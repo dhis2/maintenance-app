@@ -1,0 +1,42 @@
+$sidebar__background-color: #f7f7f7;
+$sidebar__border-color: #e1e1e1;
+$sidebar__border-style: 1px solid;
+$sidebar--item__text-color: #303030;
+$sidebar--item__hover-color: #EEEEEE;
+
+@mixin search-box($border-color) {
+  width: 100%;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  border: 1px solid $border-color;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.sidebar {
+  padding: 1rem;
+
+  .search-sidebar-items {
+    @include search-box($sidebar__border-color);
+  }
+
+  ul {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  li {
+    border-bottom: $sidebar__border-style $sidebar__border-color;
+
+    &:hover {
+      background: $sidebar--item__hover-color;
+    }
+  }
+
+  a {
+    color: $sidebar--item__text-color;
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+  }
+}

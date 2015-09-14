@@ -1,0 +1,79 @@
+@import "normalize";
+
+// Component stylesheets from dependencies
+@import '../node_modules/d2-ui-datatable/css/DataTable';
+@import '../node_modules/d2-ui-pagination/css/Pagination';
+@import '../node_modules/d2-ui-basicfields/css/BasicFields';
+@import '../node_modules/d2-ui-button/css/DefaultButton';
+
+// Other imports
+@import 'susy';
+
+$sidebar-background-color: #f7f7f7;
+$sidebar-border-color: #e1e1e1;
+$sidebar-border-style: 1px solid;
+
+/**
+ * D2 Mixins
+ */
+@mixin search-box($border-color) {
+  width: 100%;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  border: 1px solid $border-color;
+  outline: none;
+  box-sizing: border-box;
+}
+//End mixins
+
+//Basic for all
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 12px;
+}
+
+//Components
+@import './SideBar/sidebar';
+
+//App
+#app {
+  @include container();
+}
+
+.sidebar-container {
+  @include span(3 of 12);
+
+  background: $sidebar-background-color;
+  border-right: $sidebar-border-style $sidebar-border-color;
+  height: 100%;
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+}
+
+.sidebar-container--hide-scroll-bar {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-right: -2rem;
+  padding-right: 2rem;
+}
+
+.main-container {
+  @include span(9 of 12 last);
+  padding-right: 2rem;
+}
+
+//TODO: Distribute
+
+//list
+.search-list-items {
+  padding-bottom: 1rem;
+}
+
+.search-list-items--input {
+  @include search-box(#e1e1e1);
+}

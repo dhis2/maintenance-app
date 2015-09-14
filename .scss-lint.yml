@@ -1,0 +1,8 @@
+scss_files: ./src
+
+linters:
+  SelectorFormat:
+    convention: hyphenated_BEM
+
+  HexNotation:
+    style: uppercase
