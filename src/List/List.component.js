@@ -1,69 +1,43 @@
 import React from 'react';
 import {Navigation} from 'react-router';
-
+import classes from 'classnames';
 import log from 'loglevel';
-
 import {isIterable} from 'd2-utils';
 import DataTable from 'd2-ui-datatable/DataTable.component';
 import Pagination from 'd2-ui-pagination/Pagination.component';
-
+import DetailsBox from 'd2-ui-detailsbox/DetailsBox.component';
+import Sticky from 'react-sticky';
 import contextActions from './ContextActions';
-
+import detailsStore from './details.store';
 import listStore from './list.store';
 import listActions from './list.actions';
-
-import ObservedEvents from '../utils/ObservedEvents.mixin';
 import ObserverRegistry from '../utils/ObserverRegistry.mixin';
+import Paper from 'material-ui/lib/paper';
+import {config} from 'd2';
+import Translate from 'd2-ui/i18n/Translate.mixin';
+import ListActionBar from './ListActionBar.component';
+import SearchBox from './SearchBox.component';
+import LoadingStatus from './LoadingStatus.component';
 
-var LoadingStatus = React.createClass({
-    getDefaultProps() {
-        return {
-            isLoading: false,
-            loadingText: 'Loading...'
-        }
+config.i18n.strings.add('list_for');
+
+const List = React.createClass({
+    propTypes: {
+        params: React.PropTypes.shape({
+            modelType: React.PropTypes.string.isRequired,
+        }),
     },
 
-    render() {
-        if (!this.props.isLoading) { return null; }
-
-        return (
-            <div>{this.props.loadingText}</div>
-        );
-    }
-});
-
-var SearchBox = React.createClass({
-    mixins: [ObservedEvents],
-
-    componentDidMount() {
-        //TODO: Observer gets registered multiple times. Which results in many calls.
-        let searchObserver = this.events.searchList
-            .throttle(400)
-            .map(event => event && event.target && event.target.value ? event.target.value : '')
-            .distinctUntilChanged();
-
-        this.props.searchObserverHandler(searchObserver);
-    },
-
-    render() {
-        return (
-            <div className="search-list-items">
-                <input className="search-list-items--input" type="search" onKeyUp={this.createEventObserver('searchList')} placeholder="Search by name (Enter to search)" />
-            </div>
-        );
-    }
-});
-
-var List = React.createClass({
-    mixins: [Navigation, ObserverRegistry],
+    mixins: [Navigation, ObserverRegistry, Translate],
 
     getInitialState() {
         return {
             dataRows: [],
             pager: {
-                total: 0
+                total: 0,
             },
-            isLoading: true
+            isLoading: true,
+            detailsObject: null,
         };
     },
 
@@ -72,7 +46,7 @@ var List = React.createClass({
 
         const sourceStoreDisposable = listStore.subscribe(listStoreValue => {
             if (!isIterable(listStoreValue.list)) {
-                return; //Received value is not iterable, keep waiting
+                return; // Received value is not iterable, keep waiting
             }
 
             this.setState({
@@ -81,17 +55,73 @@ var List = React.createClass({
                 isLoading: false,
             });
         });
-
         this.registerDisposable(sourceStoreDisposable);
+
+        const detailsStoreDisposable = detailsStore.subscribe(detailsObject => {
+            this.setState({detailsObject});
+        });
+
+        this.registerDisposable(detailsStoreDisposable);
+    },
+
+    componentWillReceiveProps(newProps) {
+        if (this.props.params.modelType !== newProps.params.modelType) {
+            this.setState({
+                isLoading: true,
+            });
+            this.executeLoadListAction(newProps.params.modelType);
+        }
+    },
+
+    render() {
+        const currentlyShown = `${(this.state.dataRows.length * (this.state.pager.page - 1))} - ${this.state.dataRows.length * this.state.pager.page}`;
+
+        const paginationProps = {
+            hasNextPage: () => Boolean(this.state.pager.hasNextPage) && this.state.pager.hasNextPage(),
+            hasPreviousPage: () => Boolean(this.state.pager.hasPreviousPage) && this.state.pager.hasPreviousPage(),
+            onNextPageClick: () => {
+                this.setState({isLoading: true});
+                listActions.getNextPage();
+            },
+            onPreviousPageClick: () => {
+                this.setState({isLoading: true});
+                listActions.getPreviousPage();
+            },
+            total: this.state.pager.total,
+            currentlyShown,
+        };
+
+        return (
+            <div>
+                <h2>{this.getTranslation('list_for')} {this.props.params.modelType}</h2>
+                <SearchBox searchObserverHandler={this.searchListByName} />
+                <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
+                <ListActionBar modelType={this.props.params.modelType} />
+                <Pagination {...paginationProps} />
+                <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
+                    <DataTable rows={this.state.dataRows} contextMenuActions={contextActions} />
+                    {this.state.dataRows.length ? null : <div>No results found</div>}
+                </div>
+                <div className={classes('details-box-wrap', {'show-as-column': !!this.state.detailsObject})}>
+                    <Sticky>
+                        <Paper zDepth={1} rounded={false}>
+                            <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject} onClose={listActions.hideDetailsBox} />
+                        </Paper>
+                    </Sticky>
+                </div>
+            </div>
+        );
     },
 
     executeLoadListAction(modelType) {
+        this.setState({isLoading: true});
+
         const searchListDisposable = listActions.loadList(modelType)
             .subscribe(
             (message) => { console.info(message); },
             (message) => {
                 if (/^.+s$/.test(modelType)) {
-                    let nonPluralAttempt = modelType.substring(0, modelType.length - 1);
+                    const nonPluralAttempt = modelType.substring(0, modelType.length - 1);
                     log.warn(`Could not find requested model type '${modelType}' attempting to redirect to '${nonPluralAttempt}'`);
                     this.transitionTo('list', {modelType: nonPluralAttempt});
                 } else {
@@ -105,21 +135,12 @@ var List = React.createClass({
         this.registerDisposable(searchListDisposable);
     },
 
-    componentWillReceiveProps(newProps) {
-        if (this.props.params.modelType !== newProps.params.modelType) {
-            this.setState({
-                isLoading: true
-            });
-            this.executeLoadListAction(newProps.params.modelType);
-        }
-    },
-
     searchListByName(searchObserver) {
         const searchListByNameDisposable = searchObserver
             .subscribe((value) => {
                 console.log('Starting search');
                 this.setState({
-                    isLoading: true
+                    isLoading: true,
                 });
 
                 listActions.searchByName({modelType: this.props.params.modelType, searchString: value})
@@ -127,36 +148,6 @@ var List = React.createClass({
             });
 
         this.registerDisposable(searchListByNameDisposable);
-    },
-
-    render() {
-        let currentlyShown = `${(this.state.dataRows.length * (this.state.pager.page - 1))} - ${this.state.dataRows.length * this.state.pager.page}`;
-
-        let paginationProps = {
-            hasNextPage: () => Boolean(this.state.pager.hasNextPage) && this.state.pager.hasNextPage(),
-            hasPreviousPage: () => Boolean(this.state.pager.hasPreviousPage) && this.state.pager.hasPreviousPage(),
-            onNextPageClick: () => {
-                this.setState({isLoading: true});
-                listActions.getNextPage();
-            },
-            onPreviousPageClick: () => {
-                this.setState({isLoading: true});
-                listActions.getPreviousPage();
-            },
-            total: this.state.pager.total,
-            currentlyShown
-        };
-
-        return (
-            <div>
-                <h2>List of {this.props.params.modelType}</h2>
-                <SearchBox searchObserverHandler={this.searchListByName} />
-                <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
-                <Pagination {...paginationProps} />
-                <DataTable rows={this.state.dataRows} contextMenuActions={contextActions} />
-                {this.state.dataRows.length ? null : <div>No results found</div>}
-            </div>
-        );
     },
 });
 

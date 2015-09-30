@@ -15,7 +15,7 @@ module.exports = {
                 exclude: [/(node_modules)/, /d2\-ui/],
                 loader: 'babel',
                 query: {
-                    stage: 2,
+                    stage: 0,
                 },
             },
             {

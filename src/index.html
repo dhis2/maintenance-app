@@ -6,7 +6,6 @@
 
     <!-- Materialize CSS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
 
     <link rel="stylesheet" href="css/maintenance.css" />
 
@@ -27,14 +26,14 @@
     </style>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app" class="app"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
     <script>
         jQuery.ajaxSetup({
             headers: {
-                Authorization: 'Basic ' + btoa('admin:District1')
+                Authorization: 'Basic ' + btoa('admin:district')
             }
         });
     </script>

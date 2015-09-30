@@ -1,20 +1,19 @@
 import {SELECT, MULTISELECT} from 'd2-ui-basicfields/fields';
-import d2 from '../../utils/d2';
+import {getInstance as getD2} from 'd2';
+
+const organisationUnitLevelsPromise = getD2()
+    .then(d2 => d2.models.organisationUnitLevel.list());
+
+const organisationUnitLevelsMapPromise = organisationUnitLevelsPromise
+    .then(collection => {
+        return new Map(collection
+            .toArray()
+            .map(value => {
+                return [value.level, value.name];
+            }));
+    });
 
 export default new Map([
-    ['type', {
-        type: SELECT,
-        templateOptions: {
-            options: [
-                'int',
-                'string',
-                'bool',
-                'trueOnly',
-                'date',
-                'username'
-            ]
-        }
-    }],
     ['aggregationOperator', {
         type: SELECT,
         templateOptions: {
@@ -26,57 +25,34 @@ export default new Map([
                 'stddev',
                 'variance',
                 'min',
-                'max'
-            ]
+                'max',
+            ],
         },
-        hide: model => (['bool', 'trueOnly', 'int'].indexOf(model.type)) === -1
-    }],
-    ['numberType', {
-        type: SELECT,
-        templateOptions: {
-            options: [
-                'number',
-                'int',
-                'posInt',
-                'negInt',
-                'zeroPositiveInt',
-                'unitInterval',
-                'percentage'
-            ]
-        },
-        hide: (model) => model.type !== 'int'
-    }],
-    ['textType', {
-        type: SELECT,
-        templateOptions: {
-            options: [
-                'text',
-                'longText'
-            ]
-        },
-        hide: (model) => model.type !== 'string'
     }],
     ['aggregationLevels', {
         type: MULTISELECT,
         source() {
-            return d2.then(d2 => {
-                return d2.models.organisationUnitLevel.list()
-                    .then(collection => {
-                        return collection.toArray()
-                            .map(item => {
-                                return {
-                                    name: item.name,
-                                    id: item.level
-                                };
-                            });
-                    });
-            });
+            return organisationUnitLevelsPromise
+                .then(collection => {
+                    return collection.toArray()
+                        .map(item => {
+                            return {
+                                name: item.name,
+                                id: item.level,
+                            };
+                        });
+                });
         },
         fromModelTransformer(modelValue) {
-            console.log(modelValue);
-            return {
-                id: modelValue
-            };
+            return organisationUnitLevelsMapPromise
+                .then(organisationUnitLevelsMap => {
+                    if (organisationUnitLevelsMap.has(modelValue)) {
+                        return {
+                            name: organisationUnitLevelsMap.get(modelValue),
+                            id: modelValue,
+                        };
+                    }
+                });
         },
         toModelTransformer(object) {
             return parseInt(object.id, 10);

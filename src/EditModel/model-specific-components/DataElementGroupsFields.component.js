@@ -1,12 +1,10 @@
-import d2 from '../../utils/d2';
+import {getInstance as getD2}  from 'd2';
 import React from 'react';
-import modelToEditStore from '../modelToEditStrore';
-import objectActions from '../objectActions';
-
+import modelToEditStore from '../modelToEditStore';
 import FormFields from 'd2-ui-basicfields/FormFields.component';
 import ReactSelect from 'react-select';
 
-const rejectWhenGroupSetIs = (dataElementGroupSetId) => (dataElementGroup) => dataElementGroup.dataElementGroupSet.id !== dataElementGroupSetId;
+const rejectWhenGroupSetIs = (dataElementGroupSetId) => (dataElementGroup) => dataElementGroup.dataElementGroupSet && dataElementGroup.dataElementGroupSet.id !== dataElementGroupSetId;
 const getObjectWithId = (objectsWithIds, id) => objectsWithIds.reduce((result, objectsWithId) => (objectsWithId.id === id ? objectsWithId : result), undefined);
 
 const DataElementGroupsFields = React.createClass({
@@ -21,64 +19,29 @@ const DataElementGroupsFields = React.createClass({
     },
 
     componentWillMount() {
-        d2.then(d2 => {
-            const api = d2.Api.getApi();
-
+        getD2().then(d2 => {
             d2.models.dataElementGroupSet
                 .list({paging: false, fields: 'id,name,displayName,dataElementGroups[id,name,displayName]'})
                 .then(dataElementGroupSetsCollection => dataElementGroupSetsCollection.toArray())
-                .then(dataElementGroupSets => this.setState({dataElementGroupSets}))
-                .then(() => {
-                    let oldDataElementGroups = modelToEditStore.getState().dataElementGroups
-                        .filter(dataElementGroup => dataElementGroup.id)
-                        .map(dataElementGroup => dataElementGroup.id);
-
-                    // FIXME: This saves on every click on the save button / even when the model hasn't changed
-                    this.saveSubscription = objectActions.saveObject.subscribe(({data: dataElementId}) => {
-                        // Do not attempt to save when the model is not dirty
-                        if (!modelToEditStore.getState().dirty) {
-                            return;
-                        }
-
-                        const newDataElementGroups = modelToEditStore
-                            .getState()
-                            .dataElementGroups
-                            .filter(dataElementGroup => dataElementGroup.id)
-                            .map(dataElementGroup => dataElementGroup.id);
-
-                        Promise.all(oldDataElementGroups
-                                .filter(dataElementGroup => newDataElementGroups.indexOf(dataElementGroup) === -1)
-                                .map(dataElementGroup => {
-                                    return api.request('delete', `${api.baseUrl}/dataElementGroups/${dataElementGroup}/dataElements/${dataElementId}`)
-                                })
-                        )
-                            .then(() => {
-                                // Removed dataElementFromOld groups now save to new groups
-                                return Promise.all(
-                                    newDataElementGroups
-                                        .filter(dataElementGroup => oldDataElementGroups.indexOf(dataElementGroup) === -1)
-                                        .map(dataElementGroup => {
-                                            return api.request('post', `${api.baseUrl}/dataElementGroups/${dataElementGroup}/dataElements/${dataElementId}`);
-                                        })
-                                );
-                            })
-                            .then(() => {
-                                // Save successful, set the new values to be the "old ones"
-                                oldDataElementGroups = newDataElementGroups;
-                            });
-
-                    });
-                });
+                .then(dataElementGroupSets => this.setState({dataElementGroupSets}));
         });
     },
 
-    componentWillUnmount() {
-        if (this.saveSubscription.dispose) {
-            this.saveSubscription.dispose();
-        }
-    },
-
     render() {
+        function getSelectedValue(dataElementGroups, dataElementGroupSet) {
+            if (!Array.isArray(dataElementGroups)) {
+                return undefined;
+            }
+
+            return dataElementGroups
+                .filter(dataElementGroup => dataElementGroup.dataElementGroupSet && dataElementGroup.dataElementGroupSet.id === dataElementGroupSet.id)
+                .reduce((selectBoxValue, dataElementGroup) => {
+                    if (dataElementGroup && dataElementGroup.id) {
+                        return dataElementGroup.id;
+                    }
+                }, undefined);
+        }
+
         if (!Array.isArray(this.state.dataElementGroupSets)) {
             return (<div>Loading data element group sets..</div>);
         }
@@ -91,20 +54,16 @@ const DataElementGroupsFields = React.createClass({
                         options: dataElementGroupSet.dataElementGroups.map(dataElementGroup => {
                             return {label: dataElementGroup.displayName, value: dataElementGroup.id};
                         }),
-                        value: this.props.model.dataElementGroups
-                            .filter(dataElementGroup => dataElementGroup.dataElementGroupSet.id === dataElementGroupSet.id)
-                            .reduce((selectBoxValue, dataElementGroup) => {
-                                if (dataElementGroup && dataElementGroup.id) {
-                                    return dataElementGroup.id;
-                                }
-                            } , undefined),
-                        onChange: function (value) {
-                            const newDataElementGroups = this.props.model.dataElementGroups
-                                .filter(rejectWhenGroupSetIs(dataElementGroupSet.id));
+                        value: getSelectedValue(this.props.model.dataElementGroups, dataElementGroupSet),
+                        onChange: function onChange(value) {
                             const dataElementGroupToAdd = getObjectWithId(dataElementGroupSet.dataElementGroups, value);
+                            const newDataElementGroups = (this.props.model.dataElementGroups || [])
+                                .filter(rejectWhenGroupSetIs(dataElementGroupSet.id));
 
-                            dataElementGroupToAdd.dataElementGroupSet = {id: dataElementGroupSet.id};
-                            newDataElementGroups.push(dataElementGroupToAdd);
+                            if (dataElementGroupToAdd) {
+                                dataElementGroupToAdd.dataElementGroupSet = {id: dataElementGroupSet.id};
+                                newDataElementGroups.push(dataElementGroupToAdd);
+                            }
 
                             // TODO: Changing props is bad practice.. (Should ideally create a new model from data and set that, think `Model.clone();`)
                             this.props.model.dataElementGroups = newDataElementGroups;
@@ -115,7 +74,7 @@ const DataElementGroupsFields = React.createClass({
                     return (
                         <div className="d2-input input-field" key={dataElementGroupSet.id}>
                             <div className="d2-select">
-                                <ReactSelect {...reactSelectProps}></ReactSelect>
+                                <ReactSelect {...reactSelectProps} />
                             </div>
                             <label className="active" htmlFor={dataElementGroupSet.id}>{dataElementGroupSet.displayName}</label>
                         </div>
@@ -123,7 +82,7 @@ const DataElementGroupsFields = React.createClass({
                 })}
             </FormFields>
         );
-    }
+    },
 });
 
 export default DataElementGroupsFields;

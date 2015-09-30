@@ -1,30 +1,21 @@
-@import "normalize";
+@import 'normalize';
 
 // Component stylesheets from dependencies
 @import '../node_modules/d2-ui-datatable/css/DataTable';
 @import '../node_modules/d2-ui-pagination/css/Pagination';
 @import '../node_modules/d2-ui-basicfields/css/BasicFields';
 @import '../node_modules/d2-ui-button/css/DefaultButton';
+@import '../node_modules/d2-ui-detailsbox/css/DetailsBox';
+@import '../node_modules/d2-ui/css/IndicatorExpressionManager';
 
 // Other imports
 @import 'susy';
 
-$sidebar-background-color: #f7f7f7;
-$sidebar-border-color: #e1e1e1;
-$sidebar-border-style: 1px solid;
+@import '../scss/List/List';
 
-/**
- * D2 Mixins
- */
-@mixin search-box($border-color) {
-  width: 100%;
-  padding: .5rem 1rem;
-  border-radius: .5rem;
-  border: 1px solid $border-color;
-  outline: none;
-  box-sizing: border-box;
-}
-//End mixins
+$sidebar-background-color: #F7F7F7;
+$sidebar-border-color: #E1E1E1;
+$sidebar-border-style: 1px solid;
 
 //Basic for all
 * {
@@ -32,14 +23,14 @@ $sidebar-border-style: 1px solid;
 }
 
 html {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 //Components
 @import './SideBar/sidebar';
 
 //App
-#app {
+.app {
   @include container();
 }
 
@@ -49,16 +40,16 @@ html {
   background: $sidebar-background-color;
   border-right: $sidebar-border-style $sidebar-border-color;
   height: 100%;
-  position: fixed;
   overflow: hidden;
+  position: fixed;
   top: 0;
 }
 
 .sidebar-container--hide-scroll-bar {
   height: 100%;
+  margin-right: -2rem;
   overflow-x: hidden;
   overflow-y: auto;
-  margin-right: -2rem;
   padding-right: 2rem;
 }
 
@@ -71,9 +62,14 @@ html {
 
 //list
 .search-list-items {
-  padding-bottom: 1rem;
+  //padding-bottom: 1rem;
 }
 
-.search-list-items--input {
-  @include search-box(#e1e1e1);
+// Needed to override the inline style set by the component
+// scss-lint:disable ImportantRule
+.details-box-wrap .sticky {
+  left: initial !important;
+  margin-right: 2rem;
+  margin-top: 2rem;
+  width: 22%;
 }

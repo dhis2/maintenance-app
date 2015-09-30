@@ -1,4 +1,4 @@
-let fieldOrderByName = new Map([
+const fieldOrderByName = new Map([
     ['dataElement', [
         'name', 'code', 'shortName', 'description', 'formName', 'domainType', 'type', 'numberType', 'textType', 'aggregationOperator',
         'zeroIsSignificant', 'url', 'categoryCombo', 'optionSet', 'commentOptionSet', 'legendSet', 'aggregationLevels', 'data']],
@@ -9,7 +9,7 @@ let fieldOrderByName = new Map([
     ['indicator', ['name', 'shortName', 'code', 'description', 'annualized', 'decimals', 'indicatorType', 'legendSet', 'url']],
     ['indicatorGroup', ['name', 'indicators']],
     ['indicatorType', ['name', 'factor', 'number']],
-    ['indicatorGroupSet', ['name', 'description', 'compulsory', 'indicatorGroups']]
+    ['indicatorGroupSet', ['name', 'description', 'compulsory', 'indicatorGroups']],
 ]);
 
 export default {
@@ -32,5 +32,5 @@ export default {
             return fieldOrderByName.get(schemaName);
         }
         return ['name', 'shortName', 'code'];
-    }
+    },
 };

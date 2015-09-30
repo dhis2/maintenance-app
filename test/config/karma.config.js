@@ -56,12 +56,6 @@ module.exports = function karmaConfig( config ) {
             'src/**/*.js',
         ],
 
-
-        // list of preprocessors
-        preprocessors: {
-            'test/*': ['webpack']
-        },
-
         logLevel: config.LOG_INFO,
 
         browsers: ['PhantomJS'],

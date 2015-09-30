@@ -1,7 +1,9 @@
 import dataElement from './dataElement';
+import indicator from './indicator';
 
-let overridesByType = {
-    dataElement
+const overridesByType = {
+    dataElement,
+    indicator,
 };
 
 export default {
@@ -21,8 +23,8 @@ export default {
      */
     for(schemaName) {
         if (schemaName && overridesByType[schemaName]) {
-            return overridesByType[schemaName]
+            return overridesByType[schemaName];
         }
         return new Map();
-    }
+    },
 };

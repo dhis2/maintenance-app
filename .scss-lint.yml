@@ -1,4 +1,4 @@
-scss_files: ./src
+scss_files: ./scss
 
 linters:
   SelectorFormat:

@@ -1,23 +1,31 @@
 import React from 'react';
 import log from 'loglevel';
 import ObservedEvents from '../utils/ObservedEvents.mixin';
+import List from 'material-ui/lib/lists/list';
+import ListItem from 'material-ui/lib/lists/list-item';
+import TextField from 'material-ui/lib/text-field';
 
 const SideBar = React.createClass({
-    mixins: [ObservedEvents],
-
     propTypes: {
-        filterChildren: React.PropTypes.func
+        filterChildren: React.PropTypes.func,
+        items: React.PropTypes.shape({
+            map: React.PropTypes.func.isRequired,
+        }).isRequired,
+        title: React.PropTypes.string.isRequired,
+        searchHint: React.PropTypes.string.isRequired,
     },
+
+    mixins: [ObservedEvents],
 
     getDefaultProps() {
         return {
-            items: []
+            items: [],
         };
     },
 
     getInitialState() {
         return {
-            searchString: ''
+            searchString: '',
         };
     },
 
@@ -35,41 +43,45 @@ const SideBar = React.createClass({
                 searchString => {
                     console.log(searchString);
                     this.setState({
-                        searchString: searchString
+                        searchString: searchString,
                     });
                 },
                 error => {
-                    log.error('Could not set the search string');
+                    log.error('Could not set the search string', error);
                 }
             );
     },
 
-    selectTheFirst() {
-        //TODO: This ties into the DOM, which is not really best practice. Think about a way to solve this without having to do other hacky magic.
-        React.findDOMNode(this).querySelector('a').click();
-    },
-
     render() {
-        this.filteredChildren = React.Children.map(this.props.children, child => {
-            if (this.state.searchString && this.props.filterChildren) {
-                //Do not render children that do not comply with the filter
-                if (!this.props.filterChildren(this.state.searchString, child)) {
-                    return null;
+        this.filteredChildren = this.props.items
+            .map(item => {
+                if (this.state.searchString && this.props.filterChildren) {
+                    // Do not render children that do not comply with the filter
+                    if (!this.props.filterChildren(this.state.searchString, item.primaryText)) {
+                        return null;
+                    }
                 }
-            }
-            return (<li>{React.cloneElement(child, {key: child.props.params.modelType})}</li>);
-        });
+                return (<ListItem {...item} />);
+            });
 
         return (
             <div className="sidebar">
                 <h3>{this.props.title}</h3>
-                <input placeholder="Filter menu items by name (Hit enter to go to first)" type="search" className="search-sidebar-items" onKeyUp={this.createEventObserver('search')} />
-                <ul>
+                <TextField hintText={this.props.searchHint}
+                           type="search"
+                           style={{width: '100%'}}
+                           onKeyUp={this.createEventObserver('search')} />
+                <List style={{backgroundColor: 'inherit'}}>
                     {this.filteredChildren}
-                </ul>
+                </List>
             </div>
         );
-    }
+    },
+
+    selectTheFirst() {
+        // TODO: This ties into the DOM, which is not really best practice. Think about a way to solve this without having to do other hacky magic.
+        React.findDOMNode(this).querySelector('a').click();
+    },
 });
 
 export default SideBar;

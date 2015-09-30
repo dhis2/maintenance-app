@@ -1,12 +1,30 @@
 import Store from 'd2-flux/store/Store';
-import d2 from '../utils/d2';
+import {getInstance as getD2} from 'd2';
 
 const sideBarItemsStore = Store.create();
+const isInPredefinedList = (name) => {
+    return [
+        'dataElement',
+        'dataElementGroup',
+        'dataElementGroupSet',
+        'categoryOptionCombo',
+        'categoryOption',
+        'category',
+        'categoryCombo',
+        'categoryOptionGroup',
+        'categoryOptionGroupSet',
+        'indicator',
+        'indicatorType',
+        'indicatorGroup',
+        'indicatorGroupSet',
+    ].indexOf(name) >= 0;
+};
 
-d2.then((d2) => {
-    const sideBarItems = d2.models.mapThroughDefinitions(definition => {
-        return definition.name;
-    }).sort();
+getD2().then((d2) => {
+    const sideBarItems = d2.models
+        .mapThroughDefinitions(definition => definition.name)
+        .sort()
+        .filter(isInPredefinedList);
 
     sideBarItemsStore.setState(sideBarItems);
 });

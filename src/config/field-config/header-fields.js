@@ -1,8 +1,8 @@
-let headerFieldsMap = new Map([
+const headerFieldsMap = new Map([
     ['dataElementGroupSet', ['name', 'code']],
     ['categoryOptionCombo', ['name', 'code']],
     ['category', ['name', 'code']],
-    ['categoryCombo', ['name', 'code']]
+    ['categoryCombo', ['name', 'code']],
 ]);
 
 export default {
@@ -18,5 +18,5 @@ export default {
             return headerFieldsMap.get(schemaName);
         }
         return ['name', 'shortName'];
-    }
+    },
 };
