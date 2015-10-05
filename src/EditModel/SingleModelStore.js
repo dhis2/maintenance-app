@@ -31,7 +31,7 @@ const singleModelStoreConfig = {
     save() {
         const importResultPromise = this.state.save()
             .then(response => {
-                if (response.response.importCount.imported === 1) {
+                if (response.response.importCount.imported === 1 || response.response.importCount.updated === 1) {
                     return response;
                 }
 

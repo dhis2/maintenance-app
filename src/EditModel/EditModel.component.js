@@ -11,8 +11,10 @@ import {getInstance as getD2} from 'd2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
-import RaisedButton from 'material-ui/lib/raised-button';
 import SaveButton from './SaveButton.component';
+import CancelButton from './CancelButton.component';
+import Paper from 'material-ui/lib/paper';
+import {isString} from 'd2-utils';
 
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default class EditModel extends React.Component {
@@ -54,6 +56,12 @@ export default class EditModel extends React.Component {
         console.log('load the ', modelType, ' object for', this.props.modelId);
     }
 
+    componentWillReceiveProps() {
+        this.setState({
+            isLoading: true,
+        });
+    }
+
     componentWillUnmount() {
         this.disposable && this.disposable.dispose();
     }
@@ -64,16 +72,28 @@ export default class EditModel extends React.Component {
                 return undefined;
             }
 
+            const saveButtonStyle = {
+                marginRight: '1rem',
+            };
+
+            const formPaperStyle = {
+                width: '80%',
+                margin: '0 auto 2rem',
+                padding: '2rem 5rem 4rem',
+            };
+
             return (
-                <FormForModel d2={this.state.d2} model={this.state.modelToEdit} name={'ObjectEditForm'} formFieldsManager={this.state.formFieldsManager}>
+                <Paper style={formPaperStyle}>
+                    <FormForModel d2={this.state.d2} model={this.state.modelToEdit} name={'ObjectEditForm'} formFieldsManager={this.state.formFieldsManager}>
 
-                    <AttributeFields model={this.state.modelToEdit} />
+                        <AttributeFields model={this.state.modelToEdit} />
 
-                    {this.extraFieldsForModelType()}
+                        {this.extraFieldsForModelType()}
 
-                    <SaveButton onClick={this.saveAction.bind(this)}>Save</SaveButton>
-                    <RaisedButton onClick={this.closeAction.bind(this)} label={'Close'} />
-                </FormForModel>
+                        <SaveButton style={saveButtonStyle} onClick={this.saveAction.bind(this)} />
+                        <CancelButton onClick={this.closeAction.bind(this)} />
+                    </FormForModel>
+                </Paper>
             );
         };
 
@@ -92,6 +112,10 @@ export default class EditModel extends React.Component {
             .subscribe(
             (message) => snackActions.show({message, action: 'Ok!'}),
             (errorMessage) => {
+                if (isString(errorMessage)) {
+                    snackActions.show({message: errorMessage});
+                }
+
                 if (errorMessage.messages && errorMessage.messages.length > 0) {
                     console.log(errorMessage.messages);
                     snackActions.show({message: `${errorMessage.messages[0].property}: ${errorMessage.messages[0].message} `});

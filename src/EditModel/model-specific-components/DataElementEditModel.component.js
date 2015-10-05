@@ -47,7 +47,7 @@ export default class extends EditModel {
                     // Save successful, set the new values to be the "old ones"
                     this.oldDataElementGroups = newDataElementGroups;
                 });
-        }));
+        }, (e) => { console.log(e); }));
     }
 
     saveAction(event) {

@@ -2,9 +2,8 @@ import React from 'react';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Translate from 'd2-ui/i18n/Translate.mixin';
 
-const SaveButton = React.createClass({
+const CancelButton = React.createClass({
     propTypes: {
-        isFormValid: React.PropTypes.func.isRequired,
         onClick: React.PropTypes.func.isRequired,
     },
 
@@ -12,9 +11,9 @@ const SaveButton = React.createClass({
 
     render() {
         return (
-            <RaisedButton {...this.props} primary={true} onClick={this.props.onClick} label={this.getTranslation('save')} disabled={!this.props.isFormValid()} />
+            <RaisedButton {...this.props} label={this.getTranslation('cancel')} />
         );
     },
 });
 
-export default SaveButton;
+export default CancelButton;

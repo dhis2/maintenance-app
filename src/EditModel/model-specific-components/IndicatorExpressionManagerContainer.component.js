@@ -6,6 +6,7 @@ import indicatorExpressionStatusStore from 'd2-ui/indicator-expression-manager/i
 import dataElementOperandSelectorActions from 'd2-ui/indicator-expression-manager/dataElementOperandSelector.actions';
 import {getInstance as getD2} from 'd2';
 import {Observable} from 'rx';
+import Translate from 'd2-ui/i18n/Translate.mixin';
 
 const indicatorExpressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
 indicatorExpressionStatusActions.requestExpressionStatus
@@ -32,12 +33,12 @@ const IndicatorExpressionManagerContainer = React.createClass({
         formula: React.PropTypes.string.isRequired,
     },
 
-    mixins: [FormUpdateContext],
+    mixins: [FormUpdateContext, Translate],
 
     render() {
         return (
             <IndicatorExpressionManager
-                descriptionLabel="Numerator description"
+                descriptionLabel={this.getTranslation('description')}
                 descriptionValue={this.props.description}
                 formulaValue={this.props.formula}
                 organisationUnitGroupOptions={[]}

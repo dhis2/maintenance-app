@@ -16,7 +16,7 @@ const SearchBox = React.createClass({
 
     componentDidMount() {
         const searchObserver = this.events.searchBox
-            .throttle(400)
+            .debounce(400)
             .map(event => event && event.target && event.target.value ? event.target.value : '')
             .distinctUntilChanged();
 

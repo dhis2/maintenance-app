@@ -11,6 +11,7 @@ import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerCon
 import dataElementOperandStore from 'd2-ui/indicator-expression-manager/dataElementOperand.store';
 import dataElementOperandSelectorActions from 'd2-ui/indicator-expression-manager/dataElementOperandSelector.actions';
 import {Observable} from 'rx';
+import Translate from 'd2-ui/i18n/Translate.mixin';
 
 const createFakePager = response => {
     // Fake the modelCollection since dataElementOperands do not have a valid uid
@@ -71,7 +72,7 @@ const ExtraFields = React.createClass({
         formula: React.PropTypes.string.isRequired,
     },
 
-    mixins: [FormUpdateContext],
+    mixins: [FormUpdateContext, Translate],
 
     getInitialState() {
         return {
@@ -86,8 +87,8 @@ const ExtraFields = React.createClass({
 
         return (
             <div>
-                <RaisedButton label={'numerator'} onClick={this.setNumerator} />
-                <RaisedButton label={'denominator'} onClick={this.setDenominator} />
+                <RaisedButton label={this.getTranslation('edit_numerator')} onClick={this.setNumerator} />
+                <RaisedButton label={this.getTranslation('edit_denominator')} onClick={this.setDenominator} />
                 <Dialog ref="dialog" modal={true} actions={dialogActions} title={`Edit ${this.state.type}`} contentStyle={{maxWidth: '90%'}}>
                     {this.state ? <IndicatorExpressionManagerContainer indicatorExpressionChanged={this.indicatorExpressionChanged} formula={this.props.modelToEdit[this.state.type] || ''} description={this.props.modelToEdit[`${this.state.type}Description`] || ''}  /> : null}
                 </Dialog>

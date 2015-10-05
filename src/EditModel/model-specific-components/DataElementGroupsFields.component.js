@@ -73,10 +73,10 @@ const DataElementGroupsFields = React.createClass({
 
                     return (
                         <div className="d2-input input-field" key={dataElementGroupSet.id}>
+                            <label className="active" htmlFor={dataElementGroupSet.id}>{dataElementGroupSet.displayName}</label>
                             <div className="d2-select">
                                 <ReactSelect {...reactSelectProps} />
                             </div>
-                            <label className="active" htmlFor={dataElementGroupSet.id}>{dataElementGroupSet.displayName}</label>
                         </div>
                     );
                 })}

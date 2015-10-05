@@ -1,12 +1,11 @@
 import React from 'react';
 import classes from 'classnames';
 import {RouteHandler} from 'react-router';
-
 import HeaderBar from '../HeaderBar/HeaderBar.component';
 import MainContent from '../MainContent/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
-import {init, config} from 'd2';
+import {getInstance} from 'd2';
 import AppWithD2 from 'd2-ui/app/AppWithD2.component';
 import log from 'loglevel';
 import appTheme from './app.theme';
@@ -21,10 +20,6 @@ const ThemeManager = require('material-ui/lib/styles/theme-manager');
 // https://github.com/zilverline/react-tap-event-plugin
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
-
-// D2 pre-init config
-// config.i18n.sources.add('/i18n/i18n_global.properties');
-config.baseUrl = 'http://localhost:8080/dhis/api';
 
 const withMuiContext = Object.assign(AppWithD2.childContextTypes, {muiTheme: React.PropTypes.object});
 class App extends AppWithD2 {
@@ -62,13 +57,7 @@ class App extends AppWithD2 {
     }
 }
 App.defaultProps = {
-    d2: (() => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve(init());
-            });
-        });
-    })(),
+    d2: getInstance(),
 };
 
 export default App;

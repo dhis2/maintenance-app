@@ -18,6 +18,7 @@ import Translate from 'd2-ui/i18n/Translate.mixin';
 import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';
 import LoadingStatus from './LoadingStatus.component';
+import {camelCaseToUnderscores} from 'd2-utils';
 
 config.i18n.strings.add('list_for');
 
@@ -44,17 +45,18 @@ const List = React.createClass({
     componentWillMount() {
         this.executeLoadListAction(this.props.params.modelType);
 
-        const sourceStoreDisposable = listStore.subscribe(listStoreValue => {
-            if (!isIterable(listStoreValue.list)) {
-                return; // Received value is not iterable, keep waiting
-            }
+        const sourceStoreDisposable = listStore
+            .subscribe(listStoreValue => {
+                if (!isIterable(listStoreValue.list)) {
+                    return; // Received value is not iterable, keep waiting
+                }
 
-            this.setState({
-                dataRows: listStoreValue.list,
-                pager: listStoreValue.pager,
-                isLoading: false,
+                this.setState({
+                    dataRows: listStoreValue.list,
+                    pager: listStoreValue.pager,
+                    isLoading: false,
+                });
             });
-        });
         this.registerDisposable(sourceStoreDisposable);
 
         const detailsStoreDisposable = detailsStore.subscribe(detailsObject => {
@@ -93,7 +95,7 @@ const List = React.createClass({
 
         return (
             <div>
-                <h2>{this.getTranslation('list_for')} {this.props.params.modelType}</h2>
+                <h2>{this.getTranslation('list_for')} {this.getTranslation(camelCaseToUnderscores(this.props.params.modelType))}</h2>
                 <SearchBox searchObserverHandler={this.searchListByName} />
                 <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
                 <ListActionBar modelType={this.props.params.modelType} />
@@ -116,7 +118,8 @@ const List = React.createClass({
     executeLoadListAction(modelType) {
         this.setState({isLoading: true});
 
-        const searchListDisposable = listActions.loadList(modelType)
+        const searchListDisposable = listActions
+            .loadList(modelType)
             .subscribe(
             (message) => { console.info(message); },
             (message) => {
