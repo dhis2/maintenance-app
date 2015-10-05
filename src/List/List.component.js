@@ -4,7 +4,7 @@ import classes from 'classnames';
 import log from 'loglevel';
 import {isIterable} from 'd2-utils';
 import DataTable from 'd2-ui-datatable/DataTable.component';
-import Pagination from 'd2-ui-pagination/Pagination.component';
+import Pagination from 'd2-ui/pagination/Pagination.component';
 import DetailsBox from 'd2-ui-detailsbox/DetailsBox.component';
 import Sticky from 'react-sticky';
 import contextActions from './ContextActions';
