@@ -45,6 +45,9 @@ export default class EditModel extends React.Component {
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
+                }, (errorMessage) => {
+                    console.log(errorMessage);
+                    snackActions.show({message: errorMessage});
                 });
 
             this.setState({
@@ -52,8 +55,6 @@ export default class EditModel extends React.Component {
                 formFieldsManager: formFieldsManager,
             });
         });
-
-        console.log('load the ', modelType, ' object for', this.props.modelId);
     }
 
     componentWillReceiveProps() {

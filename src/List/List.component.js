@@ -19,8 +19,27 @@ import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';
 import LoadingStatus from './LoadingStatus.component';
 import {camelCaseToUnderscores} from 'd2-utils';
+import Auth from 'd2-ui/auth/Auth.mixin';
 
-config.i18n.strings.add('list_for');
+config.i18n.strings.add('management');
+
+function actionsThatRequireCreate(action) {
+    if ((action !== 'edit' && action !== 'clone') || this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.params.modelType))) {
+        return true;
+    }
+    return false;
+}
+
+function actionsThatRequireDelete(action) {
+    if (action !== 'delete' || this.getCurrentUser().canDelete(this.getModelDefinitionByName(this.props.params.modelType))) {
+        return true;
+    }
+    return false;
+}
+
+function executeLoadListAction(modelType) {
+    return listActions.loadList(modelType);
+}
 
 const List = React.createClass({
     propTypes: {
@@ -29,7 +48,32 @@ const List = React.createClass({
         }),
     },
 
-    mixins: [Navigation, ObserverRegistry, Translate],
+    mixins: [Navigation, ObserverRegistry, Translate, Auth],
+
+    statics: {
+        willTransitionTo(transition, params, query, callback) {
+            console.log('Loading a list');
+
+            executeLoadListAction(params.modelType)
+                .subscribe(
+                (message) => { console.info(message); callback(); },
+                (message) => {
+                    if (/^.+s$/.test(params.modelType)) {
+                        const nonPluralAttempt = params.modelType.substring(0, params.modelType.length - 1);
+                        log.warn(`Could not find requested model type '${params.modelType}' attempting to redirect to '${nonPluralAttempt}'`);
+                        console.log(this);
+                        transition.redirect('list', {modelType: nonPluralAttempt});
+                        callback();
+                    } else {
+                        log.error('No clue where', params.modelType, 'comes from... Redirecting to app root');
+                        log.error(message);
+                        transition.redirect('/');
+                        callback();
+                    }
+                }
+            );
+        },
+    },
 
     getInitialState() {
         return {
@@ -43,8 +87,6 @@ const List = React.createClass({
     },
 
     componentWillMount() {
-        this.executeLoadListAction(this.props.params.modelType);
-
         const sourceStoreDisposable = listStore
             .subscribe(listStoreValue => {
                 if (!isIterable(listStoreValue.list)) {
@@ -57,12 +99,12 @@ const List = React.createClass({
                     isLoading: false,
                 });
             });
-        this.registerDisposable(sourceStoreDisposable);
 
         const detailsStoreDisposable = detailsStore.subscribe(detailsObject => {
             this.setState({detailsObject});
         });
 
+        this.registerDisposable(sourceStoreDisposable);
         this.registerDisposable(detailsStoreDisposable);
     },
 
@@ -71,7 +113,7 @@ const List = React.createClass({
             this.setState({
                 isLoading: true,
             });
-            this.executeLoadListAction(newProps.params.modelType);
+            executeLoadListAction(newProps.params.modelType);
         }
     },
 
@@ -93,15 +135,23 @@ const List = React.createClass({
             currentlyShown,
         };
 
+        const availableActions = Object.keys(contextActions)
+            .filter(actionsThatRequireCreate, this)
+            .filter(actionsThatRequireDelete, this)
+            .reduce((actions, actionName) => {
+                actions[actionName] = contextActions[actionName];
+                return actions;
+            }, {});
+
         return (
             <div>
-                <h2>{this.getTranslation('list_for')} {this.getTranslation(camelCaseToUnderscores(this.props.params.modelType))}</h2>
+                <h2>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</h2>
                 <SearchBox searchObserverHandler={this.searchListByName} />
                 <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
                 <ListActionBar modelType={this.props.params.modelType} />
                 <Pagination {...paginationProps} />
                 <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
-                    <DataTable rows={this.state.dataRows} contextMenuActions={contextActions} />
+                    <DataTable rows={this.state.dataRows} contextMenuActions={availableActions} />
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
                 <div className={classes('details-box-wrap', {'show-as-column': !!this.state.detailsObject})}>
@@ -113,29 +163,6 @@ const List = React.createClass({
                 </div>
             </div>
         );
-    },
-
-    executeLoadListAction(modelType) {
-        this.setState({isLoading: true});
-
-        const searchListDisposable = listActions
-            .loadList(modelType)
-            .subscribe(
-            (message) => { console.info(message); },
-            (message) => {
-                if (/^.+s$/.test(modelType)) {
-                    const nonPluralAttempt = modelType.substring(0, modelType.length - 1);
-                    log.warn(`Could not find requested model type '${modelType}' attempting to redirect to '${nonPluralAttempt}'`);
-                    this.transitionTo('list', {modelType: nonPluralAttempt});
-                } else {
-                    log.error('No clue where', modelType, 'comes from... Redirecting to app root');
-                    log.error(message);
-                    this.transitionTo('/');
-                }
-            }
-        );
-
-        this.registerDisposable(searchListDisposable);
     },
 
     searchListByName(searchObserver) {

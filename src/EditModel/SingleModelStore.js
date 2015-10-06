@@ -1,6 +1,6 @@
 import Store from 'd2-flux/store/Store';
 import {getInstance as getD2}  from 'd2';
-import Rx from 'rx';
+import {Observable} from 'rx';
 
 function loadModelFromD2(objectType, objectId) {
     return getD2().then(d2 => {
@@ -14,18 +14,20 @@ function loadModelFromD2(objectType, objectId) {
 
 const singleModelStoreConfig = {
     getObjectOfTypeById({objectType, objectId}) {
-        loadModelFromD2(objectType, objectId)
-            .then(model => {
+        return Observable.fromPromise(loadModelFromD2(objectType, objectId))
+            .do((model) => {
                 this.setState(model);
             });
     },
 
     getObjectOfTypeByIdAndClone({objectType, objectId}) {
-        loadModelFromD2(objectType, objectId)
+        const result = loadModelFromD2(objectType, objectId)
             .then(model => {
                 model.id = undefined;
                 this.setState(model);
             });
+
+        return Observable.fromPromise(result);
     },
 
     save() {
@@ -41,7 +43,7 @@ const singleModelStoreConfig = {
                 return Promise.reject('Failed to save');
             });
 
-        return Rx.Observable.fromPromise(importResultPromise);
+        return Observable.fromPromise(importResultPromise);
     },
 };
 

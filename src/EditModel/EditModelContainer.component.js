@@ -5,6 +5,7 @@ import IndicatorEditModel from './model-specific-components/IndicatorEditModel.c
 import objectActions from './objectActions';
 import {getInstance as getD2} from 'd2';
 import modelToEditStore from './modelToEditStore';
+import snackActions from '../Snackbar/snack.actions';
 
 export class EditModelBase extends React.Component {
     constructor(props) {
@@ -34,11 +35,22 @@ export class EditModelBase extends React.Component {
 }
 
 export default class extends EditModelBase {
-    static willTransitionTo(transition, params) {
+    static willTransitionTo(transition, params, query, callback) {
         if (params.modelId === 'add') {
-            getD2().then((d2) => modelToEditStore.setState(d2.models[params.modelType].create()));
+            getD2().then((d2) => {
+                modelToEditStore.setState(d2.models[params.modelType].create());
+                callback();
+            });
         } else {
-            objectActions.getObjectOfTypeById({objectType: params.modelType, objectId: params.modelId});
+            objectActions.getObjectOfTypeById({objectType: params.modelType, objectId: params.modelId})
+                .subscribe(
+                    () => callback(),
+                    (errorMessage) => {
+                        transition.redirect('list', {modelType: params.modelType});
+                        snackActions.show({message: errorMessage});
+                        callback();
+                    }
+                );
         }
     }
 }

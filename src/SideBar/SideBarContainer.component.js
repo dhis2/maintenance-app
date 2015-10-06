@@ -8,7 +8,7 @@ import {camelCaseToUnderscores} from 'd2-utils';
 
 config.i18n.strings.add('maintenance');
 config.i18n.strings.add('filter_menu_items_by_name');
-config.i18n.strings.add('enter_to_go_to_first');
+config.i18n.strings.add('press_enter_to_go_to_first');
 
 const SideBarContainer = React.createClass({
     mixins: [State, Navigation, Translate],
@@ -44,7 +44,7 @@ const SideBarContainer = React.createClass({
 
         return (
             <SideBar title={this.getTranslation('maintenance')}
-                     searchHint={`${this.getTranslation('filter_menu_items_by_name')} ${this.getTranslation('enter_to_go_to_first')}`}
+                     searchHint={`${this.getTranslation('filter_menu_items_by_name')} ${this.getTranslation('press_enter_to_go_to_first')}`}
                      filterChildren={this.filterChildren}
                      items={items}
                 />

@@ -12,8 +12,6 @@ const SnackBarContainer = React.createClass({
 
     componentWillMount() {
         const snackStoreDisposable = snackStore.subscribe(snack => {
-            console.log('Show!');
-
             if (snack) {
                 this.setState({
                     snack: snack,
@@ -29,7 +27,6 @@ const SnackBarContainer = React.createClass({
     },
 
     render() {
-        console.log(this.state.snack);
         if (!this.state.snack) {
             return null;
         }

@@ -5,27 +5,19 @@ import log from 'loglevel';
 
 const objectActions = Action.createActionsFromNames(['getObjectOfTypeById', 'getObjectOfTypeByIdAndClone', 'saveObject', 'afterSave', 'saveAndRedirectToList']);
 
-// TODO: Extract this a convenience method onto the action object?
-objectActions.mapActionsToStore = function mapActionsToStore(actionsConfig, store) {
-    actionsConfig.forEach(mapping => {
-        mapping[0].forEach(actionKey => {
-            const actionTransformer = mapping[2];
-
-            this[actionKey].subscribe(actionConfig => {
-                let action = actionConfig;
-                if (actionTransformer) {
-                    action = actionTransformer(action);
-                }
-                store[mapping[1]](action);
-            });
-        });
+objectActions.getObjectOfTypeById
+    .subscribe(({data, complete, error}) => {
+        modelToEditStore
+            .getObjectOfTypeById(data)
+            .subscribe(complete, error);
     });
-};
 
-objectActions.mapActionsToStore([
-    [['getObjectOfTypeById'], 'getObjectOfTypeById', (action) => { return action.data; }],
-    [['getObjectOfTypeByIdAndClone'], 'getObjectOfTypeByIdAndClone', (action) => { return action.data; }],
-], modelToEditStore);
+objectActions.getObjectOfTypeByIdAndClone
+    .subscribe(({data, complete, error}) => {
+        modelToEditStore
+            .getObjectOfTypeByIdAndClone(data)
+            .subscribe(complete, error);
+    });
 
 objectActions.saveObject.subscribe(action => {
     const errorHandler = (message) => {

@@ -15,3 +15,4 @@ dist/*
 build/*
 
 npm-debug.log
+stats.json
