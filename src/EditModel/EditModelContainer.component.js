@@ -42,7 +42,15 @@ export default class extends EditModelBase {
     static willTransitionTo(transition, params, query, callback) {
         if (params.modelId === 'add') {
             getD2().then((d2) => {
-                modelToEditStore.setState(d2.models[params.modelType].create());
+                const modelToEdit = d2.models[params.modelType].create();
+
+                // TODO: Remove this hack and solve properly
+                if (params.modelType === 'dataElement') {
+                    modelToEdit.zeroIsSignificant = false;
+                }
+
+                modelToEditStore.setState(modelToEdit);
+
                 callback();
             });
         } else {
