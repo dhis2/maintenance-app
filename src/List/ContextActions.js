@@ -1,8 +1,14 @@
 import Router from 'react-router';
 import Action from 'd2-flux/action/Action';
 import detailsStore from './details.store';
-import {getInstance as getD2} from 'd2';
+import {config, getInstance as getD2} from 'd2';
 import {camelCaseToUnderscores} from 'd2-utils';
+
+config.i18n.strings.add('edit');
+config.i18n.strings.add('clone');
+config.i18n.strings.add('delete');
+config.i18n.strings.add('details');
+config.i18n.strings.add('translate');
 
 const contextActions = Action.createActionsFromNames(['edit', 'clone', 'delete', 'details', 'translate']);
 

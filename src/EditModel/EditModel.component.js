@@ -15,6 +15,7 @@ import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
 import Paper from 'material-ui/lib/paper';
 import {isString} from 'd2-utils';
+import SharingNotification from './SharingNotification.component';
 
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default class EditModel extends React.Component {
@@ -68,6 +69,12 @@ export default class EditModel extends React.Component {
     }
 
     render() {
+        const formPaperStyle = {
+            width: '80%',
+            margin: '0 auto 2rem',
+            padding: '2rem 5rem 4rem',
+        };
+
         const renderForm = () => {
             if (!this.state.d2) {
                 return undefined;
@@ -75,12 +82,6 @@ export default class EditModel extends React.Component {
 
             const saveButtonStyle = {
                 marginRight: '1rem',
-            };
-
-            const formPaperStyle = {
-                width: '80%',
-                margin: '0 auto 2rem',
-                padding: '2rem 5rem 4rem',
             };
 
             return (
@@ -98,9 +99,13 @@ export default class EditModel extends React.Component {
             );
         };
 
+        const wrapStyle = {
+            paddingTop: '2rem',
+        };
+
         return (
-            <div>
-                <h2>Edit for {this.props.modelType} with id {this.props.modelId}</h2>
+            <div style={wrapStyle}>
+                <SharingNotification style={formPaperStyle} modelType={this.props.modelType} />
                 {this.state.isLoading ? 'Loading data...' : renderForm()}
             </div>
         );

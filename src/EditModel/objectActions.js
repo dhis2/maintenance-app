@@ -29,11 +29,11 @@ objectActions.saveObject.subscribe(action => {
             log.info('Handling after save');
             action.data.afterSave(action)
                 .subscribe(
-                    () => action.complete('Success with aftersave'),
+                    () => action.complete('success'),
                     errorHandler
                 );
         } else {
-            action.complete('Success');
+            action.complete('success');
         }
     };
 

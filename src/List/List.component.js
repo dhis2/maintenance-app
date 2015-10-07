@@ -3,7 +3,7 @@ import {Navigation} from 'react-router';
 import classes from 'classnames';
 import log from 'loglevel';
 import {isIterable} from 'd2-utils';
-import DataTable from 'd2-ui-datatable/DataTable.component';
+import DataTable from 'd2-ui/data-table/DataTable.component';
 import Pagination from 'd2-ui/pagination/Pagination.component';
 import DetailsBox from 'd2-ui-detailsbox/DetailsBox.component';
 import Sticky from 'react-sticky';
@@ -151,7 +151,7 @@ const List = React.createClass({
                 <ListActionBar modelType={this.props.params.modelType} />
                 <Pagination {...paginationProps} />
                 <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
-                    <DataTable rows={this.state.dataRows} contextMenuActions={availableActions} />
+                    <DataTable rows={this.state.dataRows} columns={['name']} contextMenuActions={availableActions} contextMenuIcons={{clone: 'content_copy'}} />
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
                 <div className={classes('details-box-wrap', {'show-as-column': !!this.state.detailsObject})}>

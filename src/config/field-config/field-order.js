@@ -1,9 +1,9 @@
 const fieldOrderByName = new Map([
     ['dataElement', [
-        'name', 'code', 'shortName', 'description', 'formName', 'domainType', 'type', 'numberType', 'textType', 'aggregationOperator',
-        'zeroIsSignificant', 'url', 'categoryCombo', 'optionSet', 'commentOptionSet', 'legendSet', 'aggregationLevels', 'data']],
-    ['dataElementGroupSet', ['name', 'code', 'description', 'compulsory', 'dataDimension']],
-    ['category', ['name', 'code', 'dataDimension', 'dataDimensionType', 'categoryOptions']],
+        'name', 'shortName', 'code', 'description', 'formName', 'domainType', 'valueType', 'aggregationType',
+        'zeroIsSignificant', 'url', 'categoryCombo', 'optionSet', 'commentOptionSet', 'legendSet', 'aggregationLevels']],
+    ['dataElementGroupSet', ['name', 'shortName', 'code', 'description', 'compulsory', 'dataDimension']],
+    ['category', ['name', 'shortName', 'code', 'dataDimension', 'dataDimensionType', 'categoryOptions']],
     ['categoryCombo', ['name', 'code', 'dimensionType', 'skipTotal', 'categories']],
     ['categoryOptionGroupSet', ['name', 'description', 'dataDimension', 'categoryOptionGroups']],
     ['indicator', ['name', 'shortName', 'code', 'description', 'annualized', 'decimals', 'indicatorType', 'legendSet', 'url']],

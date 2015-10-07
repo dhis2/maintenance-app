@@ -1,5 +1,8 @@
 import {SELECT, MULTISELECT} from 'd2-ui-basicfields/fields';
-import {getInstance as getD2} from 'd2';
+import {config, getInstance as getD2} from 'd2';
+
+// TODO: Perhaps these translations should be generated somehow
+config.i18n.strings.add('value_type');
 
 const organisationUnitLevelsPromise = getD2()
     .then(d2 => d2.models.organisationUnitLevel.list());
@@ -57,5 +60,14 @@ export default new Map([
         toModelTransformer(object) {
             return parseInt(object.id, 10);
         },
+    }],
+    ['valueType', {
+        required: true,
+    }],
+    ['aggregationType', {
+        required: true,
+    }],
+    ['domainType', {
+        required: true,
     }],
 ]);

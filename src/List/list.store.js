@@ -1,6 +1,5 @@
 import {getInstance as getD2} from 'd2';
 import {Subject, Observable} from 'rx';
-
 import Store from 'd2-flux/store/Store';
 
 export default Store.create({
