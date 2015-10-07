@@ -4,6 +4,7 @@ import Action from 'd2-flux/action/Action';
 import router from './router';
 import {init, config, getUserSettings, getManifest} from 'd2';
 import log from 'loglevel';
+import LoadingMask from './loading-mask/LoadingMask.component';
 
 const routeActions = Action.createActionsFromNames(['transition']);
 
@@ -15,11 +16,13 @@ function configI18n({uiLocale}) {
 }
 
 function startApp() {
-    router.run((Root) => {
+    router.run(Root => {
         React.render(<Root/>, document.getElementById('app'));
         routeActions.transition(Router.HashLocation.getCurrentPath());
     });
 }
+
+React.render(<LoadingMask />, document.getElementById('app'));
 
 getManifest(`./manifest.webapp`)
     .then(manifest => {

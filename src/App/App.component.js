@@ -9,6 +9,7 @@ import {getInstance} from 'd2';
 import AppWithD2 from 'd2-ui/app/AppWithD2.component';
 import log from 'loglevel';
 import appTheme from './app.theme';
+import LoadingMask from '../loading-mask/LoadingMask.component';
 
 log.setLevel(log.levels.INFO);
 
@@ -35,7 +36,7 @@ class App extends AppWithD2 {
         const classList = classes('app');
 
         if (!this.state.d2) {
-            return (<div>App loading...</div>);
+            return (<LoadingMask />);
         }
 
         return (
