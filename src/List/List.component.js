@@ -41,6 +41,16 @@ function executeLoadListAction(modelType) {
     return listActions.loadList(modelType);
 }
 
+function calculatePageValue(pager) {
+    const pageSize = 50; // TODO: Make the page size dynamic
+    const {total, pageCount, page} = pager;
+    const pageCalculationValue = total - (total - ((pageCount - (pageCount - page)) * pageSize));
+    const startItem = 1 + pageCalculationValue - pageSize;
+    const endItem = pageCalculationValue;
+
+    return `${startItem} - ${endItem > total ? total : endItem}`;
+}
+
 const List = React.createClass({
     propTypes: {
         params: React.PropTypes.shape({
@@ -118,7 +128,7 @@ const List = React.createClass({
     },
 
     render() {
-        const currentlyShown = `${(this.state.dataRows.length * (this.state.pager.page - 1))} - ${this.state.dataRows.length * this.state.pager.page}`;
+        const currentlyShown = calculatePageValue(this.state.pager);
 
         const paginationProps = {
             hasNextPage: () => Boolean(this.state.pager.hasNextPage) && this.state.pager.hasNextPage(),
