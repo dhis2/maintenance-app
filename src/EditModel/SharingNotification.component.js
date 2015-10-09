@@ -1,6 +1,6 @@
 import React from 'react';
-import Auth from 'd2-ui/auth/Auth.mixin';
-import Translate from 'd2-ui/i18n/Translate.mixin';
+import Auth from 'd2-ui/lib/auth/Auth.mixin';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import {config} from 'd2';
 import FontIcon from 'material-ui/lib/font-icon';
 import Paper from 'material-ui/lib/paper';
@@ -32,14 +32,14 @@ const SharingNotification = React.createClass({
 
         if (createPublic) {
             toRender = (
-                <Paper style={notificationStyle}>
+                <Paper style={notificationStyle} zDepth={0}>
                     <FontIcon className="material-icons">lock_open</FontIcon><span style={notificationTextStyle}>{this.getTranslation('object_will_created_public')}</span>
                 </Paper>
             );
         } else {
             if (createPrivate) {
                 toRender = (
-                    <Paper style={notificationStyle}>
+                    <Paper style={notificationStyle} zDepth={0}>
                         <FontIcon className="material-icons">lock</FontIcon><span style={notificationTextStyle}>{this.getTranslation('object_will_created_private')}</span>
                     </Paper>
                 );

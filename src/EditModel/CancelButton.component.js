@@ -1,6 +1,6 @@
 import React from 'react';
 import RaisedButton from 'material-ui/lib/raised-button';
-import Translate from 'd2-ui/i18n/Translate.mixin';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import {config} from 'd2';
 
 config.i18n.strings.add('cancel');

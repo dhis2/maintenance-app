@@ -2,7 +2,7 @@ import React from 'react';
 import {Navigation} from 'react-router';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import FontIcon from 'material-ui/lib/font-icon';
-import Auth from 'd2-ui/auth/Auth.mixin';
+import Auth from 'd2-ui/lib/auth/Auth.mixin';
 
 const ListActionBar = React.createClass({
     propTypes: {

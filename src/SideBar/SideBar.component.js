@@ -8,9 +8,7 @@ import TextField from 'material-ui/lib/text-field';
 const SideBar = React.createClass({
     propTypes: {
         filterChildren: React.PropTypes.func,
-        items: React.PropTypes.shape({
-            map: React.PropTypes.func.isRequired,
-        }).isRequired,
+        items: React.PropTypes.array.isRequired,
         title: React.PropTypes.string.isRequired,
         searchHint: React.PropTypes.string.isRequired,
     },
@@ -54,14 +52,14 @@ const SideBar = React.createClass({
 
     render() {
         this.filteredChildren = this.props.items
-            .map(item => {
+            .map((item, index) => {
                 if (this.state.searchString && this.props.filterChildren) {
                     // Do not render children that do not comply with the filter
                     if (!this.props.filterChildren(this.state.searchString, item.primaryText)) {
                         return null;
                     }
                 }
-                return (<ListItem {...item} />);
+                return (<ListItem key={`${item.primaryText}-${index}`} {...item} />);
             });
 
         return (

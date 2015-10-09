@@ -5,7 +5,8 @@
 @import '../node_modules/d2-ui-pagination/css/Pagination';
 @import '../node_modules/d2-ui-basicfields/scss/BasicFields';
 @import '../node_modules/d2-ui-detailsbox/css/DetailsBox';
-@import '../node_modules/d2-ui/css/IndicatorExpressionManager';
+@import '../node_modules/d2-ui/lib/css/IndicatorExpressionManager';
+@import '../node_modules/d2-ui/lib/css/HeaderBar';
 
 // Other imports
 @import 'susy';

@@ -16,6 +16,7 @@ import CancelButton from './CancelButton.component';
 import Paper from 'material-ui/lib/paper';
 import {isString} from 'd2-utils';
 import SharingNotification from './SharingNotification.component';
+import FormButtons from './FormButtons.component';
 
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default class EditModel extends React.Component {
@@ -72,6 +73,9 @@ export default class EditModel extends React.Component {
         const formPaperStyle = {
             width: '80%',
             margin: '0 auto 2rem',
+        };
+
+        const innerFormPaperStyle = {
             padding: '2rem 5rem 4rem',
         };
 
@@ -86,14 +90,16 @@ export default class EditModel extends React.Component {
 
             return (
                 <Paper style={formPaperStyle}>
-                    <FormForModel d2={this.state.d2} model={this.state.modelToEdit} name={'ObjectEditForm'} formFieldsManager={this.state.formFieldsManager}>
+                    <FormForModel d2={this.state.d2} model={this.state.modelToEdit} name={'ObjectEditForm'} formFieldsManager={this.state.formFieldsManager} formChildStyle={innerFormPaperStyle}>
 
                         <AttributeFields model={this.state.modelToEdit} />
 
                         {this.extraFieldsForModelType()}
 
-                        <SaveButton style={saveButtonStyle} onClick={this.saveAction.bind(this)} />
-                        <CancelButton onClick={this.closeAction.bind(this)} />
+                        <FormButtons>
+                            <SaveButton style={saveButtonStyle} onClick={this.saveAction.bind(this)} />
+                            <CancelButton onClick={this.closeAction.bind(this)} />
+                        </FormButtons>
                     </FormForModel>
                 </Paper>
             );

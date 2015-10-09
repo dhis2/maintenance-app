@@ -1,19 +1,17 @@
 import React from 'react';
 import classes from 'classnames';
 import {RouteHandler} from 'react-router';
-import HeaderBar from '../HeaderBar/HeaderBar.component';
+import HeaderBar from 'd2-ui/lib/header-bar/HeaderBar.component';
 import MainContent from '../MainContent/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
 import {getInstance} from 'd2';
-import AppWithD2 from 'd2-ui/app/AppWithD2.component';
+import AppWithD2 from 'd2-ui/lib/app/AppWithD2.component';
 import log from 'loglevel';
 import appTheme from './app.theme';
 import LoadingMask from '../loading-mask/LoadingMask.component';
 
 log.setLevel(log.levels.INFO);
-
-const ThemeManager = require('material-ui/lib/styles/theme-manager');
 
 // Needed for onTouchTap
 // Can go away when react 1.0 release
@@ -28,7 +26,7 @@ class App extends AppWithD2 {
 
     getChildContext() {
         return Object.assign({}, super.getChildContext(), {
-            muiTheme: ThemeManager.getMuiTheme(appTheme),
+            muiTheme: appTheme,
         });
     }
 

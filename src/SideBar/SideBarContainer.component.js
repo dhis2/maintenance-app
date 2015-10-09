@@ -3,7 +3,7 @@ import {State, Navigation} from 'react-router';
 import sideBarItemsStore from './sideBarItems.store';
 import SideBar from './SideBar.component';
 import {config} from 'd2';
-import Translate from 'd2-ui/i18n/Translate.mixin';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import {camelCaseToUnderscores} from 'd2-utils';
 
 config.i18n.strings.add('maintenance');

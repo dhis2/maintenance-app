@@ -8,10 +8,10 @@ import RaisedButton from 'material-ui/lib/raised-button';
 
 // Indicator expression manager
 import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerContainer.component';
-import dataElementOperandStore from 'd2-ui/indicator-expression-manager/dataElementOperand.store';
-import dataElementOperandSelectorActions from 'd2-ui/indicator-expression-manager/dataElementOperandSelector.actions';
+import dataElementOperandStore from 'd2-ui/lib/indicator-expression-manager/dataElementOperand.store';
+import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
 import {Observable} from 'rx';
-import Translate from 'd2-ui/i18n/Translate.mixin';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 const createFakePager = response => {
     // Fake the modelCollection since dataElementOperands do not have a valid uid

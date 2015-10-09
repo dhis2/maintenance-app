@@ -3,8 +3,8 @@ import {Navigation} from 'react-router';
 import classes from 'classnames';
 import log from 'loglevel';
 import {isIterable} from 'd2-utils';
-import DataTable from 'd2-ui/data-table/DataTable.component';
-import Pagination from 'd2-ui/pagination/Pagination.component';
+import DataTable from 'd2-ui/lib/data-table/DataTable.component';
+import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import DetailsBox from 'd2-ui-detailsbox/DetailsBox.component';
 import Sticky from 'react-sticky';
 import contextActions from './ContextActions';
@@ -14,12 +14,12 @@ import listActions from './list.actions';
 import ObserverRegistry from '../utils/ObserverRegistry.mixin';
 import Paper from 'material-ui/lib/paper';
 import {config} from 'd2';
-import Translate from 'd2-ui/i18n/Translate.mixin';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';
 import LoadingStatus from './LoadingStatus.component';
 import {camelCaseToUnderscores} from 'd2-utils';
-import Auth from 'd2-ui/auth/Auth.mixin';
+import Auth from 'd2-ui/lib/auth/Auth.mixin';
 
 config.i18n.strings.add('management');
 
@@ -161,7 +161,7 @@ const List = React.createClass({
                 <ListActionBar modelType={this.props.params.modelType} />
                 <Pagination {...paginationProps} />
                 <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
-                    <DataTable rows={this.state.dataRows} columns={['name']} contextMenuActions={availableActions} contextMenuIcons={{clone: 'content_copy'}} />
+                    <DataTable rows={this.state.dataRows} columns={['name', 'code', 'description']} contextMenuActions={availableActions} contextMenuIcons={{clone: 'content_copy'}} />
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
                 <div className={classes('details-box-wrap', {'show-as-column': !!this.state.detailsObject})}>
