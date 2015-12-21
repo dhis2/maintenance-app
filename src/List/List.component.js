@@ -13,7 +13,7 @@ import listStore from './list.store';
 import listActions from './list.actions';
 import ObserverRegistry from '../utils/ObserverRegistry.mixin';
 import Paper from 'material-ui/lib/paper';
-import {config} from 'd2';
+import {config} from 'd2/lib/d2';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';
@@ -62,8 +62,6 @@ const List = React.createClass({
 
     statics: {
         willTransitionTo(transition, params, query, callback) {
-            console.log('Loading a list');
-
             executeLoadListAction(params.modelType)
                 .subscribe(
                 (message) => { console.info(message); callback(); },
@@ -71,7 +69,6 @@ const List = React.createClass({
                     if (/^.+s$/.test(params.modelType)) {
                         const nonPluralAttempt = params.modelType.substring(0, params.modelType.length - 1);
                         log.warn(`Could not find requested model type '${params.modelType}' attempting to redirect to '${nonPluralAttempt}'`);
-                        console.log(this);
                         transition.redirect('list', {modelType: nonPluralAttempt});
                         callback();
                     } else {
@@ -178,7 +175,6 @@ const List = React.createClass({
     searchListByName(searchObserver) {
         const searchListByNameDisposable = searchObserver
             .subscribe((value) => {
-                console.log('Starting search');
                 this.setState({
                     isLoading: true,
                 });

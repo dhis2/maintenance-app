@@ -1,13 +1,14 @@
-import React from 'react/addons';
+import React from 'react';
 import Router from 'react-router';
-import FormForModel from 'd2-ui-basicfields/FormForModel.component';
+import FormForModel from '../forms/FormForModel.component';
 import fieldOverrides from '../config/field-overrides/index';
 import fieldOrderNames from '../config/field-config/field-order';
 import headerFieldsNames from '../config/field-config/header-fields';
-import FormFieldsForModel from 'd2-ui-basicfields/FormFieldsForModel';
-import FormFieldsManager from 'd2-ui-basicfields/FormFieldsManager';
-import AttributeFields from 'd2-ui-basicfields/AttributeFields.component';
-import {getInstance as getD2} from 'd2';
+import disabledOnEdit from '../config/disabled-on-edit';
+import FormFieldsForModel from '../forms/FormFieldsForModel';
+import FormFieldsManager from '../forms/FormFieldsManager';
+// import AttributeFields from '../BasicFields/AttributeFields.component';
+import {getInstance as getD2} from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
@@ -17,11 +18,16 @@ import Paper from 'material-ui/lib/paper';
 import {isString} from 'd2-utils';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
+import Form from 'd2-ui/lib/forms/Form.component';
+import log from 'loglevel';
+import FormHeading from './FormHeading';
+import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
 
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default class EditModel extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             modelToEdit: undefined,
             isLoading: true,
@@ -44,16 +50,21 @@ export default class EditModel extends React.Component {
             this.disposable = modelToEditStore
                 .subscribe((modelToEdit) => {
                     this.setState({
+                        fieldConfigs: formFieldsManager.getFormFieldsForModel(modelToEdit)
+                            .map(fieldConfig => {
+                                if (this.props.modelId !== 'add' && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
+                                    fieldConfig.fieldOptions.disabled = true;
+                                }
+                                return fieldConfig;
+                            }),
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
                 }, (errorMessage) => {
-                    console.log(errorMessage);
                     snackActions.show({message: errorMessage});
                 });
 
             this.setState({
-                d2: d2,
                 formFieldsManager: formFieldsManager,
             });
         });
@@ -72,16 +83,16 @@ export default class EditModel extends React.Component {
     render() {
         const formPaperStyle = {
             width: '80%',
-            margin: '0 auto 2rem',
-        };
-
-        const innerFormPaperStyle = {
+            margin: '3rem auto 2rem',
             padding: '2rem 5rem 4rem',
         };
 
         const renderForm = () => {
-            if (!this.state.d2) {
-                return undefined;
+            if (this.state.isLoading) {
+
+                return (
+                    <CircularProgress mode="indeterminate" />
+                );
             }
 
             const saveButtonStyle = {
@@ -90,17 +101,13 @@ export default class EditModel extends React.Component {
 
             return (
                 <Paper style={formPaperStyle}>
-                    <FormForModel d2={this.state.d2} model={this.state.modelToEdit} name={'ObjectEditForm'} formFieldsManager={this.state.formFieldsManager} formChildStyle={innerFormPaperStyle}>
-
-                        <AttributeFields model={this.state.modelToEdit} />
-
-                        {this.extraFieldsForModelType()}
-
+                    <FormHeading text={camelCaseToUnderscores(this.props.modelType)} />
+                    <Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm.bind(this)}>
                         <FormButtons>
-                            <SaveButton style={saveButtonStyle} onClick={this.saveAction.bind(this)} />
-                            <CancelButton onClick={this.closeAction.bind(this)} />
+                            <SaveButton style={saveButtonStyle} onClick={this.saveAction.bind(this)}/>
+                            <CancelButton onClick={this.closeAction.bind(this)}/>
                         </FormButtons>
-                    </FormForModel>
+                    </Form>
                 </Paper>
             );
         };
@@ -117,6 +124,10 @@ export default class EditModel extends React.Component {
         );
     }
 
+    _updateForm(fieldName, value) {
+        objectActions.update({fieldName, value});
+    }
+
     saveAction(event) {
         event.preventDefault();
 
@@ -125,11 +136,12 @@ export default class EditModel extends React.Component {
             (message) => snackActions.show({message, action: 'Ok!'}),
             (errorMessage) => {
                 if (isString(errorMessage)) {
+                    log.debug(errorMessage.messages);
                     snackActions.show({message: errorMessage});
                 }
 
                 if (errorMessage.messages && errorMessage.messages.length > 0) {
-                    console.log(errorMessage.messages);
+                    log.debug(errorMessage.messages);
                     snackActions.show({message: `${errorMessage.messages[0].property}: ${errorMessage.messages[0].message} `});
                 }
             }

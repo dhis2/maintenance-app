@@ -1,5 +1,5 @@
-import {SELECT, MULTISELECT} from 'd2-ui-basicfields/fields';
-import {config, getInstance as getD2} from 'd2';
+import {SELECT, MULTISELECT} from '../../BasicFields//fields';
+import {config, getInstance as getD2} from 'd2/lib/d2';
 
 // TODO: Perhaps these translations should be generated somehow
 config.i18n.strings.add('value_type');

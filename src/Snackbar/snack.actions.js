@@ -1,6 +1,6 @@
 import Action from 'd2-flux/action/Action';
 import snackStore from './snack.store';
-import {config, getInstance as getD2} from 'd2';
+import {config, getInstance as getD2} from 'd2/lib/d2';
 
 const snackActions = Action.createActionsFromNames(['show', 'hide']);
 

@@ -1,4 +1,4 @@
-import {getInstance as getD2} from 'd2';
+import {getInstance as getD2} from 'd2/lib/d2';
 import {Subject, Observable} from 'rx';
 import Store from 'd2-flux/store/Store';
 
@@ -46,9 +46,13 @@ export default Store.create({
                 error(modelType + ' is not a valid schema name');
             }
 
-            const listSearchPromise = d2.models[modelType]
-                .filter().on('name').like(searchString)
-                .list({fields: 'name,id,lastUpdated'});
+            let modelDefinition = d2.models[modelType];
+
+            if (searchString) {
+                modelDefinition = d2.models[modelType].filter().on('name').like(searchString);
+            }
+
+            const listSearchPromise = modelDefinition.list({fields: 'name,id,code,description'});
 
             this.listSourceSubject.onNext(Observable.fromPromise(listSearchPromise));
 

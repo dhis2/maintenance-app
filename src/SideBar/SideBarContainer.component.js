@@ -2,7 +2,7 @@ import React from 'react';
 import {State, Navigation} from 'react-router';
 import sideBarItemsStore from './sideBarItems.store';
 import SideBar from './SideBar.component';
-import {config} from 'd2';
+import {config} from 'd2/lib/d2';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import {camelCaseToUnderscores} from 'd2-utils';
 
@@ -32,8 +32,6 @@ const SideBarContainer = React.createClass({
             .map(listItem => {
                 return {
                     primaryText: this.getTranslation(camelCaseToUnderscores(listItem)),
-                    secondaryText: this.getTranslation(`intro_${camelCaseToUnderscores(listItem)}`),
-                    secondaryTextLines: 2,
                     modelType: listItem,
                     isActive: this.isActive('list', {modelType: listItem}),
                     onClick: function onClick() {
@@ -43,8 +41,7 @@ const SideBarContainer = React.createClass({
             });
 
         return (
-            <SideBar title={this.getTranslation('maintenance')}
-                     searchHint={`${this.getTranslation('filter_menu_items_by_name')} ${this.getTranslation('press_enter_to_go_to_first')}`}
+            <SideBar searchHint={this.getTranslation('search')}
                      filterChildren={this.filterChildren}
                      items={items}
                 />

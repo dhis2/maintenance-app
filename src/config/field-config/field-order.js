@@ -2,9 +2,11 @@ const fieldOrderByName = new Map([
     ['dataElement', [
         'name', 'shortName', 'code', 'description', 'formName', 'domainType', 'valueType', 'aggregationType',
         'zeroIsSignificant', 'url', 'categoryCombo', 'optionSet', 'commentOptionSet', 'legendSet', 'aggregationLevels']],
-    ['dataElementGroupSet', ['name', 'shortName', 'code', 'description', 'compulsory', 'dataDimension']],
+    ['dataElementGroup', ['name', 'shortName', 'code', 'dataElements']],
+    ['dataElementGroupSet', ['name', 'shortName', 'code', 'description', 'compulsory', 'dataDimension',  'dataElementGroups']],
     ['category', ['name', 'shortName', 'code', 'dataDimension', 'dataDimensionType', 'categoryOptions']],
     ['categoryCombo', ['name', 'code', 'dimensionType', 'skipTotal', 'categories']],
+    ['categoryOptionGroup', ['name', 'shortName', 'code', 'dataDimensionType', 'categoryOptions']],
     ['categoryOptionGroupSet', ['name', 'description', 'dataDimension', 'categoryOptionGroups']],
     ['indicator', ['name', 'shortName', 'code', 'description', 'annualized', 'decimals', 'indicatorType', 'legendSet', 'url']],
     ['indicatorGroup', ['name', 'indicators']],

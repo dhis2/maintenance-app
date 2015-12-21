@@ -3,7 +3,7 @@ import EditModel from './EditModel.component';
 import DataElementEditModel from './model-specific-components/DataElementEditModel.component';
 import IndicatorEditModel from './model-specific-components/IndicatorEditModel.component';
 import objectActions from './objectActions';
-import {config, getInstance as getD2} from 'd2';
+import {config, getInstance as getD2} from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import snackActions from '../Snackbar/snack.actions';
 

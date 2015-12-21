@@ -1,9 +1,9 @@
 import React from 'react';
 import EditModel from '../EditModel.component';
-import {getInstance as getD2} from 'd2';
-import Pager from 'd2/pager/Pager';
+import {getInstance as getD2} from 'd2/lib/d2';
+import Pager from 'd2/lib/pager/Pager';
 import Dialog from 'material-ui/lib/dialog';
-import FormUpdateContext from 'd2-ui-basicfields/FormUpdateContext.mixin';
+import FormUpdateContext from '../../BasicFields/FormUpdateContext.mixin';
 import RaisedButton from 'material-ui/lib/raised-button';
 
 // Indicator expression manager

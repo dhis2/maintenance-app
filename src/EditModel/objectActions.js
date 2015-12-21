@@ -2,8 +2,11 @@ import Action from 'd2-flux/action/Action';
 import modelToEditStore from './modelToEditStore';
 import {isFunction} from 'd2-utils';
 import log from 'loglevel';
+import ModelCollectionProperty from 'd2/lib/model/ModelCollectionProperty';
 
-const objectActions = Action.createActionsFromNames(['getObjectOfTypeById', 'getObjectOfTypeByIdAndClone', 'saveObject', 'afterSave', 'saveAndRedirectToList']);
+const isUndefinedOrNullOrNaN = (value) => (value === undefined) || (value === null) || Number.isNaN(value);
+
+const objectActions = Action.createActionsFromNames(['getObjectOfTypeById', 'getObjectOfTypeByIdAndClone', 'saveObject', 'afterSave', 'saveAndRedirectToList', 'update']);
 
 objectActions.getObjectOfTypeById
     .subscribe(({data, complete, error}) => {
@@ -40,6 +43,28 @@ objectActions.saveObject.subscribe(action => {
     return modelToEditStore
         .save(action.data.id)
         .subscribe(successHandler, errorHandler);
+});
+
+objectActions.update.subscribe(action => {
+    const {fieldName, value} = action.data;
+    const modelToEdit = modelToEditStore.getState();
+
+    if (modelToEdit) {
+        if (!(modelToEdit[fieldName] && modelToEdit[fieldName].constructor && modelToEdit[fieldName].constructor.name === 'ModelCollectionProperty')) {
+            log.debug(`Change ${fieldName} to ${value}`);
+            modelToEdit[fieldName] = value;
+            log.debug(`Value is now: ${modelToEdit.dataValues[fieldName]}`);
+        } else {
+            log.debug('Not updating anything');
+        }
+
+        modelToEditStore.setState(modelToEdit);
+
+        action.complete();
+    } else {
+        log.error(`modelToEdit does not exist`);
+        action.error();
+    }
 });
 
 export default objectActions;

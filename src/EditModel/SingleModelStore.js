@@ -1,5 +1,5 @@
 import Store from 'd2-flux/store/Store';
-import {getInstance as getD2}  from 'd2';
+import {getInstance as getD2}  from 'd2/lib/d2';
 import {Observable} from 'rx';
 
 function loadModelFromD2(objectType, objectId) {
@@ -31,7 +31,7 @@ const singleModelStoreConfig = {
     },
 
     save() {
-        const importResultPromise = this.state.save()
+        const importResultPromise = this.state.save(true)
             .then(response => {
                 if (response.response.importCount.imported === 1 || response.response.importCount.updated === 1) {
                     return response;

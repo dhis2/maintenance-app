@@ -23,9 +23,10 @@ $sidebar-border-style: 1px solid;
 }
 
 html {
+  background: #ffffff;
+  font-family: 'Roboto', sans-serif;
   font-size: 14px;
 }
-
 //Components
 @import './SideBar/sidebar';
 

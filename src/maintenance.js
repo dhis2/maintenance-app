@@ -2,9 +2,12 @@ import React from 'react';
 import Router from 'react-router';
 import Action from 'd2-flux/action/Action';
 import router from './router';
-import {init, config, getUserSettings, getManifest} from 'd2';
+import {init, config, getUserSettings, getManifest} from 'd2/lib/d2';
 import log from 'loglevel';
 import LoadingMask from './loading-mask/LoadingMask.component';
+import dhis2 from 'd2-ui/lib/header-bar/dhis2';
+
+log.setLevel(log.levels.DEBUG);
 
 const routeActions = Action.createActionsFromNames(['transition']);
 
@@ -27,7 +30,13 @@ React.render(<LoadingMask />, document.getElementById('app'));
 getManifest(`./manifest.webapp`)
     .then(manifest => {
         config.baseUrl = manifest.getBaseUrl();
-        config.baseUrl = 'http://localhost:8080/dhis/api';
+        dhis2.settings.baseUrl = manifest.getBaseUrl();
+
+        // Set the baseUrl to localhost if we are in dev mode
+        if (process.env.NODE_ENV !== 'production') {
+            config.baseUrl = 'http://localhost:8080/dhis/api';
+            dhis2.settings.baseUrl = 'http://localhost:8080/dhis';
+        }
     })
     .then(getUserSettings)
     .then(configI18n)

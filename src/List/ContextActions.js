@@ -1,8 +1,11 @@
 import Router from 'react-router';
 import Action from 'd2-flux/action/Action';
 import detailsStore from './details.store';
-import {config, getInstance as getD2} from 'd2';
+import {config, getInstance as getD2} from 'd2/lib/d2';
 import {camelCaseToUnderscores} from 'd2-utils';
+import snackActions from '../Snackbar/snack.actions';
+import log from 'loglevel';
+import listStore from './list.store';
 
 config.i18n.strings.add('edit');
 config.i18n.strings.add('clone');
@@ -39,10 +42,25 @@ contextActions.delete
                     .then(() => {
                         model.delete()
                             .then(() => {
-                                console.info('Deleted!');
+
+                                //Remove deleted item from the listStore
+                                if (listStore.getState() && listStore.getState().list) {
+                                    listStore.setState({
+                                        pager: listStore.getState().pager,
+                                        list: listStore.getState().list
+                                            .filter(modelToCheck => modelToCheck.id !== model.id)
+                                    });
+                                }
+
+                                snackActions.show({
+                                    message: `${model.name} ${d2.i18n.getTranslation('was_deleted')}`,
+                                });
                             })
                             .catch(response => {
-                                console.warn(response.responseJSON.message);
+                                log.warn(response);
+                                snackActions.show({
+                                    message: `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
+                                });
                             });
                     });
             });

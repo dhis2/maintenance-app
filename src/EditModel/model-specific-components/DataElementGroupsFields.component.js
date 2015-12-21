@@ -1,7 +1,7 @@
-import {getInstance as getD2}  from 'd2';
+import {getInstance as getD2}  from 'd2/lib/d2';
 import React from 'react';
 import modelToEditStore from '../modelToEditStore';
-import FormFields from 'd2-ui-basicfields/FormFields.component';
+import FormFields from '../../BasicFields/FormFields.component';
 import ReactSelect from 'react-select';
 
 const rejectWhenGroupSetIs = (dataElementGroupSetId) => (dataElementGroup) => dataElementGroup.dataElementGroupSet && dataElementGroup.dataElementGroupSet.id !== dataElementGroupSetId;

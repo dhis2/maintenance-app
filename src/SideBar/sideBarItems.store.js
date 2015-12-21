@@ -1,5 +1,5 @@
 import Store from 'd2-flux/store/Store';
-import {getInstance as getD2} from 'd2';
+import {getInstance as getD2} from 'd2/lib/d2';
 
 const sideBarItemsStore = Store.create();
 const isInPredefinedList = (name) => {

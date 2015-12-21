@@ -2,7 +2,7 @@ import React from 'react';
 import ObservedEvents from '../utils/ObservedEvents.mixin';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/lib/text-field';
-import {config} from 'd2';
+import {config} from 'd2/lib/d2';
 
 config.i18n.strings.add('search_by_name');
 config.i18n.strings.add('press_enter_to_search');

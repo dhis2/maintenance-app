@@ -3,9 +3,18 @@ $sidebar--border-color: #E1E1E1;
 $sidebar--border-style: 1px solid;
 $sidebar--item--text-color: #303030;
 $sidebar--item--hover-color: #EEE;
+$left-bar-width: 256px;
 
 .sidebar {
-  padding: 1rem;
+  width: $left-bar-width;
+  float: left;
+  position: fixed;
+  margin-top: 16px;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  padding-top: 2rem;
+  overflow-y: auto;
 
   ul {
     list-style: none;
@@ -23,7 +32,6 @@ $sidebar--item--hover-color: #EEE;
   a {
     color: $sidebar--item--text-color;
     display: block;
-    padding: 1rem;
     text-decoration: none;
   }
 }

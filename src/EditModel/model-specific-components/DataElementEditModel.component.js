@@ -1,6 +1,6 @@
 import React from 'react';
 import EditModel from '../EditModel.component';
-import {getInstance as getD2}  from 'd2';
+import {getInstance as getD2}  from 'd2/lib/d2';
 import modelToEditStore from '../modelToEditStore';
 import objectActions from '../objectActions';
 import DataElementGroupsFields from './DataElementGroupsFields.component';

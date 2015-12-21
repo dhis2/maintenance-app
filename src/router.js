@@ -20,4 +20,4 @@ const router = Router.create({
     location: Router.HashLocation,
 });
 
-module.exports = router;
+export default router;

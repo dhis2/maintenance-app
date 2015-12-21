@@ -24,6 +24,13 @@ module.exports = {
             },
         ],
     },
+    resolve: {
+        alias: {
+            react: path.resolve('./node_modules/react'),
+            'material-ui': path.resolve('./node_modules/material-ui'),
+            'd2-flux': path.resolve('./node_modules/d2-flux'),
+        },
+    },
     plugins: [
         new webpack.optimize.DedupePlugin(),
         //new webpack.optimize.UglifyJsPlugin({
@@ -33,6 +40,11 @@ module.exports = {
         //    },
         //}),
         //new webpack.optimize.OccurenceOrderPlugin(),
+        //new webpack.ProvidePlugin({
+        //    $: "jquery",
+        //    jQuery: "jquery",
+        //    "window.jQuery": "jquery"
+        //}),
     ],
     devServer: {
         contentBase: './src/',

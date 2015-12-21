@@ -1,10 +1,10 @@
 import React from 'react';
 import Action from 'd2-flux/action/Action';
-import FormUpdateContext from 'd2-ui-basicfields/FormUpdateContext.mixin';
+import FormUpdateContext from '../../BasicFields/FormUpdateContext.mixin';
 import IndicatorExpressionManager from 'd2-ui/lib/indicator-expression-manager/IndicatorExpressionManager.component';
 import indicatorExpressionStatusStore from 'd2-ui/lib/indicator-expression-manager/indicatorExpressionStatus.store';
 import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
-import {getInstance as getD2} from 'd2';
+import {getInstance as getD2} from 'd2/lib/d2';
 import {Observable} from 'rx';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 

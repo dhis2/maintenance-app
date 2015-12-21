@@ -4,12 +4,12 @@ import ObservedEvents from '../utils/ObservedEvents.mixin';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import TextField from 'material-ui/lib/text-field';
+import SideBarItem from './SideBarItem.component';
 
 const SideBar = React.createClass({
     propTypes: {
         filterChildren: React.PropTypes.func,
         items: React.PropTypes.array.isRequired,
-        title: React.PropTypes.string.isRequired,
         searchHint: React.PropTypes.string.isRequired,
     },
 
@@ -39,10 +39,7 @@ const SideBar = React.createClass({
             .map(event => event && event.target && event.target.value ? event.target.value : '')
             .subscribe(
                 searchString => {
-                    console.log(searchString);
-                    this.setState({
-                        searchString: searchString,
-                    });
+                    this.setState({searchString: searchString});
                 },
                 error => {
                     log.error('Could not set the search string', error);
@@ -59,16 +56,18 @@ const SideBar = React.createClass({
                         return null;
                     }
                 }
-                return (<ListItem key={`${item.primaryText}-${index}`} {...item} />);
+                return (<SideBarItem key={`${item.primaryText}-${index}`} {...item} />);
             });
 
         return (
             <div className="sidebar">
-                <h3>{this.props.title}</h3>
-                <TextField hintText={this.props.searchHint}
-                           type="search"
-                           style={{width: '100%'}}
-                           onKeyUp={this.createEventObserver('search')} />
+                <div style={{padding: '1rem 1rem 0', position: 'relative'}}>
+                    <TextField hintText={this.props.searchHint} style={{width: '100%'}}
+                               onKeyUp={this.createEventObserver('search')}
+                               ref="searchBox"
+                    />
+                    {this.state && this.state.showCloseButton ? <FontIcon style={closeButtonStyle} className="material-icons" onClick={this.clearSearchBox}>clear</FontIcon> : null}
+                </div>
                 <List style={{backgroundColor: 'inherit'}}>
                     {this.filteredChildren}
                 </List>
@@ -78,7 +77,11 @@ const SideBar = React.createClass({
 
     selectTheFirst() {
         // TODO: This ties into the DOM, which is not really best practice. Think about a way to solve this without having to do other hacky magic.
-        React.findDOMNode(this).querySelector('a').click();
+        const firstItem = React.findDOMNode(this).querySelector('a');
+
+        if (firstItem) {
+            firstItem.click();
+        }
     },
 });
 
