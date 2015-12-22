@@ -64,20 +64,26 @@ class FormFieldsForModel {
                 .sort((left, right) => this.fieldOrder.indexOf(left.name) > this.fieldOrder.indexOf(right.name) ? 1 : -1);
 
         function getFieldClassInstance(modelValidation, modelDefinition) {
-            const overrideConfig = fieldOverrides[modelValidation.fieldName];
+            const overrideConfig = fieldOverrides[modelValidation.name];
             const isOverridden = !!overrideConfig;
             let fieldType = typeToFieldMap.get(modelValidation.type);
+
             if (isOverridden) {
                 if (overrideConfig.type) {
                     fieldType = overrideConfig.type;
                 }
 
                 Object.keys(overrideConfig)
-                    .filter(key => key !== 'type')
                     .forEach(key => {
-                        modelValidation[key] = overrideConfig[key];
+                        if (typeof modelValidation[key] === 'object') {
+                            modelValidation[key] = Object.assign({}, modelValidation[key], overrideConfig[key]);
+                        } else {
+                            modelValidation[key] = overrideConfig[key];
+                        }
                     });
             }
+
+            modelValidation.type = fieldType;
 
             return fieldTypeClasses.get(fieldType)(modelValidation, modelDefinition, this.models);
         }

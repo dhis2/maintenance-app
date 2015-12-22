@@ -1,7 +1,5 @@
 import React from 'react/addons';
 import EditModel from './EditModel.component';
-import DataElementEditModel from './model-specific-components/DataElementEditModel.component';
-import IndicatorEditModel from './model-specific-components/IndicatorEditModel.component';
 import objectActions from './objectActions';
 import {config, getInstance as getD2} from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
@@ -21,19 +19,6 @@ export class EditModelBase extends React.Component {
     }
 
     render() {
-        // Special case for dataElement forms
-        if (this.state.modelType === 'dataElement') {
-            return (
-                <DataElementEditModel modelType={this.state.modelType} modelId={this.state.modelId} />
-            );
-        }
-
-        if (this.state.modelType === 'indicator') {
-            return (
-                <IndicatorEditModel modelType={this.state.modelType} modelId={this.state.modelId} />
-            );
-        }
-
         return <EditModel modelType={this.state.modelType} modelId={this.state.modelId} />;
     }
 }

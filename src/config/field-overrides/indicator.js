@@ -1,14 +1,13 @@
+import {SELECT} from '../../forms/fields';
+
 export default new Map([
-    ['numerator', {
-        hide: () => true,
-    }],
-    ['numeratorDescription', {
-        hide: () => true,
-    }],
-    ['denominator', {
-        hide: () => true,
-    }],
-    ['denominatorDescription', {
-        hide: () => true,
+    ['decimals', {
+        type: SELECT,
+        fieldOptions: {
+            options: [0, 1, 2, 3, 4, 5],
+        },
+        beforeUpdateConverter(value) {
+            return Number(value);
+        },
     }],
 ]);

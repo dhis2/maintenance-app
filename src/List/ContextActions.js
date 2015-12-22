@@ -42,13 +42,12 @@ contextActions.delete
                     .then(() => {
                         model.delete()
                             .then(() => {
-
-                                //Remove deleted item from the listStore
+                                // Remove deleted item from the listStore
                                 if (listStore.getState() && listStore.getState().list) {
                                     listStore.setState({
                                         pager: listStore.getState().pager,
                                         list: listStore.getState().list
-                                            .filter(modelToCheck => modelToCheck.id !== model.id)
+                                            .filter(modelToCheck => modelToCheck.id !== model.id),
                                     });
                                 }
 
@@ -68,7 +67,6 @@ contextActions.delete
 
 contextActions.details
     .subscribe(({data: model}) => {
-        console.log(model);
         detailsStore.setState(model);
     });
 

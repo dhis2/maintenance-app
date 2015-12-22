@@ -1,7 +1,23 @@
 import React from 'react/addons';
 import SelectField from 'material-ui/lib/select-field';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 import MuiThemeMixin from '../mui-theme.mixin';
+
+function getOptions(options, required = false) {
+    const opts = options
+        .map((option) => {
+            return {
+                payload: option.value,
+                text: option.text,
+            };
+        });
+
+    if (!required) {
+        return [{payload: undefined, text: ''}].concat(opts);
+    }
+    return opts;
+}
 
 export default React.createClass({
     propTypes: {
@@ -12,21 +28,25 @@ export default React.createClass({
         ]),
         onFocus: React.PropTypes.func,
         onBlur: React.PropTypes.func,
+        options: React.PropTypes.array.isRequired,
+        isRequired: React.PropTypes.bool,
+        labelText: React.PropTypes.string.isRequired,
     },
 
-    mixins: [MuiThemeMixin],
+    mixins: [MuiThemeMixin, Translate],
 
     getInitialState() {
         return {
-            value: this.props.defaultValue ? this.props.defaultValue : 'null',
-            options: this.props.options
-                .map((option) => {
-                    return {
-                        payload: option.value,
-                        text: option.text,
-                    };
-                })
+            value: this.props.defaultValue ? this.props.defaultValue : '',
+            options: getOptions(this.props.options, this.props.isRequired),
         };
+    },
+
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            value: newProps.defaultValue ? newProps.defaultValue : '',
+            options: getOptions(newProps.options, newProps.isRequired),
+        });
     },
 
     render() {
@@ -36,6 +56,7 @@ export default React.createClass({
                 value={this.state.value.toString()}
                 {...other}
                 menuItems={this.state.options}
+                floatingLabelText={this.getTranslation(this.props.labelText)}
             />
         );
     },

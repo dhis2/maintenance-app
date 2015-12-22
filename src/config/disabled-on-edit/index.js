@@ -1,7 +1,13 @@
+import category from './category';
+import categoryCombo from './categoryCombo';
 import categoryOptionGroup from './categoryOptionGroup';
+import categoryOptionGroupSet from './categoryOptionGroupSet';
 
 const disabledByType = {
-    categoryOptionGroup
+    category,
+    categoryCombo,
+    categoryOptionGroup,
+    categoryOptionGroupSet,
 };
 
 export default {

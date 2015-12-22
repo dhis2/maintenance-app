@@ -1,6 +1,5 @@
 import React from 'react';
 import Action from 'd2-flux/action/Action';
-import FormUpdateContext from '../../BasicFields/FormUpdateContext.mixin';
 import IndicatorExpressionManager from 'd2-ui/lib/indicator-expression-manager/IndicatorExpressionManager.component';
 import indicatorExpressionStatusStore from 'd2-ui/lib/indicator-expression-manager/indicatorExpressionStatus.store';
 import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
@@ -33,7 +32,29 @@ const IndicatorExpressionManagerContainer = React.createClass({
         formula: React.PropTypes.string.isRequired,
     },
 
-    mixins: [FormUpdateContext, Translate],
+    mixins: [Translate],
+
+    getInitialState() {
+        return {
+            organisationUnitGroups: [],
+            constants: [],
+            programTrackedEntityAttributes: [],
+            programIndicators: [],
+            programDataElements: [],
+        };
+    },
+
+    componentDidMount() {
+        getD2()
+            .then(d2 => d2.models.organisationUnitGroup.list({paging: false, fields: 'id,displayName'}))
+            .then(collection => collection.toArray().map(model => ({value: model.id, label: model.displayName})))
+            .then(organisationUnitGroups => this.setState({organisationUnitGroups}));
+
+        getD2()
+            .then(d2 => d2.models.constant.list({paging: false, fields: 'id,displayName'}))
+            .then(collection => collection.toArray().map(model => ({value: model.id, label: model.displayName})))
+            .then(constants => this.setState({constants}));
+    },
 
     render() {
         return (
@@ -41,8 +62,8 @@ const IndicatorExpressionManagerContainer = React.createClass({
                 descriptionLabel={this.getTranslation('description')}
                 descriptionValue={this.props.description}
                 formulaValue={this.props.formula}
-                organisationUnitGroupOptions={[]}
-                constantOptions={[]}
+                organisationUnitGroupOptions={this.state.organisationUnitGroups}
+                constantOptions={this.state.constants}
                 expressionStatusActions={indicatorExpressionStatusActions}
                 expressionStatusStore={indicatorExpressionStatusStore}
                 dataElementOperandSelectorActions={dataElementOperandSelectorActions}

@@ -1,13 +1,10 @@
 import React from 'react';
 import Router from 'react-router';
-import FormForModel from '../forms/FormForModel.component';
 import fieldOverrides from '../config/field-overrides/index';
 import fieldOrderNames from '../config/field-config/field-order';
-import headerFieldsNames from '../config/field-config/header-fields';
 import disabledOnEdit from '../config/disabled-on-edit';
 import FormFieldsForModel from '../forms/FormFieldsForModel';
 import FormFieldsManager from '../forms/FormFieldsManager';
-// import AttributeFields from '../BasicFields/AttributeFields.component';
 import {getInstance as getD2} from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
@@ -22,6 +19,10 @@ import Form from 'd2-ui/lib/forms/Form.component';
 import log from 'loglevel';
 import FormHeading from './FormHeading';
 import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
+import ExtraFields from './ExtraFields';
+import AttributeFields from './AttributeFields';
+import createFormValidator from 'd2-ui/lib/forms/FormValidator';
+import CircularProgress from 'material-ui/lib/circular-progress';
 
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default class EditModel extends React.Component {
@@ -38,9 +39,7 @@ export default class EditModel extends React.Component {
         const modelType = this.props.modelType;
 
         getD2().then(d2 => {
-            // TODO: When the schema exposes the correct field configs (ENUMS) the overrides can be removed and the FormFieldManager can be instantiated by the FormForModel Component
             const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
-            formFieldsManager.setHeaderFields(headerFieldsNames.for(modelType));
             formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
 
             for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
@@ -49,14 +48,19 @@ export default class EditModel extends React.Component {
 
             this.disposable = modelToEditStore
                 .subscribe((modelToEdit) => {
-                    this.setState({
-                        fieldConfigs: formFieldsManager.getFormFieldsForModel(modelToEdit)
+                    const fieldConfigs = this.state.fieldConfigs || formFieldsManager.getFormFieldsForModel(modelToEdit)
                             .map(fieldConfig => {
                                 if (this.props.modelId !== 'add' && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
                                     fieldConfig.fieldOptions.disabled = true;
                                 }
                                 return fieldConfig;
-                            }),
+                            });
+
+                    const formValidator = this.state.formValidator || createFormValidator(fieldConfigs);
+
+                    this.setState({
+                        formValidator: formValidator,
+                        fieldConfigs: fieldConfigs,
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
@@ -89,7 +93,6 @@ export default class EditModel extends React.Component {
 
         const renderForm = () => {
             if (this.state.isLoading) {
-
                 return (
                     <CircularProgress mode="indeterminate" />
                 );
@@ -102,9 +105,11 @@ export default class EditModel extends React.Component {
             return (
                 <Paper style={formPaperStyle}>
                     <FormHeading text={camelCaseToUnderscores(this.props.modelType)} />
-                    <Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm.bind(this)}>
-                        <FormButtons>
-                            <SaveButton style={saveButtonStyle} onClick={this.saveAction.bind(this)}/>
+                    <Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm.bind(this)} formValidator={this.state.formValidator}>
+                        <AttributeFields model={this.state.modelToEdit} updateFn={objectActions.updateAttribute} registerValidator={this._registerValidator.bind(this)} />
+                        <ExtraFields modelToEdit={this.state.modelToEdit} />
+                        <FormButtons style={{paddingTop: '2rem'}}>
+                            <SaveButton style={saveButtonStyle} onClick={this.saveAction.bind(this)} />
                             <CancelButton onClick={this.closeAction.bind(this)}/>
                         </FormButtons>
                     </Form>
@@ -124,6 +129,12 @@ export default class EditModel extends React.Component {
         );
     }
 
+    _registerValidator(attributeValidator) {
+        this.setState({
+            attributeValidatorRunner: attributeValidator,
+        });
+    }
+
     _updateForm(fieldName, value) {
         objectActions.update({fieldName, value});
     }
@@ -131,9 +142,16 @@ export default class EditModel extends React.Component {
     saveAction(event) {
         event.preventDefault();
 
+        this.state.fieldConfigs
+            .forEach(v => {
+                this.state.formValidator.runFor(v.name, this.state.modelToEdit[v.name]);
+            });
+
+        this.state.attributeValidatorRunner && this.state.attributeValidatorRunner();
+
         objectActions.saveObject({id: this.props.modelId})
             .subscribe(
-            (message) => snackActions.show({message, action: 'Ok!'}),
+            (message) => snackActions.show({message, action: 'ok', translate: true}),
             (errorMessage) => {
                 if (isString(errorMessage)) {
                     log.debug(errorMessage.messages);
@@ -152,10 +170,6 @@ export default class EditModel extends React.Component {
         event.preventDefault();
 
         Router.HashLocation.push(['/list', this.props.modelType].join('/'));
-    }
-
-    extraFieldsForModelType() {
-        return undefined;
     }
 }
 EditModel.propTypes = {

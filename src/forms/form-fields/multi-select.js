@@ -5,15 +5,15 @@ import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Action from 'd2-flux/action/Action';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/lib/text-field';
-import Heading from 'd2-ui/lib/headings/Heading.component';
 import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
 import {config} from 'd2/lib/d2';
+import log from 'loglevel';
 
 config.i18n.strings.add('search_available_selected_items');
 
 export const multiSelectActions = Action.createActionsFromNames([
     'addItemsToModelCollection',
-    'removeItemsFromModelCollection'
+    'removeItemsFromModelCollection',
 ]);
 
 function unique(values) {
@@ -23,27 +23,27 @@ function unique(values) {
 function filterModelsMapOnItemIds(map, items) {
     return Array
         .from(map.values())
-        .filter(model => items.indexOf(model.id) !== -1)
+        .filter(model => items.indexOf(model.id) !== -1);
 }
 
 multiSelectActions.addItemsToModelCollection
     .subscribe(({data, complete, error}) => {
         try {
-        const [modelsToAdd, propertyName, model] = data;
+            const [modelsToAdd, propertyName, model] = data;
 
-        if (!model[propertyName]) {
-            error(`Model does not have property called '${propertyName}'`);
-        }
-
-        modelsToAdd
-            .forEach(itemToAdd => {
-                model[propertyName].add(itemToAdd);
-            });
-
-        complete();
-            } catch (e) {
-            console.error(e);
+            if (!model[propertyName]) {
+                error(`Model does not have property called '${propertyName}'`);
             }
+
+            modelsToAdd
+                .forEach(itemToAdd => {
+                    model[propertyName].add(itemToAdd);
+                });
+
+            complete();
+        } catch (e) {
+            log.error(e);
+        }
     });
 
 multiSelectActions.removeItemsFromModelCollection
@@ -63,6 +63,17 @@ multiSelectActions.removeItemsFromModelCollection
     });
 
 export default React.createClass({
+    propTypes: {
+        referenceType: React.PropTypes.string.isRequired,
+        referenceProperty: React.PropTypes.string.isRequired,
+        model: React.PropTypes.object.isRequired,
+        labelText: React.PropTypes.string.isRequired,
+        onChange: React.PropTypes.func.isRequired,
+        defaultValue: React.PropTypes.shape({
+            values: React.PropTypes.func.isRequired,
+        }).isRequired,
+    },
+
     mixins: [Translate],
 
     getInitialState() {
@@ -79,7 +90,9 @@ export default React.createClass({
     },
 
     componentWillMount() {
-        if (!this.props.referenceType) { return; }
+        if (!this.props.referenceType) {
+            return;
+        }
 
         getInstance()
             .then(this.loadAvailableItems)
@@ -87,20 +100,39 @@ export default React.createClass({
             .then(this.populateAssignedStore);
     },
 
-    loadAvailableItems(d2) {
-        if (d2.models[this.props.referenceType]) {
-            return d2.models[this.props.referenceType].list({paging: false, fields: 'displayName|rename(name),id'});
-        }
-        return Promise.reject(`${this.props.referenceType} is not a model on d2.models`);
+    render() {
+        const labelStyle = {
+            float: 'left',
+            position: 'relative',
+            display: 'block',
+            width: 'calc(100% - 60px)',
+            lineHeight: '24px',
+            color: 'rgba(0,0,0,0.3)',
+            marginTop: '1rem',
+            fontSize: 16,
+        };
+
+        return (
+            <div>
+                <label style={labelStyle}>{this.getTranslation(camelCaseToUnderscores(this.props.labelText))}</label>
+                <TextField
+                    fullWidth
+                    hintText={this.getTranslation('search_available_selected_items')}
+                    defaultValue={this.state.filterText}
+                    onChange={this._setFilterText}
+                />
+                <GroupEditor
+                    itemStore={this.state.itemStore}
+                    assignedItemStore={this.state.assignedItemStore}
+                    onAssignItems={this._assignItems}
+                    onRemoveItems={this._removeItems}
+                    height={250}
+                    filterText={this.state.filterText}
+                />
+            </div>
+        );
     },
 
-    populateItemStore(availableItems) {
-        this.state.itemStore.setState(availableItems)
-    },
-
-    populateAssignedStore() {
-        this.state.assignedItemStore.setState(Array.from(this.props.defaultValue.values()).map(value => value.id))
-    },
 
     _assignItems(items) {
         return new Promise((resolve, reject) => {
@@ -157,39 +189,20 @@ export default React.createClass({
                 value: this.props.model[this.props.referenceProperty],
             },
         });
-
     },
 
-    render() {
-        const labelStyle = {
-            float: 'left',
-            position: 'relative',
-            display: 'block',
-            width: 'calc(100% - 60px)',
-            lineHeight: '24px',
-            color: 'rgba(0,0,0,0.3)',
-            marginTop: '1rem',
-            fontSize: 16,
-        };
+    loadAvailableItems(d2) {
+        if (d2.models[this.props.referenceType]) {
+            return d2.models[this.props.referenceType].list({paging: false, fields: 'displayName|rename(name),id'});
+        }
+        return Promise.reject(`${this.props.referenceType} is not a model on d2.models`);
+    },
 
-        return (
-            <div>
-                <label style={labelStyle}>{this.getTranslation(camelCaseToUnderscores(this.props.labelText))}</label>
-                <TextField
-                    fullWidth
-                    hintText={this.getTranslation('search_available_selected_items')}
-                    defaultValue={this.state.filterText}
-                    onChange={this._setFilterText}
-                />
-                <GroupEditor
-                    itemStore={this.state.itemStore}
-                    assignedItemStore={this.state.assignedItemStore}
-                    onAssignItems={this._assignItems}
-                    onRemoveItems={this._removeItems}
-                    height={250}
-                    filterText={this.state.filterText}
-                />
-            </div>
-        );
+    populateItemStore(availableItems) {
+        this.state.itemStore.setState(availableItems);
+    },
+
+    populateAssignedStore() {
+        this.state.assignedItemStore.setState(Array.from(this.props.defaultValue.values()).map(value => value.id));
     },
 });

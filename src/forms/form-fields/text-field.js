@@ -6,6 +6,7 @@ import MuiThemeMixin from '../mui-theme.mixin';
 
 export default React.createClass({
     propTypes: {
+        labelText: React.PropTypes.string.isRequired,
         multiLine: React.PropTypes.bool,
     },
 

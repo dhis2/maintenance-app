@@ -5,6 +5,7 @@ export default React.createClass({
     propTypes: {
         label: React.PropTypes.string.isRequired,
         isActive: React.PropTypes.bool.isRequired,
+        style: React.PropTypes.object,
     },
 
     contextTypes: {

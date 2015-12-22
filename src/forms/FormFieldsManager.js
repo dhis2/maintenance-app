@@ -1,12 +1,8 @@
-import {TEXT} from './fields';
-
 class FormFieldsManager {
     constructor(fieldsForModelService) {
         this.fieldsForModelService = fieldsForModelService;
 
-        this.fieldOverrides = {
-            description: {type: TEXT},
-        };
+        this.fieldOverrides = {};
 
         this.headerFields = [];
     }

@@ -7,9 +7,21 @@ import MuiThemeMixin from '../mui-theme.mixin';
 export default React.createClass({
     propTypes: {
         onChange: React.PropTypes.func.isRequired,
+        labelText: React.PropTypes.string.isRequired,
+        defaultValue: React.PropTypes.bool,
     },
 
     mixins: [MuiThemeMixin, Translate],
+
+    render() {
+        return (
+            <div style={{marginTop: 12, marginBottom: 12}}>
+                <Checkbox onClick={this._onClick} {...this.props}
+                          label={this.getTranslation(this.props.labelText)}
+                          defaultChecked={this.props.defaultValue === true}/>
+            </div>
+        );
+    },
 
     _onClick() {
         // TODO: Emit a proper event..?
@@ -17,14 +29,6 @@ export default React.createClass({
             target: {
                 value: this.props.defaultValue !== true,
             },
-        })
-    },
-
-    render() {
-        return (
-            <div style={{marginTop: 12, marginBottom: 12}}>
-                <Checkbox onClick={this._onClick} {...this.props} label={this.getTranslation(this.props.labelText)} defaultChecked={this.props.defaultValue === true}/>
-            </div>
-        );
+        });
     },
 });

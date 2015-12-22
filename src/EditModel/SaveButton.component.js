@@ -14,7 +14,6 @@ const SaveButton = React.createClass({
     mixins: [Translate],
 
     render() {
-        //!this.props.isFormValid()
         return (
             <RaisedButton {...this.props} primary={true} onClick={this.props.onClick} label={this.getTranslation('save')} disabled={undefined} />
         );

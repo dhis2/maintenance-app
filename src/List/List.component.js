@@ -64,7 +64,7 @@ const List = React.createClass({
         willTransitionTo(transition, params, query, callback) {
             executeLoadListAction(params.modelType)
                 .subscribe(
-                (message) => { console.info(message); callback(); },
+                (message) => { log.info(message); callback(); },
                 (message) => {
                     if (/^.+s$/.test(params.modelType)) {
                         const nonPluralAttempt = params.modelType.substring(0, params.modelType.length - 1);

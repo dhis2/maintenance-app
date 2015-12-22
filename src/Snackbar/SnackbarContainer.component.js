@@ -2,6 +2,7 @@ import React from 'react';
 import Snackbar from 'material-ui/lib/snackbar';
 import snackStore from './snack.store';
 import ObserverRegistry from '../utils/ObserverRegistry.mixin';
+import log from 'loglevel';
 
 const SnackBarContainer = React.createClass({
     mixins: [ObserverRegistry],
@@ -21,7 +22,7 @@ const SnackBarContainer = React.createClass({
             } else {
                 this.refs.snackbar.dismiss();
             }
-        }, console.log.bind(console));
+        }, log.info.bind(log));
 
         this.registerDisposable(snackStoreDisposable);
     },

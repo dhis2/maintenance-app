@@ -2,9 +2,9 @@ import React from 'react';
 import log from 'loglevel';
 import ObservedEvents from '../utils/ObservedEvents.mixin';
 import List from 'material-ui/lib/lists/list';
-import ListItem from 'material-ui/lib/lists/list-item';
 import TextField from 'material-ui/lib/text-field';
 import SideBarItem from './SideBarItem.component';
+import FontIcon from 'material-ui/lib/font-icon';
 
 const SideBar = React.createClass({
     propTypes: {

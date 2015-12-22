@@ -2,11 +2,16 @@ import Action from 'd2-flux/action/Action';
 import modelToEditStore from './modelToEditStore';
 import {isFunction} from 'd2-utils';
 import log from 'loglevel';
-import ModelCollectionProperty from 'd2/lib/model/ModelCollectionProperty';
 
-const isUndefinedOrNullOrNaN = (value) => (value === undefined) || (value === null) || Number.isNaN(value);
-
-const objectActions = Action.createActionsFromNames(['getObjectOfTypeById', 'getObjectOfTypeByIdAndClone', 'saveObject', 'afterSave', 'saveAndRedirectToList', 'update']);
+const objectActions = Action.createActionsFromNames([
+    'getObjectOfTypeById',
+    'getObjectOfTypeByIdAndClone',
+    'saveObject',
+    'afterSave',
+    'saveAndRedirectToList',
+    'update',
+    'updateAttribute',
+]);
 
 objectActions.getObjectOfTypeById
     .subscribe(({data, complete, error}) => {
@@ -65,6 +70,17 @@ objectActions.update.subscribe(action => {
         log.error(`modelToEdit does not exist`);
         action.error();
     }
+});
+
+objectActions.updateAttribute.subscribe(action => {
+    const {attributeName, value} = action.data;
+    const modelToEdit = modelToEditStore.getState();
+
+    modelToEdit.attributes[attributeName] = value;
+
+    modelToEditStore.setState(modelToEdit);
+
+    action.complete();
 });
 
 export default objectActions;

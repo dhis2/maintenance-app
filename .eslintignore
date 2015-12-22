@@ -1,3 +1,4 @@
 node_modules/
 build/
 webpack.config.js
+src/dev_jquery.js
