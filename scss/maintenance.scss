@@ -17,13 +17,15 @@ $sidebar-background-color: #F7F7F7;
 $sidebar-border-color: #E1E1E1;
 $sidebar-border-style: 1px solid;
 
+$html-background-color: #FFF;
+
 //Basic for all
 * {
   box-sizing: border-box;
 }
 
 html {
-  background: #ffffff;
+  background: $html-background-color;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
 }

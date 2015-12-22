@@ -19,7 +19,7 @@
     "chai": "3.0.0",
     "coveralls": "2.11.4",
     "d2-testutils": "0.1.7",
-    "eslint": "1.2.0",
+    "eslint": "1.10.3",
     "eslint-config-dhis2": "0.0.5",
     "eslint-plugin-react": "3.2.3",
     "istanbul": "0.3.18",
