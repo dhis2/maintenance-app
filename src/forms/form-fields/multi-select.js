@@ -135,6 +135,18 @@ export default React.createClass({
 
 
     _assignItems(items) {
+        if (this.props.referenceProperty === 'aggregationLevels') {
+            const newList = Array.from((new Set((this.props.model[this.props.referenceProperty] || []).concat(items.map(Number)))).values());
+
+            this.props.onChange({
+                target: {
+                    value: newList,
+                },
+            });
+            this.state.assignedItemStore.setState(newList);
+            return Promise.resolve();
+        }
+
         return new Promise((resolve, reject) => {
             const modelsToAdd = filterModelsMapOnItemIds(this.state.itemStore.state, items);
 
@@ -159,6 +171,18 @@ export default React.createClass({
     },
 
     _removeItems(items) {
+        if (this.props.referenceProperty === 'aggregationLevels') {
+            const newList = Array.from((new Set((this.props.model[this.props.referenceProperty] || []).filter(v => items.map(Number).indexOf(v) === -1))).values());
+
+            this.props.onChange({
+                target: {
+                    value: newList,
+                },
+            });
+            this.state.assignedItemStore.setState(newList);
+            return Promise.resolve();
+        }
+
         return new Promise((resolve, reject) => {
             const modelsToRemove = filterModelsMapOnItemIds(this.state.itemStore.state, items);
 
@@ -193,16 +217,35 @@ export default React.createClass({
 
     loadAvailableItems(d2) {
         if (d2.models[this.props.referenceType]) {
-            return d2.models[this.props.referenceType].list({paging: false, fields: 'displayName|rename(name),id'});
+            return d2.models[this.props.referenceType].list({paging: false, fields: 'displayName|rename(name),id,level'});
         }
         return Promise.reject(`${this.props.referenceType} is not a model on d2.models`);
     },
 
     populateItemStore(availableItems) {
+        if (this.props.referenceProperty === 'aggregationLevels') {
+            this.state.itemStore.setState(Array.from(availableItems.values()).map((model) => {
+                return {
+                    value: model.level,
+                    text: model.displayName || model.name,
+                };
+            }));
+            return;
+        }
+
         this.state.itemStore.setState(availableItems);
     },
 
     populateAssignedStore() {
-        this.state.assignedItemStore.setState(Array.from(this.props.defaultValue.values()).map(value => value.id));
+        if (!this.props.defaultValue) {
+            return this.state.assignedItemStore.setState([]);
+        }
+
+        if (Array.isArray(this.props.defaultValue)) {
+            console.log(this.props.defaultValue);
+            this.state.assignedItemStore.setState(Array.from(this.props.defaultValue));
+        } else {
+            this.state.assignedItemStore.setState(Array.from(this.props.defaultValue.values()).map(value => value.id));
+        }
     },
 });

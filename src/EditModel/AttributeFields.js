@@ -94,12 +94,12 @@ export default React.createClass({
     runValidator(attributeFieldValidators, fieldConfigs) {
         fieldConfigs
             .forEach(fieldConfig => {
-                attributeFieldValidators.runFor(fieldConfig.name, this.props.model.attributes[fieldConfig.name]);
+                attributeFieldValidators.runFor(fieldConfig.name, this.props.model.attributes[fieldConfig.name], this.props.model);
             });
     },
 
     _updateAtrribute(fieldConfig, event) {
-        this.state.attributeFieldValidators.runFor(fieldConfig.name, event.target.value);
+        this.state.attributeFieldValidators.runFor(fieldConfig.name, event.target.value, this.props.model);
 
         this.props.updateFn({
             attributeName: fieldConfig.name,

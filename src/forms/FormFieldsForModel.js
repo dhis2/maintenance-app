@@ -75,14 +75,16 @@ class FormFieldsForModel {
 
                 Object.keys(overrideConfig)
                     .forEach(key => {
-                        if (typeof modelValidation[key] === 'object') {
+                        if (key === 'fieldOptions') {
                             modelValidation[key] = Object.assign({}, modelValidation[key], overrideConfig[key]);
                         } else {
                             modelValidation[key] = overrideConfig[key];
                         }
                     });
+                console.log(modelValidation.fieldOptions);
+                console.log(overrideConfig.fieldOptions);
+                console.log(modelValidation.referenceType);
             }
-
             modelValidation.type = fieldType;
 
             return fieldTypeClasses.get(fieldType)(modelValidation, modelDefinition, this.models);

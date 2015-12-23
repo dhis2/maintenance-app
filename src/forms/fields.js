@@ -52,9 +52,9 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
     }
     minTextOrArray.message = 'value_not_min';
 
-    function checkAgainstServer(value) {
+    function checkAgainstServer(value, fieldName, formSource) {
         // Don't validate against the server when we have no value
-        if (!value.trim()) {
+        if (!value || !value.trim()) {
             return Promise.resolve(true);
         }
 
@@ -64,8 +64,14 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
             return Promise.reject('could_not_run_async_validation');
         }
 
-        return modelDefinition
-            .filter().on(modelValidation.fieldOptions.referenceProperty).equals(value)
+        let modelDefinitionWithFilter = modelDefinition
+            .filter().on(modelValidation.fieldOptions.referenceProperty).equals(value);
+
+        if (formSource.id) {
+            modelDefinitionWithFilter = md.filter().on('id').notEqual(formSource.id);
+        }
+
+        return modelDefinitionWithFilter
             .list()
             .then(collection => {
                 if (collection.size !== 0) {

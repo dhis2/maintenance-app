@@ -144,7 +144,7 @@ export default class EditModel extends React.Component {
 
         this.state.fieldConfigs
             .forEach(v => {
-                this.state.formValidator.runFor(v.name, this.state.modelToEdit[v.name]);
+                this.state.formValidator.runFor(v.name, this.state.modelToEdit[v.name], this.state.modelToEdit);
             });
 
         this.state.attributeValidatorRunner && this.state.attributeValidatorRunner();
