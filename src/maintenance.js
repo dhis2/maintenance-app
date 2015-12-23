@@ -2,7 +2,7 @@ if (process.env.NODE_ENV !== 'production') {
     jQuery.ajaxSetup({
         headers: {
             Authorization: 'Basic ' + btoa('admin:district'), // btoa('system:System123'), //btoa('testadmin:Testadmin1234')
-        }
+        },
     });
 }
 

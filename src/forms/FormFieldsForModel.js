@@ -81,9 +81,6 @@ class FormFieldsForModel {
                             modelValidation[key] = overrideConfig[key];
                         }
                     });
-                console.log(modelValidation.fieldOptions);
-                console.log(overrideConfig.fieldOptions);
-                console.log(modelValidation.referenceType);
             }
             modelValidation.type = fieldType;
 

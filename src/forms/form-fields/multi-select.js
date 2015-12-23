@@ -242,7 +242,6 @@ export default React.createClass({
         }
 
         if (Array.isArray(this.props.defaultValue)) {
-            console.log(this.props.defaultValue);
             this.state.assignedItemStore.setState(Array.from(this.props.defaultValue));
         } else {
             this.state.assignedItemStore.setState(Array.from(this.props.defaultValue.values()).map(value => value.id));
