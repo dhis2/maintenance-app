@@ -6,6 +6,7 @@ import {camelCaseToUnderscores} from 'd2-utils';
 import snackActions from '../Snackbar/snack.actions';
 import log from 'loglevel';
 import listStore from './list.store';
+import sharingStore from './sharing.store';
 
 config.i18n.strings.add('edit');
 config.i18n.strings.add('clone');
@@ -13,7 +14,14 @@ config.i18n.strings.add('delete');
 config.i18n.strings.add('details');
 config.i18n.strings.add('translate');
 
-const contextActions = Action.createActionsFromNames(['edit', 'clone', 'delete', 'details', 'translate']);
+const contextActions = Action.createActionsFromNames([
+    'edit',
+    'clone',
+    'sharing',
+    'delete',
+    'details',
+    'translate',
+]);
 
 const confirm = (message) => {
     return new Promise((resolve, reject) => {
@@ -68,6 +76,21 @@ contextActions.delete
 contextActions.details
     .subscribe(({data: model}) => {
         detailsStore.setState(model);
+    });
+
+contextActions.sharing
+    .subscribe(({data: model}) => {
+        getD2()
+            .then((d2) => {
+                return d2.models[model.modelDefinition.name].get(model.id);
+            })
+            .then(modelToShare => {
+                console.log(modelToShare);
+                sharingStore.setState({
+                    model: modelToShare,
+                    open: true,
+                });
+            });
     });
 
 export default contextActions;

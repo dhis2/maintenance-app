@@ -20,8 +20,8 @@ import SearchBox from './SearchBox.component';
 import LoadingStatus from './LoadingStatus.component';
 import {camelCaseToUnderscores} from 'd2-utils';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
-
-config.i18n.strings.add('management');
+import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import sharingStore from './sharing.store';
 
 function actionsThatRequireCreate(action) {
     if ((action !== 'edit' && action !== 'clone') || this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.params.modelType))) {
@@ -90,7 +90,12 @@ const List = React.createClass({
             },
             isLoading: true,
             detailsObject: null,
-        };
+            sharing: {
+                model: null,
+                open: false,
+            }
+        }
+        ;
     },
 
     componentWillMount() {
@@ -111,8 +116,17 @@ const List = React.createClass({
             this.setState({detailsObject});
         });
 
+        const sharingStoreDisposable = sharingStore.subscribe(sharingState => {
+            this.setState({
+                sharing: sharingState,
+            });
+
+            this.refs.sharingDialog.refs.sharingDialog.show();
+        });
+
         this.registerDisposable(sourceStoreDisposable);
         this.registerDisposable(detailsStoreDisposable);
+        this.registerDisposable(sharingStoreDisposable);
     },
 
     componentWillReceiveProps(newProps) {
@@ -145,6 +159,12 @@ const List = React.createClass({
         const availableActions = Object.keys(contextActions)
             .filter(actionsThatRequireCreate, this)
             .filter(actionsThatRequireDelete, this)
+            .filter((actionName) => {
+                if (actionName === 'sharing') {
+                    return this.context.d2.models[this.props.params.modelType] && this.context.d2.models[this.props.params.modelType].isSharable;
+                }
+                return true;
+            })
             .reduce((actions, actionName) => {
                 actions[actionName] = contextActions[actionName];
                 return actions;
@@ -168,6 +188,11 @@ const List = React.createClass({
                         </Paper>
                     </Sticky>
                 </div>
+                <SharingDialog
+                    objectToShare={this.state.sharing.model}
+                    open={this.state.sharing.open && this.state.sharing.model}
+                    ref="sharingDialog"
+                />
             </div>
         );
     },

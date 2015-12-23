@@ -29,7 +29,6 @@ module.exports = {
             react: path.resolve('./node_modules/react'),
             'material-ui': path.resolve('./node_modules/material-ui'),
             'd2-flux': path.resolve('./node_modules/d2-flux'),
-            'd2': path.resolve('./node_modules/d2'),
         },
     },
     plugins: [
