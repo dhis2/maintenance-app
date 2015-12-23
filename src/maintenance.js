@@ -1,3 +1,11 @@
+if (process.env.NODE_ENV !== 'production') {
+    jQuery.ajaxSetup({
+        headers: {
+            Authorization: 'Basic ' + btoa('admin:district'), // btoa('system:System123'), //btoa('testadmin:Testadmin1234')
+        }
+    });
+}
+
 import React from 'react';
 import Router from 'react-router';
 import Action from 'd2-flux/action/Action';
@@ -29,8 +37,7 @@ React.render(<LoadingMask />, document.getElementById('app'));
 
 getManifest(`./manifest.webapp`)
     .then(manifest => {
-        config.baseUrl = manifest.getBaseUrl();
-        dhis2.settings.baseUrl = manifest.getBaseUrl();
+        config.baseUrl = manifest.getBaseUrl() + '/api';
 
         // Set the baseUrl to localhost if we are in dev mode
         if (process.env.NODE_ENV !== 'production') {

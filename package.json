@@ -7,8 +7,8 @@
     "test": "./node_modules/karma/bin/karma start test/config/karma.config.js --single-run true",
     "test-watch": "./node_modules/karma/bin/karma start test/config/karma.config.js",
     "lint": "./node_modules/eslint/bin/eslint.js src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon --rule 'no-unused-expressions: 0' test && scss-lint",
-    "prebuild": "npm test && npm run lint",
-    "build": "./node_modules/babel/bin/babel.js src --out-dir dist && compass compile && cp ./package.json ./dist/package.json && cp -r scss dist/scss",
+    "__prebuild": "npm test && npm run lint",
+    "build": "webpack --config webpack.config.prod.js && cp -r src/i18n build/ && compass compile && cp -r src/css build && cp ./node_modules/babel-core/browser-polyfill.min.js build && cp ./node_modules/jquery/dist/jquery.min.js build && cp ./src/index.html build && cp ./manifest.webapp build",
     "validate": "npm ls"
   },
   "devDependencies": {

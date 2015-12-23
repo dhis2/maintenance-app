@@ -7,8 +7,8 @@ import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 export default React.createClass({
     propTypes: {
-        registerValidator: React.propTypes.func.isRequired,
-        model: React.propTypes.shape({
+        registerValidator: React.PropTypes.func.isRequired,
+        model: React.PropTypes.shape({
             modelDefinition: React.PropTypes.shape({
                 attributeProperties: React.PropTypes.object.isRequired,
             }).isRequired,

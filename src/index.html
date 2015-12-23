@@ -25,13 +25,12 @@
 <body>
     <div id="app" class="app"></div>
 
-    <script src="dev_jquery.js"></script>
+    <!--<script src="browser-polyfill.min.js"></script>-->
+    <script src="jquery.min.js"></script>
     <script>
-        jQuery.ajaxSetup({
-            headers: {
-                Authorization: 'Basic ' + btoa('admin:district'), // btoa('system:System123'), //btoa('testadmin:Testadmin1234')
-            }
-        });
+        if (!('jQuery' in window)) {
+            document.write('<script src="https://code.jquery.com/jquery-2.1.4.js"><\/script>');
+        }
     </script>
     <script src="./maintenance.js"></script>
 </body>
