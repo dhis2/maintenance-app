@@ -158,7 +158,7 @@ const List = React.createClass({
                 <ListActionBar modelType={this.props.params.modelType} />
                 <Pagination {...paginationProps} />
                 <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
-                    <DataTable rows={this.state.dataRows} columns={['name', 'code', 'description']} contextMenuActions={availableActions} contextMenuIcons={{clone: 'content_copy'}} />
+                    <DataTable rows={this.state.dataRows} columns={['name', 'code']} contextMenuActions={availableActions} contextMenuIcons={{clone: 'content_copy'}} />
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
                 <div className={classes('details-box-wrap', {'show-as-column': !!this.state.detailsObject})}>

@@ -9,6 +9,7 @@ import {camelCaseToUnderscores} from 'd2-utils';
 config.i18n.strings.add('maintenance');
 config.i18n.strings.add('filter_menu_items_by_name');
 config.i18n.strings.add('press_enter_to_go_to_first');
+config.i18n.strings.add('search');
 
 const SideBarContainer = React.createClass({
     mixins: [State, Navigation, Translate],
