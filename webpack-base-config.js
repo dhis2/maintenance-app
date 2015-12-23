@@ -33,18 +33,6 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.DedupePlugin(),
-        //new webpack.optimize.UglifyJsPlugin({
-        //    minimize: true,
-        //    compress: {
-        //        warnings: false
-        //    },
-        //}),
-        //new webpack.optimize.OccurenceOrderPlugin(),
-        //new webpack.ProvidePlugin({
-        //    $: "jquery",
-        //    jQuery: "jquery",
-        //    "window.jQuery": "jquery"
-        //}),
     ],
     devtool: ['sourcemap'],
 };

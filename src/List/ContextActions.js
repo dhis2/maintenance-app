@@ -85,7 +85,6 @@ contextActions.sharing
                 return d2.models[model.modelDefinition.name].get(model.id);
             })
             .then(modelToShare => {
-                console.log(modelToShare);
                 sharingStore.setState({
                     model: modelToShare,
                     open: true,
