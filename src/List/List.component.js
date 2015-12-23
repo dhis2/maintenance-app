@@ -13,7 +13,6 @@ import listStore from './list.store';
 import listActions from './list.actions';
 import ObserverRegistry from '../utils/ObserverRegistry.mixin';
 import Paper from 'material-ui/lib/paper';
-import {config} from 'd2/lib/d2';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';
@@ -93,9 +92,8 @@ const List = React.createClass({
             sharing: {
                 model: null,
                 open: false,
-            }
-        }
-        ;
+            },
+        };
     },
 
     componentWillMount() {
@@ -121,6 +119,8 @@ const List = React.createClass({
                 sharing: sharingState,
             });
 
+            this.refs.sharingDialog &&
+            this.refs.sharingDialog.refs.sharingDialog &&
             this.refs.sharingDialog.refs.sharingDialog.show();
         });
 
