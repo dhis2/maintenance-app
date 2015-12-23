@@ -19,3 +19,4 @@ stats.json
 
 # TODO: Remove when using proper jQuery loader
 src/dev_jquery.js
+target/*
