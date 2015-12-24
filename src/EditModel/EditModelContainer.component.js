@@ -29,11 +29,6 @@ export default class extends EditModelBase {
             getD2().then((d2) => {
                 const modelToEdit = d2.models[params.modelType].create();
 
-                // TODO: Remove this hack and solve properly
-                if (params.modelType === 'dataElement') {
-                    modelToEdit.zeroIsSignificant = false;
-                }
-
                 modelToEditStore.setState(modelToEdit);
 
                 callback();
