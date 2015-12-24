@@ -13,10 +13,6 @@
 
 @import '../scss/List/List';
 
-$sidebar-background-color: #F7F7F7;
-$sidebar-border-color: #E1E1E1;
-$sidebar-border-style: 1px solid;
-
 $html-background-color: #FFF;
 
 //Basic for all
@@ -38,14 +34,11 @@ html {
 }
 
 .sidebar-container {
-  @include span(3 of 12);
-
-  background: $sidebar-background-color;
-  border-right: $sidebar-border-style $sidebar-border-color;
   height: 100%;
   overflow: hidden;
   position: fixed;
   top: 0;
+  width: 265px;
 }
 
 .sidebar-container--hide-scroll-bar {
@@ -57,7 +50,9 @@ html {
 }
 
 .main-container {
-  @include span(9 of 12 last);
+  margin-left: 256px;
+  min-width: 350px;
+  padding-left: 2rem;
   padding-right: 2rem;
 }
 
