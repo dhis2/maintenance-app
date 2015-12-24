@@ -49,7 +49,7 @@ export default Store.create({
             let modelDefinition = d2.models[modelType];
 
             if (searchString) {
-                modelDefinition = d2.models[modelType].filter().on('name').like(searchString);
+                modelDefinition = d2.models[modelType].filter().on('displayName').ilike(searchString);
             }
 
             const listSearchPromise = modelDefinition.list({fields: 'name,id,code,description'});
