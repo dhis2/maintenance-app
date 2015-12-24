@@ -68,7 +68,7 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
             .filter().on(modelValidation.fieldOptions.referenceProperty).equals(value);
 
         if (formSource.id) {
-            modelDefinitionWithFilter = md.filter().on('id').notEqual(formSource.id);
+            modelDefinitionWithFilter = modelDefinitionWithFilter.filter().on('id').notEqual(formSource.id);
         }
 
         return modelDefinitionWithFilter
