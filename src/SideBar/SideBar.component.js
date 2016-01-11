@@ -5,6 +5,7 @@ import List from 'material-ui/lib/lists/list';
 import TextField from 'material-ui/lib/text-field';
 import SideBarItem from './SideBarItem.component';
 import FontIcon from 'material-ui/lib/font-icon';
+import Paper from 'material-ui/lib/paper';
 
 const SideBar = React.createClass({
     propTypes: {
@@ -60,7 +61,7 @@ const SideBar = React.createClass({
             });
 
         return (
-            <div className="sidebar">
+            <Paper className="sidebar">
                 <div style={{padding: '1rem 1rem 0', position: 'relative'}}>
                     <TextField hintText={this.props.searchHint} style={{width: '100%'}}
                                onKeyUp={this.createEventObserver('search')}
@@ -71,7 +72,7 @@ const SideBar = React.createClass({
                 <List style={{backgroundColor: 'inherit'}}>
                     {this.filteredChildren}
                 </List>
-            </div>
+            </Paper>
         );
     },
 

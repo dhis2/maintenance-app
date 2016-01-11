@@ -166,7 +166,7 @@ export default class EditModel extends React.Component {
         );
     }
 
-    closeAction() {
+    closeAction(event) {
         event.preventDefault();
 
         Router.HashLocation.push(['/list', this.props.modelType].join('/'));

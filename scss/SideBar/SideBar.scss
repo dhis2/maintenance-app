@@ -8,14 +8,13 @@ $left-bar-width: 256px;
 .sidebar {
   background: $sidebar--background-color;
   border-right: $sidebar--border-style $sidebar--border-color;
-  bottom: 0;
+  bottom: 3rem;
   float: left;
-  left: 0;
+  left: 30px;
   margin-top: 16px;
   overflow-y: auto;
-  padding-top: 2rem;
   position: fixed;
-  top: 0;
+  top: 4rem;
   width: $left-bar-width;
 
   ul {

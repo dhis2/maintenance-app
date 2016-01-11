@@ -1,7 +1,7 @@
 @import 'normalize';
 
 // Component stylesheets from dependencies
-@import '../node_modules/d2-ui-datatable/css/DataTable';
+@import '../node_modules/d2-ui/DataTable';
 @import '../node_modules/d2-ui-pagination/css/Pagination';
 @import '../node_modules/d2-ui-basicfields/scss/BasicFields';
 @import '../node_modules/d2-ui-detailsbox/css/DetailsBox';
@@ -51,7 +51,7 @@ html {
 }
 
 .main-container {
-  margin-left: 256px;
+  margin-left: 286px;
   min-width: 350px;
   padding-left: 2rem;
   padding-right: 2rem;
