@@ -190,6 +190,10 @@ export function createFieldConfig(fieldConfig, modelDefinition, models) {
         basicFieldConfig.beforeUpdateConverter = toInteger;
     }
 
+    if (fieldConfig.constants && fieldConfig.constants.length) {
+        basicFieldConfig.fieldOptions.translate = true;
+    }
+
     const validators = [].concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition));
 
     return Object.assign(fieldConfig, {validators}, basicFieldConfig);

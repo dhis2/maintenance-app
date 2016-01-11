@@ -4,21 +4,6 @@ import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 import MuiThemeMixin from '../mui-theme.mixin';
 
-function getOptions(options, required = false) {
-    const opts = options
-        .map((option) => {
-            return {
-                payload: option.value,
-                text: option.text,
-            };
-        });
-
-    if (!required) {
-        return [{payload: undefined, text: ''}].concat(opts);
-    }
-    return opts;
-}
-
 export default React.createClass({
     propTypes: {
         defaultValue: React.PropTypes.oneOfType([
@@ -31,6 +16,7 @@ export default React.createClass({
         options: React.PropTypes.array.isRequired,
         isRequired: React.PropTypes.bool,
         labelText: React.PropTypes.string.isRequired,
+        translate: React.PropTypes.bool,
     },
 
     mixins: [MuiThemeMixin, Translate],
@@ -38,15 +24,37 @@ export default React.createClass({
     getInitialState() {
         return {
             value: this.props.defaultValue ? this.props.defaultValue : '',
-            options: getOptions(this.props.options, this.props.isRequired),
+            options: this.getOptions(this.props.options, this.props.isRequired),
         };
     },
 
     componentWillReceiveProps(newProps) {
         this.setState({
             value: newProps.defaultValue ? newProps.defaultValue : '',
-            options: getOptions(newProps.options, newProps.isRequired),
+            options: this.getOptions(newProps.options, newProps.isRequired),
         });
+    },
+
+    getOptions(options, required = false) {
+        let opts = options
+            .map((option) => {
+                return {
+                    payload: option.value,
+                    text: option.text,
+                };
+            });
+
+        if (!required) {
+            opts = [{payload: undefined, text: ''}].concat(opts);
+        }
+
+        return opts
+            .map(option => {
+                if (option.text && this.props.translate) {
+                    option.text = this.getTranslation(option.text.toLowerCase());
+                }
+                return option;
+            });
     },
 
     render() {

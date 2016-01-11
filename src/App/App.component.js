@@ -10,6 +10,7 @@ import AppWithD2 from 'd2-ui/lib/app/AppWithD2.component';
 import log from 'loglevel';
 import appTheme from './app.theme';
 import LoadingMask from '../loading-mask/LoadingMask.component';
+import '../translationRegistration';
 
 log.setLevel(log.levels.INFO);
 
