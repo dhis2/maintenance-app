@@ -186,7 +186,13 @@ const List = React.createClass({
                 </div>
                 <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
                 <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
-                    <DataTable rows={this.state.dataRows} columns={['name', 'lastUpdated']} contextMenuActions={availableActions} contextMenuIcons={{clone: 'content_copy'}} />
+                    <DataTable
+                        rows={this.state.dataRows}
+                        columns={['name', 'lastUpdated']}
+                        contextMenuActions={availableActions}
+                        contextMenuIcons={{clone: 'content_copy', sharing: 'share'}}
+                        primaryAction={availableActions.edit}
+                    />
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
                 <div className={classes('details-box-wrap', {'show-as-column': !!this.state.detailsObject})}>
