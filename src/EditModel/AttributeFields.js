@@ -4,7 +4,6 @@ import {createFieldConfig, typeToFieldMap} from '../forms/fields';
 import createFormValidator from 'd2-ui/lib/forms/FormValidator';
 import {FormFieldStatuses} from 'd2-ui/lib/forms/FormValidator';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-import d2 from 'd2/lib/d2';
 
 export default React.createClass({
     propTypes: {

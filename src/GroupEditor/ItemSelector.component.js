@@ -5,6 +5,7 @@ import Select from 'material-ui/lib/select-field';
 export default React.createClass({
     propTypes: {
         itemListStore: React.PropTypes.object.isRequired,
+        onChange: React.PropTypes.func.isRequired,
     },
 
     getInitialState() {
@@ -30,11 +31,11 @@ export default React.createClass({
                     this.props.onChange({
                         target: {
                             value: items[0].payload,
-                        }
+                        },
                     });
                 }
 
-                this.setState({items})
+                this.setState({items});
             });
     },
 

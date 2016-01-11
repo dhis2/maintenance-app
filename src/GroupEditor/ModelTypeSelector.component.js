@@ -2,7 +2,7 @@ import React from 'react';
 
 import Select from 'material-ui/lib/select-field';
 
-import d2 from 'd2/lib/d2';
+import d2lib from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
@@ -19,6 +19,7 @@ function hasNameInArray(listToCheck) {
 export default React.createClass({
     propTypes: {
         nameListFilter: React.PropTypes.arrayOf(React.PropTypes.string),
+        onChange: React.PropTypes.func.isRequired,
     },
 
     mixins: [Translate],
@@ -26,17 +27,17 @@ export default React.createClass({
     getDefaultProps() {
         return {
             nameListFilter: [],
-        }
+        };
     },
 
     getInitialState() {
         return {
             selectedModel: null,
-        }
+        };
     },
 
     componentWillMount() {
-        d2.getInstance()
+        d2lib.getInstance()
             .then(d2 => this.setState({models: d2.models}));
     },
 
@@ -69,5 +70,5 @@ export default React.createClass({
         });
 
         this.props.onChange(event);
-    }
+    },
 });

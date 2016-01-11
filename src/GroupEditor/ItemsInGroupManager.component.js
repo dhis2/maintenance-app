@@ -3,7 +3,7 @@ import React from 'react';
 import TextField from 'material-ui/lib/text-field';
 import log from 'loglevel';
 
-import d2 from 'd2/lib/d2';
+import d2lib from 'd2/lib/d2';
 import ModelTypeSelector from './ModelTypeSelector.component';
 import Store from 'd2-flux/store/Store';
 import ItemSelector from './ItemSelector.component';
@@ -52,7 +52,7 @@ export default React.createClass({
                 onAssignItems={this._assignItems}
                 onRemoveItems={this._removeItems}
                 filterText={this.state.filterText}
-            />
+            />,
         ];
     },
 
@@ -82,7 +82,7 @@ export default React.createClass({
     _assignItems(items) {
         const requests = this.createUrls(items)
             .map(url => {
-                return d2.getInstance()
+                return d2lib.getInstance()
                     .then(d2 => d2.Api.getApi())
                     .then(api => api.post(url));
             });
@@ -91,7 +91,7 @@ export default React.createClass({
             .then(() => {
                 const itemDefinition = this.state.modelToEdit.modelDefinition.name.replace('Group', '');
 
-                return d2.getInstance()
+                return d2lib.getInstance()
                     .then((d2) => {
                         return Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]);
                     })
@@ -108,7 +108,7 @@ export default React.createClass({
     _removeItems(items) {
         const requests = this.createUrls(items)
             .map(url => {
-                return d2.getInstance()
+                return d2lib.getInstance()
                     .then(d2 => d2.Api.getApi())
                     .then(api => api.delete(url));
             });
@@ -117,7 +117,7 @@ export default React.createClass({
             .then(() => {
                 const itemDefinition = this.state.modelToEdit.modelDefinition.name.replace('Group', '');
 
-                return d2.getInstance()
+                return d2lib.getInstance()
                     .then((d2) => {
                         return Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]);
                     })
@@ -151,13 +151,13 @@ export default React.createClass({
         const model = event.target.value;
         const itemDefinition = model.modelDefinition.name.replace('Group', '');
 
-        d2.getInstance()
+        d2lib.getInstance()
             .then((d2) => {
                 if (!d2.models[itemDefinition]) {
                     return Promise.reject('This groupType does not have a model named: ' + itemDefinition);
                 }
 
-                const availablePromise = d2.models[itemDefinition].list({paging: false})
+                const availablePromise = d2.models[itemDefinition].list({paging: false});
                 const modelPromise = d2.models[model.modelDefinition.name].get(model.id);
 
                 Promise.all([availablePromise, modelPromise])
@@ -178,9 +178,10 @@ export default React.createClass({
 
         const itemDefinition = this.state.modelToEdit.modelDefinition.name.replace('Group', '');
 
-        return d2.getInstance()
+        d2lib.getInstance()
             .then((d2) => {
-                return Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]);
+                return Promise
+                    .all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]);
             })
             .then(([d2, fullModel]) => {
                 this.state.assignedItemStore.setState(fullModel[d2.models[itemDefinition].plural]);

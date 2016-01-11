@@ -12,5 +12,5 @@ export default React.createClass({
                 <GroupEditor />
             </div>
         );
-    }
+    },
 });
