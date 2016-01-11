@@ -21,11 +21,17 @@ const SideBarContainer = React.createClass({
     },
 
     componentWillMount() {
-        sideBarItemsStore.subscribe(sideBarItems => {
+        this.disposable = sideBarItemsStore.subscribe(sideBarItems => {
             this.setState({
                 sideBarItems: sideBarItems,
             });
         });
+    },
+
+    componentWillUnmount() {
+        if (this.disposable && this.disposable.dispose) {
+            this.disposable.dispose();
+        }
     },
 
     render() {

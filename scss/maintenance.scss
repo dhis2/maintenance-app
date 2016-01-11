@@ -13,7 +13,8 @@
 
 @import '../scss/List/List';
 
-$html-background-color: #FFF;
+$html-background-color: #E5E5E5;
+$data-table--background-color: #FFF;
 
 //Basic for all
 * {
@@ -57,10 +58,9 @@ html {
 }
 
 //TODO: Distribute
-
 //list
-.search-list-items {
-  //padding-bottom: 1rem;
+.data-table {
+  background-color: $data-table--background-color;
 }
 
 // Needed to override the inline style set by the component

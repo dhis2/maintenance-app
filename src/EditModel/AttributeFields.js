@@ -4,6 +4,7 @@ import {createFieldConfig, typeToFieldMap} from '../forms/fields';
 import createFormValidator from 'd2-ui/lib/forms/FormValidator';
 import {FormFieldStatuses} from 'd2-ui/lib/forms/FormValidator';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import d2 from 'd2/lib/d2';
 
 export default React.createClass({
     propTypes: {
@@ -20,6 +21,11 @@ export default React.createClass({
     mixins: [Translate],
 
     componentWillMount() {
+        // TODO: Remove hack to translate the attribute field names
+        Object
+            .keys(this.props.model.modelDefinition.attributeProperties)
+            .forEach((key) => this.context.d2.i18n.translations[key] = key);
+
         const fieldConfigs = Object
             .keys(this.props.model.modelDefinition.attributeProperties)
             .map(attributeName => {

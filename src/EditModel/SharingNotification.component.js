@@ -22,6 +22,7 @@ const SharingNotification = React.createClass({
         const notificationStyle = Object.assign({}, this.props.style, {
             marginBottom: '1rem',
             padding: '1rem',
+            background: 'none',
         });
         const notificationTextStyle = {
             verticalAlign: 'super',

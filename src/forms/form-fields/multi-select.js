@@ -78,8 +78,9 @@ export default React.createClass({
 
     getInitialState() {
         const itemStore = Store.create();
-        itemStore.state = [];
         const assignedItemStore = Store.create();
+
+        itemStore.state = [];
         assignedItemStore.state = [];
 
         return {

@@ -171,14 +171,22 @@ const List = React.createClass({
             }, {});
 
         return (
-            <div>
-                <h2>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</h2>
-                <SearchBox searchObserverHandler={this.searchListByName} />
+            <div style={{paddingTop: '3rem'}}>
+                <div>
+                    <h2 style={{float: 'left'}}>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</h2>
+                    <ListActionBar modelType={this.props.params.modelType} />
+                </div>
+                <div>
+                    <div style={{float: 'left', width: '50%'}}>
+                        <SearchBox searchObserverHandler={this.searchListByName} />
+                    </div>
+                    <div>
+                        <Pagination {...paginationProps} />
+                    </div>
+                </div>
                 <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
-                <ListActionBar modelType={this.props.params.modelType} />
-                <Pagination {...paginationProps} />
                 <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
-                    <DataTable rows={this.state.dataRows} columns={['name', 'code']} contextMenuActions={availableActions} contextMenuIcons={{clone: 'content_copy'}} />
+                    <DataTable rows={this.state.dataRows} columns={['name', 'lastUpdated']} contextMenuActions={availableActions} contextMenuIcons={{clone: 'content_copy'}} />
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
                 <div className={classes('details-box-wrap', {'show-as-column': !!this.state.detailsObject})}>
