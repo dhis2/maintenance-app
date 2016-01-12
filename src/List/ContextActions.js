@@ -13,11 +13,12 @@ config.i18n.strings.add('clone');
 config.i18n.strings.add('delete');
 config.i18n.strings.add('details');
 config.i18n.strings.add('translate');
+config.i18n.strings.add('sharing');
 
 const contextActions = Action.createActionsFromNames([
     'edit',
     'clone',
-    'sharing',
+    'share',
     'delete',
     'details',
     'translate',
@@ -78,7 +79,7 @@ contextActions.details
         detailsStore.setState(model);
     });
 
-contextActions.sharing
+contextActions.share
     .subscribe(({data: model}) => {
         getD2()
             .then((d2) => {
