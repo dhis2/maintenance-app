@@ -75,3 +75,7 @@ html {
 .details-box__close-button {
   cursor: pointer;
 }
+
+.data-table__rows__row__column:not(:first-child) {
+  width: 200px;
+}
