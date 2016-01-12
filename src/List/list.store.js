@@ -21,6 +21,7 @@ export default Store.create({
         getD2().then(d2 => {
             if (d2.models[modelName]) {
                 const listPromise = d2.models[modelName]
+                    .filter().on('name').notEqual('default')
                     .list({fields: 'displayName|rename(name),id,lastUpdated'});
 
                 this.listSourceSubject.onNext(Observable.fromPromise(listPromise));
@@ -52,7 +53,9 @@ export default Store.create({
                 modelDefinition = d2.models[modelType].filter().on('displayName').ilike(searchString);
             }
 
-            const listSearchPromise = modelDefinition.list({fields: 'displayName|rename(name),id,lastUpdated'});
+            const listSearchPromise = modelDefinition
+                .filter().on('name').notEqual('default')
+                .list({fields: 'displayName|rename(name),id,lastUpdated'});
 
             this.listSourceSubject.onNext(Observable.fromPromise(listSearchPromise));
 

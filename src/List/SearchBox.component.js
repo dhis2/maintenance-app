@@ -5,7 +5,6 @@ import TextField from 'material-ui/lib/text-field';
 import {config} from 'd2/lib/d2';
 
 config.i18n.strings.add('search_by_name');
-config.i18n.strings.add('press_enter_to_search');
 
 const SearchBox = React.createClass({
     propTypes: {
@@ -29,7 +28,7 @@ const SearchBox = React.createClass({
                 <TextField style={{width: '100%'}}
                            type="search"
                            onKeyUp={this.createEventObserver('searchBox')}
-                           hintText={`${this.getTranslation('search_by_name')} ${this.getTranslation('press_enter_to_search')}`} />
+                           hintText={`${this.getTranslation('search_by_name')}`} />
             </div>
         );
     },
