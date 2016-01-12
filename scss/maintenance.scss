@@ -4,13 +4,13 @@
 @import '../node_modules/d2-ui/DataTable';
 @import '../node_modules/d2-ui-pagination/css/Pagination';
 @import '../node_modules/d2-ui-basicfields/scss/BasicFields';
-@import '../node_modules/d2-ui-detailsbox/css/DetailsBox';
 @import '../node_modules/d2-ui/lib/css/IndicatorExpressionManager';
 @import '../node_modules/d2-ui/lib/css/HeaderBar';
 
 // Other imports
 @import 'susy';
 
+@import '../scss/List/DetailsBox';
 @import '../scss/List/List';
 
 $html-background-color: #E5E5E5;

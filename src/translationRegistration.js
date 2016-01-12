@@ -33,4 +33,10 @@ import {config} from 'd2/lib/d2';
     'average_int',
     'average_int_disaggregation',
     'average_bool',
+    'displayName',
+    'code',
+    'displayDescription',
+    'created',
+    'lastUpdated',
+    'id',
 ].forEach(key => config.i18n.strings.add(key));

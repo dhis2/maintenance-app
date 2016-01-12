@@ -2,6 +2,8 @@ import {getInstance as getD2} from 'd2/lib/d2';
 import {Subject, Observable} from 'rx';
 import Store from 'd2-flux/store/Store';
 
+const fieldFilteringForQuery = 'displayName|rename(name),id,lastUpdated,created,displayDescription,code';
+
 export default Store.create({
     listSourceSubject: new Subject(),
 
@@ -22,7 +24,7 @@ export default Store.create({
             if (d2.models[modelName]) {
                 const listPromise = d2.models[modelName]
                     .filter().on('name').notEqual('default')
-                    .list({fields: 'displayName|rename(name),id,lastUpdated'});
+                    .list({fields: fieldFilteringForQuery});
 
                 this.listSourceSubject.onNext(Observable.fromPromise(listPromise));
 
@@ -55,7 +57,7 @@ export default Store.create({
 
             const listSearchPromise = modelDefinition
                 .filter().on('name').notEqual('default')
-                .list({fields: 'displayName|rename(name),id,lastUpdated'});
+                .list({fields: fieldFilteringForQuery});
 
             this.listSourceSubject.onNext(Observable.fromPromise(listSearchPromise));
 
