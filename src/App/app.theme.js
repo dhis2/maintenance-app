@@ -28,7 +28,7 @@ function createAppTheme(style) {
             backgroundColorItem: 'transparent',
             backgroundColorItemActive: style.palette.accent2Color,
             textColor: style.palette.textColor,
-            textColorActive: style.palette.primary1Color,
+            textColorActive: '#276696',
             borderStyle: '1px solid #e1e1e1',
         },
         forms: {

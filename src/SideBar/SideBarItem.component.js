@@ -25,7 +25,8 @@ export default React.createClass({
             backgroundColor: isActive ? theme.sideBar.backgroundColorItemActive : theme.sideBar.backgroundColorItem,
             color: isActive ? theme.sideBar.textColorActive : theme.sideBar.textColor,
             fontSize: 14,
-            fontWeight: isActive ? 'bold' : 'inherit',
+            fontWeight: 'normal',
+            borderLeft: `2px solid ${isActive ? '' : 'transparent'}`,
         };
 
         return (
