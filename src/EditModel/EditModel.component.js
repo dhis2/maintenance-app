@@ -151,7 +151,11 @@ export default class EditModel extends React.Component {
 
         objectActions.saveObject({id: this.props.modelId})
             .subscribe(
-            (message) => snackActions.show({message, action: 'ok', translate: true}),
+            (message) => {
+                snackActions.show({message, action: 'ok', translate: true});
+
+                Router.HashLocation.push(['/list', this.props.modelType].join('/'));
+            },
             (errorMessage) => {
                 if (isString(errorMessage)) {
                     log.debug(errorMessage.messages);
