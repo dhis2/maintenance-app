@@ -1,5 +1,5 @@
 import React from 'react';
-import {getInstance as getD2} from 'd2/lib/d2';
+import {getInstance as getD2, config} from 'd2/lib/d2';
 import Pager from 'd2/lib/pager/Pager';
 import Dialog from 'material-ui/lib/dialog';
 import RaisedButton from 'material-ui/lib/raised-button';
@@ -11,6 +11,8 @@ import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-ma
 import {Observable} from 'rx';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import modelToEditStore from './modelToEditStore';
+
+config.i18n.strings.add('done');
 
 const createFakePager = response => {
     // Fake the modelCollection since dataElementOperands do not have a valid uid
@@ -127,7 +129,7 @@ export default React.createClass({
 
     renderIndicatorFields() {
         const dialogActions = [
-            <RaisedButton label="Close" onTouchTap={this.closeDialog} disabled={!this.state.dialogValid} />,
+            <RaisedButton label={this.getTranslation('done')} onTouchTap={this.closeDialog} disabled={!this.state.dialogValid} />,
         ];
 
         return (
