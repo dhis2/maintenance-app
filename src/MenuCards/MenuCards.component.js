@@ -36,6 +36,7 @@ export default React.createClass({
             padding: '1rem',
             height: 'auto',
             borderBottom: '1px solid #ddd',
+            cursor: 'pointer',
         };
 
         const textStyle = {
@@ -49,7 +50,7 @@ export default React.createClass({
 
         return (
             <Card key={index} style={cardStyle}>
-                <CardHeader style={headerStyle} title={details.name} avatar={<span style={{display: 'none'}} />} />
+                <CardHeader onClick={details.list} style={headerStyle} title={details.name} avatar={<span style={{display: 'none'}} />} />
                 <CardText style={textStyle}>{details.description}</CardText>
                 <CardActions style={actionStyle}>
                     {details.canCreate ? <IconButton
