@@ -29,17 +29,17 @@ export default React.createClass({
             padding: '0',
             margin: '.5rem',
             float: 'left',
-            width: '320px',
+            width: '230px',
         };
 
         const headerStyle = {
-            backgroundColor: '#86C5F9',
             padding: '1rem',
             height: 'auto',
+            borderBottom: '1px solid #ddd',
         };
 
         const textStyle = {
-            height: '145px',
+            height: '115px',
             padding: '.5rem 1rem',
         };
 
