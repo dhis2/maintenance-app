@@ -191,7 +191,7 @@ const List = React.createClass({
                         columns={['name', 'lastUpdated']}
                         contextMenuActions={availableActions}
                         contextMenuIcons={{clone: 'content_copy', sharing: 'share'}}
-                        primaryAction={availableActions.edit}
+                        primaryAction={availableActions.details}
                     />
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
