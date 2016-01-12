@@ -59,7 +59,7 @@ export default React.createClass({
     render() {
         return (
             <div>
-                <Select value={this.state.selectedModel} hintText={this.getTranslation('select_please')} fullWidth {...this.props} menuItems={this.renderOptions()} onChange={this._onChange} />
+                <Select value={this.state.selectedModel} hintText={this.getTranslation('please_select_object_type')} fullWidth {...this.props} menuItems={this.renderOptions()} onChange={this._onChange} />
             </div>
         );
     },
