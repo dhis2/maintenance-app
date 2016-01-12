@@ -14,7 +14,7 @@ const routes = (
         <Route name="list" path="list/:modelType" handler={List} />
         <Route name="genericEdit" path="edit/:modelType/:modelId" handler={EditModelContainer} />
         <Route name="genericClone" path="clone/:modelType/:modelId" handler={CloneModelContainer} />
-        <Route name="groupEditor" path="groupeditor" handler={GroupEditorContainer} />
+        <Route name="groupEditor" path="groupEditor" handler={GroupEditorContainer} />
     </Route>
 );
 

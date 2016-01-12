@@ -7,6 +7,8 @@ import SideBarItem from './SideBarItem.component';
 import FontIcon from 'material-ui/lib/font-icon';
 import Paper from 'material-ui/lib/paper';
 
+import SideBarButtons from './SideBarButtons.component';
+
 const SideBar = React.createClass({
     propTypes: {
         filterChildren: React.PropTypes.func,
@@ -62,7 +64,8 @@ const SideBar = React.createClass({
 
         return (
             <Paper className="sidebar">
-                <div style={{padding: '1rem 1rem 0', position: 'relative'}}>
+                <SideBarButtons />
+                <div style={{padding: '0 1rem', position: 'relative'}}>
                     <TextField hintText={this.props.searchHint} style={{width: '100%'}}
                                onKeyUp={this.createEventObserver('search')}
                                ref="searchBox"
