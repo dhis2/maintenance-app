@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
     jQuery.ajaxSetup({
         headers: {
-            Authorization: 'Basic ' + btoa('admin:district'), // btoa('system:System123'), //btoa('testadmin:Testadmin1234')
+            Authorization: 'Basic ' + btoa('admin:district'),
         },
     });
 }
@@ -15,6 +15,8 @@ import log from 'loglevel';
 import LoadingMask from './loading-mask/LoadingMask.component';
 import dhis2 from 'd2-ui/lib/header-bar/dhis2';
 
+import moment from 'moment';
+
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
 } else {
@@ -26,6 +28,7 @@ const routeActions = Action.createActionsFromNames(['transition']);
 function configI18n({uiLocale}) {
     if (uiLocale !== 'en') {
         config.i18n.sources.add(`./i18n/i18n_module_${uiLocale}.properties`);
+        moment.locale(uiLocale);
     }
     config.i18n.sources.add('./i18n/i18n_module_en.properties');
 }

@@ -23,7 +23,7 @@ import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import sharingStore from './sharing.store';
 
 function actionsThatRequireCreate(action) {
-    if ((action !== 'edit' && action !== 'clone') || this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.params.modelType))) {
+    if ((action !== 'edit' && action !== 'clone' && action !== 'share') || this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.params.modelType))) {
         return true;
     }
     return false;
@@ -188,10 +188,11 @@ const List = React.createClass({
                 <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
                     <DataTable
                         rows={this.state.dataRows}
-                        columns={['name', 'lastUpdated']}
+                        columns={['name', 'publicAccess', 'lastUpdated']}
                         contextMenuActions={availableActions}
                         contextMenuIcons={{clone: 'content_copy', sharing: 'share'}}
                         primaryAction={availableActions.details}
+                        isContextActionAllowed={this.isContextActionAllowed}
                     />
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
@@ -209,6 +210,31 @@ const List = React.createClass({
                 />
             </div>
         );
+    },
+
+    isContextActionAllowed(model, action) {
+        // Don't allow anything if we can't determine the access
+        if (!model || !model.access) {
+            return false;
+        }
+
+        // Shortcut for access detection where action names match to access properties
+        if (model.access.hasOwnProperty(action)) {
+            return model.access[action];
+        }
+
+        // Switch action for special cases
+        switch(action) {
+        case 'share':
+        case 'edit':
+        case 'clone':
+            return model.access.write;
+        case 'translate':
+        case 'details':
+            return model.access.read;
+        default:
+            return false;
+        }
     },
 
     searchListByName(searchObserver) {

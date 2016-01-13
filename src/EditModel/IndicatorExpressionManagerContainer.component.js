@@ -30,6 +30,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
         indicatorExpressionChanged: React.PropTypes.func.isRequired,
         description: React.PropTypes.string.isRequired,
         formula: React.PropTypes.string.isRequired,
+        titleText: React.PropTypes.string.isRequired,
     },
 
     mixins: [Translate],
@@ -68,6 +69,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
                 expressionStatusStore={indicatorExpressionStatusStore}
                 dataElementOperandSelectorActions={dataElementOperandSelectorActions}
                 indicatorExpressionChanged={this.props.indicatorExpressionChanged}
+                titleText={this.props.titleText}
                 />
         );
     },
