@@ -24,6 +24,8 @@ import AttributeFields from './AttributeFields';
 import createFormValidator from 'd2-ui/lib/forms/FormValidator';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
+import BackButton from './BackButton.component';
+
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default class EditModel extends React.Component {
     constructor(props) {
@@ -86,9 +88,10 @@ export default class EditModel extends React.Component {
 
     render() {
         const formPaperStyle = {
-            width: '80%',
+            width: '100%',
             margin: '3rem auto 2rem',
             padding: '2rem 5rem 4rem',
+            position: 'relative',
         };
 
         const renderForm = () => {
@@ -102,8 +105,15 @@ export default class EditModel extends React.Component {
                 marginRight: '1rem',
             };
 
+            const backButtonStyle = {
+                position: 'absolute',
+                left: 5,
+                top: 5,
+            };
+
             return (
                 <Paper style={formPaperStyle}>
+                    <div style={backButtonStyle}><BackButton onClick={this._goBack} toolTip="back_to_list" /></div>
                     <FormHeading text={camelCaseToUnderscores(this.props.modelType)} />
                     <Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm.bind(this)} formValidator={this.state.formValidator}>
                         <AttributeFields model={this.state.modelToEdit} updateFn={objectActions.updateAttribute} registerValidator={this._registerValidator.bind(this)} />
@@ -127,6 +137,10 @@ export default class EditModel extends React.Component {
                 {this.state.isLoading ? 'Loading data...' : renderForm()}
             </div>
         );
+    }
+
+    _goBack() {
+        Router.HashLocation.pop();
     }
 
     _registerValidator(attributeValidator) {
