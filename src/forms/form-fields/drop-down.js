@@ -17,9 +17,16 @@ export default React.createClass({
         isRequired: React.PropTypes.bool,
         labelText: React.PropTypes.string.isRequired,
         translate: React.PropTypes.bool,
+        translateLabel: React.PropTypes.bool,
     },
 
     mixins: [MuiThemeMixin, Translate],
+
+    getDefaultProps() {
+        return {
+            translateLabel: true,
+        };
+    },
 
     getInitialState() {
         return {
@@ -59,12 +66,13 @@ export default React.createClass({
 
     render() {
         const {onFocus, onBlur, ...other} = this.props;
+
         return (
             <SelectField
                 value={this.state.value.toString()}
                 {...other}
                 menuItems={this.state.options}
-                floatingLabelText={this.getTranslation(this.props.labelText)}
+                floatingLabelText={this.props.translateLabel ? this.getTranslation(this.props.labelText) : this.props.labelText}
             />
         );
     },

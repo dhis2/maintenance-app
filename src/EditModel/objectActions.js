@@ -2,6 +2,9 @@ import Action from 'd2-flux/action/Action';
 import modelToEditStore from './modelToEditStore';
 import {isFunction} from 'd2-utils';
 import log from 'loglevel';
+import {getInstance} from 'd2/lib/d2';
+
+import indicatorGroupsStore from './indicatorGroupsStore';
 
 const objectActions = Action.createActionsFromNames([
     'getObjectOfTypeById',
@@ -12,6 +15,53 @@ const objectActions = Action.createActionsFromNames([
     'update',
     'updateAttribute',
 ]);
+
+const hackedSaves = {
+    dataElement: function dataElementAfterSave(model, lastImportedId) {
+        return Rx.Observable.just(true);
+    },
+    indicator: function indicatorAfterSave(model, lastImportedId) {
+        const removeUrls = indicatorGroupsStore.state.remove
+            .filter(id => id)
+            .map(remove => `indicatorGroups/${remove}/indicators/${lastImportedId}`);
+        const uniqueRemoveUrls = Array.from((new Set(removeUrls)).values());
+        const saveUrls = Object.keys(indicatorGroupsStore.state.indicatorGroupValues)
+            .map(key => indicatorGroupsStore.state.indicatorGroupValues[key])
+            .filter(id => id)
+            .map(save => `indicatorGroups/${save}/indicators/${lastImportedId}`);
+
+        const removePromises = getInstance()
+            .then(d2 => {
+                const api = d2.Api.getApi();
+
+                return Promise.all(uniqueRemoveUrls.map(url => api.delete(url)));
+            });
+
+        const savePromises = getInstance()
+            .then(d2 => {
+                const api = d2.Api.getApi();
+
+                return Promise.all(saveUrls.map(url => api.post(url)));
+            });
+
+        return Rx.Observable.fromPromise(Promise.all([removePromises, savePromises]));
+    },
+};
+
+function hasAfterSave(model) {
+    if (!model || !model.modelDefinition) {
+        return false;
+    }
+
+    if (Object.keys(hackedSaves).indexOf(model.modelDefinition.name) !== -1) {
+        return true;
+    }
+    return false;
+}
+
+function getAfterSave(model, lastImportedId) {
+    return hackedSaves[model.modelDefinition.name](model, lastImportedId);
+}
 
 objectActions.getObjectOfTypeById
     .subscribe(({data, complete, error}) => {
@@ -29,13 +79,14 @@ objectActions.getObjectOfTypeByIdAndClone
 
 objectActions.saveObject.subscribe(action => {
     const errorHandler = (message) => {
+        console.log(message);
         action.error(message);
     };
 
-    const successHandler = () => {
-        if (isFunction(action.data.afterSave)) {
+    const successHandler = (response) => {
+        if (hasAfterSave(modelToEditStore.state)) {
             log.info('Handling after save');
-            action.data.afterSave(action)
+            getAfterSave(modelToEditStore.state, response.response.lastImported)
                 .subscribe(
                     () => action.complete('success'),
                     errorHandler

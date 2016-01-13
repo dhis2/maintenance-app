@@ -1,5 +1,6 @@
 import React from 'react';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 export default React.createClass({
     propTypes: {
@@ -7,6 +8,8 @@ export default React.createClass({
         labelText: React.PropTypes.string.isRequired,
         onChange: React.PropTypes.func.isRequired,
     },
+
+    mixins: [Translate],
 
     render() {
         return (
@@ -16,7 +19,7 @@ export default React.createClass({
                 mode="landscape"
                 autoOk={true}
                 inline={true}
-                floatingLabelText={this.props.labelText}
+                floatingLabelText={this.getTranslation(this.props.labelText)}
                 onChange={this._onDateSelect}
             />
         );

@@ -39,4 +39,6 @@ import {config} from 'd2/lib/d2';
     'created',
     'lastUpdated',
     'id',
+    'start_date',
+    'end_date',
 ].forEach(key => config.i18n.strings.add(key));

@@ -12,6 +12,8 @@ import {Observable} from 'rx';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import modelToEditStore from './modelToEditStore';
 
+import DataIndicatorGroupsAssignment from './DataIndicatorGroupsAssignment.component';
+
 config.i18n.strings.add('done');
 
 const createFakePager = response => {
@@ -140,6 +142,9 @@ export default React.createClass({
                     <Dialog ref="dialog" modal={true} actions={dialogActions} contentStyle={{maxWidth: '90%'}} bodyStyle={{padding: '0'}}>
                         {this.state ? this.renderExpressionManager() : null}
                     </Dialog>
+                </div>
+                <div style={{marginTop: '2rem'}}>
+                    <DataIndicatorGroupsAssignment source={this.props.modelToEdit} />
                 </div>
             </div>
         );
