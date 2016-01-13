@@ -224,7 +224,7 @@ const List = React.createClass({
         }
 
         // Switch action for special cases
-        switch(action) {
+        switch (action) {
         case 'share':
         case 'edit':
         case 'clone':
