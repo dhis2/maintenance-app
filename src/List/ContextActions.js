@@ -7,6 +7,7 @@ import snackActions from '../Snackbar/snack.actions';
 import log from 'loglevel';
 import listStore from './list.store';
 import sharingStore from './sharing.store';
+import translateStore from './translation-dialog/translationStore';
 
 config.i18n.strings.add('edit');
 config.i18n.strings.add('clone');
@@ -91,6 +92,14 @@ contextActions.share
                     open: true,
                 });
             });
+    });
+
+contextActions.translate
+    .subscribe(({data: model}) => {
+        translateStore.setState({
+            model: model,
+            open: true,
+        });
     });
 
 export default contextActions;

@@ -6,7 +6,7 @@ function loadModelFromD2(objectType, objectId) {
     return getD2().then(d2 => {
         if (d2.models[objectType]) {
             return d2.models[objectType]
-                .get(objectId, objectType === 'dataElement' ? {fields: ':all,dataElementGroups[id,name,dataElementGroupSet[id]]'} : undefined);
+                .get(objectId, objectType === 'dataElement' ? {fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]'} : undefined);
         }
         return Promise.reject('Invalid model');
     });

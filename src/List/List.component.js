@@ -22,6 +22,9 @@ import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import sharingStore from './sharing.store';
 
+import translationStore from './translation-dialog/translationStore';
+import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+
 function actionsThatRequireCreate(action) {
     if ((action !== 'edit' && action !== 'clone' && action !== 'share') || this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.params.modelType))) {
         return true;
@@ -93,6 +96,10 @@ const List = React.createClass({
                 model: null,
                 open: false,
             },
+            translation: {
+                model: null,
+                open: false,
+            }
         };
     },
 
@@ -124,9 +131,20 @@ const List = React.createClass({
             this.refs.sharingDialog.refs.sharingDialog.show();
         });
 
+        const translationStoreDisposable = translationStore.subscribe(translationState => {
+            this.setState({
+                translation: translationState,
+            });
+
+            this.refs.translationDialog &&
+            this.refs.translationDialog.refs.translationDialog &&
+            this.refs.translationDialog.refs.translationDialog.show();
+        });
+
         this.registerDisposable(sourceStoreDisposable);
         this.registerDisposable(detailsStoreDisposable);
         this.registerDisposable(sharingStoreDisposable);
+        this.registerDisposable(translationStoreDisposable);
     },
 
     componentWillReceiveProps(newProps) {
@@ -208,6 +226,12 @@ const List = React.createClass({
                     open={this.state.sharing.open && this.state.sharing.model}
                     ref="sharingDialog"
                 />
+                <TranslationDialog
+                    objectIdToTranslate={this.state.translation.model && this.state.translation.model.id}
+                    objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
+                    open={this.state.translation.open}
+                    ref="translationDialog"
+                />
             </div>
         );
     },
@@ -247,6 +271,7 @@ const List = React.createClass({
                 listActions.searchByName({modelType: this.props.params.modelType, searchString: value})
                     .subscribe(() => {}, (error) => log.error(error));
             });
+
 
         this.registerDisposable(searchListByNameDisposable);
     },
