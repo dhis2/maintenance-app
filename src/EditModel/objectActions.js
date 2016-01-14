@@ -1,6 +1,5 @@
 import Action from 'd2-flux/action/Action';
 import modelToEditStore from './modelToEditStore';
-import {isFunction} from 'd2-utils';
 import log from 'loglevel';
 import {getInstance} from 'd2/lib/d2';
 
@@ -103,7 +102,6 @@ objectActions.getObjectOfTypeByIdAndClone
 
 objectActions.saveObject.subscribe(action => {
     const errorHandler = (message) => {
-        console.log(message);
         action.error(message);
     };
 

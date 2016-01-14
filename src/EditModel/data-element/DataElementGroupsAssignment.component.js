@@ -16,10 +16,14 @@ function getLoadingdataElement() {
 function findValue(optionList, model) {
     return optionList
         .map(option => option.value)
-        .find(option => Array.from(model.dataElementGroups.values()).map(model => model.id).indexOf(option) !== -1);
+        .find(option => Array.from(model.dataElementGroups.values()).map(dataElementGroup => dataElementGroup.id).indexOf(option) !== -1);
 }
 
 export default React.createClass({
+    propTypes: {
+        source: React.PropTypes.object.isRequired,
+    },
+
     getInitialState() {
         store.setState({
             dataElementGroupValues: {},
@@ -37,7 +41,7 @@ export default React.createClass({
             .then(d2 => d2.Api.getApi().get('dataElementGroupSets', {
                 fields: 'id,displayName,dataElementGroups[id,displayName]',
                 filter: ['compulsory:eq:true'],
-                paging: false
+                paging: false,
             }))
             .then(response => response.dataElementGroupSets)
             .then(dataElementGroupSets => this.setState({dataElementGroupSets}));
@@ -62,7 +66,7 @@ export default React.createClass({
                     const optionList = dataElementGroupSet.dataElementGroups.map(ig => {
                         return {
                             value: ig.id,
-                            text: ig.displayName
+                            text: ig.displayName,
                         };
                     });
 
@@ -77,6 +81,7 @@ export default React.createClass({
                                 options={optionList}
                                 defaultValue={value}
                                 onChange={this._updateGroupStatus.bind(this, dataElementGroupSet.id, findValue(optionList, this.props.source))}
+                                fullWidth
                             />
                         </div>
                     );

@@ -8,7 +8,7 @@ import store from './indicatorGroupsStore';
 function getLoadingIndicator() {
     return (
         <div style={{textAlign: 'center'}}>
-            <CircularProgress mode="indeterminate" />
+            <CircularProgress mode="indeterminate"/>
         </div>
     );
 }
@@ -16,10 +16,14 @@ function getLoadingIndicator() {
 function findValue(optionList, model) {
     return optionList
         .map(option => option.value)
-        .find(option => Array.from(model.indicatorGroups.values()).map(model => model.id).indexOf(option) !== -1);
+        .find(option => Array.from(model.indicatorGroups.values()).map(indicatorGroup => indicatorGroup.id).indexOf(option) !== -1);
 }
 
 export default React.createClass({
+    propTypes: {
+        source: React.PropTypes.object.isRequired,
+    },
+
     getInitialState() {
         store.setState({
             indicatorGroupValues: {},
@@ -34,7 +38,11 @@ export default React.createClass({
 
     componentDidMount() {
         getInstance()
-            .then(d2 => d2.Api.getApi().get('indicatorGroupSets', {fields: 'id,displayName,indicatorGroups[id,displayName]', filter: ['compulsory:eq:true'], paging: false}))
+            .then(d2 => d2.Api.getApi().get('indicatorGroupSets', {
+                fields: 'id,displayName,indicatorGroups[id,displayName]',
+                filter: ['compulsory:eq:true'],
+                paging: false,
+            }))
             .then(response => response.indicatorGroupSets)
             .then(indicatorGroupSets => this.setState({indicatorGroupSets}));
 
@@ -54,29 +62,30 @@ export default React.createClass({
 
         return (
             <div>
-                    {this.state.indicatorGroupSets.map(indicatorGroupSet => {
-                        const optionList = indicatorGroupSet.indicatorGroups.map(ig => {
-                            return {
-                                value: ig.id,
-                                text: ig.displayName
-                            };
-                        });
+                {this.state.indicatorGroupSets.map(indicatorGroupSet => {
+                    const optionList = indicatorGroupSet.indicatorGroups.map(ig => {
+                        return {
+                            value: ig.id,
+                            text: ig.displayName,
+                        };
+                    });
 
-                        const value = Object.prototype.hasOwnProperty.call(store.state.indicatorGroupValues, indicatorGroupSet.id) ? store.state.indicatorGroupValues[indicatorGroupSet.id] : findValue(optionList, this.props.source);
+                    const value = Object.prototype.hasOwnProperty.call(store.state.indicatorGroupValues, indicatorGroupSet.id) ? store.state.indicatorGroupValues[indicatorGroupSet.id] : findValue(optionList, this.props.source);
 
-                        return (
-                            <div>
-                                <DropDown
-                                    key={indicatorGroupSet.id}
-                                    labelText={indicatorGroupSet.displayName}
-                                    translateLabel={false}
-                                    options={optionList}
-                                    defaultValue={value}
-                                    onChange={this._updateGroupStatus.bind(this, indicatorGroupSet.id, findValue(optionList, this.props.source))}
-                                />
-                            </div>
-                        );
-                    })}
+                    return (
+                        <div>
+                            <DropDown
+                                key={indicatorGroupSet.id}
+                                labelText={indicatorGroupSet.displayName}
+                                translateLabel={false}
+                                options={optionList}
+                                defaultValue={value}
+                                onChange={this._updateGroupStatus.bind(this, indicatorGroupSet.id, findValue(optionList, this.props.source))}
+                                fullWidth
+                            />
+                        </div>
+                    );
+                })}
             </div>
         );
     },
