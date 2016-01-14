@@ -13,6 +13,7 @@ import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import modelToEditStore from './modelToEditStore';
 
 import DataIndicatorGroupsAssignment from './DataIndicatorGroupsAssignment.component';
+import DataElementGroupsAssignment from './data-element/DataElementGroupsAssignment.component';
 
 config.i18n.strings.add('done');
 
@@ -150,6 +151,14 @@ export default React.createClass({
         );
     },
 
+    renderDataElementFields() {
+        return (
+            <div style={{marginTop: '2rem'}}>
+                <DataElementGroupsAssignment source={this.props.modelToEdit} />
+            </div>
+        );
+    },
+
     renderExpressionManager() {
         return (
             <IndicatorExpressionManagerContainer
@@ -164,6 +173,10 @@ export default React.createClass({
     render() {
         if (this.props.modelToEdit.modelDefinition.name === 'indicator') {
             return this.renderIndicatorFields();
+        }
+
+        if (this.props.modelToEdit.modelDefinition.name === 'dataElement') {
+            return this.renderDataElementFields();
         }
 
         return null;

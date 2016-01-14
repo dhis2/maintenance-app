@@ -5,6 +5,7 @@ import log from 'loglevel';
 import {getInstance} from 'd2/lib/d2';
 
 import indicatorGroupsStore from './indicatorGroupsStore';
+import dataElementGroupStore from './data-element/dataElementGroupsStore';
 
 const objectActions = Action.createActionsFromNames([
     'getObjectOfTypeById',
@@ -18,7 +19,30 @@ const objectActions = Action.createActionsFromNames([
 
 const hackedSaves = {
     dataElement: function dataElementAfterSave(model, lastImportedId) {
-        return Rx.Observable.just(true);
+        const removeUrls = dataElementGroupStore.state.remove
+            .filter(id => id)
+            .map(remove => `dataElementGroups/${remove}/dataElements/${lastImportedId}`);
+        const uniqueRemoveUrls = Array.from((new Set(removeUrls)).values());
+        const saveUrls = Object.keys(dataElementGroupStore.state.dataElementGroupValues)
+            .map(key => dataElementGroupStore.state.dataElementGroupValues[key])
+            .filter(id => id)
+            .map(save => `dataElementGroups/${save}/dataElements/${lastImportedId}`);
+
+        const removePromises = getInstance()
+            .then(d2 => {
+                const api = d2.Api.getApi();
+
+                return Promise.all(uniqueRemoveUrls.map(url => api.delete(url)));
+            });
+
+        const savePromises = getInstance()
+            .then(d2 => {
+                const api = d2.Api.getApi();
+
+                return Promise.all(saveUrls.map(url => api.post(url)));
+            });
+
+        return Rx.Observable.fromPromise(Promise.all([removePromises, savePromises]));
     },
     indicator: function indicatorAfterSave(model, lastImportedId) {
         const removeUrls = indicatorGroupsStore.state.remove

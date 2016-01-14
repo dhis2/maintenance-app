@@ -1,0 +1,97 @@
+import React from 'react';
+import {getInstance} from 'd2/lib/d2';
+import CircularProgress from 'material-ui/lib/circular-progress';
+
+import DropDown from '../../forms/form-fields/drop-down';
+import store from './dataElementGroupsStore';
+
+function getLoadingdataElement() {
+    return (
+        <div style={{textAlign: 'center'}}>
+            <CircularProgress mode="indeterminate"/>
+        </div>
+    );
+}
+
+function findValue(optionList, model) {
+    return optionList
+        .map(option => option.value)
+        .find(option => Array.from(model.dataElementGroups.values()).map(model => model.id).indexOf(option) !== -1);
+}
+
+export default React.createClass({
+    getInitialState() {
+        store.setState({
+            dataElementGroupValues: {},
+            remove: [],
+            save: [],
+        });
+
+        return {
+            dataElementGroupSets: null,
+        };
+    },
+
+    componentDidMount() {
+        getInstance()
+            .then(d2 => d2.Api.getApi().get('dataElementGroupSets', {
+                fields: 'id,displayName,dataElementGroups[id,displayName]',
+                filter: ['compulsory:eq:true'],
+                paging: false
+            }))
+            .then(response => response.dataElementGroupSets)
+            .then(dataElementGroupSets => this.setState({dataElementGroupSets}));
+
+        this.disposable = store.subscribe(() => this.forceUpdate());
+    },
+
+    componentWillUnmount() {
+        if (this.disposable) {
+            this.disposable && this.disposable.dispose();
+        }
+    },
+
+    render() {
+        if (!this.state.dataElementGroupSets) {
+            return getLoadingdataElement();
+        }
+
+        return (
+            <div>
+                {this.state.dataElementGroupSets.map(dataElementGroupSet => {
+                    const optionList = dataElementGroupSet.dataElementGroups.map(ig => {
+                        return {
+                            value: ig.id,
+                            text: ig.displayName
+                        };
+                    });
+
+                    const value = Object.prototype.hasOwnProperty.call(store.state.dataElementGroupValues, dataElementGroupSet.id) ? store.state.dataElementGroupValues[dataElementGroupSet.id] : findValue(optionList, this.props.source);
+
+                    return (
+                        <div>
+                            <DropDown
+                                key={dataElementGroupSet.id}
+                                labelText={dataElementGroupSet.displayName}
+                                translateLabel={false}
+                                options={optionList}
+                                defaultValue={value}
+                                onChange={this._updateGroupStatus.bind(this, dataElementGroupSet.id, findValue(optionList, this.props.source))}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    },
+
+    _updateGroupStatus(dataElementGroupSetId, oldValue, event) {
+        // TODO: Very bad to change props and set d2.model.dirty manually
+        this.props.source.dirty = true;
+
+        store.setState({
+            dataElementGroupValues: Object.assign({}, store.state.dataElementGroupValues, {[dataElementGroupSetId]: event.target.value ? event.target.value : null}),
+            remove: Array.from((new Set(store.state.remove.concat([oldValue])).values())),
+        });
+    },
+});

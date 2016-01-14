@@ -62,7 +62,6 @@ export default React.createClass({
                             };
                         });
 
-                        console.log(store.state.indicatorGroupValues[indicatorGroupSet.id], findValue(optionList, this.props.source), Object.prototype.hasOwnProperty.call(store.state.indicatorGroupValues, indicatorGroupSet.id) ? store.state.indicatorGroupValues[indicatorGroupSet.id] : findValue(optionList, this.props.source));
                         const value = Object.prototype.hasOwnProperty.call(store.state.indicatorGroupValues, indicatorGroupSet.id) ? store.state.indicatorGroupValues[indicatorGroupSet.id] : findValue(optionList, this.props.source);
 
                         return (
