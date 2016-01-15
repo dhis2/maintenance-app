@@ -1,9 +1,9 @@
-#. extracted from /var/www/pootle/env/lib/python2.7/site-packages/pootle/po/maintenance-app/src/i18n/i18n_module_en.properties, /var/www/pootle/env/lib/python2.7/site-packages/pootle/po/maintenance-app/src/i18n/i18n_module_fr.properties
+#. extracted from i18n_module_en.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-14 05:43-0400\n"
+"POT-Creation-Date: 2016-01-15 05:12-0400\n"
 "PO-Revision-Date: 2016-01-14 10:56+0000\n"
 "Last-Translator: Administrator <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.5.0\n"
+"X-Generator: Translate Toolkit 1.11.0\n"
 "X-POOTLE-MTIME: 1452768970.0\n"
 
 #: aggregate
@@ -360,8 +360,9 @@ msgid "Saving indicator failed"
 msgstr ""
 
 #: translate
+msgctxt "translate"
 msgid "Translate"
-msgstr "Traduire"
+msgstr ""
 
 #: select_indicator
 msgid "Please select indicator"
@@ -1306,3 +1307,31 @@ msgstr ""
 #: was_not_deleted
 msgid "was not deleted"
 msgstr ""
+
+#: was_deleted
+msgid "was deleted"
+msgstr ""
+
+#: select_locale
+msgid "Select locale"
+msgstr ""
+
+#: translation_dialog_title
+msgctxt "translation_dialog_title"
+msgid "Translate"
+msgstr ""
+
+#: translation_saved
+msgid "Translation saved"
+msgstr ""
+
+#: translation_save_error
+msgid "Saving translation errored"
+msgstr ""
+
+#: select_a_locale_to_enter_translations_for_that_language
+msgid "Select a locale to enter translations for that language"
+msgstr ""
+
+#~ msgid "Translate"
+#~ msgstr "Traduire"
