@@ -167,6 +167,7 @@ export default React.createClass({
                 indicatorExpressionChanged={this.indicatorExpressionChanged}
                 formula={this.props.modelToEdit[this.state.type] || ''}
                 description={this.props.modelToEdit[`${this.state.type}Description`] || ''}
+                ref="expressionManagerContainer"
             />
         );
     },
@@ -184,15 +185,11 @@ export default React.createClass({
     },
 
     setNumerator() {
-        this.setState({
-            type: 'numerator',
-        });
-        this.refs.dialog.show();
+        this.setState({type: 'numerator'}, () => this.refs.dialog.show());
     },
 
     setDenominator() {
-        this.setState({type: 'denominator'});
-        this.refs.dialog.show();
+        this.setState({type: 'denominator'}, () => this.refs.dialog.show());
     },
 
     closeDialog() {
