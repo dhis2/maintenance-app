@@ -3,6 +3,7 @@ import {getInstance as getD2, config} from 'd2/lib/d2';
 import Pager from 'd2/lib/pager/Pager';
 import Dialog from 'material-ui/lib/dialog';
 import RaisedButton from 'material-ui/lib/raised-button';
+import FlatButton from 'material-ui/lib/flat-button';
 
 // Indicator expression manager
 import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerContainer.component';
@@ -132,7 +133,7 @@ export default React.createClass({
 
     renderIndicatorFields() {
         const dialogActions = [
-            <RaisedButton label={this.getTranslation('done')} onTouchTap={this.closeDialog} disabled={!this.state.dialogValid} />,
+            <FlatButton label={this.getTranslation('done')} onTouchTap={this.closeDialog} disabled={!this.state.dialogValid} />,
         ];
 
         return (

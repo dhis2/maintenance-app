@@ -279,6 +279,7 @@ const List = React.createClass({
         case 'clone':
             return model.access.write;
         case 'translate':
+            return model.access.read && model.modelDefinition.translated;
         case 'details':
             return model.access.read;
         default:
