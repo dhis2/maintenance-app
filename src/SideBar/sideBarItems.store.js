@@ -25,7 +25,7 @@ const isInPredefinedList = (predefinedList) => {
 };
 
 getD2().then((d2) => {
-    const modelDefinitionNames = d2.models.mapThroughDefinitions(definition => definition.name)
+    const modelDefinitionNames = d2.models.mapThroughDefinitions(definition => definition.name);
     const sideBarItems = sideBarItemNamesOrdered.filter(isInPredefinedList(modelDefinitionNames));
 
     sideBarItemsStore.setState(sideBarItems);

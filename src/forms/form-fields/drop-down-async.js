@@ -46,12 +46,9 @@ export default React.createClass({
             });
 
             if (defaultOption) {
-                console.log(defaultOption);
-                defaultValue = defaultOption;
+                defaultValue = defaultOption.model;
             }
         }
-
-        console.log(defaultValue);
 
         return (
             <DropDown {...this.props} options={this.state.options} defaultValue={this.props.defaultValue ? this.props.defaultValue.id : defaultValue.id} onChange={this._onChange} />
