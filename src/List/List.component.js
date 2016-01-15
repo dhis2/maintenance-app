@@ -24,6 +24,7 @@ import sharingStore from './sharing.store';
 
 import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import snackActions from '../Snackbar/snack.actions';
 
 function actionsThatRequireCreate(action) {
     if ((action !== 'edit' && action !== 'clone' && action !== 'share') || this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.params.modelType))) {
@@ -99,7 +100,7 @@ const List = React.createClass({
             translation: {
                 model: null,
                 open: false,
-            }
+            },
         };
     },
 
@@ -231,9 +232,20 @@ const List = React.createClass({
                     objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
                     open={this.state.translation.open}
                     ref="translationDialog"
+                    onTranslationSaved={this._translationSaved}
+                    onTranslationError={this._translationErrored}
                 />
             </div>
         );
+    },
+
+    _translationSaved() {
+        snackActions.show({message: 'translation_saved', action: 'ok', translate: true});
+    },
+
+    _translationErrored(errorMessage) {
+        log.error(errorMessage);
+        snackActions.show({message: 'translation_save_error', translate: true});
     },
 
     isContextActionAllowed(model, action) {
