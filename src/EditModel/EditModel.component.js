@@ -12,30 +12,35 @@ import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
 import Paper from 'material-ui/lib/paper';
-import {isString} from 'd2-utils';
+import {isString, camelCaseToUnderscores} from 'd2-utils';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import Form from 'd2-ui/lib/forms/Form.component';
 import log from 'loglevel';
 import FormHeading from './FormHeading';
-import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
 import ExtraFields from './ExtraFields';
 import AttributeFields from './AttributeFields';
 import createFormValidator from 'd2-ui/lib/forms/FormValidator';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 import BackButton from './BackButton.component';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
-export default class EditModel extends React.Component {
-    constructor(props) {
-        super(props);
+export default React.createClass({
+    propTypes: {
+        modelId: React.PropTypes.string.isRequired,
+        modelType: React.PropTypes.string.isRequired,
+    },
 
-        this.state = {
+    mixins: [Translate],
+
+    getInitialState() {
+        return {
             modelToEdit: undefined,
             isLoading: true,
         };
-    }
+    },
 
     componentWillMount() {
         const modelType = this.props.modelType;
@@ -74,17 +79,21 @@ export default class EditModel extends React.Component {
                 formFieldsManager: formFieldsManager,
             });
         });
-    }
+    },
 
     componentWillReceiveProps() {
         this.setState({
             isLoading: true,
         });
-    }
+    },
 
     componentWillUnmount() {
         this.disposable && this.disposable.dispose();
-    }
+    },
+
+    getTranslatedPropertyName(propertyName) {
+        return this.getTranslation(camelCaseToUnderscores(propertyName));
+    },
 
     render() {
         const formPaperStyle = {
@@ -115,12 +124,12 @@ export default class EditModel extends React.Component {
                 <Paper style={formPaperStyle}>
                     <div style={backButtonStyle}><BackButton onClick={this._goBack} toolTip="back_to_list" /></div>
                     <FormHeading text={camelCaseToUnderscores(this.props.modelType)} />
-                    <Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm.bind(this)} formValidator={this.state.formValidator}>
-                        <AttributeFields model={this.state.modelToEdit} updateFn={objectActions.updateAttribute} registerValidator={this._registerValidator.bind(this)} />
+                    <Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm} formValidator={this.state.formValidator}>
+                        <AttributeFields model={this.state.modelToEdit} updateFn={objectActions.updateAttribute} registerValidator={this._registerValidator} />
                         <ExtraFields modelToEdit={this.state.modelToEdit} />
                         <FormButtons style={{paddingTop: '2rem'}}>
-                            <SaveButton style={saveButtonStyle} onClick={this.saveAction.bind(this)} />
-                            <CancelButton onClick={this.closeAction.bind(this)}/>
+                            <SaveButton style={saveButtonStyle} onClick={this.saveAction} />
+                            <CancelButton onClick={this.closeAction}/>
                         </FormButtons>
                     </Form>
                 </Paper>
@@ -137,21 +146,21 @@ export default class EditModel extends React.Component {
                 {this.state.isLoading ? 'Loading data...' : renderForm()}
             </div>
         );
-    }
+    },
 
     _goBack() {
         Router.HashLocation.pop();
-    }
+    },
 
     _registerValidator(attributeValidator) {
         this.setState({
             attributeValidatorRunner: attributeValidator,
         });
-    }
+    },
 
     _updateForm(fieldName, value) {
         objectActions.update({fieldName, value});
-    }
+    },
 
     saveAction(event) {
         event.preventDefault();
@@ -178,19 +187,15 @@ export default class EditModel extends React.Component {
 
                 if (errorMessage.messages && errorMessage.messages.length > 0) {
                     log.debug(errorMessage.messages);
-                    snackActions.show({message: `${errorMessage.messages[0].property}: ${errorMessage.messages[0].message} `});
+                    snackActions.show({message: `${this.getTranslatedPropertyName(errorMessage.messages[0].property)}: ${errorMessage.messages[0].message} `});
                 }
             }
         );
-    }
+    },
 
     closeAction(event) {
         event.preventDefault();
 
         Router.HashLocation.push(['/list', this.props.modelType].join('/'));
-    }
-}
-EditModel.propTypes = {
-    modelId: React.PropTypes.string.isRequired,
-    modelType: React.PropTypes.string.isRequired,
-};
+    },
+});
