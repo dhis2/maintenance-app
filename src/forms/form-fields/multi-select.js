@@ -218,7 +218,9 @@ export default React.createClass({
 
     loadAvailableItems(d2) {
         if (d2.models[this.props.referenceType]) {
-            return d2.models[this.props.referenceType].list({paging: false, fields: 'displayName|rename(name),id,level'});
+            return d2.models[this.props.referenceType]
+                .filter().on('name').notEqual('default')
+                .list({paging: false, fields: 'displayName|rename(name),id,level'});
         }
         return Promise.reject(`${this.props.referenceType} is not a model on d2.models`);
     },
