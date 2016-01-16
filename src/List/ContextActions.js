@@ -68,7 +68,7 @@ contextActions.delete
                             .catch(response => {
                                 log.warn(response);
                                 snackActions.show({
-                                    message: `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
+                                    message: response.message ? response.message : `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
                                 });
                             });
                     });

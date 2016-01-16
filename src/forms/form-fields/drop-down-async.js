@@ -19,7 +19,7 @@ export default React.createClass({
 
     componentDidMount() {
         getInstance()
-            .then(d2 => d2.models[this.props.referenceType].list({fields: 'id,displayName', paging: false}))
+            .then(d2 => d2.models[this.props.referenceType].list({fields: 'id,displayName,name', paging: false}))
             .then(modelCollection => modelCollection.toArray())
             .then(values => values.map(model => {
                 return {
@@ -37,8 +37,21 @@ export default React.createClass({
     },
 
     render() {
+        let defaultValue = {};
+
+        // TODO: Hack to default categoryCombo to 'default'
+        if (this.props.referenceType === 'categoryCombo') {
+            const defaultOption = this.state.options.find(option => {
+                return option.model.name === 'default';
+            });
+
+            if (defaultOption) {
+                defaultValue = defaultOption.model;
+            }
+        }
+
         return (
-            <DropDown {...this.props} options={this.state.options} defaultValue={this.props.defaultValue ? this.props.defaultValue.id : undefined} onChange={this._onChange} />
+            <DropDown {...this.props} options={this.state.options} defaultValue={this.props.defaultValue ? this.props.defaultValue.id : defaultValue.id} onChange={this._onChange} />
         );
     },
 

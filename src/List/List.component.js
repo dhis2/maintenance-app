@@ -254,6 +254,19 @@ const List = React.createClass({
             return false;
         }
 
+        // TODO: Remove categoryOptionCombo available actions hack when this is sorted through the API
+        if (model.modelDefinition.name === 'categoryOptionCombo') {
+            if (action === 'edit') {
+                return model.access.write;
+            }
+
+            if (action === 'details') {
+                return model.access.read;
+            }
+
+            return false;
+        }
+
         // Shortcut for access detection where action names match to access properties
         if (model.access.hasOwnProperty(action)) {
             return model.access[action];
@@ -266,6 +279,7 @@ const List = React.createClass({
         case 'clone':
             return model.access.write;
         case 'translate':
+            return model.access.read && model.modelDefinition.translated;
         case 'details':
             return model.access.read;
         default:

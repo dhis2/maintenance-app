@@ -55,6 +55,12 @@ const IndicatorExpressionManagerContainer = React.createClass({
             .then(d2 => d2.models.constant.list({paging: false, fields: 'id,displayName'}))
             .then(collection => collection.toArray().map(model => ({value: model.id, label: model.displayName})))
             .then(constants => this.setState({constants}));
+
+        this.refs.expressionManager.requestExpressionStatus();
+    },
+
+    getExpressionManager() {
+        return this.refs.expressionManager;
     },
 
     render() {
@@ -70,6 +76,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
                 dataElementOperandSelectorActions={dataElementOperandSelectorActions}
                 indicatorExpressionChanged={this.props.indicatorExpressionChanged}
                 titleText={this.props.titleText}
+                ref="expressionManager"
                 />
         );
     },
