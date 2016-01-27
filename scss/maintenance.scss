@@ -1,9 +1,8 @@
 @import 'normalize';
 
 // Component stylesheets from dependencies
-@import '../node_modules/d2-ui/DataTable';
+@import '../node_modules/d2-ui/scss/DataTable';
 @import '../node_modules/d2-ui-pagination/css/Pagination';
-@import '../node_modules/d2-ui-basicfields/scss/BasicFields';
 @import '../node_modules/d2-ui/lib/css/IndicatorExpressionManager';
 @import '../node_modules/d2-ui/lib/css/HeaderBar';
 
@@ -16,7 +15,7 @@
 $html-background-color: #E7E7E7;
 $data-table--background-color: #FFF;
 
-//Basic for all
+// Basic for all
 * {
   box-sizing: border-box;
 }
