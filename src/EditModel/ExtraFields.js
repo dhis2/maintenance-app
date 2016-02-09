@@ -41,7 +41,7 @@ const createFakePager = response => {
 
 dataElementOperandSelectorActions.loadList.subscribe(() => {
     getD2()
-        .then(d2 => d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName'}))
+        .then(d2 => d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName', totals: true}))
         .then(createFakePager)
         .then(collection => {
             dataElementOperandStore.setState(collection);
