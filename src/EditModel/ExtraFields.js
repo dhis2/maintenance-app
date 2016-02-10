@@ -133,6 +133,7 @@ export default React.createClass({
 
     renderIndicatorFields() {
         const dialogActions = [
+            // TODO: This button should "commit" the change to the model where a cancel button will discard any changes made
             <FlatButton label={this.getTranslation('done')} onTouchTap={this.closeDialog} disabled={!this.state.dialogValid} />,
         ];
 
