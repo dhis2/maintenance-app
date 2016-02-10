@@ -31,8 +31,21 @@ export default React.createClass({
             .then(options => {
                 this.setState({
                     options: options,
+                }, () => {
+                    const defaultOption = this.state.options.find(option => {
+                        return option.model.name === 'default';
+                    });
+
+                    if (defaultOption) {
+                        this.props.onChange({
+                            target: {
+                                value: defaultOption.model,
+                            },
+                        });
+                    }
+
+                    this.forceUpdate();
                 });
-                this.forceUpdate();
             });
     },
 
@@ -44,15 +57,6 @@ export default React.createClass({
             const defaultOption = this.state.options.find(option => {
                 return option.model.name === 'default';
             });
-
-            if (defaultOption) {
-                defaultValue = defaultOption.model;
-                this.props.onChange({
-                    target: {
-                        value: defaultOption.model,
-                    },
-                });
-            }
         }
 
         return (
