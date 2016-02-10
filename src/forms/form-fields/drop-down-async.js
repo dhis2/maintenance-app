@@ -47,6 +47,11 @@ export default React.createClass({
 
             if (defaultOption) {
                 defaultValue = defaultOption.model;
+                this.props.onChange({
+                    target: {
+                        value: defaultOption.model,
+                    },
+                });
             }
         }
 
