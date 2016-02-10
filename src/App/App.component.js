@@ -43,9 +43,7 @@ class App extends AppWithD2 {
                 <HeaderBar />
                 <MainContent>
                     <div className="sidebar-container">
-                        <div className="sidebar-container--hide-scroll-bar">
-                            <SideBar />
-                        </div>
+                        <SideBar />
                     </div>
                     <div className="main-container">
                         <RouteHandler />

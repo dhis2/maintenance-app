@@ -12,7 +12,7 @@
 @import '../scss/List/DetailsBox';
 @import '../scss/List/List';
 
-$html-background-color: #E7E7E7;
+$html-background-color: #F3F3F3;
 $data-table--background-color: #FFF;
 
 // Basic for all
@@ -35,17 +35,11 @@ html {
 
 .sidebar-container {
   height: 100%;
+  margin-top: 16px;
+  padding-top: 2rem;
   position: fixed;
   top: 0;
   width: 265px;
-}
-
-.sidebar-container--hide-scroll-bar {
-  height: 100%;
-  margin-right: -2rem;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding-right: 2rem;
 }
 
 .main-container {

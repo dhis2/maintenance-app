@@ -1,10 +1,11 @@
 import React from 'react';
 import {State, Navigation} from 'react-router';
 import sideBarItemsStore from './sideBarItems.store';
-import SideBar from './SideBar.component';
 import {config} from 'd2/lib/d2';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import {camelCaseToUnderscores} from 'd2-utils';
+import Sidebar from 'd2-ui/lib/sidebar/Sidebar.component';
+import SideBarButtons from './SideBarButtons.component';
 
 config.i18n.strings.add('maintenance');
 config.i18n.strings.add('filter_menu_items_by_name');
@@ -17,6 +18,7 @@ const SideBarContainer = React.createClass({
     getInitialState() {
         return {
             sideBarItems: [],
+            searchString: '',
         };
     },
 
@@ -38,21 +40,30 @@ const SideBarContainer = React.createClass({
         const items = this.state.sideBarItems
             .map(listItem => {
                 return {
-                    primaryText: this.getTranslation(camelCaseToUnderscores(listItem)),
-                    modelType: listItem,
-                    isActive: this.isActive('list', {modelType: listItem}),
-                    onClick: function onClick() {
-                        this.transitionTo('list', {modelType: listItem});
-                    }.bind(this),
+                    label: this.getTranslation(camelCaseToUnderscores(listItem)),
+                    key: listItem,
                 };
-            });
+            })
+            .filter(listItem => listItem.label.toLowerCase().indexOf(this.state.searchString.toLowerCase()) >= 0);
 
         return (
-            <SideBar searchHint={this.getTranslation('search')}
-                     filterChildren={this.filterChildren}
-                     items={items}
-                />
+            <Sidebar
+                sections={items}
+                onChangeSection={this.onChangeSection}
+                currentSection={this.state.category}
+                showSearchField={true}
+                onChangeSearchText={this.onChangeSearchText}
+                sideBarButtons={<SideBarButtons />}
+            />
         );
+    },
+
+    onChangeSearchText(searchString) {
+        this.setState({searchString});
+    },
+
+    onChangeSection(listItem) {
+        this.transitionTo('list', {modelType: listItem});
     },
 
     filterChildren(searchString, child) {
