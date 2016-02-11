@@ -18,8 +18,10 @@ export default React.createClass({
     },
 
     componentDidMount() {
+        console.log(this.props.queryParamFilter);
+
         getInstance()
-            .then(d2 => d2.models[this.props.referenceType].list({fields: 'id,displayName,name', paging: false}))
+            .then(d2 => d2.models[this.props.referenceType].list({fields: 'id,displayName,name', paging: false, filter: this.props.queryParamFilter}))
             .then(modelCollection => modelCollection.toArray())
             .then(values => values.map(model => {
                 return {

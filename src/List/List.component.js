@@ -209,7 +209,7 @@ const List = React.createClass({
                         rows={this.state.dataRows}
                         columns={['name', 'publicAccess', 'lastUpdated']}
                         contextMenuActions={availableActions}
-                        contextMenuIcons={{clone: 'content_copy', sharing: 'share'}}
+                        contextMenuIcons={{clone: 'content_copy', sharing: 'share', pdfDataSetForm: 'picture_as_pdf'}}
                         primaryAction={availableActions.details}
                         isContextActionAllowed={this.isContextActionAllowed}
                     />
@@ -282,6 +282,8 @@ const List = React.createClass({
             return model.access.read && model.modelDefinition.translated;
         case 'details':
             return model.access.read;
+        case 'pdfDataSetForm':
+            return model.modelDefinition.name === 'dataSet' && model.access.read;
         default:
             return false;
         }

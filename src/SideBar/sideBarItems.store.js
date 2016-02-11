@@ -1,21 +1,8 @@
 import Store from 'd2-flux/store/Store';
 import {getInstance as getD2} from 'd2/lib/d2';
+import maintenanceModels from '../config/maintenance-models'
 
-const sideBarItemNamesOrdered = [
-    'categoryOption',
-    'category',
-    'categoryCombo',
-    'categoryOptionCombo',
-    'categoryOptionGroup',
-    'categoryOptionGroupSet',
-    'dataElement',
-    'dataElementGroup',
-    'dataElementGroupSet',
-    'indicator',
-    'indicatorType',
-    'indicatorGroup',
-    'indicatorGroupSet',
-];
+const sideBarItemNamesOrdered = maintenanceModels.getModelTypesToShowInSideBar();
 
 const sideBarItemsStore = Store.create();
 const isInPredefinedList = (predefinedList) => {

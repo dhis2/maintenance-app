@@ -1,9 +1,11 @@
 import dataElement from './dataElement';
 import indicator from './indicator';
+import dataSet from './dataSet';
 
 const overridesByType = {
     dataElement,
     indicator,
+    dataSet,
 };
 
 export default {

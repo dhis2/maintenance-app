@@ -15,6 +15,7 @@ config.i18n.strings.add('delete');
 config.i18n.strings.add('details');
 config.i18n.strings.add('translate');
 config.i18n.strings.add('sharing');
+config.i18n.strings.add('pdfDataSetForm');
 
 const contextActions = Action.createActionsFromNames([
     'edit',
@@ -23,6 +24,7 @@ const contextActions = Action.createActionsFromNames([
     'delete',
     'details',
     'translate',
+    'pdfDataSetForm'
 ]);
 
 const confirm = (message) => {
@@ -100,6 +102,16 @@ contextActions.translate
             model: model,
             open: true,
         });
+    });
+
+contextActions.pdfDataSetForm
+    .subscribe(({data: model, complete, error}) => {
+        getD2()
+            .then((d2) => {
+                window.open(d2.Api.getApi().baseUrl + `/pdfForm/dataSet/${model.id}`);
+            })
+            .then(complete)
+            .catch(error);
     });
 
 export default contextActions;

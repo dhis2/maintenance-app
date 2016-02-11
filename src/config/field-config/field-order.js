@@ -13,6 +13,31 @@ const fieldOrderByName = new Map([
     ['indicatorGroup', ['name', 'indicators']],
     ['indicatorType', ['name', 'factor', 'number']],
     ['indicatorGroupSet', ['name', 'description', 'compulsory', 'indicatorGroups']],
+    ['dataSet', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'expiryDays',
+        'openFuturePeriods',
+        'timelyDays',
+        'periodType',
+        'categoryCombo',
+        'notificationRecipients',
+        'notifyCompletingUser',
+        'workflow',
+        'mobile',
+        'fieldCombinationRequired',
+        'validCompleteOnly',
+        'noValueRequiresComment',
+        'legendSet',
+        'skipOffline',
+        'dataElementDecoration',
+        'renderAsTabs',
+        'renderHorizontally',
+        'dataElements',
+        'indicators',
+    ]]
 ]);
 
 export default {
