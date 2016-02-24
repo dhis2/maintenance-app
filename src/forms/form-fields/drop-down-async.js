@@ -1,6 +1,6 @@
 import React from 'react';
 import DropDown from './drop-down';
-import {getInstance} from 'd2/lib/d2';
+import { getInstance } from 'd2/lib/d2';
 
 export default React.createClass({
     propTypes: {
@@ -21,7 +21,7 @@ export default React.createClass({
         console.log(this.props.queryParamFilter);
 
         getInstance()
-            .then(d2 => d2.models[this.props.referenceType].list({fields: 'id,displayName,name', paging: false, filter: this.props.queryParamFilter}))
+            .then(d2 => d2.models[this.props.referenceType].list({ fields: 'id,displayName,name', paging: false, filter: this.props.queryParamFilter }))
             .then(modelCollection => modelCollection.toArray())
             .then(values => values.map(model => {
                 return {
@@ -34,6 +34,7 @@ export default React.createClass({
                 this.setState({
                     options: options,
                 }, () => {
+                    // TODO: Hack to default categoryCombo to 'default'
                     const defaultOption = this.state.options.find(option => {
                         return option.model.name === 'default';
                     });
@@ -53,13 +54,6 @@ export default React.createClass({
 
     render() {
         let defaultValue = {};
-
-        // TODO: Hack to default categoryCombo to 'default'
-        if (this.props.referenceType === 'categoryCombo') {
-            const defaultOption = this.state.options.find(option => {
-                return option.model.name === 'default';
-            });
-        }
 
         return (
             <DropDown {...this.props} options={this.state.options} defaultValue={this.props.defaultValue ? this.props.defaultValue.id : defaultValue.id} onChange={this._onChange} />

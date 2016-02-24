@@ -30,14 +30,14 @@ export default React.createClass({
 
     getInitialState() {
         return {
-            value: this.props.defaultValue ? this.props.defaultValue : '',
+            value: (this.props.defaultValue !== undefined && this.props.defaultValue !== null) ? this.props.defaultValue : '',
             options: this.getOptions(this.props.options, this.props.isRequired),
         };
     },
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            value: newProps.defaultValue ? newProps.defaultValue : '',
+            value: (newProps.defaultValue !== undefined && newProps.defaultValue !== null) ? newProps.defaultValue : '',
             options: this.getOptions(newProps.options, newProps.isRequired),
         });
     },
