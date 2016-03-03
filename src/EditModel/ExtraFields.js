@@ -26,10 +26,10 @@ const createFakePager = response => {
                 return getD2()
                     .then(d2 => {
                         if (this.searchValue) {
-                            return d2.Api.getApi().get('dataElementOperands', {page: pager.page, fields: 'id,displayName', filter: [`name:ilike:${encodeURIComponent(this.searchValue)}`]});
+                            return d2.Api.getApi().get('dataElementOperands', {page: pager.page, fields: 'id,displayName', filter: [`name:ilike:${encodeURIComponent(this.searchValue)}`], totals: true });
                         }
 
-                        return d2.Api.getApi().get('dataElementOperands', {page: pager.page, fields: 'id,displayName'});
+                        return d2.Api.getApi().get('dataElementOperands', {page: pager.page, fields: 'id,displayName', totals: true });
                     });
             },
         }),
