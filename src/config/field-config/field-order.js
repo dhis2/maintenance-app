@@ -3,7 +3,7 @@ const fieldOrderByName = new Map([
         'name', 'shortName', 'code', 'description', 'formName', 'domainType', 'valueType', 'aggregationType',
         'zeroIsSignificant', 'url', 'categoryCombo', 'optionSet', 'commentOptionSet', 'legendSet', 'aggregationLevels']],
     ['dataElementGroup', ['name', 'shortName', 'code', 'dataElements']],
-    ['dataElementGroupSet', ['name', 'shortName', 'code', 'description', 'compulsory', 'dataDimension',  'dataElementGroups']],
+    ['dataElementGroupSet', ['name', 'shortName', 'code', 'description', 'compulsory', 'dataDimension', 'dataElementGroups']],
     ['category', ['name', 'shortName', 'code', 'dataDimensionType', 'dataDimension', 'categoryOptions']],
     ['categoryOption', ['name', 'shortName', 'code', 'startDate', 'endDate']],
     ['categoryCombo', ['name', 'shortName', 'code', 'dataDimensionType', 'skipTotal', 'categories']],
@@ -37,7 +37,7 @@ const fieldOrderByName = new Map([
         'renderHorizontally',
         'dataElements',
         'indicators',
-    ]]
+    ]],
 ]);
 
 export default {

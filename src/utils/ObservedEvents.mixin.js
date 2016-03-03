@@ -1,4 +1,4 @@
-import {Subject} from 'rx/dist/rx.all';
+import { Subject } from 'rx/dist/rx.all';
 import log from 'loglevel';
 
 const ObservedEvents = {
@@ -24,19 +24,19 @@ const ObservedEvents = {
 
             if (!this.events[referenceName]) {
                 // Run a map that keeps a copy of the event
-                this.events[referenceName] = subject.map(event => { return Object.assign({}, event); });
+                this.events[referenceName] = subject.map(event => Object.assign({}, event));
             }
 
             return (event) => {
                 subject.onNext(event);
             };
         };
-    })(),
+    }()),
 
     componentWillUnmount() {
         // Complete any eventsSubjects
         Object.keys(this.eventSubjects).forEach(eventSubjectKey => {
-            log.info('Completing: ' + this.constructor.name + '.' + eventSubjectKey);
+            log.info(`Completing: ${[this.constructor.name, eventSubjectKey].join('.')}`);
             this.eventSubjects[eventSubjectKey].onCompleted();
         });
     },

@@ -1,26 +1,26 @@
-import Store from 'd2-flux/store/Store';
-import {getInstance as getD2}  from 'd2/lib/d2';
-import {Observable} from 'rx';
+import Store from 'd2-ui/lib/store/Store';
+import { getInstance as getD2 } from 'd2/lib/d2';
+import { Observable } from 'rx';
 
 function loadModelFromD2(objectType, objectId) {
     return getD2().then(d2 => {
         if (d2.models[objectType]) {
             return d2.models[objectType]
-                .get(objectId, objectType === 'dataElement' ? {fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]'} : undefined);
+                .get(objectId, objectType === 'dataElement' ? { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]' } : undefined);
         }
         return Promise.reject('Invalid model');
     });
 }
 
 const singleModelStoreConfig = {
-    getObjectOfTypeById({objectType, objectId}) {
+    getObjectOfTypeById({ objectType, objectId }) {
         return Observable.fromPromise(loadModelFromD2(objectType, objectId))
             .do((model) => {
                 this.setState(model);
             });
     },
 
-    getObjectOfTypeByIdAndClone({objectType, objectId}) {
+    getObjectOfTypeByIdAndClone({ objectType, objectId }) {
         const result = loadModelFromD2(objectType, objectId)
             .then(model => {
                 model.id = undefined;

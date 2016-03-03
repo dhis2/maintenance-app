@@ -17,8 +17,8 @@ export default React.createClass({
                 {...this.props}
                 defaultDate={this.props.defaultValue && new Date(this.props.defaultValue)}
                 mode="landscape"
-                autoOk={true}
-                inline={true}
+                autoOk
+                inline
                 floatingLabelText={this.getTranslation(this.props.labelText)}
                 onChange={this._onDateSelect}
             />

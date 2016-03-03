@@ -1,7 +1,7 @@
-import Action from 'd2-flux/action/Action';
+import Action from 'd2-ui/lib/action/Action';
 import modelToEditStore from './modelToEditStore';
 import log from 'loglevel';
-import {getInstance} from 'd2/lib/d2';
+import { getInstance } from 'd2/lib/d2';
 
 import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
@@ -87,14 +87,14 @@ function getAfterSave(model, lastImportedId) {
 }
 
 objectActions.getObjectOfTypeById
-    .subscribe(({data, complete, error}) => {
+    .subscribe(({ data, complete, error }) => {
         modelToEditStore
             .getObjectOfTypeById(data)
             .subscribe(complete, error);
     });
 
 objectActions.getObjectOfTypeByIdAndClone
-    .subscribe(({data, complete, error}) => {
+    .subscribe(({ data, complete, error }) => {
         modelToEditStore
             .getObjectOfTypeByIdAndClone(data)
             .subscribe(complete, error);
@@ -124,7 +124,7 @@ objectActions.saveObject.subscribe(action => {
 });
 
 objectActions.update.subscribe(action => {
-    const {fieldName, value} = action.data;
+    const { fieldName, value } = action.data;
     const modelToEdit = modelToEditStore.getState();
 
     if (modelToEdit) {
@@ -140,13 +140,13 @@ objectActions.update.subscribe(action => {
 
         action.complete();
     } else {
-        log.error(`modelToEdit does not exist`);
+        log.error('modelToEdit does not exist');
         action.error();
     }
 });
 
 objectActions.updateAttribute.subscribe(action => {
-    const {attributeName, value} = action.data;
+    const { attributeName, value } = action.data;
     const modelToEdit = modelToEditStore.getState();
 
     modelToEdit.attributes[attributeName] = value;

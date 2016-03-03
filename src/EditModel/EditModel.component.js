@@ -1,18 +1,18 @@
 import React from 'react';
-import Router from 'react-router';
+import {hashHistory} from 'react-router';
 import fieldOverrides from '../config/field-overrides/index';
 import fieldOrderNames from '../config/field-config/field-order';
 import disabledOnEdit from '../config/disabled-on-edit';
 import FormFieldsForModel from '../forms/FormFieldsForModel';
 import FormFieldsManager from '../forms/FormFieldsManager';
-import {getInstance as getD2} from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
 import Paper from 'material-ui/lib/paper';
-import {isString, camelCaseToUnderscores} from 'd2-utils';
+import { isString, camelCaseToUnderscores } from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import Form from 'd2-ui/lib/forms/Form.component';
@@ -53,6 +53,8 @@ export default React.createClass({
                 formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
             }
 
+            console.log('Ask for loading');
+            console.log(this.props, modelToEditStore.getState());
             this.disposable = modelToEditStore
                 .subscribe((modelToEdit) => {
                     const fieldConfigs = this.state.fieldConfigs || formFieldsManager.getFormFieldsForModel(modelToEdit)
@@ -72,7 +74,7 @@ export default React.createClass({
                         isLoading: false,
                     });
                 }, (errorMessage) => {
-                    snackActions.show({message: errorMessage});
+                    snackActions.show({ message: errorMessage });
                 });
 
             this.setState({
@@ -127,9 +129,9 @@ export default React.createClass({
                     <Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm} formValidator={this.state.formValidator}>
                         <AttributeFields model={this.state.modelToEdit} updateFn={objectActions.updateAttribute} registerValidator={this._registerValidator} />
                         <ExtraFields modelToEdit={this.state.modelToEdit} />
-                        <FormButtons style={{paddingTop: '2rem'}}>
+                        <FormButtons style={{ paddingTop: '2rem' }}>
                             <SaveButton style={saveButtonStyle} onClick={this.saveAction} />
-                            <CancelButton onClick={this.closeAction}/>
+                            <CancelButton onClick={this.closeAction} />
                         </FormButtons>
                     </Form>
                 </Paper>
@@ -149,7 +151,7 @@ export default React.createClass({
     },
 
     _goBack() {
-        Router.HashLocation.pop();
+        hashHistory.goBack();
     },
 
     _registerValidator(attributeValidator) {
@@ -159,7 +161,7 @@ export default React.createClass({
     },
 
     _updateForm(fieldName, value) {
-        objectActions.update({fieldName, value});
+        objectActions.update({ fieldName, value });
     },
 
     saveAction(event) {
@@ -172,22 +174,22 @@ export default React.createClass({
 
         this.state.attributeValidatorRunner && this.state.attributeValidatorRunner();
 
-        objectActions.saveObject({id: this.props.modelId})
+        objectActions.saveObject({ id: this.props.modelId })
             .subscribe(
             (message) => {
-                snackActions.show({message, action: 'ok', translate: true});
+                snackActions.show({ message, action: 'ok', translate: true });
 
-                Router.HashLocation.push(['/list', this.props.modelType].join('/'));
+                hashHistory.push(`/list/${this.props.modelType}`);
             },
             (errorMessage) => {
                 if (isString(errorMessage)) {
                     log.debug(errorMessage.messages);
-                    snackActions.show({message: errorMessage});
+                    snackActions.show({ message: errorMessage });
                 }
 
                 if (errorMessage.messages && errorMessage.messages.length > 0) {
                     log.debug(errorMessage.messages);
-                    snackActions.show({message: `${this.getTranslatedPropertyName(errorMessage.messages[0].property)}: ${errorMessage.messages[0].message} `});
+                    snackActions.show({ message: `${this.getTranslatedPropertyName(errorMessage.messages[0].property)}: ${errorMessage.messages[0].message} ` });
                 }
             }
         );
@@ -196,6 +198,6 @@ export default React.createClass({
     closeAction(event) {
         event.preventDefault();
 
-        Router.HashLocation.push(['/list', this.props.modelType].join('/'));
+        hashHistory.push(`/list/${this.props.modelType}`);
     },
 });

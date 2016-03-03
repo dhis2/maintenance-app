@@ -34,7 +34,7 @@ export default React.createClass({
         const style = Object.assign({}, this.context.muiTheme.forms, this.props.style);
         return (
             <div>
-                <div style={{marginTop: 16, marginBottom: 8}}>{this.props.label}</div>
+                <div style={{ marginTop: 16, marginBottom: 8 }}>{this.props.label}</div>
                 {this.props.items.map(item => {
                     return (
                         <Checkbox
@@ -65,7 +65,7 @@ export default React.createClass({
             }
             return oldState;
         }, () => {
-            this.props.onChange({target: {value: this.state.values}});
+            this.props.onChange({ target: { value: this.state.values } });
         });
     },
 });

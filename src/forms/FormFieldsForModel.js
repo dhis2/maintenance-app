@@ -1,7 +1,7 @@
 import log from 'loglevel';
-import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
-import {fieldTypeClasses, typeToFieldMap} from './fields';
+import { fieldTypeClasses, typeToFieldMap } from './fields';
 
 const fieldNamesToIgnoreOnDisplay = ['id', 'publicAccess', 'created', 'lastUpdated', 'user', 'userGroupAccesses', 'attributeValues'];
 

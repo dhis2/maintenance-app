@@ -1,4 +1,4 @@
-import {SELECT} from '../../forms/fields';
+import { SELECT } from '../../forms/fields';
 
 export default new Map([
     ['decimals', {

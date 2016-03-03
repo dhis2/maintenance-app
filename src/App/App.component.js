@@ -1,6 +1,5 @@
 import React from 'react';
 import classes from 'classnames';
-import {RouteHandler} from 'react-router';
 import HeaderBar from 'd2-ui/lib/header-bar/HeaderBar.component';
 import MainContent from '../MainContent/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
@@ -40,13 +39,13 @@ class App extends AppWithD2 {
 
         return (
             <div className={classList}>
-                <HeaderBar />
+
                 <MainContent>
                     <div className="sidebar-container">
                         <SideBar />
                     </div>
                     <div className="main-container">
-                        <RouteHandler />
+                        {this.props.children}
                     </div>
                 </MainContent>
                 <SnackbarContainer />

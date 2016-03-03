@@ -1,4 +1,4 @@
-import {isRequired, isUrl, isNumber as isNumberValidator} from 'd2-ui/lib/forms/Validators';
+import { isRequired, isUrl, isNumber as isNumberValidator } from 'd2-ui/lib/forms/Validators';
 import isNumber from 'lodash.isnumber';
 import log from 'loglevel';
 
@@ -196,7 +196,7 @@ export function createFieldConfig(fieldConfig, modelDefinition, models) {
 
     const validators = [].concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition));
 
-    return Object.assign(fieldConfig, {validators}, basicFieldConfig);
+    return Object.assign(fieldConfig, { validators }, basicFieldConfig);
 }
 
 export const fieldTypeClasses = new Map([

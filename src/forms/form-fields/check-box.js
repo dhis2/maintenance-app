@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import Checkbox from 'material-ui/lib/checkbox';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
@@ -15,10 +15,10 @@ export default React.createClass({
 
     render() {
         return (
-            <div style={{marginTop: 12, marginBottom: 12}}>
+            <div style={{ marginTop: 12, marginBottom: 12 }}>
                 <Checkbox onClick={this._onClick} {...this.props}
                           label={this.getTranslation(this.props.labelText)}
-                          defaultChecked={this.props.defaultValue === true}/>
+                          defaultChecked={this.props.defaultValue === true} />
             </div>
         );
     },

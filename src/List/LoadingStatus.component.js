@@ -16,7 +16,7 @@ export default React.createClass({
         if (!this.props.isLoading) { return null; }
 
         return (
-            <LinearProgress mode="indeterminate" style={{backgroundColor: 'lightblue'}} />
+            <LinearProgress mode="indeterminate" style={{ backgroundColor: 'lightblue' }} />
         );
     },
 });

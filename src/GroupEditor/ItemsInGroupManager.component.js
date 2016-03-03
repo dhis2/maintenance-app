@@ -5,7 +5,7 @@ import log from 'loglevel';
 
 import d2lib from 'd2/lib/d2';
 import ModelTypeSelector from './ModelTypeSelector.component';
-import Store from 'd2-flux/store/Store';
+import Store from 'd2-ui/lib/store/Store';
 import ItemSelector from './ItemSelector.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
@@ -73,7 +73,7 @@ export default React.createClass({
     },
 
     createUrls(items) {
-        const {modelToEdit, itemDefinition} = this.state;
+        const { modelToEdit, itemDefinition } = this.state;
 
         return items
             .map(id => `${modelToEdit.modelDefinition.plural}/${modelToEdit.id}/${itemDefinition}/${id}`);
@@ -134,10 +134,10 @@ export default React.createClass({
     _typeChanged(event) {
         const modelDef = event.target.value;
 
-        modelDef.list({paging: false, fields: 'id,displayName,name'})
+        modelDef.list({ paging: false, fields: 'id,displayName,name' })
             .then(modelCollection => modelCollection.toArray())
             .then(models => this.state.itemListStore.setState(models))
-            .then(() => this.setState({showGroupEditor: true}))
+            .then(() => this.setState({ showGroupEditor: true }))
             .catch(message => log.error(message));
     },
 
@@ -157,7 +157,7 @@ export default React.createClass({
                     return Promise.reject('This groupType does not have a model named: ' + itemDefinition);
                 }
 
-                const availablePromise = d2.models[itemDefinition].list({paging: false});
+                const availablePromise = d2.models[itemDefinition].list({ paging: false });
                 const modelPromise = d2.models[model.modelDefinition.name].get(model.id);
 
                 Promise.all([availablePromise, modelPromise])

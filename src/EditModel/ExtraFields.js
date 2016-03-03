@@ -1,5 +1,5 @@
 import React from 'react';
-import {getInstance as getD2, config} from 'd2/lib/d2';
+import { getInstance as getD2, config } from 'd2/lib/d2';
 import Pager from 'd2/lib/pager/Pager';
 import Dialog from 'material-ui/lib/dialog';
 import RaisedButton from 'material-ui/lib/raised-button';
@@ -9,7 +9,7 @@ import FlatButton from 'material-ui/lib/flat-button';
 import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerContainer.component';
 import dataElementOperandStore from 'd2-ui/lib/indicator-expression-manager/dataElementOperand.store';
 import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
-import {Observable} from 'rx';
+import { Observable } from 'rx';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import modelToEditStore from './modelToEditStore';
 
@@ -21,15 +21,15 @@ config.i18n.strings.add('done');
 const createFakePager = response => {
     // Fake the modelCollection since dataElementOperands do not have a valid uid
     return {
-        pager: new Pager(response.pager,  {
+        pager: new Pager(response.pager, {
             list(pager) {
                 return getD2()
                     .then(d2 => {
                         if (this.searchValue) {
-                            return d2.Api.getApi().get('dataElementOperands', {page: pager.page, fields: 'id,displayName', filter: [`name:ilike:${encodeURIComponent(this.searchValue)}`]});
+                            return d2.Api.getApi().get('dataElementOperands', { page: pager.page, fields: 'id,displayName', filter: [`name:ilike:${encodeURIComponent(this.searchValue)}`] });
                         }
 
-                        return d2.Api.getApi().get('dataElementOperands', {page: pager.page, fields: 'id,displayName'});
+                        return d2.Api.getApi().get('dataElementOperands', { page: pager.page, fields: 'id,displayName' });
                     });
             },
         }),
@@ -41,7 +41,7 @@ const createFakePager = response => {
 
 dataElementOperandSelectorActions.loadList.subscribe(() => {
     getD2()
-        .then(d2 => d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName', totals: true}))
+        .then(d2 => d2.Api.getApi().get('dataElementOperands', { fields: 'id,displayName', totals: true }))
         .then(createFakePager)
         .then(collection => {
             dataElementOperandStore.setState(collection);
@@ -55,9 +55,9 @@ dataElementOperandSelectorActions.search
         const searchPromise = getD2()
             .then(d2 => {
                 if (action.data) {
-                    return d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName', filter: [`name:ilike:${encodeURIComponent(action.data)}`]});
+                    return d2.Api.getApi().get('dataElementOperands', { fields: 'id,displayName', filter: [`name:ilike:${encodeURIComponent(action.data)}`] });
                 }
-                return d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName'});
+                return d2.Api.getApi().get('dataElementOperands', { fields: 'id,displayName' });
             })
             .then(createFakePager)
             .then(collection => {
@@ -139,14 +139,14 @@ export default React.createClass({
 
         return (
             <div>
-                <div style={{marginTop: '2rem'}}>
-                    <RaisedButton label={this.getTranslation('edit_numerator')} onClick={this.setNumerator} style={{marginRight: '2rem'}} />
+                <div style={{ marginTop: '2rem' }}>
+                    <RaisedButton label={this.getTranslation('edit_numerator')} onClick={this.setNumerator} style={{ marginRight: '2rem' }} />
                     <RaisedButton label={this.getTranslation('edit_denominator')} onClick={this.setDenominator} />
-                    <Dialog ref="dialog" modal={true} actions={dialogActions} contentStyle={{maxWidth: '90%'}} bodyStyle={{padding: '0'}}>
+                    <Dialog ref="dialog" modal actions={dialogActions} contentStyle={{ maxWidth: '90%' }} bodyStyle={{ padding: '0' }}>
                         {this.state ? this.renderExpressionManager() : null}
                     </Dialog>
                 </div>
-                <div style={{marginTop: '2rem'}}>
+                <div style={{ marginTop: '2rem' }}>
                     <DataIndicatorGroupsAssignment source={this.props.modelToEdit} />
                 </div>
             </div>
@@ -155,7 +155,7 @@ export default React.createClass({
 
     renderDataElementFields() {
         return (
-            <div style={{marginTop: '2rem'}}>
+            <div style={{ marginTop: '2rem' }}>
                 <DataElementGroupsAssignment source={this.props.modelToEdit} />
             </div>
         );
@@ -186,11 +186,11 @@ export default React.createClass({
     },
 
     setNumerator() {
-        this.setState({type: 'numerator'}, () => this.refs.dialog.show());
+        this.setState({ type: 'numerator' }, () => this.refs.dialog.show());
     },
 
     setDenominator() {
-        this.setState({type: 'denominator'}, () => this.refs.dialog.show());
+        this.setState({ type: 'denominator' }, () => this.refs.dialog.show());
     },
 
     closeDialog() {

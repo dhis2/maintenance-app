@@ -1,10 +1,10 @@
 import React from 'react';
-import Action from 'd2-flux/action/Action';
+import Action from 'd2-ui/lib/action/Action';
 import IndicatorExpressionManager from 'd2-ui/lib/indicator-expression-manager/IndicatorExpressionManager.component';
 import indicatorExpressionStatusStore from 'd2-ui/lib/indicator-expression-manager/indicatorExpressionStatus.store';
 import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
-import {getInstance as getD2} from 'd2/lib/d2';
-import {Observable} from 'rx';
+import { getInstance as getD2 } from 'd2/lib/d2';
+import { Observable } from 'rx';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 const indicatorExpressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
@@ -47,14 +47,14 @@ const IndicatorExpressionManagerContainer = React.createClass({
 
     componentDidMount() {
         getD2()
-            .then(d2 => d2.models.organisationUnitGroup.list({paging: false, fields: 'id,displayName'}))
-            .then(collection => collection.toArray().map(model => ({value: model.id, label: model.displayName})))
-            .then(organisationUnitGroups => this.setState({organisationUnitGroups}));
+            .then(d2 => d2.models.organisationUnitGroup.list({ paging: false, fields: 'id,displayName' }))
+            .then(collection => collection.toArray().map(model => ({ value: model.id, label: model.displayName })))
+            .then(organisationUnitGroups => this.setState({ organisationUnitGroups }));
 
         getD2()
-            .then(d2 => d2.models.constant.list({paging: false, fields: 'id,displayName'}))
-            .then(collection => collection.toArray().map(model => ({value: model.id, label: model.displayName})))
-            .then(constants => this.setState({constants}));
+            .then(d2 => d2.models.constant.list({ paging: false, fields: 'id,displayName' }))
+            .then(collection => collection.toArray().map(model => ({ value: model.id, label: model.displayName })))
+            .then(constants => this.setState({ constants }));
 
         this.refs.expressionManager.requestExpressionStatus();
     },

@@ -1,7 +1,7 @@
-import React from 'react/addons';
+import React from 'react';
 import EditModel from './EditModel.component';
 import objectActions from './objectActions';
-import {config, getInstance as getD2} from 'd2/lib/d2';
+import { config, getInstance as getD2 } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import snackActions from '../Snackbar/snack.actions';
 
@@ -34,12 +34,12 @@ export default class extends EditModelBase {
                 callback();
             });
         } else {
-            objectActions.getObjectOfTypeById({objectType: params.modelType, objectId: params.modelId})
+            objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
                 .subscribe(
                     () => callback(),
                     (errorMessage) => {
-                        transition.redirect('list', {modelType: params.modelType});
-                        snackActions.show({message: errorMessage});
+                        transition.redirect('list', { modelType: params.modelType });
+                        snackActions.show({ message: errorMessage });
                         callback();
                     }
                 );

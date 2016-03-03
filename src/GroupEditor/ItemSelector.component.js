@@ -35,7 +35,7 @@ export default React.createClass({
                     });
                 }
 
-                this.setState({items});
+                this.setState({ items });
             });
     },
 

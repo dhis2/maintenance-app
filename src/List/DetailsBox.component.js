@@ -4,7 +4,7 @@ import classes from 'classnames';
 import FontIcon from 'material-ui/lib/font-icon';
 
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-import {camelCaseToUnderscores} from 'd2-utils';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
 export default React.createClass({
     propTypes: {
@@ -43,8 +43,8 @@ export default React.createClass({
 
             return (
                 <div key={fieldName} className="detail-field">
-                    <div className={'detail-field__label detail-field__' + fieldName + '-label'}>{this.getTranslation(camelCaseToUnderscores(fieldName))}</div>
-                    <div className={'detail-field__value detail-field__' + fieldName}>{valueToRender}</div>
+                    <div className={`detail-field__label detail-field__${fieldName}-label`}>{this.getTranslation(camelCaseToUnderscores(fieldName))}</div>
+                    <div className={`detail-field__value detail-field__${fieldName}`}>{valueToRender}</div>
                 </div>
             );
         });

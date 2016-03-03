@@ -1,8 +1,10 @@
-import React from 'react/addons';
+import React from 'react';
 import SelectField from 'material-ui/lib/select-field';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 import MuiThemeMixin from '../mui-theme.mixin';
+
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 export default React.createClass({
     propTypes: {
@@ -64,6 +66,14 @@ export default React.createClass({
             });
     },
 
+    _onChange(event, index, value) {
+        this.props.onChange({
+            target: {
+                value,
+            }
+        });
+    },
+
     render() {
         const {onFocus, onBlur, ...other} = this.props;
 
@@ -71,9 +81,13 @@ export default React.createClass({
             <SelectField
                 value={this.state.value.toString()}
                 {...other}
-                menuItems={this.state.options}
+                onChange={this._onChange}
                 floatingLabelText={this.props.translateLabel ? this.getTranslation(this.props.labelText) : this.props.labelText}
-            />
+            >
+                {this.state.options.map((option, index) => {
+                    return <MenuItem primaryText={option.text} key={index} value={option.payload} />
+                })}
+            </SelectField>
         );
     },
 });

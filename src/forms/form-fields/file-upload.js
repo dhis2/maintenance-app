@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import log from 'loglevel';
 
 import LinearProgress from 'material-ui/lib/linear-progress';

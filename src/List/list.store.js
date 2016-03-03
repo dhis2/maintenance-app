@@ -1,6 +1,6 @@
-import {getInstance as getD2} from 'd2/lib/d2';
-import {Subject, Observable} from 'rx';
-import Store from 'd2-flux/store/Store';
+import { getInstance as getD2 } from 'd2/lib/d2';
+import { Subject, Observable } from 'rx';
+import Store from 'd2-ui/lib/store/Store';
 
 const fieldFilteringForQuery = 'displayName|rename(name),id,lastUpdated,created,displayDescription,code,publicAccess,access';
 
@@ -24,13 +24,13 @@ export default Store.create({
             if (d2.models[modelName]) {
                 const listPromise = d2.models[modelName]
                     .filter().on('name').notEqual('default')
-                    .list({fields: fieldFilteringForQuery});
+                    .list({ fields: fieldFilteringForQuery });
 
                 this.listSourceSubject.onNext(Observable.fromPromise(listPromise));
 
-                complete(modelName + ' list loading');
+                complete(`${modelName} list loading`);
             } else {
-                error(modelName + ' is not a valid schema name');
+                error(`${modelName} is not a valid schema name`);
             }
         });
     },
@@ -46,7 +46,7 @@ export default Store.create({
     searchByName(modelType, searchString, complete, error) {
         getD2().then(d2 => {
             if (!d2.models[modelType]) {
-                error(modelType + ' is not a valid schema name');
+                error(`${modelType} is not a valid schema name`);
             }
 
             let modelDefinition = d2.models[modelType];
@@ -57,11 +57,11 @@ export default Store.create({
 
             const listSearchPromise = modelDefinition
                 .filter().on('name').notEqual('default')
-                .list({fields: fieldFilteringForQuery});
+                .list({ fields: fieldFilteringForQuery });
 
             this.listSourceSubject.onNext(Observable.fromPromise(listSearchPromise));
 
-            complete(modelType + ` list with search on 'displayName' for '${searchString}' is loading`);
+            complete(`${modelType} list with search on 'displayName' for '${searchString}' is loading`);
         });
     },
 }).initialise();

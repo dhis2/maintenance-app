@@ -50,23 +50,27 @@ export default React.createClass({
 
         return (
             <Card key={index} style={cardStyle}>
-                <CardHeader onClick={details.list} style={headerStyle} title={details.name} avatar={<span style={{display: 'none'}} />} />
+                <CardHeader
+                    onClick={details.list}
+                    style={headerStyle}
+                    title={details.name}
+                    avatar={<span style={{ display: 'none' }} />}
+                />
                 <CardText style={textStyle}>{details.description}</CardText>
                 <CardActions style={actionStyle}>
                     {details.canCreate ? <IconButton
                         iconClassName="material-icons"
                         tooltip={this.getTranslation('add')}
                         tooltipPosition="top-center"
-                        onClick={details.add}>
-                        &#xE145;
-                    </IconButton> : null}
+                        onClick={details.add}
+                    >&#xE145;</IconButton> : <span></span>}
+
                     <IconButton
                         iconClassName="material-icons"
                         tooltip={this.getTranslation('list')}
                         tooltipPosition="top-center"
-                        onClick={details.list}>
-                        &#xE8EF;
-                    </IconButton>
+                        onClick={details.list}
+                    >&#xE8EF;</IconButton>
                 </CardActions>
             </Card>
         );

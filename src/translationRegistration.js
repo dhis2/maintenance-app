@@ -1,4 +1,4 @@
-import {config} from 'd2/lib/d2';
+import { config } from 'd2/lib/d2';
 
 [
     'file_resource',

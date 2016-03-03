@@ -11,7 +11,7 @@ export default React.createClass({
         return (
             <div style={this.props.style}>
                 {this.props.children.map((child, index) => {
-                    return React.addons.cloneWithProps(child, {
+                    return React.cloneElement(child, {
                         isFormValid: this.props.isFormValid,
                         key: index,
                     });

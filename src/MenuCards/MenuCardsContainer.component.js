@@ -1,13 +1,13 @@
 import React from 'react';
 import sideBarItemsStore from '../SideBar/sideBarItems.store';
-import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import MenuCards from './MenuCards.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
-import {Navigation} from 'react-router';
+import { hashHistory } from 'react-router';
 
 export default React.createClass({
-    mixins: [Translate, Auth, Navigation],
+    mixins: [Translate, Auth],
 
     getInitialState() {
         return {
@@ -17,17 +17,15 @@ export default React.createClass({
 
     componentWillMount() {
         this.disposable = sideBarItemsStore
-            .scan((acc, values) => {
-                return acc.concat(values
+            .scan((acc, values) => acc.concat(values
                     .map(keyName => ({
                         name: this.getTranslation(camelCaseToUnderscores(keyName)),
                         description: this.getTranslation(`intro_${camelCaseToUnderscores(keyName)}`),
                         canCreate: this.getCurrentUser().canCreate(this.getModelDefinitionByName(keyName)),
-                        add: () => this.transitionTo('genericEdit', {modelType: keyName, modelId: 'add'}),
-                        list: () => this.transitionTo('list', {modelType: keyName}),
-                    })));
-            }, [])
-            .subscribe(menuItems => this.setState({menuItems}));
+                        add: () => hashHistory.push(`/edit/${keyName}/add`),
+                        list: () => hashHistory.push(`/list/${keyName}`),
+                    }))), [])
+            .subscribe(menuItems => this.setState({ menuItems }));
     },
 
     componentWillUnmount() {
@@ -47,6 +45,4 @@ export default React.createClass({
             </div>
         );
     },
-
-
 });

@@ -1,12 +1,12 @@
 import React from 'react';
-import Store from 'd2-flux/store/Store';
-import {getInstance} from 'd2/lib/d2';
+import Store from 'd2-ui/lib/store/Store';
+import { getInstance } from 'd2/lib/d2';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
-import Action from 'd2-flux/action/Action';
+import Action from 'd2-ui/lib/action/Action';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/lib/text-field';
-import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
-import {config} from 'd2/lib/d2';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
+import { config } from 'd2/lib/d2';
 import log from 'loglevel';
 
 config.i18n.strings.add('search_available_selected_items');
@@ -27,7 +27,7 @@ function filterModelsMapOnItemIds(map, items) {
 }
 
 multiSelectActions.addItemsToModelCollection
-    .subscribe(({data, complete, error}) => {
+    .subscribe(({ data, complete, error }) => {
         try {
             const [modelsToAdd, propertyName, model] = data;
 
@@ -47,7 +47,7 @@ multiSelectActions.addItemsToModelCollection
     });
 
 multiSelectActions.removeItemsFromModelCollection
-    .subscribe(({data, complete, error}) => {
+    .subscribe(({ data, complete, error }) => {
         const [modelsToRemove, propertyName, model] = data;
 
         if (!model[propertyName]) {
@@ -220,7 +220,7 @@ export default React.createClass({
         if (d2.models[this.props.referenceType]) {
             return d2.models[this.props.referenceType]
                 .filter().on('name').notEqual('default')
-                .list({paging: false, fields: 'displayName|rename(name),id,level'});
+                .list({ paging: false, fields: 'displayName|rename(name),id,level' });
         }
         return Promise.reject(`${this.props.referenceType} is not a model on d2.models`);
     },

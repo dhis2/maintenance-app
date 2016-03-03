@@ -1,8 +1,8 @@
 import React from 'react';
-import {Navigation} from 'react-router';
+import { Navigation } from 'react-router';
 import classes from 'classnames';
 import log from 'loglevel';
-import {isIterable} from 'd2-utils';
+import isIterable from 'd2-utilizr/lib/isIterable';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import DetailsBox from './DetailsBox.component';
@@ -17,7 +17,7 @@ import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';
 import LoadingStatus from './LoadingStatus.component';
-import {camelCaseToUnderscores} from 'd2-utils';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import sharingStore from './sharing.store';
@@ -46,7 +46,7 @@ function executeLoadListAction(modelType) {
 
 function calculatePageValue(pager) {
     const pageSize = 50; // TODO: Make the page size dynamic
-    const {total, pageCount, page} = pager;
+    const { total, pageCount, page } = pager;
     const pageCalculationValue = total - (total - ((pageCount - (pageCount - page)) * pageSize));
     const startItem = 1 + pageCalculationValue - pageSize;
     const endItem = pageCalculationValue;
@@ -61,29 +61,7 @@ const List = React.createClass({
         }),
     },
 
-    mixins: [Navigation, ObserverRegistry, Translate, Auth],
-
-    statics: {
-        willTransitionTo(transition, params, query, callback) {
-            executeLoadListAction(params.modelType)
-                .subscribe(
-                (message) => { log.info(message); callback(); },
-                (message) => {
-                    if (/^.+s$/.test(params.modelType)) {
-                        const nonPluralAttempt = params.modelType.substring(0, params.modelType.length - 1);
-                        log.warn(`Could not find requested model type '${params.modelType}' attempting to redirect to '${nonPluralAttempt}'`);
-                        transition.redirect('list', {modelType: nonPluralAttempt});
-                        callback();
-                    } else {
-                        log.error('No clue where', params.modelType, 'comes from... Redirecting to app root');
-                        log.error(message);
-                        transition.redirect('/');
-                        callback();
-                    }
-                }
-            );
-        },
-    },
+    mixins: [ObserverRegistry, Translate, Auth],
 
     getInitialState() {
         return {
@@ -119,7 +97,7 @@ const List = React.createClass({
             });
 
         const detailsStoreDisposable = detailsStore.subscribe(detailsObject => {
-            this.setState({detailsObject});
+            this.setState({ detailsObject });
         });
 
         const sharingStoreDisposable = sharingStore.subscribe(sharingState => {
@@ -127,9 +105,9 @@ const List = React.createClass({
                 sharing: sharingState,
             });
 
-            this.refs.sharingDialog &&
-            this.refs.sharingDialog.refs.sharingDialog &&
-            this.refs.sharingDialog.refs.sharingDialog.show();
+            if (this.refs.sharingDialog && this.refs.sharingDialog.refs.sharingDialog) {
+                this.refs.sharingDialog.refs.sharingDialog.show();
+            }
         });
 
         const translationStoreDisposable = translationStore.subscribe(translationState => {
@@ -137,9 +115,9 @@ const List = React.createClass({
                 translation: translationState,
             });
 
-            this.refs.translationDialog &&
-            this.refs.translationDialog.refs.translationDialog &&
-            this.refs.translationDialog.refs.translationDialog.show();
+            if (this.refs.translationDialog && this.refs.translationDialog.refs.translationDialog) {
+                this.refs.translationDialog.refs.translationDialog.show();
+            }
         });
 
         this.registerDisposable(sourceStoreDisposable);
@@ -157,95 +135,13 @@ const List = React.createClass({
         }
     },
 
-    render() {
-        const currentlyShown = calculatePageValue(this.state.pager);
-
-        const paginationProps = {
-            hasNextPage: () => Boolean(this.state.pager.hasNextPage) && this.state.pager.hasNextPage(),
-            hasPreviousPage: () => Boolean(this.state.pager.hasPreviousPage) && this.state.pager.hasPreviousPage(),
-            onNextPageClick: () => {
-                this.setState({isLoading: true});
-                listActions.getNextPage();
-            },
-            onPreviousPageClick: () => {
-                this.setState({isLoading: true});
-                listActions.getPreviousPage();
-            },
-            total: this.state.pager.total,
-            currentlyShown,
-        };
-
-        const availableActions = Object.keys(contextActions)
-            .filter(actionsThatRequireCreate, this)
-            .filter(actionsThatRequireDelete, this)
-            .filter((actionName) => {
-                if (actionName === 'sharing') {
-                    return this.context.d2.models[this.props.params.modelType] && this.context.d2.models[this.props.params.modelType].isSharable;
-                }
-                return true;
-            })
-            .reduce((actions, actionName) => {
-                actions[actionName] = contextActions[actionName];
-                return actions;
-            }, {});
-
-        return (
-            <div style={{paddingTop: '3rem'}}>
-                <div>
-                    <h2 style={{float: 'left'}}>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</h2>
-                    <ListActionBar modelType={this.props.params.modelType} />
-                </div>
-                <div>
-                    <div style={{float: 'left', width: '50%'}}>
-                        <SearchBox searchObserverHandler={this.searchListByName} />
-                    </div>
-                    <div>
-                        <Pagination {...paginationProps} />
-                    </div>
-                </div>
-                <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
-                <div className={classes('data-table-wrap', {'smaller': !!this.state.detailsObject})}>
-                    <DataTable
-                        rows={this.state.dataRows}
-                        columns={['name', 'publicAccess', 'lastUpdated']}
-                        contextMenuActions={availableActions}
-                        contextMenuIcons={{clone: 'content_copy', sharing: 'share', pdfDataSetForm: 'picture_as_pdf'}}
-                        primaryAction={availableActions.details}
-                        isContextActionAllowed={this.isContextActionAllowed}
-                    />
-                    {this.state.dataRows.length ? null : <div>No results found</div>}
-                </div>
-                <div className={classes('details-box-wrap', {'show-as-column': !!this.state.detailsObject})}>
-                    <Sticky>
-                        <Paper zDepth={1} rounded={false}>
-                            <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject} onClose={listActions.hideDetailsBox} />
-                        </Paper>
-                    </Sticky>
-                </div>
-                <SharingDialog
-                    objectToShare={this.state.sharing.model}
-                    open={this.state.sharing.open && this.state.sharing.model}
-                    ref="sharingDialog"
-                />
-                <TranslationDialog
-                    objectIdToTranslate={this.state.translation.model && this.state.translation.model.id}
-                    objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
-                    open={this.state.translation.open}
-                    ref="translationDialog"
-                    onTranslationSaved={this._translationSaved}
-                    onTranslationError={this._translationErrored}
-                />
-            </div>
-        );
-    },
-
     _translationSaved() {
-        snackActions.show({message: 'translation_saved', action: 'ok', translate: true});
+        snackActions.show({ message: 'translation_saved', action: 'ok', translate: true });
     },
 
     _translationErrored(errorMessage) {
         log.error(errorMessage);
-        snackActions.show({message: 'translation_save_error', translate: true});
+        snackActions.show({ message: 'translation_save_error', translate: true });
     },
 
     isContextActionAllowed(model, action) {
@@ -283,9 +179,9 @@ const List = React.createClass({
         case 'details':
             return model.access.read;
         case 'pdfDataSetForm':
-            return model.modelDefinition.name === 'dataSet' && model.access.read;
+             return model.modelDefinition.name === 'dataSet' && model.access.read;
         default:
-            return false;
+            return true;
         }
     },
 
@@ -296,12 +192,95 @@ const List = React.createClass({
                     isLoading: true,
                 });
 
-                listActions.searchByName({modelType: this.props.params.modelType, searchString: value})
+                listActions.searchByName({ modelType: this.props.params.modelType, searchString: value })
                     .subscribe(() => {}, (error) => log.error(error));
             });
 
 
         this.registerDisposable(searchListByNameDisposable);
+    },
+
+    render() {
+        const currentlyShown = calculatePageValue(this.state.pager);
+
+        const paginationProps = {
+            hasNextPage: () => Boolean(this.state.pager.hasNextPage) && this.state.pager.hasNextPage(),
+            hasPreviousPage: () => Boolean(this.state.pager.hasPreviousPage) && this.state.pager.hasPreviousPage(),
+            onNextPageClick: () => {
+                this.setState({ isLoading: true });
+                listActions.getNextPage();
+            },
+            onPreviousPageClick: () => {
+                this.setState({ isLoading: true });
+                listActions.getPreviousPage();
+            },
+            total: this.state.pager.total,
+            currentlyShown,
+        };
+
+        const availableActions = Object.keys(contextActions)
+            .filter(actionsThatRequireCreate, this)
+            .filter(actionsThatRequireDelete, this)
+            .filter((actionName) => {
+                if (actionName === 'sharing') {
+                    return this.context.d2.models[this.props.params.modelType] && this.context.d2.models[this.props.params.modelType].isSharable;
+                }
+                return true;
+            })
+            .reduce((actions, actionName) => {
+                // TODO: Don't re-assign param?
+                actions[actionName] = contextActions[actionName]; // eslint-disable-line no-param-reassign
+                return actions;
+            }, {});
+
+        return (
+            <div style={{ paddingTop: '3rem' }}>
+                <div>
+                    <h2 style={{ float: 'left' }}>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</h2>
+                    <ListActionBar modelType={this.props.params.modelType} />
+                </div>
+                <div>
+                    <div style={{ float: 'left', width: '50%' }}>
+                        <SearchBox searchObserverHandler={this.searchListByName} />
+                    </div>
+                    <div>
+                        <Pagination {...paginationProps} />
+                    </div>
+                </div>
+                <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
+                <div className={classes('data-table-wrap', { smaller: !!this.state.detailsObject })}>
+                    <DataTable
+                        rows={this.state.dataRows}
+                        columns={['name', 'publicAccess', 'lastUpdated']}
+                        contextMenuActions={availableActions}
+                        contextMenuIcons={{ clone: 'content_copy', sharing: 'share', pdfDataSetForm: 'picture_as_pdf' }}
+                        primaryAction={availableActions.details}
+                        isContextActionAllowed={this.isContextActionAllowed}
+                    />
+                    {this.state.dataRows.length ? null : <div>No results found</div>}
+                </div>
+                <div className={classes('details-box-wrap', { 'show-as-column': !!this.state.detailsObject })}>
+                    <Sticky>
+                        <Paper zDepth={1} rounded={false}>
+                            <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject} onClose={listActions.hideDetailsBox} />
+                        </Paper>
+                    </Sticky>
+                </div>
+                {this.state.sharing.model ? <SharingDialog
+                    objectToShare={this.state.sharing.model}
+                    open={this.state.sharing.open && this.state.sharing.model}
+                    ref="sharingDialog"
+                /> : null }
+                {this.state.translation.model ? <TranslationDialog
+                    objectIdToTranslate={this.state.translation.model && this.state.translation.model.id}
+                    objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
+                    open={this.state.translation.open}
+                    ref="translationDialog"
+                    onTranslationSaved={this._translationSaved}
+                    onTranslationError={this._translationErrored}
+                /> : null }
+            </div>
+        );
     },
 });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Navigation} from 'react-router';
+import { Navigation, hashHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import FontIcon from 'material-ui/lib/font-icon';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
@@ -10,6 +10,10 @@ const ListActionBar = React.createClass({
     },
 
     mixins: [Navigation, Auth],
+
+    _addClick() {
+        hashHistory.push(`/edit/${this.props.modelType}/add`);
+    },
 
     render() {
         const cssStyles = {
@@ -28,10 +32,6 @@ const ListActionBar = React.createClass({
                 </FloatingActionButton>
             </div>
         );
-    },
-
-    _addClick() {
-        this.transitionTo('genericEdit', {modelType: this.props.modelType, modelId: 'add'});
     },
 });
 

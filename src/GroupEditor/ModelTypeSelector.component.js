@@ -3,7 +3,7 @@ import React from 'react';
 import Select from 'material-ui/lib/select-field';
 
 import d2lib from 'd2/lib/d2';
-import camelCaseToUnderscores from 'd2-utils/camelCaseToUnderscores';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 function hasNameInArray(listToCheck) {
@@ -38,7 +38,7 @@ export default React.createClass({
 
     componentWillMount() {
         d2lib.getInstance()
-            .then(d2 => this.setState({models: d2.models}));
+            .then(d2 => this.setState({ models: d2.models }));
     },
 
     renderOptions() {

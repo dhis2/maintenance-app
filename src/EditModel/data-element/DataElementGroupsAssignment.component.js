@@ -1,5 +1,5 @@
 import React from 'react';
-import {getInstance} from 'd2/lib/d2';
+import { getInstance } from 'd2/lib/d2';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 import DropDown from '../../forms/form-fields/drop-down';
@@ -7,8 +7,8 @@ import store from './dataElementGroupsStore';
 
 function getLoadingdataElement() {
     return (
-        <div style={{textAlign: 'center'}}>
-            <CircularProgress mode="indeterminate"/>
+        <div style={{ textAlign: 'center' }}>
+            <CircularProgress mode="indeterminate" />
         </div>
     );
 }
@@ -44,7 +44,7 @@ export default React.createClass({
                 paging: false,
             }))
             .then(response => response.dataElementGroupSets)
-            .then(dataElementGroupSets => this.setState({dataElementGroupSets}));
+            .then(dataElementGroupSets => this.setState({ dataElementGroupSets }));
 
         this.disposable = store.subscribe(() => this.forceUpdate());
     },
@@ -73,9 +73,8 @@ export default React.createClass({
                     const value = Object.prototype.hasOwnProperty.call(store.state.dataElementGroupValues, dataElementGroupSet.id) ? store.state.dataElementGroupValues[dataElementGroupSet.id] : findValue(optionList, this.props.source);
 
                     return (
-                        <div>
+                        <div key={dataElementGroupSet.id}>
                             <DropDown
-                                key={dataElementGroupSet.id}
                                 labelText={dataElementGroupSet.displayName}
                                 translateLabel={false}
                                 options={optionList}
@@ -95,7 +94,7 @@ export default React.createClass({
         this.props.source.dirty = true;
 
         store.setState({
-            dataElementGroupValues: Object.assign({}, store.state.dataElementGroupValues, {[dataElementGroupSetId]: event.target.value ? event.target.value : null}),
+            dataElementGroupValues: Object.assign({}, store.state.dataElementGroupValues, { [dataElementGroupSetId]: event.target.value ? event.target.value : null }),
             remove: Array.from((new Set(store.state.remove.concat([oldValue])).values())),
         });
     },

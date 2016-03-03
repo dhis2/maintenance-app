@@ -1,8 +1,8 @@
-import Router from 'react-router';
-import Action from 'd2-flux/action/Action';
+import { hashHistory} from 'react-router';
+import Action from 'd2-ui/lib/action/Action';
 import detailsStore from './details.store';
-import {config, getInstance as getD2} from 'd2/lib/d2';
-import {camelCaseToUnderscores} from 'd2-utils';
+import { config, getInstance as getD2 } from 'd2/lib/d2';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import snackActions from '../Snackbar/snack.actions';
 import log from 'loglevel';
 import listStore from './list.store';
@@ -24,33 +24,29 @@ const contextActions = Action.createActionsFromNames([
     'delete',
     'details',
     'translate',
-    'pdfDataSetForm'
+    'pdfDataSetForm',
 ]);
 
-const confirm = (message) => {
-    return new Promise((resolve, reject) => {
-        if (window.confirm(message)) {
-            resolve();
-        }
-        reject();
-    });
-};
+const confirm = (message) => new Promise((resolve, reject) => {
+    if (window.confirm(message)) {
+        resolve();
+    }
+    reject();
+});
 
 contextActions.edit
     .subscribe(action => {
-        Router.HashLocation.push(['/edit', action.data.modelDefinition.name, action.data.id].join('/'));
+        hashHistory.push(['/edit', action.data.modelDefinition.name, action.data.id].join('/'));
     });
 
 contextActions.clone
     .subscribe(action => {
-        Router.HashLocation.push(['/clone', action.data.modelDefinition.name, action.data.id].join('/'));
+        hashHistory.push(['/clone', action.data.modelDefinition.name, action.data.id].join('/'));
     });
 
 contextActions.delete
-    .subscribe(({data: model}) => {
-        return getD2()
-            .then(d2 => {
-                return confirm(d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`) + `\n\n${model.name}`)
+    .subscribe(({ data: model }) => getD2()
+            .then(d2 => confirm(d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`) + `\n\n${model.name}`)
                     .then(() => {
                         model.delete()
                             .then(() => {
@@ -73,17 +69,17 @@ contextActions.delete
                                     message: response.message ? response.message : `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
                                 });
                             });
-                    });
-            });
-    });
+                    })
+            )
+    );
 
 contextActions.details
-    .subscribe(({data: model}) => {
+    .subscribe(({ data: model }) => {
         detailsStore.setState(model);
     });
 
 contextActions.share
-    .subscribe(({data: model}) => {
+    .subscribe(({ data: model }) => {
         getD2()
             .then((d2) => {
                 return d2.models[model.modelDefinition.name].get(model.id);
@@ -97,7 +93,7 @@ contextActions.share
     });
 
 contextActions.translate
-    .subscribe(({data: model}) => {
+    .subscribe(({ data: model }) => {
         translateStore.setState({
             model: model,
             open: true,
@@ -105,7 +101,7 @@ contextActions.translate
     });
 
 contextActions.pdfDataSetForm
-    .subscribe(({data: model, complete, error}) => {
+    .subscribe(({ data: model, complete, error }) => {
         getD2()
             .then((d2) => {
                 window.open(d2.Api.getApi().baseUrl + `/pdfForm/dataSet/${model.id}`);

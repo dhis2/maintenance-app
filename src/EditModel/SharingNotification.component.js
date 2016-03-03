@@ -1,7 +1,7 @@
 import React from 'react';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-import {config} from 'd2/lib/d2';
+import { config } from 'd2/lib/d2';
 import FontIcon from 'material-ui/lib/font-icon';
 import Paper from 'material-ui/lib/paper';
 

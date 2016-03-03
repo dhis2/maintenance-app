@@ -15,7 +15,7 @@ const SnackBarContainer = React.createClass({
         const snackStoreDisposable = snackStore.subscribe(snack => {
             if (snack) {
                 this.setState({
-                    snack: snack,
+                    snack,
                 }, () => {
                     this.refs.snackbar.show();
                 });
@@ -34,7 +34,7 @@ const SnackBarContainer = React.createClass({
 
         return (
             <Snackbar
-                style={{maxWidth: 'auto'}}
+                style={{ maxWidth: 'auto' }}
                 ref="snackbar"
                 message={this.state.snack.message}
                 action={this.state.snack.action}

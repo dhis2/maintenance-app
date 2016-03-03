@@ -1,8 +1,8 @@
 import React from 'react';
 import FormField from 'd2-ui/lib/forms/FormField.component';
-import {createFieldConfig, typeToFieldMap} from '../forms/fields';
+import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import createFormValidator from 'd2-ui/lib/forms/FormValidator';
-import {FormFieldStatuses} from 'd2-ui/lib/forms/FormValidator';
+import { FormFieldStatuses } from 'd2-ui/lib/forms/FormValidator';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 export default React.createClass({
@@ -55,7 +55,7 @@ export default React.createClass({
             .status
             .subscribe(() => this.forceUpdate());
 
-        this.setState({fieldConfigs, attributeFieldValidators});
+        this.setState({ fieldConfigs, attributeFieldValidators });
     },
 
     componentDidMount() {
@@ -65,7 +65,7 @@ export default React.createClass({
         });
     },
 
-    renderField(fieldConfig) {
+    renderField(fieldConfig, key) {
         const validationStatus = this.state.attributeFieldValidators.getStatusFor(fieldConfig.name);
 
         let errorMessage;
@@ -77,6 +77,7 @@ export default React.createClass({
         return (
             <FormField
                 {...fieldConfig}
+                key={`attributeField_${key}`}
                 isRequired={fieldConfig.required}
                 value={this.props.model.attributes[fieldConfig.name]}
                 updateFn={this._updateAtrribute.bind(this, fieldConfig)}

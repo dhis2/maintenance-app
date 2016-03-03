@@ -1,4 +1,4 @@
-import Action from 'd2-flux/action/Action';
+import Action from 'd2-ui/lib/action/Action';
 import listStore from './list.store';
 import detailsStore from './details.store';
 
