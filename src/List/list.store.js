@@ -2,7 +2,7 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 import { Subject, Observable } from 'rx';
 import Store from 'd2-ui/lib/store/Store';
 
-const fieldFilteringForQuery = 'displayName|rename(name),id,lastUpdated,created,displayDescription,code,publicAccess,access';
+const fieldFilteringForQuery = 'displayName|rename(name),id,lastUpdated,created,displayDescription,code,publicAccess,access,href';
 
 export default Store.create({
     listSourceSubject: new Subject(),

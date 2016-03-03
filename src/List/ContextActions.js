@@ -1,4 +1,4 @@
-import { hashHistory} from 'react-router';
+import { hashHistory } from 'react-router';
 import Action from 'd2-ui/lib/action/Action';
 import detailsStore from './details.store';
 import { config, getInstance as getD2 } from 'd2/lib/d2';

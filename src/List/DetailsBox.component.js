@@ -25,6 +25,7 @@ export default React.createClass({
                 'created',
                 'lastUpdated',
                 'id',
+                'href',
             ],
             showDetailBox: false,
             onClose: () => {},
@@ -52,9 +53,9 @@ export default React.createClass({
 
     getValueToRender(fieldName, value) {
         const getDateString = dateValue => {
-            const stingifiedDate = new Date(dateValue).toString();
+            const stringifiedDate = new Date(dateValue).toString();
 
-            return stingifiedDate === 'Invalid Date' ? dateValue : stingifiedDate;
+            return stringifiedDate === 'Invalid Date' ? dateValue : stringifiedDate;
         };
 
         if (Array.isArray(value) && value.length) {
@@ -71,6 +72,11 @@ export default React.createClass({
 
         if (fieldName === 'created' || fieldName === 'lastUpdated') {
             return getDateString(value);
+        }
+
+        if (fieldName === 'href') {
+            // Suffix the url with the .json extension to always get the json representation of the api resource
+            return <a style={{ wordBreak: 'break-all' }} href={`${value}.json`} target="_blank">{value}</a>;
         }
 
         return value;

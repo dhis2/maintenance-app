@@ -179,7 +179,7 @@ const List = React.createClass({
         case 'details':
             return model.access.read;
         case 'pdfDataSetForm':
-             return model.modelDefinition.name === 'dataSet' && model.access.read;
+            return model.modelDefinition.name === 'dataSet' && model.access.read;
         default:
             return true;
         }
