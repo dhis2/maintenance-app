@@ -55,9 +55,9 @@ dataElementOperandSelectorActions.search
         const searchPromise = getD2()
             .then(d2 => {
                 if (action.data) {
-                    return d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName', filter: [`name:ilike:${encodeURIComponent(action.data)}`]});
+                    return d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName', filter: [`name:ilike:${encodeURIComponent(action.data)}`], totals: true});
                 }
-                return d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName'});
+                return d2.Api.getApi().get('dataElementOperands', {fields: 'id,displayName', totals: true});
             })
             .then(createFakePager)
             .then(collection => {
