@@ -31,6 +31,13 @@ function isIntegerValidator(value) {
 }
 isIntegerValidator.message = 'number_should_not_have_decimals';
 
+function createValidatorFromValidatorFunction(validatorFn) {
+    return {
+        validator: validatorFn,
+        message: validatorFn.message,
+    };
+}
+
 function addValidatorForType(type, modelValidation, modelDefinition) {
     function maxNumber(value) {
         return Number(value) <= modelValidation.max;
@@ -85,34 +92,35 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
 
     switch (type) {
     case INTEGER:
-        validators.push(isNumberValidator);
-        validators.push(isIntegerValidator);
+        validators.push(createValidatorFromValidatorFunction(isNumberValidator));
+        validators.push(createValidatorFromValidatorFunction(isIntegerValidator));
 
         if (isNumber(modelValidation.max)) {
-            validators.push(maxNumber);
+            validators.push(createValidatorFromValidatorFunction(maxNumber));
         }
 
         if (isNumber(modelValidation.min)) {
-            validators.push(minNumber);
+            validators.push(createValidatorFromValidatorFunction(minNumber));
         }
         break;
     case IDENTIFIER:
     case INPUT:
         if (isNumber(modelValidation.max)) {
-            validators.push(maxTextOrArray);
+            validators.push(createValidatorFromValidatorFunction(maxTextOrArray));
         }
 
         if (isNumber(modelValidation.min)) {
-            validators.push(minTextOrArray);
+            validators.push(createValidatorFromValidatorFunction(minTextOrArray));
         }
 
         if (modelValidation.unique) {
-            validators.push(checkAgainstServer);
+            // TODO: Add asyncValidator
+            // validators.push(checkAgainstServer);
         }
 
         break;
     case URL:
-        validators.push(isUrl);
+        validators.push(createValidatorFromValidatorFunction(isUrl));
         break;
     default:
         break;
@@ -125,7 +133,7 @@ function getValidatorsFromModelValidation(modelValidation, modelDefinition) {
     let validators = [];
 
     if (modelValidation.required) {
-        validators.push(isRequired);
+        validators.push(createValidatorFromValidatorFunction(isRequired));
     }
 
     if (modelDefinition) {
@@ -159,8 +167,9 @@ function getFieldUIComponent(type) {
 
 export function createFieldConfig(fieldConfig, modelDefinition, models) {
     const basicFieldConfig = {
-        type: getFieldUIComponent(fieldConfig.type),
-        fieldOptions: Object.assign(fieldConfig.fieldOptions || {}, {
+        name: fieldConfig.name,
+        component: getFieldUIComponent(fieldConfig.type),
+        props: Object.assign(fieldConfig.fieldOptions || {}, {
             floatingLabelText: fieldConfig.fieldOptions.labelText,
             modelDefinition: modelDefinition,
             models: models,
@@ -191,7 +200,7 @@ export function createFieldConfig(fieldConfig, modelDefinition, models) {
     }
 
     if (fieldConfig.constants && fieldConfig.constants.length) {
-        basicFieldConfig.fieldOptions.translate = true;
+        basicFieldConfig.translate = true;
     }
 
     const validators = [].concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition));

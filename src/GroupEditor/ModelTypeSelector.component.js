@@ -41,17 +41,23 @@ export default React.createClass({
             .then(d2 => this.setState({ models: d2.models }));
     },
 
+    _onChange(event) {
+        this.setState({
+            selectedModel: event.target.value,
+        });
+
+        this.props.onChange(event);
+    },
+
     renderOptions() {
         if (this.state && this.state.models) {
             return this.state.models
                 .mapThroughDefinitions(v => v)
                 .filter(hasNameInArray(this.props.nameListFilter))
-                .map((value) => {
-                    return {
-                        text: this.getTranslation(camelCaseToUnderscores(value.plural)),
-                        payload: value,
-                    };
-                });
+                .map((value) => ({
+                    text: this.getTranslation(camelCaseToUnderscores(value.plural)),
+                    payload: value,
+                }));
         }
         return [];
     },
@@ -62,13 +68,5 @@ export default React.createClass({
                 <Select value={this.state.selectedModel} hintText={this.getTranslation('please_select_object_type')} fullWidth {...this.props} menuItems={this.renderOptions()} onChange={this._onChange} />
             </div>
         );
-    },
-
-    _onChange(event) {
-        this.setState({
-            selectedModel: event.target.value,
-        });
-
-        this.props.onChange(event);
     },
 });

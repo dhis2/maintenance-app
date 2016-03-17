@@ -23,7 +23,10 @@ export default React.createClass({
         // TODO: Remove hack to translate the attribute field names
         Object
             .keys(this.props.model.modelDefinition.attributeProperties)
-            .forEach((key) => this.context.d2.i18n.translations[key] = key);
+            .forEach((key) => {
+                this.context.d2.i18n.translations[key] = key;
+                return key;
+            });
 
         const fieldConfigs = Object
             .keys(this.props.model.modelDefinition.attributeProperties)
@@ -74,6 +77,8 @@ export default React.createClass({
             errorMessage = validationStatus.messages[0];
         }
 
+        console.log(validationStatus.status);
+
         return (
             <FormField
                 {...fieldConfig}
@@ -84,16 +89,6 @@ export default React.createClass({
                 isValidating={validationStatus.status === FormFieldStatuses.VALIDATING}
                 errorMessage={errorMessage ? this.getTranslation(errorMessage) : undefined}
             />
-        );
-    },
-
-    render() {
-        if (!this.state || !this.state.fieldConfigs.length) {
-            return null;
-        }
-
-        return (
-            <div>{this.state.fieldConfigs.map(this.renderField)}</div>
         );
     },
 
@@ -111,5 +106,15 @@ export default React.createClass({
             attributeName: fieldConfig.name,
             value: event.target.value,
         });
+    },
+
+    render() {
+        if (!this.state || !this.state.fieldConfigs.length) {
+            return null;
+        }
+
+        return (
+            <div>{this.state.fieldConfigs.map(this.renderField)}</div>
+        );
     },
 });

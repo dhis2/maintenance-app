@@ -69,7 +69,7 @@ export default React.createClass({
         model: React.PropTypes.object.isRequired,
         labelText: React.PropTypes.string.isRequired,
         onChange: React.PropTypes.func.isRequired,
-        defaultValue: React.PropTypes.shape({
+        value: React.PropTypes.shape({
             values: React.PropTypes.func.isRequired,
         }).isRequired,
     },
@@ -115,7 +115,7 @@ export default React.createClass({
 
         return (
             <div>
-                <label style={labelStyle}>{this.getTranslation(camelCaseToUnderscores(this.props.labelText))}</label>
+                <label style={labelStyle}>{this.getTranslation(camelCaseToUnderscores(this.props.labelText || ''))}</label>
                 <TextField
                     fullWidth
                     hintText={this.getTranslation('search_available_selected_items')}
@@ -240,14 +240,14 @@ export default React.createClass({
     },
 
     populateAssignedStore() {
-        if (!this.props.defaultValue) {
+        if (!this.props.value) {
             return this.state.assignedItemStore.setState([]);
         }
 
-        if (Array.isArray(this.props.defaultValue)) {
-            this.state.assignedItemStore.setState(Array.from(this.props.defaultValue));
+        if (Array.isArray(this.props.value)) {
+            this.state.assignedItemStore.setState(Array.from(this.props.value));
         } else {
-            this.state.assignedItemStore.setState(Array.from(this.props.defaultValue.values()).map(value => value.id));
+            this.state.assignedItemStore.setState(Array.from(this.props.value.values()).map(value => value.id));
         }
     },
 });

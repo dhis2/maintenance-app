@@ -1,12 +1,10 @@
 import React from 'react';
-import { Navigation } from 'react-router';
 import classes from 'classnames';
 import log from 'loglevel';
 import isIterable from 'd2-utilizr/lib/isIterable';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import DetailsBox from './DetailsBox.component';
-import Sticky from 'react-sticky';
 import contextActions from './ContextActions';
 import detailsStore from './details.store';
 import listStore from './list.store';
@@ -175,7 +173,7 @@ const List = React.createClass({
         case 'clone':
             return model.access.write;
         case 'translate':
-            return model.access.read && model.modelDefinition.translated;
+            return model.access.read && model.modelDefinition.identifiableObject;
         case 'details':
             return model.access.read;
         case 'pdfDataSetForm':
@@ -195,7 +193,6 @@ const List = React.createClass({
                 listActions.searchByName({ modelType: this.props.params.modelType, searchString: value })
                     .subscribe(() => {}, (error) => log.error(error));
             });
-
 
         this.registerDisposable(searchListByNameDisposable);
     },
@@ -260,11 +257,9 @@ const List = React.createClass({
                     {this.state.dataRows.length ? null : <div>No results found</div>}
                 </div>
                 <div className={classes('details-box-wrap', { 'show-as-column': !!this.state.detailsObject })}>
-                    <Sticky>
-                        <Paper zDepth={1} rounded={false}>
-                            <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject} onClose={listActions.hideDetailsBox} />
-                        </Paper>
-                    </Sticky>
+                    <Paper zDepth={1} rounded={false}>
+                        <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject} onClose={listActions.hideDetailsBox} />
+                    </Paper>
                 </div>
                 {this.state.sharing.model ? <SharingDialog
                     objectToShare={this.state.sharing.model}

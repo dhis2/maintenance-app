@@ -46,7 +46,7 @@ contextActions.clone
 
 contextActions.delete
     .subscribe(({ data: model }) => getD2()
-            .then(d2 => confirm(d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`) + `\n\n${model.name}`)
+            .then(d2 => confirm([d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`), `\n\n${model.name}`].join(''))
                     .then(() => {
                         model.delete()
                             .then(() => {
@@ -81,21 +81,17 @@ contextActions.details
 contextActions.share
     .subscribe(({ data: model }) => {
         getD2()
-            .then((d2) => {
-                return d2.models[model.modelDefinition.name].get(model.id);
-            })
-            .then(modelToShare => {
-                sharingStore.setState({
-                    model: modelToShare,
-                    open: true,
-                });
-            });
+            .then((d2) => d2.models[model.modelDefinition.name].get(model.id))
+            .then(modelToShare => sharingStore.setState({
+                model: modelToShare,
+                open: true,
+            }));
     });
 
 contextActions.translate
     .subscribe(({ data: model }) => {
         translateStore.setState({
-            model: model,
+            model,
             open: true,
         });
     });
@@ -104,7 +100,7 @@ contextActions.pdfDataSetForm
     .subscribe(({ data: model, complete, error }) => {
         getD2()
             .then((d2) => {
-                window.open(d2.Api.getApi().baseUrl + `/pdfForm/dataSet/${model.id}`);
+                window.open(`${d2.Api.getApi().baseUrl}/pdfForm/dataSet/${model.id}`);
             })
             .then(complete)
             .catch(error);

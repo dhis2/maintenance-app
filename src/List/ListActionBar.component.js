@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigation, hashHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import FontIcon from 'material-ui/lib/font-icon';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
@@ -9,7 +9,7 @@ const ListActionBar = React.createClass({
         modelType: React.PropTypes.string.isRequired,
     },
 
-    mixins: [Navigation, Auth],
+    mixins: [Auth],
 
     _addClick() {
         hashHistory.push(`/edit/${this.props.modelType}/add`);

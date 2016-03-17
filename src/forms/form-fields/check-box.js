@@ -8,7 +8,7 @@ export default React.createClass({
     propTypes: {
         onChange: React.PropTypes.func.isRequired,
         labelText: React.PropTypes.string.isRequired,
-        defaultValue: React.PropTypes.bool,
+        value: React.PropTypes.bool,
     },
 
     mixins: [MuiThemeMixin, Translate],
@@ -18,7 +18,7 @@ export default React.createClass({
             <div style={{ marginTop: 12, marginBottom: 12 }}>
                 <Checkbox onClick={this._onClick} {...this.props}
                           label={this.getTranslation(this.props.labelText)}
-                          defaultChecked={this.props.defaultValue === true} />
+                          defaultChecked={this.props.value === true} />
             </div>
         );
     },
@@ -27,7 +27,7 @@ export default React.createClass({
         // TODO: Emit a proper event..?
         this.props.onChange({
             target: {
-                value: this.props.defaultValue !== true,
+                value: this.props.value !== true,
             },
         });
     },

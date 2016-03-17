@@ -10,12 +10,12 @@ import CloneModelContainer from './EditModel/CloneModelContainer.component';
 import GroupEditorContainer from './GroupEditor/GroupEditorContainer.component';
 
 import modelToEditStore from './EditModel/modelToEditStore';
-import {getInstance} from 'd2/lib/d2';
+import { getInstance } from 'd2/lib/d2';
 import objectActions from './EditModel/objectActions';
 import listActions from './List/list.actions';
+import snackActions from './Snackbar/snack.actions';
 
-function loadObject({params}, replace, callback) {
-
+function loadObject({ params }, replace, callback) {
     if (params.modelId === 'add') {
         getInstance().then((d2) => {
             const modelToEdit = d2.models[params.modelType].create();
@@ -29,7 +29,7 @@ function loadObject({params}, replace, callback) {
             .subscribe(
                 () => callback(),
                 (errorMessage) => {
-                    transition.redirect('list', { modelType: params.modelType });
+                    replace(`/list/${params.modelType}`);
                     snackActions.show({ message: errorMessage });
                     callback();
                 }
@@ -37,7 +37,7 @@ function loadObject({params}, replace, callback) {
     }
 }
 
-function loadList({params}, replace, callback) {
+function loadList({ params }, replace, callback) {
     listActions.loadList(params.modelType)
         .subscribe(
             (message) => {
@@ -48,12 +48,13 @@ function loadList({params}, replace, callback) {
                 if (/^.+s$/.test(params.modelType)) {
                     const nonPluralAttempt = params.modelType.substring(0, params.modelType.length - 1);
                     log.warn(`Could not find requested model type '${params.modelType}' attempting to redirect to '${nonPluralAttempt}'`);
-                    transition.redirect('list', { modelType: nonPluralAttempt });
+                    replace(`list/${nonPluralAttempt}`);
                     callback();
                 } else {
                     log.error('No clue where', params.modelType, 'comes from... Redirecting to app root');
                     log.error(message);
-                    transition.redirect('/');
+
+                    replace('/');
                     callback();
                 }
             }
@@ -63,7 +64,7 @@ function loadList({params}, replace, callback) {
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
-            <IndexRoute component={MenuCards}/>
+            <IndexRoute component={MenuCards} />
             <Route
                 path="list/:modelType"
                 component={List}

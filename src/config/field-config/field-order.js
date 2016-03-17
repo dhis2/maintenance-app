@@ -38,6 +38,36 @@ const fieldOrderByName = new Map([
         'dataElements',
         'indicators',
     ]],
+    ['organisationUnit', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'openingDate',
+        'closedDate',
+        'comment',
+        'url',
+        'contactPerson',
+        'address',
+        'email',
+        'phoneNumber',
+    ]],
+    ['organisationUnitGroup', [
+        'name',
+        'shortName',
+        'code',
+        'symbol',
+        'organisationUnits',
+    ]],
+    ['organisationUnitGroupSet', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'compulsory',
+        'dataDimension',
+        'organisationUnitGroups',
+    ]],
 ]);
 
 export default {

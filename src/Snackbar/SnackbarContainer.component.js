@@ -8,7 +8,9 @@ const SnackBarContainer = React.createClass({
     mixins: [ObserverRegistry],
 
     getInitialState() {
-        return {};
+        return {
+            show: false,
+        };
     },
 
     componentWillMount() {
@@ -16,15 +18,22 @@ const SnackBarContainer = React.createClass({
             if (snack) {
                 this.setState({
                     snack,
-                }, () => {
-                    this.refs.snackbar.show();
+                    show: true,
                 });
             } else {
-                this.refs.snackbar.dismiss();
+                this.setState({
+                    show: false,
+                });
             }
         }, log.info.bind(log));
 
         this.registerDisposable(snackStoreDisposable);
+    },
+
+    _closeSnackbar() {
+        this.setState({
+            show: false,
+        });
     },
 
     render() {
@@ -39,8 +48,9 @@ const SnackBarContainer = React.createClass({
                 message={this.state.snack.message}
                 action={this.state.snack.action}
                 autoHideDuration={0}
-                openOnMount={false}
+                open={this.state.show}
                 onActionTouchTap={this.state.snack.onActionTouchTap}
+                onRequestClose={this._closeSnackbar}
             />
         );
     },

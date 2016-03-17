@@ -15,6 +15,9 @@ export default {
             'indicatorGroup',
             'indicatorGroupSet',
             'dataSet',
+            'organisationUnit',
+            'organisationUnitGroup',
+            'organisationUnitGroupSet',
         ];
     },
 };

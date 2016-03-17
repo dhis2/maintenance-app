@@ -5,7 +5,7 @@ import { getInstance } from 'd2/lib/d2';
 export default React.createClass({
     propTypes: {
         referenceType: React.PropTypes.string.isRequired,
-        defaultValue: React.PropTypes.shape({
+        value: React.PropTypes.shape({
             id: React.PropTypes.string.isRequired,
         }).isRequired,
         onChange: React.PropTypes.func.isRequired,
@@ -18,8 +18,6 @@ export default React.createClass({
     },
 
     componentDidMount() {
-        console.log(this.props.queryParamFilter);
-
         getInstance()
             .then(d2 => d2.models[this.props.referenceType].list({ fields: 'id,displayName,name', paging: false, filter: this.props.queryParamFilter }))
             .then(modelCollection => modelCollection.toArray())
@@ -39,7 +37,7 @@ export default React.createClass({
                         return option.model.name === 'default';
                     });
 
-                    if (!this.props.defaultValue && defaultOption) {
+                    if (!this.props.value && defaultOption) {
                         this.props.onChange({
                             target: {
                                 value: defaultOption.model,
@@ -56,7 +54,7 @@ export default React.createClass({
         let defaultValue = {};
 
         return (
-            <DropDown {...this.props} options={this.state.options} defaultValue={this.props.defaultValue ? this.props.defaultValue.id : defaultValue.id} onChange={this._onChange} />
+            <DropDown {...this.props} options={this.state.options} value={this.props.value ? this.props.value.id : defaultValue.id} onChange={this._onChange} />
         );
     },
 

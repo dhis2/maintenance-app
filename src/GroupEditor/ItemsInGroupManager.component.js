@@ -56,6 +56,13 @@ export default React.createClass({
         ];
     },
 
+    createUrls(items) {
+        const { modelToEdit, itemDefinition } = this.state;
+
+        return items
+            .map(id => `${modelToEdit.modelDefinition.plural}/${modelToEdit.id}/${itemDefinition}/${id}`);
+    },
+
     render() {
         const contentStyle = {
             padding: '2rem',
@@ -72,20 +79,13 @@ export default React.createClass({
         );
     },
 
-    createUrls(items) {
-        const { modelToEdit, itemDefinition } = this.state;
-
-        return items
-            .map(id => `${modelToEdit.modelDefinition.plural}/${modelToEdit.id}/${itemDefinition}/${id}`);
-    },
-
     _assignItems(items) {
         const requests = this.createUrls(items)
-            .map(url => {
-                return d2lib.getInstance()
-                    .then(d2 => d2.Api.getApi())
-                    .then(api => api.post(url));
-            });
+            .map(url => d2lib
+                .getInstance()
+                .then(d2 => d2.Api.getApi())
+                .then(api => api.post(url))
+            );
 
         return Promise.all(requests)
             .then(() => {

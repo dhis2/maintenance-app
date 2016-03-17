@@ -13,12 +13,11 @@ config.i18n.strings.add('press_enter_to_go_to_first');
 config.i18n.strings.add('search');
 
 const SideBarContainer = React.createClass({
-    mixins: [Translate],
-
-    // The react-router
     contextTypes: {
         router: React.PropTypes.object,
     },
+
+    mixins: [Translate],
 
     getInitialState() {
         return {

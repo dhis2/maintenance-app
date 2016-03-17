@@ -48,6 +48,28 @@ export default React.createClass({
             textAlign: 'right',
         };
 
+        const actionButtons = [];
+
+        if (details.canCreate) {
+            actionButtons.push(
+                <IconButton
+                    iconClassName="material-icons"
+                    tooltip={this.getTranslation('add')}
+                    tooltipPosition="top-center"
+                    onClick={details.add}
+                >&#xE145;</IconButton>
+            );
+        }
+
+        actionButtons.push(
+            <IconButton
+                iconClassName="material-icons"
+                tooltip={this.getTranslation('list')}
+                tooltipPosition="top-center"
+                onClick={details.list}
+            >&#xE8EF;</IconButton>
+        );
+
         return (
             <Card key={index} style={cardStyle}>
                 <CardHeader
@@ -58,19 +80,7 @@ export default React.createClass({
                 />
                 <CardText style={textStyle}>{details.description}</CardText>
                 <CardActions style={actionStyle}>
-                    {details.canCreate ? <IconButton
-                        iconClassName="material-icons"
-                        tooltip={this.getTranslation('add')}
-                        tooltipPosition="top-center"
-                        onClick={details.add}
-                    >&#xE145;</IconButton> : <span></span>}
-
-                    <IconButton
-                        iconClassName="material-icons"
-                        tooltip={this.getTranslation('list')}
-                        tooltipPosition="top-center"
-                        onClick={details.list}
-                    >&#xE8EF;</IconButton>
+                    {actionButtons}
                 </CardActions>
             </Card>
         );

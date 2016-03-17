@@ -9,25 +9,18 @@ if (process.env.NODE_ENV !== 'production') {
 Error.stackTraceLimit = Infinity;
 
 import React from 'react';
-import {render} from 'react-dom';
-// import Router from 'react-router';
-import Action from 'd2-ui/lib/action/Action';
+import { render } from 'react-dom';
 import { init, config, getUserSettings, getManifest } from 'd2/lib/d2';
 import log from 'loglevel';
 import LoadingMask from './loading-mask/LoadingMask.component';
 import dhis2 from 'd2-ui/lib/header-bar/dhis2';
-// import moment from 'moment';
 import routes from './router';
-// import {Router, Route, hashHistory} from 'react-router';
-
 
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
 } else {
     log.setLevel(log.levels.ERROR);
 }
-
-const routeActions = Action.createActionsFromNames(['transition']);
 
 function configI18n({ uiLocale }) {
     if (uiLocale !== 'en') {
@@ -41,7 +34,6 @@ function startApp() {
     render(
         routes,
         document.getElementById('app'));
-    // routeActions.transition(hashHistory.getCurrentPath());
 }
 
 render(<LoadingMask />, document.getElementById('app'));

@@ -4,7 +4,7 @@ import HeaderBar from 'd2-ui/lib/header-bar/HeaderBar.component';
 import MainContent from '../MainContent/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
-import {getInstance} from 'd2/lib/d2';
+import { getInstance } from 'd2/lib/d2';
 import AppWithD2 from 'd2-ui/lib/app/AppWithD2.component';
 import log from 'loglevel';
 import appTheme from './app.theme';
@@ -20,10 +20,8 @@ log.setLevel(log.levels.INFO);
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-const withMuiContext = Object.assign(AppWithD2.childContextTypes, {muiTheme: React.PropTypes.object});
+const withMuiContext = Object.assign(AppWithD2.childContextTypes, { muiTheme: React.PropTypes.object });
 class App extends AppWithD2 {
-    childContextTypes: withMuiContext
-
     getChildContext() {
         return Object.assign({}, super.getChildContext(), {
             muiTheme: appTheme,
@@ -39,7 +37,7 @@ class App extends AppWithD2 {
 
         return (
             <div className={classList}>
-
+                <HeaderBar />
                 <MainContent>
                     <div className="sidebar-container">
                         <SideBar />
@@ -56,5 +54,6 @@ class App extends AppWithD2 {
 App.defaultProps = {
     d2: getInstance(),
 };
+App.childContextTypes = withMuiContext;
 
 export default App;

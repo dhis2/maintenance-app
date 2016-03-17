@@ -1,5 +1,5 @@
 import React from 'react';
-import {hashHistory} from 'react-router';
+import { hashHistory } from 'react-router';
 import fieldOverrides from '../config/field-overrides/index';
 import fieldOrderNames from '../config/field-config/field-order';
 import disabledOnEdit from '../config/disabled-on-edit';
@@ -16,6 +16,7 @@ import { isString, camelCaseToUnderscores } from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import Form from 'd2-ui/lib/forms/Form.component';
+import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import log from 'loglevel';
 import FormHeading from './FormHeading';
 import ExtraFields from './ExtraFields';
@@ -53,8 +54,8 @@ export default React.createClass({
                 formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
             }
 
-            console.log('Ask for loading');
-            console.log(this.props, modelToEditStore.getState());
+            // console.log('Ask for loading');
+            // console.log(this.props, modelToEditStore.getState());
             this.disposable = modelToEditStore
                 .subscribe((modelToEdit) => {
                     const fieldConfigs = this.state.fieldConfigs || formFieldsManager.getFormFieldsForModel(modelToEdit)
@@ -65,11 +66,17 @@ export default React.createClass({
                                 return fieldConfig;
                             });
 
-                    const formValidator = this.state.formValidator || createFormValidator(fieldConfigs);
+                    const fieldConfigsWithValues = fieldConfigs
+                        .map(fieldConfig => {
+                            console.log(modelToEdit[fieldConfig.name]);
+                            return Object.assign({}, fieldConfig, {value: modelToEdit[fieldConfig.name]});
+                        });
+
+                    // const formValidator = this.state.formValidator || createFormValidator(fieldConfigs);
 
                     this.setState({
-                        formValidator: formValidator,
-                        fieldConfigs: fieldConfigs,
+                        // formValidator: formValidator,
+                        fieldConfigs: fieldConfigsWithValues,
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
@@ -122,18 +129,23 @@ export default React.createClass({
                 top: 5,
             };
 
+            //<Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm} formValidator={this.state.formValidator}>
+            //    <AttributeFields model={this.state.modelToEdit} updateFn={objectActions.updateAttribute} registerValidator={this._registerValidator} />
+            //    <ExtraFields modelToEdit={this.state.modelToEdit} />
+            //    <FormButtons style={{ paddingTop: '2rem' }}>
+            //        <SaveButton style={saveButtonStyle} onClick={this.saveAction} />
+            //        <CancelButton onClick={this.closeAction} />
+            //    </FormButtons>
+            //</Form>
+
+            console.log(this.state.fieldConfigs);
+
             return (
                 <Paper style={formPaperStyle}>
                     <div style={backButtonStyle}><BackButton onClick={this._goBack} toolTip="back_to_list" /></div>
                     <FormHeading text={camelCaseToUnderscores(this.props.modelType)} />
-                    <Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm} formValidator={this.state.formValidator}>
-                        <AttributeFields model={this.state.modelToEdit} updateFn={objectActions.updateAttribute} registerValidator={this._registerValidator} />
-                        <ExtraFields modelToEdit={this.state.modelToEdit} />
-                        <FormButtons style={{ paddingTop: '2rem' }}>
-                            <SaveButton style={saveButtonStyle} onClick={this.saveAction} />
-                            <CancelButton onClick={this.closeAction} />
-                        </FormButtons>
-                    </Form>
+
+                    <FormBuilder fields={this.state.fieldConfigs} onUpdateField={this._formFieldUpdated} />
                 </Paper>
             );
         };
@@ -161,6 +173,19 @@ export default React.createClass({
     },
 
     _updateForm(fieldName, value) {
+        objectActions.update({ fieldName, value });
+    },
+
+    _formFieldUpdated(fieldName, value) {
+        console.log(fieldName, value);
+        if (value === 'true') {
+            return objectActions.update({ fieldName, value: true });
+        }
+
+        if (value === 'false') {
+            return objectActions.update({ fieldName, value: false });
+        }
+
         objectActions.update({ fieldName, value });
     },
 

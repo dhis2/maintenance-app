@@ -32,7 +32,7 @@ export default React.createClass({
 
     getInitialState() {
         return {
-            value: (this.props.defaultValue !== undefined && this.props.defaultValue !== null) ? this.props.defaultValue : '',
+            value: (this.props.value !== undefined && this.props.value !== null) ? this.props.value : '',
             options: this.getOptions(this.props.options, this.props.isRequired),
         };
     },
@@ -48,13 +48,13 @@ export default React.createClass({
         let opts = options
             .map((option) => {
                 return {
-                    payload: option.value,
+                    value: option.value,
                     text: option.text,
                 };
             });
 
         if (!required) {
-            opts = [{payload: undefined, text: ''}].concat(opts);
+            opts = [{value: undefined, text: ''}].concat(opts);
         }
 
         return opts
@@ -79,13 +79,13 @@ export default React.createClass({
 
         return (
             <SelectField
-                value={this.state.value.toString()}
+                value={this.state.value}
                 {...other}
                 onChange={this._onChange}
                 floatingLabelText={this.props.translateLabel ? this.getTranslation(this.props.labelText) : this.props.labelText}
             >
                 {this.state.options.map((option, index) => {
-                    return <MenuItem primaryText={option.text} key={index} value={option.payload} />
+                    return <MenuItem primaryText={option.text} key={index} value={option.value} />
                 })}
             </SelectField>
         );
