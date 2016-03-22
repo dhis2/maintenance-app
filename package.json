@@ -4,6 +4,7 @@
   "description": "maintenance",
   "main": "index.js",
   "scripts": {
+    "start": "webpack-dev-server",
     "test": "./node_modules/karma/bin/karma start test/config/karma.config.js --single-run true",
     "test-watch": "./node_modules/karma/bin/karma start test/config/karma.config.js",
     "lint": "./node_modules/eslint/bin/eslint.js src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon --rule 'no-unused-expressions: 0' test && scss-lint",
@@ -51,7 +52,7 @@
     "classnames": "2.2.3",
     "d2": "0.0.25",
     "d2-flux": "0.5.0",
-    "d2-ui": "0.0.11-0",
+    "d2-ui": "0.0.11-1",
     "d2-ui-button": "0.0.2",
     "d2-ui-datatable": "0.0.4",
     "d2-ui-detailsbox": "0.0.4",
