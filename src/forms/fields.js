@@ -59,35 +59,6 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
     }
     minTextOrArray.message = 'value_not_min';
 
-    function checkAgainstServer(value, fieldName, formSource) {
-        // Don't validate against the server when we have no value
-        if (!value || !value.trim()) {
-            return Promise.resolve(true);
-        }
-
-        if (modelValidation.modelDefinition) {
-            log.error('No modelDefintion found on validation object.');
-
-            return Promise.reject('could_not_run_async_validation');
-        }
-
-        let modelDefinitionWithFilter = modelDefinition
-            .filter().on(modelValidation.fieldOptions.referenceProperty).equals(value);
-
-        if (formSource.id) {
-            modelDefinitionWithFilter = modelDefinitionWithFilter.filter().on('id').notEqual(formSource.id);
-        }
-
-        return modelDefinitionWithFilter
-            .list()
-            .then(collection => {
-                if (collection.size !== 0) {
-                    return Promise.reject('value_not_unique');
-                }
-                return Promise.resolve(true);
-            });
-    }
-
     const validators = [];
 
     switch (type) {
@@ -111,11 +82,6 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
 
         if (isNumber(modelValidation.min)) {
             validators.push(createValidatorFromValidatorFunction(minTextOrArray));
-        }
-
-        if (modelValidation.unique) {
-            // TODO: Add asyncValidator
-            // validators.push(checkAgainstServer);
         }
 
         break;
@@ -143,6 +109,43 @@ function getValidatorsFromModelValidation(modelValidation, modelDefinition) {
     return validators;
 }
 
+function getAsyncValidatorsFromModelValidation(modelValidation, modelDefinition, uid) {
+    function checkAgainstServer(value) {
+        // Don't validate against the server when we have no value
+        if (!value || !value.trim()) {
+            return Promise.resolve(true);
+        }
+
+        if (modelValidation.modelDefinition) {
+            log.error('No modelDefinition found on validation object.');
+
+            return Promise.reject('could_not_run_async_validation');
+        }
+
+        let modelDefinitionWithFilter = modelDefinition
+            .filter().on(modelValidation.fieldOptions.referenceProperty).equals(value);
+
+        if (uid) {
+            modelDefinitionWithFilter = modelDefinitionWithFilter.filter().on('id').notEqual(uid);
+        }
+
+        return modelDefinitionWithFilter
+            .list()
+            .then(collection => {
+                if (collection.size !== 0) {
+                    return Promise.reject('value_not_unique');
+                }
+                return Promise.resolve(true);
+            });
+    }
+
+    if (modelValidation.unique) {
+        // TODO: Add asyncValidator
+        return [checkAgainstServer];
+    }
+    return [];
+}
+
 function getFieldUIComponent(type) {
     switch (type) {
     case SELECT:
@@ -165,10 +168,10 @@ function getFieldUIComponent(type) {
     return TextField;
 }
 
-export function createFieldConfig(fieldConfig, modelDefinition, models) {
+export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
     const basicFieldConfig = {
         name: fieldConfig.name,
-        component: getFieldUIComponent(fieldConfig.type),
+        component: fieldConfig.component || getFieldUIComponent(fieldConfig.type),
         props: Object.assign(fieldConfig.fieldOptions || {}, {
             floatingLabelText: fieldConfig.fieldOptions.labelText,
             modelDefinition: modelDefinition,
@@ -204,21 +207,10 @@ export function createFieldConfig(fieldConfig, modelDefinition, models) {
     }
 
     const validators = [].concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition));
+    const asyncValidators = [].concat(getAsyncValidatorsFromModelValidation(fieldConfig, modelDefinition, model.id));
 
-    return Object.assign(fieldConfig, { validators }, basicFieldConfig);
+    return Object.assign(fieldConfig, { validators, asyncValidators }, basicFieldConfig);
 }
-
-export const fieldTypeClasses = new Map([
-    [CHECKBOX, createFieldConfig],
-    [INPUT, createFieldConfig],
-    [SELECT, createFieldConfig],
-    [MULTISELECT, createFieldConfig],
-    [DATE, createFieldConfig],
-    [INTEGER, createFieldConfig],
-    [IDENTIFIER, createFieldConfig],
-    [SELECTASYNC, createFieldConfig],
-    [URL, createFieldConfig],
-]);
 
 export const typeToFieldMap = new Map([
     ['BOOLEAN', CHECKBOX],

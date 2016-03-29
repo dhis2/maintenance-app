@@ -1,5 +1,5 @@
 import objectActions from './objectActions';
-import { EditModelBase } from './EditModelContainer.component';
+import { EditModelBase } from './EditModel.component';
 import snackActions from '../Snackbar/snack.actions';
 
 export default class extends EditModelBase {

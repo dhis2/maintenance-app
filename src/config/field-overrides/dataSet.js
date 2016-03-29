@@ -9,7 +9,7 @@ export default new Map([
     }],
     ['periodType', {
         type: SELECT,
-        fieldOptions: {
+        props: {
             options: [
                 'Daily', 'Weekly', 'Monthly', 'BiMonthly', 'Quarterly', 'SixMonthlyApril', 'Yearly', 'FinancialApril', 'FinancialJuly', 'FinancialOctober',
             ],

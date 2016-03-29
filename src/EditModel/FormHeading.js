@@ -1,18 +1,15 @@
 import React from 'react';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 
-export default React.createClass({
-    propTypes: {
-        text: React.PropTypes.string.isRequired,
-        level: React.PropTypes.number,
-    },
+function FormHeading(props, context) {
+    return (
+        <Heading level={props.level || 2} text={context.d2.i18n.getTranslation(props.text)} />
+    );
+}
+FormHeading.propTypes = {
+    text: React.PropTypes.string.isRequired,
+    level: React.PropTypes.number,
+};
 
-    mixins: [Translate],
-
-    render() {
-        return (
-            <Heading level={this.props.level || 2} text={this.getTranslation(this.props.text)} />
-        );
-    },
-});
+export default addD2Context(FormHeading);

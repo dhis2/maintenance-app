@@ -54,7 +54,7 @@ export default React.createClass({
             });
 
         if (!required) {
-            opts = [{value: undefined, text: ''}].concat(opts);
+            opts = [{value: null, text: this.getTranslation('no_value')}].concat(opts);
         }
 
         return opts
@@ -75,6 +75,8 @@ export default React.createClass({
     },
 
     render() {
+        console.log(this.props.labelText, this.props.isRequired);
+
         const {onFocus, onBlur, ...other} = this.props;
 
         return (

@@ -1,23 +1,23 @@
 import React from 'react';
 import RaisedButton from 'material-ui/lib/raised-button';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import { config } from 'd2/lib/d2';
 
 config.i18n.strings.add('save');
+config.i18n.strings.add('saving');
 
-const SaveButton = React.createClass({
-    propTypes: {
-        isFormValid: React.PropTypes.func.isRequired,
-        onClick: React.PropTypes.func.isRequired,
-    },
+function SaveButton(props, {d2}) {
+    const buttonText = props.isSaving ? d2.i18n.getTranslation('saving') : d2.i18n.getTranslation('save');
 
-    mixins: [Translate],
+    return (
+        <RaisedButton {...props} primary onClick={props.onClick} label={buttonText} disabled={props.isSaving || props.isValidating} />
+    );
+}
 
-    render() {
-        return (
-            <RaisedButton {...this.props} primary onClick={this.props.onClick} label={this.getTranslation('save')} disabled={undefined} />
-        );
-    },
-});
+SaveButton.propTypes = {
+    isSaving: React.PropTypes.bool,
+    isValidating: React.PropTypes.bool,
+    onClick: React.PropTypes.func.isRequired,
+};
 
-export default SaveButton;
+export default addD2Context(SaveButton);

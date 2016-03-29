@@ -1,31 +1,70 @@
 import React from 'react';
-import { hashHistory } from 'react-router';
+import Router from 'react-router';
 import fieldOverrides from '../config/field-overrides/index';
 import fieldOrderNames from '../config/field-config/field-order';
 import disabledOnEdit from '../config/disabled-on-edit';
 import FormFieldsForModel from '../forms/FormFieldsForModel';
 import FormFieldsManager from '../forms/FormFieldsManager';
-import { getInstance as getD2 } from 'd2/lib/d2';
+import {config, getInstance as getD2} from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
 import Paper from 'material-ui/lib/paper';
-import { isString, camelCaseToUnderscores } from 'd2-utilizr';
+import {isString, camelCaseToUnderscores} from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
-import Form from 'd2-ui/lib/forms/Form.component';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import log from 'loglevel';
 import FormHeading from './FormHeading';
-import ExtraFields from './ExtraFields';
+import extraFields from './extraFields';
 import AttributeFields from './AttributeFields';
-import createFormValidator from 'd2-ui/lib/forms/FormValidator';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 import BackButton from './BackButton.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { goToRoute, goBack } from '../router';
+import {createFieldConfig, typeToFieldMap} from '../forms/fields';
+
+config.i18n.strings.add('name');
+config.i18n.strings.add('code');
+config.i18n.strings.add('short_name');
+
+function getAttributeFieldConfigs(modelToEdit) {
+    Object
+        .keys(modelToEdit.modelDefinition.attributeProperties)
+        .forEach((key) => {
+            this.context.d2.i18n.translations[key] = key;
+            return key;
+        });
+
+    return Object
+        .keys(modelToEdit.modelDefinition.attributeProperties)
+        .map(attributeName => {
+            const attribute = modelToEdit.modelDefinition.attributeProperties[attributeName];
+
+            return createFieldConfig({
+                name: attribute.name,
+                valueType: attribute.valueType,
+                type: typeToFieldMap.get(attribute.optionSet ? 'CONSTANT' : attribute.valueType),
+                required: Boolean(attribute.mandatory),
+                fieldOptions: {
+                    labelText: attribute.name,
+                    options: attribute.optionSet ? attribute.optionSet.options.map(option => {
+                        return {
+                            name: option.displayName || option.name,
+                            value: option.code,
+                        };
+                    }) : [],
+                },
+            }, modelToEdit.modelDefinition, this.context.d2.models, modelToEdit);
+        })
+        .map(attributeFieldConfig => {
+            attributeFieldConfig.value = modelToEdit.attributes[attributeFieldConfig.name];
+            return attributeFieldConfig;
+        });
+}
 
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default React.createClass({
@@ -54,33 +93,33 @@ export default React.createClass({
                 formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
             }
 
-            // console.log('Ask for loading');
-            // console.log(this.props, modelToEditStore.getState());
             this.disposable = modelToEditStore
                 .subscribe((modelToEdit) => {
-                    const fieldConfigs = this.state.fieldConfigs || formFieldsManager.getFormFieldsForModel(modelToEdit)
+                    const fieldConfigs = (/*this.state.fieldConfigs || */formFieldsManager.getFormFieldsForModel(modelToEdit))
                             .map(fieldConfig => {
                                 if (this.props.modelId !== 'add' && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
                                     fieldConfig.fieldOptions.disabled = true;
                                 }
+                                fieldConfig.value = modelToEdit[fieldConfig.name];
+
                                 return fieldConfig;
                             });
 
-                    const fieldConfigsWithValues = fieldConfigs
-                        .map(fieldConfig => {
-                            return Object.assign({}, fieldConfig, {value: modelToEdit[fieldConfig.name]});
-                        });
-
-                    // const formValidator = this.state.formValidator || createFormValidator(fieldConfigs);
-
                     this.setState({
-                        // formValidator: formValidator,
-                        fieldConfigs: fieldConfigsWithValues,
+                        fieldConfigs: [].concat(
+                            fieldConfigs,
+                            getAttributeFieldConfigs.call(this, modelToEdit),
+                            (extraFields[modelType] || []).map(config => {
+                                config.props = config.props || {};
+                                config.props.modelToEdit = modelToEdit;
+                                return config;
+                            })
+                        ),
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
                 }, (errorMessage) => {
-                    snackActions.show({ message: errorMessage });
+                    snackActions.show({message: errorMessage});
                 });
 
             this.setState({
@@ -118,33 +157,25 @@ export default React.createClass({
                 );
             }
 
-            const saveButtonStyle = {
-                marginRight: '1rem',
-            };
-
             const backButtonStyle = {
                 position: 'absolute',
                 left: 5,
                 top: 5,
             };
 
-            //<Form source={this.state.modelToEdit} fieldConfigs={this.state.fieldConfigs} onFormFieldUpdate={this._updateForm} formValidator={this.state.formValidator}>
-            //    <AttributeFields model={this.state.modelToEdit} updateFn={objectActions.updateAttribute} registerValidator={this._registerValidator} />
-            //    <ExtraFields modelToEdit={this.state.modelToEdit} />
-            //    <FormButtons style={{ paddingTop: '2rem' }}>
-            //        <SaveButton style={saveButtonStyle} onClick={this.saveAction} />
-            //        <CancelButton onClick={this.closeAction} />
-            //    </FormButtons>
-            //</Form>
-
-            console.log(this.state.fieldConfigs);
-
             return (
                 <Paper style={formPaperStyle}>
                     <div style={backButtonStyle}><BackButton onClick={this._goBack} toolTip="back_to_list" /></div>
                     <FormHeading text={camelCaseToUnderscores(this.props.modelType)} />
 
-                    <FormBuilder fields={this.state.fieldConfigs} onUpdateField={this._formFieldUpdated} />
+                    <FormBuilder
+                        fields={this.state.fieldConfigs}
+                        onUpdateField={this._onUpdateField}
+                        onFormStatusUpdate={this._onFormStatusUpdate}
+                    />
+
+                    <SaveButton onClick={this._saveAction} />
+                    <CancelButton onClick={this._closeAction} />
                 </Paper>
             );
         };
@@ -162,7 +193,7 @@ export default React.createClass({
     },
 
     _goBack() {
-        hashHistory.goBack();
+        goBack();
     },
 
     _registerValidator(attributeValidator) {
@@ -171,57 +202,46 @@ export default React.createClass({
         });
     },
 
-    _updateForm(fieldName, value) {
-        objectActions.update({ fieldName, value });
+    _onUpdateField(fieldName, value) {
+        objectActions.update({fieldName, value})
+            .subscribe(() => console.log('update complete'));
     },
 
-    _formFieldUpdated(fieldName, value) {
-        console.log(fieldName, value);
-        if (value === 'true') {
-            return objectActions.update({ fieldName, value: true });
-        }
+    _onFormStatusUpdate() {
 
-        if (value === 'false') {
-            return objectActions.update({ fieldName, value: false });
-        }
-
-        objectActions.update({ fieldName, value });
     },
 
-    saveAction(event) {
+    _saveAction(event) {
         event.preventDefault();
 
-        this.state.fieldConfigs
-            .forEach(v => {
-                this.state.formValidator.runFor(v.name, this.state.modelToEdit[v.name], this.state.modelToEdit);
-            });
-
-        this.state.attributeValidatorRunner && this.state.attributeValidatorRunner();
-
-        objectActions.saveObject({ id: this.props.modelId })
+        objectActions.saveObject({id: this.props.modelId})
             .subscribe(
             (message) => {
-                snackActions.show({ message, action: 'ok', translate: true });
+                snackActions.show({message, action: 'ok', translate: true});
 
-                hashHistory.push(`/list/${this.props.modelType}`);
+                goToRoute(`/list/${this.props.modelType}`);
             },
             (errorMessage) => {
                 if (isString(errorMessage)) {
                     log.debug(errorMessage.messages);
-                    snackActions.show({ message: errorMessage });
+                    snackActions.show({message: errorMessage});
                 }
 
                 if (errorMessage.messages && errorMessage.messages.length > 0) {
                     log.debug(errorMessage.messages);
-                    snackActions.show({ message: `${this.getTranslatedPropertyName(errorMessage.messages[0].property)}: ${errorMessage.messages[0].message} ` });
+                    snackActions.show({message: `${this.getTranslatedPropertyName(errorMessage.messages[0].property)}: ${errorMessage.messages[0].message} `});
+                }
+
+                if (errorMessage === 'No changes to be saved') {
+                    goToRoute(`/list/${this.props.modelType}`);
                 }
             }
         );
     },
 
-    closeAction(event) {
+    _closeAction(event) {
         event.preventDefault();
 
-        hashHistory.push(`/list/${this.props.modelType}`);
+        goToRoute(`/list/${this.props.modelType}`);
     },
 });

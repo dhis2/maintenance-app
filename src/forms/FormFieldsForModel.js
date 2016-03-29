@@ -1,7 +1,6 @@
 import log from 'loglevel';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-
-import { fieldTypeClasses, typeToFieldMap } from './fields';
+import { typeToFieldMap, createFieldConfig } from './fields';
 
 const fieldNamesToIgnoreOnDisplay = ['id', 'publicAccess', 'created', 'lastUpdated', 'user', 'userGroupAccesses', 'attributeValues'];
 
@@ -28,7 +27,7 @@ class FormFieldsForModel {
         }
 
         const removeFieldsThatShouldNotBeDisplayed = modelValidation => this.fieldNamesToIgnoreOnDisplay.indexOf(modelValidation.fieldName) === -1;
-        const onlyUsableFieldTypes = modelValidation => fieldTypeClasses.get(typeToFieldMap.get(modelValidation.type));
+        const onlyUsableFieldTypes = modelValidation => typeToFieldMap.get(modelValidation.type);
         const onlyWritableProperties = modelValidation => modelValidation.writable;
         const onlyPersistedProperties = modelValidation => modelValidation.persisted;
         const onlyOwnedProperties = modelValidation => modelValidation.owner;
@@ -84,7 +83,7 @@ class FormFieldsForModel {
             }
             modelValidation.type = fieldType;
 
-            return fieldTypeClasses.get(fieldType)(modelValidation, modelDefinition, this.models);
+            return createFieldConfig(modelValidation, modelDefinition, this.models, model);
         }
     }
 }

@@ -128,6 +128,16 @@ objectActions.update.subscribe(action => {
     const modelToEdit = modelToEditStore.getState();
 
     if (modelToEdit) {
+        if(Object.keys(modelToEdit.attributes).indexOf(fieldName) >= 0) {
+            log.debug(`${fieldName} is a custom attribute. Setting ${fieldName} to ${value}`);
+            modelToEdit.attributes[fieldName] = value;
+            log.debug(`Value is now: ${modelToEdit.attributes[fieldName]}`);
+
+            modelToEditStore.setState(modelToEdit);
+
+            return action.complete();
+        }
+
         if (!(modelToEdit[fieldName] && modelToEdit[fieldName].constructor && modelToEdit[fieldName].constructor.name === 'ModelCollectionProperty')) {
             log.debug(`Change ${fieldName} to ${value}`);
             modelToEdit[fieldName] = value;

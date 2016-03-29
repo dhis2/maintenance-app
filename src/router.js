@@ -6,7 +6,6 @@ import App from './App/App.component';
 import MenuCards from './MenuCards/MenuCardsContainer.component';
 import List from './List/List.component';
 import EditModelContainer from './EditModel/EditModelContainer.component';
-import CloneModelContainer from './EditModel/CloneModelContainer.component';
 import GroupEditorContainer from './GroupEditor/GroupEditorContainer.component';
 
 import modelToEditStore from './EditModel/modelToEditStore';
@@ -61,6 +60,18 @@ function loadList({ params }, replace, callback) {
         );
 }
 
+function cloneObject({ params }, replace, callback) {
+    objectActions.getObjectOfTypeByIdAndClone({ objectType: params.modelType, objectId: params.modelId })
+        .subscribe(
+            () => callback(),
+            (errorMessage) => {
+                replace(`/list/${params.modelType}`);
+                snackActions.show({ message: errorMessage });
+                callback();
+            }
+        );
+}
+
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
@@ -77,7 +88,8 @@ const routes = (
             />
             <Route
                 path="clone/:modelType/:modelId"
-                component={CloneModelContainer}
+                component={EditModelContainer}
+                onEnter={cloneObject}
             />
             <Route
                 path="group-editor"
@@ -86,5 +98,13 @@ const routes = (
         </Route>
     </Router>
 );
+
+export function goToRoute(url) {
+    hashHistory.push(url);
+}
+
+export function goBack() {
+    hashHistory.goBack();
+}
 
 export default routes;

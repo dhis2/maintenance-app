@@ -1,22 +1,18 @@
 import React from 'react';
 import RaisedButton from 'material-ui/lib/raised-button';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import { config } from 'd2/lib/d2';
 
 config.i18n.strings.add('cancel');
 
-const CancelButton = React.createClass({
-    propTypes: {
-        onClick: React.PropTypes.func.isRequired,
-    },
+function CancelButton(props, context) {
+    return (
+        <RaisedButton {...props} label={context.d2.i18n.getTranslation('cancel')} />
+    );
+}
 
-    mixins: [Translate],
+CancelButton.propTypes = {
+    onClick: React.PropTypes.func.isRequired,
+};
 
-    render() {
-        return (
-            <RaisedButton {...this.props} label={this.getTranslation('cancel')} />
-        );
-    },
-});
-
-export default CancelButton;
+export default addD2Context(CancelButton);

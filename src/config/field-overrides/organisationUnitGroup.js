@@ -1,8 +1,8 @@
-import { SELECT } from '../../forms/fields';
+import IconPicker from '../../forms/form-fields/icon-picker';
 
 export default new Map([
     ['symbol', {
-        type: SELECT,
+        component: IconPicker,
         fieldOptions: {
             options: (function () {
                 const symbolUrls = [];
@@ -15,6 +15,7 @@ export default new Map([
 
                 return symbolUrls;
             }()),
+            imgPath: (process.env.NODE_ENV !== 'production') ? 'http://localhost:8080/dhis/images/orgunitgroup' : '/images/orgunitgroup'
         },
     }],
 ]);

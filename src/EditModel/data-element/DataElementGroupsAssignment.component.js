@@ -78,7 +78,7 @@ export default React.createClass({
                                 labelText={dataElementGroupSet.displayName}
                                 translateLabel={false}
                                 options={optionList}
-                                defaultValue={value}
+                                value={value}
                                 onChange={this._updateGroupStatus.bind(this, dataElementGroupSet.id, findValue(optionList, this.props.source))}
                                 fullWidth
                             />

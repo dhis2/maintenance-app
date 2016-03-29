@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import FormField from 'd2-ui/lib/forms/FormField.component';
 import { createFieldConfig, typeToFieldMap } from '../forms/fields';
@@ -118,3 +119,4 @@ export default React.createClass({
         );
     },
 });
+*/
