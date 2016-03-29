@@ -68,7 +68,6 @@ export default React.createClass({
 
                     const fieldConfigsWithValues = fieldConfigs
                         .map(fieldConfig => {
-                            console.log(modelToEdit[fieldConfig.name]);
                             return Object.assign({}, fieldConfig, {value: modelToEdit[fieldConfig.name]});
                         });
 
