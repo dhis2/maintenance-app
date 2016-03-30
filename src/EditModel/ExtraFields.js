@@ -128,6 +128,7 @@ class IndicatorExtraFields extends React.Component {
         this.setNumerator = this.setNumerator.bind(this);
         this.setDenominator = this.setDenominator.bind(this);
         this.closeDialog = this.closeDialog.bind(this);
+        this.saveToModelAndCloseDialog = this.saveToModelAndCloseDialog.bind(this);
         this.indicatorExpressionChanged = this.indicatorExpressionChanged.bind(this);
     }
 
@@ -146,7 +147,8 @@ class IndicatorExtraFields extends React.Component {
     render() {
         const dialogActions = [
             // TODO: This button should "commit" the change to the model where a cancel button will discard any changes made
-            <FlatButton label={this.context.d2.i18n.getTranslation('done')} onTouchTap={this.closeDialog} disabled={!this.state.dialogValid} />,
+            <FlatButton label={this.context.d2.i18n.getTranslation('cancel')} onTouchTap={this.closeDialog} />,
+            <FlatButton label={this.context.d2.i18n.getTranslation('done')} onTouchTap={this.saveToModelAndCloseDialog} disabled={!this.state.dialogValid} />,
         ];
 
         return (
@@ -174,22 +176,35 @@ class IndicatorExtraFields extends React.Component {
     }
 
     closeDialog() {
-        this.setState({ dialogOpen: false, });
+        this.setState({ dialogOpen: false });
     }
 
-    indicatorExpressionChanged(data) {
-        this.setState({
-            dialogValid: data.expressionStatus.isValid && Boolean(data.description.trim()),
-        });
+    saveToModelAndCloseDialog() {
+        if (this.state.expressionStatus.isValid) {
+            console.log(`it's valid should save the value`, this.state.expressionDescription);
 
-        if (data.expressionStatus.isValid) {
-            console.log(`it's valid should save the value`, data.description);
-
-            this.props.modelToEdit[this.state.type] = data.formula;
-            this.props.modelToEdit[`${this.state.type}Description`] = data.description;
+            this.props.modelToEdit[this.state.type] = this.state.expressionFormula;
+            this.props.modelToEdit[`${this.state.type}Description`] = this.state.expressionDescription;
 
             modelToEditStore.setState(this.props.modelToEdit);
         }
+
+        this.setState({ dialogOpen: false });
+    }
+
+    indicatorExpressionChanged(data) {
+        const expressionValues = {};
+
+        if (data.expressionStatus.isValid) {
+            expressionValues.expressionStatus = data.expressionStatus;
+            expressionValues.expressionDescription = data.description;
+            expressionValues.expressionFormula = data.formula;
+        }
+
+        this.setState({
+            dialogValid: data.expressionStatus.isValid && Boolean(data.description.trim()),
+            ...expressionValues,
+        });
     }
 }
 IndicatorExtraFields.propTypes = {
