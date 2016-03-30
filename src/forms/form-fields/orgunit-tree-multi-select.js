@@ -3,6 +3,11 @@ import OrgunitTree from 'd2-ui/lib/org-unit-tree';
 import TextField from 'material-ui/lib/text-field';
 import Action from 'd2-ui/lib/action/Action';
 import {Observable} from 'rx';
+import { config } from 'd2/lib/d2';
+
+config.i18n.strings.add('determining_your_root_orgunits');
+config.i18n.strings.add('filter_organisation_units_by_name');
+config.i18n.strings.add('organisation_units_selected');
 
 export default class OrganisationUnitTreeMultiSelect extends React.Component {
     constructor(...args) {
@@ -23,6 +28,8 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             .then(rootOrgUnits => {
                 rootOrgUnits
                     .filter(ou => (new RegExp(`${this.state.searchValue}`)).test(ou.displayName));
+
+                console.log(rootOrgUnits);
 
                 this.setState({
                     originalRoots: rootOrgUnits,

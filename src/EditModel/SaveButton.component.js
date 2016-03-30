@@ -10,13 +10,13 @@ function SaveButton(props, {d2}) {
     const buttonText = props.isSaving ? d2.i18n.getTranslation('saving') : d2.i18n.getTranslation('save');
 
     return (
-        <RaisedButton {...props} primary onClick={props.onClick} label={buttonText} disabled={props.isSaving || props.isValidating} />
+        <RaisedButton {...props} primary onClick={props.onClick} label={buttonText} disabled={props.isSaving || !props.isValid} />
     );
 }
 
 SaveButton.propTypes = {
     isSaving: React.PropTypes.bool,
-    isValidating: React.PropTypes.bool,
+    isValid: React.PropTypes.bool,
     onClick: React.PropTypes.func.isRequired,
 };
 

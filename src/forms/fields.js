@@ -1,6 +1,7 @@
-import { isRequired, isUrl, isNumber as isNumberValidator } from 'd2-ui/lib/forms/Validators';
+import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from 'd2-ui/lib/forms/Validators';
 import isNumber from 'lodash.isnumber';
 import log from 'loglevel';
+import { config } from 'd2/lib/d2';
 
 // FormField components
 import TextField from './form-fields/text-field';
@@ -21,6 +22,20 @@ export const DATE = Symbol('DATE');
 export const INTEGER = Symbol('INTEGER');
 export const IDENTIFIER = Symbol('IDENTIFIER');
 export const URL = Symbol('URL');
+export const EMAIL = Symbol('EMAIL');
+
+config.i18n.strings.add(isRequired.message);
+config.i18n.strings.add(isUrl.message);
+config.i18n.strings.add(isNumberValidator.message);
+config.i18n.strings.add(isEmail.message);
+config.i18n.strings.add('value_not_max');
+config.i18n.strings.add('value_not_min');
+config.i18n.strings.add('value_not_max');
+config.i18n.strings.add('value_not_min');
+config.i18n.strings.add('could_not_run_async_validation');
+config.i18n.strings.add('value_not_unique');
+
+
 
 function toInteger(value) {
     return Number.parseInt(value, 10);
@@ -88,6 +103,8 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
     case URL:
         validators.push(createValidatorFromValidatorFunction(isUrl));
         break;
+    case EMAIL:
+        validators.push(createValidatorFromValidatorFunction(isEmail));
     default:
         break;
     }
@@ -160,6 +177,7 @@ function getFieldUIComponent(type) {
         return DateSelect;
     case INTEGER:
         return NumberField;
+    case EMAIL:
     case INPUT:
     case IDENTIFIER:
     default:
@@ -173,7 +191,7 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
         name: fieldConfig.name,
         component: fieldConfig.component || getFieldUIComponent(fieldConfig.type),
         props: Object.assign(fieldConfig.fieldOptions || {}, {
-            floatingLabelText: fieldConfig.fieldOptions.labelText,
+            labelText: fieldConfig.fieldOptions.labelText,
             modelDefinition: modelDefinition,
             models: models,
             referenceType: fieldConfig.referenceType,
@@ -181,6 +199,8 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
             isInteger: fieldConfig.type === INTEGER,
             multiLine: fieldConfig.name === 'description',
             fullWidth: true,
+            translateOptions: fieldConfig.constants && !!fieldConfig.constants.length,
+            isRequired: fieldConfig.required,
             options: (fieldConfig.fieldOptions.options || fieldConfig.constants || [])
                 .map((constant) => {
                     if (constant.name && constant.value) {
@@ -218,6 +238,8 @@ export const typeToFieldMap = new Map([
     ['IDENTIFIER', IDENTIFIER], // TODO: Add identifiers for the type of field...
     ['REFERENCE', SELECTASYNC],
     ['TEXT', INPUT],
+    ['EMAIL', EMAIL],
+    ['PHONENUMBER', INPUT],
     ['COLLECTION', MULTISELECT],
     ['INTEGER', INTEGER], // TODO: Add Numberfield!
     ['DATE', DATE],

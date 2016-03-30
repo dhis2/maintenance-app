@@ -1,4 +1,5 @@
 import IconPicker from '../../forms/form-fields/icon-picker';
+import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
 
 export default new Map([
     ['symbol', {
@@ -18,4 +19,10 @@ export default new Map([
             imgPath: (process.env.NODE_ENV !== 'production') ? 'http://localhost:8080/dhis/images/orgunitgroup' : '/images/orgunitgroup'
         },
     }],
+    ['organisationUnits', {
+        component: OrganisationUnitTreeMultiSelect,
+        fieldOptions: {
+
+        }
+    }]
 ]);

@@ -1,22 +1,45 @@
 import React from 'react';
 
-export default React.createClass({
-    propTypes: {
-        style: React.PropTypes.object,
-        children: React.PropTypes.array.isRequired,
-        isFormValid: React.PropTypes.func,
-    },
+export default function FormButtons(props) {
+    const defaultStyle = {
+        marginTop: '1rem',
+    };
 
-    render() {
-        return (
-            <div style={this.props.style}>
-                {this.props.children.map((child, index) => {
-                    return React.cloneElement(child, {
-                        isFormValid: this.props.isFormValid,
-                        key: index,
-                    });
-                })}
-            </div>
-        );
-    },
-});
+    const buttonStyle = {
+        marginRight: '1rem',
+        width: '10rem',
+    };
+
+    return (
+        <div style={Object.assign(defaultStyle, props.style)}>
+            {props.children.map((child, index) => {
+                return React.cloneElement(child, {
+                    style: buttonStyle,
+                    key: index,
+                });
+            })}
+        </div>
+    );
+}
+FormButtons.propTypes = {
+    style: React.PropTypes.object,
+    children: React.PropTypes.array.isRequired,
+    isFormValid: React.PropTypes.func,
+};
+//
+//export default React.createClass({
+//
+//
+//    render() {
+//        return (
+//            <div style={this.props.style}>
+//                {this.props.children.map((child, index) => {
+//                    return React.cloneElement(child, {
+//                        isFormValid: this.props.isFormValid,
+//                        key: index,
+//                    });
+//                })}
+//            </div>
+//        );
+//    },
+//});

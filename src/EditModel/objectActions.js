@@ -128,7 +128,7 @@ objectActions.update.subscribe(action => {
     const modelToEdit = modelToEditStore.getState();
 
     if (modelToEdit) {
-        if(Object.keys(modelToEdit.attributes).indexOf(fieldName) >= 0) {
+        if(modelToEdit.attributes && Object.keys(modelToEdit.attributes).indexOf(fieldName) >= 0) {
             log.debug(`${fieldName} is a custom attribute. Setting ${fieldName} to ${value}`);
             modelToEdit.attributes[fieldName] = value;
             log.debug(`Value is now: ${modelToEdit.attributes[fieldName]}`);
@@ -142,6 +142,13 @@ objectActions.update.subscribe(action => {
             log.debug(`Change ${fieldName} to ${value}`);
             modelToEdit[fieldName] = value;
             log.debug(`Value is now: ${modelToEdit.dataValues[fieldName]}`);
+
+            // TODO: Find a more generic way to do this for multiple modelTypes, using some sort of config perhaps
+            // Some sort of rules that need to run on a field change
+            if (fieldName === 'domainType' && value === 'TRACKER') {
+                modelToEdit['aggregationType'] = 'NONE';
+            }
+
         } else {
             log.debug('Not updating anything');
         }

@@ -79,6 +79,10 @@ export default React.createClass({
         return {
             modelToEdit: undefined,
             isLoading: true,
+            formState: {
+                validating: false,
+                valid: true,
+            },
         };
     },
 
@@ -95,10 +99,10 @@ export default React.createClass({
 
             this.disposable = modelToEditStore
                 .subscribe((modelToEdit) => {
-                    const fieldConfigs = (/*this.state.fieldConfigs || */formFieldsManager.getFormFieldsForModel(modelToEdit))
+                    const fieldConfigs = (formFieldsManager.getFormFieldsForModel(modelToEdit))
                             .map(fieldConfig => {
                                 if (this.props.modelId !== 'add' && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
-                                    fieldConfig.fieldOptions.disabled = true;
+                                    fieldConfig.props.disabled = true;
                                 }
                                 fieldConfig.value = modelToEdit[fieldConfig.name];
 
@@ -114,7 +118,29 @@ export default React.createClass({
                                 config.props.modelToEdit = modelToEdit;
                                 return config;
                             })
-                        ),
+                        )
+                            .map(fieldConfig => {
+                                // TODO: Take this code out to a sort of formRulesRunner, that can modify the fieldConfigs before the render
+                                if (modelToEdit.modelDefinition.name === 'dataElement') {
+                                    // Disable the categoryCombo field when working with a tracker dataElement
+                                    if (fieldConfig.name === 'categoryCombo' && modelToEdit.domainType === 'TRACKER') {
+                                        fieldConfig.props.disabled = true;
+                                    }
+                                    // Disable aggregationOperator when working with a tracker dataElement
+                                    if (fieldConfig.name === 'aggregationType' && modelToEdit.domainType === 'TRACKER') {
+                                        fieldConfig.props.disabled = true;
+                                    }
+                                }
+
+                                // Get translation for the field label
+                                fieldConfig.props.labelText = this.getTranslation(fieldConfig.props.labelText);
+
+                                // Add required indicator when the field is required
+                                if (fieldConfig.required) {
+                                    fieldConfig.props.labelText = `${fieldConfig.props.labelText} (*)`;
+                                }
+                                return fieldConfig;
+                            }),
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
@@ -171,11 +197,12 @@ export default React.createClass({
                     <FormBuilder
                         fields={this.state.fieldConfigs}
                         onUpdateField={this._onUpdateField}
-                        onFormStatusUpdate={this._onFormStatusUpdate}
+                        onUpdateFormStatus={this._onUpdateFormStatus}
                     />
-
-                    <SaveButton onClick={this._saveAction} />
-                    <CancelButton onClick={this._closeAction} />
+                    <FormButtons>
+                        <SaveButton onClick={this._saveAction} isValid={this.state.formState.valid && !this.state.formState.validating} isSaving={this.state.isSaving} />
+                        <CancelButton onClick={this._closeAction} />
+                    </FormButtons>
                 </Paper>
             );
         };
@@ -207,21 +234,29 @@ export default React.createClass({
             .subscribe(() => console.log('update complete'));
     },
 
-    _onFormStatusUpdate() {
-
+    _onUpdateFormStatus(formState) {
+        this.setState({
+            formState,
+        });
     },
 
     _saveAction(event) {
         event.preventDefault();
+        // Set state to saving so forms actions are being prevented
+        this.setState({ isSaving: true });
 
         objectActions.saveObject({id: this.props.modelId})
             .subscribe(
             (message) => {
+                this.setState({ isSaving: false });
+
                 snackActions.show({message, action: 'ok', translate: true});
 
                 goToRoute(`/list/${this.props.modelType}`);
             },
             (errorMessage) => {
+                this.setState({ isSaving: false });
+
                 if (isString(errorMessage)) {
                     log.debug(errorMessage.messages);
                     snackActions.show({message: errorMessage});

@@ -1,6 +1,7 @@
 import React from 'react';
 import SelectField from 'material-ui/lib/select-field';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import isString from 'd2-utilizr/lib/isString';
 
 import MuiThemeMixin from '../mui-theme.mixin';
 
@@ -18,17 +19,10 @@ export default React.createClass({
         options: React.PropTypes.array.isRequired,
         isRequired: React.PropTypes.bool,
         labelText: React.PropTypes.string.isRequired,
-        translate: React.PropTypes.bool,
-        translateLabel: React.PropTypes.bool,
+        translateOptions: React.PropTypes.bool,
     },
 
     mixins: [MuiThemeMixin, Translate],
-
-    getDefaultProps() {
-        return {
-            translateLabel: true,
-        };
-    },
 
     getInitialState() {
         return {
@@ -53,17 +47,18 @@ export default React.createClass({
                 };
             });
 
-        if (!required) {
-            opts = [{value: null, text: this.getTranslation('no_value')}].concat(opts);
-        }
-
-        return opts
+        const translatedOpts = opts
             .map(option => {
-                if (option.text && this.props.translate) {
-                    option.text = this.getTranslation(option.text.toLowerCase());
+                if (option.text && this.props.translateOptions) {
+                    option.text = isString(option.text) ? this.getTranslation(option.text.toLowerCase()) : option.text;
                 }
                 return option;
             });
+
+        if (!required) {
+            return [{value: null, text: this.getTranslation('no_value')}].concat(translatedOpts);
+        }
+        return translatedOpts;
     },
 
     _onChange(event, index, value) {
@@ -75,8 +70,6 @@ export default React.createClass({
     },
 
     render() {
-        console.log(this.props.labelText, this.props.isRequired);
-
         const {onFocus, onBlur, ...other} = this.props;
 
         return (
@@ -84,7 +77,7 @@ export default React.createClass({
                 value={this.state.value}
                 {...other}
                 onChange={this._onChange}
-                floatingLabelText={this.props.translateLabel ? this.getTranslation(this.props.labelText) : this.props.labelText}
+                floatingLabelText={this.props.labelText}
             >
                 {this.state.options.map((option, index) => {
                     return <MenuItem primaryText={option.text} key={index} value={option.value} />

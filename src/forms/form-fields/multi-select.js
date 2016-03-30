@@ -115,7 +115,7 @@ export default React.createClass({
 
         return (
             <div>
-                <label style={labelStyle}>{this.getTranslation(camelCaseToUnderscores(this.props.labelText || ''))}</label>
+                <label style={labelStyle}>{this.props.labelText || ''}</label>
                 <TextField
                     fullWidth
                     hintText={this.getTranslation('search_available_selected_items')}

@@ -7,7 +7,7 @@ export default React.createClass({
         referenceType: React.PropTypes.string.isRequired,
         value: React.PropTypes.shape({
             id: React.PropTypes.string.isRequired,
-        }).isRequired,
+        }),
         onChange: React.PropTypes.func.isRequired,
     },
 
@@ -37,6 +37,10 @@ export default React.createClass({
                         return option.model.name === 'default';
                     });
 
+                    if (this.props.value && defaultOption.model.id !== this.props.value.id && this.props.model.domainType === 'TRACKER') {
+                        console.log('Reset the value to default for tracker domainTypes');
+                    }
+
                     if (!this.props.value && defaultOption) {
                         this.props.onChange({
                             target: {
@@ -48,6 +52,24 @@ export default React.createClass({
                     this.forceUpdate();
                 });
             });
+    },
+
+    // TODO: Remove this hack to update the categoryCombo property when the domainType is set to TRACKER
+    // This should probably be done in the objectActions, however there we currently do not have any knowledge of the options
+    // It might be worth loading the categoryOption with name `default` just for this.
+    componentWillReceiveProps(newProps) {
+        const defaultOption = this.state.options.find(option => {
+            return option.model.name === 'default';
+        });
+
+        if (newProps.value && defaultOption && defaultOption.model.id !== newProps.value.id && this.props.model.domainType === 'TRACKER') {
+            console.log('Reset the value to default for tracker domainTypes');
+            this.props.onChange({
+                target: {
+                    value: defaultOption.model,
+                },
+            });
+        }
     },
 
     render() {

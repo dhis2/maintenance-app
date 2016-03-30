@@ -1,8 +1,5 @@
 import React from 'react';
 import TextField from 'material-ui/lib/text-field';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-
-import MuiThemeMixin from '../mui-theme.mixin';
 
 export default React.createClass({
     propTypes: {
@@ -11,8 +8,6 @@ export default React.createClass({
         multiLine: React.PropTypes.bool,
     },
 
-    mixins: [MuiThemeMixin, Translate],
-
     render() {
         const errorStyle = {
             lineHeight: this.props.multiLine ? '48px' : '12px',
@@ -20,7 +15,7 @@ export default React.createClass({
         };
 
         return (
-            <TextField errorStyle={errorStyle} {...this.props} floatingLabelText={this.getTranslation(this.props.labelText)} onChange={this._convertToNumberAndEmitChange} />
+            <TextField errorStyle={errorStyle} {...this.props} floatingLabelText={this.props.labelText} onChange={this._convertToNumberAndEmitChange} />
         );
     },
 
