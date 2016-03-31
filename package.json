@@ -1,16 +1,18 @@
 {
-  "name": "maintenance",
+  "name": "maintenance-app",
   "version": "0.0.1",
-  "description": "maintenance",
+  "description": "DHIS2 Maintenance app",
   "main": "index.js",
   "scripts": {
+    "prestart": "d2-manifest package.json src/manifest.webapp",
     "start": "webpack-dev-server",
     "test": "karma start test/config/karma.config.js --single-run true",
     "test-watch": "karma start test/config/karma.config.js",
     "lint": "eslint src && eslint --env node,mocha --global expect,sinon --rule 'no-unused-expressions: 0' test && scss-lint",
     "__prebuild": "npm test && npm run lint",
-    "build": "webpack --config webpack.config.prod.js && cp -r src/i18n build/ && compass compile && cp -r src/css build && cp ./node_modules/babel-core/browser-polyfill.min.js build && cp ./node_modules/jquery/dist/jquery.min.js build && cp ./src/index.html build && cp ./manifest.webapp build",
-    "validate": "npm ls"
+    "build": "webpack --config webpack.config.prod.js && cp -r src/i18n build/ && compass compile && cp -r src/css build && cp ./node_modules/babel-core/browser-polyfill.min.js build && cp ./node_modules/jquery/dist/jquery.min.js build && cp ./src/index.html build && cp dhis-web-maintenance.png build && npm run manifest",
+    "validate": "npm ls",
+    "manifest": "d2-manifest package.json build/manifest.webapp"
   },
   "devDependencies": {
     "babel": "5.8.23",
@@ -19,6 +21,7 @@
     "babel-loader": "5.3.2",
     "chai": "3.0.0",
     "coveralls": "2.11.4",
+    "d2-manifest": "^1.0.0-2",
     "d2-ui": "0.0.17",
     "eslint": "^2.4.0",
     "eslint-config-dhis2": "^2.0.0",
@@ -68,5 +71,20 @@
   "pre-commit": [
     "lint",
     "validate"
-  ]
+  ],
+  "manifest.webapp": {
+    "name": "Maintenance app",
+      "icons": {
+        "48": "dhis-web-maintenance.png"
+      },
+      "developer": {
+        "url": "",
+        "name": "Mark Polak"
+      },
+      "activities": {
+        "dhis": {
+          "href": ".."
+        }
+      }
+    }
 }
