@@ -18,8 +18,10 @@ export default React.createClass({
     },
 
     componentDidMount() {
+        const fieldsForReferenceType = this.props.referenceType === 'optionSet' ? 'id,displayName,name,valueType' : 'id,displayName,name';
+
         getInstance()
-            .then(d2 => d2.models[this.props.referenceType].list({ fields: 'id,displayName,name', paging: false, filter: this.props.queryParamFilter }))
+            .then(d2 => d2.models[this.props.referenceType].list({ fields: fieldsForReferenceType, paging: false, filter: this.props.queryParamFilter }))
             .then(modelCollection => modelCollection.toArray())
             .then(values => values.map(model => {
                 return {
@@ -36,10 +38,6 @@ export default React.createClass({
                     const defaultOption = this.state.options.find(option => {
                         return option.model.name === 'default';
                     });
-
-                    if (this.props.value && defaultOption.model.id !== this.props.value.id && this.props.model.domainType === 'TRACKER') {
-                        console.log('Reset the value to default for tracker domainTypes');
-                    }
 
                     if (!this.props.value && defaultOption) {
                         this.props.onChange({
@@ -63,7 +61,6 @@ export default React.createClass({
         });
 
         if (newProps.value && defaultOption && defaultOption.model.id !== newProps.value.id && this.props.model.domainType === 'TRACKER') {
-            console.log('Reset the value to default for tracker domainTypes');
             this.props.onChange({
                 target: {
                     value: defaultOption.model,

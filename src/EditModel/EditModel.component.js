@@ -130,6 +130,10 @@ export default React.createClass({
                                     if (fieldConfig.name === 'aggregationType' && modelToEdit.domainType === 'TRACKER') {
                                         fieldConfig.props.disabled = true;
                                     }
+                                    // Disable valueType when an optionSet is selected
+                                    if (fieldConfig.name === 'valueType' && modelToEdit.optionSet) {
+                                        fieldConfig.props.disabled = true;
+                                    }
                                 }
 
                                 // Get translation for the field label
@@ -230,8 +234,7 @@ export default React.createClass({
     },
 
     _onUpdateField(fieldName, value) {
-        objectActions.update({fieldName, value})
-            .subscribe(() => console.log('update complete'));
+        objectActions.update({fieldName, value});
     },
 
     _onUpdateFormStatus(formState) {
