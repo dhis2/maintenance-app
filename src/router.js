@@ -1,20 +1,23 @@
 import React from 'react';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import log from 'loglevel';
-
 import App from './App/App.component';
 import MenuCards from './MenuCards/MenuCardsContainer.component';
 import List from './List/List.component';
 import EditModelContainer from './EditModel/EditModelContainer.component';
 import GroupEditorContainer from './GroupEditor/GroupEditorContainer.component';
-
 import modelToEditStore from './EditModel/modelToEditStore';
 import { getInstance } from 'd2/lib/d2';
 import objectActions from './EditModel/objectActions';
 import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
+import { initAppState } from './App/appStateStore';
+import OrganisationUnitList from './List/organisation-unit-list/OrganisationUnitList.component.js';
+import {fieldFilteringForQuery} from './List/list.store';
 
 function loadObject({ params }, replace, callback) {
+    initState({ params });
+
     if (params.modelId === 'add') {
         getInstance().then((d2) => {
             const modelToEdit = d2.models[params.modelType].create();
@@ -37,6 +40,14 @@ function loadObject({ params }, replace, callback) {
 }
 
 function loadList({ params }, replace, callback) {
+    initState({ params });
+
+    if (params.modelType === 'organisationUnit') {
+        // Don't load organisation units as they get loaded through the appState
+        return callback();
+    }
+
+    // Not sure if loading this list should go on the top? :P
     listActions.loadList(params.modelType)
         .subscribe(
             (message) => {
@@ -61,6 +72,8 @@ function loadList({ params }, replace, callback) {
 }
 
 function cloneObject({ params }, replace, callback) {
+    initState({ params });
+
     objectActions.getObjectOfTypeByIdAndClone({ objectType: params.modelType, objectId: params.modelId })
         .subscribe(
             () => callback(),
@@ -72,22 +85,50 @@ function cloneObject({ params }, replace, callback) {
         );
 }
 
+function initState({ params }) {
+    initAppState({
+        sideBar: {
+            currentSection: params.groupName,
+            currentSubSection: params.modelType,
+        },
+    });
+}
+
+async function initStateOrgUnitList({ params }) {
+    initAppState({
+        sideBar: {
+            currentSection: params.groupName,
+            currentSubSection: 'organisationUnit',
+        },
+    });
+}
+
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
-            <IndexRoute component={MenuCards} />
+            <IndexRoute component={MenuCards} onEnter={initState} />
             <Route
-                path="list/:modelType"
+                path="list/:groupName"
+                component={MenuCards}
+                onEnter={initState}
+            />
+            <Route
+                path="list/:groupName/organisationUnit"
+                component={OrganisationUnitList}
+                onEnter={initStateOrgUnitList}
+            />
+            <Route
+                path="list/:groupName/:modelType"
                 component={List}
                 onEnter={loadList}
             />
             <Route
-                path="edit/:modelType/:modelId"
+                path="edit/:groupName/:modelType/:modelId"
                 component={EditModelContainer}
                 onEnter={loadObject}
             />
             <Route
-                path="clone/:modelType/:modelId"
+                path="clone/:groupName/:modelType/:modelId"
                 component={EditModelContainer}
                 onEnter={cloneObject}
             />

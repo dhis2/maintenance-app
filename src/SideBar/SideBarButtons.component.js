@@ -1,24 +1,22 @@
 import React from 'react';
-
-import { hashHistory } from 'react-router';
-
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import IconButton from 'material-ui/lib/icon-button';
+import {goToRoute} from '../router';
 
 export default React.createClass({
     mixins: [Translate],
 
     _gotoOverview() {
-        hashHistory.push('/');
+        goToRoute('/');
     },
 
     _goToGroupEditor() {
-        hashHistory.push('/group-editor');
+        goToRoute('/group-editor');
     },
 
     render() {
         return (
-            <div>
+            <div style={{paddingLeft: '.75rem'}}>
                 <IconButton
                     iconClassName="material-icons"
                     tooltip={this.getTranslation('metadata_management_overview')}

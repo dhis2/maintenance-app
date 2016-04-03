@@ -9,17 +9,19 @@ const theme = {
     palette: {
         primary1Color: Colors.blue500,
         primary2Color: Colors.blue700,
-        primary3Color: Colors.grey300,
-        accent1Color: '#276696',
-        accent2Color: '#E5E5E5',
+        primary3Color: Colors.blue100,
+        accent1Color: Colors.orange500,
+        accent2Color: Colors.grey100,
         accent3Color: Colors.grey500,
         textColor: Colors.darkBlack,
         alternateTextColor: Colors.white,
         canvasColor: Colors.white,
-        borderColor: Colors.grey300,
+        borderColor: Colors.grey400,
         disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
     },
 };
+
+
 
 function createAppTheme(style) {
     return {

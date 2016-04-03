@@ -129,7 +129,6 @@ const List = React.createClass({
             this.setState({
                 isLoading: true,
             });
-            executeLoadListAction(newProps.params.modelType);
         }
     },
 
@@ -231,10 +230,10 @@ const List = React.createClass({
             }, {});
 
         return (
-            <div style={{ paddingTop: '3rem' }}>
+            <div>
                 <div>
                     <h2 style={{ float: 'left' }}>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</h2>
-                    <ListActionBar modelType={this.props.params.modelType} />
+                    <ListActionBar modelType={this.props.params.modelType} groupName={this.props.params.groupName} />
                 </div>
                 <div>
                     <div style={{ float: 'left', width: '50%' }}>

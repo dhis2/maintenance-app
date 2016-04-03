@@ -6,12 +6,12 @@ const ObserverRegistry = {
     },
 
     componentWillUnmount() {
-        log.info('Disposing: ', this.observerDisposables);
+        // log.debug('Disposing: ', this.observerDisposables);
         this.observerDisposables.forEach(disposable => disposable.dispose());
     },
 
     registerDisposable(disposable) {
-        log.info('Registered: ', disposable);
+        // log.debug('Registered: ', disposable);
         this.observerDisposables.push(disposable);
     },
 };

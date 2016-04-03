@@ -181,8 +181,6 @@ class IndicatorExtraFields extends React.Component {
 
     saveToModelAndCloseDialog() {
         if (this.state.expressionStatus.isValid) {
-            console.log(`it's valid should save the value`, this.state.expressionDescription);
-
             this.props.modelToEdit[this.state.type] = this.state.expressionFormula;
             this.props.modelToEdit[`${this.state.type}Description`] = this.state.expressionDescription;
 

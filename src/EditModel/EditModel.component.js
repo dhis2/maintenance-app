@@ -18,7 +18,6 @@ import FormButtons from './FormButtons.component';
 import log from 'loglevel';
 import FormHeading from './FormHeading';
 import extraFields from './extraFields';
-import AttributeFields from './AttributeFields';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 import BackButton from './BackButton.component';
@@ -175,7 +174,7 @@ export default React.createClass({
     render() {
         const formPaperStyle = {
             width: '100%',
-            margin: '3rem auto 2rem',
+            margin: '0 auto 2rem',
             padding: '2rem 5rem 4rem',
             position: 'relative',
         };
@@ -255,7 +254,7 @@ export default React.createClass({
 
                 snackActions.show({message, action: 'ok', translate: true});
 
-                goToRoute(`/list/${this.props.modelType}`);
+                goToRoute(`/list/${this.props.groupName}/${this.props.modelType}`);
             },
             (errorMessage) => {
                 this.setState({ isSaving: false });
@@ -271,7 +270,7 @@ export default React.createClass({
                 }
 
                 if (errorMessage === 'No changes to be saved') {
-                    goToRoute(`/list/${this.props.modelType}`);
+                    goToRoute(`/list/${this.props.groupName}/${this.props.modelType}`);
                 }
             }
         );

@@ -18,6 +18,7 @@ target/*
 npm-debug.log
 stats.json
 
-# TODO: Remove when using proper jQuery loader
+# TODO: Remove when using proper jQuery and babel-polyfill loader
 src/jquery.min.js
+src/babel-polyfill.js
 

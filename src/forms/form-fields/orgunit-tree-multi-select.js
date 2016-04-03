@@ -29,8 +29,6 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 rootOrgUnits
                     .filter(ou => (new RegExp(`${this.state.searchValue}`)).test(ou.displayName));
 
-                console.log(rootOrgUnits);
-
                 this.setState({
                     originalRoots: rootOrgUnits,
                     rootOrgUnits,

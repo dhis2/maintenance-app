@@ -1,10 +1,10 @@
 import React from 'react';
-import sideBarItemsStore from '../SideBar/sideBarItems.store';
-import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
+import Store from 'd2-ui/lib/store/Store';
 import MenuCards from './MenuCards.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
-import { hashHistory } from 'react-router';
+import Heading from 'd2-ui/lib/headings/Heading.component';
+import menuCardsStore from './menuCardsStore';
 
 export default React.createClass({
     mixins: [Translate, Auth],
@@ -16,16 +16,11 @@ export default React.createClass({
     },
 
     componentWillMount() {
-        this.disposable = sideBarItemsStore
-            .scan((acc, values) => acc.concat(values
-                    .map(keyName => ({
-                        name: this.getTranslation(camelCaseToUnderscores(keyName)),
-                        description: this.getTranslation(`intro_${camelCaseToUnderscores(keyName)}`),
-                        canCreate: this.getCurrentUser().canCreate(this.getModelDefinitionByName(keyName)),
-                        add: () => hashHistory.push(`/edit/${keyName}/add`),
-                        list: () => hashHistory.push(`/list/${keyName}`),
-                    }))), [])
-            .subscribe(menuItems => this.setState({ menuItems }));
+        this.disposable = menuCardsStore
+            .subscribe(menuItems => {
+                console.log(menuItems);
+                this.setState({ menuItems });
+            });
     },
 
     componentWillUnmount() {
@@ -35,13 +30,18 @@ export default React.createClass({
     },
 
     render() {
-        const wrapStyle = {
-            paddingTop: '3rem',
-        };
-
         return (
-            <div style={wrapStyle}>
-                <MenuCards menuItems={this.state.menuItems} />
+            <div>
+                {this.state.menuItems
+                    .filter(metaDataSection => this.props.params.groupName ? metaDataSection.key === this.props.params.groupName : true)
+                    .map((metaDataSection) => {
+                        return (
+                            <div key={metaDataSection.key}>
+                                <Heading text={metaDataSection.name} level={2} />
+                                <MenuCards menuItems={metaDataSection.items} />
+                            </div>
+                        );
+                    })}
             </div>
         );
     },

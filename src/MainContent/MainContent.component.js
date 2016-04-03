@@ -7,10 +7,13 @@ const MainContent = React.createClass({
     },
 
     render() {
-        const classList = classes('main-content');
+        const mainContentStyle = {
+            marginTop: '4rem',
+            marginBottom: '4rem',
+        };
 
         return (
-            <div className={classList}>
+            <div style={mainContentStyle}>
                 {this.props.children}
             </div>
         );

@@ -8,6 +8,8 @@ import log from 'loglevel';
 import listStore from './list.store';
 import sharingStore from './sharing.store';
 import translateStore from './translation-dialog/translationStore';
+import appStore from '../App/appStateStore';
+import { goToRoute } from '../router';
 
 config.i18n.strings.add('edit');
 config.i18n.strings.add('clone');
@@ -34,14 +36,16 @@ const confirm = (message) => new Promise((resolve, reject) => {
     reject();
 });
 
+// TODO: The action assumes that the appState actually has state
 contextActions.edit
     .subscribe(action => {
-        hashHistory.push(['/edit', action.data.modelDefinition.name, action.data.id].join('/'));
+        goToRoute(['/edit', appStore.state.sideBar.currentSection, action.data.modelDefinition.name, action.data.id].join('/'));
     });
 
+// TODO: The action assumes that the appState actually has state
 contextActions.clone
     .subscribe(action => {
-        hashHistory.push(['/clone', action.data.modelDefinition.name, action.data.id].join('/'));
+        goToRoute(['/clone', appStore.state.sideBar.currentSection, action.data.modelDefinition.name, action.data.id].join('/'));
     });
 
 contextActions.delete

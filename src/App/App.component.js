@@ -40,7 +40,7 @@ class App extends AppWithD2 {
                 <HeaderBar />
                 <MainContent>
                     <div className="sidebar-container">
-                        <SideBar />
+                        <SideBar activeGroupName={this.props.params.groupName} activeModelType={this.props.params.modelType} />
                     </div>
                     <div className="main-container">
                         {this.props.children}

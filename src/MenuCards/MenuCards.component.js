@@ -53,6 +53,7 @@ export default React.createClass({
         if (details.canCreate) {
             actionButtons.push(
                 <IconButton
+                    key="add"
                     iconClassName="material-icons"
                     tooltip={this.getTranslation('add')}
                     tooltipPosition="top-center"
@@ -63,6 +64,7 @@ export default React.createClass({
 
         actionButtons.push(
             <IconButton
+                key="list"
                 iconClassName="material-icons"
                 tooltip={this.getTranslation('list')}
                 tooltipPosition="top-center"
@@ -87,14 +89,11 @@ export default React.createClass({
     },
 
     render() {
-        const wrapStyle = {
-            paddingTop: '3rem',
-        };
-
         return (
-            <div style={wrapStyle}>
+            <div>
                 <div>
                     {this.props.menuItems.map(this.renderCard)}
+                    <div style={{clear: 'both'}}></div>
                 </div>
             </div>
         );

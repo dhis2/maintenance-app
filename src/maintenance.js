@@ -25,7 +25,6 @@ if (process.env.NODE_ENV !== 'production') {
 function configI18n({ uiLocale }) {
     if (uiLocale !== 'en') {
         config.i18n.sources.add(`./i18n/i18n_module_${uiLocale}.properties`);
-        // moment.locale(uiLocale);
     }
     config.i18n.sources.add('./i18n/i18n_module_en.properties');
 }
@@ -41,6 +40,8 @@ render(<LoadingMask />, document.getElementById('app'));
 getManifest('./manifest.webapp')
     .then(manifest => {
         config.baseUrl = `${manifest.getBaseUrl()}/api`;
+        log.info(`Loading: ${manifest.name} v${manifest.version}`);
+        log.info(`Built ${manifest.manifest_generated_at}`);
 
         // Set the baseUrl to localhost if we are in dev mode
         if (process.env.NODE_ENV !== 'production') {
