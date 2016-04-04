@@ -135,7 +135,7 @@ function getValidatorsFromModelValidation(modelValidation, modelDefinition) {
     return validators;
 }
 
-function getFieldUIComponent(type) {
+function getFieldUIComponent(type, fieldName) {
     switch (type) {
     case SELECT:
         return DropDown;
@@ -159,7 +159,7 @@ function getFieldUIComponent(type) {
 
 export function createFieldConfig(fieldConfig, modelDefinition, models) {
     const basicFieldConfig = {
-        type: getFieldUIComponent(fieldConfig.type),
+        type: getFieldUIComponent(fieldConfig.type, fieldConfig.name),
         fieldOptions: Object.assign(fieldConfig.fieldOptions || {}, {
             floatingLabelText: fieldConfig.fieldOptions.labelText,
             modelDefinition: modelDefinition,

@@ -4,6 +4,7 @@ import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import {config} from 'd2/lib/d2';
 
 config.i18n.strings.add('save');
+config.i18n.strings.add('saving');
 
 const SaveButton = React.createClass({
     propTypes: {

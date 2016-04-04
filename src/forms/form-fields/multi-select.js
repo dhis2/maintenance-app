@@ -2,6 +2,7 @@ import React from 'react';
 import Store from 'd2-flux/store/Store';
 import {getInstance} from 'd2/lib/d2';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
+import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import Action from 'd2-flux/action/Action';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/lib/text-field';
@@ -101,6 +102,34 @@ export default React.createClass({
             .then(this.populateAssignedStore);
     },
 
+    renderGroupEditor() {
+        if (this.props.model.modelDefinition.modelValidations[this.props.referenceProperty] &&
+            this.props.model.modelDefinition.modelValidations[this.props.referenceProperty].ordered) {
+            return (
+                <GroupEditorWithOrdering
+                    itemStore={this.state.itemStore}
+                    assignedItemStore={this.state.assignedItemStore}
+                    onAssignItems={this._assignItems}
+                    onRemoveItems={this._removeItems}
+                    onOrderChanged={this._orderChanged}
+                    height={250}
+                    filterText={this.state.filterText}
+                />
+            );
+        }
+
+        return (
+            <GroupEditor
+                itemStore={this.state.itemStore}
+                assignedItemStore={this.state.assignedItemStore}
+                onAssignItems={this._assignItems}
+                onRemoveItems={this._removeItems}
+                height={250}
+                filterText={this.state.filterText}
+            />
+        );
+    },
+
     render() {
         const labelStyle = {
             float: 'left',
@@ -114,7 +143,7 @@ export default React.createClass({
         };
 
         return (
-            <div>
+            <div style={{marginBottom: '6rem'}}>
                 <label style={labelStyle}>{this.getTranslation(camelCaseToUnderscores(this.props.labelText))}</label>
                 <TextField
                     fullWidth
@@ -122,18 +151,28 @@ export default React.createClass({
                     defaultValue={this.state.filterText}
                     onChange={this._setFilterText}
                 />
-                <GroupEditor
-                    itemStore={this.state.itemStore}
-                    assignedItemStore={this.state.assignedItemStore}
-                    onAssignItems={this._assignItems}
-                    onRemoveItems={this._removeItems}
-                    height={250}
-                    filterText={this.state.filterText}
-                />
+                {this.renderGroupEditor()}
             </div>
         );
     },
 
+    _orderChanged(newOrder) {
+        const itemList = this.state.itemStore.getState();
+
+        // TODO: Move the following mutation to an `Action`
+        // Reset the ModelCollectionProperty / ModelCollection
+        this.props.model[this.props.referenceProperty].clear();
+
+        // Add the items back in the correct order
+        newOrder.forEach(item => {
+            if (itemList.has(item)) {
+                this.props.model[this.props.referenceProperty].add(itemList.get(item));
+            }
+        });
+
+        // Set the state to the store to emit the value to all subscribers
+        this.state.assignedItemStore.setState(this.props.model[this.props.referenceProperty].toArray().map(value => value.id));
+    },
 
     _assignItems(items) {
         if (this.props.referenceProperty === 'aggregationLevels') {
