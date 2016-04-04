@@ -93,11 +93,17 @@ contextActions.share
     });
 
 contextActions.translate
-    .subscribe(({ data: model }) => {
-        translateStore.setState({
-            model,
-            open: true,
-        });
+    .subscribe(({data: model}) => {
+        getD2()
+            .then((d2) => {
+                return d2.models[model.modelDefinition.name].get(model.id);
+            })
+            .then(modelToTranslate => {
+                translateStore.setState({
+                    model: modelToTranslate,
+                    open: true,
+                });
+            });
     });
 
 contextActions.pdfDataSetForm

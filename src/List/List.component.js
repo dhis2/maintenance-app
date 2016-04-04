@@ -266,7 +266,7 @@ const List = React.createClass({
                     ref="sharingDialog"
                 /> : null }
                 {this.state.translation.model ? <TranslationDialog
-                    objectIdToTranslate={this.state.translation.model && this.state.translation.model.id}
+                    objectToTranslate={this.state.translation.model}
                     objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
                     open={this.state.translation.open}
                     ref="translationDialog"
