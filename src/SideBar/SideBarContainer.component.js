@@ -112,8 +112,8 @@ class SideBarContainer extends React.Component {
                     <div style={wrapperStyle}>
                         <div style={innerWrapperStyle}>
                             <OrganisationUnitTree
-                                roots={this.state.userOrganisationUnits.toArray()}
-                                selected={[this.state.selectedOrganisationUnit.id]}
+                                roots={this.state.userOrganisationUnits.toArray().map(v => { console.log(v.displayName); return v; })}
+                                selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
                                 initiallyExpanded={this.state.userOrganisationUnits.toArray().map(v => v.id)}
                                 labelStyle={{
                                         whiteSpace: 'nowrap',

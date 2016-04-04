@@ -18,7 +18,6 @@ export default React.createClass({
     componentWillMount() {
         this.disposable = menuCardsStore
             .subscribe(menuItems => {
-                console.log(menuItems);
                 this.setState({ menuItems });
             });
     },

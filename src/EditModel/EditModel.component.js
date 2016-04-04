@@ -260,13 +260,18 @@ export default React.createClass({
                 this.setState({ isSaving: false });
 
                 if (isString(errorMessage)) {
-                    log.debug(errorMessage.messages);
+                    log.debug(errorMessage);
                     snackActions.show({message: errorMessage});
                 }
 
                 if (errorMessage.messages && errorMessage.messages.length > 0) {
                     log.debug(errorMessage.messages);
-                    snackActions.show({message: `${this.getTranslatedPropertyName(errorMessage.messages[0].property)}: ${errorMessage.messages[0].message} `});
+
+                    if (this.context.d2.i18n.isTranslated(errorMessage.messages[0].errorCode)) {
+                        snackActions.show({message: this.context.d2.i18n.getTranslation(errorMessage.messages[0].errorCode)});
+                    } else {
+                        snackActions.show({message: errorMessage.messages[0].message});
+                    }
                 }
 
                 if (errorMessage === 'No changes to be saved') {

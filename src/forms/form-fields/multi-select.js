@@ -130,6 +130,7 @@ export default React.createClass({
                     height={250}
                     filterText={this.state.filterText}
                 />
+                <div style={{clear: 'both', height: '1rem', width: '100%'}} />
             </div>
         );
     },

@@ -45,13 +45,23 @@ async function loadSideBarState() {
 }
 
 // TODO: Move the caching of these organisation units to d2.currentUser instead
-async function getCurrentUserOrganisationUnits() {
-    if (getCurrentUserOrganisationUnits.currentUserOrganisationUnits) {
+async function getCurrentUserOrganisationUnits(disableCache = false) {
+    console.log('Disabled cache?', disableCache);
+    if (!disableCache && getCurrentUserOrganisationUnits.currentUserOrganisationUnits) {
         return getCurrentUserOrganisationUnits.currentUserOrganisationUnits;
     }
 
     const d2 = await getInstance();
-    const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits();
+
+    let organisationUnitsCollection;
+
+    if (d2.currentUser.authorities.has('ALL')) {
+        organisationUnitsCollection = await d2.models.organisationUnit
+            .filter().on('name').notEqual('default')
+            .list({ fields: 'id,displayName,path,children:notEmpty', level: 1 });
+    } else {
+        organisationUnitsCollection = await d2.currentUser.getOrganisationUnits();
+    }
 
     getCurrentUserOrganisationUnits.currentUserOrganisationUnits = organisationUnitsCollection;
 
@@ -74,11 +84,11 @@ async function loadSelectedOrganisationUnitState() {
         }, {});
 }
 
-export async function initAppState(startState) {
+export async function initAppState(startState, disableCache) {
     const [sideBar, selectedOrganisationUnit, userOrganisationUnits] = await Promise.all([
         loadSideBarState(),
         loadSelectedOrganisationUnitState(),
-        getCurrentUserOrganisationUnits(),
+        getCurrentUserOrganisationUnits(disableCache),
     ]);
 
     const loadedState = {
@@ -102,9 +112,11 @@ export async function initAppState(startState) {
     appState.setState(completeInitState);
 }
 
-appState.subscribe(() => {
-    console.log('appState updated', appState.state);
-});
+appState
+    .debounce(400)
+    .subscribe(() => {
+        console.log('appState updated', appState.state);
+    });
 
 export default appState;
 

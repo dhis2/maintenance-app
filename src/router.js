@@ -11,7 +11,7 @@ import { getInstance } from 'd2/lib/d2';
 import objectActions from './EditModel/objectActions';
 import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
-import { initAppState } from './App/appStateStore';
+import { initAppState, default as appState } from './App/appStateStore';
 import OrganisationUnitList from './List/organisation-unit-list/OrganisationUnitList.component.js';
 import {fieldFilteringForQuery} from './List/list.store';
 
@@ -22,9 +22,24 @@ function loadObject({ params }, replace, callback) {
         getInstance().then((d2) => {
             const modelToEdit = d2.models[params.modelType].create();
 
-            modelToEditStore.setState(modelToEdit);
+            // Set the parent for the new organisationUnit to the selected OU
+            // TODO: Should probably be able to do this in a different way when this becomes needed for multiple object types
+            if (params.modelType === 'organisationUnit') {
+                appState
+                    .subscribe((appState) => {
+                        if (appState.selectedOrganisationUnit && appState.selectedOrganisationUnit.id) {
+                            modelToEdit.parent = {
+                                id: appState.selectedOrganisationUnit.id,
+                            };
+                        }
 
-            callback();
+                        modelToEditStore.setState(modelToEdit);
+                        callback();
+                    })
+            } else {
+                modelToEditStore.setState(modelToEdit);
+                callback();
+            }
         });
     } else {
         objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
@@ -40,13 +55,16 @@ function loadObject({ params }, replace, callback) {
 }
 
 function loadList({ params }, replace, callback) {
-    initState({ params });
-
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the appState
+        // Also load the initialState without cache so we refresh the assigned organisation units
+        // These could have changed by adding an organisation unit which would need to be reflexted in the
+        // organisation unit tree
+        initState({ params }, true);
         return callback();
     }
 
+    initState({ params });
     // Not sure if loading this list should go on the top? :P
     listActions.loadList(params.modelType)
         .subscribe(
@@ -100,7 +118,7 @@ async function initStateOrgUnitList({ params }) {
             currentSection: params.groupName,
             currentSubSection: 'organisationUnit',
         },
-    });
+    }, true);
 }
 
 const routes = (
