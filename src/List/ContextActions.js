@@ -96,10 +96,16 @@ contextActions.share
 
 contextActions.translate
     .subscribe(({data: model}) => {
-        translateStore.setState({
-            model: model,
-            open: true,
-        });
+        getD2()
+            .then((d2) => {
+                return d2.models[model.modelDefinition.name].get(model.id);
+            })
+            .then(modelToTranslate => {
+                translateStore.setState({
+                    model: modelToTranslate,
+                    open: true,
+                });
+            });
     });
 
 export default contextActions;
