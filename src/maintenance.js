@@ -4,6 +4,12 @@ if (process.env.NODE_ENV !== 'production') {
             Authorization: `Basic ${btoa('admin:district')}`,
         },
     });
+
+    jQuery('head').append(`
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    `);
 }
 
 Error.stackTraceLimit = Infinity;
