@@ -1,8 +1,21 @@
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { Subject, Observable } from 'rx';
 import Store from 'd2-ui/lib/store/Store';
+import appState from '../App/appStateStore';
 
-export const fieldFilteringForQuery = 'displayName|rename(name),id,lastUpdated,created,displayDescription,code,publicAccess,access,href';
+export const fieldFilteringForQuery = 'displayName|rename(name),id,lastUpdated,created,displayDescription,code,publicAccess,access,href,level';
+
+const columnObservable = appState
+    .filter(appState => appState.sideBar && appState.sideBar.currentSubSection)
+    .map(appState => appState.sideBar.currentSubSection)
+    .map(subSection => {
+        if (subSection === 'organisationUnitLevel') {
+            return ['name', 'level', 'lastUpdated'];
+        }
+
+        return ['name', 'publicAccess', 'lastUpdated'];
+    });
+
 
 export default Store.create({
     listSourceSubject: new Subject(),
@@ -10,8 +23,10 @@ export default Store.create({
     initialise() {
         this.listSourceSubject
             .concatAll()
-            .subscribe(modelCollection => {
+            .combineLatest(columnObservable)
+            .subscribe(([modelCollection, columns]) => {
                 this.setState({
+                    tableColumns: columns,
                     pager: modelCollection.pager,
                     list: modelCollection.toArray(),
                 });
@@ -24,7 +39,10 @@ export default Store.create({
             if (d2.models[modelName]) {
                 const listPromise = d2.models[modelName]
                     .filter().on('name').notEqual('default')
-                    .list({ fields: fieldFilteringForQuery });
+                    .list({
+                        fields: fieldFilteringForQuery,
+                        order: (modelName === 'organisationUnitLevel') ? 'level:ASC' : 'displayName:ASC'
+                    });
 
                 this.listSourceSubject.onNext(Observable.fromPromise(listPromise));
 

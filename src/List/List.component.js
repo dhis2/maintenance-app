@@ -24,22 +24,20 @@ import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import snackActions from '../Snackbar/snack.actions';
 
+// Filters out any actions `edit`, `clone` or `share` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
-    if ((action !== 'edit' && action !== 'clone' && action !== 'share') || this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.params.modelType))) {
+    if ((action !== 'edit' && action !== 'clone' && action !== 'share') || this.getCurrentUser().canUpdate(this.getModelDefinitionByName(this.props.params.modelType))) {
         return true;
     }
     return false;
 }
 
+// Filters out the `delete` when the user can not delete this modelType
 function actionsThatRequireDelete(action) {
     if (action !== 'delete' || this.getCurrentUser().canDelete(this.getModelDefinitionByName(this.props.params.modelType))) {
         return true;
     }
     return false;
-}
-
-function executeLoadListAction(modelType) {
-    return listActions.loadList(modelType);
 }
 
 function calculatePageValue(pager) {
@@ -90,6 +88,7 @@ const List = React.createClass({
                 this.setState({
                     dataRows: listStoreValue.list,
                     pager: listStoreValue.pager,
+                    tableColumns: listStoreValue.tableColumns,
                     isLoading: false,
                 });
             });
@@ -244,21 +243,23 @@ const List = React.createClass({
                     </div>
                 </div>
                 <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
-                <div className={classes('data-table-wrap', { smaller: !!this.state.detailsObject })}>
-                    <DataTable
-                        rows={this.state.dataRows}
-                        columns={['name', 'publicAccess', 'lastUpdated']}
-                        contextMenuActions={availableActions}
-                        contextMenuIcons={{ clone: 'content_copy', sharing: 'share', pdfDataSetForm: 'picture_as_pdf' }}
-                        primaryAction={availableActions.details}
-                        isContextActionAllowed={this.isContextActionAllowed}
-                    />
-                    {this.state.dataRows.length ? null : <div>No results found</div>}
-                </div>
-                <div className={classes('details-box-wrap', { 'show-as-column': !!this.state.detailsObject })}>
-                    <Paper zDepth={1} rounded={false}>
-                        <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject} onClose={listActions.hideDetailsBox} />
-                    </Paper>
+                <div className="list-details-wrap">
+                    <div className={classes('data-table-wrap', { smaller: !!this.state.detailsObject })}>
+                        <DataTable
+                            rows={this.state.dataRows}
+                            columns={this.state.tableColumns}
+                            contextMenuActions={availableActions}
+                            contextMenuIcons={{ clone: 'content_copy', sharing: 'share', pdfDataSetForm: 'picture_as_pdf' }}
+                            primaryAction={availableActions.details}
+                            isContextActionAllowed={this.isContextActionAllowed}
+                        />
+                        {this.state.dataRows.length ? null : <div>No results found</div>}
+                    </div>
+                    <div className={classes('details-box-wrap', { 'show-as-column': !!this.state.detailsObject })}>
+                        <Paper zDepth={1} rounded={false} style={{position: 'fixed'}}>
+                            <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject} onClose={listActions.hideDetailsBox} />
+                        </Paper>
+                    </div>
                 </div>
                 {this.state.sharing.model ? <SharingDialog
                     objectToShare={this.state.sharing.model}

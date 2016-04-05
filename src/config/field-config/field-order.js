@@ -68,6 +68,11 @@ const fieldOrderByName = new Map([
         'dataDimension',
         'organisationUnitGroups',
     ]],
+    ['organisationUnitLevel', [
+        'name',
+        'code',
+        'offlineLevels',
+    ]]
 ]);
 
 export default {

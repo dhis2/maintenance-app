@@ -46,7 +46,6 @@ async function loadSideBarState() {
 
 // TODO: Move the caching of these organisation units to d2.currentUser instead
 async function getCurrentUserOrganisationUnits(disableCache = false) {
-    console.log('Disabled cache?', disableCache);
     if (!disableCache && getCurrentUserOrganisationUnits.currentUserOrganisationUnits) {
         return getCurrentUserOrganisationUnits.currentUserOrganisationUnits;
     }
