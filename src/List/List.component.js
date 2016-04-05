@@ -104,7 +104,6 @@ const List = React.createClass({
         });
 
         const translationStoreDisposable = translationStore.subscribe(translationState => {
-            console.log(translationState);
             this.setState({
                 translation: translationState,
             });
@@ -120,6 +119,7 @@ const List = React.createClass({
         if (this.props.params.modelType !== newProps.params.modelType) {
             this.setState({
                 isLoading: true,
+                translation: Object.assign({}, this.state.translation, { open: false }),
             });
         }
     },
@@ -257,6 +257,7 @@ const List = React.createClass({
                 {this.state.sharing.model ? <SharingDialog
                     objectToShare={this.state.sharing.model}
                     open={this.state.sharing.open && this.state.sharing.model}
+                    onRequestClose={this._closeSharingDialog}
                 /> : null }
                 {this.state.translation.model ? <TranslationDialog
                     objectToTranslate={this.state.translation.model}
@@ -271,11 +272,15 @@ const List = React.createClass({
     },
 
     _closeTranslationDialog() {
-        this.setState({
-            translation: Object.assign({}, this.state.translation, {
-                open: false,
-            }),
-        });
+        translationStore.setState(Object.assign({}, translationStore.state, {
+            open: false,
+        }));
+    },
+
+    _closeSharingDialog() {
+        sharingStore.setState(Object.assign({}, sharingStore.state, {
+            open: false,
+        }));
     }
 });
 
