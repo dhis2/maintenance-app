@@ -20,6 +20,7 @@ export default React.createClass({
         return {
             fields: [
                 'name',
+                'shortName',
                 'code',
                 'displayDescription',
                 'created',
@@ -39,16 +40,18 @@ export default React.createClass({
             );
         }
 
-        return this.props.fields.map(fieldName => {
-            const valueToRender = this.getValueToRender(fieldName, this.props.source[fieldName]);
+        return this.props.fields
+            .filter(fieldName => this.props.source[fieldName])
+            .map(fieldName => {
+                const valueToRender = this.getValueToRender(fieldName, this.props.source[fieldName]);
 
-            return (
-                <div key={fieldName} className="detail-field">
-                    <div className={`detail-field__label detail-field__${fieldName}-label`}>{this.getTranslation(camelCaseToUnderscores(fieldName))}</div>
-                    <div className={`detail-field__value detail-field__${fieldName}`}>{valueToRender}</div>
-                </div>
-            );
-        });
+                return (
+                    <div key={fieldName} className="detail-field">
+                        <div className={`detail-field__label detail-field__${fieldName}-label`}>{this.getTranslation(camelCaseToUnderscores(fieldName))}</div>
+                        <div className={`detail-field__value detail-field__${fieldName}`}>{valueToRender}</div>
+                    </div>
+                );
+            });
     },
 
     getValueToRender(fieldName, value) {

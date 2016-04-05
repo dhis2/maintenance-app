@@ -3,7 +3,7 @@ import { Subject, Observable } from 'rx';
 import Store from 'd2-ui/lib/store/Store';
 import appState from '../App/appStateStore';
 
-export const fieldFilteringForQuery = 'displayName|rename(name),id,lastUpdated,created,displayDescription,code,publicAccess,access,href,level';
+export const fieldFilteringForQuery = 'displayName|rename(name),shortName,id,lastUpdated,created,displayDescription,code,publicAccess,access,href,level';
 
 const columnObservable = appState
     .filter(appState => appState.sideBar && appState.sideBar.currentSubSection)
