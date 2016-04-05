@@ -101,20 +101,13 @@ const List = React.createClass({
             this.setState({
                 sharing: sharingState,
             });
-
-            if (this.refs.sharingDialog && this.refs.sharingDialog.refs.sharingDialog) {
-                this.refs.sharingDialog.refs.sharingDialog.show();
-            }
         });
 
         const translationStoreDisposable = translationStore.subscribe(translationState => {
+            console.log(translationState);
             this.setState({
                 translation: translationState,
             });
-
-            if (this.refs.translationDialog && this.refs.translationDialog.refs.translationDialog) {
-                this.refs.translationDialog.refs.translationDialog.show();
-            }
         });
 
         this.registerDisposable(sourceStoreDisposable);
@@ -264,19 +257,26 @@ const List = React.createClass({
                 {this.state.sharing.model ? <SharingDialog
                     objectToShare={this.state.sharing.model}
                     open={this.state.sharing.open && this.state.sharing.model}
-                    ref="sharingDialog"
                 /> : null }
                 {this.state.translation.model ? <TranslationDialog
                     objectToTranslate={this.state.translation.model}
                     objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
                     open={this.state.translation.open}
-                    ref="translationDialog"
                     onTranslationSaved={this._translationSaved}
                     onTranslationError={this._translationErrored}
+                    onRequestClose={this._closeTranslationDialog}
                 /> : null }
             </div>
         );
     },
+
+    _closeTranslationDialog() {
+        this.setState({
+            translation: Object.assign({}, this.state.translation, {
+                open: false,
+            }),
+        });
+    }
 });
 
 export default List;
