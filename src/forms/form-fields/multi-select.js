@@ -104,7 +104,8 @@ export default React.createClass({
 
     renderGroupEditor() {
         if (this.props.model.modelDefinition.modelValidations[this.props.referenceProperty] &&
-            this.props.model.modelDefinition.modelValidations[this.props.referenceProperty].ordered) {
+            this.props.model.modelDefinition.modelValidations[this.props.referenceProperty].ordered &&
+            this.props.referenceProperty !== 'aggregationLevels' /* TODO: The aggregation levels should either not be "ordered" or should be returned from the API properly */) {
             return (
                 <GroupEditorWithOrdering
                     itemStore={this.state.itemStore}
