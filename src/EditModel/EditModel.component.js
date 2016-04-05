@@ -284,6 +284,6 @@ export default React.createClass({
     _closeAction(event) {
         event.preventDefault();
 
-        goToRoute(`/list/${this.props.modelType}`);
+        goToRoute(`/list/${this.props.groupName}/${this.props.modelType}`);
     },
 });
