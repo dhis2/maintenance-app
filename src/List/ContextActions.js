@@ -83,27 +83,25 @@ contextActions.details
     });
 
 contextActions.share
-    .subscribe(({ data: model }) => {
-        getD2()
-            .then((d2) => d2.models[model.modelDefinition.name].get(model.id))
-            .then(modelToShare => sharingStore.setState({
-                model: modelToShare,
-                open: true,
-            }));
+    .subscribe(async ({ data: model }) => {
+        const d2 = await getD2();
+        const modelToShare = await d2.models[model.modelDefinition.name].get(model.id);
+
+        sharingStore.setState({
+            model: modelToShare,
+            open: true,
+        })
     });
 
 contextActions.translate
-    .subscribe(({data: model}) => {
-        getD2()
-            .then((d2) => {
-                return d2.models[model.modelDefinition.name].get(model.id);
-            })
-            .then(modelToTranslate => {
-                translateStore.setState({
-                    model: modelToTranslate,
-                    open: true,
-                });
-            });
+    .subscribe(async ({ data: model }) => {
+        const d2 = await getD2();
+        const modelToTranslate = await d2.models[model.modelDefinition.name].get(model.id);
+
+        translateStore.setState({
+            model: modelToTranslate,
+            open: true,
+        });
     });
 
 contextActions.pdfDataSetForm
