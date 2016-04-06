@@ -24,9 +24,9 @@ import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import snackActions from '../Snackbar/snack.actions';
 
-// Filters out any actions `edit`, `clone` or `share` when the user can not update/edit this modelType
+// Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
-    if ((action !== 'edit' && action !== 'clone' && action !== 'share') || this.getCurrentUser().canUpdate(this.getModelDefinitionByName(this.props.params.modelType))) {
+    if ((action !== 'edit' && action !== 'clone') || this.getCurrentUser().canUpdate(this.getModelDefinitionByName(this.props.params.modelType))) {
         return true;
     }
     return false;
@@ -159,7 +159,6 @@ const List = React.createClass({
 
         // Switch action for special cases
         switch (action) {
-        case 'share':
         case 'edit':
         case 'clone':
             return model.access.write;
@@ -167,6 +166,8 @@ const List = React.createClass({
             return model.access.read && model.modelDefinition.identifiableObject;
         case 'details':
             return model.access.read;
+        case 'share':
+            return model.modelDefinition.isSharable === true; // TODO: Sharing is filtered out twice...
         case 'pdfDataSetForm':
             return model.modelDefinition.name === 'dataSet' && model.access.read;
         default:
@@ -210,7 +211,7 @@ const List = React.createClass({
             .filter(actionsThatRequireCreate, this)
             .filter(actionsThatRequireDelete, this)
             .filter((actionName) => {
-                if (actionName === 'sharing') {
+                if (actionName === 'share') {
                     return this.context.d2.models[this.props.params.modelType] && this.context.d2.models[this.props.params.modelType].isSharable;
                 }
                 return true;
