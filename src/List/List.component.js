@@ -1,5 +1,4 @@
 import React from 'react';
-import classes from 'classnames';
 import log from 'loglevel';
 import isIterable from 'd2-utilizr/lib/isIterable';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
@@ -19,7 +18,6 @@ import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import sharingStore from './sharing.store';
-
 import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import snackActions from '../Snackbar/snack.actions';
@@ -227,13 +225,6 @@ const List = React.createClass({
             dataTableWrap: {
                 display: 'flex',
                 flexDirection: 'column',
-            },
-            list: {
-                color: 'inherit',
-            },
-
-            dataTableWrap: {
-                display: 'flex',
                 flex: 2,
             },
 
@@ -266,8 +257,8 @@ const List = React.createClass({
                     </div>
                 </div>
                 <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
-                <div className="list-details-wrap">
-                    <div style={styles.dataTableWrap} className={classes('data-table-wrap', { smaller: !!this.state.detailsObject })}>
+                <div style={styles.listDetailsWrap}>
+                    <div style={styles.dataTableWrap}>
                         <DataTable
                             rows={this.state.dataRows}
                             columns={this.state.tableColumns}
