@@ -13,9 +13,13 @@ export default React.createClass({
     },
 
     render() {
+        // Do not pass the value on to the CheckBox component
+        const { value, ...otherProps } = this.props;
+
         return (
             <div style={{ marginTop: 12, marginBottom: 12 }}>
-                <Checkbox onClick={this._onClick} {...this.props}
+                <Checkbox onClick={this._onClick}
+                          {...otherProps}
                           label={this.props.labelText}
                           defaultChecked={isTrueOrTheStringTrue(this.props.value)} />
             </div>
@@ -23,7 +27,6 @@ export default React.createClass({
     },
 
     _onClick() {
-        // TODO: Emit a proper event..?
         this.props.onChange({
             target: {
                 value: !isTrueOrTheStringTrue(this.props.value),
