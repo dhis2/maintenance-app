@@ -1,3 +1,8 @@
 {
-  "extends": "dhis2"
+  "extends": "dhis2",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  }
 }
