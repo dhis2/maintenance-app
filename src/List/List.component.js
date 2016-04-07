@@ -39,6 +39,21 @@ function actionsThatRequireDelete(action) {
     return false;
 }
 
+function getTranslatablePropertiesForModelType(modelType) {
+    const defaultTranslatableProperties = ['name', 'shortName', 'description'];
+
+    switch (modelType) {
+        case 'dataElement':
+            return defaultTranslatableProperties.concat(['formName']);
+        case 'organisationUnitLevel':
+            return ['name'];
+        default:
+            break;
+    }
+
+    return defaultTranslatableProperties;
+}
+
 function calculatePageValue(pager) {
     const pageSize = 50; // TODO: Make the page size dynamic
     const { total, pageCount, page } = pager;
@@ -290,6 +305,7 @@ const List = React.createClass({
                     onTranslationSaved={this._translationSaved}
                     onTranslationError={this._translationErrored}
                     onRequestClose={this._closeTranslationDialog}
+                    fieldsToTranslate={getTranslatablePropertiesForModelType(this.props.params.modelType)}
                 /> : null }
             </div>
         );
