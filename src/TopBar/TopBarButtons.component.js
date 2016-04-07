@@ -15,21 +15,29 @@ export default React.createClass({
     },
 
     render() {
+        const styles = {
+            buttonStyle: {
+                color: '#FFF',
+            },
+        };
+
         return (
-            <div style={{paddingLeft: '.75rem'}}>
+            <div>
                 <IconButton
                     iconClassName="material-icons"
                     tooltip={this.getTranslation('metadata_management_overview')}
-                    tooltipPosition="bottom-right"
+                    tooltipPosition="bottom-left"
                     onClick={this._gotoOverview}
+                    iconStyle={styles.buttonStyle}
                 >
                     &#xE8F0;
                 </IconButton>
                 <IconButton
                     iconClassName="material-icons"
                     tooltip={this.getTranslation('metadata_group_editor')}
-                    tooltipPosition="bottom-right"
+                    tooltipPosition="bottom-left"
                     onClick={this._goToGroupEditor}
+                    iconStyle={styles.buttonStyle}
                 >
                     &#xE428;
                 </IconButton>

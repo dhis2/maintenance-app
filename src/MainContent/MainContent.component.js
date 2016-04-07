@@ -1,23 +1,23 @@
 import React from 'react';
 import classes from 'classnames';
 
-const MainContent = React.createClass({
-    propTypes: {
-        children: React.PropTypes.array.isRequired,
-    },
+function MainContent(props) {
+    const mainContentStyle = {
+        marginBottom: '4rem',
+        width: '100%',
+    };
 
-    render() {
-        const mainContentStyle = {
-            marginTop: '4rem',
-            marginBottom: '4rem',
-        };
-
-        return (
-            <div style={mainContentStyle}>
-                {this.props.children}
-            </div>
-        );
-    },
-});
+    return (
+        <div style={mainContentStyle}>
+            {props.children}
+        </div>
+    );
+}
+MainContent.propTypes = {
+    children: React.PropTypes.oneOfType([
+        React.PropTypes.array.isRequired,
+        React.PropTypes.object.isRequired,
+    ]),
+};
 
 export default MainContent;

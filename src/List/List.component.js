@@ -23,6 +23,7 @@ import sharingStore from './sharing.store';
 import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import snackActions from '../Snackbar/snack.actions';
+import Heading from 'd2-ui/lib/headings/Heading.component';
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
@@ -222,10 +223,38 @@ const List = React.createClass({
                 return actions;
             }, {});
 
+        const styles = {
+            dataTableWrap: {
+                display: 'flex',
+                flexDirection: 'column',
+            },
+            list: {
+                color: 'inherit',
+            },
+
+            dataTableWrap: {
+                display: 'flex',
+                flex: 2,
+            },
+
+            detailsBoxWrap: {
+                flex: 1,
+                marginLeft: '1rem',
+                marginRight: '1rem',
+                opacity: 1,
+            },
+
+            listDetailsWrap: {
+                flex: 1,
+                display: 'flex',
+                flexOrientation: 'row',
+            }
+        };
+
         return (
             <div>
                 <div>
-                    <h2 style={{ float: 'left' }}>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</h2>
+                    <Heading>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</Heading>
                     <ListActionBar modelType={this.props.params.modelType} groupName={this.props.params.groupName} />
                 </div>
                 <div>
@@ -238,7 +267,7 @@ const List = React.createClass({
                 </div>
                 <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
                 <div className="list-details-wrap">
-                    <div className={classes('data-table-wrap', { smaller: !!this.state.detailsObject })}>
+                    <div style={styles.dataTableWrap} className={classes('data-table-wrap', { smaller: !!this.state.detailsObject })}>
                         <DataTable
                             rows={this.state.dataRows}
                             columns={this.state.tableColumns}
@@ -247,13 +276,16 @@ const List = React.createClass({
                             primaryAction={availableActions.details}
                             isContextActionAllowed={this.isContextActionAllowed}
                         />
-                        {this.state.dataRows.length ? null : <div>No results found</div>}
+                        {this.state.dataRows.length || this.state.isLoading ? null : <div>No results found</div>}
                     </div>
-                    <div className={classes('details-box-wrap', { 'show-as-column': !!this.state.detailsObject })}>
-                        <Paper zDepth={1} rounded={false} style={{position: 'fixed'}}>
-                            <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject} onClose={listActions.hideDetailsBox} />
-                        </Paper>
-                    </div>
+                    {this.state.detailsObject ?
+                        <div style={styles.detailsBoxWrap}>
+                            <Paper zDepth={1} rounded={false} style={{position: 'fixed'}}>
+                                <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject}
+                                            onClose={listActions.hideDetailsBox}/>
+                            </Paper>
+                        </div>
+                    : null}
                 </div>
                 {this.state.sharing.model ? <SharingDialog
                     objectToShare={this.state.sharing.model}

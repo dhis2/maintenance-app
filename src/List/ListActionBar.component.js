@@ -21,6 +21,10 @@ const ListActionBar = React.createClass({
         const cssStyles = {
             textAlign: 'right',
             marginTop: '1rem',
+            bottom: '1.5rem',
+            right: '1.5rem',
+            position: 'fixed',
+            zIndex: 10,
         };
 
         if (!this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.modelType))) {

@@ -19,12 +19,14 @@ import log from 'loglevel';
 import FormHeading from './FormHeading';
 import extraFields from './extraFields';
 import CircularProgress from 'material-ui/lib/circular-progress';
-
+import FontIcon from 'material-ui/lib/font-icon';
 import BackButton from './BackButton.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import { goToRoute, goBack } from '../router';
 import {createFieldConfig, typeToFieldMap} from '../forms/fields';
+import Heading from 'd2-ui/lib/headings/Heading.component';
+import appState from '../App/appStateStore';
 
 config.i18n.strings.add('name');
 config.i18n.strings.add('code');
@@ -175,7 +177,7 @@ export default React.createClass({
         const formPaperStyle = {
             width: '100%',
             margin: '0 auto 2rem',
-            padding: '2rem 5rem 4rem',
+            padding: '0 5rem 4rem',
             position: 'relative',
         };
 
@@ -193,29 +195,33 @@ export default React.createClass({
             };
 
             return (
-                <Paper style={formPaperStyle}>
-                    <div style={backButtonStyle}><BackButton onClick={this._goBack} toolTip="back_to_list" /></div>
-                    <FormHeading text={camelCaseToUnderscores(this.props.modelType)} />
-
-                    <FormBuilder
-                        fields={this.state.fieldConfigs}
-                        onUpdateField={this._onUpdateField}
-                        onUpdateFormStatus={this._onUpdateFormStatus}
-                    />
-                    <FormButtons>
-                        <SaveButton onClick={this._saveAction} isValid={this.state.formState.valid && !this.state.formState.validating} isSaving={this.state.isSaving} />
-                        <CancelButton onClick={this._closeAction} />
-                    </FormButtons>
-                </Paper>
+                <div>
+                    <Paper style={formPaperStyle}>
+                        <div style={backButtonStyle}>
+                            <BackButton onClick={this._goBack} toolTip="back_to_list" />
+                        </div>
+                        <FormBuilder
+                            fields={this.state.fieldConfigs}
+                            onUpdateField={this._onUpdateField}
+                            onUpdateFormStatus={this._onUpdateFormStatus}
+                        />
+                        <FormButtons>
+                            <SaveButton onClick={this._saveAction} isValid={this.state.formState.valid && !this.state.formState.validating} isSaving={this.state.isSaving} />
+                            <CancelButton onClick={this._closeAction} />
+                        </FormButtons>
+                    </Paper>
+                </div>
             );
         };
 
-        const wrapStyle = {
-            paddingTop: '2rem',
-        };
-
+        // TODO: Implement the sort of breadcrumb bar?
+        // <Heading>{this.getTranslation(camelCaseToUnderscores((appState.state && appState.state.sideBar && appState.state.sideBar.currentSection) || ''))}</Heading>
+        // <FontIcon className="material-icons" style={{color: '#AAA', padding: '18px .5rem 5px'}}>chevron_right</FontIcon>
         return (
-            <div style={wrapStyle}>
+            <div>
+                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2rem'}}>
+                    <FormHeading>{camelCaseToUnderscores(this.props.modelType)}</FormHeading>
+                </div>
                 <SharingNotification style={formPaperStyle} modelType={this.props.modelType} />
                 {this.state.isLoading ? 'Loading data...' : renderForm()}
             </div>

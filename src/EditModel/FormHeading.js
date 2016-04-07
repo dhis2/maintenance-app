@@ -4,11 +4,11 @@ import Heading from 'd2-ui/lib/headings/Heading.component';
 
 function FormHeading(props, context) {
     return (
-        <Heading level={props.level || 2} text={context.d2.i18n.getTranslation(props.text)} />
+        <Heading {...props} level={props.level || 2}>{context.d2.i18n.getTranslation(props.children)}</Heading>
     );
 }
 FormHeading.propTypes = {
-    text: React.PropTypes.string.isRequired,
+    children: React.PropTypes.string,
     level: React.PropTypes.number,
 };
 

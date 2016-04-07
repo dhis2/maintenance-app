@@ -10,6 +10,8 @@ import log from 'loglevel';
 import appTheme from './app.theme';
 import LoadingMask from '../loading-mask/LoadingMask.component';
 import '../translationRegistration';
+import SectionTabs from '../TopBar/SectionTabs.component';
+import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 
 log.setLevel(log.levels.INFO);
 
@@ -20,6 +22,83 @@ log.setLevel(log.levels.INFO);
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
+import FlatButton from 'material-ui/lib/flat-button';
+import { setAppState, default as appState } from './appStateStore';
+import { goToRoute } from '../router';
+
+const sections$ = appState
+    .map(appState => {
+        return {
+            sections: appState.sideBar.mainSections,
+            current: appState.sideBar.currentSection,
+            changeSection: (sectionName) => {
+                setAppState({
+                    sideBar: Object.assign({}, appState.sideBar, {
+                        currentSection: sectionName,
+                    }),
+                });
+                goToRoute(`/list/${sectionName}`);
+            }
+        };
+    });
+
+const SectionTabsWrap = withStateFrom(sections$, SectionTabs);
+
+function TwoPanelSelector(props) {
+    const {children, ...otherProps} = props;
+    const styles = {
+        mainStyle: {
+            flex: 1,
+            display: 'flex',
+            flexOrientation: 'row',
+            marginTop: '8rem',
+        },
+    };
+
+    const flexedChilden = children
+        .map((childComponent, index) => {
+            const childStyle = Object
+                .assign({}, styles.childWrapStyle, {
+                    flex: props.sizeRatio[index],
+                    paddingRight: (index === children.length - 1) ? '2rem' : undefined,
+                });
+
+            return (
+                <div key={index} style={childStyle}>{childComponent}</div>
+            );
+        });
+
+    return (
+        <main style={styles.mainStyle} {...otherProps}>
+            {flexedChilden}
+        </main>
+    );
+}
+TwoPanelSelector.defaultProps = {
+    sizeRatio: ['0 0 286px', 1],
+};
+
+function SinglePanel(props) {
+    const {children, ...otherProps} = props;
+
+    const styles = {
+        mainStyle: {
+            flex: 1,
+            display: 'flex',
+            flexOrientation: 'row',
+            marginTop: '8rem',
+            marginLeft: '2rem',
+            marginRight: '2rem',
+        },
+    };
+
+    return (
+        <main style={styles.mainStyle} {...otherProps}>
+            {children}
+        </main>
+    );
+}
+
 const withMuiContext = Object.assign(AppWithD2.childContextTypes, { muiTheme: React.PropTypes.object });
 class App extends AppWithD2 {
     getChildContext() {
@@ -28,24 +107,41 @@ class App extends AppWithD2 {
         });
     }
 
-    render() {
-        const classList = classes('app');
+    componentDidMount() {
+        super.componentDidMount();
 
+        this.disposable = appState
+            .map((state) => state.mainSections.some(mainSection => mainSection.key === state.sideBar.currentSection))
+            .distinctUntilChanged()
+            .subscribe((hasSection) => this.setState({
+                ...this.state,
+                hasSection,
+            }));
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+
+        this.disposable && this.disposable.dispose();
+    }
+
+    render() {
         if (!this.state.d2) {
             return (<LoadingMask />);
         }
 
         return (
-            <div className={classList}>
+            <div>
                 <HeaderBar />
-                <MainContent>
-                    <div className="sidebar-container">
-                        <SideBar activeGroupName={this.props.params.groupName} activeModelType={this.props.params.modelType} />
-                    </div>
-                    <div className="main-container">
+                <SectionTabsWrap />
+                {this.state.hasSection ? <TwoPanelSelector>
+                    <SideBar activeGroupName={this.props.params.groupName} activeModelType={this.props.params.modelType} />
+                    <MainContent>
                         {this.props.children}
-                    </div>
-                </MainContent>
+                    </MainContent>
+                </TwoPanelSelector>: <SinglePanel> <MainContent>
+                    {this.props.children}
+                </MainContent></SinglePanel>}
                 <SnackbarContainer />
             </div>
         );

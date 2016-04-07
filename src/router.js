@@ -2,10 +2,9 @@ import React from 'react';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import log from 'loglevel';
 import App from './App/App.component';
-import MenuCards from './MenuCards/MenuCardsContainer.component';
 import List from './List/List.component';
 import EditModelContainer from './EditModel/EditModelContainer.component';
-import GroupEditorContainer from './GroupEditor/GroupEditorContainer.component';
+import GroupEditor from './GroupEditor/GroupEditor.component';
 import modelToEditStore from './EditModel/modelToEditStore';
 import { getInstance } from 'd2/lib/d2';
 import objectActions from './EditModel/objectActions';
@@ -14,6 +13,8 @@ import snackActions from './Snackbar/snack.actions';
 import { initAppState, default as appState } from './App/appStateStore';
 import OrganisationUnitList from './List/organisation-unit-list/OrganisationUnitList.component.js';
 import {fieldFilteringForQuery} from './List/list.store';
+import MenuCardsForSection from './MenuCards/MenuCardsForSection.component';
+import MenuCardsForAllSections from './MenuCards/MenuCardsForAllSections.component';
 
 function loadObject({ params }, replace, callback) {
     initState({ params });
@@ -124,10 +125,10 @@ async function initStateOrgUnitList({ params }) {
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
-            <IndexRoute component={MenuCards} onEnter={initState} />
+            <IndexRoute component={MenuCardsForAllSections} onEnter={initState} />
             <Route
                 path="list/:groupName"
-                component={MenuCards}
+                component={MenuCardsForSection}
                 onEnter={initState}
             />
             <Route
@@ -152,7 +153,8 @@ const routes = (
             />
             <Route
                 path="group-editor"
-                component={GroupEditorContainer}
+                component={GroupEditor}
+                onEnter={initState}
             />
         </Route>
     </Router>

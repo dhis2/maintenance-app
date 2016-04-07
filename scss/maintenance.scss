@@ -25,30 +25,6 @@ html {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
 }
-//Components
-@import './SideBar/sidebar';
-
-//App
-.app {
-  @include container();
-}
-
-.sidebar-container {
-  height: 100%;
-  margin-top: 16px;
-  padding-top: 2rem;
-  position: fixed;
-  top: 0;
-  width: 265px;
-  display: flex;
-}
-
-.main-container {
-  margin-left: 286px;
-  min-width: 350px;
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
 
 //TODO: Distribute
 //list

@@ -93,6 +93,7 @@ export async function initAppState(startState, disableCache) {
     const loadedState = {
         selectedOrganisationUnit,
         sideBar,
+        mainSections: sideBar.mainSections,
         userOrganisationUnits,
     };
 
@@ -113,8 +114,9 @@ export async function initAppState(startState, disableCache) {
 
 appState
     .debounce(400)
-    .subscribe(() => {
-        console.log('appState updated', appState.state);
+    .subscribe((s) => {
+        // console.log('appState updated', appState.state);
+        console.log( s.sideBar.currentSection );
     });
 
 export default appState;

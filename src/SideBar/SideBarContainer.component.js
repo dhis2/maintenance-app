@@ -1,68 +1,22 @@
 import React from 'react';
-import Sidebar from 'd2-ui/lib/sidebar/Sidebar.component';
-import SideBarButtons from './SideBarButtons.component';
 import sideBarStore from './sideBarStore';
 import LinearProgress from 'material-ui/lib/linear-progress';
 import {onSectionChanged, onBackToSections} from './sideBarActions';
 import BackButton from '../EditModel/BackButton.component'; // TODO: Move backbutton out to it's own folder if it's used in multiple places
 import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree';
 import { setAppState } from '../App/appStateStore';
-
-function noop() {}
-
-function MaintenanceSideBar(props) {
-    const sideBarWrapperStyle = {
-            //display: 'flex',
-            //flexDirection: 'column',
-            //flexFlow: 'column',
-            //flex: 1,
-        };
-
-    return (
-        <div style={sideBarWrapperStyle}>
-            <SideBarButtons />
-            <Sidebar
-                sections={props.sections}
-                onChangeSection={props.onChangeSection || noop}
-                currentSection={props.currentSection}
-                styles={Object.assign({leftBar: {overflowY: 'initial'}}, props.style)}
-            />
-            {props.children}
-        </div>
-    );
-}
-MaintenanceSideBar.propTypes = {
-    style: React.PropTypes.object,
-    sections: React.PropTypes.arrayOf(React.PropTypes.object),
-    onChangeSection: React.PropTypes.func,
-    currentSection: React.PropTypes.string,
-};
-MaintenanceSideBar.defaultProps = {
-    style: {},
-    sections: [],
-};
-
-class SideBarOrganisationUnitTree extends React.Component {
-    componentWillMount() {
-        sideBarStore
-            .subscribe(sideBarState => {
-                this.setState(sideBarState);
-            });
-    }
-
-    render() {
-        return (
-            <LinearProgress indeterminate={true} />
-        );
-    }
-}
+import MaintenanceSideBar from './MaintenanceSidebar.component';
 
 class SideBarContainer extends React.Component {
     componentWillMount() {
-        sideBarStore
+        this.disposable = sideBarStore
             .subscribe(sideBarState => {
                 this.setState(sideBarState);
             });
+    }
+
+    componentWillUnmount() {
+        this.disposable && this.disposable.dispose();
     }
 
     render() {
@@ -77,13 +31,11 @@ class SideBarContainer extends React.Component {
             flexDirection: 'column',
             flexFlow: 'column',
             flex: 1,
+            position: 'fixed',
         };
 
         return (
             <div style={sideBarWrapperStyle}>
-                <div style={{paddingLeft: '.75rem'}}>
-                    {this.state.currentSection ? <BackButton onClick={this._onBackToSections} /> : null}
-                </div>
                 <MaintenanceSideBar
                     sections={this.state.sections}
                     currentSection={this.state.activeItem || '-- not set --'}
@@ -142,10 +94,6 @@ class SideBarContainer extends React.Component {
             section: this.state.currentSection,
             subSection: newSection,
         });
-    }
-
-    _onBackToSections() {
-        onBackToSections();
     }
 }
 

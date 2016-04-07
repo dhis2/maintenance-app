@@ -35,8 +35,6 @@ export default appStateStore
                 }]);
             }, []);
 
-        cardState.$key = 'cardState';
-
         return cardState;
     })
     .take(1)
