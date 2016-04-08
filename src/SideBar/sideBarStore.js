@@ -21,5 +21,6 @@ export default appStateStore
             activeItem: currentSubSection ? currentSubSection : currentSection,
             selectedOrganisationUnit,
             userOrganisationUnits,
+            autoCompleteOrganisationUnits: appState.sideBar.organisationUnits,
         };
     });

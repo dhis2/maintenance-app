@@ -1,11 +1,12 @@
 import React from 'react';
 import sideBarStore from './sideBarStore';
 import LinearProgress from 'material-ui/lib/linear-progress';
-import {onSectionChanged, onBackToSections} from './sideBarActions';
+import {onSectionChanged, onOrgUnitSearch} from './sideBarActions';
 import BackButton from '../EditModel/BackButton.component'; // TODO: Move backbutton out to it's own folder if it's used in multiple places
 import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree';
 import { setAppState } from '../App/appStateStore';
 import MaintenanceSideBar from './MaintenanceSidebar.component';
+import AutoComplete from 'material-ui/lib/auto-complete';
 
 class SideBarContainer extends React.Component {
     componentWillMount() {
@@ -32,6 +33,8 @@ class SideBarContainer extends React.Component {
             flexFlow: 'column',
             flex: 1,
             position: 'fixed',
+            bottom: '0',
+            top: '7rem',
         };
 
         return (
@@ -53,7 +56,6 @@ class SideBarContainer extends React.Component {
                     padding: '1.5rem',
                     overflowY: 'auto',
                     overflowX: 'auto',
-                    marginBottom: '2rem',
                     flex: '1',
                     width: '256px',
                 };
@@ -63,14 +65,21 @@ class SideBarContainer extends React.Component {
                 return (
                     <div style={wrapperStyle}>
                         <div style={innerWrapperStyle}>
+                            <AutoComplete
+                                hintText="Search"
+                                onUpdateInput={this._searchOrganisationUnits}
+                                onNewRequest={this._onAutoCompleteValueSelected.bind(this)}
+                                dataSource={(this.state.autoCompleteOrganisationUnits || []).map(model => model.displayName)}
+                                filter={AutoComplete.noFilter}
+                            />
                             <OrganisationUnitTree
                                 roots={this.state.userOrganisationUnits.toArray()}
                                 selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
-                                initiallyExpanded={this.state.userOrganisationUnits.toArray().map(v => v.id)}
+                                initiallyExpanded={this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || [])}
                                 labelStyle={{
                                         whiteSpace: 'nowrap',
                                     }}
-                                onClick={this._onChangeSelectedOrgUnit}
+                                onClick={this._onChangeSelectedOrgUnit.bind(this)}
                             />
                         </div>
                     </div>
@@ -83,10 +92,28 @@ class SideBarContainer extends React.Component {
         }
     }
 
+    _searchOrganisationUnits(searchValue) {
+        onOrgUnitSearch(searchValue)
+            .subscribe(() => {}, (e) => console.error(e));
+    }
+
     _onChangeSelectedOrgUnit(event, model) {
         setAppState({
             selectedOrganisationUnit: model,
         });
+
+        this.setState({
+            initiallyExpanded: model.path ? model.path.split('/').filter(v => v).slice(0, -1) : [],
+        });
+    }
+
+    _onAutoCompleteValueSelected(displayName) {
+        const ouToSelect = (this.state.autoCompleteOrganisationUnits || [])
+            .find(model => model.displayName === displayName);
+
+        if (ouToSelect) {
+            this._onChangeSelectedOrgUnit(null, ouToSelect);
+        }
     }
 
     _onChangeSection(newSection) {

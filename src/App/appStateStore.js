@@ -51,16 +51,7 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
     }
 
     const d2 = await getInstance();
-
-    let organisationUnitsCollection;
-
-    if (d2.currentUser.authorities.has('ALL')) {
-        organisationUnitsCollection = await d2.models.organisationUnit
-            .filter().on('name').notEqual('default')
-            .list({ fields: 'id,displayName,path,children:notEmpty', level: 1 });
-    } else {
-        organisationUnitsCollection = await d2.currentUser.getOrganisationUnits();
-    }
+    const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits();
 
     getCurrentUserOrganisationUnits.currentUserOrganisationUnits = organisationUnitsCollection;
 
@@ -112,12 +103,12 @@ export async function initAppState(startState, disableCache) {
     appState.setState(completeInitState);
 }
 
-appState
-    .debounce(400)
-    .subscribe((s) => {
-        // console.log('appState updated', appState.state);
-        console.log( s.sideBar.currentSection );
-    });
+//appState
+//    .debounce(400)
+//    .subscribe((s) => {
+//        // console.log('appState updated', appState.state);
+//        console.log( s.sideBar.currentSection );
+//    });
 
 export default appState;
 

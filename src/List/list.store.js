@@ -61,25 +61,48 @@ export default Store.create({
         this.listSourceSubject.onNext(Observable.fromPromise(this.state.pager.getPreviousPage()));
     },
 
-    searchByName(modelType, searchString, complete, error) {
-        getD2().then(d2 => {
-            if (!d2.models[modelType]) {
-                error(`${modelType} is not a valid schema name`);
+    async searchByName(modelType, searchString, complete, error) {
+        // TODO: Move this out to different observables in list.actions
+        if (modelType === 'organisationUnit') {
+            const d2 = await getD2();
+            let organisationUnitModelDefinition = d2.models.organisationUnits;
+
+            // When an organisation unit is present on the appState we constrain the query to the children of the
+            // selected organisation unit.
+            if (appState.state && appState.state.selectedOrganisationUnit) {
+                organisationUnitModelDefinition = organisationUnitModelDefinition
+                    .filter().on('parent.id').equals(appState.state.selectedOrganisationUnit.id);
             }
+            const organisationUnitsThatMatchQuery = await organisationUnitModelDefinition
+                .list({
+                    fields: fieldFilteringForQuery,
+                    query: searchString,
+                    withinUserHierarchy: true,
+                    pageSize: 5,
+                });
 
-            let modelDefinition = d2.models[modelType];
+            this.listSourceSubject.onNext(Observable.just(organisationUnitsThatMatchQuery));
+            complete();
+        } else {
+            getD2().then(d2 => {
+                if (!d2.models[modelType]) {
+                    error(`${modelType} is not a valid schema name`);
+                }
 
-            if (searchString) {
-                modelDefinition = d2.models[modelType].filter().on('displayName').ilike(searchString);
-            }
+                let modelDefinition = d2.models[modelType];
 
-            const listSearchPromise = modelDefinition
-                .filter().on('name').notEqual('default')
-                .list({ fields: fieldFilteringForQuery });
+                if (searchString) {
+                    modelDefinition = d2.models[modelType].filter().on('displayName').ilike(searchString);
+                }
 
-            this.listSourceSubject.onNext(Observable.fromPromise(listSearchPromise));
+                const listSearchPromise = modelDefinition
+                    .filter().on('name').notEqual('default')
+                    .list({fields: fieldFilteringForQuery});
 
-            complete(`${modelType} list with search on 'displayName' for '${searchString}' is loading`);
-        });
+                this.listSourceSubject.onNext(Observable.fromPromise(listSearchPromise));
+
+                complete(`${modelType} list with search on 'displayName' for '${searchString}' is loading`);
+            });
+        }
     },
 }).initialise();

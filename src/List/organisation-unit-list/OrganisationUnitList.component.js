@@ -9,35 +9,29 @@ import log from 'loglevel';
 export default class OrganisationUnitList extends React.Component {
     componentDidMount() {
         this.disposable = appState
-            .map((state) => state.selectedOrganisationUnit)
-            .filter(selectedOrganisationUnit => selectedOrganisationUnit)
-            .distinctUntilChanged()
+            .map(({selectedOrganisationUnit, userOrganisationUnits}) => ({
+                selectedOrganisationUnit,
+                userOrganisationUnitIds: userOrganisationUnits
+                    .toArray()
+                    .map(model => model.id),
+            }))
+            .filter(state => state.selectedOrganisationUnit)
+            .distinctUntilChanged(state => state.selectedOrganisationUnit)
             .subscribe(
-                async (selectedOrganisationUnit) => {
+                async ({selectedOrganisationUnit, userOrganisationUnitIds}) => {
                     const d2 = await getInstance();
                     let organisationUnitList = d2.models.organisationUnit
                         .filter().on('name').notEqual('default');
-                    let rootOrgUnits = [];
 
                     organisationUnitList = await organisationUnitList
                         .filter().on('name').notEqual('default')
                         .filter().on('parent.id').equals(selectedOrganisationUnit.id)
                         .list({ fields: fieldFilteringForQuery });
 
-                    // When a root organisation unit is selected we also add the root organisation units to the list
+                    // When a root organisation unit is selected we also add the root organisation unit to the list
                     // of available organisation units to pick from
-                    // TODO: Checking if there is a path is not very reliable...
-                    if (selectedOrganisationUnit.path) {
-                        rootOrgUnits = await d2.models.organisationUnit
-                            .filter().on('name').notEqual('default')
-                            .filter().on('name').notEqual('default')
-                            .list({ fields: fieldFilteringForQuery, level: 1 });
-
-                        rootOrgUnits
-                            .toArray()
-                            .forEach(rootOuModel => {
-                                organisationUnitList.add(rootOuModel);
-                            });
+                    if (userOrganisationUnitIds.indexOf(selectedOrganisationUnit.id) >= 0) {
+                        organisationUnitList.add(selectedOrganisationUnit);
                     }
 
                     listActions.setListSource(organisationUnitList);

@@ -122,6 +122,11 @@ async function initStateOrgUnitList({ params }) {
     }, true);
 }
 
+function loadOrgUnitObject({ params }, replace, callback) {
+    loadObject({ ...params, modelType: 'organisationUnit' }, replace, callback);
+}
+
+
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
@@ -145,6 +150,11 @@ const routes = (
                 path="edit/:groupName/:modelType/:modelId"
                 component={EditModelContainer}
                 onEnter={loadObject}
+            />
+            <Route
+                path="edit/:groupName/organisationUnit/:modelId"
+                component={EditModelContainer}
+                onEnter={loadOrgUnitObject}
             />
             <Route
                 path="clone/:groupName/:modelType/:modelId"

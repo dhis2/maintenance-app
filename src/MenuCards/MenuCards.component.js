@@ -40,7 +40,7 @@ export default React.createClass({
         };
 
         const textStyle = {
-            height: '115px',
+            height: '85px',
             padding: '.5rem 1rem',
         };
 

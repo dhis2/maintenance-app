@@ -50,7 +50,9 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             .map(searchValue => {
                 const organisationUnitRequest = this.context.d2.models.organisationUnits
                     .filter().on('displayName').ilike(searchValue)
-                    .list({fields: 'id,displayName,path,children::isNotEmpty'})
+                    // withinUserHierarchy makes the query only apply to the subtrees of the organisation units that are
+                    // assigned to the current user
+                    .list({fields: 'id,displayName,path,children::isNotEmpty', withinUserHierarchy: true})
                     .then(modelCollection => modelCollection.toArray());
 
                 return Observable.fromPromise(organisationUnitRequest);

@@ -9,7 +9,7 @@ function SectionTabs(props) {
             display: 'flex',
             flexOrientation: 'row',
             position: 'fixed',
-            background: '#5892BE',
+            background: '#E4E4E4',
             width: '100%',
             zIndex: 10,
             top: '44px',
@@ -39,12 +39,15 @@ function SectionTabs(props) {
         tabsWrap: {
             flex: 1,
         },
+        tabStyle: {
+            color: '#666',
+        },
     };
 
     const sections = props.sections
         .map((section, index) => {
             return (
-                <Tab key={index} label={section.label} value={section.key} />
+                <Tab key={index} style={styles.tabStyle} label={section.label} value={section.key} />
             );
         });
 

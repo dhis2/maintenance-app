@@ -17,7 +17,7 @@ export default React.createClass({
     render() {
         const styles = {
             buttonStyle: {
-                color: '#FFF',
+                color: '#666',
             },
         };
 

@@ -5,11 +5,7 @@ import menuCardsStore from './menuCardsStore';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 
 const sectionsForAllCards$ = menuCardsStore
-    .map(sections => ({ sections }))
-    .map(props => {
-        console.log(props);
-        return props;
-    });
+    .map(sections => ({ sections }));
 
 function MenuCardsForAllSections(props) {
     return (
