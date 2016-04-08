@@ -114,6 +114,7 @@ function initState({ params }) {
 }
 
 async function initStateOrgUnitList({ params }) {
+    console.log('Loading?');
     initAppState({
         sideBar: {
             currentSection: params.groupName,
@@ -131,31 +132,34 @@ const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
             <IndexRoute component={MenuCardsForAllSections} onEnter={initState} />
-            <Route
-                path="list/:groupName"
-                component={MenuCardsForSection}
-                onEnter={initState}
-            />
-            <Route
-                path="list/:groupName/organisationUnit"
-                component={OrganisationUnitList}
-                onEnter={initStateOrgUnitList}
-            />
-            <Route
-                path="list/:groupName/:modelType"
-                component={List}
-                onEnter={loadList}
-            />
-            <Route
-                path="edit/:groupName/:modelType/:modelId"
-                component={EditModelContainer}
-                onEnter={loadObject}
-            />
-            <Route
-                path="edit/:groupName/organisationUnit/:modelId"
-                component={EditModelContainer}
-                onEnter={loadOrgUnitObject}
-            />
+            <Route path="list/:groupName">
+                <IndexRoute
+                    component={MenuCardsForSection}
+                    onEnter={initState}
+                />
+                <Route
+                    path="organisationUnit"
+                    component={OrganisationUnitList}
+                    onEnter={initStateOrgUnitList}
+                />
+                <Route
+                    path=":modelType"
+                    component={List}
+                    onEnter={loadList}
+                />
+            </Route>
+            <Route path="edit/:groupName">
+                <Route
+                    path="organisationUnit/:modelId"
+                    component={EditModelContainer}
+                    onEnter={loadOrgUnitObject}
+                />
+                <Route
+                    path=":modelType/:modelId"
+                    component={EditModelContainer}
+                    onEnter={loadObject}
+                />
+            </Route>
             <Route
                 path="clone/:groupName/:modelType/:modelId"
                 component={EditModelContainer}
