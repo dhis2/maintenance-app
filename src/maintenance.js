@@ -30,8 +30,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 function configI18n({ uiLocale }) {
     if (uiLocale !== 'en') {
+        // Add the language sources for the preferred locale
         config.i18n.sources.add(`./i18n/i18n_module_${uiLocale}.properties`);
     }
+
+    // Add english as locale for all cases (either as primary or fallback)
     config.i18n.sources.add('./i18n/i18n_module_en.properties');
 }
 
