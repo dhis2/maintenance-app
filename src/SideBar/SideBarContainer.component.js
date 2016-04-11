@@ -3,10 +3,12 @@ import sideBarStore from './sideBarStore';
 import LinearProgress from 'material-ui/lib/linear-progress';
 import {onSectionChanged, onOrgUnitSearch} from './sideBarActions';
 import BackButton from '../EditModel/BackButton.component'; // TODO: Move backbutton out to it's own folder if it's used in multiple places
-import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree';
 import { setAppState } from '../App/appStateStore';
 import MaintenanceSideBar from './MaintenanceSidebar.component';
-import AutoComplete from 'material-ui/lib/auto-complete';
+import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+import Menu from 'material-ui/lib/menus/menu';
+import FontIcon from 'material-ui/lib/font-icon';
 
 class SideBarContainer extends React.Component {
     componentWillMount() {
@@ -52,36 +54,27 @@ class SideBarContainer extends React.Component {
     getSideBarItems() {
         if (this.state.currentSubSection === 'organisationUnit') {
             if (this.state.userOrganisationUnits && this.state.selectedOrganisationUnit) {
-                const wrapperStyle = {
-                    padding: '1.5rem',
-                    overflowY: 'auto',
-                    overflowX: 'auto',
-                    flex: '1',
-                    width: '256px',
+                const styles = {
+                    wrapperStyle: {
+                        padding: '1.5rem',
+                        overflowY: 'auto',
+                        overflowX: 'auto',
+                        flex: '1',
+                        width: '256px',
+                    },
                 };
 
-                const innerWrapperStyle = {};
-
                 return (
-                    <div style={wrapperStyle}>
-                        <div style={innerWrapperStyle}>
-                            <AutoComplete
-                                hintText="Search"
-                                onUpdateInput={this._searchOrganisationUnits}
-                                onNewRequest={this._onAutoCompleteValueSelected.bind(this)}
-                                dataSource={(this.state.autoCompleteOrganisationUnits || []).map(model => model.displayName)}
-                                filter={AutoComplete.noFilter}
-                            />
-                            <OrganisationUnitTree
-                                roots={this.state.userOrganisationUnits.toArray()}
-                                selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
-                                initiallyExpanded={this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || [])}
-                                labelStyle={{
-                                        whiteSpace: 'nowrap',
-                                    }}
-                                onClick={this._onChangeSelectedOrgUnit.bind(this)}
-                            />
-                        </div>
+                    <div style={styles.wrapperStyle}>
+                        <OrganisationUnitTreeWithSingleSelectionAndSearch
+                            onUpdateInput={this._searchOrganisationUnits.bind(this)}
+                            onAutoCompleteValueSelected={this._onAutoCompleteValueSelected.bind(this)}
+                            autoCompleteDataSource={(this.state.autoCompleteOrganisationUnits || []).map(model => model.displayName)}
+                            roots={this.state.userOrganisationUnits.toArray()}
+                            selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
+                            initiallyExpanded={this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || [])}
+                            onClick={this._onChangeSelectedOrgUnit.bind(this)}
+                        />
                     </div>
                 );
             } else {

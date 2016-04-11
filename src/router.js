@@ -15,6 +15,7 @@ import OrganisationUnitList from './List/organisation-unit-list/OrganisationUnit
 import {fieldFilteringForQuery} from './List/list.store';
 import MenuCardsForSection from './MenuCards/MenuCardsForSection.component';
 import MenuCardsForAllSections from './MenuCards/MenuCardsForAllSections.component';
+import OrganisationUnitHierarchy from './OrganisationUnitHierarchy';
 
 function loadObject({ params }, replace, callback) {
     initState({ params });
@@ -66,7 +67,6 @@ function loadList({ params }, replace, callback) {
     }
 
     initState({ params });
-    // Not sure if loading this list should go on the top? :P
     listActions.loadList(params.modelType)
         .subscribe(
             (message) => {
@@ -114,7 +114,6 @@ function initState({ params }) {
 }
 
 async function initStateOrgUnitList({ params }) {
-    console.log('Loading?');
     initAppState({
         sideBar: {
             currentSection: params.groupName,
@@ -127,6 +126,14 @@ function loadOrgUnitObject({ params }, replace, callback) {
     loadObject({ ...params, modelType: 'organisationUnit' }, replace, callback);
 }
 
+function initStateOuHierarchy() {
+    initAppState({
+        sideBar: {
+            currentSection: 'organisationUnitSection',
+            currentSubSection: 'hierarchy',
+        },
+    });
+}
 
 const routes = (
     <Router history={hashHistory}>
@@ -169,6 +176,11 @@ const routes = (
                 path="group-editor"
                 component={GroupEditor}
                 onEnter={initState}
+            />
+            <Route
+                path="organisationUnitSection/hierarchy"
+                component={OrganisationUnitHierarchy}
+                onEnter={initStateOuHierarchy}
             />
         </Route>
     </Router>

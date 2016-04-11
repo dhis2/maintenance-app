@@ -8,6 +8,10 @@ export const onSectionChanged = Action.create('onSectionChanged', 'SideBar');
 
 onSectionChanged
     .subscribe(({data}) => {
+        if (data.section === 'organisationUnitSection' && data.subSection === 'hierarchy') {
+            return goToRoute(`${data.section}/${data.subSection}`);
+        }
+
         if (data.section) {
             setAppState({
                 sideBar: Object.assign({}, appState.state.sideBar, {

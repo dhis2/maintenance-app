@@ -86,6 +86,11 @@ export async function initAppState(startState, disableCache) {
         sideBar,
         mainSections: sideBar.mainSections,
         userOrganisationUnits,
+        hierarchy: {
+            selectedLeft: [],
+            selectedRight: [],
+            isProcessing: false,
+        },
     };
 
     const completeInitState = Object.keys(startState)
@@ -102,13 +107,6 @@ export async function initAppState(startState, disableCache) {
 
     appState.setState(completeInitState);
 }
-
-//appState
-//    .debounce(400)
-//    .subscribe((s) => {
-//        // console.log('appState updated', appState.state);
-//        console.log( s.sideBar.currentSection );
-//    });
 
 export default appState;
 
