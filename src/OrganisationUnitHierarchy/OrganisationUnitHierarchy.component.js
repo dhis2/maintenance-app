@@ -10,6 +10,7 @@ import {getInstance} from  'd2/lib/d2';
 import {Observable} from 'rx';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
+import searchForOrganisationUnitsWithinHierarchy from './searchForOrganisationUnitsWithinHierarchy';
 
 function identity(v) {
     return v;
@@ -20,10 +21,78 @@ const d2$ = Observable.fromPromise(getInstance());
 const hierarchy$ = appState
     .map(appState => appState.hierarchy || {});
 
+function getOrgUnitTreeSearchFromAction(action) {
+    return action
+        .debounce(400)
+        .filter(action => action.data)
+        .map(({complete, error, data}) => {
+            return Observable.fromPromise(searchForOrganisationUnitsWithinHierarchy(data, 50))
+                .map(organisationUnits => {
+                    return {
+                        complete,
+                        error,
+                        organisationUnits,
+                    };
+                });
+        })
+        .concatAll()
+        .flatMap((v) => {
+            return Observable.just(v).combineLatest(hierarchy$.take(1));
+        });
+}
+
+const rightTreeSearch = Action.create('rightTreeSearch', 'Hierarchy');
+getOrgUnitTreeSearchFromAction(rightTreeSearch)
+    .subscribe(([result, hierarchy]) => {
+        setAppState({
+            hierarchy:  {
+                ...hierarchy,
+                rightRoots: result.organisationUnits,
+            },
+        });
+    });
+rightTreeSearch
+    .filter(action => !action.data)
+    .flatMap(action => hierarchy$.take(1))
+    .subscribe((appState) => {
+        setAppState({
+            hierarchy:  {
+                ...appState.hierarchy,
+                // Reset the roots of the right tree to the original root(s)
+                leftRoots: appState.userOrganisationUnits.toArray(),
+            },
+        });
+    });
+
+const leftTreeSearch = Action.create('leftTreeSearch', 'Hierarchy');
+getOrgUnitTreeSearchFromAction(leftTreeSearch)
+    .subscribe(([result, hierarchy]) => {
+        setAppState({
+            hierarchy:  {
+                ...appState.state.hierarchy,
+                leftRoots: result.organisationUnits,
+            },
+        });
+    });
+leftTreeSearch
+    .filter(action => !action.data)
+    .flatMap(action => appState.take(1))
+    .subscribe((appState) => {
+        setAppState({
+            hierarchy:  {
+                ...appState.hierarchy,
+                // Reset the roots of the left tree to the original root(s)
+                leftRoots: appState.userOrganisationUnits.toArray(),
+            },
+        });
+    });
+
 const organisationUnitHierarchy$ = appState
     .map(({hierarchy = {}, userOrganisationUnits}) => {
         return {
             roots: userOrganisationUnits.toArray(),
+            leftRoots: hierarchy.leftRoots,
+            rightRoots: hierarchy.rightRoots,
             initiallyExpanded: [],
             selectedLeft: hierarchy.selectedLeft || [],
             selectedRight: hierarchy.selectedRight || [],
@@ -155,7 +224,7 @@ function SelectedOrganisationUnitList(props, context) {
     };
 
     const listItems = props.organisationUnits
-        .map(model => <li>{model.displayName}</li>);
+        .map(model => <li key={model.id}>{model.displayName}</li>);
 
     const noOrganisationUnitsMessage = (
         <span style={styles.message}>{context.d2.i18n.getTranslation(props.noOrganisationUnitsMessage)}</span>
@@ -241,18 +310,20 @@ function OrganisationUnitHierarchy(props, context) {
             <div style={styles.wrap}>
                 <Paper style={styles.ouTreeLeft}>
                     <OrganisationUnitTreeWithSingleSelectionAndSearch
-                        roots={props.roots}
+                        roots={props.leftRoots}
                         initiallyExpanded={props.initiallyExpanded}
                         selected={props.selectedLeft.map(model => model.id)}
                         onClick={onClickLeft}
+                        onUpdateInput={value => leftTreeSearch(value)}
                     />
                 </Paper>
                 <Paper style={styles.ouTreeRight}>
                     <OrganisationUnitTreeWithSingleSelectionAndSearch
-                        roots={props.roots}
+                        roots={props.rightRoots}
                         selected={props.selectedRight.map(model => model.id)}
                         initiallyExpanded={props.initiallyExpanded}
                         onClick={onClickRight}
+                        onUpdateInput={value => rightTreeSearch(value)}
                     />
                 </Paper>
             </div>

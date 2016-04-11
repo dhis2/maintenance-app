@@ -90,6 +90,8 @@ export async function initAppState(startState, disableCache) {
             selectedLeft: [],
             selectedRight: [],
             isProcessing: false,
+            leftRoots: userOrganisationUnits.toArray(),
+            rightRoots: userOrganisationUnits.toArray(),
         },
     };
 

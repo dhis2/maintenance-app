@@ -3,6 +3,7 @@ import {setAppState, default as appState} from '../App/appStateStore';
 import {goToRoute} from '../router';
 import { getInstance } from 'd2/lib/d2';
 import { Observable } from 'rx';
+import searchForOrganisationUnitsWithinHierarchy from '../OrganisationUnitHierarchy/searchForOrganisationUnitsWithinHierarchy';
 
 export const onSectionChanged = Action.create('onSectionChanged', 'SideBar');
 
@@ -39,26 +40,13 @@ onBackToSections
         goToRoute(`/`);
     });
 
-async function searchForOrganisationUnitsWithinHeirarchy(searchValue) {
-    const d2 = await getInstance();
-    const organisationUnitsThatMatchQuery = await d2.models.organisationUnits
-        .list({
-            fields: 'id,displayName,path,children:isEmpty',
-            query: searchValue,
-            withinUserHierarchy: true,
-            pageSize: 5,
-        });
-
-    return organisationUnitsThatMatchQuery.toArray();
-}
-
 export const onOrgUnitSearch = Action.create('onOrgUnitSearch', 'SideBar');
 onOrgUnitSearch
     .filter(action => action.data)
     .distinctUntilChanged()
     .debounce(400)
     .map(({complete, error, data}) => {
-        return Observable.fromPromise(searchForOrganisationUnitsWithinHeirarchy(data))
+        return Observable.fromPromise(searchForOrganisationUnitsWithinHierarchy(data))
             .map(organisationUnits => {
                 return {
                     complete,
