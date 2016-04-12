@@ -11,6 +11,8 @@ import {Observable} from 'rx';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import searchForOrganisationUnitsWithinHierarchy from './searchForOrganisationUnitsWithinHierarchy';
+import log from 'loglevel';
+import FontIcon from 'material-ui/lib/font-icon';
 
 function identity(v) {
     return v;
@@ -132,7 +134,7 @@ async function getOrganisationUnitByIds(ids) {
     const d2 = await getInstance();
 
     const organisationUnits =  await d2.models.organisationUnit
-        .list({filter: [`id:in:[${ids.join(',')}]`], fields: ':owner,href,id,parent,displayName'});
+        .list({filter: [`id:in:[${ids.join(',')}]`], fields: ':owner,href,id,parent,displayName,path,children[id,displayName,path]'});
 
     return organisationUnits.toArray();
 }
@@ -181,7 +183,6 @@ function moveOrganisationUnit() {
                 snackActions.show({message, translate: false});
             },
             (e) => {
-                console.trace(e);
                 setHierarchyProcessingStatus(appState.state.hierarchy, false)
             },
             () => {
@@ -243,6 +244,42 @@ SelectedOrganisationUnitList.defaultProps = {
 
 const SelectedOrganisationUnitListWithContext = addD2Context(SelectedOrganisationUnitList);
 
+function hasEqualElement(left, right, selector) {
+    return left.map(selector).some((item) => right.map(selector).indexOf(item) >= 0);
+}
+
+function splitOuPath(path = '') {
+    return path
+        .split('/')
+        .filter(part => part);
+}
+
+function sourceIsInPathOfTarget(source, target) {
+    if (source.some(model => !model.path) || target.some(model => !model.path)) {
+        log.warn('No path found, so can not run hierarchy validation');
+        return true;
+    }
+
+    if (target.length !== 1) {
+        log.warn('More than/less than 1 target found, can not move.');
+        return true;
+    }
+
+    const targetModel = target[0];
+
+    return source.some((sourceModel) => {
+        return splitOuPath(targetModel.path).indexOf(sourceModel.id) >= 0;
+    });
+}
+
+function moveButtonDisabled(props) {
+    return props.isProcessing ||
+        !props.selectedLeft.length ||
+        !props.selectedRight.length ||
+        hasEqualElement(props.selectedLeft, props.selectedRight, v => v && v.id) ||
+        sourceIsInPathOfTarget(props.selectedLeft, props.selectedRight);
+}
+
 function OrganisationUnitHierarchy(props, context) {
     const styles = {
         wrap: {
@@ -276,10 +313,19 @@ function OrganisationUnitHierarchy(props, context) {
             flex: 1,
             padding: '.5rem',
         },
+        errorMessage: {
+            color: 'orange',
+            lineHeight: '1.5rem',
+            paddingBottom: '1rem',
+        },
+        errorIcon: {
+            color: 'orange',
+        }
     };
 
     const buttonLabel = context.d2.i18n.getTranslation('move_$$ouCount$$_organisation_units', {ouCount: (props.selectedLeft && props.selectedLeft.length) || 0 });
     const headingTitle = context.d2.i18n.getTranslation('hierarchy_operations');
+    const warningForMovingWithinSubtree = context.d2.i18n.getTranslation('you_can_not_move_higher_level_organisation_units_to_its_descendants')
 
     return (
         <div>
@@ -289,8 +335,9 @@ function OrganisationUnitHierarchy(props, context) {
                 style={styles.moveButton}
                 label={buttonLabel}
                 onClick={moveOrganisationUnit}
-                disabled={props.isProcessing || !props.selectedLeft.length || !props.selectedRight.length}
+                disabled={moveButtonDisabled(props)}
             />
+            {props.selectedLeft.length && props.selectedRight.length && sourceIsInPathOfTarget(props.selectedLeft || [], props.selectedRight || []) ? <div style={styles.errorMessage}><FontIcon style={styles.errorIcon} className="material-icons">warning</FontIcon>{warningForMovingWithinSubtree}</div> : null}
             <Paper style={styles.pendingOperationsWrap}>
                 <div style={styles.pendingOperationsListsWrap}>
                     <SelectedOrganisationUnitListWithContext
@@ -333,6 +380,6 @@ function OrganisationUnitHierarchy(props, context) {
 OrganisationUnitHierarchy.defaultProps = {
     selectedLeft: [],
     selectedRight: [],
-}
+};
 
 export default withStateFrom(organisationUnitHierarchy$, addD2Context(OrganisationUnitHierarchy));
