@@ -123,7 +123,7 @@ async function initStateOrgUnitList({ params }) {
 }
 
 function loadOrgUnitObject({ params }, replace, callback) {
-    loadObject({ ...params, modelType: 'organisationUnit' }, replace, callback);
+    loadObject({ params: { modelType: 'organisationUnit', groupName: params.groupName, modelId: params.modelId} }, replace, callback);
 }
 
 function initStateOuHierarchy() {
