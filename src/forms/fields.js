@@ -65,12 +65,12 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
     minNumber.message = 'value_not_min';
 
     function maxTextOrArray(value) {
-        return value.length <= modelValidation.max;
+        return !value || value.length <= modelValidation.max;
     }
     maxTextOrArray.message = 'value_not_max';
 
     function minTextOrArray(value) {
-        return value.length >= modelValidation.min;
+        return !value || value.length >= modelValidation.min;
     }
     minTextOrArray.message = 'value_not_min';
 
