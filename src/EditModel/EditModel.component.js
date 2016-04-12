@@ -273,11 +273,7 @@ export default React.createClass({
                 if (errorMessage.messages && errorMessage.messages.length > 0) {
                     log.debug(errorMessage.messages);
 
-                    if (this.context.d2.i18n.isTranslated(errorMessage.messages[0].errorCode)) {
-                        snackActions.show({message: this.context.d2.i18n.getTranslation(errorMessage.messages[0].errorCode)});
-                    } else {
-                        snackActions.show({message: errorMessage.messages[0].message});
-                    }
+                    snackActions.show({message: errorMessage.messages[0].message});
                 }
 
                 if (errorMessage === 'No changes to be saved') {
