@@ -89,7 +89,11 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
 
         return (
             <div>
-                <TextField onChange={(event) => this._searchOrganisationUnits(event.target.value)} floatingLabelText={this.context.d2.i18n.getTranslation('filter_organisation_units_by_name')} />
+                <TextField
+                    onChange={(event) => this._searchOrganisationUnits(event.target.value)}
+                    floatingLabelText={this.context.d2.i18n.getTranslation('filter_organisation_units_by_name')}
+                    fullWidth
+                />
                 <div className="organisation-unit-tree__selected">{this.state.selectedOrgUnits.length} {this.context.d2.i18n.getTranslation('organisation_units_selected')}</div>
                 {this.renderRoots()}
             </div>
