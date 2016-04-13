@@ -65,6 +65,15 @@ export default React.createClass({
     },
 
     _onChange(event) {
+        if (event.target.value === null) {
+            this.props.onChange({
+                target: {
+                    value: null,
+                },
+            });
+            return;
+        }
+
         const option = this.state.options.find((opt) => opt.model.id === event.target.value);
         if (option && option.model) {
             this.props.onChange({

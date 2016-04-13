@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import SelectField from 'material-ui/lib/select-field';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
@@ -30,14 +30,14 @@ export default React.createClass({
 
     getInitialState() {
         return {
-            value: this.props.defaultValue ? this.props.defaultValue : '',
+            value: (this.props.defaultValue !== undefined && this.props.defaultValue !== null) ? this.props.defaultValue : '',
             options: this.getOptions(this.props.options, this.props.isRequired),
         };
     },
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            value: newProps.defaultValue ? newProps.defaultValue : '',
+            value: (newProps.defaultValue !== undefined && newProps.defaultValue !== null) ? newProps.defaultValue : '',
             options: this.getOptions(newProps.options, newProps.isRequired),
         });
     },
@@ -51,8 +51,8 @@ export default React.createClass({
                 };
             });
 
-        if (!required) {
-            opts = [{payload: undefined, text: ''}].concat(opts);
+        if (!required && !(this.props.referenceProperty === 'categoryCombo')) {
+            opts = [{payload: null, text: this.getTranslation('no_value')}].concat(opts);
         }
 
         return opts
@@ -64,6 +64,14 @@ export default React.createClass({
             });
     },
 
+    _onChange(event, index, value) {
+        this.props.onChange({
+            target: {
+                value: value.payload,
+            }
+        });
+    },
+
     render() {
         const {onFocus, onBlur, ...other} = this.props;
 
@@ -72,6 +80,7 @@ export default React.createClass({
                 value={this.state.value.toString()}
                 {...other}
                 menuItems={this.state.options}
+                onChange={this._onChange}
                 floatingLabelText={this.props.translateLabel ? this.getTranslation(this.props.labelText) : this.props.labelText}
             />
         );
