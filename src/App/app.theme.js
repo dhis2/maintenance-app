@@ -1,4 +1,4 @@
-import Colors from 'material-ui/lib/styles/colors';
+import {blue500, blue700, blue100, orange500, grey100, gray500, darkBlack, white, grey500, grey400} from 'material-ui/lib/styles/colors';
 import ColorManipulator from 'material-ui/lib/utils/color-manipulator';
 import Spacing from 'material-ui/lib/styles/spacing';
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
@@ -7,17 +7,17 @@ const theme = {
     spacing: Spacing,
     fontFamily: 'Roboto, sans-serif',
     palette: {
-        primary1Color: Colors.blue500,
-        primary2Color: Colors.blue700,
-        primary3Color: Colors.blue100,
-        accent1Color: Colors.orange500,
-        accent2Color: Colors.grey100,
-        accent3Color: Colors.grey500,
-        textColor: Colors.darkBlack,
-        alternateTextColor: Colors.white,
-        canvasColor: Colors.white,
-        borderColor: Colors.grey400,
-        disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
+        primary1Color: blue500,
+        primary2Color: blue700,
+        primary3Color: blue100,
+        accent1Color: orange500,
+        accent2Color: grey100,
+        accent3Color: grey500,
+        textColor: darkBlack,
+        alternateTextColor: white,
+        canvasColor: white,
+        borderColor: grey400,
+        disabledColor: ColorManipulator.fade(darkBlack, 0.3),
     },
 };
 
