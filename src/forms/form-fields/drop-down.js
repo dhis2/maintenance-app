@@ -55,9 +55,6 @@ export default React.createClass({
                 return option;
             });
 
-        if (!required) {
-            return [{value: null, text: this.getTranslation('no_value')}].concat(translatedOpts);
-        }
         return translatedOpts;
     },
 
@@ -79,10 +76,36 @@ export default React.createClass({
                 onChange={this._onChange}
                 floatingLabelText={this.props.labelText}
             >
-                {this.state.options.map((option, index) => {
-                    return <MenuItem primaryText={option.text} key={index} value={option.value} />
-                })}
+                {this.renderOptions()}
             </SelectField>
         );
     },
+
+    renderOptions() {
+        const options = this.state.options.map((option, index) => {
+            return (
+                <MenuItem
+                    primaryText={option.text}
+                    key={index}
+                    value={option.value}
+                />
+            );
+        });
+
+        if (!this.props.isRequired) {
+            // When the value is not required we add an item that sets the value to null
+            // For this value we pass an empty label to not show the label no_value
+            // when this option is selected.
+            options.unshift([
+                <MenuItem
+                    primaryText={this.getTranslation('no_value')}
+                    key="no_value"
+                    value={null}
+                    label=" "
+                />
+            ]);
+        }
+
+        return options;
+    }
 });
