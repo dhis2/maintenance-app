@@ -27,7 +27,9 @@ const ListActionBar = React.createClass({
             zIndex: 10,
         };
 
-        if (!this.getCurrentUser().canCreate(this.getModelDefinitionByName(this.props.modelType))) {
+        const modelDefinition = this.getModelDefinitionByName(this.props.modelType);
+
+        if (!this.getCurrentUser().canCreate(modelDefinition)) {
             return null;
         }
 
