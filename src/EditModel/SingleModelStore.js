@@ -25,7 +25,6 @@ const singleModelStoreConfig = {
             .then(model => {
                 // Clear out the id to create a new model with the same data
                 model.id = undefined;
-
                 // Some objects also have a uuid property that should be cleared
                 model.uuid = undefined;
 
