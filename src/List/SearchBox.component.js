@@ -3,6 +3,7 @@ import ObservedEvents from '../utils/ObservedEvents.mixin';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/lib/text-field';
 import { config } from 'd2/lib/d2';
+import { currentSubSection$ } from '../App/appStateStore';
 
 config.i18n.strings.add('search_by_name');
 
@@ -13,6 +14,16 @@ const SearchBox = React.createClass({
 
     mixins: [ObservedEvents, Translate],
 
+    getInitialState() {
+        return {
+            value: ''
+        };
+    },
+
+    componentWillMount() {
+        this.searchBoxCb = this.createEventObserver('searchBox');
+    },
+
     componentDidMount() {
         const searchObserver = this.events.searchBox
             .debounce(400)
@@ -20,20 +31,35 @@ const SearchBox = React.createClass({
             .distinctUntilChanged();
 
         this.props.searchObserverHandler(searchObserver);
+
+        this.disposable = currentSubSection$
+            .subscribe((appState) => this.setState({ value: '' }));
+    },
+
+    componentWillUnmount() {
+        this.disposable && this.disposable.dispose && this.disposable.dispose();
     },
 
     render() {
         return (
             <div className="search-list-items">
                 <TextField
+                    value={this.state.value}
                     style={{ width: '100%' }}
                     type="search"
-                    onKeyUp={this.createEventObserver('searchBox')}
+                    onChange={this._onKeyUp}
                     hintText={`${this.getTranslation('search_by_name')}`}
                 />
             </div>
         );
     },
+
+    _onKeyUp(event) {
+        this.setState({
+            value: event.target.value,
+        });
+        this.searchBoxCb(event);
+    }
 });
 
 export default SearchBox;

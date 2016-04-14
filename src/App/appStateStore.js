@@ -115,3 +115,7 @@ export default appState;
 export function setAppState(newPartialState) {
     appState.setState(Object.assign({}, appState.state, newPartialState));
 }
+
+export const currentSubSection$ = appState
+    .map(appState => appState.sideBar.currentSubSection)
+    .distinctUntilChanged();
