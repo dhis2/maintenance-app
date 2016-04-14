@@ -22,6 +22,7 @@ import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
+import fieldOrder from '../config/field-config/field-order';
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
@@ -40,7 +41,12 @@ function actionsThatRequireDelete(action) {
 }
 
 function getTranslatablePropertiesForModelType(modelType) {
-    const defaultTranslatableProperties = ['name', 'shortName', 'description'];
+    const fieldsForModel = fieldOrder.for(modelType);
+    const defaultTranslatableProperties = ['name', 'shortName'];
+
+    if (fieldsForModel.indexOf('description') >= 0) {
+        defaultTranslatableProperties.push('description');
+    }
 
     switch (modelType) {
         case 'dataElement':
