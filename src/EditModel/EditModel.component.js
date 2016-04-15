@@ -112,6 +112,13 @@ export default React.createClass({
                                     fieldConfig.value = modelToEdit[fieldConfig.name];
                                 }
 
+                                if (fieldConfig.validators) {
+                                    fieldConfig.validators
+                                        .forEach(validator => {
+                                            validator.message = d2.i18n.getTranslation(validator.message);
+                                        });
+                                }
+
                                 return fieldConfig;
                             });
 
