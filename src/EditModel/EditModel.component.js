@@ -141,7 +141,7 @@ export default React.createClass({
                                 fieldConfig.props.labelText = this.getTranslation(fieldConfig.props.labelText);
 
                                 // Add required indicator when the field is required
-                                if (fieldConfig.required) {
+                                if (fieldConfig.props.isRequired) {
                                     fieldConfig.props.labelText = `${fieldConfig.props.labelText} (*)`;
                                 }
                                 return fieldConfig;

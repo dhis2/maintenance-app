@@ -218,6 +218,12 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
         }),
     };
 
+    // Checkbox fields should not be marked as required
+    // This looks strange from a ui perspective as the user looks like he/she needs to check the box
+    if (fieldConfig.type === CHECKBOX) {
+        basicFieldConfig.props.isRequired = false;
+    }
+
     if (fieldConfig.type === INTEGER) {
         basicFieldConfig.beforeUpdateConverter = toInteger;
     }
