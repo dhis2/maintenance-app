@@ -10,7 +10,10 @@ export default new Map([
             return Number(value);
         },
         beforePassToFieldConverter(value) {
-            return value.toString();
+            if (value) {
+                return value.toString();
+            }
+            return value;
         },
     }],
 ]);
