@@ -2,6 +2,16 @@ import React from 'react';
 import appStateStore from '../App/appStateStore';
 import FontIcon from 'material-ui/lib/font-icon';
 
+class DefaultSideBarIcon extends FontIcon {
+    shouldComponentUpdate() {
+        return false;
+    }
+}
+DefaultSideBarIcon.defaultProps = {
+    className: 'material-icons',
+    children: 'folder_open',
+};
+
 function getAdditionalSideBarFields(currentSection) {
     if (currentSection === 'organisationUnitSection') {
         return [
@@ -26,7 +36,7 @@ export default appStateStore
         return {
             sections: (appState.sideBar[currentSection] || appState.sideBar.mainSections)
                 .map(section => {
-                    section.icon = (<FontIcon className="material-icons">folder_open</FontIcon>);
+                    section.icon = (<DefaultSideBarIcon />);
                     return section;
                 })
                 .concat(getAdditionalSideBarFields(currentSection)),
@@ -37,4 +47,5 @@ export default appStateStore
             userOrganisationUnits,
             autoCompleteOrganisationUnits: appState.sideBar.organisationUnits,
         };
-    });
+    })
+    .distinctUntilChanged(sideBarState => sideBarState.activeItem);
