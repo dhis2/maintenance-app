@@ -9,5 +9,8 @@ export default new Map([
         beforeUpdateConverter(value) {
             return Number(value);
         },
+        beforePassToFieldConverter(value) {
+            return value.toString();
+        }
     }],
 ]);

@@ -105,7 +105,12 @@ export default React.createClass({
                                 if (this.props.modelId !== 'add' && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
                                     fieldConfig.props.disabled = true;
                                 }
-                                fieldConfig.value = modelToEdit[fieldConfig.name];
+
+                                if (fieldConfig.beforePassToFieldConverter) {
+                                    fieldConfig.value = fieldConfig.beforePassToFieldConverter(modelToEdit[fieldConfig.name]);
+                                } else {
+                                    fieldConfig.value = modelToEdit[fieldConfig.name];
+                                }
 
                                 return fieldConfig;
                             });
@@ -239,7 +244,13 @@ export default React.createClass({
     },
 
     _onUpdateField(fieldName, value) {
-        objectActions.update({fieldName, value});
+        const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name == fieldName);
+
+        if (fieldConfig && fieldConfig.beforeUpdateConverter) {
+            return objectActions.update({fieldName, value: fieldConfig.beforeUpdateConverter(value)});
+        }
+
+        return objectActions.update({fieldName, value});
     },
 
     _onUpdateFormStatus(formState) {
