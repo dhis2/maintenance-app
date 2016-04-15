@@ -75,7 +75,7 @@ function TwoPanelSelector(props) {
     );
 }
 TwoPanelSelector.defaultProps = {
-    sizeRatio: ['0 0 286px', 1],
+    sizeRatio: ['0 0 320px', 1],
 };
 
 function SinglePanel(props) {

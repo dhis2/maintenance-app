@@ -60,7 +60,7 @@ class SideBarContainer extends React.Component {
                         overflowY: 'auto',
                         overflowX: 'auto',
                         flex: '1',
-                        width: '256px',
+                        width: '295px',
                     },
                 };
 
