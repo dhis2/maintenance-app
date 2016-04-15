@@ -1,4 +1,5 @@
 import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from 'd2-ui/lib/forms/Validators';
+import isString from 'd2-utilizr/lib/isString';
 import isNumber from 'lodash.isnumber';
 import log from 'loglevel';
 import { config } from 'd2/lib/d2';
@@ -7,7 +8,6 @@ import { config } from 'd2/lib/d2';
 import TextField from './form-fields/text-field';
 import MultiSelect from './form-fields/multi-select';
 import CheckBox from './form-fields/check-box';
-import NumberField from './form-fields/number-field';
 import DropDown from './form-fields/drop-down';
 import DropDownAsync from './form-fields/drop-down-async';
 import DateSelect from './form-fields/date-select';
@@ -42,6 +42,9 @@ function toInteger(value) {
 }
 
 function isIntegerValidator(value) {
+    if (isString(value) && /\./.test(value)) {
+        return false;
+    }
     return Number.parseInt(value, 10) === Number.parseFloat(value);
 }
 isIntegerValidator.message = 'number_should_not_have_decimals';
@@ -175,8 +178,6 @@ function getFieldUIComponent(type) {
         return MultiSelect;
     case DATE:
         return DateSelect;
-    case INTEGER:
-        return NumberField;
     case EMAIL:
     case INPUT:
     case IDENTIFIER:
@@ -224,10 +225,6 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
         basicFieldConfig.props.isRequired = false;
     }
 
-    if (fieldConfig.type === INTEGER) {
-        basicFieldConfig.beforeUpdateConverter = toInteger;
-    }
-
     if (fieldConfig.constants && fieldConfig.constants.length) {
         basicFieldConfig.translate = true;
     }
@@ -247,7 +244,7 @@ export const typeToFieldMap = new Map([
     ['EMAIL', EMAIL],
     ['PHONENUMBER', INPUT],
     ['COLLECTION', MULTISELECT],
-    ['INTEGER', INTEGER], // TODO: Add Numberfield!
+    ['INTEGER', INTEGER],
     ['DATE', DATE],
     ['URL', URL],
 ]);
