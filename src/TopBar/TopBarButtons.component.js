@@ -1,47 +1,45 @@
 import React from 'react';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import IconButton from 'material-ui/lib/icon-button';
-import {goToRoute} from '../router';
+import { goToRoute } from '../router';
+import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 
-export default React.createClass({
-    mixins: [Translate],
+function gotoOverview() {
+    goToRoute('/');
+}
 
-    _gotoOverview() {
-        goToRoute('/');
-    },
+function goToGroupEditor() {
+    goToRoute('/group-editor');
+}
 
-    _goToGroupEditor() {
-        goToRoute('/group-editor');
-    },
+function TopBarButtons(props, context) {
+    const styles = {
+        buttonStyle: {
+            color: '#666',
+        },
+    };
 
-    render() {
-        const styles = {
-            buttonStyle: {
-                color: '#666',
-            },
-        };
+    return (
+        <div>
+            <IconButton
+                iconClassName="material-icons"
+                tooltip={context.d2.i18n.getTranslation('metadata_management_overview')}
+                tooltipPosition="bottom-left"
+                onClick={gotoOverview}
+                iconStyle={styles.buttonStyle}
+            >
+                &#xE8F0;
+            </IconButton>
+            <IconButton
+                iconClassName="material-icons"
+                tooltip={context.d2.i18n.getTranslation('metadata_group_editor')}
+                tooltipPosition="bottom-left"
+                onClick={goToGroupEditor}
+                iconStyle={styles.buttonStyle}
+            >
+                &#xE428;
+            </IconButton>
+        </div>
+    );
+}
 
-        return (
-            <div>
-                <IconButton
-                    iconClassName="material-icons"
-                    tooltip={this.getTranslation('metadata_management_overview')}
-                    tooltipPosition="bottom-left"
-                    onClick={this._gotoOverview}
-                    iconStyle={styles.buttonStyle}
-                >
-                    &#xE8F0;
-                </IconButton>
-                <IconButton
-                    iconClassName="material-icons"
-                    tooltip={this.getTranslation('metadata_group_editor')}
-                    tooltipPosition="bottom-left"
-                    onClick={this._goToGroupEditor}
-                    iconStyle={styles.buttonStyle}
-                >
-                    &#xE428;
-                </IconButton>
-            </div>
-        );
-    },
-});
+export default addD2Context(TopBarButtons);
