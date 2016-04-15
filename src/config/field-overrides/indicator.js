@@ -11,6 +11,6 @@ export default new Map([
         },
         beforePassToFieldConverter(value) {
             return value.toString();
-        }
+        },
     }],
 ]);
