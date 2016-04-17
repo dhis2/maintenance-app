@@ -1,5 +1,5 @@
 import React from 'react';
-import sideBarStore from './sideBarStore';
+import sideBarStore, {organisationUnitAdded} from './sideBarStore';
 import LinearProgress from 'material-ui/lib/linear-progress';
 import {onSectionChanged, onOrgUnitSearch} from './sideBarActions';
 import BackButton from '../EditModel/BackButton.component'; // TODO: Move backbutton out to it's own folder if it's used in multiple places
@@ -14,12 +14,21 @@ class SideBarContainer extends React.Component {
     componentWillMount() {
         this.disposable = sideBarStore
             .subscribe(sideBarState => {
-                this.setState(sideBarState);
+                this.setState({
+                    ...sideBarState,
+                    organisationUnitsToReload: [],
+                });
+            });
+
+        this.organisationUnitSaved = organisationUnitAdded
+            .subscribe(organisationUnitToReload => {
+                this.setState({organisationUnitsToReload: [organisationUnitToReload.id]});
             });
     }
 
     componentWillUnmount() {
         this.disposable && this.disposable.dispose();
+        this.organisationUnitSaved && this.organisationUnitSaved.dispose();
     }
 
     render() {
@@ -63,7 +72,6 @@ class SideBarContainer extends React.Component {
                         width: '295px',
                     },
                 };
-
                 return (
                     <div style={styles.wrapperStyle}>
                         <OrganisationUnitTreeWithSingleSelectionAndSearch
@@ -74,6 +82,7 @@ class SideBarContainer extends React.Component {
                             selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
                             initiallyExpanded={this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || [])}
                             onClick={this._onChangeSelectedOrgUnit.bind(this)}
+                            idsThatShouldBeReloaded={this.state.organisationUnitsToReload}
                         />
                     </div>
                 );

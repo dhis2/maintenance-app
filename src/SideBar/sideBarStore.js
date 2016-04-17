@@ -1,6 +1,9 @@
 import React from 'react';
+import {Observable} from 'rx';
 import appStateStore from '../App/appStateStore';
 import FontIcon from 'material-ui/lib/font-icon';
+import objectActions from '../EditModel/objectActions';
+import modelToEditStore from '../EditModel/modelToEditStore';
 
 class DefaultSideBarIcon extends FontIcon {
     shouldComponentUpdate() {
@@ -25,7 +28,7 @@ function getAdditionalSideBarFields(currentSection) {
     return [];
 }
 
-export default appStateStore
+const sideBarState = appStateStore
     .map(appState => {
         const {userOrganisationUnits, selectedOrganisationUnit} = appState;
         const {
@@ -47,5 +50,13 @@ export default appStateStore
             userOrganisationUnits,
             autoCompleteOrganisationUnits: appState.sideBar.organisationUnits,
         };
-    })
-    .distinctUntilChanged(sideBarState => sideBarState.activeItem);
+    });
+
+export default sideBarState
+    .distinctUntilChanged(sideBarState => `${sideBarState.activeItem}_${sideBarState.selectedOrganisationUnit.id}`);
+
+export const organisationUnitAdded = objectActions.saveObject
+    .map(() => modelToEditStore.state)
+    .filter((modelToEdit) => modelToEdit.modelDefinition.name === 'organisationUnit')
+    .map((modelToEdit) => modelToEdit.parent);
+

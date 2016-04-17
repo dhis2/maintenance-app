@@ -99,6 +99,7 @@ const organisationUnitHierarchy$ = appState
             selectedLeft: hierarchy.selectedLeft || [],
             selectedRight: hierarchy.selectedRight || [],
             isProcessing: hierarchy.isProcessing,
+            reload: hierarchy.reload,
         };
     });
 
@@ -123,12 +124,15 @@ function onClickLeft(event, model) {
                 setAppState({
                     hierarchy:  {
                         ...hierarchy,
+                        reload: [],
                         selectedLeft,
                     },
                 });
             }
         );
 }
+
+const operationsCompleted = Action.create('operationsCompleted', 'Hierarchy');
 
 async function getOrganisationUnitByIds(ids) {
     const d2 = await getInstance();
@@ -181,16 +185,33 @@ function moveOrganisationUnit() {
         .subscribe(
             (message) => {
                 snackActions.show({message, translate: false});
+
+                const hierarchy = Object.assign({}, appState.state.hierarchy);
+                setAppState({
+                    hierarchy: {
+                        ...hierarchy,
+                        isProcessing: false,
+                        reload: []
+                            .concat(hierarchy.selectedRight.map(model => model.id))
+                            .concat(hierarchy.selectedLeft.map(model => (model.parent && model.parent.id) || model.id)),
+                    }
+                });
             },
             (e) => {
                 setHierarchyProcessingStatus(appState.state.hierarchy, false)
             },
             () => {
                 const hierarchy = Object.assign({}, appState.state.hierarchy);
+
                 hierarchy.selectedLeft = [];
                 hierarchy.selectedRight = [];
                 hierarchy.initiallySelected = [];
-                setHierarchyProcessingStatus(hierarchy, false);
+                setAppState({
+                    hierarchy: {
+                        ...hierarchy,
+                        isProcessing: false,
+                    }
+                });
             }
         );
 }
@@ -202,6 +223,7 @@ function onClickRight(event, model) {
             (hierarchy) => setAppState({
                 hierarchy:  {
                     ...hierarchy,
+                    reload: [],
                     selectedRight: [model],
                 },
             })
@@ -323,10 +345,11 @@ function OrganisationUnitHierarchy(props, context) {
         }
     };
 
+    console.log(props.reload);
+
     const buttonLabel = context.d2.i18n.getTranslation('move_$$ouCount$$_organisation_units', {ouCount: (props.selectedLeft && props.selectedLeft.length) || 0 });
     const headingTitle = context.d2.i18n.getTranslation('hierarchy_operations');
     const warningForMovingWithinSubtree = context.d2.i18n.getTranslation('you_can_not_move_higher_level_organisation_units_to_its_descendants')
-
     return (
         <div>
             <Heading>{headingTitle}</Heading>
@@ -362,6 +385,7 @@ function OrganisationUnitHierarchy(props, context) {
                         selected={props.selectedLeft.map(model => model.id)}
                         onClick={onClickLeft}
                         onUpdateInput={value => leftTreeSearch(value)}
+                        idsThatShouldBeReloaded={props.reload}
                     />
                 </Paper>
                 <Paper style={styles.ouTreeRight}>
@@ -371,6 +395,7 @@ function OrganisationUnitHierarchy(props, context) {
                         initiallyExpanded={props.initiallyExpanded}
                         onClick={onClickRight}
                         onUpdateInput={value => rightTreeSearch(value)}
+                        idsThatShouldBeReloaded={props.reload}
                     />
                 </Paper>
             </div>

@@ -27,6 +27,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                 initiallyExpanded={props.initiallyExpanded}
                 labelStyle={styles.labelStyle}
                 onClick={props.onClick}
+                idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
             />
         </div>
     );
@@ -39,6 +40,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.propTypes = {
     onAutoCompleteValueSelected: React.PropTypes.func,
     searchOrganisationUnits: React.PropTypes.func,
     roots: React.PropTypes.array,
+    idsThatShouldBeReloaded: React.PropTypes.array,
 };
 OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onOrgUnitSearch: noop,
@@ -48,6 +50,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     searchOrganisationUnits: noop,
     roots: [],
     autoCompleteDataSource: [],
+    idsThatShouldBeReloaded: [],
 };
 
 export default addD2Context(OrganisationUnitTreeWithSingleSelectionAndSearch);
