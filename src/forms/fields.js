@@ -2,7 +2,7 @@ import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from 'd2-ui
 import isString from 'd2-utilizr/lib/isString';
 import isNumber from 'lodash.isnumber';
 import log from 'loglevel';
-import { config } from 'd2/lib/d2';
+import { config, getInstance } from 'd2/lib/d2';
 
 // FormField components
 import TextField from './form-fields/text-field';
@@ -34,8 +34,6 @@ config.i18n.strings.add('value_not_max');
 config.i18n.strings.add('value_not_min');
 config.i18n.strings.add('could_not_run_async_validation');
 config.i18n.strings.add('value_not_unique');
-
-
 
 function toInteger(value) {
     return Number.parseInt(value, 10);
@@ -153,7 +151,9 @@ function getAsyncValidatorsFromModelValidation(modelValidation, modelDefinition,
             .list()
             .then(collection => {
                 if (collection.size !== 0) {
-                    return Promise.reject('value_not_unique');
+                    return getInstance()
+                        .then(d2 => d2.i18n.getTranslation('value_not_unique'))
+                        .then(message => Promise.reject(message));
                 }
                 return Promise.resolve(true);
             });
