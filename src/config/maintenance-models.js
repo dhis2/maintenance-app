@@ -1,6 +1,9 @@
 export default {
     getSideBarConfig() {
         return {
+            all: {
+                items: [],
+            },
             dataElementSection: {
                 items: [
                     'categoryOption',

@@ -54,7 +54,12 @@ function SectionTabs(props) {
     return (
         <div style={styles.navStyle}>
             <div style={styles.tabsWrap}>
-                <Tabs value={props.current || 'unknown'} onChange={props.changeSection} style={styles.tabsStyle} tabItemContainerStyle={styles.tabItemContainerStyle}>
+                <Tabs
+                    value={props.current || 'unknown'}
+                    onChange={props.changeSection}
+                    style={styles.tabsStyle}
+                    tabItemContainerStyle={styles.tabItemContainerStyle}
+                >
                     {sections}
                 </Tabs>
             </div>

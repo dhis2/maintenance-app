@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-router';
 import log from 'loglevel';
 import App from './App/App.component';
 import List from './List/List.component';
@@ -138,7 +138,8 @@ function initStateOuHierarchy() {
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
-            <IndexRoute component={MenuCardsForAllSections} onEnter={initState} />
+            <IndexRedirect to="/list/all" />
+            <Route path="list/all" component={MenuCardsForAllSections} onEnter={() => initState({ params: {groupName: 'all' }})} />
             <Route path="list/:groupName">
                 <IndexRoute
                     component={MenuCardsForSection}
