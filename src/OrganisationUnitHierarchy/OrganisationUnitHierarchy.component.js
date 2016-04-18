@@ -193,7 +193,18 @@ function moveOrganisationUnit() {
                         isProcessing: false,
                         reload: []
                             .concat(hierarchy.selectedRight.map(model => model.id))
-                            .concat(hierarchy.selectedLeft.map(model => (model.parent && model.parent.id) || model.id)),
+                            .concat(hierarchy.selectedLeft.map(model => {
+                                if (model.parent && model.parent.id) {
+                                    return model.parent.id;
+                                }
+                                return appState.state.hierarchy.leftRoots
+                                    .concat(appState.state.hierarchy.rightRoots)
+                                    .map(value => value.id)
+                                    .filter(rootId => new RegExp(rootId).test(model.path))
+                                    .reduce(value => {
+                                        return value;
+                                    });
+                            })),
                     }
                 });
             },
@@ -344,8 +355,6 @@ function OrganisationUnitHierarchy(props, context) {
             color: 'orange',
         }
     };
-
-    console.log(props.reload);
 
     const buttonLabel = context.d2.i18n.getTranslation('move_$$ouCount$$_organisation_units', {ouCount: (props.selectedLeft && props.selectedLeft.length) || 0 });
     const headingTitle = context.d2.i18n.getTranslation('hierarchy_operations');

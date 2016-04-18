@@ -13,6 +13,8 @@ import '../translationRegistration';
 import SectionTabs from '../TopBar/SectionTabs.component';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import {Observable} from 'rx';
+import SinglePanelLayout from 'd2-ui/lib/layouts/SinglePanel.component';
+import TwoPanelLayout from 'd2-ui/lib/layouts/TwoPanel.component';
 
 log.setLevel(log.levels.INFO);
 
@@ -44,61 +46,6 @@ const sections$ = appState
     });
 
 const SectionTabsWrap = withStateFrom(sections$, SectionTabs);
-
-function TwoPanelSelector(props) {
-    const {children, ...otherProps} = props;
-    const styles = {
-        mainStyle: {
-            flex: 1,
-            display: 'flex',
-            flexOrientation: 'row',
-            marginTop: '8rem',
-        },
-    };
-
-    const flexedChilden = children
-        .map((childComponent, index) => {
-            const childStyle = Object
-                .assign({}, styles.childWrapStyle, {
-                    flex: props.sizeRatio[index],
-                    paddingRight: (index === children.length - 1) ? '2rem' : undefined,
-                });
-
-            return (
-                <div key={index} style={childStyle}>{childComponent}</div>
-            );
-        });
-
-    return (
-        <main style={styles.mainStyle} {...otherProps}>
-            {flexedChilden}
-        </main>
-    );
-}
-TwoPanelSelector.defaultProps = {
-    sizeRatio: ['0 0 320px', 1],
-};
-
-function SinglePanel(props) {
-    const {children, ...otherProps} = props;
-
-    const styles = {
-        mainStyle: {
-            flex: 1,
-            display: 'flex',
-            flexOrientation: 'row',
-            marginTop: '8rem',
-            marginLeft: '2rem',
-            marginRight: '2rem',
-        },
-    };
-
-    return (
-        <main style={styles.mainStyle} {...otherProps}>
-            {children}
-        </main>
-    );
-}
 
 const withMuiContext = Object.assign(AppWithD2.childContextTypes, { muiTheme: React.PropTypes.object });
 class App extends AppWithD2 {
@@ -149,14 +96,14 @@ class App extends AppWithD2 {
             <div>
                 <HeaderBar />
                 <SectionTabsWrap />
-                {this.state.hasSection ? <TwoPanelSelector>
+                {this.state.hasSection ? <TwoPanelLayout>
                     <SideBar activeGroupName={this.props.params.groupName} activeModelType={this.props.params.modelType} />
                     <MainContent>
                         {this.props.children}
                     </MainContent>
-                </TwoPanelSelector>: <SinglePanel> <MainContent>
-                    {this.props.children}
-                </MainContent></SinglePanel>}
+                </TwoPanelLayout>: <SinglePanelLayout>
+                    <MainContent>{this.props.children}</MainContent>
+                </SinglePanelLayout>}
                 <SnackbarContainer />
             </div>
         );
