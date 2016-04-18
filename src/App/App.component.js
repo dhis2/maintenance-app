@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from 'classnames';
 import HeaderBar from 'd2-ui/lib/header-bar/HeaderBar.component';
-import MainContent from '../MainContent/MainContent.component';
+import MainContent from 'd2-ui/lib/layout/main-content/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
 import { getInstance } from 'd2/lib/d2';
@@ -13,8 +13,8 @@ import '../translationRegistration';
 import SectionTabs from '../TopBar/SectionTabs.component';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import {Observable} from 'rx';
-import SinglePanelLayout from 'd2-ui/lib/layouts/SinglePanel.component';
-import TwoPanelLayout from 'd2-ui/lib/layouts/TwoPanel.component';
+import SinglePanelLayout from 'd2-ui/lib/layout/SinglePanel.component';
+import TwoPanelLayout from 'd2-ui/lib/layout/TwoPanel.component';
 
 log.setLevel(log.levels.INFO);
 
