@@ -67,7 +67,7 @@ export default React.createClass({
     },
 
     render() {
-        const {onFocus, onBlur, ...other} = this.props;
+        const { onFocus, onBlur, ...other } = this.props;
 
         return (
             <SelectField

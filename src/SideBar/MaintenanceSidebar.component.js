@@ -4,10 +4,10 @@ function noop() {}
 
 function MaintenanceSideBar(props) {
     const sideBarWrapperStyle = {
-        //display: 'flex',
-        //flexDirection: 'column',
-        //flexFlow: 'column',
-        //flex: 1,
+        // display: 'flex',
+        // flexDirection: 'column',
+        // flexFlow: 'column',
+        // flex: 1,
     };
 
     return (
@@ -16,7 +16,7 @@ function MaintenanceSideBar(props) {
                 sections={props.sections}
                 onChangeSection={props.onChangeSection || noop}
                 currentSection={props.currentSection}
-                styles={Object.assign({leftBar: {overflowY: 'initial'}}, props.style)}
+                styles={Object.assign({ leftBar: { overflowY: 'initial' } }, props.style)}
             />
             {props.children}
         </div>

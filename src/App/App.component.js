@@ -12,7 +12,7 @@ import LoadingMask from '../loading-mask/LoadingMask.component';
 import '../translationRegistration';
 import SectionTabs from '../TopBar/SectionTabs.component';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
-import {Observable} from 'rx';
+import { Observable } from 'rx';
 import SinglePanelLayout from 'd2-ui/lib/layout/SinglePanel.component';
 import TwoPanelLayout from 'd2-ui/lib/layout/TwoPanel.component';
 
@@ -101,7 +101,7 @@ class App extends AppWithD2 {
                     <MainContent>
                         {this.props.children}
                     </MainContent>
-                </TwoPanelLayout>: <SinglePanelLayout>
+                </TwoPanelLayout> : <SinglePanelLayout>
                     <MainContent>{this.props.children}</MainContent>
                 </SinglePanelLayout>}
                 <SnackbarContainer />

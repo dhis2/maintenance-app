@@ -6,7 +6,7 @@ import { config } from 'd2/lib/d2';
 config.i18n.strings.add('save');
 config.i18n.strings.add('saving');
 
-function SaveButton(props, {d2}) {
+function SaveButton(props, { d2 }) {
     const buttonText = props.isSaving ? d2.i18n.getTranslation('saving') : d2.i18n.getTranslation('save');
 
     return (

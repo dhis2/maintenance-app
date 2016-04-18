@@ -5,14 +5,14 @@ import fieldOrderNames from '../config/field-config/field-order';
 import disabledOnEdit from '../config/disabled-on-edit';
 import FormFieldsForModel from '../forms/FormFieldsForModel';
 import FormFieldsManager from '../forms/FormFieldsManager';
-import {config, getInstance as getD2} from 'd2/lib/d2';
+import { config, getInstance as getD2 } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
 import Paper from 'material-ui/lib/paper';
-import {isString, camelCaseToUnderscores} from 'd2-utilizr';
+import { isString, camelCaseToUnderscores } from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import log from 'loglevel';
@@ -24,7 +24,7 @@ import BackButton from './BackButton.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import { goToRoute, goBack } from '../router';
-import {createFieldConfig, typeToFieldMap} from '../forms/fields';
+import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import appState from '../App/appStateStore';
 
@@ -162,7 +162,7 @@ export default React.createClass({
                         isLoading: false,
                     });
                 }, (errorMessage) => {
-                    snackActions.show({message: errorMessage});
+                    snackActions.show({ message: errorMessage });
                 });
 
             this.setState({
@@ -231,7 +231,7 @@ export default React.createClass({
         // <FontIcon className="material-icons" style={{color: '#AAA', padding: '18px .5rem 5px'}}>chevron_right</FontIcon>
         return (
             <div>
-                <div style={{display: 'flex', flexDirection: 'row', marginBottom: '2rem'}}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '2rem' }}>
                     <FormHeading>{camelCaseToUnderscores(this.props.modelType)}</FormHeading>
                 </div>
                 <SharingNotification style={formPaperStyle} modelType={this.props.modelType} />
@@ -254,10 +254,10 @@ export default React.createClass({
         const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name == fieldName);
 
         if (fieldConfig && fieldConfig.beforeUpdateConverter) {
-            return objectActions.update({fieldName, value: fieldConfig.beforeUpdateConverter(value)});
+            return objectActions.update({ fieldName, value: fieldConfig.beforeUpdateConverter(value) });
         }
 
-        return objectActions.update({fieldName, value});
+        return objectActions.update({ fieldName, value });
     },
 
     _onUpdateFormStatus(formState) {
@@ -271,12 +271,12 @@ export default React.createClass({
         // Set state to saving so forms actions are being prevented
         this.setState({ isSaving: true });
 
-        objectActions.saveObject({id: this.props.modelId})
+        objectActions.saveObject({ id: this.props.modelId })
             .subscribe(
             (message) => {
                 this.setState({ isSaving: false });
 
-                snackActions.show({message, action: 'ok', translate: true});
+                snackActions.show({ message, action: 'ok', translate: true });
 
                 goToRoute(`/list/${this.props.groupName}/${this.props.modelType}`);
             },
@@ -285,13 +285,13 @@ export default React.createClass({
 
                 if (isString(errorMessage)) {
                     log.debug(errorMessage);
-                    snackActions.show({message: errorMessage});
+                    snackActions.show({ message: errorMessage });
                 }
 
                 if (errorMessage.messages && errorMessage.messages.length > 0) {
                     log.debug(errorMessage.messages);
 
-                    snackActions.show({message: errorMessage.messages[0].message});
+                    snackActions.show({ message: errorMessage.messages[0].message });
                 }
 
                 if (errorMessage === 'No changes to be saved') {

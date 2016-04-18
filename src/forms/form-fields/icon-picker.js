@@ -10,7 +10,7 @@ export default function IconPickerField(props) {
         });
     }
 
-    const {options, ...otherProps} = props;
+    const { options, ...otherProps } = props;
 
     const iconPickerOptions = options
         .map((option) => option.value);

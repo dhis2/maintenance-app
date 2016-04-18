@@ -28,7 +28,7 @@ MenuCardsForAllSections.defaultProps = {
 
 export default withStateFrom(sectionsForAllCards$, MenuCardsForAllSections);
 //
-//export default React.createClass({
+// export default React.createClass({
 //    mixins: [Translate, Auth],
 //
 //    getInitialState() {
@@ -65,4 +65,4 @@ export default withStateFrom(sectionsForAllCards$, MenuCardsForAllSections);
 //            </div>
 //        );
 //    },
-//});
+// });

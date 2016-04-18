@@ -2,7 +2,7 @@ import React from 'react';
 import OrgunitTree from 'd2-ui/lib/org-unit-tree';
 import TextField from 'material-ui/lib/text-field';
 import Action from 'd2-ui/lib/action/Action';
-import {Observable} from 'rx';
+import { Observable } from 'rx';
 import { config } from 'd2/lib/d2';
 
 config.i18n.strings.add('determining_your_root_orgunits');
@@ -38,7 +38,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 });
             });
 
-        const dataFromAction = this._searchOrganisationUnits.map(action => action.data)
+        const dataFromAction = this._searchOrganisationUnits.map(action => action.data);
 
         dataFromAction
             .filter(searchValue => !searchValue.trim())
@@ -52,7 +52,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                     .filter().on('displayName').ilike(searchValue)
                     // withinUserHierarchy makes the query only apply to the subtrees of the organisation units that are
                     // assigned to the current user
-                    .list({fields: 'id,displayName,path,children::isNotEmpty', withinUserHierarchy: true})
+                    .list({ fields: 'id,displayName,path,children::isNotEmpty', withinUserHierarchy: true })
                     .then(modelCollection => modelCollection.toArray());
 
                 return Observable.fromPromise(organisationUnitRequest);
@@ -70,7 +70,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                         selected={this.state.selectedOrgUnits}
                         root={rootOu}
                         onClick={this._handleClick.bind(this)}
-                        emitModel={true}
+                        emitModel
                         initiallyExpanded={[rootOu.id]}
                     />
                 );
@@ -84,7 +84,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
 
     render() {
         if (!this.state.rootOrgUnits) {
-            return  (<div>this.context.d2.i18n.getTranslation('determining_your_root_orgunits')</div>);
+            return (<div>this.context.d2.i18n.getTranslation('determining_your_root_orgunits')</div>);
         }
 
         return (

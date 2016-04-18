@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import TopBarButtons from '../TopBar/TopBarButtons.component';
 import Tabs from 'material-ui/lib/tabs/tabs';
 import Tab from 'material-ui/lib/tabs/tab';
+
+const noop = () => {};
 
 function SectionTabs(props) {
     const styles = {
@@ -45,17 +47,15 @@ function SectionTabs(props) {
     };
 
     const sections = props.sections
-        .map((section, index) => {
-            return (
-                <Tab key={index} style={styles.tabStyle} label={section.label} value={section.key} />
-            );
-        });
+        .map((section, index) => (
+            <Tab key={index} style={styles.tabStyle} label={section.label} value={section.key} />
+        ));
 
     return (
         <div style={styles.navStyle}>
             <div style={styles.tabsWrap}>
                 <Tabs
-                    value={props.current || 'unknown'}
+                    value={props.current}
                     onChange={props.changeSection}
                     style={styles.tabsStyle}
                     tabItemContainerStyle={styles.tabItemContainerStyle}
@@ -69,8 +69,15 @@ function SectionTabs(props) {
         </div>
     );
 }
+SectionTabs.propTypes = {
+    sections: PropTypes.array,
+    current: PropTypes.string,
+    changeSection: PropTypes.func,
+};
 SectionTabs.defaultProps = {
     sections: [],
+    current: 'unknown',
+    changeSection: noop,
 };
 
 export default SectionTabs;

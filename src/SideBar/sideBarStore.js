@@ -1,5 +1,4 @@
 import React from 'react';
-import {Observable} from 'rx';
 import appStateStore from '../App/appStateStore';
 import FontIcon from 'material-ui/lib/font-icon';
 import objectActions from '../EditModel/objectActions';
@@ -22,7 +21,7 @@ function getAdditionalSideBarFields(currentSection) {
                 key: 'hierarchy',
                 label: 'Hierarchy operations',
                 icon: (<FontIcon className="material-icons">folder_open</FontIcon>),
-            }
+            },
         ];
     }
     return [];
@@ -30,7 +29,7 @@ function getAdditionalSideBarFields(currentSection) {
 
 const sideBarState = appStateStore
     .map(appState => {
-        const {userOrganisationUnits, selectedOrganisationUnit} = appState;
+        const { userOrganisationUnits, selectedOrganisationUnit } = appState;
         const {
             currentSection,
             currentSubSection,
@@ -38,14 +37,11 @@ const sideBarState = appStateStore
 
         return {
             sections: (appState.sideBar[currentSection] || appState.sideBar.mainSections)
-                .map(section => {
-                    section.icon = (<DefaultSideBarIcon />);
-                    return section;
-                })
+                .map(section => Object.assign({ icon: <DefaultSideBarIcon /> }, section))
                 .concat(getAdditionalSideBarFields(currentSection)),
             currentSection,
             currentSubSection,
-            activeItem: currentSubSection ? currentSubSection : currentSection,
+            activeItem: currentSubSection || currentSection,
             selectedOrganisationUnit,
             userOrganisationUnits,
             autoCompleteOrganisationUnits: appState.sideBar.organisationUnits,
@@ -53,7 +49,7 @@ const sideBarState = appStateStore
     });
 
 export default sideBarState
-    .distinctUntilChanged(sideBarState => `${sideBarState.activeItem}_${sideBarState.selectedOrganisationUnit.id}`);
+    .distinctUntilChanged(state => `${state.activeItem}_${state.selectedOrganisationUnit.id}`);
 
 export const organisationUnitAdded = objectActions.saveObject
     .map(() => modelToEditStore.state)

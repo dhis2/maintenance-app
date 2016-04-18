@@ -128,7 +128,7 @@ objectActions.update.subscribe(action => {
     const modelToEdit = modelToEditStore.getState();
 
     if (modelToEdit) {
-        if(modelToEdit.attributes && Object.keys(modelToEdit.attributes).indexOf(fieldName) >= 0) {
+        if (modelToEdit.attributes && Object.keys(modelToEdit.attributes).indexOf(fieldName) >= 0) {
             log.debug(`${fieldName} is a custom attribute. Setting ${fieldName} to ${value}`);
             modelToEdit.attributes[fieldName] = value;
             log.debug(`Value is now: ${modelToEdit.attributes[fieldName]}`);

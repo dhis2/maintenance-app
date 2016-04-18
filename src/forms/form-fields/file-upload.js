@@ -45,7 +45,7 @@ export default React.createClass({
             <div>
                 <FlatButton label={this.getTranslation('cancel_upload')} onClick={this._fileClick} />
                 <div style={progressStyle}>
-                    <LinearProgress mode={this.state.progress ? 'determinate' : 'indeterminate'} value={this.state.progress}/>
+                    <LinearProgress mode={this.state.progress ? 'determinate' : 'indeterminate'} value={this.state.progress} />
                 </div>
             </div>
         );
@@ -83,7 +83,7 @@ export default React.createClass({
     },
 
     render() {
-        const {onFocus, onBlur, onChange, ...other} = this.props;
+        const { onFocus, onBlur, onChange, ...other } = this.props;
 
         const containerStyle = {
             position: 'relative',
@@ -111,13 +111,13 @@ export default React.createClass({
                     <Checkbox label={this.props.label}
                               onCheck={this._check}
                               disabled={!this.state.isEnabled}
-                              labelStyle={{color: AppTheme.rawTheme.palette.textColor}}
+                              labelStyle={{ color: AppTheme.rawTheme.palette.textColor }}
                               checked={this.props.value} />
                 </div>
                 <div style={btnStyle}>
                     { this.state.uploading ? this.renderUploading() : this.renderUpload() }
                     <input type="file"
-                           style={{visibility: 'hidden', display: 'none'}}
+                           style={{ visibility: 'hidden', display: 'none' }}
                            ref={(ref) => this.fileInput = ref}
                            onChange={this._upload} />
                 </div>
@@ -130,7 +130,7 @@ export default React.createClass({
             this.fileInput.getDOMNode().click(e);
         } else if (this.state.uploading) {
             this.xhr.abort();
-            this.setState({uploading: false, progress: undefined});
+            this.setState({ uploading: false, progress: undefined });
             log.info('File upload cancelled');
         }
     },
@@ -140,7 +140,7 @@ export default React.createClass({
     },
 
     _check(e) {
-        this.props.onChange({target: {value: e.target.checked}});
+        this.props.onChange({ target: { value: e.target.checked } });
     },
 
     _upload(e) {
@@ -157,9 +157,9 @@ export default React.createClass({
         const xhr = new XMLHttpRequest();
         xhr.upload.onprogress = (progress) => {
             if (progress.lengthComputable) {
-                this.setState({progress: (progress.loaded / progress.total) * 100});
+                this.setState({ progress: (progress.loaded / progress.total) * 100 });
             } else {
-                this.setState({progress: undefined});
+                this.setState({ progress: undefined });
             }
         };
         this.xhr = xhr;
@@ -173,7 +173,7 @@ export default React.createClass({
             xhr: () => { return xhr; },
         }).then(() => {
             log.info('File uploaded successfully');
-            this.props.onChange({target: {value: true}});
+            this.props.onChange({ target: { value: true } });
             this.setState({
                 uploading: false,
                 progress: undefined,
@@ -181,7 +181,7 @@ export default React.createClass({
             });
         }).catch(() => {
             log.warn('File upload failed:', arguments);
-            this.props.onChange({target: {value: false}});
+            this.props.onChange({ target: { value: false } });
             this.setState({
                 uploading: false,
                 progress: undefined,

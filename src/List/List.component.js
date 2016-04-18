@@ -49,12 +49,12 @@ function getTranslatablePropertiesForModelType(modelType) {
     }
 
     switch (modelType) {
-        case 'dataElement':
-            return defaultTranslatableProperties.concat(['formName']);
-        case 'organisationUnitLevel':
-            return ['name'];
-        default:
-            break;
+    case 'dataElement':
+        return defaultTranslatableProperties.concat(['formName']);
+    case 'organisationUnitLevel':
+        return ['name'];
+    default:
+        break;
     }
 
     return defaultTranslatableProperties;
@@ -292,9 +292,9 @@ const List = React.createClass({
                     </div>
                     {this.state.detailsObject ?
                         <div style={styles.detailsBoxWrap}>
-                            <Paper zDepth={1} rounded={false} style={{position: 'fixed'}}>
+                            <Paper zDepth={1} rounded={false} style={{ position: 'fixed' }}>
                                 <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject}
-                                            onClose={listActions.hideDetailsBox}/>
+                                            onClose={listActions.hideDetailsBox} />
                             </Paper>
                         </div>
                     : null}

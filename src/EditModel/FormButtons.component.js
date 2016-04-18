@@ -27,7 +27,7 @@ FormButtons.propTypes = {
     isFormValid: React.PropTypes.func,
 };
 //
-//export default React.createClass({
+// export default React.createClass({
 //
 //
 //    render() {
@@ -42,4 +42,4 @@ FormButtons.propTypes = {
 //            </div>
 //        );
 //    },
-//});
+// });

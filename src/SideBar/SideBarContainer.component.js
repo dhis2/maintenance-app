@@ -1,14 +1,10 @@
 import React from 'react';
-import sideBarStore, {organisationUnitAdded} from './sideBarStore';
+import sideBarStore, { organisationUnitAdded } from './sideBarStore';
 import LinearProgress from 'material-ui/lib/linear-progress';
-import {onSectionChanged, onOrgUnitSearch} from './sideBarActions';
-import BackButton from '../EditModel/BackButton.component'; // TODO: Move backbutton out to it's own folder if it's used in multiple places
+import { onSectionChanged, onOrgUnitSearch } from './sideBarActions';
 import { setAppState } from '../App/appStateStore';
 import MaintenanceSideBar from './MaintenanceSidebar.component';
 import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import Menu from 'material-ui/lib/menus/menu';
-import FontIcon from 'material-ui/lib/font-icon';
 
 class SideBarContainer extends React.Component {
     componentWillMount() {
@@ -22,42 +18,18 @@ class SideBarContainer extends React.Component {
 
         this.organisationUnitSaved = organisationUnitAdded
             .subscribe(organisationUnitToReload => {
-                this.setState({organisationUnitsToReload: [organisationUnitToReload.id]});
+                this.setState({ organisationUnitsToReload: [organisationUnitToReload.id] });
             });
     }
 
     componentWillUnmount() {
-        this.disposable && this.disposable.dispose();
-        this.organisationUnitSaved && this.organisationUnitSaved.dispose();
-    }
-
-    render() {
-        if (!this.state || !this.state.sections) {
-            return (
-                <LinearProgress indeterminate={true} />
-            );
+        if (this.disposable && this.disposable) {
+            this.disposable.dispose();
         }
 
-        const sideBarWrapperStyle = {
-            display: 'flex',
-            flexDirection: 'column',
-            flexFlow: 'column',
-            flex: 1,
-            position: 'fixed',
-            bottom: '0',
-            top: '7rem',
-        };
-
-        return (
-            <div style={sideBarWrapperStyle}>
-                <MaintenanceSideBar
-                    sections={this.state.sections}
-                    currentSection={this.state.activeItem || '-- not set --'}
-                    onChangeSection={this._onChangeSection.bind(this)}
-                />
-                {this.getSideBarItems()}
-            </div>
-        );
+        if (this.organisationUnitSaved && this.organisationUnitSaved.dispose) {
+            this.organisationUnitSaved.dispose();
+        }
     }
 
     getSideBarItems() {
@@ -86,12 +58,13 @@ class SideBarContainer extends React.Component {
                         />
                     </div>
                 );
-            } else {
-                return (
-                    <LinearProgress indeterminate={true} />
-                );
             }
+
+            return (
+                <LinearProgress indeterminate />
+            );
         }
+        return null;
     }
 
     _searchOrganisationUnits(searchValue) {
@@ -108,7 +81,6 @@ class SideBarContainer extends React.Component {
             initiallyExpanded: model.path ? model.path.split('/').filter(v => v).slice(0, -1) : [],
         });
     }
-
     _onAutoCompleteValueSelected(displayName) {
         const ouToSelect = (this.state.autoCompleteOrganisationUnits || [])
             .find(model => model.displayName === displayName);
@@ -123,6 +95,35 @@ class SideBarContainer extends React.Component {
             section: this.state.currentSection,
             subSection: newSection,
         });
+    }
+
+    render() {
+        if (!this.state || !this.state.sections) {
+            return (
+                <LinearProgress indeterminate />
+            );
+        }
+
+        const sideBarWrapperStyle = {
+            display: 'flex',
+            flexDirection: 'column',
+            flexFlow: 'column',
+            flex: 1,
+            position: 'fixed',
+            bottom: '0',
+            top: '7rem',
+        };
+
+        return (
+            <div style={sideBarWrapperStyle}>
+                <MaintenanceSideBar
+                    sections={this.state.sections}
+                    currentSection={this.state.activeItem || '-- not set --'}
+                    onChangeSection={this._onChangeSection.bind(this)}
+                />
+                {this.getSideBarItems()}
+            </div>
+        );
     }
 }
 

@@ -1,1 +1,1 @@
-export {default as default} from './OrganisationUnitHierarchy.component';
+export { default as default } from './OrganisationUnitHierarchy.component';
