@@ -13,7 +13,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
     };
 
     return (
-        <div>
+        <div style={{position: 'relative'}}>
             <AutoComplete
                 hintText={context.d2.i18n.getTranslation('search')}
                 onUpdateInput={props.onUpdateInput}

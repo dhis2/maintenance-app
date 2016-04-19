@@ -48,8 +48,7 @@ const sideBarState = appStateStore
         };
     });
 
-export default sideBarState
-    .distinctUntilChanged(state => `${state.activeItem}_${state.selectedOrganisationUnit.id}`);
+export default sideBarState;
 
 export const organisationUnitAdded = objectActions.saveObject
     .map(() => modelToEditStore.state)

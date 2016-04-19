@@ -1,4 +1,5 @@
 import React from 'react';
+import isArray from 'd2-utilizr/lib/isArray';
 
 export default function FormButtons(props) {
     const defaultStyle = {
@@ -10,9 +11,11 @@ export default function FormButtons(props) {
         width: '10rem',
     };
 
+    const buttonsToRender = isArray(props.children) ? props.children : [props.children];
+
     return (
         <div style={Object.assign(defaultStyle, props.style)}>
-            {props.children.map((child, index) => {
+            {buttonsToRender.map((child, index) => {
                 return React.cloneElement(child, {
                     style: buttonStyle,
                     key: index,
@@ -23,7 +26,10 @@ export default function FormButtons(props) {
 }
 FormButtons.propTypes = {
     style: React.PropTypes.object,
-    children: React.PropTypes.array.isRequired,
+    children: React.PropTypes.oneOfType([
+        React.PropTypes.array,
+        React.PropTypes.object,
+    ]).isRequired,
     isFormValid: React.PropTypes.func,
 };
 //

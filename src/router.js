@@ -16,6 +16,7 @@ import {fieldFilteringForQuery} from './List/list.store';
 import MenuCardsForSection from './MenuCards/MenuCardsForSection.component';
 import MenuCardsForAllSections from './MenuCards/MenuCardsForAllSections.component';
 import OrganisationUnitHierarchy from './OrganisationUnitHierarchy';
+import OrganisationUnitLevels from './OrganisationUnitLevels/OrganisationUnitLevels.component';
 
 function loadObject({ params }, replace, callback) {
     initState({ params });
@@ -113,13 +114,22 @@ function initState({ params }) {
     });
 }
 
-async function initStateOrgUnitList({ params }) {
+function initStateOrgUnitList({ params }) {
     initAppState({
         sideBar: {
             currentSection: params.groupName,
             currentSubSection: 'organisationUnit',
         },
     }, true);
+}
+
+function initStateOrgUnitLevels({ params }) {
+    initAppState({
+        sideBar: {
+            currentSection: params.groupName,
+            currentSubSection: 'organisationUnitLevel',
+        },
+    });
 }
 
 function loadOrgUnitObject({ params }, replace, callback) {
@@ -149,6 +159,11 @@ const routes = (
                     path="organisationUnit"
                     component={OrganisationUnitList}
                     onEnter={initStateOrgUnitList}
+                />
+                <Route
+                    path="organisationUnitLevel"
+                    component={OrganisationUnitLevels}
+                    onEnter={initStateOrgUnitLevels}
                 />
                 <Route
                     path=":modelType"

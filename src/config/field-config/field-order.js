@@ -71,7 +71,6 @@ const fieldOrderByName = new Map([
     ]],
     ['organisationUnitLevel', [
         'name',
-        'code',
         'offlineLevels',
     ]]
 ]);

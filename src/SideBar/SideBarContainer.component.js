@@ -44,6 +44,7 @@ class SideBarContainer extends React.Component {
                         width: '295px',
                     },
                 };
+
                 return (
                     <div style={styles.wrapperStyle}>
                         <OrganisationUnitTreeWithSingleSelectionAndSearch
