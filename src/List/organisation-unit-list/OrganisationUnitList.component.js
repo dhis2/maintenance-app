@@ -9,7 +9,7 @@ import log from 'loglevel';
 export default class OrganisationUnitList extends React.Component {
     componentDidMount() {
         this.disposable = appState
-            .map(({selectedOrganisationUnit, userOrganisationUnits}) => ({
+            .map(({ selectedOrganisationUnit, userOrganisationUnits }) => ({
                 selectedOrganisationUnit,
                 userOrganisationUnitIds: userOrganisationUnits
                     .toArray()
@@ -18,7 +18,7 @@ export default class OrganisationUnitList extends React.Component {
             .filter(state => state.selectedOrganisationUnit)
             .distinctUntilChanged(state => state.selectedOrganisationUnit)
             .subscribe(
-                async ({selectedOrganisationUnit, userOrganisationUnitIds}) => {
+                async ({ selectedOrganisationUnit, userOrganisationUnitIds }) => {
                     const d2 = await getInstance();
                     let organisationUnitList = d2.models.organisationUnit
                         .filter().on('name').notEqual('default');
@@ -45,7 +45,7 @@ export default class OrganisationUnitList extends React.Component {
     }
 
     render() {
-        const {params, ...otherProps} = this.props;
+        const { params, ...otherProps } = this.props;
 
         return (
             <List

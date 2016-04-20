@@ -1,5 +1,4 @@
 import React from 'react';
-import classes from 'classnames';
 import HeaderBar from 'd2-ui/lib/header-bar/HeaderBar.component';
 import MainContent from 'd2-ui/lib/layout/main-content/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
@@ -25,25 +24,22 @@ log.setLevel(log.levels.INFO);
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-import FlatButton from 'material-ui/lib/flat-button';
-import { setAppState, default as appState } from './appStateStore';
+import appState, { setAppState } from './appStateStore';
 import { goToRoute } from '../router';
 
 const sections$ = appState
-    .map(appState => {
-        return {
-            sections: appState.sideBar.mainSections,
-            current: appState.sideBar.currentSection,
-            changeSection: (sectionName) => {
-                setAppState({
-                    sideBar: Object.assign({}, appState.sideBar, {
-                        currentSection: sectionName,
-                    }),
-                });
-                goToRoute(`/list/${sectionName}`);
-            }
-        };
-    });
+    .map(state => ({
+        sections: state.sideBar.mainSections,
+        current: state.sideBar.currentSection,
+        changeSection: (sectionName) => {
+            setAppState({
+                sideBar: Object.assign({}, state.sideBar, {
+                    currentSection: sectionName,
+                }),
+            });
+            goToRoute(`/list/${sectionName}`);
+        },
+    }));
 
 const SectionTabsWrap = withStateFrom(sections$, SectionTabs);
 
@@ -84,7 +80,9 @@ class App extends AppWithD2 {
     componentWillUnmount() {
         super.componentWillUnmount();
 
-        this.disposable && this.disposable.dispose();
+        if (this.disposable && this.disposable.dispose) {
+            this.disposable.dispose();
+        }
     }
 
     render() {

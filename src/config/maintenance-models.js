@@ -34,7 +34,7 @@ export default {
                     'organisationUnitGroupSet',
                     'organisationUnitLevel',
                 ],
-            }
+            },
         };
     },
 };

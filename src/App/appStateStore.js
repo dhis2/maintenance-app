@@ -19,28 +19,24 @@ async function loadSideBarState() {
     const modelDefinitionNames = d2.models.mapThroughDefinitions(definition => definition.name);
 
     return Object.keys(sideBarConfig)
-        .map(sideBarCategory => {
-            return {
-                name: sideBarCategory,
-                items: sideBarConfig[sideBarCategory].items
-                    .filter(isInPredefinedList(modelDefinitionNames))
-                    .map(key => ({
-                        key,
-                        label: d2.i18n.getTranslation(camelCaseToUnderscores(key)),
-                    }))
-            };
-        })
+        .map(sideBarCategory => ({
+            name: sideBarCategory,
+            items: sideBarConfig[sideBarCategory].items
+                .filter(isInPredefinedList(modelDefinitionNames))
+                .map(key => ({
+                    key,
+                    label: d2.i18n.getTranslation(camelCaseToUnderscores(key)),
+                })),
+        }))
         .reduce((acc, sideBarCategory) => {
-            acc[sideBarCategory.name] = sideBarCategory.items;
+            acc[sideBarCategory.name] = sideBarCategory.items; // eslint-disable-line no-param-reassign
             return acc;
         }, {
             mainSections: Object.keys(sideBarConfig)
-                .map(sideBarCategory => {
-                    return {
-                        key: sideBarCategory,
-                        label: d2.i18n.getTranslation(camelCaseToUnderscores(sideBarCategory)),
-                    };
-                }),
+                .map(sideBarCategory => ({
+                    key: sideBarCategory,
+                    label: d2.i18n.getTranslation(camelCaseToUnderscores(sideBarCategory)),
+                })),
         });
 }
 
@@ -99,9 +95,9 @@ export async function initAppState(startState, disableCache) {
         .reduce((newAppState, stateKey) => {
             if (newAppState[stateKey]) {
                 if (isObject(newAppState[stateKey])) {
-                    newAppState[stateKey] = Object.assign({}, newAppState[stateKey], startState[stateKey]);
+                    newAppState[stateKey] = Object.assign({}, newAppState[stateKey], startState[stateKey]);  // eslint-disable-line no-param-reassign
                 } else {
-                    newAppState[stateKey] = startState[stateKey];
+                    newAppState[stateKey] = startState[stateKey];  // eslint-disable-line no-param-reassign
                 }
             }
             return newAppState;
@@ -117,5 +113,5 @@ export function setAppState(newPartialState) {
 }
 
 export const currentSubSection$ = appState
-    .map(appState => appState.sideBar.currentSubSection)
+    .map(state => state.sideBar.currentSubSection)
     .distinctUntilChanged();

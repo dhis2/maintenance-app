@@ -16,13 +16,11 @@ export default new Map([
 
                 return symbolUrls;
             }()),
-            imgPath: (process.env.NODE_ENV !== 'production') ? 'http://localhost:8080/dhis/images/orgunitgroup' : '/images/orgunitgroup'
+            imgPath: (process.env.NODE_ENV !== 'production') ? 'http://localhost:8080/dhis/images/orgunitgroup' : '/images/orgunitgroup',
         },
     }],
     ['organisationUnits', {
         component: OrganisationUnitTreeMultiSelect,
-        fieldOptions: {
-
-        }
-    }]
+        fieldOptions: {},
+    }],
 ]);

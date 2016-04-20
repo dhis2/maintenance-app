@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rx';
 import { getInstance } from 'd2/lib/d2';
@@ -13,29 +13,34 @@ const fieldForOrganisationUnitLevels = fieldOrder.for('organisationUnitLevel');
 
 const actions = Action.createActionsFromNames(['initOrgUnitLevels', 'fieldUpdate', 'updateFormStatus', 'saveOrganisationUnitLevels']);
 
+function DropDownFieldForOfflineLevels(props) {
+    const { options, ...otherProps } = props;
+
+    const availableOptions = [{ value: undefined, text: 'Default', label: ' ' }]
+        .concat(options.map(option => ({ value: option, text: option, label: option })))
+        .map((option, index) => (
+            <MenuItem key={index} primaryText={option.text} value={option.value} label={option.label} />
+        ));
+
+    return (
+        <SelectField {...otherProps} onChange={(event, index, value) => props.onChange({ target: { value } })}>
+            {availableOptions}
+        </SelectField>
+    );
+}
+DropDownFieldForOfflineLevels.propTypes = {
+    options: PropTypes.array,
+};
+
 const fieldOptions = new Map([
     ['name', {
         component: TextField,
     }],
     ['offlineLevels', {
-        component: (props) => {
-            const {options, ...otherProps} = props;
-
-            const availableOptions = [{ value: undefined, text: 'Default', label: ' ' }]
-                .concat(options.map(option => ({ value: option, text: option, label: option })))
-                .map((option, index) => (
-                    <MenuItem key={index} primaryText={option.text} value={option.value} label={option.label} />
-                ));
-
-            return (
-                <SelectField {...otherProps} onChange={(event, index, value) => props.onChange({ target: { value } })}>
-                    {availableOptions}
-                </SelectField>
-            );
-        } ,
+        component: DropDownFieldForOfflineLevels,
         props: {
             options: [
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
             ],
         },
     }],
@@ -52,11 +57,10 @@ function isNameUnique(name) {
     return organisationUnitLevelsStore
         .state
         .fieldsForOrganisationUnitLevel
-        .map(fieldConfigs => {
-            return fieldConfigs
-                .filter(fieldConfig => fieldConfig.name === 'name')
-                .some(fieldConfig => fieldConfig.value === name);
-        })
+        .map(fieldConfigs => fieldConfigs
+            .filter(fieldConfig => fieldConfig.name === 'name')
+            .some(fieldConfig => fieldConfig.value === name)
+        )
         .every(result => result === false);
 }
 
@@ -94,16 +98,20 @@ function getFieldConfigsForAllFields(organisationUnitLevels, organisationUnitLev
         });
 }
 
+function buildFormStatus({ data }) {
+    return organisationUnitLevelsStore
+        .getState()
+        .formStatus
+        .map((status, index) => {
+            if (index === data.levelIndex) {
+                return data.formStatus.valid;
+            }
+            return status;
+        });
+}
+
 actions.updateFormStatus
-    .map(({data}) => {
-        return organisationUnitLevelsStore.getState().formStatus
-            .map((status, index) => {
-                if (index === data.levelIndex) {
-                    return data.formStatus.valid;
-                }
-                return status;
-            });
-    })
+    .map(buildFormStatus)
     .subscribe((formStatusForAllLevels) => {
         organisationUnitLevelsStore.setState(Object.assign(
             {},
@@ -118,7 +126,7 @@ actions.initOrgUnitLevels
         organisationUnitLevelFormFields$,
         (organisationUnitLevels, organisationUnitLevelFormFields) => ({ organisationUnitLevels, organisationUnitLevelFormFields })
     ))
-    .map(({organisationUnitLevels, organisationUnitLevelFormFields}) => {
+    .map(({ organisationUnitLevels, organisationUnitLevelFormFields }) => {
         const fieldConfigsForAllLevels = getFieldConfigsForAllFields(organisationUnitLevels, organisationUnitLevelFormFields);
 
         return {
@@ -126,7 +134,7 @@ actions.initOrgUnitLevels
             organisationUnitLevels,
         };
     })
-    .subscribe(({fieldConfigsForAllLevels, organisationUnitLevels}) => {
+    .subscribe(({ fieldConfigsForAllLevels, organisationUnitLevels }) => {
         organisationUnitLevelsStore.setState({
             isSaving: false,
             isLoading: false,
@@ -141,13 +149,11 @@ Observable.combineLatest(
     organisationUnitLevelFormFields$,
     (action, organisationUnitLevelFormFields) => ({ action, organisationUnitLevelFormFields })
 )
-    .map(({ action, organisationUnitLevelFormFields }) => {
-        return {
-            ...action.data,
-            storeState: organisationUnitLevelsStore.getState(),
-            organisationUnitLevelFormFields,
-        };
-    })
+    .map(({ action, organisationUnitLevelFormFields }) => ({
+        ...action.data,
+        storeState: organisationUnitLevelsStore.getState(),
+        organisationUnitLevelFormFields,
+    }))
     .subscribe(({ storeState, fieldName, fieldValue, organisationUnitLevel, organisationUnitLevelFormFields }) => {
         const organisationUnitToChangeValueFor = storeState.organisationUnitLevels
             .find(ouLevel => ouLevel === organisationUnitLevel);
@@ -166,40 +172,22 @@ Observable.combineLatest(
         ));
     });
 
+function saveOrganisationUnitLevels(...args) {
+    const [organisationUnitLevels, complete, error] = args;
 
-
-function saveOrganisationUnitLevels({organisationUnitLevels, complete, error}) {
     return getInstance()
         .then(d2 => d2.Api.getApi())
-        .then(api => api.post('filledOrganisationUnitLevels', {organisationUnitLevels}))
+        .then(api => api.post('filledOrganisationUnitLevels', { organisationUnitLevels }))
         .then(() => complete)
         .catch(() => error);
 }
-
-//async function saveOrganisationUnitLevels({organisationUnitLevels, complete, error}) {
-//    const d2 = await getInstance();
-//    const api = d2.Api.getApi();
-//
-//    try {
-//        await api.post('filledOrganisationUnitLevels', {organisationUnitLevels})
-//    } catch(e) {
-//        return error;
-//    }
-//
-//    return complete;
-//
-//    //.catch((e) => {
-//    //    console.log('failed?');
-//    //    console.log(e);
-//    //});
-//}
 
 actions.saveOrganisationUnitLevels
     .map((action) => ({
         organisationUnitLevels: organisationUnitLevelsStore
             .getState()
             .organisationUnitLevels
-            .map(({name, level, offlineLevels}) => ({name, level, offlineLevels})),
+            .map(({ name, level, offlineLevels }) => ({ name, level, offlineLevels })),
         ...action,
     }))
     .do(() => {
@@ -208,7 +196,6 @@ actions.saveOrganisationUnitLevels
                 ...organisationUnitLevelsStore.getState(),
                 isSaving: true,
             });
-
     })
     .flatMap(action => Observable.fromPromise(saveOrganisationUnitLevels(action)))
     .subscribe((callback) => {

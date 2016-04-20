@@ -16,8 +16,8 @@ import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 function saveOrganisationUnitLevels(i18n) {
     actions.saveOrganisationUnitLevels()
         .subscribe(
-            () => {snackActions.show({ message: i18n.getTranslation('organisation_unit_levels_save_success'), action: 'ok' })},
-            () => {snackActions.show({ message: i18n.getTranslation('organisation_unit_levels_save_failed') })}
+            () => snackActions.show({ message: i18n.getTranslation('organisation_unit_levels_save_success'), action: 'ok' }),
+            () => snackActions.show({ message: i18n.getTranslation('organisation_unit_levels_save_failed') })
         );
 }
 
@@ -95,9 +95,15 @@ function OrganisationUnitLevels(props, context) {
 }
 OrganisationUnitLevels.defaultProps = {
     fieldsForOrganisationUnitLevel: [],
-    formStatus: [ false ],
+    formStatus: [false],
     isLoading: true,
     isSaving: false,
+};
+OrganisationUnitLevels.propTypes = {
+    fieldsForOrganisationUnitLevel: PropTypes.array,
+    formStatus: PropTypes.array,
+    isLoading: PropTypes.bool,
+    isSaving: PropTypes.bool,
 };
 
 const componentState$ = organisationUnitLevelsStore;

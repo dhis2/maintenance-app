@@ -90,7 +90,7 @@ contextActions.share
         sharingStore.setState({
             model: modelToShare,
             open: true,
-        })
+        });
     });
 
 contextActions.translate

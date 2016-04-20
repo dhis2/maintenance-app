@@ -12,11 +12,46 @@ import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
 import { initAppState, default as appState } from './App/appStateStore';
 import OrganisationUnitList from './List/organisation-unit-list/OrganisationUnitList.component.js';
-import {fieldFilteringForQuery} from './List/list.store';
 import MenuCardsForSection from './MenuCards/MenuCardsForSection.component';
 import MenuCardsForAllSections from './MenuCards/MenuCardsForAllSections.component';
 import OrganisationUnitHierarchy from './OrganisationUnitHierarchy';
 import OrganisationUnitLevels from './OrganisationUnitLevels/OrganisationUnitLevels.component';
+
+function initState({ params }) {
+    initAppState({
+        sideBar: {
+            currentSection: params.groupName,
+            currentSubSection: params.modelType,
+        },
+    });
+}
+
+function initStateOrgUnitList({ params }) {
+    initAppState({
+        sideBar: {
+            currentSection: params.groupName,
+            currentSubSection: 'organisationUnit',
+        },
+    }, true);
+}
+
+function initStateOrgUnitLevels({ params }) {
+    initAppState({
+        sideBar: {
+            currentSection: params.groupName,
+            currentSubSection: 'organisationUnitLevel',
+        },
+    });
+}
+
+function initStateOuHierarchy() {
+    initAppState({
+        sideBar: {
+            currentSection: 'organisationUnitSection',
+            currentSubSection: 'hierarchy',
+        },
+    });
+}
 
 function loadObject({ params }, replace, callback) {
     initState({ params });
@@ -29,16 +64,16 @@ function loadObject({ params }, replace, callback) {
             // TODO: Should probably be able to do this in a different way when this becomes needed for multiple object types
             if (params.modelType === 'organisationUnit') {
                 appState
-                    .subscribe((appState) => {
-                        if (appState.selectedOrganisationUnit && appState.selectedOrganisationUnit.id) {
+                    .subscribe((state) => {
+                        if (state.selectedOrganisationUnit && state.selectedOrganisationUnit.id) {
                             modelToEdit.parent = {
-                                id: appState.selectedOrganisationUnit.id,
+                                id: state.selectedOrganisationUnit.id,
                             };
                         }
 
                         modelToEditStore.setState(modelToEdit);
                         callback();
-                    })
+                    });
             } else {
                 modelToEditStore.setState(modelToEdit);
                 callback();
@@ -57,6 +92,10 @@ function loadObject({ params }, replace, callback) {
     }
 }
 
+function loadOrgUnitObject({ params }, replace, callback) {
+    loadObject({ params: { modelType: 'organisationUnit', groupName: params.groupName, modelId: params.modelId } }, replace, callback);
+}
+
 function loadList({ params }, replace, callback) {
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the appState
@@ -68,7 +107,7 @@ function loadList({ params }, replace, callback) {
     }
 
     initState({ params });
-    listActions.loadList(params.modelType)
+    return listActions.loadList(params.modelType)
         .subscribe(
             (message) => {
                 log.info(message);
@@ -105,51 +144,11 @@ function cloneObject({ params }, replace, callback) {
         );
 }
 
-function initState({ params }) {
-    initAppState({
-        sideBar: {
-            currentSection: params.groupName,
-            currentSubSection: params.modelType,
-        },
-    });
-}
-
-function initStateOrgUnitList({ params }) {
-    initAppState({
-        sideBar: {
-            currentSection: params.groupName,
-            currentSubSection: 'organisationUnit',
-        },
-    }, true);
-}
-
-function initStateOrgUnitLevels({ params }) {
-    initAppState({
-        sideBar: {
-            currentSection: params.groupName,
-            currentSubSection: 'organisationUnitLevel',
-        },
-    });
-}
-
-function loadOrgUnitObject({ params }, replace, callback) {
-    loadObject({ params: { modelType: 'organisationUnit', groupName: params.groupName, modelId: params.modelId} }, replace, callback);
-}
-
-function initStateOuHierarchy() {
-    initAppState({
-        sideBar: {
-            currentSection: 'organisationUnitSection',
-            currentSubSection: 'hierarchy',
-        },
-    });
-}
-
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
             <IndexRedirect to="/list/all" />
-            <Route path="list/all" component={MenuCardsForAllSections} onEnter={() => initState({ params: {groupName: 'all' }})} />
+            <Route path="list/all" component={MenuCardsForAllSections} onEnter={() => initState({ params: { groupName: 'all' } })} />
             <Route path="list/:groupName">
                 <IndexRoute
                     component={MenuCardsForSection}

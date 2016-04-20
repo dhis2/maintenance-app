@@ -97,7 +97,7 @@ export default Store.create({
 
                 const listSearchPromise = modelDefinition
                     .filter().on('name').notEqual('default')
-                    .list({fields: fieldFilteringForQuery});
+                    .list({ fields: fieldFilteringForQuery });
 
                 this.listSourceSubject.onNext(Observable.fromPromise(listSearchPromise));
 

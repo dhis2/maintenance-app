@@ -6,8 +6,8 @@ import { setAppState, default as appState } from '../App/appStateStore';
 import Action from 'd2-ui/lib/action/Action';
 import RaisedButton from 'material-ui/lib/raised-button';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-import {getInstance} from  'd2/lib/d2';
-import {Observable} from 'rx';
+import { getInstance } from 'd2/lib/d2';
+import { Observable } from 'rx';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import searchForOrganisationUnitsWithinHierarchy from './searchForOrganisationUnitsWithinHierarchy';
@@ -27,7 +27,7 @@ function getOrgUnitTreeSearchFromAction(action) {
     return action
         .debounce(400)
         .filter(action => action.data)
-        .map(({complete, error, data}) => {
+        .map(({ complete, error, data }) => {
             return Observable.fromPromise(searchForOrganisationUnitsWithinHierarchy(data, 50))
                 .map(organisationUnits => {
                     return {
@@ -90,7 +90,7 @@ leftTreeSearch
     });
 
 const organisationUnitHierarchy$ = appState
-    .map(({hierarchy = {}, userOrganisationUnits}) => {
+    .map(({ hierarchy = {}, userOrganisationUnits }) => {
         return {
             roots: userOrganisationUnits.toArray(),
             leftRoots: hierarchy.leftRoots,
@@ -114,9 +114,9 @@ function onClickLeft(event, model) {
                     .indexOf(model.id);
 
                 if (indexOfModelInSelected >= 0) {
-                   selectedLeft = hierarchy.selectedLeft
+                    selectedLeft = hierarchy.selectedLeft
                        .slice(0, indexOfModelInSelected)
-                       .concat(hierarchy.selectedLeft.slice(indexOfModelInSelected + 1))
+                       .concat(hierarchy.selectedLeft.slice(indexOfModelInSelected + 1));
                 } else {
                     selectedLeft = hierarchy.selectedLeft.concat([model]);
                 }
@@ -137,8 +137,8 @@ const operationsCompleted = Action.create('operationsCompleted', 'Hierarchy');
 async function getOrganisationUnitByIds(ids) {
     const d2 = await getInstance();
 
-    const organisationUnits =  await d2.models.organisationUnit
-        .list({filter: [`id:in:[${ids.join(',')}]`], fields: ':owner,href,id,parent,displayName,path,children[id,displayName,path]'});
+    const organisationUnits = await d2.models.organisationUnit
+        .list({ filter: [`id:in:[${ids.join(',')}]`], fields: ':owner,href,id,parent,displayName,path,children[id,displayName,path]' });
 
     return organisationUnits.toArray();
 }
@@ -157,7 +157,7 @@ function changeOrganisationUnitParentAndSave(organisationUnit) {
         .take(1)
         .combineLatest(d2$)
         .flatMap(([hierarchy, d2]) => {
-            organisationUnit.parent = { id: hierarchy.selectedRight[0] && hierarchy.selectedRight[0].id};
+            organisationUnit.parent = { id: hierarchy.selectedRight[0] && hierarchy.selectedRight[0].id };
 
             const movingStatus = organisationUnit
                 .save()
@@ -184,7 +184,7 @@ function moveOrganisationUnit() {
         .concatAll()
         .subscribe(
             (message) => {
-                snackActions.show({message, translate: false});
+                snackActions.show({ message, translate: false });
 
                 const hierarchy = Object.assign({}, appState.state.hierarchy);
                 setAppState({
@@ -209,7 +209,7 @@ function moveOrganisationUnit() {
                 });
             },
             (e) => {
-                setHierarchyProcessingStatus(appState.state.hierarchy, false)
+                setHierarchyProcessingStatus(appState.state.hierarchy, false);
             },
             () => {
                 const hierarchy = Object.assign({}, appState.state.hierarchy);
@@ -356,9 +356,9 @@ function OrganisationUnitHierarchy(props, context) {
         }
     };
 
-    const buttonLabel = context.d2.i18n.getTranslation('move_$$ouCount$$_organisation_units', {ouCount: (props.selectedLeft && props.selectedLeft.length) || 0 });
+    const buttonLabel = context.d2.i18n.getTranslation('move_$$ouCount$$_organisation_units', { ouCount: (props.selectedLeft && props.selectedLeft.length) || 0 });
     const headingTitle = context.d2.i18n.getTranslation('hierarchy_operations');
-    const warningForMovingWithinSubtree = context.d2.i18n.getTranslation('you_can_not_move_higher_level_organisation_units_to_its_descendants')
+    const warningForMovingWithinSubtree = context.d2.i18n.getTranslation('you_can_not_move_higher_level_organisation_units_to_its_descendants');
     return (
         <div>
             <Heading>{headingTitle}</Heading>

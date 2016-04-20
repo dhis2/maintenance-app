@@ -13,7 +13,10 @@ function BackButton(props, context) {
             tooltip={tooltip || context.d2.i18n.getTranslation('back')}
             tooltipPosition="bottom-right"
             {...otherProps}
-            iconClassName="material-icons">&#xE5C4;</IconButton>
+            iconClassName="material-icons"
+        >
+            &#xE5C4;
+        </IconButton>
     );
 }
 BackButton.propTypes = {

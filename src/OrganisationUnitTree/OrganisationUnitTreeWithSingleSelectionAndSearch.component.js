@@ -13,7 +13,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
     };
 
     return (
-        <div style={{position: 'relative'}}>
+        <div style={{ position: 'relative' }}>
             <AutoComplete
                 hintText={context.d2.i18n.getTranslation('search')}
                 onUpdateInput={props.onUpdateInput}
@@ -41,6 +41,10 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.propTypes = {
     searchOrganisationUnits: React.PropTypes.func,
     roots: React.PropTypes.array,
     idsThatShouldBeReloaded: React.PropTypes.array,
+    onUpdateInput: React.PropTypes.func,
+    selected: React.PropTypes.array,
+    initiallyExpanded: React.PropTypes.array,
+    onClick: React.PropTypes.func,
 };
 OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onOrgUnitSearch: noop,
@@ -48,9 +52,12 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onChangeSelectedOrgUnit: noop,
     onAutoCompleteValueSelected: noop,
     searchOrganisationUnits: noop,
+    onUpdateInput: noop,
+    initiallyExpanded: [],
     roots: [],
     autoCompleteDataSource: [],
     idsThatShouldBeReloaded: [],
+    onClick: noop,
 };
 
 export default addD2Context(OrganisationUnitTreeWithSingleSelectionAndSearch);

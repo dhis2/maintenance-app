@@ -72,7 +72,7 @@ const fieldOrderByName = new Map([
     ['organisationUnitLevel', [
         'name',
         'offlineLevels',
-    ]]
+    ]],
 ]);
 
 export default {

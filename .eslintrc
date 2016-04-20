@@ -1,8 +1,9 @@
 {
-  "extends": "dhis2",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
+    "extends": "dhis2",
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
     }
-  }
 }

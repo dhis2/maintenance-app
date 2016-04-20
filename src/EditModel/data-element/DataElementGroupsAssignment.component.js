@@ -50,9 +50,19 @@ export default React.createClass({
     },
 
     componentWillUnmount() {
-        if (this.disposable) {
-            this.disposable && this.disposable.dispose();
+        if (this.disposable && this.disposable.dispose) {
+            this.disposable.dispose();
         }
+    },
+
+    _updateGroupStatus(dataElementGroupSetId, oldValue, event) {
+        // TODO: Very bad to change props and set d2.model.dirty manually
+        this.props.source.dirty = true;
+
+        store.setState({
+            dataElementGroupValues: Object.assign({}, store.state.dataElementGroupValues, { [dataElementGroupSetId]: event.target.value ? event.target.value : null }),
+            remove: Array.from((new Set(store.state.remove.concat([oldValue])).values())),
+        });
     },
 
     render() {
@@ -63,12 +73,10 @@ export default React.createClass({
         return (
             <div>
                 {this.state.dataElementGroupSets.map(dataElementGroupSet => {
-                    const optionList = dataElementGroupSet.dataElementGroups.map(ig => {
-                        return {
-                            value: ig.id,
-                            text: ig.displayName,
-                        };
-                    });
+                    const optionList = dataElementGroupSet.dataElementGroups.map(ig => ({
+                        value: ig.id,
+                        text: ig.displayName,
+                    }));
 
                     const value = Object.prototype.hasOwnProperty.call(store.state.dataElementGroupValues, dataElementGroupSet.id) ? store.state.dataElementGroupValues[dataElementGroupSet.id] : findValue(optionList, this.props.source);
 
@@ -87,15 +95,5 @@ export default React.createClass({
                 })}
             </div>
         );
-    },
-
-    _updateGroupStatus(dataElementGroupSetId, oldValue, event) {
-        // TODO: Very bad to change props and set d2.model.dirty manually
-        this.props.source.dirty = true;
-
-        store.setState({
-            dataElementGroupValues: Object.assign({}, store.state.dataElementGroupValues, { [dataElementGroupSetId]: event.target.value ? event.target.value : null }),
-            remove: Array.from((new Set(store.state.remove.concat([oldValue])).values())),
-        });
     },
 });

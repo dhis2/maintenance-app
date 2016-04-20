@@ -1,4 +1,4 @@
-import { blue500, blue700, blue100, orange500, grey100, gray500, darkBlack, white, grey500, grey400 } from 'material-ui/lib/styles/colors';
+import { blue500, blue700, blue100, orange500, grey100, darkBlack, white, grey500, grey400 } from 'material-ui/lib/styles/colors';
 import ColorManipulator from 'material-ui/lib/utils/color-manipulator';
 import Spacing from 'material-ui/lib/styles/spacing';
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
@@ -20,8 +20,6 @@ const theme = {
         disabledColor: ColorManipulator.fade(darkBlack, 0.3),
     },
 };
-
-
 
 function createAppTheme(style) {
     return {
