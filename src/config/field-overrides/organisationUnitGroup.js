@@ -1,9 +1,42 @@
+import React from 'react';
+import LinearProgress from 'material-ui/lib/circular-progress';
 import IconPicker from '../../forms/form-fields/icon-picker';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
+import { getManifest } from 'd2/lib/d2';
+
+class SymbolPickerField extends React.Component {
+    constructor(...args) {
+        super(...args);
+
+        this.state = {};
+    }
+
+    componentDidMount() {
+        getManifest('./manifest.webapp')
+            .then(manifest => {
+                console.log(process.env.NODE_ENV);
+                this.setState({
+                    baseUrl: (process.env.NODE_ENV === 'production') ? manifest.getBaseUrl() : 'http://localhost:8080/dhis/images/orgunitgroup',
+                });
+            });
+    }
+
+    render() {
+        if (!this.state.baseUrl) {
+            return (<LinearProgress indeterminate/>);
+        }
+        return (
+            <IconPicker
+                {...this.props}
+                imgPath={this.state.baseUrl}
+            />
+        );
+    }
+}
 
 export default new Map([
     ['symbol', {
-        component: IconPicker,
+        component: SymbolPickerField,
         fieldOptions: {
             options: (function () {
                 const symbolUrls = [];
@@ -16,7 +49,6 @@ export default new Map([
 
                 return symbolUrls;
             }()),
-            imgPath: (process.env.NODE_ENV !== 'production') ? 'http://localhost:8080/dhis/images/orgunitgroup' : '/images/orgunitgroup',
         },
     }],
     ['organisationUnits', {
