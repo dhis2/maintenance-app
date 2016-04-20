@@ -38,7 +38,6 @@ class FormFieldsForModel {
             fieldConfig.name = fieldName;
             fieldConfig.fieldOptions = {
                 labelText: camelCaseToUnderscores(fieldName),
-                model: model,
             };
 
             return fieldConfig;

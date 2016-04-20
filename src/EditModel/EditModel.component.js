@@ -27,10 +27,82 @@ import { goToRoute, goBack } from '../router';
 import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import appState from '../App/appStateStore';
+import { Observable } from 'rx';
+import TextField from '../forms/form-fields/text-field';
 
 config.i18n.strings.add('name');
 config.i18n.strings.add('code');
 config.i18n.strings.add('short_name');
+
+function createUniqueValidator(fieldConfig, modelDefinition, uid) {
+    return function checkAgainstServer(value) {
+        // Don't validate against the server when we have no value
+        if (!value || !value.trim()) {
+            return Promise.resolve(true);
+        }
+
+        let modelDefinitionWithFilter = modelDefinition
+            .filter().on(fieldConfig.fieldOptions.referenceProperty).equals(value);
+
+        if (uid) {
+            modelDefinitionWithFilter = modelDefinitionWithFilter.filter().on('id').notEqual(uid);
+        }
+
+        return modelDefinitionWithFilter
+            .list()
+            .then(collection => {
+                if (collection.size !== 0) {
+                    return getInstance()
+                        .then(d2 => d2.i18n.getTranslation('value_not_unique'))
+                        .then(message => Promise.reject(message));
+                }
+                return Promise.resolve(true);
+            });
+    };
+}
+
+async function createFieldConfigForModelTypes(modelType) {
+    const d2 = await getD2();
+
+    const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
+    formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
+
+    for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
+        formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
+    }
+
+    return formFieldsManager.getFormFieldsForModel({ modelDefinition: d2.models[modelType] })
+        .map(fieldConfig => {
+            // Translate the sync validator messages if there are any validators
+            if (fieldConfig.validators) {
+                fieldConfig.validators
+                    .forEach(validator => {
+                        validator.message = d2.i18n.getTranslation(validator.message);
+                    });
+            }
+
+            // Get translation for the field label
+            fieldConfig.props.labelText = d2.i18n.getTranslation(fieldConfig.props.labelText);
+
+            // Add required indicator when the field is required
+            if (fieldConfig.props.isRequired) {
+                fieldConfig.props.labelText = `${fieldConfig.props.labelText} (*)`;
+            }
+
+            console.log(fieldConfig.component === TextField);
+            if (fieldConfig.component === TextField) {
+                fieldConfig.props.changeEvent = 'onBlur';
+            }
+
+            return fieldConfig;
+        });
+}
+
+const editFormFieldsForCurrentSection$ = appState
+    .filter(state => state.sideBar && state.sideBar.currentSection)
+    .map(state => state.sideBar.currentSubSection)
+    .distinctUntilChanged()
+    .flatMap((modelType) => Observable.fromPromise(createFieldConfigForModelTypes(modelType)));
 
 function getAttributeFieldConfigs(modelToEdit) {
     Object
@@ -97,11 +169,12 @@ export default React.createClass({
             for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
                 formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
             }
-
-            this.disposable = modelToEditStore
-                .subscribe((modelToEdit) => {
-                    const fieldConfigs = (formFieldsManager.getFormFieldsForModel(modelToEdit))
+            this.disposable = Observable.combineLatest(modelToEditStore, editFormFieldsForCurrentSection$)
+                .subscribe(([modelToEdit, editFormFieldsForCurrentModelType]) => {
+                    const fieldConfigs = editFormFieldsForCurrentModelType
                             .map(fieldConfig => {
+                                fieldConfig.fieldOptions.model = modelToEdit;
+
                                 if (this.props.modelId !== 'add' && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
                                     fieldConfig.props.disabled = true;
                                 }
@@ -110,13 +183,6 @@ export default React.createClass({
                                     fieldConfig.value = fieldConfig.beforePassToFieldConverter(modelToEdit[fieldConfig.name]);
                                 } else {
                                     fieldConfig.value = modelToEdit[fieldConfig.name];
-                                }
-
-                                if (fieldConfig.validators) {
-                                    fieldConfig.validators
-                                        .forEach(validator => {
-                                            validator.message = d2.i18n.getTranslation(validator.message);
-                                        });
                                 }
 
                                 return fieldConfig;
@@ -149,13 +215,10 @@ export default React.createClass({
                                     }
                                 }
 
-                                // Get translation for the field label
-                                fieldConfig.props.labelText = this.getTranslation(fieldConfig.props.labelText);
-
-                                // Add required indicator when the field is required
-                                if (fieldConfig.props.isRequired) {
-                                    fieldConfig.props.labelText = `${fieldConfig.props.labelText} (*)`;
+                                if (fieldConfig.unique) {
+                                    fieldConfig.asyncValidators = [createUniqueValidator(fieldConfig, modelToEdit.modelDefinition, modelToEdit.id)];
                                 }
+
                                 return fieldConfig;
                             }),
                         modelToEdit: modelToEdit,
@@ -226,9 +289,6 @@ export default React.createClass({
             );
         };
 
-        // TODO: Implement the sort of breadcrumb bar?
-        // <Heading>{this.getTranslation(camelCaseToUnderscores((appState.state && appState.state.sideBar && appState.state.sideBar.currentSection) || ''))}</Heading>
-        // <FontIcon className="material-icons" style={{color: '#AAA', padding: '18px .5rem 5px'}}>chevron_right</FontIcon>
         return (
             <div>
                 <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '2rem' }}>

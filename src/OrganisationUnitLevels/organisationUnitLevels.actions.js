@@ -172,12 +172,12 @@ Observable.combineLatest(
         ));
     });
 
-function saveOrganisationUnitLevels(...args) {
-    const [organisationUnitLevels, complete, error] = args;
+function saveOrganisationUnitLevels(action) {
+    const {organisationUnitLevels, complete, error} = action;
 
     return getInstance()
         .then(d2 => d2.Api.getApi())
-        .then(api => api.post('filledOrganisationUnitLevels', { organisationUnitLevels }))
+        .then(api => api.post('filledOrganisationUnitLevels', { organisationUnitLevels }, { dataType: 'text' }))
         .then(() => complete)
         .catch(() => error);
 }

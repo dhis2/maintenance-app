@@ -128,36 +128,7 @@ function getValidatorsFromModelValidation(modelValidation, modelDefinition) {
 }
 
 function getAsyncValidatorsFromModelValidation(modelValidation, modelDefinition, uid) {
-    function checkAgainstServer(value) {
-        // Don't validate against the server when we have no value
-        if (!value || !value.trim()) {
-            return Promise.resolve(true);
-        }
 
-        if (modelValidation.modelDefinition) {
-            log.error('No modelDefinition found on validation object.');
-
-            return Promise.reject('could_not_run_async_validation');
-        }
-
-        let modelDefinitionWithFilter = modelDefinition
-            .filter().on(modelValidation.fieldOptions.referenceProperty).equals(value);
-
-        if (uid) {
-            modelDefinitionWithFilter = modelDefinitionWithFilter.filter().on('id').notEqual(uid);
-        }
-
-        return modelDefinitionWithFilter
-            .list()
-            .then(collection => {
-                if (collection.size !== 0) {
-                    return getInstance()
-                        .then(d2 => d2.i18n.getTranslation('value_not_unique'))
-                        .then(message => Promise.reject(message));
-                }
-                return Promise.resolve(true);
-            });
-    }
 
     if (modelValidation.unique) {
         // TODO: Add asyncValidator
@@ -230,9 +201,8 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
     }
 
     const validators = [].concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition));
-    const asyncValidators = [].concat(getAsyncValidatorsFromModelValidation(fieldConfig, modelDefinition, model.id));
 
-    return Object.assign(fieldConfig, { validators, asyncValidators }, basicFieldConfig);
+    return Object.assign(fieldConfig, { validators }, basicFieldConfig);
 }
 
 export const typeToFieldMap = new Map([
