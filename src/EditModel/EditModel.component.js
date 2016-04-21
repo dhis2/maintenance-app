@@ -89,7 +89,6 @@ async function createFieldConfigForModelTypes(modelType) {
                 fieldConfig.props.labelText = `${fieldConfig.props.labelText} (*)`;
             }
 
-            console.log(fieldConfig.component === TextField);
             if (fieldConfig.component === TextField) {
                 fieldConfig.props.changeEvent = 'onBlur';
             }
