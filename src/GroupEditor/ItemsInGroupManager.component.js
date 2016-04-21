@@ -32,28 +32,31 @@ export default React.createClass({
 
     renderGroupEditor() {
         if (!this.state.showGroupEditor) {
-            return [];
+            return null;
         }
 
-        return [
-            <ItemSelector
-                itemListStore={this.state.itemListStore}
-                onChange={this._workItemChanged}
-            />,
-            <TextField
-                fullWidth
-                hintText={this.getTranslation('search_available_selected_items')}
-                defaultValue={this.state.filterText}
-                onChange={this._setFilterText}
-            />,
-            <GroupEditor
-                itemStore={this.state.itemStore}
-                assignedItemStore={this.state.assignedItemStore}
-                onAssignItems={this._assignItems}
-                onRemoveItems={this._removeItems}
-                filterText={this.state.filterText}
-            />,
-        ];
+        return (
+            <div>
+                <ItemSelector
+                    value={this.state.modelToEdit || this.state.itemListStore.state[0]}
+                    itemListStore={this.state.itemListStore}
+                    onItemSelected={this._workItemChanged}
+                />
+                <TextField
+                    fullWidth
+                    hintText={this.getTranslation('search_available_selected_items')}
+                    defaultValue={this.state.filterText}
+                    onChange={this._setFilterText}
+                />
+                <GroupEditor
+                    itemStore={this.state.itemStore}
+                    assignedItemStore={this.state.assignedItemStore}
+                    onAssignItems={this._assignItems}
+                    onRemoveItems={this._removeItems}
+                    filterText={this.state.filterText}
+                />
+            </div>
+        );
     },
 
     createUrls(items) {
@@ -131,8 +134,10 @@ export default React.createClass({
             });
     },
 
-    _typeChanged(event) {
-        const modelDef = event.target.value;
+    _typeChanged(modelDef) {
+        if (!modelDef) {
+            return;
+        }
 
         modelDef.list({ paging: false, fields: 'id,displayName,name' })
             .then(modelCollection => modelCollection.toArray())
@@ -147,8 +152,7 @@ export default React.createClass({
         });
     },
 
-    _workItemChanged(event) {
-        const model = event.target.value;
+    _workItemChanged(model) {
         const itemDefinition = model.modelDefinition.name.replace('Group', '');
 
         d2lib.getInstance()

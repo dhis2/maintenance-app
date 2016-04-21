@@ -35,25 +35,28 @@ export default React.createClass({
             return [];
         }
 
-        return [
-            <ItemSelector
-                itemListStore={this.state.itemListStore}
-                onChange={this._workItemChanged}
-            />,
-            <TextField
-                fullWidth
-                hintText={this.getTranslation('search_available_selected_items')}
-                defaultValue={this.state.filterText}
-                onChange={this._setFilterText}
-            />,
-            <GroupEditor
-                itemStore={this.state.itemStore}
-                assignedItemStore={this.state.assignedItemStore}
-                onAssignItems={this._assignItems}
-                onRemoveItems={this._removeItems}
-                filterText={this.state.filterText}
-            />,
-        ];
+        return (
+            <div>
+                <ItemSelector
+                    value={this.state.modelToEdit || this.state.itemListStore.state[0]}
+                    itemListStore={this.state.itemListStore}
+                    onItemSelected={this._workItemChanged}
+                />
+                <TextField
+                    fullWidth
+                    hintText={this.getTranslation('search_available_selected_items')}
+                    defaultValue={this.state.filterText}
+                    onChange={this._setFilterText}
+                />
+                <GroupEditor
+                    itemStore={this.state.itemStore}
+                    assignedItemStore={this.state.assignedItemStore}
+                    onAssignItems={this._assignItems}
+                    onRemoveItems={this._removeItems}
+                    filterText={this.state.filterText}
+                />
+            </div>
+        );
     },
 
     render() {
@@ -131,9 +134,7 @@ export default React.createClass({
             .catch(message => log.error(message));
     },
 
-    _typeChanged(event) {
-        const modelDef = event.target.value;
-
+    _typeChanged(modelDef) {
         modelDef.list({ paging: false, fields: 'id,displayName,name' })
             .then(modelCollection => modelCollection.toArray())
             .then(models => this.state.itemListStore.setState(models))
@@ -147,8 +148,7 @@ export default React.createClass({
         });
     },
 
-    _workItemChanged(event) {
-        const model = event.target.value;
+    _workItemChanged(model) {
         const itemDefinition = `${model.modelDefinition.name}Group`;
 
         d2lib.getInstance()

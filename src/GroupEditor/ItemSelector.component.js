@@ -1,11 +1,12 @@
 import React from 'react';
 
-import Select from 'material-ui/lib/select-field';
+import SelectField from 'material-ui/lib/select-field';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 export default React.createClass({
     propTypes: {
         itemListStore: React.PropTypes.object.isRequired,
-        onChange: React.PropTypes.func.isRequired,
+        onItemSelected: React.PropTypes.func.isRequired,
     },
 
     getInitialState() {
@@ -21,18 +22,14 @@ export default React.createClass({
                     .map(model => {
                         return {
                             text: model.displayName,
-                            payload: model,
+                            payload: model.id,
+                            model,
                         };
                     });
             })
             .subscribe(items => {
                 if (items.length) {
-                    // TODO: Remove hack to emit auto selected value on list change
-                    this.props.onChange({
-                        target: {
-                            value: items[0].payload,
-                        },
-                    });
+                    this.props.onItemSelected(items[0].model);
                 }
 
                 this.setState({ items });
@@ -45,11 +42,24 @@ export default React.createClass({
         }
     },
 
+    renderOptions() {
+        return this.state.items
+            .map((option, index) => {
+                return <MenuItem key={index} primaryText={option.text} value={option.payload} />
+            });
+    },
+
     render() {
         return (
             <div>
-                <Select {...this.props} fullWidth menuItems={this.state.items} />
+                <SelectField onChange={this._onChange} value={this.props.value && this.props.value.id} fullWidth>{this.renderOptions()}</SelectField>
             </div>
         );
+    },
+
+    _onChange(event, index, value) {
+        if (this.state.items && this.state.items[index]) {
+            this.props.onItemSelected(this.state.items[index].model);
+        }
     },
 });

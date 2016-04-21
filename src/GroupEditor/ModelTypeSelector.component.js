@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Select from 'material-ui/lib/select-field';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 import d2lib from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
@@ -41,12 +42,12 @@ export default React.createClass({
             .then(d2 => this.setState({ models: d2.models }));
     },
 
-    _onChange(event) {
+    _onChange(event, index, modelType) {
         this.setState({
-            selectedModel: event.target.value,
+            selectedModel: modelType,
         });
 
-        this.props.onChange(event);
+        this.props.onChange(modelType);
     },
 
     renderOptions() {
@@ -57,7 +58,12 @@ export default React.createClass({
                 .map((value) => ({
                     text: this.getTranslation(camelCaseToUnderscores(value.plural)),
                     payload: value,
-                }));
+                }))
+                .map((option, index) => {
+                    return (
+                        <MenuItem key={index} primaryText={option.text} value={option.payload} />
+                    );
+                });
         }
         return [];
     },
@@ -65,7 +71,15 @@ export default React.createClass({
     render() {
         return (
             <div>
-                <Select value={this.state.selectedModel} hintText={this.getTranslation('please_select_object_type')} fullWidth {...this.props} menuItems={this.renderOptions()} onChange={this._onChange} />
+                <Select
+                    value={this.state.selectedModel}
+                    hintText={this.getTranslation('please_select_object_type')}
+                    fullWidth
+                    {...this.props}
+                    onChange={this._onChange}
+                >
+                    {this.renderOptions()}
+                </Select>
             </div>
         );
     },
