@@ -2,12 +2,14 @@ import dataElement from './dataElement';
 import indicator from './indicator';
 import dataSet from './dataSet';
 import organisationUnitGroup from './organisationUnitGroup';
+import categoryOption from './categoryOption';
 
 const overridesByType = {
     dataElement,
     indicator,
     dataSet,
     organisationUnitGroup,
+    categoryOption,
 };
 
 export default {

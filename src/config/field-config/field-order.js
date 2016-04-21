@@ -5,7 +5,7 @@ const fieldOrderByName = new Map([
     ['dataElementGroup', ['name', 'shortName', 'code', 'description', 'dataElements']],
     ['dataElementGroupSet', ['name', 'shortName', 'code', 'description', 'compulsory', 'dataDimension', 'dataElementGroups']],
     ['category', ['name', 'shortName', 'code', 'description', 'dataDimensionType', 'dataDimension', 'categoryOptions']],
-    ['categoryOption', ['name', 'shortName', 'code', 'description', 'startDate', 'endDate']],
+    ['categoryOption', ['name', 'shortName', 'code', 'description', 'startDate', 'endDate', 'organisationUnits']],
     ['categoryCombo', ['name', 'shortName', 'code', 'dataDimensionType', 'skipTotal', 'categories']],
     ['categoryOptionGroup', ['name', 'shortName', 'code', 'description', 'dataDimensionType', 'categoryOptions']],
     ['categoryOptionGroupSet', ['name', 'description', 'dataDimension', 'dataDimensionType', 'categoryOptionGroups']],
