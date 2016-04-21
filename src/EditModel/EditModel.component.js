@@ -159,6 +159,10 @@ export default React.createClass({
         };
     },
 
+    isAddOperation() {
+        return this.props.modelId === 'add';
+    },
+
     componentWillMount() {
         const modelType = this.props.modelType;
 
@@ -175,7 +179,7 @@ export default React.createClass({
                             .map(fieldConfig => {
                                 fieldConfig.fieldOptions.model = modelToEdit;
 
-                                if (this.props.modelId !== 'add' && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
+                                if (!this.isAddOperation() && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
                                     fieldConfig.props.disabled = true;
                                 }
 
@@ -248,6 +252,14 @@ export default React.createClass({
         return this.getTranslation(camelCaseToUnderscores(propertyName));
     },
 
+    renderSharingNotification(formPaperStyle) {
+        if (this.isAddOperation()) {
+            return (<SharingNotification style={formPaperStyle} modelType={this.props.modelType} />);
+        }
+
+        return null;
+    },
+
     render() {
         const formPaperStyle = {
             width: '100%',
@@ -294,7 +306,7 @@ export default React.createClass({
                 <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '2rem' }}>
                     <FormHeading>{camelCaseToUnderscores(this.props.modelType)}</FormHeading>
                 </div>
-                <SharingNotification style={formPaperStyle} modelType={this.props.modelType} />
+                {this.renderSharingNotification(formPaperStyle)}
                 {this.state.isLoading ? 'Loading data...' : renderForm()}
             </div>
         );
