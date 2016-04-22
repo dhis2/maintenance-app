@@ -100,6 +100,7 @@ async function createFieldConfigForModelTypes(modelType) {
 const editFormFieldsForCurrentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
     .map(state => state.sideBar.currentSubSection)
+    .filter(state => state)
     .distinctUntilChanged()
     .flatMap((modelType) => Observable.fromPromise(createFieldConfigForModelTypes(modelType)));
 
