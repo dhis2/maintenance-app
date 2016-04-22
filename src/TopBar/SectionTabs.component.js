@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react';
 import TopBarButtons from '../TopBar/TopBarButtons.component';
 import Tabs from 'material-ui/lib/tabs/tabs';
 import Tab from 'material-ui/lib/tabs/tab';
-
-const noop = () => {};
+import noop from 'd2-utilizr/lib/noop';
 
 function SectionTabs(props) {
     const styles = {

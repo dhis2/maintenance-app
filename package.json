@@ -55,7 +55,7 @@
     "classnames": "2.2.3",
     "d2": "0.0.34",
     "d2-ui": "0.0.20",
-    "d2-utilizr": "0.2.1",
+    "d2-utilizr": "^0.2.9",
     "fbjs": "0.2.1",
     "jquery": "2.1.4",
     "lodash.isnumber": "3.0.1",

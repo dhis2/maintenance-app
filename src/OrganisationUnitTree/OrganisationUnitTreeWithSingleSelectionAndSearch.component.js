@@ -2,8 +2,7 @@ import React from 'react';
 import AutoComplete from 'material-ui/lib/auto-complete';
 import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-
-const noop = () => {};
+import noop from 'd2-utilizr/lib/noop';
 
 function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
     const styles = {

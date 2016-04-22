@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from 'd2-ui/lib/sidebar/Sidebar.component';
-function noop() {}
+import noop from 'd2-utilizr/lib/noop';
 
 function MaintenanceSideBar(props) {
     const sideBarWrapperStyle = {};
@@ -17,6 +17,7 @@ function MaintenanceSideBar(props) {
         </div>
     );
 }
+
 MaintenanceSideBar.propTypes = {
     style: React.PropTypes.object,
     sections: React.PropTypes.arrayOf(React.PropTypes.object),
