@@ -100,7 +100,7 @@ function loadList({ params }, replace, callback) {
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the appState
         // Also load the initialState without cache so we refresh the assigned organisation units
-        // These could have changed by adding an organisation unit which would need to be reflexted in the
+        // These could have changed by adding an organisation unit which would need to be reflected in the
         // organisation unit tree
         initState({ params }, true);
         return callback();

@@ -1,5 +1,5 @@
 import React from 'react';
-import sideBarStore, { organisationUnitAdded } from './sideBarStore';
+import sideBarStore, { organisationUnitTreeChanged$ } from './sideBarStore';
 import LinearProgress from 'material-ui/lib/linear-progress';
 import { onSectionChanged, onOrgUnitSearch } from './sideBarActions';
 import { setAppState } from '../App/appStateStore';
@@ -10,15 +10,17 @@ class SideBarContainer extends React.Component {
     componentWillMount() {
         this.disposable = sideBarStore
             .subscribe(sideBarState => {
+                console.log(sideBarState);
                 this.setState({
                     ...sideBarState,
-                    organisationUnitsToReload: [],
+                    organisationUnitsToReload: this.state && this.state.organisationUnitsToReload ? this.state.organisationUnitsToReload : [],
                 });
             });
 
-        this.organisationUnitSaved = organisationUnitAdded
+        this.organisationUnitSaved = organisationUnitTreeChanged$
             .subscribe(organisationUnitToReload => {
-                this.setState({ organisationUnitsToReload: [organisationUnitToReload.id] });
+                console.log(organisationUnitToReload);
+                this.setState({ organisationUnitsToReload: [organisationUnitToReload.id] }, () => this.forceUpdate());
             });
     }
 
@@ -33,6 +35,8 @@ class SideBarContainer extends React.Component {
     }
 
     getSideBarItems() {
+        console.log(this.state.organisationUnitsToReload);
+
         if (this.state.currentSubSection === 'organisationUnit') {
             if (this.state.userOrganisationUnits && this.state.selectedOrganisationUnit) {
                 const styles = {

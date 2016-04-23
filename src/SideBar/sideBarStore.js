@@ -1,8 +1,10 @@
 import React from 'react';
-import appStateStore from '../App/appStateStore';
+import appStateStore, { reloadUserOrganisationUnits } from '../App/appStateStore';
 import FontIcon from 'material-ui/lib/font-icon';
 import objectActions from '../EditModel/objectActions';
 import modelToEditStore from '../EditModel/modelToEditStore';
+import { afterDeleteHook$ } from '../List/ContextActions.js';
+import { Observable } from 'rx';
 
 class DefaultSideBarIcon extends FontIcon {
     shouldComponentUpdate() {
@@ -50,8 +52,15 @@ const sideBarState = appStateStore
 
 export default sideBarState;
 
-export const organisationUnitAdded = objectActions.saveObject
+const organisationUnitAdded$ = objectActions.saveObject
     .map(() => modelToEditStore.state)
     .filter((modelToEdit) => modelToEdit.modelDefinition.name === 'organisationUnit')
     .map((modelToEdit) => modelToEdit.parent);
+
+const afterOrganisationUnitDeleted$ = afterDeleteHook$
+    .filter(data => data.modelType && data.modelType === 'organisationUnit')
+    .flatMap(() => Observable.fromPromise(reloadUserOrganisationUnits()))
+    .map(() => appStateStore.getState().selectedOrganisationUnit);
+
+export const organisationUnitTreeChanged$ = Observable.merge(organisationUnitAdded$, afterOrganisationUnitDeleted$);
 
