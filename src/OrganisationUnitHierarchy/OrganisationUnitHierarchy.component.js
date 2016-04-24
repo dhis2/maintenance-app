@@ -95,7 +95,7 @@ const organisationUnitHierarchy$ = appState
             roots: userOrganisationUnits.toArray(),
             leftRoots: hierarchy.leftRoots,
             rightRoots: hierarchy.rightRoots,
-            initiallyExpanded: [],
+            initiallyExpanded: userOrganisationUnits.toArray().map(model => model.id),
             selectedLeft: hierarchy.selectedLeft || [],
             selectedRight: hierarchy.selectedRight || [],
             isProcessing: hierarchy.isProcessing,

@@ -10,7 +10,6 @@ class SideBarContainer extends React.Component {
     componentWillMount() {
         this.disposable = sideBarStore
             .subscribe(sideBarState => {
-                console.log(sideBarState);
                 this.setState({
                     ...sideBarState,
                     organisationUnitsToReload: this.state && this.state.organisationUnitsToReload ? this.state.organisationUnitsToReload : [],
@@ -19,7 +18,6 @@ class SideBarContainer extends React.Component {
 
         this.organisationUnitSaved = organisationUnitTreeChanged$
             .subscribe(organisationUnitToReload => {
-                console.log(organisationUnitToReload);
                 this.setState({ organisationUnitsToReload: [organisationUnitToReload.id] }, () => this.forceUpdate());
             });
     }
@@ -35,8 +33,6 @@ class SideBarContainer extends React.Component {
     }
 
     getSideBarItems() {
-        console.log(this.state.organisationUnitsToReload);
-
         if (this.state.currentSubSection === 'organisationUnit') {
             if (this.state.userOrganisationUnits && this.state.selectedOrganisationUnit) {
                 const styles = {
