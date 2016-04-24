@@ -70,6 +70,15 @@ async function loadSelectedOrganisationUnitState() {
         }, {});
 }
 
+export async function reloadUserOrganisationUnits() {
+    const userOrganisationUnits = await getCurrentUserOrganisationUnits(true);
+
+    appState.setState({
+        ...appState.getState(),
+        userOrganisationUnits,
+    });
+}
+
 export async function initAppState(startState, disableCache) {
     const [sideBar, selectedOrganisationUnit, userOrganisationUnits] = await Promise.all([
         loadSideBarState(),

@@ -10,6 +10,7 @@ import sharingStore from './sharing.store';
 import translateStore from './translation-dialog/translationStore';
 import appStore from '../App/appStateStore';
 import { goToRoute } from '../router';
+import { Subject } from 'rx';
 
 config.i18n.strings.add('edit');
 config.i18n.strings.add('clone');
@@ -18,6 +19,8 @@ config.i18n.strings.add('details');
 config.i18n.strings.add('translate');
 config.i18n.strings.add('sharing');
 config.i18n.strings.add('pdfDataSetForm');
+
+export const afterDeleteHook$ = new Subject();
 
 const contextActions = Action.createActionsFromNames([
     'edit',
@@ -65,6 +68,12 @@ contextActions.delete
 
                                 snackActions.show({
                                     message: `${model.name} ${d2.i18n.getTranslation('was_deleted')}`,
+                                });
+
+                                // Fire the afterDeleteHook
+                                afterDeleteHook$.onNext({
+                                    model,
+                                    modelType: model.modelDefinition.name,
                                 });
                             })
                             .catch(response => {

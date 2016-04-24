@@ -8,6 +8,7 @@ export const fieldFilteringForQuery = 'displayName|rename(name),shortName,id,las
 const columnObservable = appState
     .filter(appState => appState.sideBar && appState.sideBar.currentSubSection)
     .map(appState => appState.sideBar.currentSubSection)
+    .distinctUntilChanged()
     .map(subSection => {
         if (subSection === 'organisationUnitLevel') {
             return ['name', 'level', 'lastUpdated'];
