@@ -107,7 +107,7 @@ objectActions.saveObject.subscribe(action => {
 
     const successHandler = (response) => {
         if (hasAfterSave(modelToEditStore.state)) {
-            log.info('Handling after save');
+            log.debug('Handling after save');
             getAfterSave(modelToEditStore.state, response.response.lastImported)
                 .subscribe(
                     () => action.complete('success'),

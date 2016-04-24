@@ -25,7 +25,7 @@ const SnackBarContainer = React.createClass({
                     show: false,
                 });
             }
-        }, log.info.bind(log));
+        }, log.debug.bind(log));
 
         this.registerDisposable(snackStoreDisposable);
     },

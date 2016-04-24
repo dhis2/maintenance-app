@@ -25,7 +25,7 @@ import routes from './router';
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
 } else {
-    log.setLevel(log.levels.ERROR);
+    log.setLevel(log.levels.info);
 }
 
 function configI18n({ uiLocale }) {
