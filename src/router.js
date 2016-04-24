@@ -110,7 +110,7 @@ function loadList({ params }, replace, callback) {
     return listActions.loadList(params.modelType)
         .subscribe(
             (message) => {
-                log.info(message);
+                log.debug(message);
                 callback();
             },
             (message) => {
