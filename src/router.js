@@ -53,6 +53,7 @@ function initStateOuHierarchy() {
     });
 }
 
+// TODO: We could use an Observable that manages the current modelType to load the correct d2.Model. This would clean up the load function below.
 function loadObject({ params }, replace, callback) {
     initState({ params });
 
@@ -63,7 +64,9 @@ function loadObject({ params }, replace, callback) {
             // Set the parent for the new organisationUnit to the selected OU
             // TODO: Should probably be able to do this in a different way when this becomes needed for multiple object types
             if (params.modelType === 'organisationUnit') {
-                appState
+                return appState
+                    // Just take the first value as we don't want this observer to keep updating the state
+                    .take(1)
                     .subscribe((state) => {
                         if (state.selectedOrganisationUnit && state.selectedOrganisationUnit.id) {
                             modelToEdit.parent = {

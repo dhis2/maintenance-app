@@ -94,11 +94,13 @@ async function createFieldConfigForModelTypes(modelType) {
         });
 }
 
-const editFormFieldsForCurrentSection$ = appState
+const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
     .map(state => state.sideBar.currentSubSection)
     .filter(state => state)
-    .distinctUntilChanged()
+    .distinctUntilChanged();
+
+const editFormFieldsForCurrentSection$ = currentSection$
     .flatMap((modelType) => Observable.fromPromise(createFieldConfigForModelTypes(modelType)));
 
 function getAttributeFieldConfigs(modelToEdit) {
@@ -136,6 +138,16 @@ function getAttributeFieldConfigs(modelToEdit) {
         });
 }
 
+const modelToEditStoreFilteredByCurrentType$ = modelToEditStore
+
+const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStoreFilteredByCurrentType$, editFormFieldsForCurrentSection$, currentSection$)
+    .filter(([modelToEdit, formFields, currentType]) => {
+        if (modelToEdit && modelToEdit.modelDefinition && modelToEdit.modelDefinition.name) {
+            return modelToEdit.modelDefinition.name === currentType;
+        }
+        return false;
+    });
+
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default React.createClass({
     propTypes: {
@@ -170,7 +182,8 @@ export default React.createClass({
             for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
                 formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
             }
-            this.disposable = Observable.combineLatest(modelToEditStore, editFormFieldsForCurrentSection$)
+
+            this.disposable = modelToEditAndModelForm$
                 .subscribe(([modelToEdit, editFormFieldsForCurrentModelType]) => {
                     const fieldConfigs = editFormFieldsForCurrentModelType
                             .map(fieldConfig => {

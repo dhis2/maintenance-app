@@ -10,6 +10,9 @@ const SnackBarContainer = React.createClass({
     getInitialState() {
         return {
             show: false,
+            snack: {
+                message: '',
+            },
         };
     },
 
