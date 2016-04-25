@@ -4,7 +4,7 @@ import fieldOrderNames from '../config/field-config/field-order';
 import disabledOnEdit from '../config/disabled-on-edit';
 import FormFieldsForModel from '../forms/FormFieldsForModel';
 import FormFieldsManager from '../forms/FormFieldsManager';
-import { config, getInstance as getD2 } from 'd2/lib/d2';
+import { config, getInstance } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
@@ -59,7 +59,7 @@ function createUniqueValidator(fieldConfig, modelDefinition, uid) {
 }
 
 async function createFieldConfigForModelTypes(modelType) {
-    const d2 = await getD2();
+    const d2 = await getInstance();
 
     const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
     formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
@@ -175,7 +175,7 @@ export default React.createClass({
     componentWillMount() {
         const modelType = this.props.modelType;
 
-        getD2().then(d2 => {
+        getInstance().then(d2 => {
             const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
             formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
 
