@@ -23,6 +23,7 @@ export const INTEGER = Symbol('INTEGER');
 export const IDENTIFIER = Symbol('IDENTIFIER');
 export const URL = Symbol('URL');
 export const EMAIL = Symbol('EMAIL');
+export const NUMBER = Symbol('NUMBER');
 
 config.i18n.strings.add(isRequired.message);
 config.i18n.strings.add(isUrl.message);
@@ -78,6 +79,9 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
     const validators = [];
 
     switch (type) {
+    case NUMBER:
+        validators.push(createValidatorFromValidatorFunction(isNumberValidator));
+        break;
     case INTEGER:
         validators.push(createValidatorFromValidatorFunction(isNumberValidator));
         validators.push(createValidatorFromValidatorFunction(isIntegerValidator));
@@ -217,4 +221,5 @@ export const typeToFieldMap = new Map([
     ['INTEGER', INTEGER],
     ['DATE', DATE],
     ['URL', URL],
+    ['NUMBER', NUMBER],
 ]);

@@ -35,6 +35,12 @@ export default {
                     'organisationUnitLevel',
                 ],
             },
+
+            dataAdministrationSection: {
+                items: [
+                    'constant',
+                ],
+            },
         };
     },
 };

@@ -73,6 +73,13 @@ const fieldOrderByName = new Map([
         'name',
         'offlineLevels',
     ]],
+    ['constant', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'value',
+    ]],
 ]);
 
 export default {
