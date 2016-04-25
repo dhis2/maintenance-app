@@ -148,6 +148,37 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStoreFilter
         return false;
     });
 
+function runFieldRules(fieldConfig, modelToEdit) {
+    // TODO: Take this code out to a sort of formRulesRunner, that can modify the fieldConfigs before the render
+    if (modelToEdit.modelDefinition.name === 'dataElement') {
+        // Disable the categoryCombo field when working with a tracker dataElement
+        if (fieldConfig.name === 'categoryCombo' && modelToEdit.domainType === 'TRACKER') {
+            fieldConfig.props.disabled = true;
+        }
+        // Disable aggregationOperator when working with a tracker dataElement
+        if (fieldConfig.name === 'aggregationType' && modelToEdit.domainType === 'TRACKER') {
+            fieldConfig.props.disabled = true;
+        }
+    }
+
+    if (modelToEdit.modelDefinition.name === 'dataElement' || modelToEdit.modelDefinition.name === 'attribute') {
+        if (fieldConfig.name === 'valueType') {
+            // Disable valueType when an optionSet is selected
+            if (modelToEdit.optionSet) {
+                fieldConfig.props.disabled = true;
+            } else {
+                fieldConfig.props.disabled = false;
+            }
+        }
+    }
+
+    if (fieldConfig.unique) {
+        fieldConfig.asyncValidators = [createUniqueValidator(fieldConfig, modelToEdit.modelDefinition, modelToEdit.id)];
+    }
+
+    return fieldConfig;
+}
+
 // TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default React.createClass({
     propTypes: {
@@ -213,27 +244,7 @@ export default React.createClass({
                             })
                         )
                             .map(fieldConfig => {
-                                // TODO: Take this code out to a sort of formRulesRunner, that can modify the fieldConfigs before the render
-                                if (modelToEdit.modelDefinition.name === 'dataElement') {
-                                    // Disable the categoryCombo field when working with a tracker dataElement
-                                    if (fieldConfig.name === 'categoryCombo' && modelToEdit.domainType === 'TRACKER') {
-                                        fieldConfig.props.disabled = true;
-                                    }
-                                    // Disable aggregationOperator when working with a tracker dataElement
-                                    if (fieldConfig.name === 'aggregationType' && modelToEdit.domainType === 'TRACKER') {
-                                        fieldConfig.props.disabled = true;
-                                    }
-                                    // Disable valueType when an optionSet is selected
-                                    if (fieldConfig.name === 'valueType' && modelToEdit.optionSet) {
-                                        fieldConfig.props.disabled = true;
-                                    }
-                                }
-
-                                if (fieldConfig.unique) {
-                                    fieldConfig.asyncValidators = [createUniqueValidator(fieldConfig, modelToEdit.modelDefinition, modelToEdit.id)];
-                                }
-
-                                return fieldConfig;
+                                return runFieldRules(fieldConfig, modelToEdit);
                             }),
                         modelToEdit: modelToEdit,
                         isLoading: false,

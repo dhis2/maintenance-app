@@ -39,6 +39,7 @@ export default {
             dataAdministrationSection: {
                 items: [
                     'constant',
+                    'attribute',
                 ],
             },
         };
