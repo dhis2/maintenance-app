@@ -1,6 +1,6 @@
 {
   "name": "maintenance-app",
-  "version": "1.0.7",
+  "version": "23.0.0",
   "description": "DHIS2 Maintenance app",
   "main": "index.js",
   "scripts": {
