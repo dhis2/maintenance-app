@@ -27,6 +27,8 @@ import appState from '../App/appStateStore';
 import { Observable } from 'rx';
 import TextField from '../forms/form-fields/text-field';
 
+import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
+
 config.i18n.strings.add('name');
 config.i18n.strings.add('code');
 config.i18n.strings.add('short_name');
@@ -149,28 +151,16 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStoreFilter
     });
 
 function runFieldRules(fieldConfig, modelToEdit) {
-    // TODO: Take this code out to a sort of formRulesRunner, that can modify the fieldConfigs before the render
-    if (modelToEdit.modelDefinition.name === 'dataElement') {
-        // Disable the categoryCombo field when working with a tracker dataElement
-        if (fieldConfig.name === 'categoryCombo' && modelToEdit.domainType === 'TRACKER') {
-            fieldConfig.props.disabled = true;
-        }
-        // Disable aggregationOperator when working with a tracker dataElement
-        if (fieldConfig.name === 'aggregationType' && modelToEdit.domainType === 'TRACKER') {
-            fieldConfig.props.disabled = true;
-        }
-    }
-
-    if (modelToEdit.modelDefinition.name === 'dataElement' || modelToEdit.modelDefinition.name === 'attribute') {
-        if (fieldConfig.name === 'valueType') {
-            // Disable valueType when an optionSet is selected
-            if (modelToEdit.optionSet) {
-                fieldConfig.props.disabled = true;
-            } else {
-                fieldConfig.props.disabled = false;
-            }
-        }
-    }
+    // if (modelToEdit.modelDefinition.name === 'dataElement' || modelToEdit.modelDefinition.name === 'attribute') {
+    //     if (fieldConfig.name === 'valueType') {
+    //         // Disable valueType when an optionSet is selected
+    //         if (modelToEdit.optionSet) {
+    //             fieldConfig.props.disabled = true;
+    //         } else {
+    //             fieldConfig.props.disabled = false;
+    //         }
+    //     }
+    // }
 
     if (fieldConfig.unique) {
         fieldConfig.asyncValidators = [createUniqueValidator(fieldConfig, modelToEdit.modelDefinition, modelToEdit.id)];
@@ -216,7 +206,7 @@ export default React.createClass({
 
             this.disposable = modelToEditAndModelForm$
                 .subscribe(([modelToEdit, editFormFieldsForCurrentModelType]) => {
-                    const fieldConfigs = editFormFieldsForCurrentModelType
+                    let fieldConfigs = editFormFieldsForCurrentModelType
                             .map(fieldConfig => {
                                 fieldConfig.fieldOptions.model = modelToEdit;
 
@@ -232,6 +222,8 @@ export default React.createClass({
 
                                 return fieldConfig;
                             });
+
+                    fieldConfigs = applyRulesToFieldConfigs(getRulesForModelType(modelToEdit.modelDefinition.name), fieldConfigs, modelToEdit);
 
                     this.setState({
                         fieldConfigs: [].concat(
@@ -249,6 +241,7 @@ export default React.createClass({
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
+
                 }, (errorMessage) => {
                     snackActions.show({ message: errorMessage });
                 });
