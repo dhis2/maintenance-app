@@ -36,15 +36,42 @@ const fieldRules = new Map([['dataElement',
                     thenValue: true,
                     elseValue: false,
                 },
-                // {
-                //     setValue: (modelToEdit) => {
-                //         return modelToEdit.optionSet.valueType;
-                //     },
-                // },
+                {
+                    type: 'CHANGE_VALUE',
+                    setValue: (model, fieldConfig) => {
+                        // TODO: This is not an immutable modification. It is more efficient this way however it might
+                        // collide and is not very transparent. Especially the fact that the new value needs to be set
+                        // on both the model and the fieldConfig is not very clear.
+                        // It would probably make sense to run the model modification rules before.
+                        fieldConfig.value = model[fieldConfig.property] = model.optionSet.valueType;
+                    },
+                }
             ],
         }
     ],
-]]);
+], ['attribute', [
+    {
+        field: 'valueType',
+        when: {
+            field: 'optionSet',
+            operator: 'HAS_VALUE',
+        },
+        operations: [
+            {
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            },
+            {
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.property] = model.optionSet.valueType;
+                },
+            }
+        ]
+    }
+]]]);
 
 const whenOperatorMap = new Map([
     ['EQUALS', equalsOperator],
@@ -53,6 +80,8 @@ const whenOperatorMap = new Map([
 
 const operationsMap = new Map([
     ['SET_PROP', setProp],
+    ['CHANGE_VALUE', changeValue],
+
 ]);
 
 export function getRulesForModelType(fieldName) {
@@ -63,8 +92,13 @@ export function getRulesForModelType(fieldName) {
     return [];
 }
 
+function changeValue(fieldConfig, operationParams, ruleResult, model) {
+    if (ruleResult) {
+        operationParams.setValue(model, fieldConfig);
+    }
+}
+
 function setProp(fieldConfig, operationParams, ruleResult) {
-    console.log(fieldConfig.name, ruleResult);
     if (ruleResult) {
         return fieldConfig.props[operationParams.propName] = operationParams.thenValue;
     }
@@ -112,7 +146,7 @@ export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
 
                     log.debug(`---- For field ${field || rule.field} execute ${getOperation(type).name} with`, operationParams);
 
-                    getOperation(type)(fieldConfigForOperation, operationParams, rulePassed);
+                    getOperation(type)(fieldConfigForOperation, operationParams, rulePassed, modelToEdit);
                 });
         });
 

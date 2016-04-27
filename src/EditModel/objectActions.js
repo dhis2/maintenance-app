@@ -150,10 +150,10 @@ objectActions.update.subscribe(action => {
                     modelToEdit['aggregationType'] = 'NONE';
                 }
 
-                // When an optionSet is selected the valueType should follow the valueType of the optionSet
-                if (fieldName === 'optionSet' && value) {
-                    modelToEdit.valueType = value.valueType;
-                }
+                // // When an optionSet is selected the valueType should follow the valueType of the optionSet
+                // if (fieldName === 'optionSet' && value) {
+                //     modelToEdit.valueType = value.valueType;
+                // }
             }
 
         } else {
