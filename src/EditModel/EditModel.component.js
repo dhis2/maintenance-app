@@ -262,7 +262,13 @@ export default React.createClass({
         return this.getTranslation(camelCaseToUnderscores(propertyName));
     },
 
-    renderSharingNotification(formPaperStyle) {
+    renderSharingNotification() {
+        const formPaperStyle = {
+            width: '100%',
+            margin: '0 auto 3rem',
+            position: 'relative',
+        };
+
         if (this.isAddOperation()) {
             return (<SharingNotification style={formPaperStyle} modelType={this.props.modelType} />);
         }
@@ -270,54 +276,54 @@ export default React.createClass({
         return null;
     },
 
-    render() {
+    renderForm() {
         const formPaperStyle = {
             width: '100%',
             margin: '0 auto 2rem',
-            padding: '0 5rem 4rem',
+            padding: '2rem 5rem 4rem',
             position: 'relative',
         };
 
-        const renderForm = () => {
-            if (this.state.isLoading) {
-                return (
-                    <CircularProgress mode="indeterminate" />
-                );
-            }
-
-            const backButtonStyle = {
-                position: 'absolute',
-                left: 5,
-                top: 5,
-            };
-
+        if (this.state.isLoading) {
             return (
-                <div>
-                    <Paper style={formPaperStyle}>
-                        <div style={backButtonStyle}>
-                            <BackButton onClick={this._goBack} toolTip="back_to_list" />
-                        </div>
-                        <FormBuilder
-                            fields={this.state.fieldConfigs}
-                            onUpdateField={this._onUpdateField}
-                            onUpdateFormStatus={this._onUpdateFormStatus}
-                        />
-                        <FormButtons>
-                            <SaveButton onClick={this._saveAction} isValid={this.state.formState.valid && !this.state.formState.validating} isSaving={this.state.isSaving} />
-                            <CancelButton onClick={this._closeAction} />
-                        </FormButtons>
-                    </Paper>
-                </div>
+                <CircularProgress mode="indeterminate" />
             );
+        }
+
+        const backButtonStyle = {
+            position: 'absolute',
+            left: 5,
+            top: 5,
         };
 
         return (
+            <Paper style={formPaperStyle}>
+                <div style={backButtonStyle}>
+                    <BackButton onClick={this._goBack} toolTip="back_to_list"/>
+                </div>
+                <FormBuilder
+                    fields={this.state.fieldConfigs}
+                    onUpdateField={this._onUpdateField}
+                    onUpdateFormStatus={this._onUpdateFormStatus}
+                />
+                <FormButtons>
+                    <SaveButton onClick={this._saveAction}
+                                isValid={this.state.formState.valid && !this.state.formState.validating}
+                                isSaving={this.state.isSaving}/>
+                    <CancelButton onClick={this._closeAction}/>
+                </FormButtons>
+            </Paper>
+        );
+    },
+
+    render() {
+        return (
             <div>
-                <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '1rem' }}>
                     <FormHeading>{camelCaseToUnderscores(this.props.modelType)}</FormHeading>
                 </div>
-                {this.renderSharingNotification(formPaperStyle)}
-                {this.state.isLoading ? 'Loading data...' : renderForm()}
+                {this.renderSharingNotification()}
+                {this.state.isLoading ? 'Loading data...' : this.renderForm()}
             </div>
         );
     },

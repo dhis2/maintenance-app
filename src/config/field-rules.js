@@ -18,6 +18,12 @@ export default new Map([['dataElement',
                 propName: 'disabled',
                 thenValue: true,
                 elseValue: false,
+            }, {
+                field: 'aggregationType',
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.property] = 'NONE';
+                },
             }],
         },
         {

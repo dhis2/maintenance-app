@@ -142,20 +142,6 @@ objectActions.update.subscribe(action => {
             log.debug(`Change ${fieldName} to ${value}`);
             modelToEdit[fieldName] = value;
             log.debug(`Value is now: ${modelToEdit.dataValues[fieldName]}`);
-
-            if (modelToEdit.modelDefinition.name === 'dataElement') {
-                // TODO: Find a more generic way to do this for multiple modelTypes, using some sort of config perhaps
-                // Some sort of rules that need to run on a field change
-                if (fieldName === 'domainType' && value === 'TRACKER') {
-                    modelToEdit['aggregationType'] = 'NONE';
-                }
-
-                // // When an optionSet is selected the valueType should follow the valueType of the optionSet
-                // if (fieldName === 'optionSet' && value) {
-                //     modelToEdit.valueType = value.valueType;
-                // }
-            }
-
         } else {
             log.debug('Not updating anything');
         }
