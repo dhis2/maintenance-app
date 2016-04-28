@@ -150,18 +150,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStoreFilter
         return false;
     });
 
-function runFieldRules(fieldConfig, modelToEdit) {
-    // if (modelToEdit.modelDefinition.name === 'dataElement' || modelToEdit.modelDefinition.name === 'attribute') {
-    //     if (fieldConfig.name === 'valueType') {
-    //         // Disable valueType when an optionSet is selected
-    //         if (modelToEdit.optionSet) {
-    //             fieldConfig.props.disabled = true;
-    //         } else {
-    //             fieldConfig.props.disabled = false;
-    //         }
-    //     }
-    // }
-
+function addUniqueValidatorWhenUnique(fieldConfig, modelToEdit) {
     if (fieldConfig.unique) {
         fieldConfig.asyncValidators = [createUniqueValidator(fieldConfig, modelToEdit.modelDefinition, modelToEdit.id)];
     }
@@ -206,7 +195,10 @@ export default React.createClass({
 
             this.disposable = modelToEditAndModelForm$
                 .subscribe(([modelToEdit, editFormFieldsForCurrentModelType]) => {
-                    let fieldConfigs = editFormFieldsForCurrentModelType
+                    const fieldConfigs = editFormFieldsForCurrentModelType
+                            // TODO: When switching to the FormBuilder that manages state this function for all values
+                            // would need to be executed only for the field that actually changed and/or the values that
+                            // change because of it.
                             .map(fieldConfig => {
                                 fieldConfig.fieldOptions.model = modelToEdit;
 
@@ -214,6 +206,9 @@ export default React.createClass({
                                     fieldConfig.props.disabled = true;
                                 }
 
+                                // The value is passes through a converter before being set onto the field config.
+                                // This is useful for when a value is a number and might have to be translated to a
+                                // value of the type Number.
                                 if (fieldConfig.beforePassToFieldConverter) {
                                     fieldConfig.value = fieldConfig.beforePassToFieldConverter(modelToEdit[fieldConfig.name]);
                                 } else {
@@ -223,21 +218,22 @@ export default React.createClass({
                                 return fieldConfig;
                             });
 
-                    fieldConfigs = applyRulesToFieldConfigs(getRulesForModelType(modelToEdit.modelDefinition.name), fieldConfigs, modelToEdit);
+                    const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(modelToEdit.modelDefinition.name), fieldConfigs, modelToEdit);
+                    const fieldConfigsWithAttributeFields = [].concat(
+                        fieldConfigsAfterRules,
+                        getAttributeFieldConfigs.call(this, modelToEdit),
+                        (extraFields[modelType] || []).map(config => {
+                            config.props = config.props || {};
+                            config.props.modelToEdit = modelToEdit;
+                            return config;
+                        })
+                    );
+
+                    const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
+                        .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
 
                     this.setState({
-                        fieldConfigs: [].concat(
-                            fieldConfigs,
-                            getAttributeFieldConfigs.call(this, modelToEdit),
-                            (extraFields[modelType] || []).map(config => {
-                                config.props = config.props || {};
-                                config.props.modelToEdit = modelToEdit;
-                                return config;
-                            })
-                        )
-                            .map(fieldConfig => {
-                                return runFieldRules(fieldConfig, modelToEdit);
-                            }),
+                        fieldConfigs: fieldConfigsWithAttributeFieldsAndUniqueValidators,
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
