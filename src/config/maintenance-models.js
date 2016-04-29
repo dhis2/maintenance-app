@@ -40,6 +40,7 @@ export default {
                 items: [
                     'constant',
                     'attribute',
+                    'optionSet',
                 ],
             },
         };
