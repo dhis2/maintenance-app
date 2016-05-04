@@ -2,12 +2,25 @@ import Store from 'd2-ui/lib/store/Store';
 import { getInstance } from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import isObject from 'd2-utilizr/lib/isObject';
-import snackActions from '../Snackbar/snack.actions';
-
 import maintenanceModels from '../config/maintenance-models';
-const sideBarConfig = maintenanceModels.getSideBarConfig();
 
+import snackActions from '../Snackbar/snack.actions';
+import Action from 'd2-ui/lib/action/Action';
+import { Observable } from 'rx';
+
+const sideBarConfig = maintenanceModels.getSideBarConfig();
 const appState = Store.create();
+const notifications = Action.createActionsFromNames(['noRootOrgUnitAvailable'])
+
+Observable.combineLatest(notifications.noRootOrgUnitAvailable, appState, (_, appState) => appState)
+    .filter(appState => appState.sideBar.currentSection === 'organisationUnitSection')
+    .take(1)
+    .subscribe(() => {
+        snackActions.show({
+            message: 'no_org_units_add_one_to_get_started',
+            translate: true,
+        });
+    });
 
 function isInPredefinedList(predefinedList) {
     return function isInPredefinedListFunc(name) {
@@ -55,11 +68,8 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
 
         getCurrentUserOrganisationUnits.currentUserOrganisationUnits = rootLevelOrgUnits;
 
-        if (rootLevelOrgUnits.size === 0) {
-            snackActions.show({
-                message: 'no_org_units_add_one_to_get_started',
-                translate: true,
-            });
+        if (!rootLevelOrgUnits.size) {
+            notifications.noRootOrgUnitAvailable();
         }
 
         return rootLevelOrgUnits;
