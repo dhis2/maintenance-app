@@ -2,6 +2,7 @@ import Store from 'd2-ui/lib/store/Store';
 import { getInstance } from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import isObject from 'd2-utilizr/lib/isObject';
+import snackActions from '../Snackbar/snack.actions';
 
 import maintenanceModels from '../config/maintenance-models';
 const sideBarConfig = maintenanceModels.getSideBarConfig();
@@ -48,6 +49,21 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
 
     const d2 = await getInstance();
     const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits();
+
+    if (d2.currentUser.authorities.has('ALL') && !organisationUnitsCollection.size) {
+        const rootLevelOrgUnits = await d2.models.organisationUnits.list({level: 1});
+
+        getCurrentUserOrganisationUnits.currentUserOrganisationUnits = rootLevelOrgUnits;
+
+        if (rootLevelOrgUnits.size === 0) {
+            snackActions.show({
+                message: 'no_org_units_add_one_to_get_started',
+                translate: true,
+            });
+        }
+
+        return rootLevelOrgUnits;
+    }
 
     getCurrentUserOrganisationUnits.currentUserOrganisationUnits = organisationUnitsCollection;
 
