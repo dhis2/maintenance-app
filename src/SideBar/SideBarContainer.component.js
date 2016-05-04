@@ -5,6 +5,7 @@ import { onSectionChanged, onOrgUnitSearch } from './sideBarActions';
 import { setAppState } from '../App/appStateStore';
 import MaintenanceSideBar from './MaintenanceSidebar.component';
 import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
+import log from 'loglevel';
 
 class SideBarContainer extends React.Component {
     componentWillMount() {
@@ -17,9 +18,10 @@ class SideBarContainer extends React.Component {
             });
 
         this.organisationUnitSaved = organisationUnitTreeChanged$
-            .subscribe(organisationUnitToReload => {
-                this.setState({ organisationUnitsToReload: [organisationUnitToReload.id] }, () => this.forceUpdate());
-            });
+            .subscribe(
+                (organisationUnitToReload) => this.setState({ organisationUnitsToReload: [organisationUnitToReload.id] }, () => this.forceUpdate()),
+                (error) => log.error(error)
+            );
     }
 
     componentWillUnmount() {
