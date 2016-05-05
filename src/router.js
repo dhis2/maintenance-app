@@ -16,6 +16,7 @@ import MenuCardsForSection from './MenuCards/MenuCardsForSection.component';
 import MenuCardsForAllSections from './MenuCards/MenuCardsForAllSections.component';
 import OrganisationUnitHierarchy from './OrganisationUnitHierarchy';
 import OrganisationUnitLevels from './OrganisationUnitLevels/OrganisationUnitLevels.component';
+import EditOptionSet from './EditModel/EditOptionSet.component';
 
 function initState({ params }) {
     initAppState({
@@ -99,6 +100,10 @@ function loadOrgUnitObject({ params }, replace, callback) {
     loadObject({ params: { modelType: 'organisationUnit', groupName: params.groupName, modelId: params.modelId } }, replace, callback);
 }
 
+function loadOptionSetObject({ params }, replace, callback) {
+    loadObject({ params: { modelType: 'optionSet', groupName: params.groupName, modelId: params.modelId } }, replace, callback);
+}
+
 function loadList({ params }, replace, callback) {
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the appState
@@ -178,6 +183,11 @@ const routes = (
                     path="organisationUnit/:modelId"
                     component={EditModelContainer}
                     onEnter={loadOrgUnitObject}
+                />
+                <Route
+                    path="optionSet/:modelId"
+                    component={EditOptionSet}
+                    onEnter={loadOptionSetObject}
                 />
                 <Route
                     path=":modelType/:modelId"
