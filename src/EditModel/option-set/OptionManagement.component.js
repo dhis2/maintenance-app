@@ -25,12 +25,13 @@ const actions = Action.createActionsFromNames(['saveOption', 'setActiveModel', '
 export const optionsForOptionSetStore = Store.create({
     getInitialState() {
         return [];
-    }
+    },
 });
 
 const optionDialogStore = Store.create();
 
-actions.updateModel.subscribe(({data: [model, field, value]}) => {
+actions.updateModel.subscribe(({ data: [modelToEdit, field, value] }) => {
+    const model = modelToEdit;
     model[field] = value;
 
     optionDialogStore.setState({
@@ -39,7 +40,7 @@ actions.updateModel.subscribe(({data: [model, field, value]}) => {
     });
 });
 
-actions.setActiveModel.subscribe(async ({data: model}) => {
+actions.setActiveModel.subscribe(async ({ data: model }) => {
     const d2 = await getInstance();
     let modelToSave = model;
 
@@ -56,7 +57,7 @@ actions.setActiveModel.subscribe(async ({data: model}) => {
 });
 
 actions.saveOption
-    .subscribe(({data: [model, parentModel], complete, error}) => {
+    .subscribe(({ data: [model, parentModel], complete, error }) => {
         const isAdd = !model.id;
 
         model.save()
@@ -72,12 +73,12 @@ actions.saveOption
             .catch(error);
     });
 
-actions.getOptionsFor.subscribe(async ({data: model, complete, error}) => {
+actions.getOptionsFor.subscribe(async ({ data: model, complete }) => {
     const d2 = await getInstance();
 
     if (model && model.id) {
         const options = await d2.models.optionSet
-            .get(model.id, {fields: 'options[:all,href]'})
+            .get(model.id, { fields: 'options[:all,href]' })
             .then((optionSet) => optionSet.options.toArray());
 
         optionsForOptionSetStore.setState(options);
@@ -95,7 +96,7 @@ actions.closeOptionDialog.subscribe(() => {
     });
 });
 
-actions.deleteOption.subscribe(async ({data: [modelToDelete, modelParent], complete, error}) => {
+actions.deleteOption.subscribe(async ({ data: [modelToDelete, modelParent], complete, error }) => {
     const d2 = await getInstance();
     const api = d2.Api.getApi();
 
@@ -103,9 +104,9 @@ actions.deleteOption.subscribe(async ({data: [modelToDelete, modelParent], compl
         return error('unable_to_delete_due_to_missing_id');
     }
 
-    const deleteMessage = d2.i18n.getTranslation(`option_$$name$$_deleted`, { name: modelToDelete.name });
+    const deleteMessage = d2.i18n.getTranslation('option_$$name$$_deleted', { name: modelToDelete.name });
 
-    api.delete(`${modelParent.modelDefinition.apiEndpoint}/${modelParent.id}/options/${modelToDelete.id}`)
+    return api.delete(`${modelParent.modelDefinition.apiEndpoint}/${modelParent.id}/options/${modelToDelete.id}`)
         .then(() => modelToDelete.delete())
         .then(() => snackActions.show({ message: deleteMessage}))
         .then(() => actions.getOptionsFor(modelParent))
@@ -184,7 +185,7 @@ const optionFormData$ = Observable.combineLatest(
         isAdd: !optionDialogState.model.id,
         isDialogOpen: optionDialogState.isDialogOpen,
     }))
-    .flatMap(async ({fieldConfigs, model, isAdd, ...other}) => {
+    .flatMap(async ({ fieldConfigs, model, isAdd, ...other }) => {
         const d2 = await getInstance();
 
         return Promise.resolve({

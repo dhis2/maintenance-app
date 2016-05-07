@@ -78,10 +78,10 @@ function loadObject({ params }, replace, callback) {
                         modelToEditStore.setState(modelToEdit);
                         callback();
                     });
-            } else {
-                modelToEditStore.setState(modelToEdit);
-                callback();
             }
+
+            modelToEditStore.setState(modelToEdit);
+            return callback();
         });
     } else {
         objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
