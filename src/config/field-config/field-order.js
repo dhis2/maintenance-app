@@ -112,8 +112,8 @@ const fieldOrderByName = new Map([
     ['optionSet', [
         'name',
         'code',
+        'description',
         'valueType',
-        // 'options',
     ]],
 ]);
 

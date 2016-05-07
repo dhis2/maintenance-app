@@ -188,7 +188,10 @@ const routes = (
                     path="optionSet/:modelId"
                     component={EditOptionSet}
                     onEnter={loadOptionSetObject}
-                />
+                >
+                    <IndexRoute />
+                    <Route path=":activeView" />
+                </Route>
                 <Route
                     path=":modelType/:modelId"
                     component={EditModelContainer}

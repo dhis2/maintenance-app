@@ -62,6 +62,8 @@ export default class TextFormField extends Component {
     }
 
     _onValueChanged(event) {
+        event.preventDefault();
+        event.stopPropagation();
         // Keep local state to keep the field responsiveness
         this.setState({
             fieldValue: event.currentTarget.value,

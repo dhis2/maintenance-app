@@ -17,9 +17,12 @@ import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import isArray from 'd2-utilizr/lib/isArray';
 import CancelButton from '../CancelButton.component';
 import modelToEditStore from '../modelToEditStore';
+import OptionSorter from './OptionSorter.component';
+import { typeToFieldMap, getFieldUIComponent, getValidatorsFromModelValidation } from '../../forms/fields';
+import { createFieldConfigForModelTypes } from '../EditModelForm.component';
 
 const actions = Action.createActionsFromNames(['saveOption', 'setActiveModel', 'closeOptionDialog', 'getOptionsFor', 'deleteOption', 'updateModel'], 'optionSet');
-const optionsForOptionSetStore = Store.create({
+export const optionsForOptionSetStore = Store.create({
     getInitialState() {
         return [];
     }
@@ -70,10 +73,10 @@ actions.saveOption
     });
 
 actions.getOptionsFor.subscribe(async ({data: model, complete, error}) => {
-    const optionSetModelDefinition = model.modelDefinition;
+    const d2 = await getInstance();
 
-    if (model.id) {
-        const options = await optionSetModelDefinition
+    if (model && model.id) {
+        const options = await d2.models.optionSet
             .get(model.id, {fields: 'options[:all,href]'})
             .then((optionSet) => optionSet.options.toArray());
 
@@ -115,21 +118,28 @@ const fieldConfigsForOption = [
     {
         name: 'name',
         component: TextField,
-        props: {
-            floatingLabelText: 'name',
+        fieldOptions: {
+            labelText: 'name',
         },
     },
     {
         name: 'code',
         component: TextField,
-        props: {
-            floatingLabelText: 'code',
+        fieldOptions: {
+            labelText: 'code_value',
         },
     },
 ];
 
 const optionList$ = Observable.combineLatest(
-    optionsForOptionSetStore,
+    optionsForOptionSetStore
+        //TODO: Remove when we have server side paging
+        .map((options) => {
+            if(options.length < 50) {
+                return options;
+            }
+            return options.slice(0, 50);
+        }),
     Observable.just(['name', 'code']),
     (options, columns) => ({
         rows: options,
@@ -137,22 +147,36 @@ const optionList$ = Observable.combineLatest(
     })
 );
 
-optionList$.subscribe(() => console.log('optionList$'));
+const optionForm$ = Observable.combineLatest(
+    Observable.fromPromise(createFieldConfigForModelTypes('option')),
+    modelToEditStore,
+)
+    .flatMap(async ([fieldConfigs, modelToEdit]) => {
+        const d2 = await getInstance();
+
+        return fieldConfigs
+            .map(fieldConfig => {
+                // Adjust the code when dealing with a different
+                if (fieldConfig.name === 'code' && typeToFieldMap.has(modelToEdit.valueType)) {
+                    // Get the correct matching Ui component
+                    fieldConfig.component = getFieldUIComponent(typeToFieldMap.get(modelToEdit.valueType));
+                    // Copy the optionSet value type onto the code field
+                    fieldConfig.type = typeToFieldMap.get(modelToEdit.valueType);
+                    // Generate the validator and pre-translate their messages
+                    fieldConfig.validators = getValidatorsFromModelValidation(fieldConfig, d2.models.option)
+                        .map(validator => {
+                            validator.message = d2.i18n.getTranslation(validator.message);
+
+                            return validator;
+                        });
+                }
+                // For the code field we replace the fieldConfig with a config that matches the type of the optionSet
+                return fieldConfig;
+            });
+    });
 
 const optionFormData$ = Observable.combineLatest(
-    Observable.just(fieldConfigsForOption)
-        .flatMap(async (fieldConfigs) => {
-            const d2 = await getInstance();
-
-            return fieldConfigs.map((fieldConfig) => {
-                const fieldConfigWithLabel = Object.assign({}, fieldConfig);
-                fieldConfigWithLabel.props = Object.assign({}, fieldConfigWithLabel.props, {
-                    floatingLabelText: d2.i18n.getTranslation(fieldConfig.props.floatingLabelText),
-                });
-
-                return fieldConfigWithLabel;
-            });
-        }),
+    optionForm$,
     optionDialogStore,
     (fieldConfigs, optionDialogState) => ({
         fieldConfigs,
@@ -252,6 +276,10 @@ const OptionDialogForOptions = withStateFrom(optionFormData$, AddOptionDialog)
 class OptionManagement extends Component {
     constructor(props, context) {
         super(props, context);
+        this.state = {
+            nameSortedASC: false,
+            isSorting: false,
+        };
 
         this._onAddOption = this._onAddOption.bind(this);
         this._onEditOption = this._onEditOption.bind(this);
@@ -277,14 +305,26 @@ class OptionManagement extends Component {
     render() {
         const styles = {
             optionManagementWrap: {
-                position: 'relative',
+                paddingTop: '1rem',
+            },
+            dataTableWrap: {
+                padding: '1rem',
                 paddingTop: '2.5rem',
-                marginTop: '2rem',
+                marginTop: '1rem',
+                position: 'relative',
             },
             addButton: {
                 position: 'absolute',
                 top: '.5rem',
                 right: '.5rem',
+            },
+            sortBarStyle: {
+                paddingLeft: '1rem',
+                display: 'flex',
+            },
+            sortButtonStyle: {
+                flex: '0 0 15rem',
+                marginRight: '1rem',
             },
         };
 
@@ -295,15 +335,18 @@ class OptionManagement extends Component {
 
         return (
             <div style={styles.optionManagementWrap}>
-                <DataTable
-                    rows={this.props.rows}
-                    columns={this.props.columns}
-                    primaryAction={this._onEditOption}
-                    contextMenuActions={contextActions}
-                />
-                <FloatingActionButton onClick={this._onAddOption} style={styles.addButton}>
-                    <ContentAdd />
-                </FloatingActionButton>
+                <OptionSorter style={styles.sortBarStyle} buttonStyle={styles.sortButtonStyle} rows={this.props.rows} />
+                <div style={styles.dataTableWrap}>
+                    <DataTable
+                        rows={this.props.rows}
+                        columns={this.props.columns}
+                        primaryAction={this._onEditOption}
+                        contextMenuActions={contextActions}
+                    />
+                    <FloatingActionButton onClick={this._onAddOption} style={styles.addButton}>
+                        <ContentAdd />
+                    </FloatingActionButton>
+                </div>
                 <OptionDialogForOptions
                     onRequestClose={this._onAddDialogClose}
                     parentModel={this.props.model}

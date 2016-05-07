@@ -10,12 +10,10 @@ import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
-import Paper from 'material-ui/lib/paper';
 import { isString, camelCaseToUnderscores } from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import log from 'loglevel';
-import FormHeading from './FormHeading';
 import extraFields from './extraFields';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import BackButton from './BackButton.component';
@@ -60,7 +58,8 @@ function createUniqueValidator(fieldConfig, modelDefinition, uid) {
     };
 }
 
-async function createFieldConfigForModelTypes(modelType) {
+// TODO: Move this outside of this function as it is used with more than just this component
+export async function createFieldConfigForModelTypes(modelType) {
     const d2 = await getInstance();
 
     const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
@@ -86,10 +85,6 @@ async function createFieldConfigForModelTypes(modelType) {
             // Add required indicator when the field is required
             if (fieldConfig.props.isRequired) {
                 fieldConfig.props.labelText = `${fieldConfig.props.labelText} (*)`;
-            }
-
-            if (fieldConfig.component === TextField) {
-                fieldConfig.props.changeEvent = 'onBlur';
             }
 
             return fieldConfig;
@@ -161,6 +156,9 @@ export default React.createClass({
     propTypes: {
         modelId: React.PropTypes.string.isRequired,
         modelType: React.PropTypes.string.isRequired,
+        onSaveSuccess: React.PropTypes.func.isRequired,
+        onSaveError: React.PropTypes.func.isRequired,
+        onCancel: React.PropTypes.func.isRequired,
     },
 
     mixins: [Translate],
@@ -187,7 +185,9 @@ export default React.createClass({
             const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
             formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
 
-            for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
+            for (const fieldOverrideConfig of fieldOverrides.for(modelType)) {
+                const [fieldName, overrideConfig] = fieldOverrideConfig;
+
                 formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
             }
 
@@ -246,18 +246,8 @@ export default React.createClass({
         });
     },
 
-    componentWillReceiveProps() {
-        // this.setState({
-        //     isLoading: true,
-        // });
-    },
-
     componentWillUnmount() {
         this.disposable && this.disposable.dispose();
-    },
-
-    getTranslatedPropertyName(propertyName) {
-        return this.getTranslation(camelCaseToUnderscores(propertyName));
     },
 
     renderSharingNotification() {
@@ -296,9 +286,6 @@ export default React.createClass({
 
         return (
             <div style={formPaperStyle}>
-                <div style={backButtonStyle}>
-                    <BackButton onClick={this._goBack} toolTip="back_to_list"/>
-                </div>
                 {this.renderSharingNotification()}
                 <FormBuilder
                     fields={this.state.fieldConfigs}
@@ -321,22 +308,6 @@ export default React.createClass({
         }
 
         return this.renderForm();
-
-        // <Paper style={formPaperStyle}>
-
-        // return (
-        //     <div>
-        //         <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '1rem' }}>
-        //             <FormHeading>{camelCaseToUnderscores(this.props.modelType)}</FormHeading>
-        //         </div>
-        //         {this.renderSharingNotification()}
-        //         {this.state.isLoading ? 'Loading data...' : this.renderForm()}
-        //     </div>
-        // );
-    },
-
-    _goBack() {
-        goBack();
     },
 
     _onUpdateField(fieldName, value) {
@@ -367,7 +338,7 @@ export default React.createClass({
 
                     snackActions.show({ message, action: 'ok', translate: true });
 
-                    goToRoute(`/list/${this.props.groupName}/${this.props.modelType}`);
+                    this.props.onSaveSuccess(this.state.modelToEdit);
                 },
                 (errorMessage) => {
                     this.setState({ isSaving: false });
@@ -383,9 +354,7 @@ export default React.createClass({
                         snackActions.show({ message: errorMessage.messages[0].message });
                     }
 
-                    if (errorMessage === 'No changes to be saved') {
-                        goToRoute(`/list/${this.props.groupName}/${this.props.modelType}`);
-                    }
+                    this.props.onSaveError(errorMessage);
                 }
             );
     },
@@ -393,6 +362,6 @@ export default React.createClass({
     _closeAction(event) {
         event.preventDefault();
 
-        goToRoute(`/list/${this.props.groupName}/${this.props.modelType}`);
+        this.props.onCancel();
     },
 });

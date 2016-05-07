@@ -117,7 +117,7 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
     return validators;
 }
 
-function getValidatorsFromModelValidation(modelValidation, modelDefinition) {
+export function getValidatorsFromModelValidation(modelValidation, modelDefinition) {
     let validators = [];
 
     if (modelValidation.required) {
@@ -131,17 +131,7 @@ function getValidatorsFromModelValidation(modelValidation, modelDefinition) {
     return validators;
 }
 
-function getAsyncValidatorsFromModelValidation(modelValidation, modelDefinition, uid) {
-
-
-    if (modelValidation.unique) {
-        // TODO: Add asyncValidator
-        return [checkAgainstServer];
-    }
-    return [];
-}
-
-function getFieldUIComponent(type) {
+export function getFieldUIComponent(type) {
     switch (type) {
     case SELECT:
         return DropDown;
