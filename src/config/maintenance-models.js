@@ -36,10 +36,11 @@ export default {
                 ],
             },
 
-            dataAdministrationSection: {
+            otherSection: {
                 items: [
                     'constant',
                     'attribute',
+                    'optionSet',
                 ],
             },
         };

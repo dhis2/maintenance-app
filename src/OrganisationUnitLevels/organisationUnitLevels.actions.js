@@ -173,7 +173,7 @@ Observable.combineLatest(
     });
 
 function saveOrganisationUnitLevels(action) {
-    const {organisationUnitLevels, complete, error} = action;
+    const { organisationUnitLevels, complete, error } = action;
 
     return getInstance()
         .then(d2 => d2.Api.getApi())

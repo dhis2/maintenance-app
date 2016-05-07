@@ -109,6 +109,12 @@ const fieldOrderByName = new Map([
         'constantAttribute',
         'legendSetAttribute',
     ]],
+    ['optionSet', [
+        'name',
+        'code',
+        'description',
+        'valueType',
+    ]],
 ]);
 
 export default {
