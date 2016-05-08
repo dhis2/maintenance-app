@@ -17,7 +17,11 @@ export default {
                     'dataElementGroupSet',
                 ],
             },
-
+            dataSetSection: {
+                items: [
+                    'dataSet',
+                ],
+            },
             indicatorSection: {
                 items: [
                     'indicator',
