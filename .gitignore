@@ -5,7 +5,7 @@ node_modules/*
 .sass-cache
 src/css/*
 coverage/*
-src/manifest.webapp
+manifest.webapp
 
 # TODO: Jshint is a dependency of the git hook which installs these files on install...
 .jshintignore
@@ -17,8 +17,3 @@ target/*
 
 npm-debug.log
 stats.json
-
-# TODO: Remove when using proper jQuery and babel-polyfill loader
-src/jquery.min.js
-src/babel-polyfill.js
-
