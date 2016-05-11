@@ -12,6 +12,7 @@ import log from 'loglevel';
 import LoadingMask from './loading-mask/LoadingMask.component';
 import dhis2 from 'd2-ui/lib/header-bar/dhis2';
 import routes from './router';
+import '../scss/maintenance.scss';
 
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
