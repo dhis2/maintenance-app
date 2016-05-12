@@ -3,6 +3,11 @@
   "version": "24.0.1",
   "description": "DHIS2 Maintenance app",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhis2/maintenance-app.git"
+  },
+  "license": "BSD-3-Clause",
   "scripts": {
     "prestart": "d2-manifest package.json manifest.webapp",
     "start": "webpack-dev-server",
@@ -10,7 +15,8 @@
     "test-watch": "karma start test/config/karma.config.js",
     "lint": "eslint src && eslint --env node,mocha --global expect,sinon --rule 'no-unused-expressions: 0' test && scss-lint",
     "__prebuild": "npm test && npm run lint",
-    "build": "webpack && cp -r src/i18n build/ && cp ./node_modules/babel-polyfill/dist/polyfill.min.js build/polyfill.min.js && cp ./node_modules/jquery/dist/jquery.min.js build && cp ./index.html build && cp dhis-web-maintenance.png build && npm run manifest",
+    "build": "rm -rf build && webpack && npm run manifest",
+    "postbuild": "cp -r src/i18n index.html icon.png node_modules/babel-polyfill/dist/polyfill.min.js node_modules/jquery/dist/jquery.min.js ./build/",
     "validate": "npm ls",
     "manifest": "d2-manifest package.json build/manifest.webapp"
   },
@@ -82,7 +88,7 @@
   "manifest.webapp": {
     "name": "Maintenance app",
     "icons": {
-      "48": "dhis-web-maintenance.png"
+      "48": "icon.png"
     },
     "developer": {
       "url": "",
