@@ -188,6 +188,8 @@ const List = React.createClass({
             return model.access.read;
         case 'share':
             return model.modelDefinition.isSharable === true; // TODO: Sharing is filtered out twice...
+        case 'dataEntryForm':
+            return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'pdfDataSetForm':
             return model.modelDefinition.name === 'dataSet' && model.access.read;
         default:
@@ -260,7 +262,14 @@ const List = React.createClass({
                 flex: 1,
                 display: 'flex',
                 flexOrientation: 'row',
-            }
+            },
+        };
+
+        const contextMenuIcons = {
+            clone: 'content_copy',
+            sharing: 'share',
+            dataEntryForm: 'assignment',
+            pdfDataSetForm: 'picture_as_pdf',
         };
 
         return (
@@ -284,7 +293,7 @@ const List = React.createClass({
                             rows={this.state.dataRows}
                             columns={this.state.tableColumns}
                             contextMenuActions={availableActions}
-                            contextMenuIcons={{ clone: 'content_copy', sharing: 'share', pdfDataSetForm: 'picture_as_pdf' }}
+                            contextMenuIcons={contextMenuIcons}
                             primaryAction={availableActions.details}
                             isContextActionAllowed={this.isContextActionAllowed}
                         />
