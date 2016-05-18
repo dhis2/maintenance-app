@@ -1,10 +1,21 @@
 import React from 'react';
 
+import RaisedButton from 'material-ui/lib/raised-button';
+import FlatButton from 'material-ui/lib/flat-button';
+import SelectField from 'material-ui/lib/select-field';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+
 import Heading from 'd2-ui/lib/headings/Heading.component';
 
 const styles = {
     heading: {
         paddingBottom: 18,
+    },
+    formSection: {
+        marginTop: 28,
+    },
+    cancelButton: {
+        marginLeft: 14,
     },
 };
 
@@ -13,34 +24,78 @@ class EditDataEntryForm extends React.Component {
         super(props, context);
 
         this.state = {
+            formTitle: undefined,
             formHtml: undefined,
         };
 
         const CKEDITOR = window.CKEDITOR || {};
 
         // TODO: Load all data elements, category option group sets and indicators for the data set
-        context.d2.models.dataSets.get(props.params.modelId, {
-            fields: 'displayName,dataEntryForm[:all]',
-        }).then(dataSet => {
+        Promise.all([
+            context.d2.models.dataSets.get(props.params.modelId, {
+                fields: 'displayName,dataEntryForm[:all]',
+            }),
+            // context.d2.models.dataElementOperands.list({
+            //     paging: false,
+            //     fields: 'displayName,:all',
+            // }),
+            context.d2.Api.getApi().get('dataElementOperands', {
+                paging: false,
+                totals: true,
+                fields: 'id,displayName',
+            }),
+        ]).then(([
+            dataSet,
+            ops,
+        ]) => {
+            this.operands = ops.dataElementOperands
+                .filter(op => op.id.indexOf('.') !== -1)
+                .reduce((out, op) => {
+                    const id = `${op.id.split('.').join('-')}-val`;
+                    out[id] = op.displayName; // eslint-disable-line
+                    return out;
+                }, {});
+
+            this.totals = ops.dataElementOperands
+                .filter(op => op.id.indexOf('.') === -1)
+                .reduce((out, op) => {
+                    out[op.id] = op.displayName; // eslint-disable-line
+                    return out;
+                }, {});
+
+            const formHtml = dataSet.dataEntryForm ? this.processFormData(dataSet.dataEntryForm) : '';
+            const formStyle = dataSet.dataEntryForm && dataSet.dataEntryForm.formStyle || 'NORMAL';
+
             this.setState({
                 formTitle: dataSet.displayName,
-                formHtml: EditDataEntryForm.processFormData(dataSet.dataEntryForm),
+                formHtml,
+                formStyle,
             }, () => {
                 if (this.state.formHtml !== undefined) {
                     this._editor = CKEDITOR.replace('designTextarea', {
-                        removePlugins: 'flash, iframe, smiley, save, templates',
+                        removePlugins: 'scayt,wsc,about',
                         allowedContent: true,
-                        extraPlugins: 'autogrow',
+                        extraPlugins: 'preview,div',
                         autoGrow_onStartup: true,
                         autoGrow_minHeight: 500,
+                        disableNativeSpellChecked: false,
+                        height: 500,
                     });
                     this._editor.setData(this.state.formHtml);
                 }
             });
         });
+
+        this.changeStyle = this.changeStyle.bind(this);
     }
 
-    static processFormData(formData) {
+    componentWillUnmount() {
+        if (this._editor) {
+            this._editor.destroy();
+        }
+    }
+
+    processFormData(formData) {
         const inHtml = formData.htmlCode || '';
         let outHtml = '';
 
@@ -56,16 +111,22 @@ class EditDataEntryForm extends React.Component {
             inPos = inputPattern.lastIndex;
 
             const inputHtml = inputElement[0];
+            const inputStyle = (/style="(.*?)"/.exec(inputHtml) || ['', ''])[1];
+
             const idMatch = idPattern.exec(inputHtml);
             const dataElementTotalMatch = dataElementPattern.exec(inputHtml);
             const indicatorMatch = indicatorPattern.exec(inHtml);
 
             // TODO: Insert properly formatted input fields
             if (idMatch) {
-                // const [, dataElementId, categoryOptionComboId] = idMatch;
-                outHtml += '<span style="background:#ffeeee;white-space:nowrap;">Data Element</span>';
+                const [, dataElementId, categoryOptionComboId] = idMatch;
+                const id = `${dataElementId}-${categoryOptionComboId}-val`;
+                const label = this.operands && this.operands[id];
+                outHtml += `<input id="${id}" name="entryfield" title="${label}" value="[ ${label} ]" style="${inputStyle}"/>`;
             } else if (dataElementTotalMatch) {
-                outHtml += '<span style="background:#eeffee;white-space:nowrap;">Data Element Total</span>';
+                const dataElementTotalId = dataElementTotalMatch[1];
+                const label = this.totals && this.totals[dataElementTotalId];
+                outHtml += `<input dataelementid="${dataElementTotalId}" id="total${dataElementTotalId}" name="total" readonly="readonly" title="${label}" value="[ ${label} ]" style="${inputStyle}"/>`;
             } else if (indicatorMatch) {
                 outHtml += '<span style="background:#eeeeff;white-space:nowrap;">Indicator</span>';
             } else {
@@ -79,12 +140,6 @@ class EditDataEntryForm extends React.Component {
         return outHtml;
     }
 
-    componentWillUnmount() {
-        if (this._editor) {
-            this._editor.destroy();
-        }
-    }
-
     render() {
         const editorStyle = {
             display: this.state.formHtml === undefined ? 'none' : 'block',
@@ -93,15 +148,34 @@ class EditDataEntryForm extends React.Component {
         // TODO: Add dialog for finding and inserting data elements, data element totals, indicators and flags (?)
         // TODO: Add style setting
         // TODO: Autosaving
+        // TODO: Add loading mask
 
         return (
             <div>
                 <Heading style={styles.heading}>
-                    {this.state.formTitle} {this.context.d2.i18n.getTranslation('data_entry_form')}
+                    {this.state.formTitle} &mdash; {this.context.d2.i18n.getTranslation('data_entry_form')}
                 </Heading>
                 <textarea id="designTextarea" name="designTextarea" style={editorStyle} />
+                <div style={styles.formSection}>
+                    <SelectField value={this.state.formStyle} floatingLabelText="Form display style" onChange={this.changeStyle}>
+                        <MenuItem value={'NORMAL'} primaryText="Normal" />
+                        <MenuItem value={'COMFORTABLE'} primaryText="Comfortable" />
+                        <MenuItem value={'COMPACT'} primaryText="Compact" />
+                        <MenuItem value={'NONE'} primaryText="None" />
+                    </SelectField>
+                </div>
+                <div style={styles.formSection}>
+                    <RaisedButton label="Save" primary/>
+                    <FlatButton label="Cancel" style={styles.cancelButton}/>
+                </div>
             </div>
         );
+    }
+
+    changeStyle(e, i, value) {
+        this.setState({
+            formStyle: value,
+        });
     }
 }
 EditDataEntryForm.contextTypes = {
