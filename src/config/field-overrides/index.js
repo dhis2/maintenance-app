@@ -3,6 +3,7 @@ import indicator from './indicator';
 import dataSet from './dataSet';
 import organisationUnitGroup from './organisationUnitGroup';
 import categoryOption from './categoryOption';
+import validationRule from './validationRule';
 
 const overridesByType = {
     dataElement,
@@ -10,6 +11,7 @@ const overridesByType = {
     dataSet,
     organisationUnitGroup,
     categoryOption,
+    validationRule,
 };
 
 export default {

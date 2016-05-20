@@ -341,6 +341,8 @@ export default React.createClass({
                     this.props.onSaveSuccess(this.state.modelToEdit);
                 },
                 (errorMessage) => {
+                    log.error(errorMessage);
+
                     this.setState({ isSaving: false });
 
                     if (isString(errorMessage)) {

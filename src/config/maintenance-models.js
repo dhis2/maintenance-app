@@ -40,6 +40,13 @@ export default {
                 ],
             },
 
+            validationSection: {
+                items: [
+                    'validationRule',
+                    'validationRuleGroup',
+                ],
+            },
+
             otherSection: {
                 items: [
                     'constant',
