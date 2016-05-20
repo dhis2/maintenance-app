@@ -15,7 +15,7 @@ class SymbolPickerField extends React.Component {
         getManifest('./manifest.webapp')
             .then(manifest => {
                 this.setState({
-                    baseUrl: (process.env.NODE_ENV === 'production') ? manifest.getBaseUrl() : 'http://localhost:8080/dhis/images/orgunitgroup',
+                    baseUrl: (process.env.NODE_ENV === 'production') ? manifest.getBaseUrl() + '/images/orgunitgroup' : 'http://localhost:8080/dhis/images/orgunitgroup',
                 });
             });
     }
