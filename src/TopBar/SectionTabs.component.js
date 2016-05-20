@@ -27,7 +27,7 @@ function SectionTabs(props) {
             width: 'auto',
         },
         extraButtons: {
-            flex: 1,
+            flex: 0,
             textAlign: 'right',
         },
         tabItemContainerStyle: {

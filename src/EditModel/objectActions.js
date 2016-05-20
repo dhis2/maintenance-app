@@ -121,6 +121,8 @@ objectActions.saveObject.subscribe(action => {
     return modelToEditStore
         .save(action.data.id)
         .subscribe(successHandler, errorHandler);
+}, (e) => {
+    log.error(e);
 });
 
 objectActions.update.subscribe(action => {

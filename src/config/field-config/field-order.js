@@ -1,18 +1,104 @@
 const fieldOrderByName = new Map([
     ['dataElement', [
-        'name', 'shortName', 'code', 'description', 'formName', 'domainType', 'valueType', 'aggregationType',
-        'zeroIsSignificant', 'url', 'categoryCombo', 'optionSet', 'commentOptionSet', 'legendSet', 'aggregationLevels']],
-    ['dataElementGroup', ['name', 'shortName', 'code', 'description', 'dataElements']],
-    ['dataElementGroupSet', ['name', 'shortName', 'code', 'description', 'compulsory', 'dataDimension', 'dataElementGroups']],
-    ['category', ['name', 'shortName', 'code', 'description', 'dataDimensionType', 'dataDimension', 'categoryOptions']],
-    ['categoryOption', ['name', 'shortName', 'code', 'description', 'startDate', 'endDate', 'organisationUnits']],
-    ['categoryCombo', ['name', 'shortName', 'code', 'dataDimensionType', 'skipTotal', 'categories']],
-    ['categoryOptionGroup', ['name', 'shortName', 'code', 'description', 'dataDimensionType', 'categoryOptions']],
-    ['categoryOptionGroupSet', ['name', 'description', 'dataDimension', 'dataDimensionType', 'categoryOptionGroups']],
-    ['indicator', ['name', 'shortName', 'code', 'description', 'annualized', 'decimals', 'indicatorType', 'legendSet', 'url']],
-    ['indicatorGroup', ['name', 'indicators']],
-    ['indicatorType', ['name', 'factor', 'number']],
-    ['indicatorGroupSet', ['name', 'description', 'compulsory', 'indicatorGroups']],
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'formName',
+        'domainType',
+        'valueType',
+        'aggregationType',
+        'zeroIsSignificant',
+        'url',
+        'categoryCombo',
+        'optionSet',
+        'commentOptionSet',
+        'legendSet',
+        'aggregationLevels'
+    ]],
+    ['dataElementGroup', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'dataElements'
+    ]],
+    ['dataElementGroupSet', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'compulsory',
+        'dataDimension',
+        'dataElementGroups'
+    ]],
+    ['category', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'dataDimensionType',
+        'dataDimension',
+        'categoryOptions'
+    ]],
+    ['categoryOption', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'startDate',
+        'endDate',
+        'organisationUnits'
+    ]],
+    ['categoryCombo', [
+        'name',
+        'shortName',
+        'code',
+        'dataDimensionType',
+        'skipTotal',
+        'categories'
+    ]],
+    ['categoryOptionGroup', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'dataDimensionType',
+        'categoryOptions'
+    ]],
+    ['categoryOptionGroupSet', [
+        'name',
+        'description',
+        'dataDimension',
+        'dataDimensionType',
+        'categoryOptionGroups'
+    ]],
+    ['indicator', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'annualized',
+        'decimals',
+        'indicatorType',
+        'legendSet',
+        'url'
+    ]],
+    ['indicatorGroup', [
+        'name',
+        'indicators'
+    ]],
+    ['indicatorType', [
+        'name',
+        'factor',
+        'number'
+    ]],
+    ['indicatorGroupSet', [
+        'name',
+        'description',
+        'compulsory',
+        'indicatorGroups'
+    ]],
     ['dataSet', [
         'name',
         'shortName',
@@ -115,6 +201,27 @@ const fieldOrderByName = new Map([
         'description',
         'valueType',
     ]],
+    ['validationRule', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'importance',
+        'ruleType',
+        'importance',
+        'ruleType',
+        'periodType',
+        'operator',
+    ]],
+    ['validationRuleGroup', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'validationRules',
+        'userGroupsToAlert',
+        'alertByOrgUnits',
+    ]]
 ]);
 
 export default {
