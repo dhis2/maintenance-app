@@ -1,4 +1,5 @@
 import React from 'react';
+import Rx from 'rx';
 import log from 'loglevel';
 
 import RaisedButton from 'material-ui/lib/raised-button';
@@ -9,6 +10,12 @@ import Paper from 'material-ui/lib/paper';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
+
+
+const inputPattern = /<input.*?\/>/gi;
+const dataElementCategoryOptionIdPattern = /id="(\w*?)-(\w*?)-val"/;
+const dataElementPattern = /dataelementid="(\w{11})"/;
+const indicatorPattern = /indicatorid="(\w{11})"/;
 
 const styles = {
     heading: {
@@ -45,6 +52,11 @@ const styles = {
         fontSize: 16,
         marginLeft: -8,
     },
+    item: {
+    },
+    activeItem: {
+        textDecoration: 'line-through',
+    },
 };
 
 class EditDataEntryForm extends React.Component {
@@ -52,23 +64,29 @@ class EditDataEntryForm extends React.Component {
         super(props, context);
 
         const CKEDITOR = window.CKEDITOR || {};
-        this.state = {};
+        this.state = {
+            usedIds: [],
+        };
 
-        // TODO: Use d2.models when dataElementOperands are properly supported
         Promise.all([
             context.d2.models.dataSets.get(props.params.modelId, {
                 fields: 'displayName,dataEntryForm[style,htmlCode],indicators[id,displayName]',
             }),
+            // TODO: Use d2.models when dataElementOperands are properly supported
             context.d2.Api.getApi().get('dataElementOperands', {
                 paging: false,
                 totals: true,
                 fields: 'id,displayName',
+                filter: [`dataElement.dataSets.id:eq:${props.params.modelId}`],
             }),
         ]).then(([
             dataSet,
             ops,
         ]) => {
-            const operands = ops.dataElementOperands
+            // Operands with ID's that contain a dot ('.') are combined dataElementId's and categoryOptionId's
+            // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
+            // custom forms: "dataElementId-categoryOptionId-val"
+            this.operands = ops.dataElementOperands
                 .filter(op => op.id.indexOf('.') !== -1)
                 .reduce((out, op) => {
                     const id = `${op.id.split('.').join('-')}-val`;
@@ -76,45 +94,46 @@ class EditDataEntryForm extends React.Component {
                     return out;
                 }, {});
 
-            const totals = ops.dataElementOperands
+            // Data element totals have only a single ID and thus no dot ('.')
+            this.totals = ops.dataElementOperands
                 .filter(op => op.id.indexOf('.') === -1)
                 .reduce((out, op) => {
                     out[op.id] = op.displayName; // eslint-disable-line
                     return out;
                 }, {});
 
-            const indicators = dataSet.indicators.toArray()
+            this.indicators = dataSet.indicators.toArray()
                 .sort((a, b) => a.displayName.localeCompare(b.displayName))
                 .reduce((out, i) => {
                     out[i.id] = i.displayName; // eslint-disable-line
                     return out;
                 }, {});
 
+            const formHtml = dataSet.dataEntryForm ? this.processFormData(dataSet.dataEntryForm) : '';
+
             this.setState({
                 formTitle: dataSet.displayName,
-                formHtml: dataSet.dataEntryForm || '',
+                formHtml,
                 formStyle: dataSet.dataEntryForm && dataSet.dataEntryForm.formStyle || 'NORMAL',
-                operands,
-                totals,
-                indicators,
             }, () => {
-                if (this.state.formHtml !== undefined) {
-                    this._editor = CKEDITOR.replace('designTextarea', {
-                        removePlugins: 'scayt,wsc,about',
-                        allowedContent: true,
-                        extraPlugins: 'preview,div',
-                        autoGrow_onStartup: true,
-                        autoGrow_minHeight: 500,
-                        disableNativeSpellChecked: false,
-                        height: 500,
+                this._editor = CKEDITOR.replace('designTextarea', {
+                    removePlugins: 'scayt,wsc,about',
+                    allowedContent: true,
+                    extraPlugins: 'div',
+                    height: 500,
+                });
+                this._editor.setData(this.state.formHtml);
+                Rx.Observable.fromEventPattern((x) => { this._editor.on('change', x); })
+                    .debounce(150)
+                    .subscribe(() => {
+                        this.processFormData.call(this, this._editor.getData());
                     });
-                    this._editor.setData(this.processFormData(this.state.formHtml));
-                }
             });
         });
 
-        this.saveClick = this.saveClick.bind(this);
-        this.changeStyle = this.changeStyle.bind(this);
+        this.handleSaveClick = this.handleSaveClick.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
+        this.handleStyleChange = this.handleStyleChange.bind(this);
     }
 
     componentWillUnmount() {
@@ -123,14 +142,111 @@ class EditDataEntryForm extends React.Component {
         }
     }
 
+    handleSaveClick() {
+        console.warn(this._editor.getData());
+    }
+
+    handleCancelClick() {
+        console.warn('Cancel!');
+    }
+
+    handleStyleChange(e, i, value) {
+        this.setState({
+            formStyle: value,
+        });
+    }
+
+    renderPaletteSection(keySet) {
+        // TODO: Styling
+        return (
+            Object.keys(keySet)
+                // .filter(key => this.state.usedIds.indexOf(key) === -1)
+                .map(key => {
+                    const itemStyle = this.state.usedIds.indexOf(key) === -1 ? styles.item : styles.activeItem;
+                    return (
+                        <div key={key} style={itemStyle}>
+                            <a title={`Click to insert input field for \"${keySet[key]}\"`}
+                                onClick={this.insertElement.bind(this, key)}
+                            >{keySet[key]}</a>
+                        </div>
+                    );
+                })
+        );
+    }
+
+    renderPalette() {
+        // TODO: Floating dialog?
+        return (
+            <div style={styles.palette}>
+                <div style={styles.paletteHeader}>Operands:</div>
+                {this.renderPaletteSection(this.operands)}
+                <div style={styles.paletteHeader}>Totals:</div>
+                {this.renderPaletteSection(this.totals)}
+                <div style={styles.paletteHeader}>Indicators:</div>
+                {this.renderPaletteSection(this.indicators)}
+            </div>
+        );
+    }
+
+    render() {
+        // TODO: Autosaving
+
+        return this.state.formHtml === undefined ? <LoadingMask /> : (
+            <div>
+                <Heading style={styles.heading}>
+                    {this.state.formTitle} {this.context.d2.i18n.getTranslation('data_entry_form')}
+                </Heading>
+                {this.renderPalette()}
+                <textarea id="designTextarea" name="designTextarea"/>
+                <Paper style={styles.formPaper}>
+                    <div style={styles.formSection}>
+                        <SelectField
+                            value={this.state.formStyle}
+                            floatingLabelText="Form display style"
+                            onChange={this.handleStyleChange}
+                        >
+                            <MenuItem value={'NORMAL'} primaryText="Normal"/>
+                            <MenuItem value={'COMFORTABLE'} primaryText="Comfortable"/>
+                            <MenuItem value={'COMPACT'} primaryText="Compact"/>
+                            <MenuItem value={'NONE'} primaryText="None"/>
+                        </SelectField>
+                    </div>
+                    <div style={styles.formSection}>
+                        <RaisedButton label="Save" primary onClick={this.handleSaveClick}/>
+                        <FlatButton label="Cancel" style={styles.cancelButton} onClick={this.handleCancelClick}/>
+                    </div>
+                </Paper>
+            </div>
+        );
+    }
+
+    generateHtml(id, styleAttr, disabledAttr) {
+        const style = styleAttr ? ` style=${styleAttr}` : '';
+        const disabled = disabledAttr ? ' disabled="disabled"' : '';
+
+        if (id.indexOf('-') !== -1) {
+            const label = this.operands && this.operands[id];
+            const attr = `name="entryfield" title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
+            return `<input id="${id}" ${attr}/>`;
+        } else if (this.totals.hasOwnProperty(id)) {
+            const label = this.totals[id];
+            const attr = `name="total" readonly title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
+            return `<input dataelementid="${id}" id="total${id}" name="total" ${attr}/>`;
+        } else if (this.indicators.hasOwnProperty(id)) {
+            const label = this.indicators[id];
+            const attr = `name="indicator" readonly title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
+            return `<input indicatorid="${id}" id="indicator${id}" ${attr}/>`;
+        }
+
+        log.warn('Failed to generate HTML for ID:', id);
+        return '';
+    }
+
     processFormData(formData) {
-        const inHtml = formData.htmlCode || '';
+        const inHtml = formData.htmlCode || formData || '';
         let outHtml = '';
 
-        const inputPattern = /<input.*?\/>/gi;
-        const idPattern = /id="(\w*?)-(\w*?)-val"/;
-        const dataElementPattern = /dataelementid="(\w{11})"/;
-        const indicatorPattern = /indicatorid="(\w{11})"/;
+        const usedIds = [];
 
         let inputElement = inputPattern.exec(inHtml);
         let inPos = 0;
@@ -142,17 +258,22 @@ class EditDataEntryForm extends React.Component {
             const inputStyle = (/style="(.*?)"/.exec(inputHtml) || ['', ''])[1];
             const inputDisabled = /disabled/.exec(inputHtml) !== null;
 
-            const idMatch = idPattern.exec(inputHtml);
+            const idMatch = dataElementCategoryOptionIdPattern.exec(inputHtml);
             const dataElementTotalMatch = dataElementPattern.exec(inputHtml);
-            const indicatorMatch = indicatorPattern.exec(inHtml);
+            const indicatorMatch = indicatorPattern.exec(inputHtml);
 
-            // TODO: Insert properly formatted input fields
             if (idMatch) {
-                outHtml += this.getHtml(`${idMatch[1]}-${idMatch[2]}-val`, inputStyle, inputDisabled);
+                const id = `${idMatch[1]}-${idMatch[2]}-val`;
+                usedIds.push(id);
+                outHtml += this.generateHtml(id, inputStyle, inputDisabled);
             } else if (dataElementTotalMatch) {
-                outHtml += this.getHtml(dataElementTotalMatch[1], inputStyle, inputDisabled);
+                const id = dataElementTotalMatch[1];
+                usedIds.push(id);
+                outHtml += this.generateHtml(id, inputStyle, inputDisabled);
             } else if (indicatorMatch) {
-                outHtml += this.getHtml(indicatorMatch[1], inputStyle, inputDisabled);
+                const id = indicatorMatch[1];
+                usedIds.push(id);
+                outHtml += this.generateHtml(id, inputStyle, inputDisabled);
             } else {
                 outHtml += inputHtml;
             }
@@ -161,109 +282,18 @@ class EditDataEntryForm extends React.Component {
         }
         outHtml += inHtml.substr(inPos);
 
+        this.setState({ usedIds });
+
         return outHtml;
     }
 
-    render() {
-        // TODO: Add dialog for finding and inserting data elements, data element totals, indicators and flags (?)
-        // TODO: Autosaving
-
-        return this.state.formHtml === undefined ? <LoadingMask /> : (
-            <div>
-                <Heading style={styles.heading}>
-                    {this.state.formTitle} {this.context.d2.i18n.getTranslation('data_entry_form')}
-                </Heading>
-                <div style={styles.palette}>
-                    <div style={styles.paletteHeader}>Operands:</div>
-                    {Object.keys(this.state.operands).map(op => (
-                        <div key={op}>
-                            <a title={`Click to insert input field for \"${this.state.operands[op]}\"`}
-                                onClick={this.insertOperand.bind(this, op)}
-                            >{this.state.operands[op]}</a>
-                        </div>
-                    ))}
-                    <div style={styles.paletteHeader}>Totals:</div>
-                    {Object.keys(this.state.totals).map(t => (
-                        <div key={t}>
-                            <a title={`Click to insert input field for \"${this.state.totals[t]}\"`}
-                                onClick={this.insertTotal.bind(this, t)}
-                            >{this.state.totals[t]}</a>
-                        </div>
-                    ))}
-                    <div style={styles.paletteHeader}>Indicators:</div>
-                    {Object.keys(this.state.indicators).map(i => (
-                        <div key={i}>
-                            <a title={`Click to insert input field for \"${this.state.indicators[i]}\"`}
-                                onClick={this.insertIndicator.bind(this, i)}
-                            >{this.state.indicators[i]}</a>
-                        </div>
-                    ))}
-                </div>
-                <textarea id="designTextarea" name="designTextarea"/>
-                <Paper style={styles.formPaper}>
-                    <div style={styles.formSection}>
-                        <SelectField
-                            value={this.state.formStyle}
-                            floatingLabelText="Form display style"
-                            onChange={this.changeStyle}
-                        >
-                            <MenuItem value={'NORMAL'} primaryText="Normal"/>
-                            <MenuItem value={'COMFORTABLE'} primaryText="Comfortable"/>
-                            <MenuItem value={'COMPACT'} primaryText="Compact"/>
-                            <MenuItem value={'NONE'} primaryText="None"/>
-                        </SelectField>
-                    </div>
-                    <div style={styles.formSection}>
-                        <RaisedButton label="Save" primary onClick={this.saveClick}/>
-                        <FlatButton label="Cancel" style={styles.cancelButton}/>
-                    </div>
-                </Paper>
-            </div>
-        );
-    }
-
-    getHtml(id, styleAttr, disabledAttr) {
-        const style = styleAttr ? ` style=${styleAttr}` : '';
-        const disabled = disabledAttr ? ' disabled="disabled"' : '';
-
-        if (id.indexOf('-') !== -1) {
-            const label = this.state.operands && this.state.operands[id];
-            const attr = `name="entryfield" title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
-            return `<input id="${id}" ${attr}/>`;
-        } else if (this.state.totals.hasOwnProperty(id)) {
-            const label = this.state.totals[id];
-            const attr = `name="total" readonly title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
-            return `<input dataelementid="${id}" id="total${id}" name="total" ${attr}/>`;
-        } else if (this.state.indicators.hasOwnProperty(id)) {
-            const label = this.state.indicators[id];
-            const attr = `name="indicator" readonly title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
-            return `<input indicatorid="${id}" id="indicator${id}" ${attr}/>`;
-        }
-
-        log.warn('Failed to generate HTML for ID:', id);
-        return '';
-    }
-
-    insertOperand(id) {
-        this._editor.insertHtml(this.getHtml(id), 'unfiltered_html');
-    }
-
-    insertTotal(id) {
-        this._editor.insertHtml(this.getHtml(id), 'unfiltered_html');
-    }
-
-    insertIndicator(id) {
-        this._editor.insertHtml(this.getHtml(id), 'unfiltered_html');
-    }
-
-    saveClick(e) {
-        console.warn(this._editor.getData());
-    }
-
-    changeStyle(e, i, value) {
-        this.setState({
-            formStyle: value,
-        });
+    insertElement(id) {
+        // TODO: Don't insert elements that are already present
+        this._editor.insertHtml(this.generateHtml(id), 'unfiltered_html');
+        this.setState(state => ({ usedIds: state.usedIds.concat(id) }));
+        // Move the current selection to just after the newly inserted element
+        const range = this._editor.getSelection().getRanges()[0];
+        range.moveToElementEditablePosition(range.endContainer, true);
     }
 }
 EditDataEntryForm.propTypes = {
