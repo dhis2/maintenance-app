@@ -11,14 +11,14 @@ function MenuCardsForAllSections(props) {
     return (
         <div>
             {props.sections
-                .map((metaDataSection) => {
-                    return (
-                        <div key={metaDataSection.key}>
-                            <Heading>{metaDataSection.name}</Heading>
-                            <MenuCards menuItems={metaDataSection.items} />
-                        </div>
-                    );
-                })}
+                // Only show sections that have items
+                .filter(metaDataSection => metaDataSection.items.length > 0)
+                .map((metaDataSection) => (
+                    <div key={metaDataSection.key}>
+                        <Heading>{metaDataSection.name}</Heading>
+                        <MenuCards menuItems={metaDataSection.items} />
+                    </div>
+                ))}
         </div>
     );
 }
@@ -27,42 +27,3 @@ MenuCardsForAllSections.defaultProps = {
 };
 
 export default withStateFrom(sectionsForAllCards$, MenuCardsForAllSections);
-//
-// export default React.createClass({
-//    mixins: [Translate, Auth],
-//
-//    getInitialState() {
-//        return {
-//            menuItems: [],
-//        };
-//    },
-//
-//    componentWillMount() {
-//        this.disposable = menuCardsStore
-//            .subscribe(menuItems => {
-//                this.setState({ menuItems });
-//            });
-//    },
-//
-//    componentWillUnmount() {
-//        if (this.disposable && this.disposable.dispose) {
-//            this.disposable.dispose();
-//        }
-//    },
-//
-//    render() {
-//        return (
-//            <div>
-//                {this.state.sections
-//                    .map((metaDataSection) => {
-//                        return (
-//                            <div key={metaDataSection.key}>
-//                                <Heading>metaDataSection.label</Heading>
-//                                <MenuCards menuItems={metaDataSection.items} />
-//                            </div>
-//                        );
-//                    })}
-//            </div>
-//        );
-//    },
-// });

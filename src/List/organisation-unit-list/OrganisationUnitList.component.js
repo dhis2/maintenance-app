@@ -5,6 +5,7 @@ import { getInstance } from 'd2/lib/d2';
 import { fieldFilteringForQuery } from '../list.store';
 import listActions from '../list.actions';
 import log from 'loglevel';
+import ModelCollection from 'd2/lib/model/ModelCollection';
 
 export default class OrganisationUnitList extends React.Component {
     componentDidMount() {
@@ -20,6 +21,11 @@ export default class OrganisationUnitList extends React.Component {
             .subscribe(
                 async ({ selectedOrganisationUnit, userOrganisationUnitIds }) => {
                     const d2 = await getInstance();
+
+                    if (!selectedOrganisationUnit.id) {
+                        return listActions.setListSource(ModelCollection.create(d2.models.organisationUnit));
+                    }
+
                     let organisationUnitList = d2.models.organisationUnit
                         .filter().on('name').notEqual('default');
 

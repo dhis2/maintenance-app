@@ -9,10 +9,15 @@ export default new Map([
     }],
     ['periodType', {
         type: SELECT,
-        props: {
+        fieldOptions: {
             options: [
                 'Daily', 'Weekly', 'Monthly', 'BiMonthly', 'Quarterly', 'SixMonthlyApril', 'Yearly', 'FinancialApril', 'FinancialJuly', 'FinancialOctober',
             ],
         },
     }],
+    ['expiryDays', {
+        fieldOptions: {
+            defaultValue: 0,
+        },
+    }]
 ]);

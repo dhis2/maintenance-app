@@ -16,6 +16,7 @@ import MenuCardsForSection from './MenuCards/MenuCardsForSection.component';
 import MenuCardsForAllSections from './MenuCards/MenuCardsForAllSections.component';
 import OrganisationUnitHierarchy from './OrganisationUnitHierarchy';
 import OrganisationUnitLevels from './OrganisationUnitLevels/OrganisationUnitLevels.component';
+import EditOptionSet from './EditModel/EditOptionSet.component';
 
 function initState({ params }) {
     initAppState({
@@ -77,10 +78,10 @@ function loadObject({ params }, replace, callback) {
                         modelToEditStore.setState(modelToEdit);
                         callback();
                     });
-            } else {
-                modelToEditStore.setState(modelToEdit);
-                callback();
             }
+
+            modelToEditStore.setState(modelToEdit);
+            return callback();
         });
     } else {
         objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
@@ -97,6 +98,10 @@ function loadObject({ params }, replace, callback) {
 
 function loadOrgUnitObject({ params }, replace, callback) {
     loadObject({ params: { modelType: 'organisationUnit', groupName: params.groupName, modelId: params.modelId } }, replace, callback);
+}
+
+function loadOptionSetObject({ params }, replace, callback) {
+    loadObject({ params: { modelType: 'optionSet', groupName: params.groupName, modelId: params.modelId } }, replace, callback);
 }
 
 function loadList({ params }, replace, callback) {
@@ -179,6 +184,14 @@ const routes = (
                     component={EditModelContainer}
                     onEnter={loadOrgUnitObject}
                 />
+                <Route
+                    path="optionSet/:modelId"
+                    component={EditOptionSet}
+                    onEnter={loadOptionSetObject}
+                >
+                    <IndexRoute />
+                    <Route path=":activeView" />
+                </Route>
                 <Route
                     path=":modelType/:modelId"
                     component={EditModelContainer}

@@ -1,15 +1,6 @@
+const dhisDevConfig = DHIS_CONFIG;
 if (process.env.NODE_ENV !== 'production') {
-    jQuery.ajaxSetup({ // eslint-disable-line no-undef
-        headers: {
-            Authorization: `Basic ${btoa('admin:district')}`,
-        },
-    });
-
-    jQuery('head').append(`
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'/>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    `);
+    jQuery.ajaxSetup({ headers: { Authorization: dhisDevConfig.authorization } }); // eslint-disable-line
 }
 
 Error.stackTraceLimit = Infinity;
@@ -21,6 +12,7 @@ import log from 'loglevel';
 import LoadingMask from './loading-mask/LoadingMask.component';
 import dhis2 from 'd2-ui/lib/header-bar/dhis2';
 import routes from './router';
+import '../scss/maintenance.scss';
 
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
@@ -28,7 +20,8 @@ if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.INFO);
 }
 
-function configI18n({ uiLocale }) {
+function configI18n(userSettings) {
+    const uiLocale = userSettings.keyUiLocale;
     if (uiLocale !== 'en') {
         // Add the language sources for the preferred locale
         config.i18n.sources.add(`./i18n/i18n_module_${uiLocale}.properties`);
@@ -48,14 +41,15 @@ render(<LoadingMask />, document.getElementById('app'));
 
 getManifest('./manifest.webapp')
     .then(manifest => {
-        config.baseUrl = `${manifest.getBaseUrl()}/api`;
+        const baseUrl = process.env.NODE_ENV === 'production' ? manifest.getBaseUrl() : dhisDevConfig.baseUrl;
+        config.baseUrl = `${baseUrl}/api`;
         log.info(`Loading: ${manifest.name} v${manifest.version}`);
         log.info(`Built ${manifest.manifest_generated_at}`);
 
         // Set the baseUrl to localhost if we are in dev mode
         if (process.env.NODE_ENV !== 'production') {
-            config.baseUrl = 'http://localhost:8080/dhis/api';
-            dhis2.settings.baseUrl = 'http://localhost:8080/dhis';
+            config.baseUrl = `${baseUrl}/api`;
+            dhis2.settings.baseUrl = baseUrl;
         }
     })
     .then(getUserSettings)

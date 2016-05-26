@@ -17,7 +17,11 @@ export default {
                     'dataElementGroupSet',
                 ],
             },
-
+            dataSetSection: {
+                items: [
+                    'dataSet',
+                ],
+            },
             indicatorSection: {
                 items: [
                     'indicator',
@@ -36,10 +40,18 @@ export default {
                 ],
             },
 
-            dataAdministrationSection: {
+            validationSection: {
+                items: [
+                    'validationRule',
+                    'validationRuleGroup',
+                ],
+            },
+
+            otherSection: {
                 items: [
                     'constant',
                     'attribute',
+                    'optionSet',
                 ],
             },
         };

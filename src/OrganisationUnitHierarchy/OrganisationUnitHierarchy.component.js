@@ -21,7 +21,7 @@ function identity(v) {
 const d2$ = Observable.fromPromise(getInstance());
 
 const hierarchy$ = appState
-    .map(appState => appState.hierarchy || {});
+    .map(state => state.hierarchy || {});
 
 function getOrgUnitTreeSearchFromAction(action) {
     return action
