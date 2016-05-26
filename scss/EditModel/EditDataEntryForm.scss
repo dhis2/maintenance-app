@@ -1,0 +1,51 @@
+.palette {
+  position: fixed;
+  left: 16px;
+  top: 174px;
+  bottom: 8px;
+  background: white;
+  border-radius: 5px;
+  z-index: 100;
+
+  width: 279px;
+  transition: all 125ms ease-out;
+
+  &:hover {
+    width: 500px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.12);
+  }
+
+  .elements {
+    position: absolute;
+    top: 48px;
+    bottom: 0; left: 0; right: 0;
+    padding: 0 16px 16px;
+    margin: 16px 8px 8px;
+    font-size: 12px;
+    overflow: auto;
+    overflow-x: hidden;
+    white-space: nowrap;
+  }
+}
+
+.item {
+  &.active {
+    a {
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  &.inactive {
+    a {
+      color: inherit;
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+}
+
+.expand {
+  @extend .item.active;
+}
