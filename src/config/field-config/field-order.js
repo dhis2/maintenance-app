@@ -212,6 +212,8 @@ const fieldOrderByName = new Map([
         'ruleType',
         'periodType',
         'operator',
+        'leftSide',
+        'rightSide',
     ]],
     ['validationRuleGroup', [
         'name',

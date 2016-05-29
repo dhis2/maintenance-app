@@ -16,14 +16,11 @@ import FormButtons from './FormButtons.component';
 import log from 'loglevel';
 import extraFields from './extraFields';
 import CircularProgress from 'material-ui/lib/circular-progress';
-import BackButton from './BackButton.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
-import { goToRoute, goBack } from '../router';
 import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import appState from '../App/appStateStore';
 import { Observable } from 'rx';
-import TextField from '../forms/form-fields/text-field';
 
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
 

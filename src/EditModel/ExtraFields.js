@@ -10,7 +10,6 @@ import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerCon
 import dataElementOperandStore from 'd2-ui/lib/indicator-expression-manager/dataElementOperand.store';
 import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
 import { Observable } from 'rx';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import modelToEditStore from './modelToEditStore';
 
 import DataIndicatorGroupsAssignment from './DataIndicatorGroupsAssignment.component';
