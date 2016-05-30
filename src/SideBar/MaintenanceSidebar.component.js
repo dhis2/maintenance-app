@@ -9,7 +9,8 @@ function MaintenanceSideBar(props) {
         <div style={sideBarWrapperStyle}>
             <Sidebar
                 sections={props.sections}
-                onChangeSection={props.onChangeSection || noop}
+                onChangeSection={noop}
+                onSectionClick={props.onChangeSection || noop}
                 currentSection={props.currentSection}
                 styles={Object.assign({ leftBar: { overflowY: 'initial' } }, props.style)}
             />

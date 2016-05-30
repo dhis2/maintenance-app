@@ -212,4 +212,5 @@ export const typeToFieldMap = new Map([
     ['DATE', DATE],
     ['URL', URL],
     ['NUMBER', NUMBER],
+    ['COMPLEX', INPUT],
 ]);

@@ -1,5 +1,6 @@
 import React from 'react';
-import HeaderBar from 'd2-ui/lib/header-bar/HeaderBar.component';
+import HeaderBarComponent from 'd2-ui/lib/app-header/HeaderBar';
+import headerBarStore$ from 'd2-ui/lib/app-header/headerBar.store';
 import MainContent from 'd2-ui/lib/layout/main-content/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
@@ -26,6 +27,8 @@ injectTapEventPlugin();
 
 import appState, { setAppState } from './appStateStore';
 import { goToRoute } from '../router';
+
+const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 
 const sections$ = appState
     .map(state => ({
