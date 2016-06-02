@@ -219,16 +219,16 @@ export default React.createClass({
                                 // TODO: Take this code out to a sort of formRulesRunner, that can modify the fieldConfigs before the render
                                 if (modelToEdit.modelDefinition.name === 'dataElement') {
                                     // Disable the categoryCombo field when working with a tracker dataElement
-                                    if (fieldConfig.name === 'categoryCombo' && modelToEdit.domainType === 'TRACKER') {
-                                        fieldConfig.props.disabled = true;
+                                    if (fieldConfig.name === 'categoryCombo') {
+                                        fieldConfig.props.disabled = modelToEdit.domainType === 'TRACKER';
                                     }
                                     // Disable aggregationOperator when working with a tracker dataElement
-                                    if (fieldConfig.name === 'aggregationType' && modelToEdit.domainType === 'TRACKER') {
-                                        fieldConfig.props.disabled = true;
+                                    if (fieldConfig.name === 'aggregationType') {
+                                        fieldConfig.props.disabled = modelToEdit.domainType === 'TRACKER';
                                     }
                                     // Disable valueType when an optionSet is selected
-                                    if (fieldConfig.name === 'valueType' && modelToEdit.optionSet) {
-                                        fieldConfig.props.disabled = true;
+                                    if (fieldConfig.name === 'valueType') {
+                                        fieldConfig.props.disabled = !!modelToEdit.optionSet;
                                     }
                                 }
 

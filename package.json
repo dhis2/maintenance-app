@@ -10,7 +10,7 @@
     "test-watch": "karma start test/config/karma.config.js",
     "lint": "eslint src && eslint --env node,mocha --global expect,sinon --rule 'no-unused-expressions: 0' test && scss-lint",
     "__prebuild": "npm test && npm run lint",
-    "build": "webpack --config webpack.config.prod.js && cp -r src/i18n build/ && compass compile && cp -r src/css build && cp ./node_modules/babel-polyfill/dist/polyfill.min.js build/babel-polyfill.js && cp ./node_modules/jquery/dist/jquery.min.js build && cp ./src/index.html build && cp dhis-web-maintenance.png build && npm run manifest",
+    "build": "webpack --config webpack.config.prod.js && cp -r src/i18n build/ && compass compile && cp -r src/css build && cp ./node_modules/babel-polyfill/dist/polyfill.min.js build/polyfill.min.js && cp ./node_modules/jquery/dist/jquery.min.js build && cp ./index.html build && cp dhis-web-maintenance.png build && npm run manifest",
     "validate": "npm ls",
     "manifest": "d2-manifest package.json build/manifest.webapp"
   },
