@@ -67,8 +67,13 @@ class App extends AppWithD2 {
         const nonAllSectionSelected$ = appState
             // The all section is managed separately so we do not want to process those any further
             .filter(state => state.sideBar.currentSection !== 'all')
-            // Check if the current section is in the list of mainSections
-            .map((state) => state.mainSections.some(mainSection => mainSection.key === state.sideBar.currentSection));
+            .map((state) => (
+                // Check if the current section is in the list of mainSections ...
+                state.mainSections.some(mainSection => mainSection.key === state.sideBar.currentSection) &&
+                // ... and has at least 2 subsections
+                state.sideBar[state.sideBar.currentSection] &&
+                state.sideBar[state.sideBar.currentSection].length > 1
+            ));
 
         this.disposable = Observable
             .merge(allSectionSelected$, nonAllSectionSelected$)

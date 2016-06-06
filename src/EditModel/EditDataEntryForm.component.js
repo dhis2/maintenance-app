@@ -24,10 +24,19 @@ const dataElementCategoryOptionIdPattern = /id="(\w*?)-(\w*?)-val"/;
 const dataElementPattern = /dataelementid="(\w{11})"/;
 const indicatorPattern = /indicatorid="(\w{11})"/;
 
+function clampPaletteWidth(width) {
+    return Math.min(750, Math.max(width, 250));
+}
+
+
+// TODO: Disabled fields
+// TODO?: Automatic labels <span label-id="{id}-{id}"></span> / <span label-id="{id}"></span>
+
 const styles = {
     heading: {
         paddingBottom: 18,
     },
+    formContainer: {},
     formPaper: {
         width: '100%',
         margin: '0 auto 2rem',
@@ -40,13 +49,7 @@ const styles = {
     cancelButton: {
         marginLeft: '2rem',
     },
-    paletteHeader: {
-        fontWeight: 700,
-        display: 'block',
-        fontSize: 16,
-        marginLeft: -16,
-        paddingTop: 8,
-    },
+    paletteHeader: {},
     paletteFilter: {
         position: 'absolute',
         top: -16,
@@ -65,6 +68,8 @@ class EditDataEntryForm extends React.Component {
         this.state = {
             usedIds: [],
             filter: '',
+            paletteWidth: clampPaletteWidth(window.innerWidth / 3),
+            expand: 'data_elements',
         };
 
         // Load form data, operands, indicators and flags
@@ -138,7 +143,10 @@ class EditDataEntryForm extends React.Component {
                 .map(({ data, complete, error }) => ({ data: data.target.value, complete, error }))
                 .debounce(75)
                 .subscribe(args => {
-                    this.setState({ expand: '', filter: args.data.split(' ').filter(x => x.length) });
+                    const filter = args.data
+                        .split(' ')
+                        .filter(x => x.length);
+                    this.setState({ filter });
                 });
 
             const formHtml = dataSet.dataEntryForm ? this.processFormData(dataSet.dataEntryForm) : '';
@@ -184,6 +192,10 @@ class EditDataEntryForm extends React.Component {
         this.handleSaveClick = this.handleSaveClick.bind(this);
         this.handleCancelClick = this.handleCancelClick.bind(this);
         this.handleStyleChange = this.handleStyleChange.bind(this);
+
+        this.startResize = this.startResize.bind(this);
+        this.doResize = this.doResize.bind(this);
+        this.endResize = this.endResize.bind(this);
     }
 
     componentWillUnmount() {
@@ -216,6 +228,33 @@ class EditDataEntryForm extends React.Component {
         this.setState({
             formStyle: value,
         });
+    }
+
+    startResize(e) {
+        this._startPos = e.clientX;
+        this._startWidth = this.state.paletteWidth;
+        window.addEventListener('mousemove', this.doResize);
+        window.addEventListener('mouseup', this.endResize);
+    }
+
+    doResize(e) {
+        if (!e.buttons) {
+            // If no buttons are pressed it probably simply means we missed a mouseUp event - so stop resizing
+            this.endResize();
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        const width = clampPaletteWidth(this._startWidth + (this._startPos - e.clientX));
+        window.requestAnimationFrame(() => {
+            this.setState({
+                paletteWidth: width,
+            });
+        });
+    }
+
+    endResize() {
+        window.removeEventListener('mousemove', this.doResize);
+        window.removeEventListener('mouseup', this.endResize);
     }
 
     generateHtml(id, styleAttr, disabledAttr) {
@@ -303,62 +342,64 @@ class EditDataEntryForm extends React.Component {
         range.moveToElementEditablePosition(range.endContainer, true);
     }
 
-    renderPaletteSection(keySet, expand) {
-        const filtered = Object.keys(keySet)
-            .filter(key => (!this.state.filter.length || this.state.filter.reduce((p, ft) => (
-                p && keySet[key].toLowerCase().indexOf(ft.toLowerCase()) !== -1
-            ), true)));
-        const filterCount = Object.keys(filtered).length;
+    renderPaletteSection(keySet, label) {
+        const filteredItems = Object.keys(keySet)
+            .filter(key => !this.state.filter.length || this.state.filter.every(
+                filter => keySet[key].toLowerCase().indexOf(filter.toLowerCase()) !== -1
+            ));
 
-        const displayLimit = this.state.expand === expand ? 0 : 5;
-        const display = displayLimit ? filtered.slice(0, displayLimit) : filtered;
+        const cellClass = label === this.state.expand ? 'cell expanded' : 'cell';
+
+
+        const expandClick = () => {
+            this.setState({ expand: label });
+        };
 
         return (
-            <div>{
-                display
-                    .map(key => {
-                        // Active items are items that are NOT already added to the form
-                        const isActive = this.state.usedIds.indexOf(key) === -1;
-                        const className = isActive ? 'item active' : 'item inactive';
-                        const name = keySet[key].name || keySet[key];
-                        return (
-                            <div key={key} className={className}>
-                                <a onClick={this.insertFn[key]}>{name}</a>
-                            </div>
-                        );
-                    })
-            } {
-                displayLimit && filterCount - displayLimit > 0 ? (
-                    <div className="expand">
-                        <a onClick={() => { this.setState({ expand }); }}>
-                            ... click to show {filterCount - displayLimit} more
-                        </a>
-                    </div>
-                ) : undefined
-            }
+            <div className={cellClass}>
+                <div style={styles.paletteHeader} className="header" onClick={expandClick}>
+                    <div className="arrow">&#9656;</div>
+                    {this.getTranslation(label)}:
+                    <div className="count">{filteredItems.length}</div>
+                </div>
+                <div className="items">
+                    {
+                        filteredItems
+                            .map(key => {
+                                // Active items are items that are not already added to the form
+                                const isActive = this.state.usedIds.indexOf(key) === -1;
+                                const className = isActive ? 'item active' : 'item inactive';
+                                const name = keySet[key].name || keySet[key];
+                                return (
+                                    <div key={key} className={className} title={name}>
+                                        <a onClick={this.insertFn[key]}>{name}</a>
+                                    </div>
+                                );
+                            })
+                    }
+                </div>
             </div>
         );
     }
 
     renderPalette() {
         return (
-            <div className="palette">
-                <div style={styles.paletteFilter}>
-                    <TextField
-                        floatingLabelText={this.getTranslation('filter_elements')}
-                        style={styles.paletteFilterField}
-                        onChange={this.filterAction}
-                    />
-                </div>
-                <div className="elements">
-                    <div style={styles.paletteHeader}>{this.getTranslation('data_elements')}:</div>
-                    {this.renderPaletteSection(this.operands, 'data_elements')}
-                    <div style={styles.paletteHeader}>{this.getTranslation('totals')}:</div>
-                    {this.renderPaletteSection(this.totals, 'totals')}
-                    <div style={styles.paletteHeader}>{this.getTranslation('indicators')}:</div>
-                    {this.renderPaletteSection(this.indicators, 'indicators')}
-                    <div style={styles.paletteHeader}>{this.getTranslation('flags')}:</div>
-                    {this.renderPaletteSection(this.flags, 'flags')}
+            <div className="paletteContainer" style={{width: this.state.paletteWidth}}>
+                <div className="resizeHandle" onMouseDown={this.startResize}></div>
+                <div className="palette">
+                    <div style={styles.paletteFilter}>
+                        <TextField
+                            floatingLabelText={this.getTranslation('filter_elements')}
+                            style={styles.paletteFilterField}
+                            onChange={this.filterAction}
+                        />
+                    </div>
+                    <div className="elements">
+                        {this.renderPaletteSection(this.operands, 'data_elements')}
+                        {this.renderPaletteSection(this.totals, 'totals')}
+                        {this.renderPaletteSection(this.indicators, 'indicators')}
+                        {this.renderPaletteSection(this.flags, 'flags')}
+                    </div>
                 </div>
             </div>
         );
@@ -366,7 +407,7 @@ class EditDataEntryForm extends React.Component {
 
     render() {
         return this.state.formHtml === undefined ? <LoadingMask /> : (
-            <div>
+            <div style={Object.assign({}, styles.formContainer, { marginRight: this.state.paletteWidth })}>
                 <Heading style={styles.heading}>
                     {this.state.formTitle} {this.getTranslation('data_entry_form')}
                 </Heading>
