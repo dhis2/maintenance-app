@@ -4,6 +4,7 @@ import log from 'loglevel';
 import App from './App/App.component';
 import List from './List/List.component';
 import EditModelContainer from './EditModel/EditModelContainer.component';
+import EditDataEntryForm from './EditModel/EditDataEntryForm.component';
 import GroupEditor from './GroupEditor/GroupEditor.component';
 import modelToEditStore from './EditModel/modelToEditStore';
 import { getInstance } from 'd2/lib/d2';
@@ -97,11 +98,23 @@ function loadObject({ params }, replace, callback) {
 }
 
 function loadOrgUnitObject({ params }, replace, callback) {
-    loadObject({ params: { modelType: 'organisationUnit', groupName: params.groupName, modelId: params.modelId } }, replace, callback);
+    loadObject({
+        params: {
+            modelType: 'organisationUnit',
+            groupName: params.groupName,
+            modelId: params.modelId
+        }
+    }, replace, callback);
 }
 
 function loadOptionSetObject({ params }, replace, callback) {
-    loadObject({ params: { modelType: 'optionSet', groupName: params.groupName, modelId: params.modelId } }, replace, callback);
+    loadObject({
+        params: {
+            modelType: 'optionSet',
+            groupName: params.groupName,
+            modelId: params.modelId
+        }
+    }, replace, callback);
 }
 
 function loadList({ params }, replace, callback) {
@@ -155,8 +168,9 @@ function cloneObject({ params }, replace, callback) {
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
-            <IndexRedirect to="/list/all" />
-            <Route path="list/all" component={MenuCardsForAllSections} onEnter={() => initState({ params: { groupName: 'all' } })} />
+            <IndexRedirect to="/list/all"/>
+            <Route path="list/all" component={MenuCardsForAllSections}
+                   onEnter={() => initState({ params: { groupName: 'all' } })}/>
             <Route path="list/:groupName">
                 <IndexRoute
                     component={MenuCardsForSection}
@@ -190,8 +204,13 @@ const routes = (
                     onEnter={loadOptionSetObject}
                 >
                     <IndexRoute />
-                    <Route path=":activeView" />
+                    <Route path=":activeView"/>
                 </Route>
+                <Route
+                    path=":modelType/:modelId/dataEntryForm"
+                    component={EditDataEntryForm}
+                    onEnter={loadObject}
+                />
                 <Route
                     path=":modelType/:modelId"
                     component={EditModelContainer}

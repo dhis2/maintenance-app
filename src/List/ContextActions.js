@@ -18,6 +18,7 @@ config.i18n.strings.add('delete');
 config.i18n.strings.add('details');
 config.i18n.strings.add('translate');
 config.i18n.strings.add('sharing');
+config.i18n.strings.add('dataEntryForm');
 config.i18n.strings.add('pdfDataSetForm');
 
 export const afterDeleteHook$ = new Subject();
@@ -29,6 +30,7 @@ const contextActions = Action.createActionsFromNames([
     'delete',
     'details',
     'translate',
+    'dataEntryForm',
     'pdfDataSetForm',
 ]);
 
@@ -113,14 +115,20 @@ contextActions.translate
         });
     });
 
+contextActions.dataEntryForm
+    .subscribe(action => {
+        goToRoute([
+            '/edit',
+            appStore.state.sideBar.currentSection,
+            action.data.modelDefinition.name,
+            action.data.id,
+            'dataEntryForm',
+        ].join('/'));
+    });
+
 contextActions.pdfDataSetForm
     .subscribe(({ data: model, complete, error }) => {
-        getD2()
-            .then((d2) => {
-                window.open(`${d2.Api.getApi().baseUrl}/pdfForm/dataSet/${model.id}`);
-            })
-            .then(complete)
-            .catch(error);
+        goToRoute(['/edit', model.id, 'form'])
     });
 
 export default contextActions;
