@@ -8,6 +8,7 @@ import SelectField from 'material-ui/lib/select-field';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import Paper from 'material-ui/lib/paper';
 import TextField from 'material-ui/lib/text-field';
+import CheckBox from 'material-ui/lib/checkbox';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
@@ -29,7 +30,6 @@ function clampPaletteWidth(width) {
 }
 
 
-// TODO: Disabled fields
 // TODO?: Automatic labels <span label-id="{id}-{id}"></span> / <span label-id="{id}"></span>
 
 const styles = {
@@ -59,6 +59,12 @@ const styles = {
     paletteFilterField: {
         width: '100%',
     },
+    greySwitch: {
+        position: 'absolute',
+        bottom: 8,
+        left: 8,
+        right: 8,
+    },
 };
 
 class EditDataEntryForm extends React.Component {
@@ -70,6 +76,7 @@ class EditDataEntryForm extends React.Component {
             filter: '',
             paletteWidth: clampPaletteWidth(window.innerWidth / 3),
             expand: 'data_elements',
+            insertGrey: false,
         };
 
         // Load form data, operands, indicators and flags
@@ -259,7 +266,7 @@ class EditDataEntryForm extends React.Component {
 
     generateHtml(id, styleAttr, disabledAttr) {
         const style = styleAttr ? ` style=${styleAttr}` : '';
-        const disabled = disabledAttr ? ' disabled="disabled"' : '';
+        const disabled = disabledAttr || this.state.insertGrey ? ' disabled="disabled"' : '';
 
         if (id.indexOf('-') !== -1) {
             const label = this.operands && this.operands[id];
@@ -383,8 +390,12 @@ class EditDataEntryForm extends React.Component {
     }
 
     renderPalette() {
+        const toggleGrey = (e, value) => {
+            this.setState({ insertGrey: value });
+        };
+
         return (
-            <div className="paletteContainer" style={{width: this.state.paletteWidth}}>
+            <div className="paletteContainer" style={{ width: this.state.paletteWidth }}>
                 <div className="resizeHandle" onMouseDown={this.startResize}></div>
                 <div className="palette">
                     <div style={styles.paletteFilter}>
@@ -400,6 +411,13 @@ class EditDataEntryForm extends React.Component {
                         {this.renderPaletteSection(this.indicators, 'indicators')}
                         {this.renderPaletteSection(this.flags, 'flags')}
                     </div>
+                    <CheckBox
+                        label={this.getTranslation('insert_grey_fields')}
+                        labelPosition="right"
+                        style={styles.greySwitch}
+                        onCheck={toggleGrey}
+                        checked={this.state.insertGrey}
+                    />
                 </div>
             </div>
         );
