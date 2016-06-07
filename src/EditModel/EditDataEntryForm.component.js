@@ -220,6 +220,7 @@ class EditDataEntryForm extends React.Component {
             .then(() => {
                 log.info('Form saved successfully');
                 snackActions.show({ message: 'Form saved', action: 'ok' });
+                goBack();
             })
             .catch(e => {
                 log.warn('Failed to save form:', e);
