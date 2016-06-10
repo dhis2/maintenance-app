@@ -4,6 +4,7 @@ import dataSet from './dataSet';
 import organisationUnitGroup from './organisationUnitGroup';
 import categoryOption from './categoryOption';
 import validationRule from './validationRule';
+import legendSet from './legendSet';
 
 const overridesByType = {
     dataElement,
@@ -12,6 +13,7 @@ const overridesByType = {
     organisationUnitGroup,
     categoryOption,
     validationRule,
+    legendSet,
 };
 
 export default {

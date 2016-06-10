@@ -40,18 +40,20 @@ export default {
                 ],
             },
 
-            validationSection: {
-                items: [
-                    'validationRule',
-                    'validationRuleGroup',
-                ],
-            },
+            // TODO: 2.25
+            // validationSection: {
+            //     items: [
+            //         'validationRule',
+            //         'validationRuleGroup',
+            //     ],
+            // },
 
             otherSection: {
                 items: [
                     'constant',
                     'attribute',
                     'optionSet',
+                    'legendSet',
                 ],
             },
         };

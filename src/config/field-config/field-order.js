@@ -201,6 +201,11 @@ const fieldOrderByName = new Map([
         'description',
         'valueType',
     ]],
+    ['legendSet', [
+        'name',
+        'code',
+        'legends',
+    ]],
     ['validationRule', [
         'name',
         'shortName',
@@ -223,7 +228,7 @@ const fieldOrderByName = new Map([
         'validationRules',
         'userGroupsToAlert',
         'alertByOrgUnits',
-    ]]
+    ]],
 ]);
 
 export default {
