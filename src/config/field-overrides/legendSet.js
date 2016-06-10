@@ -2,26 +2,53 @@ import React from 'react';
 import Legend from 'd2-ui/lib/legend/Legend.component';
 import { getInstance } from 'd2/lib/d2';
 import Store from 'd2-ui/lib/store/Store';
-import CircularProgress from 'material-ui/lib/circular-progress';
+import LinearProgress from 'material-ui/lib/linear-progress';
+import modelToEditStore from '../../EditModel/modelToEditStore';
 
 const legendStore = Store.create();
 
-async function loadLegendsForLegendSet(legends) {
-    const d2 = await getInstance();
-
-
-    const loadedLegends = await Promise.all(
-        legends.map(legend => d2.models.legend.get(legend.id))
-    );
-
-    return loadedLegends;
-}
+// validateLegends = function() {
+//     var items = tmpLegendStore.data.items,
+//         item,
+//         prevItem;
+//
+//     if (items.length === 0) {
+//         gis.alert('At least one legend is required');
+//         return false;
+//     }
+//
+//     for (var i = 1; i < items.length; i++) {
+//         item = items[i].data;
+//         prevItem = items[i - 1].data;
+//
+//         if (item.startValue < prevItem.endValue) {
+//             var msg = 'Overlapping legends not allowed!\n\n' +
+//                 prevItem.name + ' (' + prevItem.startValue + ' - ' + prevItem.endValue + ')\n' +
+//                 item.name + ' (' + item.startValue + ' - ' + item.endValue + ')';
+//             gis.alert(msg);
+//             return false;
+//         }
+//
+//         if (prevItem.endValue < item.startValue) {
+//             var msg = 'Legend gaps detected!\n\n' +
+//                 prevItem.name + ' (' + prevItem.startValue + ' - ' + prevItem.endValue + ')\n' +
+//                 item.name + ' (' + item.startValue + ' - ' + item.endValue + ')\n\n' +
+//                 'Proceed anyway?';
+//
+//             if (!confirm(msg)) {
+//                 return false;
+//             }
+//         }
+//     }
+//
+//     return true;
+// };
 
 export default new Map([
     ['legends', {
         component: class extends React.Component {
-            constructor() {
-                super();
+            constructor(props, context) {
+                super(props, context);
 
                 this.state = {
                     isLoading: true,
@@ -30,23 +57,75 @@ export default new Map([
             }
 
             componentDidMount() {
-                loadLegendsForLegendSet(this.props.value.toArray())
-                    .then((legends) => legendStore.setState(legends));
+                this.initLegends(this.props);
+            }
 
-                legendStore
-                    .take(1)
-                    .subscribe(legends => this.setState({
-                        legends,
-                        isLoading: false,
-                    }));
+            componentWillReceiveProps(props) {
+                this.initLegends(props);
+            }
+
+            initLegends(props) {
+                this.setState({
+                    legends: props.value.toArray(),
+                    isLoading: false,
+                });
             }
 
             render() {
                 if (this.state.isLoading) {
-                    return (<CircularProgress indetermined />);
+                    return (<LinearProgress indetermined />);
                 }
 
-                return <Legend items={this.state.legends} />
+                return <Legend items={this.state.legends} onItemsChange={this.updateLegends} />
+            }
+
+            updateLegends = (newLegends) => {
+                getInstance()
+                    .then(d2 => d2.Api.getApi())
+                    .then(api => api.get('system/uid', { limit: newLegends.length }))
+                    .then(response => response.codes)
+                    .then(codes => {
+                        return newLegends.map((legend, index) => {
+                            legend.id = codes[index];
+                            return legend;
+                        });
+                    })
+                    .then(legends => {
+                        const model = modelToEditStore.getState();
+                        model[this.props.referenceProperty].clear();
+
+                        legends.forEach(legend => model[this.props.referenceProperty].add(legend));
+
+                        this.props.onChange({
+                            target: {
+                                value: model[this.props.referenceProperty],
+                            }
+                        });
+                    });
+
+                // Promise
+                //     .all(newLegends.map(model => model
+                //         .save()
+                //         .catch(() => true)
+                //     ))
+                //     .then(() => {
+                //         const model = modelToEditStore.getState();
+                //
+                //
+                //         newLegends
+                //             .forEach(legend => model[this.props.referenceProperty].add(legend));
+                //
+                //         return model;
+                //     })
+                //     .then(model => {
+                //         this.setState({ isLoading: false });
+                //
+                //         this.props.onChange({
+                //             target: {
+                //                 value: model[this.props.referenceProperty],
+                //             }
+                //         });
+                //     });
             }
         },
         fieldOptions: {},
