@@ -9,7 +9,6 @@ const legendStore = Store.create();
 async function loadLegendsForLegendSet(legends) {
     const d2 = await getInstance();
 
-
     const loadedLegends = await Promise.all(
         legends.map(legend => d2.models.legend.get(legend.id))
     );
