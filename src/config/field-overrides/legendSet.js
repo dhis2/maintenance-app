@@ -7,6 +7,7 @@ import modelToEditStore from '../../EditModel/modelToEditStore';
 
 const legendStore = Store.create();
 
+// TODO: Integrate these validation functions before saving.
 // validateLegends = function() {
 //     var items = tmpLegendStore.data.items,
 //         item,
@@ -102,30 +103,6 @@ export default new Map([
                             }
                         });
                     });
-
-                // Promise
-                //     .all(newLegends.map(model => model
-                //         .save()
-                //         .catch(() => true)
-                //     ))
-                //     .then(() => {
-                //         const model = modelToEditStore.getState();
-                //
-                //
-                //         newLegends
-                //             .forEach(legend => model[this.props.referenceProperty].add(legend));
-                //
-                //         return model;
-                //     })
-                //     .then(model => {
-                //         this.setState({ isLoading: false });
-                //
-                //         this.props.onChange({
-                //             target: {
-                //                 value: model[this.props.referenceProperty],
-                //             }
-                //         });
-                //     });
             }
         },
         fieldOptions: {},
