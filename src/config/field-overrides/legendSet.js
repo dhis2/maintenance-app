@@ -4,6 +4,7 @@ import { getInstance } from 'd2/lib/d2';
 import Store from 'd2-ui/lib/store/Store';
 import LinearProgress from 'material-ui/lib/linear-progress';
 import modelToEditStore from '../../EditModel/modelToEditStore';
+import log from 'loglevel';
 
 const legendStore = Store.create();
 
@@ -102,7 +103,8 @@ export default new Map([
                                 value: model[this.props.referenceProperty],
                             }
                         });
-                    });
+                    })
+                    .catch(log.error);
             }
         },
         fieldOptions: {},
