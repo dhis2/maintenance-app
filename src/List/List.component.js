@@ -60,7 +60,8 @@ function getTranslatablePropertiesForModelType(modelType) {
     return defaultTranslatableProperties;
 }
 
-function calculatePageValue(pager) {
+// TODO: Move this somewhere as a utility function, probably on the Pagination component (as a separate export) in d2-ui?
+export function calculatePageValue(pager) {
     const pageSize = 50; // TODO: Make the page size dynamic
     const { total, pageCount, page } = pager;
     const pageCalculationValue = total - (total - ((pageCount - (pageCount - page)) * pageSize));

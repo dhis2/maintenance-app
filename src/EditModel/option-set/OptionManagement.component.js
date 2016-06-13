@@ -20,11 +20,15 @@ import modelToEditStore from '../modelToEditStore';
 import OptionSorter from './OptionSorter.component';
 import { typeToFieldMap, getFieldUIComponent, getValidatorsFromModelValidation } from '../../forms/fields';
 import { createFieldConfigForModelTypes } from '../EditModelForm.component';
+import Pagination from 'd2-ui/lib/pagination/Pagination.component';
+import { calculatePageValue } from '../../List/List.component';
 
 const actions = Action.createActionsFromNames(['saveOption', 'setActiveModel', 'closeOptionDialog', 'getOptionsFor', 'deleteOption', 'updateModel'], 'optionSet');
 export const optionsForOptionSetStore = Store.create({
     getInitialState() {
-        return [];
+        return {
+            options: [],
+        };
     },
 });
 
@@ -73,17 +77,41 @@ actions.saveOption
             .catch(error);
     });
 
+function processResponse(options) {
+    const state = {
+        options: options.toArray(),
+        getNextPage: () => {
+            options.pager.getNextPage()
+                .then(processResponse);
+        },
+        getPreviousPage: () => {
+            options.pager.getPreviousPage()
+                .then(processResponse);
+        },
+        pager: options.pager,
+    };
+
+    optionsForOptionSetStore.setState(state);
+
+    return state;
+}
+
+// TODO:
+// Load options using the following and use the paging
+// http://localhost:8080/dhis/api/options.json?filter=optionSet.id:eq:VQ2lai3OfVG
+// Add a dialog window for sorting the options.
 actions.getOptionsFor.subscribe(async ({ data: model, complete }) => {
     const d2 = await getInstance();
 
     if (model && model.id) {
-        const options = await d2.models.optionSet
-            .get(model.id, { fields: 'options[:all,href]' })
-            .then((optionSet) => optionSet.options.toArray());
-
-        optionsForOptionSetStore.setState(options);
+        const state = await d2.models.option
+            .filter().on('optionSet.id').equals(model.id)
+            .list({ fields: ':all,href' })
+            .then(processResponse);
     } else {
-        optionsForOptionSetStore.setState([]);
+        optionsForOptionSetStore.setState({
+            options: [],
+        });
     }
 
     complete();
@@ -133,17 +161,12 @@ const fieldConfigsForOption = [
 ];
 
 const optionList$ = Observable.combineLatest(
-    optionsForOptionSetStore
-        //TODO: Remove when we have server side paging
-        .map((options) => {
-            if(options.length < 50) {
-                return options;
-            }
-            return options.slice(0, 50);
-        }),
+    optionsForOptionSetStore,
     Observable.just(['name', 'code']),
-    (options, columns) => ({
+    ({options, pager, ...other}, columns) => ({
+        ...other,
         rows: options,
+        pager,
         columns,
     })
 );
@@ -337,6 +360,7 @@ class OptionManagement extends Component {
         return (
             <div style={styles.optionManagementWrap}>
                 <OptionSorter style={styles.sortBarStyle} buttonStyle={styles.sortButtonStyle} rows={this.props.rows} />
+                {this.renderPagination()}
                 <div style={styles.dataTableWrap}>
                     <DataTable
                         rows={this.props.rows}
@@ -352,6 +376,39 @@ class OptionManagement extends Component {
                     onRequestClose={this._onAddDialogClose}
                     parentModel={this.props.model}
                 />
+            </div>
+        );
+    }
+
+    renderPagination() {
+        if (!this.props.pager) {
+            return null;
+        }
+
+        const styles = {
+            paginationWrap: {
+                padding: '0 1rem',
+            },
+        };
+
+        const paginationProps = {
+            hasNextPage: () => Boolean(this.props.pager.hasNextPage) && this.props.pager.hasNextPage(),
+            hasPreviousPage: () => Boolean(this.props.pager.hasPreviousPage) && this.props.pager.hasPreviousPage(),
+            onNextPageClick: () => {
+                this.setState({isLoading: true});
+                this.props.getNextPage();
+            },
+            onPreviousPageClick: () => {
+                this.setState({isLoading: true});
+                this.props.getPreviousPage();
+            },
+            total: this.props.pager.total,
+            currentlyShown: calculatePageValue(this.props.pager),
+        };
+
+        return (
+            <div style={styles.paginationWrap}>
+                <Pagination {...paginationProps} />
             </div>
         );
     }
