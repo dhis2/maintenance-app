@@ -20,6 +20,8 @@ import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import sharingStore from './sharing.store';
 import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import orgUnitDialogStore from './organisation-unit-dialog/organisationUnitDialogStore';
+import OrgUnitDialog from './organisation-unit-dialog/OrgUnitDialog.component';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import fieldOrder from '../config/field-config/field-order';
@@ -95,6 +97,10 @@ const List = React.createClass({
                 model: null,
                 open: false,
             },
+            orgunitassignment: {
+                model: null,
+                open: false,
+            },
         };
     },
 
@@ -129,10 +135,17 @@ const List = React.createClass({
             });
         });
 
+        const orgUnitAssignmentStoreDisposable = orgUnitDialogStore.subscribe(orgunitassignmentState => {
+            this.setState({
+                orgunitassignment: orgunitassignmentState,
+            });
+        });
+
         this.registerDisposable(sourceStoreDisposable);
         this.registerDisposable(detailsStoreDisposable);
         this.registerDisposable(sharingStoreDisposable);
         this.registerDisposable(translationStoreDisposable);
+        this.registerDisposable(orgUnitAssignmentStoreDisposable);
     },
 
     componentWillReceiveProps(newProps) {
@@ -151,6 +164,15 @@ const List = React.createClass({
     _translationErrored(errorMessage) {
         log.error(errorMessage);
         snackActions.show({ message: 'translation_save_error', translate: true });
+    },
+
+    _orgUnitAssignmentSaved() {
+        snackActions.show({ message: 'org_unit_assignment_saved', action: 'ok', translate: true });
+    },
+
+    _orgUnitAssignmentErrored(errorMessage) {
+        log.error(errorMessage);
+        snackActions.show({ message: 'org_unit_assignment_save_error', translate: true });
     },
 
     isContextActionAllowed(model, action) {
@@ -188,6 +210,8 @@ const List = React.createClass({
             return model.access.read;
         case 'share':
             return model.modelDefinition.isSharable === true; // TODO: Sharing is filtered out twice...
+        case 'assignToOrgUnits':
+            return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'dataEntryForm':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'pdfDataSetForm':
@@ -268,6 +292,7 @@ const List = React.createClass({
         const contextMenuIcons = {
             clone: 'content_copy',
             sharing: 'share',
+            assignToOrgUnits: 'business',
             dataEntryForm: 'assignment',
             pdfDataSetForm: 'picture_as_pdf',
         };
@@ -280,13 +305,16 @@ const List = React.createClass({
                 </div>
                 <div>
                     <div style={{ float: 'left', width: '50%' }}>
-                        <SearchBox searchObserverHandler={this.searchListByName} />
+                        <SearchBox searchObserverHandler={this.searchListByName}/>
                     </div>
                     <div>
                         <Pagination {...paginationProps} />
                     </div>
                 </div>
-                <LoadingStatus loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')} isLoading={this.state.isLoading} />
+                <LoadingStatus
+                    loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')}
+                    isLoading={this.state.isLoading}
+                />
                 <div style={styles.listDetailsWrap}>
                     <div style={styles.dataTableWrap}>
                         <DataTable
@@ -302,11 +330,14 @@ const List = React.createClass({
                     {this.state.detailsObject ?
                         <div style={styles.detailsBoxWrap}>
                             <Paper zDepth={1} rounded={false} style={{ position: 'fixed' }}>
-                                <DetailsBox source={this.state.detailsObject} showDetailBox={!!this.state.detailsObject}
-                                            onClose={listActions.hideDetailsBox} />
+                                <DetailsBox
+                                    source={this.state.detailsObject}
+                                    showDetailBox={!!this.state.detailsObject}
+                                    onClose={listActions.hideDetailsBox}
+                                />
                             </Paper>
                         </div>
-                    : null}
+                        : null}
                 </div>
                 {this.state.sharing.model ? <SharingDialog
                     objectToShare={this.state.sharing.model}
@@ -322,6 +353,14 @@ const List = React.createClass({
                     onRequestClose={this._closeTranslationDialog}
                     fieldsToTranslate={getTranslatablePropertiesForModelType(this.props.params.modelType)}
                 /> : null }
+                {this.state.orgunitassignment.model ? <OrgUnitDialog
+                    model={this.state.orgunitassignment.model}
+                    root={this.state.orgunitassignment.root}
+                    open={this.state.orgunitassignment.open}
+                    onOrgUnitAssignmentSaved={this._orgUnitAssignmentSaved}
+                    onOrgUnitAssignmentErrot={this._orgUnitAssignmentErrored}
+                    onRequestClose={this._closeOrgUnitDialog}
+                /> : null }
             </div>
         );
     },
@@ -336,7 +375,13 @@ const List = React.createClass({
         sharingStore.setState(Object.assign({}, sharingStore.state, {
             open: false,
         }));
-    }
+    },
+
+    _closeOrgUnitDialog() {
+        orgUnitDialogStore.setState(Object.assign({}, orgUnitDialogStore.state, {
+            open: false,
+        }));
+    },
 });
 
 export default List;

@@ -8,6 +8,7 @@ import log from 'loglevel';
 import listStore from './list.store';
 import sharingStore from './sharing.store';
 import translateStore from './translation-dialog/translationStore';
+import orgUnitAssignmentDialogStore from './organisation-unit-dialog/organisationUnitDialogStore';
 import appStore from '../App/appStateStore';
 import { goToRoute } from '../router';
 import { Subject } from 'rx';
@@ -18,6 +19,7 @@ config.i18n.strings.add('delete');
 config.i18n.strings.add('details');
 config.i18n.strings.add('translate');
 config.i18n.strings.add('sharing');
+config.i18n.strings.add('assignToOrgUnits');
 config.i18n.strings.add('dataEntryForm');
 config.i18n.strings.add('pdfDataSetForm');
 
@@ -30,6 +32,7 @@ const contextActions = Action.createActionsFromNames([
     'delete',
     'details',
     'translate',
+    'assignToOrgUnits',
     'dataEntryForm',
     'pdfDataSetForm',
 ]);
@@ -44,48 +47,63 @@ const confirm = (message) => new Promise((resolve, reject) => {
 // TODO: The action assumes that the appState actually has state
 contextActions.edit
     .subscribe(action => {
-        goToRoute(['/edit', appStore.state.sideBar.currentSection, action.data.modelDefinition.name, action.data.id].join('/'));
+        goToRoute([
+            '/edit',
+            appStore.state.sideBar.currentSection,
+            action.data.modelDefinition.name,
+            action.data.id,
+        ].join('/'));
     });
 
 // TODO: The action assumes that the appState actually has state
 contextActions.clone
     .subscribe(action => {
-        goToRoute(['/clone', appStore.state.sideBar.currentSection, action.data.modelDefinition.name, action.data.id].join('/'));
+        goToRoute([
+            '/clone',
+            appStore.state.sideBar.currentSection,
+            action.data.modelDefinition.name,
+            action.data.id,
+        ].join('/'));
     });
 
 contextActions.delete
     .subscribe(({ data: model }) => getD2()
-            .then(d2 => confirm([d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`), `\n\n${model.name}`].join(''))
+        .then(d2 => confirm([
+            d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`),
+            `\n\n${model.name}`,
+        ].join(''))
+            .then(() => {
+                model.delete()
                     .then(() => {
-                        model.delete()
-                            .then(() => {
-                                // Remove deleted item from the listStore
-                                if (listStore.getState() && listStore.getState().list) {
-                                    listStore.setState({
-                                        pager: listStore.getState().pager,
-                                        list: listStore.getState().list
-                                            .filter(modelToCheck => modelToCheck.id !== model.id),
-                                    });
-                                }
-
-                                snackActions.show({
-                                    message: `${model.name} ${d2.i18n.getTranslation('was_deleted')}`,
-                                });
-
-                                // Fire the afterDeleteHook
-                                afterDeleteHook$.onNext({
-                                    model,
-                                    modelType: model.modelDefinition.name,
-                                });
-                            })
-                            .catch(response => {
-                                log.warn(response);
-                                snackActions.show({
-                                    message: response.message ? response.message : `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
-                                });
+                        // Remove deleted item from the listStore
+                        if (listStore.getState() && listStore.getState().list) {
+                            listStore.setState({
+                                pager: listStore.getState().pager,
+                                list: listStore.getState().list
+                                    .filter(modelToCheck => modelToCheck.id !== model.id),
                             });
+                        }
+
+                        snackActions.show({
+                            message: `${model.name} ${d2.i18n.getTranslation('was_deleted')}`,
+                        });
+
+                        // Fire the afterDeleteHook
+                        afterDeleteHook$.onNext({
+                            model,
+                            modelType: model.modelDefinition.name,
+                        });
                     })
-            )
+                    .catch(response => {
+                        log.warn(response);
+                        snackActions.show({
+                            message: response.message
+                                ? response.message
+                                : `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
+                        });
+                    });
+            })
+        )
     );
 
 contextActions.details
@@ -94,7 +112,7 @@ contextActions.details
     });
 
 contextActions.share
-    .subscribe(async ({ data: model }) => {
+    .subscribe(async({ data: model }) => {
         const d2 = await getD2();
         const modelToShare = await d2.models[model.modelDefinition.name].get(model.id);
 
@@ -105,12 +123,29 @@ contextActions.share
     });
 
 contextActions.translate
-    .subscribe(async ({ data: model }) => {
+    .subscribe(async({ data: model }) => {
         const d2 = await getD2();
         const modelToTranslate = await d2.models[model.modelDefinition.name].get(model.id);
 
         translateStore.setState({
             model: modelToTranslate,
+            open: true,
+        });
+    });
+
+contextActions.assignToOrgUnits
+    .subscribe(async({ data: model }) => {
+        const d2 = await getD2();
+        const modelItem = await d2.models[model.modelDefinition.name].get(model.id);
+        const rootOrgUnit = await d2.models.organisationUnits.list({
+            paging: false,
+            level: 1,
+            fields: 'id,displayName,children[id,displayName,children::isNotEmpty]',
+        }).then(rootLevel => rootLevel.toArray()[0]);
+
+        orgUnitAssignmentDialogStore.setState({
+            model: modelItem,
+            root: rootOrgUnit,
             open: true,
         });
     });
