@@ -338,6 +338,15 @@ export default React.createClass({
                     this.props.onSaveSuccess(this.state.modelToEdit);
                 },
                 (errorMessage) => {
+                    // TODO: d2 queries require a JSON body on 200 OK, an empty body is not valid JSON
+                    if (errorMessage.status === 200) {
+                        log.warn('Save errored due to empty 200 OK body');
+
+                        snackActions.show({ message: 'success', action: 'ok', translate: true });
+
+                        return this.props.onSaveSuccess(this.state.modelToEdit);
+                    }
+
                     log.error(errorMessage);
 
                     this.setState({ isSaving: false });

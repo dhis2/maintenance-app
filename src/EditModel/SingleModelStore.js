@@ -2,11 +2,16 @@ import Store from 'd2-ui/lib/store/Store';
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { Observable } from 'rx';
 
+const requestParams = new Map([
+    ['dataElement', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]' }],
+    ['legendSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],legends[id,name,displayName,startValue,endValue,color]' }],
+])
+
 function loadModelFromD2(objectType, objectId) {
     return getD2().then(d2 => {
         if (d2.models[objectType]) {
             return d2.models[objectType]
-                .get(objectId, objectType === 'dataElement' ? { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]' } : undefined);
+                .get(objectId, requestParams.get(objectType));
         }
         return Promise.reject('Invalid model');
     });
