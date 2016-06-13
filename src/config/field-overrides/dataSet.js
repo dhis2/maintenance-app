@@ -1,4 +1,5 @@
 import { SELECT } from '../../forms/fields';
+import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
 
 export default new Map([
     ['categoryCombo', {
@@ -19,5 +20,9 @@ export default new Map([
         fieldOptions: {
             defaultValue: 0,
         },
-    }]
+    }],
+    ['organisationUnits', {
+        component: OrganisationUnitTreeMultiSelect,
+        fieldOptions: {},
+    }],
 ]);
