@@ -34,7 +34,7 @@
     "css-loader": "^0.23.1",
     "d2": "^24.0.6",
     "d2-manifest": "^1.0.0-2",
-    "d2-ui": "^0.0.32",
+    "d2-ui": "0.0.x",
     "d2-utilizr": "^0.2.9",
     "eslint": "^2.9.0",
     "eslint-config-dhis2": "^2.0.2",
