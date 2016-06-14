@@ -123,7 +123,6 @@ const fieldOrderByName = new Map([
         'renderHorizontally',
         'dataElements',
         'indicators',
-        'organisationUnits',
     ]],
     ['organisationUnit', [
         'name',
