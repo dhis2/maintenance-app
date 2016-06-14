@@ -213,6 +213,8 @@ const List = React.createClass({
             return model.modelDefinition.isSharable === true; // TODO: Sharing is filtered out twice...
         case 'assignToOrgUnits':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
+        case 'sectionForm':
+            return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'dataEntryForm':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'pdfDataSetForm':
@@ -294,6 +296,7 @@ const List = React.createClass({
             clone: 'content_copy',
             sharing: 'share',
             assignToOrgUnits: 'business',
+            sectionForm: 'assignment_turned_in',
             dataEntryForm: 'assignment',
             pdfDataSetForm: 'picture_as_pdf',
         };

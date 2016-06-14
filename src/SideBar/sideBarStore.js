@@ -21,7 +21,15 @@ function getAdditionalSideBarFields(currentSection) {
         return [
             {
                 key: 'hierarchy',
-                label: 'Hierarchy operations',
+                label: 'hierarchyOperations',
+                icon: (<FontIcon className="material-icons">folder_open</FontIcon>),
+            },
+        ];
+    } else if (currentSection === 'dataSet') {
+        return [
+            {
+                key: 'assignment',
+                label: 'assignmentEditor',
                 icon: (<FontIcon className="material-icons">folder_open</FontIcon>),
             },
         ];

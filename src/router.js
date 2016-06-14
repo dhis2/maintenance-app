@@ -4,6 +4,7 @@ import log from 'loglevel';
 import App from './App/App.component';
 import List from './List/List.component';
 import EditModelContainer from './EditModel/EditModelContainer.component';
+import EditDataSetSections from './EditModel/EditDataSetSections.component';
 import EditDataEntryForm from './EditModel/EditDataEntryForm.component';
 import GroupEditor from './GroupEditor/GroupEditor.component';
 import modelToEditStore from './EditModel/modelToEditStore';
@@ -67,7 +68,7 @@ function loadObject({ params }, replace, callback) {
             // TODO: Should probably be able to do this in a different way when this becomes needed for multiple object types
             if (params.modelType === 'organisationUnit') {
                 return appState
-                    // Just take the first value as we don't want this observer to keep updating the state
+                // Just take the first value as we don't want this observer to keep updating the state
                     .take(1)
                     .subscribe((state) => {
                         if (state.selectedOrganisationUnit && state.selectedOrganisationUnit.id) {
@@ -168,9 +169,11 @@ function cloneObject({ params }, replace, callback) {
 const routes = (
     <Router history={hashHistory}>
         <Route path="/" component={App}>
-            <IndexRedirect to="/list/all"/>
-            <Route path="list/all" component={MenuCardsForAllSections}
-                   onEnter={() => initState({ params: { groupName: 'all' } })}/>
+            <IndexRedirect to="/list/all" />
+            <Route
+                path="list/all" component={MenuCardsForAllSections}
+                onEnter={() => initState({ params: { groupName: 'all' } })}
+            />
             <Route path="list/:groupName">
                 <IndexRoute
                     component={MenuCardsForSection}
@@ -204,8 +207,13 @@ const routes = (
                     onEnter={loadOptionSetObject}
                 >
                     <IndexRoute />
-                    <Route path=":activeView"/>
+                    <Route path=":activeView" />
                 </Route>
+                <Route
+                    path=":modelType/:modelId/sections"
+                    component={EditDataSetSections}
+                    onEnter={loadObject}
+                />
                 <Route
                     path=":modelType/:modelId/dataEntryForm"
                     component={EditDataEntryForm}
