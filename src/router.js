@@ -210,6 +210,7 @@ const routes = (
                     path=":modelType/:modelId/dataEntryForm"
                     component={EditDataEntryForm}
                     onEnter={loadObject}
+                    disableSidebar
                 />
                 <Route
                     path=":modelType/:modelId"

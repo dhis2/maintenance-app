@@ -68,11 +68,8 @@ class App extends AppWithD2 {
             // The all section is managed separately so we do not want to process those any further
             .filter(state => state.sideBar.currentSection !== 'all')
             .map((state) => (
-                // Check if the current section is in the list of mainSections ...
-                state.mainSections.some(mainSection => mainSection.key === state.sideBar.currentSection) &&
-                // ... and has at least 2 subsections
-                state.sideBar[state.sideBar.currentSection] &&
-                state.sideBar[state.sideBar.currentSection].length > 1
+                // Check if the current section is in the list of mainSections
+                state.mainSections.some(mainSection => mainSection.key === state.sideBar.currentSection)
             ));
 
         this.disposable = Observable
@@ -102,7 +99,7 @@ class App extends AppWithD2 {
             <div>
                 <HeaderBar />
                 <SectionTabsWrap />
-                {this.state.hasSection ? <TwoPanelLayout>
+                {this.state.hasSection && !this.props.children.props.route.disableSidebar ? <TwoPanelLayout>
                     <SideBar activeGroupName={this.props.params.groupName} activeModelType={this.props.params.modelType} />
                     <MainContent>
                         {this.props.children}
