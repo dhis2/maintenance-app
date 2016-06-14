@@ -1,6 +1,6 @@
 import React from 'react';
 import AutoComplete from 'material-ui/lib/auto-complete';
-import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree';
+import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import noop from 'd2-utilizr/lib/noop';
 
