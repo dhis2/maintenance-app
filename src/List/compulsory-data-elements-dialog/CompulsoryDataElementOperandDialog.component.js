@@ -107,7 +107,7 @@ class CompulsoryDataElementOperandDialog extends Component {
                     <Heading>{this.i18n.getTranslation('edit_compulsory_data_elements')} - {this.props.model.displayName}</Heading>
                     {isLoaded ? this.renderDialogContent() : <CircularProgress indetermined />}
                     <div style={styles.formButtons}>
-                        <RaisedButton disabled={this.state.isSaving} primary onClick={this._saveCollection}>{saveButtonText}</RaisedButton>
+                        <RaisedButton labelColor="white" disabledLabelColor="#666" disabled={this.state.isSaving} primary onClick={this._saveCollection} label={saveButtonText} />
                         <FlatButton disabled={this.state.isSaving} style={{marginLeft: '1rem'}} onClick={this.props.onRequestClose}>{this.i18n.getTranslation('close')}</FlatButton>
                     </div>
                 </div>
