@@ -23,6 +23,49 @@ const styles = {
 const itemsAvailableStore = Store.create();
 const itemsSelectedStore = Store.create();
 
+// TODO: Copied from d2 (Should find a better way to do this)
+function getOwnedPropertyJSON(model) {
+    const objectToSave = {};
+    const ownedProperties = this.getOwnedPropertyNames();
+    const collectionProperties = model.getCollectionChildrenPropertyNames();
+
+    Object.keys(this.modelValidations).forEach((propertyName) => {
+        if (ownedProperties.indexOf(propertyName) >= 0) {
+            if (model.dataValues[propertyName] !== undefined && model.dataValues[propertyName] !== null) {
+                // Handle collections and plain values different
+                if (collectionProperties.indexOf(propertyName) === -1) {
+                    objectToSave[propertyName] = model.dataValues[propertyName];
+                } else {
+                    // compulsoryDataElementOperands is not an array of models.
+                    // TODO: This is not the proper way to do this. We should check if the array contains Models
+                    if (propertyName === 'compulsoryDataElementOperands') {
+                        objectToSave[propertyName] = model.dataValues[propertyName];
+                        return;
+                    }
+
+                    // Transform an object collection to an array of objects with id properties
+                    objectToSave[propertyName] = Array
+                        .from(model.dataValues[propertyName].values())
+                        .filter(value => value.id)
+                        .map((childModel) => {
+                            // Legends can be saved as part of the LegendSet object.
+                            // To make this work properly we will return all of the properties for the items in the collection
+                            // instead of just the `id` fields
+                            if (model.modelDefinition && model.modelDefinition.name === 'legendSet') {
+                                return getOwnedPropertyJSON.call(childModel.modelDefinition, childModel);
+                            }
+
+                            // For any other types we return an object with just an id
+                            return { id: childModel.id };
+                        });
+                }
+            }
+        }
+    });
+
+    return objectToSave;
+}
+
 class CompulsoryDataElementOperandDialog extends Component {
     constructor(props, context) {
         super(props, context);
@@ -58,7 +101,7 @@ class CompulsoryDataElementOperandDialog extends Component {
                 open={this.props.open}
                 onRequestClose={this.props.onRequestClose}
                 autoScrollBodyContent={true}
-                model={true}
+                modal={true}
             >
                 <div>
                     <Heading>{this.i18n.getTranslation('edit_compulsory_data_elements')} - {this.props.model.displayName}</Heading>
@@ -123,9 +166,15 @@ class CompulsoryDataElementOperandDialog extends Component {
             isSaving: true,
         });
 
+        const payload = getOwnedPropertyJSON.bind(this.props.model.modelDefinition)(this.props.model);
+        const d2 = this.context.d2;
+        const api = d2.Api.getApi();
+
+        payload.compulsoryDataElementOperands = collectionToSave;
+
         // TODO: Should be done propery without modifying props and preferably without saving the whole model
         this.props.model.compulsoryDataElementOperands = collectionToSave;
-        return this.props.model.save()
+        api.update(this.props.model.href, payload, false)
             .then(() => {
                 snackActions.show({
                     message: 'saved_compulsory_data_elements',
