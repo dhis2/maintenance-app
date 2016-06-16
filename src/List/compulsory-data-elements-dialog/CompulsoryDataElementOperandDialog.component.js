@@ -85,7 +85,6 @@ class CompulsoryDataElementOperandDialog extends Component {
                 };
             }));
 
-        console.log('Creating only once');
         itemsSelectedStore.setState(
             props.model.compulsoryDataElementOperands
                 .map(deo => [deo.dataElement.id, deo.categoryOptionCombo.id].join('.'))
