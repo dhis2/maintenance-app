@@ -162,7 +162,7 @@ contextActions.compulsoryDataElements
                 'dataElementOperands',
                 {
                     fields: 'dataElementId,optionComboId,displayName',
-                    totals: true,
+                    totals: false,
                     paging: false,
                 }
             )
