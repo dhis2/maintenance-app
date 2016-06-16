@@ -5,7 +5,8 @@ import { Observable } from 'rx';
 const requestParams = new Map([
     ['dataElement', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]' }],
     ['legendSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],legends[id,name,displayName,startValue,endValue,color]' }],
-])
+    ['dataSet', { fields: ':all,,attributeValues[:all,attribute[id,name,displayName]],dataElements[id,displayName],indicators[id,displayName],organisationUnits[id],sections[:all,greyedFields[categoryOptionCombo,dataElement]]' }],
+]);
 
 function loadModelFromD2(objectType, objectId) {
     return getD2().then(d2 => {
