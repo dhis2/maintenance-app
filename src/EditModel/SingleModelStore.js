@@ -5,6 +5,7 @@ import { Observable } from 'rx';
 const requestParams = new Map([
     ['dataElement', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]' }],
     ['legendSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],legends[id,name,displayName,startValue,endValue,color]' }],
+    ['optionSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],options[id,name,displayName,code]' }],
 ])
 
 function loadModelFromD2(objectType, objectId) {

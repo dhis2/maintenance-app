@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import optionSorter from './optionSorter';
 import RaisedButton from 'material-ui/lib/raised-button';
 import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from '../modelToEditStore';
 import { Observable } from 'rx';
-import { optionsForOptionSetStore } from './OptionManagement.component';
+import { getOptionForOptionSetStore } from './OptionManagement.component';
 import snackActions from '../../Snackbar/snack.actions';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { optionsForOptionSetStore } from './stores.js';
+import SortDialog, { setSortDialogOpenTo } from './sorting/SortDialog.component';
 
 class OptionSorter extends Component {
     constructor(props, context) {
@@ -38,6 +40,13 @@ class OptionSorter extends Component {
                     disabled={this.state.isSorting}
                     label={this.getTranslation(this.state.isSorting ? 'sorting' : 'sort_by_code')}
                 />
+                <RaisedButton
+                    style={this.props.buttonStyle}
+                    onClick={() => setSortDialogOpenTo(true)}
+                    disabled={this.state.isSorting}
+                    label={this.getTranslation(this.state.isSorting ? 'sorting' : 'sort_manually')}
+                />
+                <SortDialog />
             </div>
         );
     }
@@ -46,7 +55,7 @@ class OptionSorter extends Component {
         this.setState({
             isSorting: true,
         }, () => {
-            optionSorter(optionsForOptionSetStore.state, propertyName, this.state.sortedASC[propertyName] ? 'DESC' : 'ASC')
+            optionSorter(modelToEditStore.getState().options.toArray(), propertyName, this.state.sortedASC[propertyName] ? 'DESC' : 'ASC')
                 .flatMap(async (options) => {
                     const d2 = await getInstance();
 
@@ -65,7 +74,10 @@ class OptionSorter extends Component {
                     });
 
                     modelToEditStore.setState(modelToEdit);
-                    optionsForOptionSetStore.setState(options);
+                    optionsForOptionSetStore.setState({
+                        ...optionsForOptionSetStore.getState(),
+                        options,
+                    });
                     options.map(v => v.displayName);
 
                     snackActions.show({ message: 'options_sorted_locally_saving_to_server', translate: true });
