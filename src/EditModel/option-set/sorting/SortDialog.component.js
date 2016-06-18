@@ -249,6 +249,8 @@ class SortDialog extends Component {
                     action: 'ok',
                     translate: true,
                 });
+
+                setSortDialogOpenTo(false);
             })
             .catch(() => {
                 sortDialogStore.setState({
