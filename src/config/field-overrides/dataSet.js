@@ -25,4 +25,9 @@ export default new Map([
         component: OrganisationUnitTreeMultiSelect,
         fieldOptions: {},
     }],
+    ['dataElements', {
+        fieldOptions: {
+            queryParamFilter: ['domainType:eq:AGGREGATE'],
+        }
+    }]
 ]);
