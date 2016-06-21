@@ -3,9 +3,30 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 import { Observable } from 'rx';
 
 const requestParams = new Map([
-    ['dataElement', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]' }],
-    ['legendSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],legends[id,name,displayName,startValue,endValue,color]' }],
-    ['dataSet', { fields: ':all,,attributeValues[:all,attribute[id,name,displayName]],dataElements[id,displayName],indicators[id,displayName],organisationUnits[id],sections[:all,greyedFields[categoryOptionCombo,dataElement]]' }],
+    ['dataElement', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'dataElementGroups[id,name,dataElementGroupSet[id]]',
+        ].join(','),
+    }],
+    ['legendSet', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'legends[id,name,displayName,startValue,endValue,color]',
+        ].join(','),
+    }],
+    ['dataSet', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'dataElements[id,displayName,categoryCombo[id,displayName]]',
+            'indicators[id,displayName,categoryCombo[id,displayName]]',
+            'organisationUnits[id]',
+            'sections[:all,dataElements[id,categoryCombo[id,displayName]],greyedFields[categoryOptionCombo,dataElement]]',
+        ].join(','),
+    }],
 ]);
 
 function loadModelFromD2(objectType, objectId) {
