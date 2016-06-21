@@ -8,6 +8,7 @@ import Heading from 'd2-ui/lib/headings/Heading.component';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Store from 'd2-ui/lib/store/Store';
 import snackActions from '../../Snackbar/snack.actions';
+import { updateAPIUrlWithBaseUrlVersionNumber } from 'd2/lib/lib/utils';
 
 const styles = {
     groupEditorWrap: {
@@ -87,6 +88,7 @@ class CompulsoryDataElementOperandDialog extends Component {
 
         itemsSelectedStore.setState(
             props.model.compulsoryDataElementOperands
+                .filter(deo => deo.dataElement && deo.categoryOptionCombo)
                 .map(deo => [deo.dataElement.id, deo.categoryOptionCombo.id].join('.'))
         );
     }
@@ -173,7 +175,7 @@ class CompulsoryDataElementOperandDialog extends Component {
 
         // TODO: Should be done propery without modifying props and preferably without saving the whole model
         this.props.model.compulsoryDataElementOperands = collectionToSave;
-        api.update(this.props.model.href, payload, false)
+        api.update(updateAPIUrlWithBaseUrlVersionNumber(this.props.model.href, api.baseUrl), payload, false)
             .then(() => {
                 snackActions.show({
                     message: 'saved_compulsory_data_elements',

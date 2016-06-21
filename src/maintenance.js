@@ -22,6 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 function configI18n(userSettings) {
     const uiLocale = userSettings.keyUiLocale;
+
     if (uiLocale !== 'en') {
         // Add the language sources for the preferred locale
         config.i18n.sources.add(`./i18n/i18n_module_${uiLocale}.properties`);
@@ -34,7 +35,8 @@ function configI18n(userSettings) {
 function startApp() {
     render(
         routes,
-        document.getElementById('app'));
+        document.getElementById('app')
+    );
 }
 
 render(<LoadingMask />, document.getElementById('app'));
@@ -42,13 +44,12 @@ render(<LoadingMask />, document.getElementById('app'));
 getManifest('./manifest.webapp')
     .then(manifest => {
         const baseUrl = process.env.NODE_ENV === 'production' ? manifest.getBaseUrl() : dhisDevConfig.baseUrl;
-        config.baseUrl = `${baseUrl}/api`;
+        config.baseUrl = `${baseUrl}/api/24`;
         log.info(`Loading: ${manifest.name} v${manifest.version}`);
         log.info(`Built ${manifest.manifest_generated_at}`);
 
         // Set the baseUrl to localhost if we are in dev mode
         if (process.env.NODE_ENV !== 'production') {
-            config.baseUrl = `${baseUrl}/api`;
             dhis2.settings.baseUrl = baseUrl;
         }
     })
