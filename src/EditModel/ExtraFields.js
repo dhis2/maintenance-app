@@ -155,7 +155,14 @@ class IndicatorExtraFields extends React.Component {
                 <div style={{ marginTop: '2rem' }}>
                     <RaisedButton label={this.context.d2.i18n.getTranslation('edit_numerator')} onClick={this.setNumerator} style={{ marginRight: '2rem' }} />
                     <RaisedButton label={this.context.d2.i18n.getTranslation('edit_denominator')} onClick={this.setDenominator} />
-                    <Dialog open={this.state.dialogOpen} modal actions={dialogActions} contentStyle={{ maxWidth: '90%' }} bodyStyle={{ padding: '0' }}>
+                    <Dialog
+                        open={this.state.dialogOpen}
+                        modal
+                        actions={dialogActions}
+                        contentStyle={{ maxWidth: '90%' }}
+                        bodyStyle={{ padding: '0' }}
+                        autoScrollBodyContent
+                    >
                         {this.state ? this.renderExpressionManager() : null}
                     </Dialog>
                 </div>

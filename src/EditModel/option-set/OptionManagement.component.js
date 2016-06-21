@@ -109,7 +109,11 @@ class AddOptionDialog extends Component {
 
     render() {
         return (
-            <Dialog open={this.props.isDialogOpen} onRequestClose={this.props.onRequestClose}>
+            <Dialog
+                open={this.props.isDialogOpen}
+                onRequestClose={this.props.onRequestClose}
+                autoScrollBodyContent
+            >
                 <Heading>{this.props.title}</Heading>
                 <FormBuilder fields={this.props.fieldConfigs} onUpdateField={this._onUpdateField} />
                 <FormButtons>
