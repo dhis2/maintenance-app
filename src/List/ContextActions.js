@@ -9,6 +9,7 @@ import listStore from './list.store';
 import sharingStore from './sharing.store';
 import translateStore from './translation-dialog/translationStore';
 import orgUnitAssignmentDialogStore from './organisation-unit-dialog/organisationUnitDialogStore';
+import compulsoryDataElementStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
 import appStore from '../App/appStateStore';
 import { goToRoute } from '../router';
 import { Subject } from 'rx';
@@ -34,6 +35,7 @@ const contextActions = Action.createActionsFromNames([
     'details',
     'translate',
     'assignToOrgUnits',
+    'compulsoryDataElements',
     'sectionForm',
     'dataEntryForm',
     'pdfDataSetForm',
@@ -149,6 +151,43 @@ contextActions.assignToOrgUnits
             model: modelItem,
             root: rootOrgUnit,
             open: true,
+        });
+    });
+
+contextActions.compulsoryDataElements
+    .subscribe(async ({ data: model }) => {
+        const d2 = await getD2();
+        const api = d2.Api.getApi();
+        const getModelItem = () => d2.models[model.modelDefinition.name].get(model.id);
+        const getDataElementOperands = () => api
+            .get(
+                'dataElementOperands',
+                {
+                    fields: 'dataElementId,optionComboId,displayName',
+                    totals: false,
+                    paging: false,
+                }
+            )
+            .then(responseData => responseData.dataElementOperands);
+
+        // Open dialog immediately so we can show a progress indicator
+        compulsoryDataElementStore.setState({
+            open: true,
+        });
+
+        const [modelItem, dataElementOperands] = await Promise.all([getModelItem(), getDataElementOperands()]);
+
+        const dataSetDataElementIds = modelItem.dataElements
+            .toArray()
+            .map(dataElement => dataElement.id);
+
+        const dataElementOperandsForDataSet = dataElementOperands
+            .filter(dataElementOperand => dataSetDataElementIds.indexOf(dataElementOperand.dataElementId) >= 0);
+
+        compulsoryDataElementStore.setState({
+            open: true,
+            model: modelItem,
+            dataElementOperands: dataElementOperandsForDataSet,
         });
     });
 

@@ -53,7 +53,8 @@ export default {
                     'constant',
                     'attribute',
                     'optionSet',
-                    'legendSet',
+                    // TODO: 2.25
+                    // 'legendSet',
                 ],
             },
         };

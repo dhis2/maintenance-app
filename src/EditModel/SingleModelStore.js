@@ -17,6 +17,7 @@ const requestParams = new Map([
             'legends[id,name,displayName,startValue,endValue,color]',
         ].join(','),
     }],
+    ['optionSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],options[id,name,displayName,code]' }],
     ['dataSet', {
         fields: [
             ':all',

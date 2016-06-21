@@ -259,9 +259,18 @@ export default React.createClass({
 
     loadAvailableItems(d2) {
         if (d2.models[this.props.referenceType]) {
-            return d2.models[this.props.referenceType]
-                .filter().on('name').notEqual('default')
-                .list({ paging: false, fields: 'displayName|rename(name),id,level' });
+            const multiSelectSourceModelDefinition = d2.models[this.props.referenceType];
+
+            // When there are any special filters set we need to apply them to the modelDefinition before loading
+            // the items. An array of filters can be passed to the filter property of the options to the .list() call
+            // As the default should always be filtered out we concat the set filters with default filter that filters
+            // out anything with the name 'default'
+            const filters = ['name:ne:default']
+                .concat(this.props.queryParamFilter)
+                .filter(f => f);
+
+            return multiSelectSourceModelDefinition
+                .list({ paging: false, fields: 'displayName|rename(name),id,level', filter: filters });
         }
         return Promise.reject(`${this.props.referenceType} is not a model on d2.models`);
     },

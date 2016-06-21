@@ -1,6 +1,6 @@
 {
   "name": "maintenance-app",
-  "version": "24.0.4",
+  "version": "24.0.9",
   "description": "DHIS2 Maintenance app",
   "main": "index.js",
   "repository": {
@@ -66,6 +66,8 @@
     "precommit-hook": "3.0.0",
     "react": "^0.14.8",
     "react-addons-perf": "^0.14.8",
+    "react-dnd": "^2.1.4",
+    "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^0.14.8",
     "react-router": "^2.0.0",
     "react-sticky": "^2.5.2",

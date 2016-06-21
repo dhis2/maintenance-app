@@ -22,6 +22,8 @@ import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import orgUnitDialogStore from './organisation-unit-dialog/organisationUnitDialogStore';
 import OrgUnitDialog from './organisation-unit-dialog/OrgUnitDialog.component';
+import dataElementOperandStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
+import CompulsoryDataElementOperandDialog from './compulsory-data-elements-dialog/CompulsoryDataElementOperandDialog.component';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import fieldOrder from '../config/field-config/field-order';
@@ -102,6 +104,10 @@ const List = React.createClass({
                 model: null,
                 open: false,
             },
+            dataElementOperand: {
+                model: null,
+                open: false,
+            },
         };
     },
 
@@ -142,11 +148,18 @@ const List = React.createClass({
             });
         });
 
+        const dataElementOperandStoreDisposable = dataElementOperandStore.subscribe(state => {
+            this.setState({
+                dataElementOperand: state,
+            });
+        });
+
         this.registerDisposable(sourceStoreDisposable);
         this.registerDisposable(detailsStoreDisposable);
         this.registerDisposable(sharingStoreDisposable);
         this.registerDisposable(translationStoreDisposable);
         this.registerDisposable(orgUnitAssignmentStoreDisposable);
+        this.registerDisposable(dataElementOperandStoreDisposable);
     },
 
     componentWillReceiveProps(newProps) {
@@ -212,6 +225,8 @@ const List = React.createClass({
         case 'share':
             return model.modelDefinition.isSharable === true; // TODO: Sharing is filtered out twice...
         case 'assignToOrgUnits':
+            return model.modelDefinition.name === 'dataSet' && model.access.write;
+        case 'compulsoryDataElements':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'sectionForm':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
@@ -299,6 +314,7 @@ const List = React.createClass({
             sectionForm: 'assignment_turned_in',
             dataEntryForm: 'assignment',
             pdfDataSetForm: 'picture_as_pdf',
+            compulsoryDataElements: 'border_color',
         };
 
         return (
@@ -365,6 +381,16 @@ const List = React.createClass({
                     onOrgUnitAssignmentErrot={this._orgUnitAssignmentErrored}
                     onRequestClose={this._closeOrgUnitDialog}
                 /> : null }
+                {this.state.dataElementOperand.model ? (
+                    <CompulsoryDataElementOperandDialog
+                        model={this.state.dataElementOperand.model}
+                        dataElementOperands={this.state.dataElementOperand.dataElementOperands}
+                        open={this.state.dataElementOperand.open}
+                        onDataElementOperandsSaved={this._orgUnitAssignmentSaved}
+                        onDataElementOperandsError={this._orgUnitAssignmentErrored}
+                        onRequestClose={this._closeDataElementOperandDialog}
+                    />
+                ) : null}
             </div>
         );
     },
@@ -383,6 +409,12 @@ const List = React.createClass({
 
     _closeOrgUnitDialog() {
         orgUnitDialogStore.setState(Object.assign({}, orgUnitDialogStore.state, {
+            open: false,
+        }));
+    },
+
+    _closeDataElementOperandDialog() {
+        dataElementOperandStore.setState(Object.assign({}, orgUnitDialogStore.state, {
             open: false,
         }));
     },
