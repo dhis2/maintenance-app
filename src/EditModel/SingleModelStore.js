@@ -17,7 +17,13 @@ const requestParams = new Map([
             'legends[id,name,displayName,startValue,endValue,color]',
         ].join(','),
     }],
-    ['optionSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],options[id,name,displayName,code]' }],
+    ['optionSet', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'options[id,name,displayName,code]',
+        ].join(','),
+    }],
     ['dataSet', {
         fields: [
             ':all',
@@ -25,7 +31,8 @@ const requestParams = new Map([
             'dataElements[id,displayName,categoryCombo[id,displayName]]',
             'indicators[id,displayName,categoryCombo[id,displayName]]',
             'organisationUnits[id]',
-            'sections[:all,dataElements[id,categoryCombo[id,displayName]],greyedFields[categoryOptionCombo,dataElement]]',
+            'sections[:all,dataElements[id,categoryCombo[id,displayName]]',
+            'greyedFields[categoryOptionCombo,dataElement]]',
         ].join(','),
     }],
 ]);
