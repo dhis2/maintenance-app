@@ -1,5 +1,5 @@
 import React from 'react';
-import OrgunitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';
+import OrgunitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.component';
 import TextField from 'material-ui/lib/text-field';
 import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rx';
