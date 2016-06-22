@@ -339,7 +339,7 @@ export default React.createClass({
                 },
                 (errorMessage) => {
                     // TODO: d2 queries require a JSON body on 200 OK, an empty body is not valid JSON
-                    if (errorMessage.status === 200) {
+                    if (errorMessage.httpStatusCode === 200) {
                         log.warn('Save errored due to empty 200 OK body');
 
                         snackActions.show({ message: 'success', action: 'ok', translate: true });
@@ -354,12 +354,6 @@ export default React.createClass({
                     if (isString(errorMessage)) {
                         log.debug(errorMessage);
                         snackActions.show({ message: errorMessage });
-                    }
-
-                    if (errorMessage.messages && errorMessage.messages.length > 0) {
-                        log.debug(errorMessage.messages);
-
-                        snackActions.show({ message: errorMessage.messages[0].message });
                     }
 
                     this.props.onSaveError(errorMessage);

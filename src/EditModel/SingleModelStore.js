@@ -1,6 +1,7 @@
 import Store from 'd2-ui/lib/store/Store';
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { Observable } from 'rx';
+import isString from 'd2-utilizr/lib/isString';
 
 const requestParams = new Map([
     ['dataElement', {
@@ -72,12 +73,19 @@ const singleModelStoreConfig = {
     save() {
         const importResultPromise = this.state.save(true)
             .then(response => {
-                if (response.response.importCount.imported === 1 || response.response.importCount.updated === 1) {
-                    return response;
+                return response;
+            })
+            .catch(response => {
+                if (isString(response)) {
+                    return Promise.reject(response);
                 }
 
-                if (response.response.importConflicts && response.response.importConflicts.length > 0) {
-                    return Promise.reject(response.response.importConflicts[0].value);
+                if (response.messages && response.messages.length > 0) {
+                    return Promise.reject(response.messages[0].message);
+                }
+
+                if (response.response.errorReports && response.response.errorReports.length > 0) {
+                    return Promise.reject(response.response.errorReports[0].message);
                 }
                 return Promise.reject('Failed to save');
             });
