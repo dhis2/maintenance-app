@@ -7,13 +7,12 @@ import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 
 import RaisedButton from 'material-ui/lib/raised-button';
 import SectionDialog from './SectionDialog.component';
+import GreyFieldDialog from './GreyFieldDialog.component';
 
 import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';
 
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
-
-import { goBack } from '../router';
 
 const styles = {
     heading: {
@@ -27,7 +26,8 @@ class EditDataSetSections extends React.Component {
 
         this.state = {
             categoryCombos: null,
-            sectionToEdit: false,
+            editSectionModel: false,
+            greyFieldSectionModel: false,
         };
 
         Promise.all([
@@ -53,6 +53,8 @@ class EditDataSetSections extends React.Component {
         this.handleTranslationSaved = this.handleTranslationSaved.bind(this);
         this.handleTranslationErrored = this.handleTranslationErrored.bind(this);
 
+        this.handleSectionGreyFieldsClick = this.handleSectionGreyFieldsClick.bind(this);
+
         this.swapSections = this.swapSections.bind(this);
         this.moveSectionUp = this.moveSectionUp.bind(this);
         this.moveSectionDown = this.moveSectionDown.bind(this);
@@ -62,35 +64,35 @@ class EditDataSetSections extends React.Component {
 
     handleAddSectionClick() {
         this.setState(state => ({
-            sectionToEdit: Object.assign(modelToEditStore.state.sections.modelDefinition.create(), {
+            editSectionModel: Object.assign(modelToEditStore.state.sections.modelDefinition.create(), {
                 dataSet: { id: modelToEditStore.state.id },
                 sortOrder: state.sections.reduce((p, s) => Math.max(s.sortOrder, p), 0) + 1,
             })
         }));
     }
 
-    handleEditSectionClick(sectionToEdit) {
-        this.setState({ sectionToEdit });
+    handleEditSectionClick(editSectionModel) {
+        this.setState({ editSectionModel });
     }
 
-    handleSectionSaved(section) {
+    handleSectionSaved(savedSection) {
         this.setState(state => {
             let replaced = false;
             const sections = state.sections
                 .map(s => {
-                    if (s.id === section.id) {
+                    if (s.id === savedSection.id) {
                         replaced = true;
-                        return section;
+                        return savedSection;
                     }
                     return s;
                 })
                 .sort((a, b) => a.sortOrder - b.sortOrder);
             if (!replaced) {
-                sections.push(section);
+                sections.push(savedSection);
             }
 
             return {
-                sectionToEdit: false,
+                editSectionModel: false,
                 sections,
             };
         }, () => {
@@ -125,6 +127,10 @@ class EditDataSetSections extends React.Component {
     handleTranslationErrored(errorMessage) {
         log.error(errorMessage);
         snackActions.show({ message: 'translation_save_error', translate: true });
+    }
+
+    handleSectionGreyFieldsClick(section) {
+        this.setState({ greyFieldSectionModel: section });
     }
 
     swapSections(sectionA, sectionB) {
@@ -176,7 +182,7 @@ class EditDataSetSections extends React.Component {
             edit: this.handleEditSectionClick,
             delete: this.handleDeleteSectionClick,
             translate: this.handleTranslateSectionClick,
-            manage_grey_fields: noop,
+            manage_grey_fields: this.handleSectionGreyFieldsClick,
             move_up: this.moveSectionUp,
             move_down: this.moveSectionDown,
         };
@@ -211,13 +217,18 @@ class EditDataSetSections extends React.Component {
                     isContextActionAllowed={contextActionChecker}
                 />
                 <SectionDialog
-                    open={!!this.state.sectionToEdit}
+                    open={!!this.state.editSectionModel}
                     categoryCombos={this.state.categoryCombos}
                     dataElements={modelToEditStore.state.dataElements}
                     indicators={modelToEditStore.state.indicators}
-                    sectionModel={this.state.sectionToEdit}
-                    onRequestClose={() => { this.setState({ sectionToEdit: false }); }}
+                    sectionModel={this.state.editSectionModel}
+                    onRequestClose={() => { this.setState({ editSectionModel: false }); }}
                     onSaveSection={this.handleSectionSaved}
+                />
+                <GreyFieldDialog
+                    open={!!this.state.greyFieldSectionModel}
+                    sectionModel={this.state.greyFieldSectionModel}
+                    onRequestClose={() => { this.setState({ greyFieldSectionModel: false }); }}
                 />
                 {this.state.translationModel ? <TranslationDialog
                     objectToTranslate={this.state.translationModel}
