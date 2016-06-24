@@ -13,7 +13,8 @@ function processResponse(options) {
             .subscribe((model) => {
                 const optionsInOrder = model.options
                     .toArray()
-                    .map(({ id }) => options.get(id));
+                    .map(({ id }) => options.get(id))
+                    .filter(option => option);
 
                 optionsForOptionSetStore.setState({
                     onePage: true,
