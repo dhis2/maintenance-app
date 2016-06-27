@@ -41,6 +41,11 @@ function toInteger(value) {
 }
 
 function isIntegerValidator(value) {
+    // Empty string values are correct values
+    if (isString(value) && !value) {
+        return true;
+    }
+
     if (isString(value) && /\./.test(value)) {
         return false;
     }
