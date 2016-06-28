@@ -21,6 +21,7 @@ config.i18n.strings.add('details');
 config.i18n.strings.add('translate');
 config.i18n.strings.add('sharing');
 config.i18n.strings.add('assignToOrgUnits');
+config.i18n.strings.add('sectionForm');
 config.i18n.strings.add('dataEntryForm');
 config.i18n.strings.add('pdfDataSetForm');
 
@@ -35,6 +36,7 @@ const contextActions = Action.createActionsFromNames([
     'translate',
     'assignToOrgUnits',
     'compulsoryDataElements',
+    'sectionForm',
     'dataEntryForm',
     'pdfDataSetForm',
 ]);
@@ -189,6 +191,17 @@ contextActions.compulsoryDataElements
         });
     });
 
+contextActions.sectionForm
+    .subscribe(action => {
+        goToRoute([
+            '/edit',
+            appStore.state.sideBar.currentSection,
+            action.data.modelDefinition.name,
+            action.data.id,
+            'sections',
+        ].join('/'));
+    });
+
 contextActions.dataEntryForm
     .subscribe(action => {
         goToRoute([
@@ -201,8 +214,12 @@ contextActions.dataEntryForm
     });
 
 contextActions.pdfDataSetForm
-    .subscribe(({ data: model, complete, error }) => {
-        goToRoute(['/edit', model.id, 'form'])
+    .subscribe(({ data: model }) => {
+        goToRoute([
+            '/edit',
+            model.id,
+            'form'
+        ].join('/'));
     });
 
 export default contextActions;

@@ -246,8 +246,9 @@ const List = React.createClass({
         // Switch action for special cases
         switch (action) {
         case 'edit':
-        case 'clone':
             return model.access.write;
+        case 'clone':
+            return model.modelDefinition.name !== 'dataSet' && model.access.write;
         case 'translate':
             return model.access.read && model.modelDefinition.identifiableObject;
         case 'details':
@@ -257,6 +258,8 @@ const List = React.createClass({
         case 'assignToOrgUnits':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'compulsoryDataElements':
+            return model.modelDefinition.name === 'dataSet' && model.access.write;
+        case 'sectionForm':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'dataEntryForm':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
@@ -340,6 +343,7 @@ const List = React.createClass({
             clone: 'content_copy',
             sharing: 'share',
             assignToOrgUnits: 'business',
+            sectionForm: 'assignment_turned_in',
             dataEntryForm: 'assignment',
             pdfDataSetForm: 'picture_as_pdf',
             compulsoryDataElements: 'border_color',

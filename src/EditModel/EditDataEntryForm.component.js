@@ -219,12 +219,12 @@ class EditDataEntryForm extends React.Component {
         this.context.d2.Api.getApi().post(['dataSets', this.props.params.modelId, 'form'].join('/'), payload)
             .then(() => {
                 log.info('Form saved successfully');
-                snackActions.show({ message: 'Form saved', action: 'ok' });
+                snackActions.show({ message: this.getTranslation('form_saved'), action: 'ok' });
                 goBack();
             })
             .catch(e => {
                 log.warn('Failed to save form:', e);
-                snackActions.show({ message: 'Failed to save form' });
+                snackActions.show({ message: this.getTranslation('failed_to_save_form') });
             });
     }
 

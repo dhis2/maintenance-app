@@ -4,10 +4,39 @@ import { Observable } from 'rx';
 import isString from 'd2-utilizr/lib/isString';
 
 const requestParams = new Map([
-    ['dataElement', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],dataElementGroups[id,name,dataElementGroupSet[id]]' }],
-    ['legendSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],legends[id,name,displayName,startValue,endValue,color]' }],
-    ['optionSet', { fields: ':all,attributeValues[:all,attribute[id,name,displayName]],options[id,name,displayName,code]' }],
-])
+    ['dataElement', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'dataElementGroups[id,name,dataElementGroupSet[id]]',
+        ].join(','),
+    }],
+    ['legendSet', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'legends[id,name,displayName,startValue,endValue,color]',
+        ].join(','),
+    }],
+    ['optionSet', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'options[id,name,displayName,code]',
+        ].join(','),
+    }],
+    ['dataSet', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'dataElements[id,displayName,categoryCombo[id,displayName]]',
+            'indicators[id,displayName,categoryCombo[id,displayName]]',
+            'organisationUnits[id]',
+            'sections[:all,dataElements[id,displayName,categoryCombo[id,displayName]]',
+            'greyedFields[categoryOptionCombo,dataElement]]',
+        ].join(','),
+    }],
+]);
 
 function loadModelFromD2(objectType, objectId) {
     return getD2().then(d2 => {
