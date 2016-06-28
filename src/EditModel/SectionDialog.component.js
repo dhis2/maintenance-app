@@ -183,16 +183,11 @@ class SectionDialog extends React.Component {
             });
     }
 
-    renderCategoryComboBox() {
+    renderFilters() {
         const hasAssignment = assignedDataElementStore.state.length > 0;
 
         return (
-            <div>
-                <TextField
-                    floatingLabelText={this.getTranslation('filter')}
-                    onChange={this.handleFilterChange}
-                    style={{ width: 284 }}
-                />
+            <div style={{ minWidth: 605 }}>
                 <DropDown
                     options={this.props.categoryCombos}
                     labelText={this.getTranslation('category_combo')}
@@ -200,6 +195,11 @@ class SectionDialog extends React.Component {
                     defaultValue={this.state.categoryCombo}
                     isRequired
                     disabled={hasAssignment}
+                    style={{ width: 284 }}
+                />
+                <TextField
+                    floatingLabelText={this.getTranslation('filter')}
+                    onChange={this.handleFilterChange}
                     style={{ float: 'right', marginRight: 34, width: 284 }}
                 />
             </div>
@@ -208,7 +208,6 @@ class SectionDialog extends React.Component {
 
     renderAvailableOptions() {
         const labelStyle = {
-            // float: 'left',
             position: 'relative',
             display: 'block',
             width: '100%',
@@ -286,7 +285,7 @@ class SectionDialog extends React.Component {
                     multiLine
                     onChange={this.handleDescriptionChange}
                 />
-                {this.renderCategoryComboBox()}
+                {this.renderFilters()}
                 {this.renderAvailableOptions()}
             </Dialog>
         );
