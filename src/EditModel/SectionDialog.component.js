@@ -16,8 +16,6 @@ const assignedDataElementStore = Store.create();
 const indicatorStore = Store.create();
 const assignedIndicatorStore = Store.create();
 
-// TODO: Can't update descriptions?
-// TODO: Can't remove all indicators?
 
 class SectionDialog extends React.Component {
     constructor(props, context) {
@@ -150,16 +148,26 @@ class SectionDialog extends React.Component {
     }
 
     saveSection() {
-        Object.assign(this.props.sectionModel, {
+        const sectionModel = this.props.sectionModel.id
+            ? this.props.sectionModel
+            : this.props.sectionModel.modelDefinition.create();
+        Object.assign(sectionModel, {
+            dataSet: { id: modelToEditStore.state.id },
             name: this.state.name,
             description: this.state.description,
             dataElements: assignedDataElementStore.state.map(de => ({ id: de })),
             indicators: assignedIndicatorStore.state.map(i => ({ id: i })),
+            sortOrder: this.props.sectionModel.sortOrder || modelToEditStore
+                .state
+                .sections
+                .toArray()
+                .reduce((prev, s) => Math.max(prev, s.sortOrder + 1), 0),
         });
-        this.props.sectionModel.save()
+        sectionModel.save()
             .then((res) => {
                 snackActions.show({ message: this.getTranslation('section_saved'), action: 'ok' });
-                this.context.d2.models.sections.get(res.response.lastImported, {
+                log.info('Section saved', res);
+                this.context.d2.models.sections.get(res.response.uid, {
                     fields: [
                         ':all,dataElements[id,categoryCombo[id,displayName]]',
                         'greyedFields[categoryOptionCombo,dataElement]',
