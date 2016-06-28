@@ -107,7 +107,7 @@ contextActions.delete
                         });
                     });
             })
-        )
+        ).catch(() => {})
     );
 
 contextActions.details
