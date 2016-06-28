@@ -84,9 +84,14 @@ const singleModelStoreConfig = {
                     return Promise.reject(response.messages[0].message);
                 }
 
-                if (response.response.errorReports && response.response.errorReports.length > 0) {
+                if (response && response.response && response.response.errorReports && response.response.errorReports.length > 0) {
                     return Promise.reject(response.response.errorReports[0].message);
                 }
+
+                if (response  && response.message) {
+                    return Promise.reject(response.message);
+                }
+
                 return Promise.reject('Failed to save');
             });
 
