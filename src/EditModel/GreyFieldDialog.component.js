@@ -25,6 +25,14 @@ class GreyFieldDialog extends React.Component {
 
     componentWillReceiveProps(props) {
         if (props.sectionModel) {
+            const dataElements = props.sectionModel.dataElements.toArray();
+            if (dataElements.length < 1) {
+                log.info(`Section ${props.sectionModel.displayName} contains no data elements`);
+                snackActions.show({ message: this.getTranslation('this_section_has_no_data_elements') });
+                this.props.onRequestClose();
+                return;
+            }
+
             const catComboId = props.sectionModel.dataElements.toArray()[0].categoryCombo.id;
             this.context.d2.models.categoryCombos
                 .get(catComboId, {
@@ -228,6 +236,10 @@ class GreyFieldDialog extends React.Component {
 
     render() {
         const title = this.props.sectionModel.displayName;
+        const {
+            open,
+            ...extraProps,
+        } = this.props;
 
         return (
             <Dialog
@@ -254,7 +266,7 @@ class GreyFieldDialog extends React.Component {
                         <table>
                             <tbody>
                             {this.renderTableHeader()}
-                            {this.renderDataElements()}
+                            {this.props.sectionModel.dataElements && this.renderDataElements()}
                             </tbody>
                         </table>
                     ) : <LoadingMask size={0.75}/>}
