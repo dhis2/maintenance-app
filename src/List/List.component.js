@@ -211,12 +211,12 @@ const List = React.createClass({
     },
 
     _orgUnitAssignmentSaved() {
-        snackActions.show({ message: 'org_unit_assignment_saved', action: 'ok', translate: true });
+        snackActions.show({ message: 'organisation_unit_assignment_saved', action: 'ok', translate: true });
     },
 
     _orgUnitAssignmentErrored(errorMessage) {
         log.error(errorMessage);
-        snackActions.show({ message: 'org_unit_assignment_save_error', translate: true });
+        snackActions.show({ message: 'organisation_unit_assignment_save_error', translate: true });
     },
 
     isContextActionAllowed(model, action) {

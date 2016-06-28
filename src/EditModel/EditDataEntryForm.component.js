@@ -15,6 +15,7 @@ import Heading from 'd2-ui/lib/headings/Heading.component';
 import Action from 'd2-ui/lib/action/Action';
 
 import snackActions from '../Snackbar/snack.actions';
+import modelToEditStore from './modelToEditStore';
 import { goBack } from '../router';
 
 import '../../scss/EditModel/EditDataEntryForm.scss';
@@ -47,6 +48,9 @@ const styles = {
         marginTop: 28,
     },
     cancelButton: {
+        marginLeft: '2rem',
+    },
+    deleteButton: {
         marginLeft: '2rem',
     },
     paletteHeader: {},
@@ -82,7 +86,7 @@ class EditDataEntryForm extends React.Component {
         // Load form data, operands, indicators and flags
         Promise.all([
             context.d2.models.dataSets.get(props.params.modelId, {
-                fields: 'displayName,dataEntryForm[style,htmlCode],indicators[id,displayName]',
+                fields: 'id,displayName,dataEntryForm[id,style,htmlCode],indicators[id,displayName]',
             }),
             // TODO: Use d2.models when dataElementOperands are properly supported
             context.d2.Api.getApi().get('dataElementOperands', {
@@ -198,6 +202,7 @@ class EditDataEntryForm extends React.Component {
         this.getTranslation = this.context.d2.i18n.getTranslation.bind(this.context.d2.i18n);
         this.handleSaveClick = this.handleSaveClick.bind(this);
         this.handleCancelClick = this.handleCancelClick.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleStyleChange = this.handleStyleChange.bind(this);
 
         this.startResize = this.startResize.bind(this);
@@ -230,6 +235,25 @@ class EditDataEntryForm extends React.Component {
 
     handleCancelClick() {
         goBack();
+    }
+
+    handleDeleteClick() {
+        snackActions.show({
+            message: this.getTranslation('dataentryform_confirm_delete'),
+            action: 'confirm',
+            onActionTouchTap: () => {
+                this.context.d2.Api.getApi()
+                    .delete(['dataEntryForms', modelToEditStore.state.dataEntryForm.id].join('/'))
+                    .then(() => {
+                        snackActions.show({ message: this.getTranslation('form_deleted'), action: 'ok' });
+                        goBack();
+                    })
+                    .catch(err => {
+                        log.error('Failed to delete form:', err);
+                        snackActions.show({ message: this.getTranslation('failed_to_delete_form') });
+                    });
+            },
+        });
     }
 
     handleStyleChange(e, i, value) {
@@ -446,8 +470,20 @@ class EditDataEntryForm extends React.Component {
                         </SelectField>
                     </div>
                     <div style={styles.formSection}>
-                        <RaisedButton label="Save" primary onClick={this.handleSaveClick}/>
-                        <FlatButton label="Cancel" style={styles.cancelButton} onClick={this.handleCancelClick}/>
+                        <RaisedButton label={this.getTranslation('save')} primary onClick={this.handleSaveClick}/>
+                        <FlatButton
+                            label={this.getTranslation('cancel')}
+                            style={styles.cancelButton}
+                            onClick={this.handleCancelClick}
+                        />
+                        {modelToEditStore.state.dataEntryForm && modelToEditStore.state.dataEntryForm.id ? (
+                            <FlatButton
+                                primary
+                                label={this.getTranslation('delete')}
+                                style={styles.deleteButton}
+                                onClick={this.handleDeleteClick}
+                            />
+                        ) : undefined}
                     </div>
                 </Paper>
             </div>
