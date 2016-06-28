@@ -214,12 +214,12 @@ contextActions.dataEntryForm
     });
 
 contextActions.pdfDataSetForm
-    .subscribe(({ data: model }) => {
-        goToRoute([
-            '/edit',
-            model.id,
-            'form'
-        ].join('/'));
+    .subscribe(({data: model, complete, error}) => {
+        getD2()
+            .then((d2) => {
+                window.open(d2.Api.getApi().baseUrl + `/pdfForm/dataSet/${model.id}`);
+            })
+            .then(complete)
+            .catch(error);
     });
-
 export default contextActions;
