@@ -1,4 +1,5 @@
 import React from 'react';
+import log from 'loglevel';
 
 import Dialog from 'material-ui/lib/dialog';
 import FlatButton from 'material-ui/lib/flat-button';
@@ -57,6 +58,7 @@ class GreyFieldDialog extends React.Component {
         };
 
         this.closeDialog = this.closeDialog.bind(this);
+        this.handleSaveClick = this.handleSaveClick.bind(this);
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
@@ -132,8 +134,18 @@ class GreyFieldDialog extends React.Component {
                             return prev;
                         }
 
-                        prev[gf.dataElement.id] = [gf.categoryOptionCombo.id]; // eslint-disable-line
-                        return prev;
+                        const out = prev;
+                        if (gf.hasOwnProperty('dataElement') && gf.hasOwnProperty('categoryOptionCombo')) {
+                            out[gf.dataElement.id] = [gf.categoryOptionCombo.id];
+                        } else {
+                            log.warn([
+                                `Warning: Invalid greyed field present on section ${props.sectionModel.displayName}`,
+                                `  - Data element: ${gf.dataElement && gf.dataElement.id || '(missing)'}`,
+                                `  - Category option combo: ${gf.categoryOptionCombo && gf.categoryOptionCombo.id || '(missing)'}`,
+                                `See ${props.sectionModel.href}`,
+                            ].join('\n'));
+                        }
+                        return out;
                     }, {});
 
                     this.setState({
@@ -150,6 +162,32 @@ class GreyFieldDialog extends React.Component {
     closeDialog() {
         this.setState({ categories: [] });
         this.props.onRequestClose();
+    }
+
+    handleSaveClick() {
+        const greyedFields = [];
+        Object.keys(this.state.greyedFields).forEach(dataElement => {
+            this.state.greyedFields[dataElement].forEach(coc => {
+                greyedFields.push({
+                    dataElement: { id: dataElement },
+                    categoryOptionCombo: { id: coc },
+                });
+            });
+        });
+
+        const section = Object.assign(this.props.sectionModel, { greyedFields });
+
+        section
+            .save()
+            .then(res => {
+                log.info('Section updated', res);
+                snackActions.show({ message: this.getTranslation('section_saved') });
+                this.props.onRequestSave(section);
+            })
+            .catch(err => {
+                log.error('Failed to save section:', err);
+                snackActions.show({ message: this.getTranslation('failed_to_save_section') });
+            });
     }
 
     renderTableHeader() {
@@ -185,7 +223,7 @@ class GreyFieldDialog extends React.Component {
         });
     }
 
-    renderCheckbox(dataElement, fieldArray) {
+    renderCheckbox(dataElement, fieldArray, fieldNum) {
         const resolveCoc = (cocMap, fields) => {
             if (fields.length === 0) {
                 return cocMap;
@@ -318,8 +356,10 @@ class GreyFieldDialog extends React.Component {
 
 GreyFieldDialog.contextTypes = { d2: React.PropTypes.any.isRequired };
 GreyFieldDialog.propTypes = {
+    open: React.PropTypes.bool.isRequired,
     sectionModel: React.PropTypes.any.isRequired,
     onRequestClose: React.PropTypes.func.isRequired,
+    onRequestSave: React.PropTypes.func.isRequired,
 };
 
 export default GreyFieldDialog;
