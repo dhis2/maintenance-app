@@ -216,6 +216,7 @@ const List = React.createClass({
         // Switch action for special cases
         switch (action) {
         case 'edit':
+            return model.access.write;
         case 'clone':
             return model.modelDefinition.name !== 'dataSet' && model.access.write;
         case 'translate':
