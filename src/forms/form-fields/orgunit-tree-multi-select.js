@@ -38,16 +38,13 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 });
             });
 
-        const dataFromAction = this._searchOrganisationUnits.map(action => action.data);
-
-        dataFromAction
-            .filter(searchValue => !searchValue.trim())
-            .subscribe(() => this.setState({ rootOrgUnits: this.state.originalRoots }));
-
-        dataFromAction
-            .filter(searchValue => searchValue.trim())
+        this.disposable = this._searchOrganisationUnits.map(action => action.data)
             .debounce(400)
             .map(searchValue => {
+                if (!searchValue.trim()) {
+                    return Observable.just(this.state.originalRoots);
+                }
+
                 const organisationUnitRequest = this.context.d2.models.organisationUnits
                     .filter().on('displayName').ilike(searchValue)
                     // withinUserHierarchy makes the query only apply to the subtrees of the organisation units that are
@@ -59,6 +56,10 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             })
             .concatAll()
             .subscribe((models) => this.setState({ rootOrgUnits: models }));
+    }
+
+    componentWillUnmount() {
+        this.disposable && this.disposable.dispose();
     }
 
     renderRoots() {
