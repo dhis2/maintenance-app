@@ -13,11 +13,11 @@ export default React.createClass({
             <DatePicker
                 {...this.props}
                 value={this.props.value && new Date(this.props.value)}
-                mode="landscape"
+                mode="portrait"
                 autoOk
-                inline
                 floatingLabelText={this.props.labelText}
                 onChange={this._onDateSelect}
+                inputStyle={{zIndex: 2}} // TODO: Remove temp label click fix when updating to material-ui 15
             />
         );
     },
