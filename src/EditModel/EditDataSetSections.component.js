@@ -4,8 +4,10 @@ import log from 'loglevel';
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-
 import RaisedButton from 'material-ui/lib/raised-button';
+import FloatingActionButton from 'material-ui/lib/floating-action-button';
+import FontIcon from 'material-ui/lib/font-icon';
+
 import SectionDialog from './SectionDialog.component';
 import GreyFieldDialog from './GreyFieldDialog.component';
 
@@ -17,6 +19,14 @@ import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 const styles = {
     heading: {
         paddingBottom: 18,
+    },
+    fab: {
+        textAlign: 'right',
+        marginTop: '1rem',
+        bottom: '1.5rem',
+        right: '1.5rem',
+        position: 'fixed',
+        zIndex: 10,
     },
 };
 
@@ -93,6 +103,7 @@ class EditDataSetSections extends React.Component {
 
             return {
                 editSectionModel: false,
+                greyFieldSectionModel: false,
                 sections,
             };
         }, () => {
@@ -174,10 +185,6 @@ class EditDataSetSections extends React.Component {
     }
 
     render() {
-        // TODO: Actual actions
-        const noop = () => {
-            snackActions.show({ message: 'Exciting funcionality coming soon™', action: 'huh?' });
-        };
         const contextActions = {
             edit: this.handleEditSectionClick,
             delete: this.handleDeleteSectionClick,
@@ -229,6 +236,7 @@ class EditDataSetSections extends React.Component {
                     open={!!this.state.greyFieldSectionModel}
                     sectionModel={this.state.greyFieldSectionModel}
                     onRequestClose={() => { this.setState({ greyFieldSectionModel: false }); }}
+                    onRequestSave={this.handleSectionSaved}
                 />
                 {this.state.translationModel ? <TranslationDialog
                     objectToTranslate={this.state.translationModel}
@@ -239,11 +247,11 @@ class EditDataSetSections extends React.Component {
                     onRequestClose={() => { this.setState({ translationModel: null }); }}
                     fieldsToTranslate={['name']}
                 /> : null }
-                <RaisedButton
-                    secondary
-                    label="Add section"
-                    onClick={this.handleAddSectionClick}
-                />
+                <div style={styles.fab}>
+                    <FloatingActionButton onClick={this.handleAddSectionClick}>
+                        <FontIcon className="material-icons">add</FontIcon>
+                    </FloatingActionButton>
+                </div>
             </div>
         );
     }

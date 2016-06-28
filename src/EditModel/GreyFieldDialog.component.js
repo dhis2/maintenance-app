@@ -6,9 +6,47 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import Checkbox from 'material-ui/lib/checkbox';
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 
-import modelToEditStore from './modelToEditStore';
 import snackActions from '../Snackbar/snack.actions';
 
+
+const styles = {
+    dialogContent: {
+        maxWidth: 'none',
+    },
+    dialogDiv: {
+        overflowX: 'auto',
+        overflowY: 'hidden',
+    },
+    table: {
+        borderSpacing: 0,
+        borderCollapse: 'collapse',
+        margin: '0 auto',
+    },
+    th: {
+        whiteSpace: 'nowrap',
+        textAlign: 'center',
+        border: '1px solid #e0e0e0',
+        padding: 6,
+    },
+    thDataElements: {
+        whiteSpace: 'nowrap',
+        border: '1px solid #e0e0e0',
+        background: '#f0f0f0',
+        textAlign: 'left',
+        padding: 6,
+    },
+    td: {
+        whiteSpace: 'nowrap',
+        padding: 2,
+        border: '1px solid #e0e0e0',
+        minWidth: 105,
+    },
+    tdDataElement: {
+        whiteSpace: 'nowrap',
+        padding: 6,
+        border: '1px solid #e0e0e0',
+    },
+};
 
 class GreyFieldDialog extends React.Component {
     constructor(props, context) {
@@ -115,7 +153,6 @@ class GreyFieldDialog extends React.Component {
     }
 
     renderTableHeader() {
-        const thStyle = { border: '1px solid blue', minWidth: 35, textAlign: 'center' };
         let prevRowColCount = 1;
 
         return this.state.categories.map((cat, catNum) => {
@@ -125,7 +162,7 @@ class GreyFieldDialog extends React.Component {
 
             const row = (
                 <tr key={catNum}>
-                    <th style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: 250 }}>
+                    <th style={styles.thDataElements}>
                         { catNum === this.state.categories.length - 1 ? this.getTranslation('data_element') : null }
                     </th>
                     {
@@ -136,7 +173,7 @@ class GreyFieldDialog extends React.Component {
                                 return (
                                     <th key={`${optNum}.${rep}`}
                                         colSpan={colSpan}
-                                        style={thStyle}
+                                        style={styles.th}
                                     >{opt.displayName}</th>
                                 );
                             });
@@ -189,7 +226,7 @@ class GreyFieldDialog extends React.Component {
         }).bind(this, dataElement.id, coc.id);
 
         return (
-            <td key={`${coc.id}_${dataElement.id}`} style={{ whiteSpace: 'nowrap', minWidth: 115 }}>
+            <td key={fieldNum} style={styles.td}>
                 <Checkbox
                     defaultChecked={!isGreyed}
                     label={isGreyed ? this.getTranslation('disabled') : this.getTranslation('enabled')}
@@ -226,9 +263,9 @@ class GreyFieldDialog extends React.Component {
         return this.props.sectionModel.dataElements.toArray().map((de, deNum) => {
             const cocFields = getCocFields();
             return (
-                <tr key={deNum}>
-                    <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflowX: 'hidden' }}>{de.displayName}</td>
-                    {cocFields.map((fields, fieldNum) => this.renderCheckbox(de, fields))}
+                <tr key={deNum} style={{ background: deNum % 2 === 0 ? 'none' : '#f0f0f0' }}>
+                    <td style={styles.tdDataElement}>{de.displayName}</td>
+                    {cocFields.map((fields, fieldNum) => this.renderCheckbox(de, fields, fieldNum))}
                 </tr>
             );
         });
@@ -244,9 +281,12 @@ class GreyFieldDialog extends React.Component {
         return (
             <Dialog
                 autoScrollBodyContent
-                title={`${title} ${this.getTranslation('greyed_fields')}`}
-                contentStyle={{ maxWidth: '100%' }}
-                {...this.props}
+                autoDetectWindowHeight
+                title={`${this.getTranslation('manage_grey_fields')}: ${title}`}
+                style={{ maxWidth: 'none' }}
+                contentStyle={styles.dialogContent}
+                open={open && this.props.sectionModel.dataElements.size > 0}
+                {...extraProps}
                 actions={[
                     <FlatButton
                         label={this.getTranslation('cancel')}
@@ -256,14 +296,14 @@ class GreyFieldDialog extends React.Component {
                     <RaisedButton
                         primary
                         label={this.getTranslation('save')}
-                        onTouchTap={() => { snackActions.show({ message: 'Nope' }); }}
-                    />
+                        onTouchTap={this.handleSaveClick}
+                    />,
                 ]}
                 onRequestClose={this.closeDialog}
             >
-                <div style={{ width: '100%', maxHeight: 500, overflow: 'auto' }}>
+                <div style={styles.dialogDiv}>
                     {this.state.categories.length ? (
-                        <table>
+                        <table style={styles.table}>
                             <tbody>
                             {this.renderTableHeader()}
                             {this.props.sectionModel.dataElements && this.renderDataElements()}
