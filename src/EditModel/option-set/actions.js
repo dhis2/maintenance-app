@@ -3,6 +3,7 @@ import { getInstance } from 'd2/lib/d2';
 import { optionDialogStore, optionsForOptionSetStore } from './stores.js';
 import isArray from 'd2-utilizr/lib/isArray';
 import modelToEditStore from '../modelToEditStore';
+import snackActions from '../../Snackbar/snack.actions';
 
 const actions = Action.createActionsFromNames(['saveOption', 'setActiveModel', 'closeOptionDialog', 'getOptionsFor', 'deleteOption', 'updateModel'], 'optionSet');
 
@@ -13,7 +14,8 @@ function processResponse(options) {
             .subscribe((model) => {
                 const optionsInOrder = model.options
                     .toArray()
-                    .map(({ id }) => options.get(id));
+                    .map(({ id }) => options.get(id))
+                    .filter(option => option);
 
                 optionsForOptionSetStore.setState({
                     onePage: true,
@@ -120,6 +122,7 @@ actions.deleteOption.subscribe(async ({ data: [modelToDelete, modelParent], comp
         .then(() => modelToDelete.delete())
         .then(() => snackActions.show({ message: deleteMessage}))
         .then(() => actions.getOptionsFor(modelParent))
+        .then(() => modelParent.options.delete(modelToDelete.id))
         .then(complete)
         .catch(error);
 
