@@ -86,7 +86,6 @@
     "jquery": "^2.2.3"
   },
   "pre-commit": [
-    "lint",
     "validate"
   ],
   "manifest.webapp": {
