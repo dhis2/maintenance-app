@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import log from 'loglevel';
 import isIterable from 'd2-utilizr/lib/isIterable';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
@@ -27,6 +27,7 @@ import CompulsoryDataElementOperandDialog from './compulsory-data-elements-dialo
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import fieldOrder from '../config/field-config/field-order';
+import { Observable } from 'rx';
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
@@ -73,6 +74,35 @@ export function calculatePageValue(pager) {
     const endItem = pageCalculationValue;
 
     return `${startItem} - ${endItem > total ? total : endItem}`;
+}
+
+class DetailsBoxWithScroll extends Component {
+
+    componentDidMount() {
+        this.disposable = Observable
+            .fromEvent(global, 'scroll')
+            .debounce(200)
+            .map(() => document.querySelector('body').scrollTop)
+            .subscribe(() => this.forceUpdate());
+    }
+
+    componentWillUnmount() {
+        this.disposable && this.disposable.dispose();
+    }
+
+    render() {
+        return (
+            <div style={this.props.style}>
+                <Paper zDepth={1} rounded={false} style={{ maxWidth: 500, minWidth: 300, marginTop: document.querySelector('body').scrollTop }}>
+                    <DetailsBox
+                        source={this.props.detailsObject}
+                        showDetailBox={!!this.props.detailsObject}
+                        onClose={this.props.onClose}
+                    />
+                </Paper>
+            </div>
+        );
+    }
 }
 
 const List = React.createClass({
@@ -296,6 +326,7 @@ const List = React.createClass({
                 marginLeft: '1rem',
                 marginRight: '1rem',
                 opacity: 1,
+                flexGrow: 0,
             },
 
             listDetailsWrap: {
@@ -344,16 +375,13 @@ const List = React.createClass({
                         />
                         {this.state.dataRows.length || this.state.isLoading ? null : <div>No results found</div>}
                     </div>
-                    {this.state.detailsObject ?
-                        <div style={styles.detailsBoxWrap}>
-                            <Paper zDepth={1} rounded={false} style={{ position: 'fixed' }}>
-                                <DetailsBox
-                                    source={this.state.detailsObject}
-                                    showDetailBox={!!this.state.detailsObject}
-                                    onClose={listActions.hideDetailsBox}
-                                />
-                            </Paper>
-                        </div>
+                    {
+                        this.state.detailsObject ?
+                            <DetailsBoxWithScroll
+                                style={styles.detailsBoxWrap}
+                                detailsObject={this.state.detailsObject}
+                                onClose={listActions.hideDetailsBox}
+                            />
                         : null}
                 </div>
                 {this.state.sharing.model ? <SharingDialog

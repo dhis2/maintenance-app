@@ -16,6 +16,9 @@ $detail-box--field-value--color: #333;
 .detail-field__value {
   color: $detail-box--field-value--color;
   padding-top: 4px;
+  min-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .detail-field {
