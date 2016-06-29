@@ -1,4 +1,3 @@
-import { hashHistory } from 'react-router';
 import Action from 'd2-ui/lib/action/Action';
 import detailsStore from './details.store';
 import { config, getInstance as getD2 } from 'd2/lib/d2';
@@ -72,42 +71,46 @@ contextActions.clone
 
 contextActions.delete
     .subscribe(({ data: model }) => getD2()
-        .then(d2 => confirm([
-            d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`),
-            `\n\n${model.name}`,
-        ].join(''))
-            .then(() => {
-                model.delete()
-                    .then(() => {
-                        // Remove deleted item from the listStore
-                        if (listStore.getState() && listStore.getState().list) {
-                            listStore.setState({
-                                pager: listStore.getState().pager,
-                                list: listStore.getState().list
-                                    .filter(modelToCheck => modelToCheck.id !== model.id),
+        .then(d2 => {
+            snackActions.show({
+                message: [
+                    d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`),
+                    model.name,
+                ].join(' '),
+                action: 'confirm',
+                onActionTouchTap: () => {
+                    model.delete()
+                        .then(() => {
+                            // Remove deleted item from the listStore
+                            if (listStore.getState() && listStore.getState().list) {
+                                listStore.setState({
+                                    pager: listStore.getState().pager,
+                                    list: listStore.getState().list
+                                        .filter(modelToCheck => modelToCheck.id !== model.id),
+                                });
+                            }
+
+                            snackActions.show({
+                                message: `${model.name} ${d2.i18n.getTranslation('was_deleted')}`,
                             });
-                        }
 
-                        snackActions.show({
-                            message: `${model.name} ${d2.i18n.getTranslation('was_deleted')}`,
+                            // Fire the afterDeleteHook
+                            afterDeleteHook$.onNext({
+                                model,
+                                modelType: model.modelDefinition.name,
+                            });
+                        })
+                        .catch(response => {
+                            log.warn(response);
+                            snackActions.show({
+                                message: response.message
+                                    ? response.message
+                                    : `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
+                            });
                         });
-
-                        // Fire the afterDeleteHook
-                        afterDeleteHook$.onNext({
-                            model,
-                            modelType: model.modelDefinition.name,
-                        });
-                    })
-                    .catch(response => {
-                        log.warn(response);
-                        snackActions.show({
-                            message: response.message
-                                ? response.message
-                                : `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
-                        });
-                    });
+                }
             })
-        ).catch(() => {})
+        })
     );
 
 contextActions.details
