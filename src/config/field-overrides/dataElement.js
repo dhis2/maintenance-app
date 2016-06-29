@@ -5,6 +5,20 @@ export default new Map([
         referenceType: 'organisationUnitLevel',
         fieldOptions: {},
     }],
+    ['aggregationType', {
+        fieldOptions: {
+            options: [
+                'SUM',
+                'AVERAGE',
+                'COUNT',
+                'STDDEV',
+                'VARIANCE',
+                'MIN',
+                'MAX',
+                'NONE',
+            ]
+        }
+    }],
     ['categoryCombo', {
         component: DropDownAsync,
     }],
