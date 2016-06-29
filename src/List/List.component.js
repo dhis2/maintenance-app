@@ -161,9 +161,15 @@ const List = React.createClass({
         });
 
         const sharingStoreDisposable = sharingStore.subscribe(sharingState => {
-            this.setState({
+            this.setState(state => ({
                 sharing: sharingState,
-            });
+                dataRows: state.dataRows.map(row => {
+                    if (row.id === sharingState.model.id) {
+                        return Object.assign(row, { publicAccess: sharingState.model.publicAccess });
+                    }
+                    return row;
+                }),
+            }));
         });
 
         const translationStoreDisposable = translationStore.subscribe(translationState => {
@@ -430,8 +436,12 @@ const List = React.createClass({
         }));
     },
 
-    _closeSharingDialog() {
+    _closeSharingDialog(sharingState) {
+        const model = sharingState
+            ? Object.assign(sharingStore.state.model, { publicAccess: sharingState.publicAccess })
+            : sharingStore.state.model;
         sharingStore.setState(Object.assign({}, sharingStore.state, {
+            model,
             open: false,
         }));
     },
