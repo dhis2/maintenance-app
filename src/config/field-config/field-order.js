@@ -14,14 +14,14 @@ const fieldOrderByName = new Map([
         'optionSet',
         'commentOptionSet',
         'legendSet',
-        'aggregationLevels'
+        'aggregationLevels',
     ]],
     ['dataElementGroup', [
         'name',
         'shortName',
         'code',
         'description',
-        'dataElements'
+        'dataElements',
     ]],
     ['dataElementGroupSet', [
         'name',
@@ -30,7 +30,7 @@ const fieldOrderByName = new Map([
         'description',
         'compulsory',
         'dataDimension',
-        'dataElementGroups'
+        'dataElementGroups',
     ]],
     ['category', [
         'name',
@@ -39,7 +39,7 @@ const fieldOrderByName = new Map([
         'description',
         'dataDimensionType',
         'dataDimension',
-        'categoryOptions'
+        'categoryOptions',
     ]],
     ['categoryOption', [
         'name',
@@ -48,7 +48,7 @@ const fieldOrderByName = new Map([
         'description',
         'startDate',
         'endDate',
-        'organisationUnits'
+        'organisationUnits',
     ]],
     ['categoryCombo', [
         'name',
@@ -56,7 +56,7 @@ const fieldOrderByName = new Map([
         'code',
         'dataDimensionType',
         'skipTotal',
-        'categories'
+        'categories',
     ]],
     ['categoryOptionGroup', [
         'name',
@@ -64,14 +64,14 @@ const fieldOrderByName = new Map([
         'code',
         'description',
         'dataDimensionType',
-        'categoryOptions'
+        'categoryOptions',
     ]],
     ['categoryOptionGroupSet', [
         'name',
         'description',
         'dataDimension',
         'dataDimensionType',
-        'categoryOptionGroups'
+        'categoryOptionGroups',
     ]],
     ['indicator', [
         'name',
@@ -82,11 +82,11 @@ const fieldOrderByName = new Map([
         'decimals',
         'indicatorType',
         'legendSet',
-        'url'
+        'url',
     ]],
     ['indicatorGroup', [
         'name',
-        'indicators'
+        'indicators',
     ]],
     ['indicatorType', [
         'name',
@@ -96,7 +96,7 @@ const fieldOrderByName = new Map([
         'name',
         'description',
         'compulsory',
-        'indicatorGroups'
+        'indicatorGroups',
     ]],
     ['dataSet', [
         'name',
