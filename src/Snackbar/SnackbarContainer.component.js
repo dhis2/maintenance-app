@@ -46,7 +46,7 @@ const SnackBarContainer = React.createClass({
 
         return (
             <Snackbar
-                style={{ maxWidth: 'auto' }}
+                style={{ maxWidth: 'auto', zIndex: 5 }}
                 bodyStyle={{ maxWidth: 'auto' }}
                 ref="snackbar"
                 message={this.state.snack.message}
