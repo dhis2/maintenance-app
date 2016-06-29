@@ -166,7 +166,6 @@ class SectionDialog extends React.Component {
         sectionModel.save()
             .then((res) => {
                 snackActions.show({ message: this.getTranslation('section_saved'), action: 'ok' });
-                log.info('Section saved', res);
                 this.context.d2.models.sections.get(res.response.uid, {
                     fields: [
                         ':all,dataElements[id,categoryCombo[id,displayName]]',
