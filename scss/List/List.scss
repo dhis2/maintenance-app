@@ -21,3 +21,7 @@
   display: flex;
   flex-orientation: row;
 }
+
+.list-search-field input[type="search"]::-webkit-search-decoration {
+  display: none;
+}

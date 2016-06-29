@@ -44,8 +44,9 @@ const SearchBox = React.createClass({
         return (
             <div className="search-list-items">
                 <TextField
+                    className="list-search-field"
                     value={this.state.value}
-                    style={{ width: '100%' }}
+                    fullWidth
                     type="search"
                     onChange={this._onKeyUp}
                     hintText={`${this.getTranslation('search_by_name')}`}
