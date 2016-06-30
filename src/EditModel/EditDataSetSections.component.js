@@ -112,17 +112,23 @@ class EditDataSetSections extends React.Component {
     }
 
     handleDeleteSectionClick(section) {
-        section.delete()
-            .then(() => {
-                snackActions.show({ message: this.getTranslation('section_deleted'), action: 'ok' });
-                this.setState(state => ({
-                    sections: state.sections.filter(s => s.id !== section.id),
-                }));
-            })
-            .catch(err => {
-                snackActions.show({ message: this.getTranslation('failed_to_delete_section') });
-                log.warn('Failed to delete section', err);
-            });
+        snackActions.show({
+            message: `${this.getTranslation('confirm_delete_section')} ${section.displayName}`,
+            action: 'confirm',
+            onActionTouchTap: () => {
+                section.delete()
+                    .then(() => {
+                        snackActions.show({ message: this.getTranslation('section_deleted'), action: 'ok' });
+                        this.setState(state => ({
+                            sections: state.sections.filter(s => s.id !== section.id),
+                        }));
+                    })
+                    .catch(err => {
+                        snackActions.show({ message: this.getTranslation('failed_to_delete_section') });
+                        log.warn('Failed to delete section', err);
+                    });
+            }
+        });
     }
 
     handleTranslateSectionClick(section) {
