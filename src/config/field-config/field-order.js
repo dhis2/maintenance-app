@@ -136,6 +136,7 @@ const fieldOrderByName = new Map([
         'address',
         'email',
         'phoneNumber',
+        'coordinates',
     ]],
     ['organisationUnitGroup', [
         'name',

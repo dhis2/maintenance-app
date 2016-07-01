@@ -1,6 +1,7 @@
 import dataElement from './dataElement';
 import indicator from './indicator';
 import dataSet from './dataSet';
+import organisationUnit from './organisationUnit';
 import organisationUnitGroup from './organisationUnitGroup';
 import categoryOption from './categoryOption';
 import validationRule from './validationRule';
@@ -10,6 +11,7 @@ const overridesByType = {
     dataElement,
     indicator,
     dataSet,
+    organisationUnit,
     organisationUnitGroup,
     categoryOption,
     validationRule,

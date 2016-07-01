@@ -218,4 +218,5 @@ export const typeToFieldMap = new Map([
     ['URL', URL],
     ['NUMBER', NUMBER],
     ['COMPLEX', INPUT],
+    ['GEOLOCATION', INPUT],
 ]);
