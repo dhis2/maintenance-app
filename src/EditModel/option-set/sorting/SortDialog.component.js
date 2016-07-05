@@ -11,9 +11,7 @@ import Heading from 'd2-ui/lib/headings/Heading.component';
 import OptionValue from './OptionValue.component';
 import { sortDialogStore, optionsForOptionSetStore } from '../stores';
 import { Observable } from 'rx';
-import { loadOptionsForOptionSet } from '../actions';
 import snackActions from '../../../Snackbar/snack.actions';
-import actions from '../actions';
 
 export function setSortDialogOpenTo(status) {
     sortDialogStore.setState({
@@ -80,6 +78,7 @@ const cardTarget = {
 
         // Time to actually perform the action
         props.moveOption(dragId, hoverId);
+        return true;
     }
 };
 

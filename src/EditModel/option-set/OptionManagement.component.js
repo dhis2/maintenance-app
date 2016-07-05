@@ -22,6 +22,7 @@ import actions from './actions';
 import { optionDialogStore, optionsForOptionSetStore } from './stores.js';
 import LinearProgress from 'material-ui/lib/linear-progress';
 import AlertIcon from 'material-ui/lib/svg-icons/alert/warning';
+import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 const optionList$ = Observable.combineLatest(
     optionsForOptionSetStore,
@@ -170,6 +171,7 @@ class OptionManagement extends Component {
         this.state = {
             nameSortedASC: false,
             isSorting: false,
+            modelToTranslate: null,
         };
 
         this._onAddOption = this._onAddOption.bind(this);
@@ -224,6 +226,11 @@ class OptionManagement extends Component {
         const contextActions = {
             edit: this._onEditOption,
             delete: (modelToDelete) => actions.deleteOption(modelToDelete, this.props.model),
+            translate: (modelToTranslate) => {
+                this.setState({
+                    modelToTranslate,
+                })
+            }
         };
 
         return (
@@ -247,6 +254,15 @@ class OptionManagement extends Component {
                     onRequestClose={this._onAddDialogClose}
                     parentModel={this.props.model}
                 />
+                {this.state.modelToTranslate ? <TranslationDialog
+                    objectToTranslate={this.state.modelToTranslate}
+                    objectTypeToTranslate={this.state.modelToTranslate && this.state.modelToTranslate.modelDefinition}
+                    open={Boolean(this.state.modelToTranslate)}
+                    onTranslationSaved={this._translationSaved}
+                    onTranslationError={this._translationErrored}
+                    onRequestClose={() => this.setState({ modelToTranslate: null, })}
+                    fieldsToTranslate={['name']}
+                /> : null }
             </div>
         );
     }
@@ -305,6 +321,15 @@ class OptionManagement extends Component {
                 <div style={textStyle}>{this.i18n.getTranslation('list_might_not_represent_the_accurate_order_of_options_due_the_availability_of_pagination')}</div>
             </div>
         );
+    }
+
+    _translationSaved() {
+        snackActions.show({ message: 'translation_saved', action: 'ok', translate: true });
+    }
+
+    _translationErrored(errorMessage) {
+        log.error(errorMessage);
+        snackActions.show({ message: 'translation_save_error', translate: true });
     }
 
     _onAddOption() {
