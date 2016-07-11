@@ -2,6 +2,7 @@ import React from 'react';
 
 import Dialog from 'material-ui/lib/dialog';
 import FlatButton from 'material-ui/lib/flat-button';
+import RaisedButton from 'material-ui/lib/raised-button';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 
@@ -9,6 +10,8 @@ import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';
 import OrgUnitSelectByLevel from 'd2-ui/lib/org-unit-select/OrgUnitSelectByLevel.component';
 import OrgUnitSelectByGroup from 'd2-ui/lib/org-unit-select/OrgUnitSelectByGroup.component';
 import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.component';
+
+import snackbarActions from '../../Snackbar/snack.actions';
 
 class OrgUnitDialog extends React.Component {
     constructor(props, context) {
@@ -24,6 +27,7 @@ class OrgUnitDialog extends React.Component {
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
         this.toggleOrgUnit = this.toggleOrgUnit.bind(this);
         this.setNewSelection = this.setNewSelection.bind(this);
+        this.save = this.save.bind(this);
     }
 
     componentWillMount() {
@@ -57,8 +61,6 @@ class OrgUnitDialog extends React.Component {
     }
 
     setNewSelection(selected) {
-        this.setState({ loading: true });
-
         const d2 = this.context.d2;
         const modelOrgUnits = this.props.model.organisationUnits;
         const assigned = modelOrgUnits.toArray().map(ou => ou.id);
@@ -82,49 +84,41 @@ class OrgUnitDialog extends React.Component {
             modelOrgUnits.remove(ou);
         });
 
-        this.props.model
-            .save()
-            .then(() => {
-                this.setState({ selected, loading: false });
-                this.props.onOrgUnitAssignmentSaved();
-            })
-            .catch(err => {
-                this.setState({ loading: false });
-                this.props.onOrgUnitAssignmentError(err);
-            });
+        this.setState({ selected });
     }
 
     toggleOrgUnit(e, orgUnit) {
-        this.setState({ loading: true });
-
         if (this.state.selected.indexOf(orgUnit.id) === -1) {
             this.props.model.organisationUnits.add(orgUnit);
-            this.props.model.save()
-                .then(() => {
-                    this.setState(state => ({
-                        selected: state.selected.concat(orgUnit.id),
-                        loading: false,
-                    }));
-                    this.props.onOrgUnitAssignmentSaved();
-                })
-                .catch(err => {
-                    this.setState({ loading: false });
-                    this.props.onOrgUnitAssignmentError(err);
-                });
+            this.setState(state => ({
+                selected: state.selected.concat(orgUnit.id),
+            }));
         } else {
             this.props.model.organisationUnits.remove(orgUnit);
-            this.props.model.save()
+            this.setState(state => ({
+                selected: state.selected.filter(x => x !== orgUnit.id),
+            }));
+        }
+    }
+
+    save() {
+        if (this.props.model.isDirty()) {
+            this.setState({ loading: true });
+            this.props.model
+                .save()
                 .then(() => {
-                    this.setState(state => ({
-                        selected: state.selected.filter(x => x !== orgUnit.id),
-                        loading: false,
-                    }));
+                    this.setState({ loading: false });
                     this.props.onOrgUnitAssignmentSaved();
+                    this.props.onRequestClose();
                 })
                 .catch(err => {
                     this.setState({ loading: false });
                     this.props.onOrgUnitAssignmentError(err);
+                    this.props.onRequestClose();
                 });
+        } else {
+            snackbarActions.show({ message: this.getTranslation('no_changes_to_be_saved'), action: 'ok' });
+            this.props.onRequestClose();
         }
     }
 
@@ -157,10 +151,24 @@ class OrgUnitDialog extends React.Component {
                 zIndex: 1,
                 background: 'white',
             },
+            cancelButton: {
+                marginRight: 16,
+            },
         };
 
         const dialogActions = [
-            <FlatButton label={this.getTranslation('close')} onClick={this.props.onRequestClose} />,
+            <FlatButton
+                label={this.getTranslation('cancel')}
+                onClick={this.props.onRequestClose}
+                style={styles.cancelButton}
+                disabled={this.state.loading}
+            />,
+            <RaisedButton
+                primary
+                label={this.getTranslation('save')}
+                onClick={this.save}
+                disabled={this.state.loading}
+            />,
         ];
 
         return (
@@ -195,6 +203,9 @@ class OrgUnitDialog extends React.Component {
                                 onUpdateSelection={this.setNewSelection}
                             />
                         </div>
+                    </div>
+                    <div className="organisation-unit-tree__selected">
+                        {`${this.state.selected.length} ${this.getTranslation('organisation_units_selected')}`}
                     </div>
                     <OrgUnitTree
                         root={root}
