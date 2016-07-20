@@ -319,6 +319,7 @@ function OrganisationUnitHierarchy(props, context) {
             flex: 1,
             display: 'flex',
             flexOrientation: 'row',
+            margin: '1rem 0',
         },
         ouTreeLeft: {
             flex: 1,
@@ -336,7 +337,7 @@ function OrganisationUnitHierarchy(props, context) {
         },
         pendingOperationsWrap: {
             padding: '1rem',
-            marginBottom: '1rem',
+            margin: '1rem 0',
         },
         pendingOperationsListsWrap: {
             display: 'flex',
@@ -349,7 +350,9 @@ function OrganisationUnitHierarchy(props, context) {
         errorMessage: {
             color: 'orange',
             lineHeight: '1.5rem',
-            paddingBottom: '1rem',
+            padding: '1rem 0',
+            display: 'flex',
+            alignItems: 'flex-end',
         },
         errorIcon: {
             color: 'orange',
@@ -362,30 +365,6 @@ function OrganisationUnitHierarchy(props, context) {
     return (
         <div>
             <Heading>{headingTitle}</Heading>
-            <RaisedButton
-                primary
-                style={styles.moveButton}
-                label={buttonLabel}
-                onClick={moveOrganisationUnit}
-                disabled={moveButtonDisabled(props)}
-            />
-            {props.selectedLeft.length && props.selectedRight.length && sourceIsInPathOfTarget(props.selectedLeft || [], props.selectedRight || []) ? <div style={styles.errorMessage}><FontIcon style={styles.errorIcon} className="material-icons">warning</FontIcon>{warningForMovingWithinSubtree}</div> : null}
-            <Paper style={styles.pendingOperationsWrap}>
-                <div style={styles.pendingOperationsListsWrap}>
-                    <SelectedOrganisationUnitListWithContext
-                        style={styles.pendingOperationsList}
-                        organisationUnits={props.selectedLeft}
-                        noOrganisationUnitsMessage="select_organisation_units_to_move_from_the_left_tree"
-                        title="move"
-                    />
-                    <SelectedOrganisationUnitListWithContext
-                        style={styles.pendingOperationsList}
-                        organisationUnits={props.selectedRight}
-                        noOrganisationUnitsMessage="select_new_parent_for_organisation_units_from_the_right_tree"
-                        title="new_parent"
-                    />
-                </div>
-            </Paper>
             <div style={styles.wrap}>
                 <Paper style={styles.ouTreeLeft}>
                     <OrganisationUnitTreeWithSingleSelectionAndSearch
@@ -408,6 +387,30 @@ function OrganisationUnitHierarchy(props, context) {
                     />
                 </Paper>
             </div>
+            <Paper style={styles.pendingOperationsWrap}>
+                <div style={styles.pendingOperationsListsWrap}>
+                    <SelectedOrganisationUnitListWithContext
+                        style={styles.pendingOperationsList}
+                        organisationUnits={props.selectedLeft}
+                        noOrganisationUnitsMessage="select_organisation_units_to_move_from_the_left_tree"
+                        title="move"
+                    />
+                    <SelectedOrganisationUnitListWithContext
+                        style={styles.pendingOperationsList}
+                        organisationUnits={props.selectedRight}
+                        noOrganisationUnitsMessage="select_new_parent_for_organisation_units_from_the_right_tree"
+                        title="new_parent"
+                    />
+                </div>
+            </Paper>
+            {props.selectedLeft.length && props.selectedRight.length && sourceIsInPathOfTarget(props.selectedLeft || [], props.selectedRight || []) ? <div style={styles.errorMessage}><FontIcon style={styles.errorIcon} className="material-icons">warning</FontIcon>{warningForMovingWithinSubtree}</div> : null}
+            <RaisedButton
+                primary
+                style={styles.moveButton}
+                label={buttonLabel}
+                onClick={moveOrganisationUnit}
+                disabled={moveButtonDisabled(props)}
+            />
         </div>
     );
 }
