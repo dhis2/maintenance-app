@@ -73,7 +73,7 @@ export default React.createClass({
             <div>
                 <Select
                     value={this.state.selectedModel}
-                    hintText={this.getTranslation('please_select_object_type')}
+                    hintText={this.getTranslation('select_an_object_type')}
                     fullWidth
                     {...this.props}
                     onChange={this._onChange}
