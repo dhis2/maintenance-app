@@ -211,7 +211,7 @@ const List = React.createClass({
         snackActions.show({ message: 'translation_saved', action: 'ok', translate: true });
     },
 
-    _translationErrored(errorMessage) {
+    _translationError(errorMessage) {
         log.error(errorMessage);
         snackActions.show({ message: 'translation_save_error', translate: true });
     },
@@ -220,7 +220,7 @@ const List = React.createClass({
         snackActions.show({ message: 'organisation_unit_assignment_saved', action: 'ok', translate: true });
     },
 
-    _orgUnitAssignmentErrored(errorMessage) {
+    _orgUnitAssignmentError(errorMessage) {
         log.error(errorMessage);
         snackActions.show({ message: 'organisation_unit_assignment_save_error', translate: true });
     },
@@ -404,7 +404,7 @@ const List = React.createClass({
                     objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
                     open={this.state.translation.open}
                     onTranslationSaved={this._translationSaved}
-                    onTranslationError={this._translationErrored}
+                    onTranslationError={this._translationError}
                     onRequestClose={this._closeTranslationDialog}
                     fieldsToTranslate={getTranslatablePropertiesForModelType(this.props.params.modelType)}
                 /> : null }
@@ -413,7 +413,7 @@ const List = React.createClass({
                     root={this.state.orgunitassignment.root}
                     open={this.state.orgunitassignment.open}
                     onOrgUnitAssignmentSaved={this._orgUnitAssignmentSaved}
-                    onOrgUnitAssignmentErrot={this._orgUnitAssignmentErrored}
+                    onOrgUnitAssignmentError={this._orgUnitAssignmentError}
                     onRequestClose={this._closeOrgUnitDialog}
                 /> : null }
                 {this.state.dataElementOperand.model ? (
@@ -422,7 +422,7 @@ const List = React.createClass({
                         dataElementOperands={this.state.dataElementOperand.dataElementOperands}
                         open={this.state.dataElementOperand.open}
                         onDataElementOperandsSaved={this._orgUnitAssignmentSaved}
-                        onDataElementOperandsError={this._orgUnitAssignmentErrored}
+                        onDataElementOperandsError={this._orgUnitAssignmentError}
                         onRequestClose={this._closeDataElementOperandDialog}
                     />
                 ) : null}
