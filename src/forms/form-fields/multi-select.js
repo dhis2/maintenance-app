@@ -153,7 +153,7 @@ export default React.createClass({
                     onChange={this._setFilterText}
                 />
                 {this.renderGroupEditor()}
-                <div style={{ clear: 'both', height: '1rem', width: '100%' }} />
+                <div style={{ clear: 'both', height: '2rem', width: '100%' }} />
             </div>
         );
     },
