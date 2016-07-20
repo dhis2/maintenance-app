@@ -79,7 +79,6 @@ export default Store.create({
                     fields: fieldFilteringForQuery,
                     query: searchString,
                     withinUserHierarchy: true,
-                    pageSize: 5,
                 });
 
             this.listSourceSubject.onNext(Observable.just(organisationUnitsThatMatchQuery));
