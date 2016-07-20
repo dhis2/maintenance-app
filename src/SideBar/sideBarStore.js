@@ -5,6 +5,7 @@ import objectActions from '../EditModel/objectActions';
 import modelToEditStore from '../EditModel/modelToEditStore';
 import { afterDeleteHook$ } from '../List/ContextActions.js';
 import { Observable } from 'rx';
+import { getInstance } from 'd2/lib/d2';
 
 class DefaultSideBarIcon extends FontIcon {
     shouldComponentUpdate() {
@@ -16,20 +17,12 @@ DefaultSideBarIcon.defaultProps = {
     children: 'folder_open',
 };
 
-function getAdditionalSideBarFields(currentSection) {
+function getAdditionalSideBarFields(currentSection, i18n) {
     if (currentSection === 'organisationUnitSection') {
         return [
             {
                 key: 'hierarchy',
-                label: 'hierarchyOperations',
-                icon: (<FontIcon className="material-icons">folder_open</FontIcon>),
-            },
-        ];
-    } else if (currentSection === 'dataSet') {
-        return [
-            {
-                key: 'assignment',
-                label: 'assignmentEditor',
+                label: i18n.getTranslation('hierarchy_operations'),
                 icon: (<FontIcon className="material-icons">folder_open</FontIcon>),
             },
         ];
@@ -38,7 +31,8 @@ function getAdditionalSideBarFields(currentSection) {
 }
 
 const sideBarState = appStateStore
-    .map(appState => {
+    .combineLatest(Observable.fromPromise(getInstance()))
+    .map(([appState, d2]) => {
         const { userOrganisationUnits, selectedOrganisationUnit } = appState;
         const {
             currentSection,
@@ -48,7 +42,7 @@ const sideBarState = appStateStore
         return {
             sections: (appState.sideBar[currentSection] || appState.sideBar.mainSections)
                 .map(section => Object.assign({ icon: <DefaultSideBarIcon /> }, section))
-                .concat(getAdditionalSideBarFields(currentSection)),
+                .concat(getAdditionalSideBarFields(currentSection, d2.i18n)),
             currentSection,
             currentSubSection,
             activeItem: currentSubSection || currentSection,
