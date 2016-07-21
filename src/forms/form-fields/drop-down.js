@@ -82,15 +82,15 @@ export default React.createClass({
     },
 
     renderOptions() {
-        const options = this.state.options.map((option, index) => {
-            return (
+        const options = this.state.options
+            .map((option, index) => (
                 <MenuItem
                     primaryText={option.text}
                     key={index}
                     value={option.value}
+                    label={option.text}
                 />
-            );
-        });
+            ));
 
         if (!this.props.isRequired) {
             // When the value is not required we add an item that sets the value to null

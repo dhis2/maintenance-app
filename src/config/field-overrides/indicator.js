@@ -1,16 +1,21 @@
 import { SELECT } from '../../forms/fields';
+import isString from 'd2-utilizr/lib/isString';
+import isNumber from 'd2-utilizr/lib/isNumber';
 
 export default new Map([
     ['decimals', {
         type: SELECT,
         fieldOptions: {
-            options: [0, 1, 2, 3, 4, 5],
+            options: ['0', '1', '2', '3', '4', '5'],
         },
         beforeUpdateConverter(value) {
-            return Number(value);
+            if (isString(value)) {
+                return Number(value);
+            }
+            return undefined;
         },
         beforePassToFieldConverter(value) {
-            if (value) {
+            if (isNumber(value)) {
                 return value.toString();
             }
             return value;
