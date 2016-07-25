@@ -17,7 +17,6 @@
   "devDependencies": {
     "babel": "5.8.23",
     "babel-core": "5.8.23",
-    "babel-eslint": "^6.0.2",
     "babel-loader": "5.3.2",
     "babel-polyfill": "^6.7.4",
     "chai": "3.0.0",
@@ -53,7 +52,7 @@
     "babel-eslint": "4.0.10",
     "babel-loader": "5.3.2",
     "classnames": "2.2.3",
-    "d2": "0.0.34",
+    "d2": "~24.0.13",
     "d2-ui": "0.0.20",
     "d2-utilizr": "0.2.1",
     "fbjs": "0.2.1",
@@ -70,7 +69,6 @@
     "rx": "4.0.8"
   },
   "pre-commit": [
-    "lint",
     "validate"
   ],
   "manifest.webapp": {
