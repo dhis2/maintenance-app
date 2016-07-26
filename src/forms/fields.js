@@ -219,4 +219,5 @@ export const typeToFieldMap = new Map([
     ['NUMBER', NUMBER],
     ['COMPLEX', INPUT],
     ['GEOLOCATION', INPUT],
+    ['TRUE_ONLY', CHECKBOX],
 ]);
