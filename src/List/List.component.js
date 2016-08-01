@@ -260,7 +260,7 @@ const List = React.createClass({
         case 'details':
             return model.access.read;
         case 'share':
-            return model.modelDefinition.isSharable === true; // TODO: Sharing is filtered out twice...
+            return model.modelDefinition.isShareable === true; // TODO: Sharing is filtered out twice...
         case 'assignToOrgUnits':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'compulsoryDataElements':
@@ -313,7 +313,7 @@ const List = React.createClass({
             .filter(actionsThatRequireDelete, this)
             .filter((actionName) => {
                 if (actionName === 'share') {
-                    return this.context.d2.models[this.props.params.modelType] && this.context.d2.models[this.props.params.modelType].isSharable;
+                    return this.context.d2.models[this.props.params.modelType] && this.context.d2.models[this.props.params.modelType].isShareable;
                 }
                 return true;
             })
