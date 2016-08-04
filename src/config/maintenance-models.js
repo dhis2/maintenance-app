@@ -1,5 +1,4 @@
-export default {
-    getSideBarConfig() {
+export function getSideBarConfig() {
         return {
             all: {
                 items: [],
@@ -58,5 +57,20 @@ export default {
                 ],
             },
         };
-    },
+}
+
+export function getSectionForType(modelType) {
+    const config = getSideBarConfig();
+
+    return Object
+        .keys(config)
+        .find(section => {
+            return config[section] &&
+                config[section].items &&
+                config[section].items.indexOf(modelType) >= 0;
+        });
+}
+
+export default {
+    getSideBarConfig,
 };

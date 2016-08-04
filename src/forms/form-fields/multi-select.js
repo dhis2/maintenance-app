@@ -6,9 +6,10 @@ import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrder
 import Action from 'd2-ui/lib/action/Action';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/lib/text-field';
-import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import { config } from 'd2/lib/d2';
 import log from 'loglevel';
+import QuickAddLink from './helpers/QuickAddLink.component';
+import RefreshMask from './helpers/RefreshMask.component';
 
 config.i18n.strings.add('search_available_selected_items');
 
@@ -88,6 +89,7 @@ export default React.createClass({
             itemStore,
             assignedItemStore,
             filterText: '',
+            isRefreshing: false,
         };
     },
 
@@ -132,20 +134,36 @@ export default React.createClass({
     },
 
     render() {
-        const labelStyle = {
-            float: 'left',
-            position: 'relative',
-            display: 'block',
-            width: 'calc(100% - 60px)',
-            lineHeight: '24px',
-            color: 'rgba(0,0,0,0.3)',
-            marginTop: '1rem',
-            fontSize: 16,
+        const styles = {
+            labelStyle: {
+                float: 'left',
+                position: 'relative',
+                display: 'block',
+                width: 'calc(100% - 60px)',
+                lineHeight: '24px',
+                color: 'rgba(0,0,0,0.3)',
+                marginTop: '1rem',
+                fontSize: 16,
+            },
+
+            labelWrap: {
+                display: 'flex',
+            },
+            fieldWrap: {
+                position: 'relative',
+            },
         };
 
         return (
-            <div>
-                <label style={labelStyle}>{this.props.labelText || ''}</label>
+            <div style={styles.fieldWrap}>
+                {this.state.isRefreshing ? <RefreshMask /> : null }
+                <div style={styles.labelWrap}>
+                    <label style={styles.labelStyle}>{this.props.labelText || ''}</label>
+                    <QuickAddLink
+                        referenceType={this.props.referenceType}
+                        onRefreshClick={this.reloadAvailableItems}
+                    />
+                </div>
                 <TextField
                     fullWidth
                     hintText={this.getTranslation('search_available_selected_items')}
@@ -255,6 +273,21 @@ export default React.createClass({
                 value: this.props.model[this.props.referenceProperty],
             },
         });
+    },
+
+    reloadAvailableItems() {
+        this.setState({
+            isRefreshing: true,
+        });
+
+        getInstance()
+            .then(this.loadAvailableItems)
+            .then(this.populateItemStore)
+            .then(() => {
+                this.setState({
+                    isRefreshing: false,
+                });
+            });
     },
 
     loadAvailableItems(d2) {

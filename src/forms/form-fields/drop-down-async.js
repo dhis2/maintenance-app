@@ -1,6 +1,8 @@
 import React from 'react';
 import DropDown from './drop-down';
 import { getInstance } from 'd2/lib/d2';
+import QuickAddLink from './helpers/QuickAddLink.component';
+import RefreshMask from './helpers/RefreshMask.component';
 
 export default React.createClass({
     propTypes: {
@@ -14,13 +16,14 @@ export default React.createClass({
     getInitialState() {
         return {
             options: [],
+            isRefreshing: false,
         };
     },
 
-    componentDidMount() {
+    loadOptions() {
         const fieldsForReferenceType = this.props.referenceType === 'optionSet' ? 'id,displayName,name,valueType' : 'id,displayName,name';
 
-        getInstance()
+        return getInstance()
             .then(d2 => d2.models[this.props.referenceType].list({ fields: fieldsForReferenceType, paging: false, filter: this.props.queryParamFilter }))
             .then(modelCollection => modelCollection.toArray())
             .then(values => values.map(model => {
@@ -52,6 +55,10 @@ export default React.createClass({
             });
     },
 
+    componentDidMount() {
+        this.loadOptions();
+    },
+
     // TODO: Remove this hack to update the categoryCombo property when the domainType is set to TRACKER
     // This should probably be done in the objectActions, however there we currently do not have any knowledge of the options
     // It might be worth loading the categoryOption with name `default` just for this.
@@ -70,11 +77,70 @@ export default React.createClass({
     },
 
     render() {
-        let defaultValue = {};
+        const styles = {
+            wrap: {
+                display: 'flex',
+                alignItems: 'flex-end',
+            },
+        };
 
         return (
-            <DropDown {...this.props} options={this.state.options} value={this.props.value ? this.props.value.id : defaultValue.id} onChange={this._onChange} />
+            <div style={styles.wrap}>
+                {this.state.isRefreshing ? <RefreshMask horizontal={true} /> : null}
+                <DropDown
+                    {...this.props}
+                    options={this.state.options}
+                    value={this.props.value ? this.props.value.id : undefined}
+                    onChange={this._onChange}
+                />
+                <QuickAddLink
+                    referenceType={this.props.referenceType}
+                    onRefreshClick={this._onRefreshClick}
+                />
+            </div>
         );
+    },
+
+    renderQuickAddLink() {
+        const sectionForReferenceType = getSectionForType(this.props.referenceType);
+
+        if (!sectionForReferenceType) {
+            return null;
+        }
+
+        const styles = {
+            quickAddWrap: {
+                display: 'flex',
+            },
+        };
+
+        return (
+            <div style={styles.quickAddWrap}>
+                <Link
+                    tooltip="Add some related object"
+                    tooltipPosition="top-left"
+                    to={`/edit/${sectionForReferenceType}/${this.props.referenceType}/add`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <IconButton tooltip="Add new" tooltipPosition="top-left">
+                        <AddCircleOutlineIcon />
+                    </IconButton>
+                </Link>
+                <IconButton tooltip="Refresh values" tooltipPosition="top-left" onClick={this._onRefreshClick}>
+                    <RefreshIcon />
+                </IconButton>
+            </div>
+        );
+    },
+
+    _onRefreshClick() {
+        this.setState({
+            isRefreshing: true,
+        });
+
+        this.loadOptions()
+            .then(() => this.setState({ isRefreshing: false }));
     },
 
     _onChange(event) {
