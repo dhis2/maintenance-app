@@ -16,6 +16,7 @@ export default new Map([
                 'MIN',
                 'MAX',
                 'NONE',
+                'AVERAGE_SUM_ORG_UNIT',
             ]
         }
     }],
