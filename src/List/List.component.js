@@ -380,7 +380,7 @@ const List = React.createClass({
                             columns={this.state.tableColumns}
                             contextMenuActions={availableActions}
                             contextMenuIcons={contextMenuIcons}
-                            primaryAction={availableActions.details}
+                            primaryAction={availableActions.edit}
                             isContextActionAllowed={this.isContextActionAllowed}
                         />
                         {this.state.dataRows.length || this.state.isLoading ? null : <div>No results found</div>}
