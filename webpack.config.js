@@ -96,7 +96,8 @@ if (!isDevBuild) {
             //         warnings: false,
             //     },
             comments: false,
-            beautify: true,
+            beautify: false,
+            // mangle: false,
         }),
     ];
 } else {
