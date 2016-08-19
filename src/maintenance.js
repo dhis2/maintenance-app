@@ -23,7 +23,7 @@ if (process.env.NODE_ENV !== 'production') {
 function configI18n(userSettings) {
     const uiLocale = userSettings.keyUiLocale;
 
-    if (uiLocale !== 'en') {
+    if (uiLocale && uiLocale !== 'en') {
         // Add the language sources for the preferred locale
         config.i18n.sources.add(`./i18n/i18n_module_${uiLocale}.properties`);
     }
