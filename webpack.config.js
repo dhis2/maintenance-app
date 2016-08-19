@@ -1,11 +1,12 @@
-'use strict';
-
-var webpack = require('webpack');
-var path = require('path');
-var colors = require('colors');
+const webpack = require('webpack');
+const path = require('path');
+const colors = require('colors');
 
 const isDevBuild = process.argv[1].indexOf('webpack-dev-server') !== -1;
 const dhisConfigPath = process.env.DHIS2_HOME && `${process.env.DHIS2_HOME}/config`;
+
+const Visualizer = require('webpack-visualizer-plugin');
+
 let dhisConfig;
 
 try {
@@ -43,9 +44,6 @@ const webpackConfig = {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
                 loader: 'babel',
-                query: {
-                    presets: ['es2015', 'stage-0', 'react']
-                },
             },
             {
                 test: /\.css$/,
@@ -64,21 +62,44 @@ const webpackConfig = {
         },
     },
     devServer: {
+        // host: '0.0.0.0',
         progress: true,
         colors: true,
         port: 8081,
         inline: true,
         compress: true,
-        proxy: [
-            { path: '/api/*', target: dhisConfig.baseUrl, bypass },
-            { path: '/dhis-web-commons/*', target: dhisConfig.baseUrl, bypass },
-            { path: '/icons/*', target: dhisConfig.baseUrl, bypass },
-            { path: '/css/*', target: 'http://localhost:8081/src', bypass },
-            { path: '/i18n/*', target: 'http://localhost:8081/src', bypass },
-            { path: '/jquery.min.js', target: 'http://localhost:8081/node_modules/jquery/dist', bypass },
-            { path: '/polyfill.min.js', target: 'http://localhost:8081/node_modules/babel-polyfill/dist', bypass },
-            { path: '/ckeditor/*', target: 'http://localhost:8081/node_modules', bypass },
-        ],
+        proxy: {
+            '/dhis-web-commons/**': {
+                target: dhisConfig.baseUrl,
+                changeOrigin: true,
+                bypass
+            },
+            '/icons': {
+                target: dhisConfig.baseUrl,
+                changeOrigin: true,
+                bypass
+            },
+            '/icons/*': {
+                target: dhisConfig.baseUrl,
+                changeOrigin: true,
+                bypass
+            },
+            '/css/*': {
+                target: 'http://localhost:8081/src',
+            },
+            '/i18n/*': {
+                target: 'http://localhost:8081/src',
+            },
+            '/jquery.min.js': {
+                target: 'http://localhost:8081/node_modules/jquery/dist',
+            },
+            '/polyfill.min.js': {
+                target: 'http://localhost:8081/node_modules/babel-polyfill/dist',
+            },
+            '/ckeditor/*': {
+                target: 'http://localhost:8081/node_modules',
+            },
+        },
     },
 };
 
@@ -90,15 +111,13 @@ if (!isDevBuild) {
             DHIS_CONFIG: JSON.stringify({}),
         }),
         new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin({
-            //     compress: {
-            //         warnings: false,
-            //     },
             comments: false,
             beautify: false,
-            // mangle: false,
+            sourceMap: true,
         }),
+        new Visualizer(),
     ];
 } else {
     webpackConfig.plugins = [
