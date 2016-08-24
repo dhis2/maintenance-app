@@ -47,13 +47,21 @@ export function getSideBarConfig() {
             //     ],
             // },
 
+            trackerSection: {
+                items: [
+                    'trackedEntityAttribute',
+                    'trackedEntityAttributeGroup',
+                    'relationshipType',
+                    'trackedEntity',
+                ],
+            },
+
             otherSection: {
                 items: [
                     'constant',
                     'attribute',
                     'optionSet',
-                    // TODO: 2.25
-                    // 'legendSet',
+                    'legendSet',
                 ],
             },
         };
