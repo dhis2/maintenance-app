@@ -2,7 +2,7 @@ import appStateStore from '../App/appStateStore';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import { Observable } from 'rx';
 import { getInstance } from 'd2/lib/d2';
-import { goToRoute } from '../router';
+import { goToRoute } from '../router-utils';
 
 async function createCardsFromMetaDataSections(metaDataSections) {
     const d2 = await getInstance();

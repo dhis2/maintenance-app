@@ -15,18 +15,11 @@ import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import { Observable } from 'rx';
 import SinglePanelLayout from 'd2-ui/lib/layout/SinglePanel.component';
 import TwoPanelLayout from 'd2-ui/lib/layout/TwoPanel.component';
+import { goToRoute } from '../router-utils';
 
 log.setLevel(log.levels.INFO);
 
-// Needed for onTouchTap
-// Can go away when react 1.0 release
-// Check this repo:
-// https://github.com/zilverline/react-tap-event-plugin
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
-
 import appState, { setAppState } from './appStateStore';
-import { goToRoute } from '../router';
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 
@@ -83,7 +76,8 @@ class App extends AppWithD2 {
     }
 
     componentWillUnmount() {
-        super.componentWillUnmount();
+        if (super.componentWillUnmount)
+            super.componentWillUnmount();
 
         if (this.disposable && this.disposable.dispose) {
             this.disposable.dispose();

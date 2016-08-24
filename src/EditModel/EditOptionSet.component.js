@@ -6,7 +6,7 @@ import OptionManagement from './option-set/OptionManagement.component';
 import { camelCaseToUnderscores } from 'd2-utilizr';
 import FormHeading from './FormHeading';
 import Paper from 'material-ui/lib/paper';
-import { goToRoute } from '../router';
+import { goToRoute } from '../router-utils';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 
 function onSaveError(errorMessage, props) {

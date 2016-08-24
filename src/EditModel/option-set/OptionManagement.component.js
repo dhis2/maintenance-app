@@ -17,7 +17,7 @@ import OptionSorter from './OptionSorter.component';
 import { typeToFieldMap, getFieldUIComponent, getValidatorsFromModelValidation } from '../../forms/fields';
 import { createFieldConfigForModelTypes } from '../EditModelForm.component';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
-import { calculatePageValue } from '../../List/List.component';
+import { calculatePageValue } from '../../List/helpers/pagination'; // TODO: Move this out to some other file.
 import actions from './actions';
 import { optionDialogStore, optionsForOptionSetStore } from './stores.js';
 import LinearProgress from 'material-ui/lib/linear-progress';

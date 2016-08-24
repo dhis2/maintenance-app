@@ -47,7 +47,12 @@ function SectionTabs(props) {
 
     const sections = props.sections
         .map((section, index) => (
-            <Tab key={index} style={styles.tabStyle} label={section.label} value={section.key} />
+            <Tab
+                key={index}
+                style={styles.tabStyle}
+                label={section.label}
+                value={section.key}
+            />
         ));
 
     return (
@@ -55,7 +60,10 @@ function SectionTabs(props) {
             <div style={styles.tabsWrap}>
                 <Tabs
                     value={props.current}
-                    onChange={props.changeSection}
+                    onChange={((...args) => {
+                        console.log('Clicked!', args);
+                        props.changeSection(...args)
+                    })}
                     style={styles.tabsStyle}
                     tabItemContainerStyle={styles.tabItemContainerStyle}
                 >

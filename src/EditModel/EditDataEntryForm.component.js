@@ -16,7 +16,7 @@ import Action from 'd2-ui/lib/action/Action';
 
 import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';
-import { goBack } from '../router';
+import { goBack } from '../router-utils';
 
 import '../../scss/EditModel/EditDataEntryForm.scss';
 

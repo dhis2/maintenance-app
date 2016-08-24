@@ -1,5 +1,6 @@
 import { SELECT } from '../../forms/fields';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
+import React from 'react';
 
 export default new Map([
     ['categoryCombo', {

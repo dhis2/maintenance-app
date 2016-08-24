@@ -1,7 +1,7 @@
 import React from 'react';
 import Paper from 'material-ui/lib/paper';
 import EditModelForm from './EditModelForm.component';
-import { goToRoute } from '../router';
+import { goToRoute } from '../router-utils';
 
 function goToAndScrollUp(url) {
     goToRoute(url);

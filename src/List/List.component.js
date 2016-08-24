@@ -28,6 +28,7 @@ import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import fieldOrder from '../config/field-config/field-order';
 import { Observable } from 'rx';
+import { calculatePageValue } from './helpers/pagination';
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
@@ -63,17 +64,6 @@ function getTranslatablePropertiesForModelType(modelType) {
     }
 
     return defaultTranslatableProperties;
-}
-
-// TODO: Move this somewhere as a utility function, probably on the Pagination component (as a separate export) in d2-ui?
-export function calculatePageValue(pager) {
-    const pageSize = 50; // TODO: Make the page size dynamic
-    const { total, pageCount, page } = pager;
-    const pageCalculationValue = total - (total - ((pageCount - (pageCount - page)) * pageSize));
-    const startItem = 1 + pageCalculationValue - pageSize;
-    const endItem = pageCalculationValue;
-
-    return `${startItem} - ${endItem > total ? total : endItem}`;
 }
 
 class DetailsBoxWithScroll extends Component {

@@ -1,26 +1,17 @@
 import React from 'react';
-import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-router';
+import {Router, Route, IndexRoute, hashHistory, IndexRedirect} from 'react-router';
 import log from 'loglevel';
-import App from './App/App.component';
-import List from './List/List.component';
-import EditModelContainer from './EditModel/EditModelContainer.component';
-import EditDataSetSections from './EditModel/EditDataSetSections.component';
-import EditDataEntryForm from './EditModel/EditDataEntryForm.component';
-import GroupEditor from './GroupEditor/GroupEditor.component';
 import modelToEditStore from './EditModel/modelToEditStore';
-import { getInstance } from 'd2/lib/d2';
+import {getInstance} from 'd2/lib/d2';
 import objectActions from './EditModel/objectActions';
 import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
-import { initAppState, default as appState } from './App/appStateStore';
-import OrganisationUnitList from './List/organisation-unit-list/OrganisationUnitList.component.js';
-import MenuCardsForSection from './MenuCards/MenuCardsForSection.component';
-import MenuCardsForAllSections from './MenuCards/MenuCardsForAllSections.component';
-import OrganisationUnitHierarchy from './OrganisationUnitHierarchy';
-import OrganisationUnitLevels from './OrganisationUnitLevels/OrganisationUnitLevels.component';
-import EditOptionSet from './EditModel/EditOptionSet.component';
+import {initAppState, default as appState} from './App/appStateStore';
+import LinearProgress from 'material-ui/lib/linear-progress';
 
-function initState({ params }) {
+import onDemand from './on-demand';
+
+function initState({params}) {
     initAppState({
         sideBar: {
             currentSection: params.groupName,
@@ -29,7 +20,7 @@ function initState({ params }) {
     });
 }
 
-function initStateOrgUnitList({ params }) {
+function initStateOrgUnitList({params}) {
     initAppState({
         sideBar: {
             currentSection: params.groupName,
@@ -38,7 +29,7 @@ function initStateOrgUnitList({ params }) {
     }, true);
 }
 
-function initStateOrgUnitLevels({ params }) {
+function initStateOrgUnitLevels({params}) {
     initAppState({
         sideBar: {
             currentSection: params.groupName,
@@ -57,8 +48,8 @@ function initStateOuHierarchy() {
 }
 
 // TODO: We could use an Observable that manages the current modelType to load the correct d2.Model. This would clean up the load function below.
-function loadObject({ params }, replace, callback) {
-    initState({ params });
+function loadObject({params}, replace, callback) {
+    initState({params});
 
     if (params.modelId === 'add') {
         getInstance().then((d2) => {
@@ -86,19 +77,19 @@ function loadObject({ params }, replace, callback) {
             return callback();
         });
     } else {
-        objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
+        objectActions.getObjectOfTypeById({objectType: params.modelType, objectId: params.modelId})
             .subscribe(
                 () => callback(),
                 (errorMessage) => {
                     replace(`/list/${params.modelType}`);
-                    snackActions.show({ message: errorMessage });
+                    snackActions.show({message: errorMessage});
                     callback();
                 }
             );
     }
 }
 
-function loadOrgUnitObject({ params }, replace, callback) {
+function loadOrgUnitObject({params}, replace, callback) {
     loadObject({
         params: {
             modelType: 'organisationUnit',
@@ -108,7 +99,7 @@ function loadOrgUnitObject({ params }, replace, callback) {
     }, replace, callback);
 }
 
-function loadOptionSetObject({ params }, replace, callback) {
+function loadOptionSetObject({params}, replace, callback) {
     loadObject({
         params: {
             modelType: 'optionSet',
@@ -118,17 +109,17 @@ function loadOptionSetObject({ params }, replace, callback) {
     }, replace, callback);
 }
 
-function loadList({ params }, replace, callback) {
+function loadList({params}, replace, callback) {
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the appState
         // Also load the initialState without cache so we refresh the assigned organisation units
         // These could have changed by adding an organisation unit which would need to be reflected in the
         // organisation unit tree
-        initState({ params }, true);
+        initState({params}, true);
         return callback();
     }
 
-    initState({ params });
+    initState({params});
     return listActions.loadList(params.modelType)
         .subscribe(
             (message) => {
@@ -152,105 +143,112 @@ function loadList({ params }, replace, callback) {
         );
 }
 
-function cloneObject({ params }, replace, callback) {
-    initState({ params });
+function cloneObject({params}, replace, callback) {
+    initState({params});
 
-    objectActions.getObjectOfTypeByIdAndClone({ objectType: params.modelType, objectId: params.modelId })
+    objectActions.getObjectOfTypeByIdAndClone({objectType: params.modelType, objectId: params.modelId})
         .subscribe(
             () => callback(),
             (errorMessage) => {
                 replace(`/list/${params.modelType}`);
-                snackActions.show({ message: errorMessage });
+                snackActions.show({message: errorMessage});
                 callback();
             }
         );
 }
 
+function delayRender(importFactory) {
+    return (props) => {
+        const BaseComponent = onDemand.loadDefault(importFactory, {loadingComponent: () => (<LinearProgress indeterminate />)})
+
+        return <BaseComponent {...props} />
+    };
+}
+
+const errorLoading = error => `Dynamic page loading failed ${error}`;
+const loadModule = cb => module => cb(null, module.default);
+
 const routes = (
     <Router history={hashHistory}>
-        <Route path="/" component={App}>
-            <IndexRedirect to="/list/all" />
+        <Route
+            path="/"
+            component={delayRender(() => System.import('./App/App.component'))}
+        >
+            <IndexRedirect to="/list/all"/>
             <Route
-                path="list/all" component={MenuCardsForAllSections}
+                path="list/all"
+                component={delayRender(() => System.import('./MenuCards/MenuCardsForAllSections.component'))}
                 onEnter={() => initState({ params: { groupName: 'all' } })}
             />
             <Route path="list/:groupName">
                 <IndexRoute
-                    component={MenuCardsForSection}
+                    component={delayRender(() => System.import('./MenuCards/MenuCardsForSection.component'))}
                     onEnter={initState}
                 />
                 <Route
                     path="organisationUnit"
-                    component={OrganisationUnitList}
+                    component={delayRender(() => System.import('./List/organisation-unit-list/OrganisationUnitList.component.js'))}
                     onEnter={initStateOrgUnitList}
                 />
                 <Route
                     path="organisationUnitLevel"
-                    component={OrganisationUnitLevels}
+                    component={delayRender(() => System.import('./OrganisationUnitLevels/OrganisationUnitLevels.component'))}
                     onEnter={initStateOrgUnitLevels}
                 />
                 <Route
                     path=":modelType"
-                    component={List}
+                    component={delayRender(() => System.import('./List/List.component'))}
                     onEnter={loadList}
                 />
             </Route>
             <Route path="edit/:groupName">
                 <Route
                     path="organisationUnit/:modelId"
-                    component={EditModelContainer}
+                    component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                     onEnter={loadOrgUnitObject}
                 />
                 <Route
                     path="optionSet/:modelId"
-                    component={EditOptionSet}
+                    component={delayRender(() => System.import('./EditModel/EditOptionSet.component'))}
                     onEnter={loadOptionSetObject}
                 >
                     <IndexRoute />
-                    <Route path=":activeView" />
+                    <Route path=":activeView"/>
                 </Route>
                 <Route
                     path=":modelType/:modelId/sections"
-                    component={EditDataSetSections}
+                    component={delayRender(() => System.import('./EditModel/EditDataSetSections.component'))}
                     onEnter={loadObject}
                 />
                 <Route
                     path=":modelType/:modelId/dataEntryForm"
-                    component={EditDataEntryForm}
+                    component={delayRender(() => System.import('./EditModel/EditDataEntryForm.component'))}
                     onEnter={loadObject}
                     disableSidebar
                 />
                 <Route
                     path=":modelType/:modelId"
-                    component={EditModelContainer}
+                    component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                     onEnter={loadObject}
                 />
             </Route>
             <Route
                 path="clone/:groupName/:modelType/:modelId"
-                component={EditModelContainer}
+                component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                 onEnter={cloneObject}
             />
             <Route
                 path="group-editor"
-                component={GroupEditor}
+                component={delayRender(() => System.import('./GroupEditor/GroupEditor.component'))}
                 onEnter={initState}
             />
             <Route
                 path="organisationUnitSection/hierarchy"
-                component={OrganisationUnitHierarchy}
+                component={delayRender(() => System.import('./OrganisationUnitHierarchy'))}
                 onEnter={initStateOuHierarchy}
             />
         </Route>
     </Router>
 );
-
-export function goToRoute(url) {
-    hashHistory.push(url);
-}
-
-export function goBack() {
-    hashHistory.goBack();
-}
 
 export default routes;

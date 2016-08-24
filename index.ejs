@@ -8,7 +8,6 @@
 
     <link type="text/css" rel="stylesheet" href="../dhis-web-commons/material-design-icons/material-icons.css">
     <link type="text/css" rel="stylesheet" href="../dhis-web-commons/fonts/roboto.css">
-    <link type="text/css" rel="stylesheet" href="../dhis-web-commons/font-awesome/css/font-awesome.min.css">
 
     <style type="text/css">
         body {
@@ -23,9 +22,7 @@
 <body>
     <div id="app" class="app"></div>
 
-    <script src="polyfill.min.js"></script>
-    <script src="jquery.min.js"></script>
-    <script src="ckeditor/ckeditor.js"></script>
-    <script src="maintenance.js"></script>
+    <%= htmlWebpackPlugin.options.vendorScripts %>
+    <%= htmlWebpackPlugin.options.serviceWorkerScript %>
 </body>
 </html>

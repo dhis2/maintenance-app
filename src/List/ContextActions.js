@@ -10,7 +10,7 @@ import translateStore from './translation-dialog/translationStore';
 import orgUnitAssignmentDialogStore from './organisation-unit-dialog/organisationUnitDialogStore';
 import compulsoryDataElementStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
 import appStore from '../App/appStateStore';
-import { goToRoute } from '../router';
+import { goToRoute } from '../router-utils';
 import { Subject } from 'rx';
 
 config.i18n.strings.add('edit');

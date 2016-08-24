@@ -1,6 +1,6 @@
 import Action from 'd2-ui/lib/action/Action';
 import { setAppState, default as appState } from '../App/appStateStore';
-import { goToRoute } from '../router';
+import { goToRoute } from '../router-utils';
 import { Observable } from 'rx';
 import searchForOrganisationUnitsWithinHierarchy from '../OrganisationUnitHierarchy/searchForOrganisationUnitsWithinHierarchy';
 

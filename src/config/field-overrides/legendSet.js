@@ -1,5 +1,5 @@
 import React from 'react';
-import Legend from 'd2-ui/lib/legend/Legend.component';
+// import Legend from 'd2-ui/lib/legend/Legend.component';
 import { getInstance } from 'd2/lib/d2';
 import Store from 'd2-ui/lib/store/Store';
 import LinearProgress from 'material-ui/lib/linear-progress';
@@ -55,11 +55,23 @@ export default new Map([
                 this.state = {
                     isLoading: true,
                     legends: [],
+                    Legend: null,
                 };
+            }
+
+            loadLegendComponent() {
+                return System.import('d2-ui/lib/legend/Legend.component')
+                    .then(module => {
+                        this.setState({
+                            Legend: module.default,
+                        });
+                    });
+
             }
 
             componentDidMount() {
                 this.initLegends(this.props);
+                this.loadLegendComponent()
             }
 
             componentWillReceiveProps(props) {
@@ -74,11 +86,11 @@ export default new Map([
             }
 
             render() {
-                if (this.state.isLoading) {
+                if (this.state.isLoading || !this.state.Legend) {
                     return (<LinearProgress indetermined />);
                 }
 
-                return <Legend items={this.state.legends} onItemsChange={this.updateLegends} />
+                return <this.state.Legend items={this.state.legends} onItemsChange={this.updateLegends} />
             }
 
             updateLegends = (newLegends) => {

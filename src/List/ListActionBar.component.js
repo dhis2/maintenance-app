@@ -3,7 +3,7 @@ import { hashHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import FontIcon from 'material-ui/lib/font-icon';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
-import { goToRoute } from '../router';
+import { goToRoute } from '../router-utils';
 
 const ListActionBar = React.createClass({
     propTypes: {

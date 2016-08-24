@@ -1,4 +1,4 @@
-import { Subject } from 'rx/dist/rx.all';
+import { Subject } from 'rx';
 import log from 'loglevel';
 
 const ObservedEvents = {
