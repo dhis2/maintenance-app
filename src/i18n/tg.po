@@ -1,0 +1,2035 @@
+#. extracted from i18n_module_en.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-30 01:55-0400\n"
+"PO-Revision-Date: 2016-07-29 08:10+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: tg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.8\n"
+"X-POOTLE-MTIME: 1469779849.000000\n"
+
+#: aggregate
+msgid "Aggregate"
+msgstr "Ҳамроҳкунӣ"
+
+#: tracker
+msgid "Tracker"
+msgstr ""
+
+#: no_option_assigned
+msgid "Use of category with an empty option is not allowed!"
+msgstr "Истифодаи категория бо имкони холӣ иҷозат нест!"
+
+#: number_of_category_options
+msgid "Number of category options"
+msgstr "Шумораи имконоти категория"
+
+#: number_of_categories
+msgid "Number of categories"
+msgstr "Шумораи категорияҳо"
+
+#: sort
+msgid "Sort"
+msgstr "Ҷудокунӣ"
+
+#: create_new_data_element_category
+msgid "Create new data element category"
+msgstr "Сохтани категорияи унсури нави иттилоот"
+
+#: selected_categories
+msgid "Selected categories"
+msgstr "УКатегорияҳои интихобшуда"
+
+#: available_categories
+msgid "Available categories"
+msgstr "Категоряиҳои мавҷуда"
+
+#: category_management
+msgid "Data element category management"
+msgstr "Идоракунии категорияи унсури иттилоот"
+
+#: category_combo_management
+msgid "Data element category combination management"
+msgstr "Идоракунии ҷуфти категорияи унсури иттилоот"
+
+#: create_new_data_element_category_combo
+msgid "Create new data element category combination"
+msgstr "Сохтани ҷуфти нави категорияи унсури иттилоот"
+
+#: confirm_delete_category_option
+#, fuzzy
+msgid "Are you sure you want to delete this data element category option?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи унсурҳои иттилоотро нест кардан мехоҳед?"
+
+#: confirm_delete_category
+#, fuzzy
+msgid "Are you sure you want to delete this data element category?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи унсурҳои иттилоотро нест кардан мехоҳед?"
+
+#: confirm_delete_category_combo
+#, fuzzy
+msgid "Are you sure you want to delete this data element category combo?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи унсурҳои иттилоотро нест кардан мехоҳед?"
+
+#: edit_data_element_category
+msgid "Edit data element category"
+msgstr "Таҳрири категорияи унсури иттилоот"
+
+#: edit_data_element_category_combo
+msgid "Edit data element category combination"
+msgstr "Таҳрири ҷуфти категорияи унсури иттилоот"
+
+#: category_combination
+msgctxt "category_combination"
+msgid "Category Combination"
+msgstr "Ҷуфти категорияҳо"
+
+#: data_element_category_combo_details
+msgid "Data element category combo details"
+msgstr "Маълумоти муфассали комбои унсури иттилоот"
+
+#: data_element_category
+msgid "Data Element Category"
+msgstr "Категорияи унсурҳои иттилоот"
+
+#: data_element_category_combo
+msgid "Data Element Category Combination"
+msgstr "Ҷуфти категорияҳои унсурҳои иттилоот"
+
+#: select
+msgid "Select"
+msgstr "Интихоб кунед"
+
+#: data_element
+msgid "Data Element"
+msgstr "Унсури иттилоот"
+
+#: data_element_group
+msgid "Data Element Group"
+msgstr "Гурӯҳи унсурҳои иттилоот"
+
+#: data_element_groups
+msgid "Data Element Groups"
+msgstr "Гурӯҳҳои унсурҳои иттилоот"
+
+#: data_elements
+#, fuzzy
+msgctxt "data_elements"
+msgid "Data elements"
+msgstr "Унсури иттилоот"
+
+#: indicator
+msgctxt "indicator"
+msgid "Indicator"
+msgstr "Индикатор"
+
+#: indicator_group
+msgid "Indicator Group"
+msgstr "Гурӯҳи индикаторҳо"
+
+#: indicator_groups
+msgid "Indicator Groups"
+msgstr "Гурӯҳҳои индикаторҳо"
+
+#: create_new_data_element
+msgid "Create new data element"
+msgstr "Сохтани унсури нави иттилоот"
+
+#: domain_type
+msgid "Domain Type"
+msgstr "Навъи домен"
+
+#: create_new_data_element_group
+msgid "Create new data element group"
+msgstr "Сохтани гурӯҳи нави унсури иттилоот"
+
+#: group_members
+msgid "Group members"
+msgstr "Аъзоёни гурӯҳ"
+
+#: available_data_elements
+msgid "Available data elements"
+msgstr "Унсурҳои иттилооти мавҷуда"
+
+#: create_new_indicator
+msgid "Create new indicator"
+msgstr "Сохтани индикатори нав"
+
+#: create_new_indicator_group
+msgid "Create new indicator group"
+msgstr "Сохтани гурӯҳи индикаторҳои нав"
+
+#: create_new_indicator_type
+msgid "Create new indicator type"
+msgstr "Сохтани навъи нави индикаторҳо"
+
+#: factor
+msgid "Factor"
+msgstr "Коэффисиент"
+
+#: data_element_management
+msgid "Data element management"
+msgstr "Идоракунии унсурҳои иттилоот"
+
+#: data_element_group_management
+msgid "Data element group management"
+msgstr "Идоракунии гурӯҳҳои унсурҳои иттилоот"
+
+#: number_of_members
+msgid "Number of members"
+msgstr "Шумораи аъзоён"
+
+#: export
+msgid "Export"
+msgstr "Воридот"
+
+#: import
+msgid "Import"
+msgstr "Содирот"
+
+#: indicator_management
+msgid "Indicator management"
+msgstr "Идоракунии индикаторҳо"
+
+#: indicator_group_management
+msgid "Indicator group management"
+msgstr "Идоракунии гурӯҳи индикаторҳо"
+
+#: indicator_type_management
+msgid "Indicator type management"
+msgstr "Идоракунии навъи индикаторҳо"
+
+#: edit_data_element
+msgid "Edit data element"
+msgstr "Таҳрири унсури иттилоот"
+
+#: edit_data_element_group
+msgid "Edit data element group"
+msgstr "Таҳрири гурӯҳи унсурҳои иттилоот"
+
+#: edit_indicator
+msgid "Edit indicator"
+msgstr "Таҳрири индикатор"
+
+#: edit_indicator_group
+msgid "Edit indicator group"
+msgstr "Таҳрири гурӯҳи индикаторҳо"
+
+#: edit_indicator_type
+msgid "Edit indicator type"
+msgstr "Таҳрири навъи индикаторҳо"
+
+#: edit_numerator
+msgid "Edit numerator"
+msgstr "Таҳрири сурати каср"
+
+#: edit_denominator
+msgid "Edit denominator"
+msgstr "Таҳрири махраҷи каср"
+
+#: confirm_delete_data_element
+msgid "Are you sure you want to delete this data element?"
+msgstr "Оё боварӣ доред, ки ин унсури иттилоотро нест кардан мехоҳед?"
+
+#: confirm_delete_data_element_group
+msgid "Are you sure you want to delete this data element group?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи унсурҳои иттилоотро нест кардан мехоҳед?"
+
+#: confirm_delete_data_element_group_set
+#, fuzzy
+msgid "Are you sure you want to delete this data element group set?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи унсурҳои иттилоотро нест кардан мехоҳед?"
+
+#: confirm_delete_indicator_group
+msgid "Are you sure you want to delete this indicator group?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи индикаторҳоро нест кардан мехоҳед?"
+
+#: confirm_delete_indicator_type
+msgid "Are you sure you want to delete this indicator type?"
+msgstr "Оё боварӣ доред, ки ин навъи индикаторро нест кардан мехоҳед?"
+
+#: confirm_delete_data_dictionary
+msgid "Are you sure you want to delete this data dictionary?"
+msgstr "Оё боварӣ доред, ки ин луғати иттилоотро нест кардан мехоҳед?"
+
+#: everything_is_ok
+msgid "Everything is OK"
+msgstr "Ҳама чиз хуб аст"
+
+#: adding_data_element_group_failed
+msgid "Adding the data element group failed with the following message"
+msgstr "Иловаи гурӯҳи унсурҳои иттилоот бо паёми зерин иҷро нашуд"
+
+#: saving_data_element_group_failed
+msgid "Saving the data element group failed with the following message"
+msgstr "Захиракунии гурӯҳи унсурҳои иттилоот бо паёми зерин иҷро нашуд"
+
+#: adding_indicator_group_failed
+msgid "Adding the indicator group failed with the following message"
+msgstr "Иловаи гурӯҳи индикаторҳо бо паёми зерин иҷро нашуд"
+
+#: saving_indicator_group_failed
+msgid "Saving the indicator group failed with the following message"
+msgstr "Захиракунии гурӯҳи индикаторҳо бо паёми зерин иҷро нашуд"
+
+#: adding_indicator_type_failed
+msgid "Adding the indicator type failed with the following message"
+msgstr "Иловаи навъи индикаторҳо бо паёми зерин иҷро нашуд"
+
+#: saving_indicator_type_failed
+msgid "Saving the indicator type failed with the following message"
+msgstr "Захиракунии навъи индикаторҳо бо паёми зерин иҷро нашуд"
+
+#: calculated
+msgid "Calculated"
+msgstr "Ҳисобшуда"
+
+#: available_dataelements
+msgid "Available Data Elements"
+msgstr "Унсурҳои иттилооти мавҷуда"
+
+#: selected_dataelements
+msgid "Selected Data Elements"
+msgstr "Унсурҳои иттилооти интихобшуда"
+
+#: add_selected
+msgid "Add selected"
+msgstr "Илова кардани интихобшудаҳо"
+
+#: remove_all
+msgid "Remove all"
+msgstr "Тоза кардани ҳама"
+
+#: assign_all
+msgid "Assign all"
+msgstr ""
+
+#: create_new_data_dictionary
+msgid "Create new data dictionary"
+msgstr "Сохтани луғати нави иттилоот"
+
+#: region
+msgid "Region"
+msgstr "Минтақа"
+
+#: select_domain_type
+msgid "Select domain type"
+msgstr ""
+
+#: current
+msgid "Current"
+msgstr "Ҷорӣ"
+
+#: date
+msgid "Date"
+msgstr ""
+
+#: selected_data_elements
+msgid "Selected data elements"
+msgstr "Унсурҳои иттилооти интихобшуда"
+
+#: selected_indicators
+msgid "Selected indicators"
+msgstr "Индикаторҳои интихобшуда"
+
+#: available_indicators
+msgid "Available indicators"
+msgstr ""
+
+#: item_deleted_successfully
+msgid "Item deleted successfully"
+msgstr "Ҷузъ бомуваффақият нест карда шуд"
+
+#: value
+msgid "Value"
+msgstr "Қимат"
+
+#: confirm_delete_indicator
+msgid "Do you want to delete indicator?"
+msgstr ""
+
+#: adding_indicator_failed
+msgid "Adding indicator failed"
+msgstr ""
+
+#: saving_indicator_failed
+msgid "Saving indicator failed"
+msgstr ""
+
+#: translate
+msgctxt "translate"
+msgid "Translate"
+msgstr "Тарҷума"
+
+#: select_indicator
+msgid "Please select indicator"
+msgstr "Лутфан индикаторро интихоб кунед"
+
+#: object_not_deleted_associated_by_objects
+msgid "Object not deleted because it is associated by objects of type"
+msgstr "Объект нест карда нашуд, зеро онро объектҳои дигар истифода мебаранд:"
+
+#: hide_warning
+msgid "Hide warning"
+msgstr "Пинҳон кардани огоҳӣ"
+
+#: update_dataelement_group_members
+msgid "Update Data Element Group Member"
+msgstr "Навсозии аъзои гурӯҳи унсурҳои иттилоот"
+
+#: update_success
+msgid "Update was successful"
+msgstr "Навсозии бомуваффақият"
+
+#: member_of
+msgid "Member of"
+msgstr "Шумораи"
+
+#: data_element_group_editor
+msgid "Data Element Group Editor"
+msgstr "Муҳаррири гурӯҳи унсурҳои иттилоот"
+
+#: move_up
+msgid "Move up"
+msgstr "Интиқол ба боло"
+
+#: move_down
+msgid "Move down"
+msgstr "Интиқол ба поён"
+
+#: move_to_top
+msgid "Move to top"
+msgstr "Интиқол ба аввал"
+
+#: move_to_bottom
+msgid "Move to bottom"
+msgstr "Интиқол ба охир"
+
+#: indicator_sort_order
+msgid "Indicator sort order"
+msgstr "Тартиби ҷудокунии индикаторҳо"
+
+#: data_element_sort_order
+msgid "Data element sort order"
+msgstr "Тартиби ҷудокунии унсурҳои иттилоот"
+
+#: indicator_group_editor
+msgid "Indicator Group Editor"
+msgstr "Муҳаррири гурӯҳи индикаторҳо"
+
+#: update_indicator_group_member
+msgid "Update Indicator Member"
+msgstr "Навсозии аъзои индикатор"
+
+#: factor_cannot_be_zero
+msgid "Factor cannot be zero"
+msgstr "Коэффисиент сифр буда наметавонад"
+
+#: url
+msgid "URL"
+msgstr "Url"
+
+#: aggregation_levels
+msgid "Aggregation levels"
+msgstr "Сатҳҳои ҳамҷоякунӣ"
+
+#: available_aggregation_levels
+msgid "Available aggregation levels"
+msgstr "Сатҳҳои ҳамҷоякунии мавҷуда"
+
+#: selected_aggregation_levels
+msgid "Selected aggregation levels"
+msgstr "Сатҳҳои ҳамҷоякунии интихобшуда"
+
+#: remove_selected
+msgid "Remove selected"
+msgstr "Тоза кардани интихобшудаҳо"
+
+#: category_options
+msgid "Category options"
+msgstr "Имконоти категорияҳо"
+
+#: add_category_option
+msgid "Add category option"
+msgstr "Иловаи имкони категория"
+
+#: must_include_category_option
+msgid "Please include one or more category options"
+msgstr "Лутфан як ё зиёда имконоти категорияро дохил кунед"
+
+#: specify_category_option_name
+msgid "Please specify a category option name"
+msgstr "Лутфан номи имкони категорияро нишон диҳед"
+
+#: category_option_name_already_exists
+msgid "The category option name already exists"
+msgstr "Номи имкони категория аллакай вуҷуд дорад"
+
+#: data_element_group_set
+msgid "Data Element Group Set"
+msgstr "Маҷмӯъи гурӯҳҳои унсурҳои иттилоот"
+
+#: data_element_group_set_management
+#, fuzzy
+msgid "Data element group set management"
+msgstr "Идоракунии гурӯҳҳои унсурҳои иттилоот"
+
+#: indicator_group_set
+msgid "Indicator Group Set"
+msgstr "Маҷмӯъҳои гурӯҳи индикаторҳо"
+
+#: name_aldready_exists
+msgid "Name already exists !"
+msgstr "Ном аллакай вуҷуд дорад !"
+
+#: available_dataelementgroup
+msgid "Available Data Element Groups"
+msgstr "Гурӯҳҳои унсурҳои иттилоот мавҷуда"
+
+#: selected_dataelementgroup
+msgid "Selected Data Element Groups"
+msgstr "Гурӯҳҳои унсурҳои иттилоот интихобшуда"
+
+#: add_dataelementgroupset
+msgid "Add Data Element Group Set"
+msgstr "Иловаи маҷмӯи гурӯҳи унсурҳои иттилоот"
+
+#: update_dataelementgroupset
+msgid "Update Data Element Group Set"
+msgstr "Навсозии маҷмӯи гурӯҳи унсурҳои иттилоот"
+
+#: add_indicatorgroupset
+msgid "Add Indicator Group Set"
+msgstr "Иловаи маҷмӯи гурӯҳи индикаторҳо"
+
+#: update_indicatorgroupset
+msgid "Update Indicator Group Set"
+msgstr "Навсозии маҷмӯи гурӯҳи индикаторҳо"
+
+#: available_indicatorgroup
+msgid "Available Indicator Groups"
+msgstr "Гурӯҳҳои индикаторҳои мавҷуда"
+
+#: selected_indicatorgroup
+msgid "Selected Indicator Groups"
+msgstr "Гурӯҳҳои индикаторҳои интихобшуда"
+
+#: last_updated
+msgid "Last updated"
+msgstr "Навсозии охирин"
+
+#: dataelement_id_not_numeric
+msgid "Data element identifier must be a number"
+msgstr "Идентификатори унсури иттилоот бояд адад бошад"
+
+#: category_option_combo_id_not_numeric
+msgid "Category option combo identifier must be a number"
+msgstr "Комбои имкони категория identifier must be a number"
+
+#: data_element_does_not_exist
+msgid "Identifier does not reference a data element"
+msgstr "Унсурҳои иттилоот вуҷуд надорад"
+
+#: category_option_combo_does_not_exist
+msgid "Identifier does not reference a category option combo"
+msgstr "Имкони комбои категория вуҷуд надорад"
+
+#: expression_not_well_formed
+msgid "Expression is not well formed"
+msgstr "Ифода хуб ташаккул дода нашудааст"
+
+#: intro_data_element
+msgid ""
+"Create, modify, view and delete data elements. Data elements are phenomena "
+"for which will be captured and analyzed."
+msgstr ""
+"Унсурҳои иттилоотро созед, тағйир диҳед, намоиш диҳед ва нест кунед. "
+"Унсурҳои иттилоот ҳодисаҳое мебошанд, ки барои онҳо маълумот ҷамъоварӣ ва "
+"таҳлил карда мешавад."
+
+#: intro_data_element_group
+msgid ""
+"Create, modify, view and delete data element groups. Groups are used for "
+"improved analysis."
+msgstr ""
+"Гурӯҳҳои унсурҳои иттилоотро созед, тағйир диҳед, намоиш диҳед ва нест "
+"кунед. Гурӯҳҳо барои беҳтар кардани таҳлил истифода мешаванд."
+
+#: intro_data_element_group_editor
+msgid ""
+"Easily add or remove data elements to and from data element groups, as well "
+"as deleted data elements."
+msgstr ""
+"Унсурҳои иттилоотро ба гурӯҳҳои унсурҳои иттилоот, ва инчунин ба унсурҳои "
+"иттилооти несткардашуда ба осонӣ илова кунед ва аз онҳо тоза кунед."
+
+#: intro_data_element_group_set
+msgid ""
+"Create, modify, view and delete data element group sets. Group sets are used "
+"for improved analysis."
+msgstr ""
+"Маҷмӯъҳои гурӯҳҳои унсурҳои иттилоотро созед, тағйир диҳед, намоиш диҳед ва "
+"нест кунед. Маҷмӯъҳои гурӯҳҳо барои беҳтар кардани таҳлил истифода мешаванд."
+
+#: intro_category_option
+msgid ""
+"Create, modify, view and delete data element category options. Category "
+"options are options with in category."
+msgstr ""
+
+#: intro_category
+msgid ""
+"Create, modify, view and delete data element categories. Categories are used "
+"for disaggregation of data elements."
+msgstr ""
+
+#: intro_category_combo
+msgid "Create, modify, view and delete data element category combinations."
+msgstr ""
+
+#: intro_category_option_group
+msgid ""
+"Create, modify, view and delete category option groups, which can be used to "
+"classify category options."
+msgstr ""
+
+#: intro_category_option_group_set
+msgid ""
+"Create, modify, view and delete category option group sets, which can be "
+"used for improved data analysis."
+msgstr ""
+
+#: intro_indicator
+msgid ""
+"Create, modify, view and delete indicators. An indicator is a formula "
+"consisting of data elements and numbers."
+msgstr ""
+"Индикаторҳоро созед, тағйир диҳед, намоиш диҳед ва нест кунед. Индикатор "
+"формулаест, ки аз унсурҳои иттилоот ва ададҳо иборат аст."
+
+#: intro_indicator_type
+msgid ""
+"Create, modify, view and delete indicator types. An indicator type is a "
+"factor for an indicator, like percentage."
+msgstr ""
+"Навъҳои индикаторҳоро созед, тағйир диҳед, намоиш диҳед ва нест кунед. Навъи "
+"индикатор ягон коэффисиенти индикатор аст, масалан, фоиз."
+
+#: intro_indicator_group
+msgid ""
+"Create, modify, view and delete indicator groups. Groups are used for "
+"improved analysis."
+msgstr ""
+"Гурӯҳҳои индикаторҳоро созед, тағйир диҳед, намоиш диҳед ва нест кунед. "
+"Гурӯҳҳо барои беҳтар кардани таҳлил истифода мешаванд."
+
+#: intro_indicator_group_editor
+msgid ""
+"Easily add or remove indicators to and from indicator groups, as well as "
+"delete indicators."
+msgstr ""
+"Индикаторҳоро ба гурӯҳҳои индикаторҳо, ва инчунин ба гурӯҳҳои иттилооти "
+"несткардашуда ба осонӣ илова кунед ва аз онҳо тоза кунед."
+
+#: intro_indicator_group_set
+msgid ""
+"Create, modify, view and delete indicator group sets. Group sets are used "
+"for improved analysis."
+msgstr ""
+"Маҷмӯъҳои гурӯҳҳои индикаторҳоро созед, тағйир диҳед, намоиш диҳед ва нест "
+"кунед. Маҷмӯъҳои гурӯҳҳо барои беҳтар кардани таҳлил истифода мешаванд."
+
+#: intro_data_dictionary
+msgid ""
+"Create, modify, view and delete data dictionaries. A data dictionary is a "
+"set of meta-data."
+msgstr ""
+"Луғатҳои иттилоотро созед, тағйир диҳед, намоиш диҳед ва нест кунед. Луғати "
+"иттилоот маҷмӯи метадата мебошад."
+
+#: intro_concept
+msgid ""
+"Create, modify, view and delete concepts. A concept can be used by a "
+"category."
+msgstr ""
+"Консепсияҳоро созед, тағйир диҳед, намоиш диҳед ва нест кунед. Консепсияро "
+"аз рӯи категория истифода бурдан мумкин аст."
+
+#: available_data_element_group_sets
+msgid "Available data element group sets"
+msgstr "Маҷмӯъҳои гурӯҳҳои унсурҳои иттилооти мавҷуда"
+
+#: selected_data_element_group_sets
+msgid "Selected data element group sets"
+msgstr "Маҷмӯъҳои гурӯҳҳои унсурҳои иттилооти интихобшуда"
+
+#: available_groups
+msgid "Available Groups"
+msgstr "Гурӯҳҳои мавҷуда"
+
+#: selected_groups
+msgid "Selected Groups"
+msgstr "Гурӯҳҳои интихобшуда"
+
+#: assign_groups_for_dataelement
+msgid "Assign Groups for Data Element"
+msgstr "Таъин кардани гурӯҳҳо барои унсури иттилоот"
+
+#: select_dataelement
+msgid "Please select data element"
+msgstr "Лутфан унсури иттилоотро интихоб кунед"
+
+#: option_rename_successfully
+msgid "Category option renamed successfully"
+msgstr "Номи имкони категория бомуваффақият иваз карда шуд"
+
+#: create_new_concept
+msgid "Create new concept"
+msgstr "Сохтани консепсияи нав"
+
+#: edit_concept
+msgid "Edit concept"
+msgstr "Таҳрири консепсия"
+
+#: concept_name
+msgid "Concept name"
+msgstr ""
+
+#: confirm_delete_concept
+msgid "Are you sure you want to delete this concept?"
+msgstr "Оё боварӣ доред, ки ин консепсияро нест кардан емхоҳед?"
+
+#: adding_concept_failed
+msgid "Adding concept failed"
+msgstr "Иловаи консепсия иҷро нашуд"
+
+#: saving_concept_failed
+msgid "Saving concept failed"
+msgstr "Захираи консепсия иҷро нашуд"
+
+#: regex_add_edit_concept
+msgid ""
+"Enter alphabet (a-z A-Z), number (0-9) and underscore (_) characters only."
+msgstr ""
+"Танҳо аломатҳои алифбо (a-z A-Z), рақамҳо (0-9) ва тиреи поёнро (_) истифода "
+"баред."
+
+#: concept_management
+msgid "Concept management"
+msgstr "Идоракунии консепсияҳо"
+
+#: concept
+msgid "Concept"
+msgstr "Консепсия"
+
+#: selected_name
+msgid "Selected name"
+msgstr "Номи интихобшуда"
+
+#: update_category_option
+msgid "Update category option"
+msgstr "Навсозии имкони категория"
+
+#: move_selected
+msgid "Move selected"
+msgstr "Интиқоли интихобшудаҳо"
+
+#: number_value_type
+msgid "Number type"
+msgstr "Навъи адад"
+
+#: number
+msgid "Number"
+msgstr ""
+
+#: int
+msgctxt "int"
+msgid "Integer"
+msgstr "Рақам"
+
+#: view_1
+msgid "View 1"
+msgstr "Намуди 1"
+
+#: view_2
+msgid "View 2"
+msgstr "Намуди 2"
+
+#: zero_is_significant
+msgid "Store zero data values"
+msgstr "Ҳифз кардани қиматҳои сифрӣ"
+
+#: form_name
+msgid "Form name"
+msgstr "Ташаккули ном"
+
+#: compulsory
+msgid "Compulsory"
+msgstr "Ҳатмӣ"
+
+#: data_dimension
+msgid "Data Dimension"
+msgstr ""
+
+#: select_group
+msgid "Select group"
+msgstr "Интихоби гурӯҳ"
+
+#: option_set
+msgctxt "option_set"
+msgid "Option set"
+msgstr "Маҷмӯи имконот"
+
+#: please_select
+msgid "Please select"
+msgstr "Лутфан интихоб кунед"
+
+#: formula
+msgid "Formula"
+msgstr "Формула"
+
+#: legend_set
+msgid "Legend set"
+msgstr "Маҷмӯи аломатҳои шартӣ"
+
+#: skip_total
+msgid "Skip category total in reports"
+msgstr ""
+
+#: data_element_category_option
+msgid "Data Element Category Option"
+msgstr "Имкони категорияи унсури иттилоот"
+
+#: category_option_management
+msgid "Data element category option management"
+msgstr "Идоракунии имкони категорияи унсури иттилоот"
+
+#: category_option_combo_management
+#, fuzzy
+msgid "Data element category option combination management"
+msgstr "Идоракунии ҷуфти категорияи унсури иттилоот"
+
+#: create_new_data_element_category_option
+msgid "Create new data element category option"
+msgstr "Сохтани имкони категорияи унсури иттилоот"
+
+#: edit_data_element_category_option
+msgid "Edit data element category option"
+msgstr "Таҳрири имкони категорияи унсури иттилоот"
+
+#: available_category_options
+msgid "Available category options"
+msgstr "Имконоти категорияи мавҷуда"
+
+#: selected_category_options
+msgid "Selected category options"
+msgstr "Имконоти категорияи интихобшуда"
+
+#: use_as_data_dimension
+msgid "Use as data dimension"
+msgstr "Истифода ҳамчун андозаи иттилоот"
+
+#: tip
+msgid "Tip"
+msgstr "Маслиҳат"
+
+#: use
+msgid "use"
+msgstr "истифода"
+
+#: dimension_type
+msgid "Dimension type"
+msgstr ""
+
+#: disaggregation
+msgid "Disaggregation"
+msgstr ""
+
+#: attribute
+msgid "Attribute"
+msgstr ""
+
+#: option_set_for_data_values
+msgid "Option set for data values"
+msgstr ""
+
+#: comment_option_set
+msgid "Option set for comments"
+msgstr ""
+
+#: organisation_unit_counts
+msgid "Organisation unit counts"
+msgstr ""
+
+#: category_option
+msgid "Category Option"
+msgstr "Имкони категория"
+
+#: category
+msgid "Category"
+msgstr "Категория"
+
+#: category_combo
+msgctxt "category_combo"
+msgid "Category Combination"
+msgstr "Ҷуфти категорияҳо"
+
+#: category_option_group
+msgid "Category Option Group"
+msgstr ""
+
+#: category_option_group_management
+msgid "Category option group management"
+msgstr ""
+
+#: create_new_category_option_group
+#, fuzzy
+msgid "Create new category option group"
+msgstr "Имконоти категорияи интихобшуда"
+
+#: edit_category_option_group
+msgid "Edit category option group"
+msgstr ""
+
+#: confirm_delete_category_option_group
+#, fuzzy
+msgid "Are you sure you want to delete this category option group?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи унсурҳои иттилоотро нест кардан мехоҳед?"
+
+#: category_option_group_set
+msgid "Category Option Group Set"
+msgstr ""
+
+#: category_option_group_set_management
+msgid "Category option group set management"
+msgstr ""
+
+#: create_new_category_option_group_set
+msgid "Create new category option group set"
+msgstr ""
+
+#: edit_category_option_group_set
+msgid "Edit category option group set"
+msgstr ""
+
+#: available_category_option_groups
+#, fuzzy
+msgid "Available category option groups"
+msgstr "Имконоти категорияи мавҷуда"
+
+#: selected_category_option_groups
+#, fuzzy
+msgid "Selected category option groups"
+msgstr "Имконоти категорияи интихобшуда"
+
+#: confirm_delete_category_option_group_set
+#, fuzzy
+msgid "Are you sure you want to delete this category option group set?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи унсурҳои иттилоотро нест кардан мехоҳед?"
+
+#: show_more_options
+msgid "Show more options"
+msgstr ""
+
+#: show_fewer_options
+msgid "Show fewer options"
+msgstr ""
+
+#: id
+msgid "Id"
+msgstr ""
+
+#: min
+msgid "Min"
+msgstr ""
+
+#: max
+msgid "Max"
+msgstr ""
+
+#: category_option_combo
+msgid "Category Option Combination"
+msgstr ""
+
+#: intro_category_option_combo
+msgid ""
+"View and edit data element category option combinations. Category option "
+"combinations are break-downs of category."
+msgstr ""
+
+#: edit_data_element_category_option_combo
+#, fuzzy
+msgid "Edit data element category option combo"
+msgstr "Таҳрири имкони категорияи унсури иттилоот"
+
+#: approve_data
+msgid "Approve data"
+msgstr ""
+
+#: decimals_in_data_output
+msgctxt "decimals_in_data_output"
+msgid "Decimals in data output"
+msgstr ""
+
+#: categories
+msgid "Categories"
+msgstr ""
+
+#: ignore_data_approval
+msgid "Ignore data approval"
+msgstr ""
+
+#: data_dimension_type
+msgid "Data dimension type"
+msgstr ""
+
+#: indicator_type
+msgid "Indicator Type"
+msgstr ""
+
+#: indicator_group_set_management
+msgid "Indicator type group set management"
+msgstr ""
+
+#: of_page
+msgid "of"
+msgstr ""
+
+#: management
+msgid "management"
+msgstr ""
+
+#: search_by_name
+msgid "Search by name"
+msgstr ""
+
+#: press_enter_to_search
+msgid "(Press enter to search)"
+msgstr ""
+
+#: filter_menu_items_by_name
+msgid "Filter by name"
+msgstr ""
+
+#: press_enter_to_go_to_first
+msgid "(Press enter to go to first item)"
+msgstr ""
+
+#: search_available
+msgid "Search available"
+msgstr ""
+
+#: search_selected
+msgid "Search selected"
+msgstr ""
+
+#: required
+msgid "(required)"
+msgstr ""
+
+#: aggregation_type
+msgid "Aggregation operator"
+msgstr ""
+
+#: ok
+msgid "Ok!"
+msgstr ""
+
+#: dismiss
+msgid "Dismiss"
+msgstr ""
+
+#: description
+msgctxt "description"
+msgid "Description"
+msgstr ""
+
+#: search_available_selected_items
+msgid "Search available/selected items"
+msgstr ""
+
+#: selected
+msgid "selected"
+msgstr ""
+
+#: indicators
+#, fuzzy
+msgctxt "indicators"
+msgid "Indicators"
+msgstr "Индикатор"
+
+#: category_option_groups
+msgid "Category Option Groups"
+msgstr ""
+
+#: annualized
+msgid "Annualized"
+msgstr ""
+
+#: decimals
+msgctxt "decimals"
+msgid "Decimals in data output"
+msgstr ""
+
+#: constants
+msgid "Constants"
+msgstr ""
+
+#: sharing
+msgid "Sharing"
+msgstr ""
+
+#: search
+msgid "Search"
+msgstr ""
+
+#: program_tracked_entity_attributes
+msgid "Attributes"
+msgstr ""
+
+#: program_indicators
+#, fuzzy
+msgctxt "program_indicators"
+msgid "Indicators"
+msgstr "Индикатор"
+
+#: program_data_elements
+#, fuzzy
+msgctxt "program_data_elements"
+msgid "Data elements"
+msgstr "Унсури иттилоот"
+
+#: please_select_a_program
+msgid "Please select a program"
+msgstr ""
+
+#: no_tracked_entity_attributes
+msgid "No tracked entity attributes for this program"
+msgstr ""
+
+#: no_program_indicators
+msgid "No program indicators for this program"
+msgstr ""
+
+#: no_program_data_elements
+msgid "No program data elements for this program"
+msgstr ""
+
+#: members
+msgid "Members"
+msgstr ""
+
+#: can_edit
+msgid "Can Edit"
+msgstr ""
+
+#: hidden_by_filters
+msgid "hidden by filters"
+msgstr ""
+
+#: value_type
+msgid "Value type"
+msgstr ""
+
+#: value_required
+msgid "This field is required"
+msgstr ""
+
+#: value_not_unique
+msgid "This field requires a unique value"
+msgstr ""
+
+#: value_should_be_empty_string_or_undefined
+msgid "Value should be empty"
+msgstr ""
+
+#: value_should_be_a_url
+msgid "This field required a valid url"
+msgstr ""
+
+#: value_should_be_a_relative_url
+msgid "This field requires a relative URL"
+msgstr ""
+
+#: value_should_be_list_of_urls
+msgid "This field requires a list of URLs"
+msgstr ""
+
+#: value_should_be_an_email
+msgid "This field contains an e-mail address"
+msgstr ""
+
+#: value_should_be_a_number
+msgid "This field should contain a number"
+msgstr ""
+
+#: number_should_not_have_decimals
+msgid "The number should not have decimals"
+msgstr ""
+
+#: value_not_max
+msgid "The value is to long/large"
+msgstr ""
+
+#: value_not_min
+msgid "The value is to short/small"
+msgstr ""
+
+#: could_not_run_async_validation
+msgid "Unable to run async validator"
+msgstr ""
+
+#: list
+msgid "List"
+msgstr ""
+
+#: add
+msgid "Add"
+msgstr ""
+
+#: done
+msgid "Done"
+msgstr ""
+
+#: letter
+msgid "Letter"
+msgstr ""
+
+#: boolean
+msgid "Yes/No"
+msgstr ""
+
+#: true_only
+msgid "Yes Only"
+msgstr ""
+
+#: file_resource
+msgid "File"
+msgstr ""
+
+#: integer_positive
+msgid "Positive Integer"
+msgstr ""
+
+#: integer_zero_or_positive
+msgid "Positive or Zero Integer"
+msgstr ""
+
+#: coordinate
+msgid "Coordinate"
+msgstr ""
+
+#: integer_negative
+msgid "Negative Integer"
+msgstr ""
+
+#: integer
+msgctxt "integer"
+msgid "Integer"
+msgstr "Рақам"
+
+#: datetime
+msgid "Date & Time"
+msgstr ""
+
+#: time
+msgid "Time"
+msgstr ""
+
+#: tracker_associate
+msgid "Tracker Associate"
+msgstr ""
+
+#: average_sum_org_unit
+msgid "Average (sum in org unit hierarchy)"
+msgstr ""
+
+#: average_sum_int
+msgid "Average (sum of numbers)"
+msgstr ""
+
+#: average_sum_int_disaggregation
+msgid "Average (sum of numbers, disaggregation)"
+msgstr ""
+
+#: average_int
+msgid "Average (number)"
+msgstr ""
+
+#: average_int_disaggregation
+msgid "Average (number, disaggregation)"
+msgstr ""
+
+#: average_bool
+msgid "Average (Yes/No)"
+msgstr ""
+
+#: created
+msgid "Created"
+msgstr ""
+
+#: display_description
+msgctxt "display_description"
+msgid "Description"
+msgstr ""
+
+#: details
+msgid "Show details"
+msgstr ""
+
+#: share
+msgid "Share"
+msgstr ""
+
+#: metadata_management_overview
+msgid "Metadata management overview"
+msgstr ""
+
+#: metadata_group_editor
+msgid "Metadata group editor"
+msgstr ""
+
+#: please_select_object_type
+msgid "Please select an object type"
+msgstr ""
+
+#: back
+msgid "Back"
+msgstr ""
+
+#: public_access
+msgid "Public access"
+msgstr ""
+
+#: view
+msgid "View"
+msgstr ""
+
+#: was_not_deleted
+msgid "was not deleted"
+msgstr ""
+
+#: was_deleted
+msgid "was deleted"
+msgstr ""
+
+#: select_locale
+msgid "Select locale"
+msgstr ""
+
+#: translation_dialog_title
+msgctxt "translation_dialog_title"
+msgid "Translate"
+msgstr "Тарҷума"
+
+#: translation_saved
+msgid "Translation saved"
+msgstr ""
+
+#: translation_save_error
+msgid "Could not save the translation."
+msgstr ""
+
+#: select_a_locale_to_enter_translations_for_that_language
+msgid "Select a locale to enter translations for"
+msgstr ""
+
+#. # Data Set
+#. #TODO: used to be dataset_management
+#: data_set_management
+#, fuzzy
+msgid "Data set management"
+msgstr "Идоракунии унсурҳои иттилоот"
+
+#. #TODO: used to be dataset
+#: data_set
+msgid "Data Set"
+msgstr ""
+
+#: intro_data_set
+msgid ""
+"Create, update, view and delete data sets and custom forms. A data set is a "
+"collection of data elements for which data is entered."
+msgstr ""
+
+#: pdfDataSetForm
+msgid "Get PDF for data entry"
+msgstr ""
+
+#. # Organisation units
+#: create_new_root
+#, fuzzy
+msgid "Are you sure you want to create a new root organisation unit?"
+msgstr "Оё боварӣ доред, ки ин навъи индикаторро нест кардан мехоҳед?"
+
+#: create_new_organisation_unit
+msgid "Create new organisation unit"
+msgstr ""
+
+#: registers_data
+msgid "Registers data"
+msgstr ""
+
+#: crease_new_organisation_unit_group
+msgid "Create new organisation unit group"
+msgstr ""
+
+#: hierarchy_operations
+msgid "Hierarchy operations"
+msgstr ""
+
+#: select_an_organisation_unit_to_move
+msgid "Select an organisation unit to move"
+msgstr ""
+
+#: not_selected
+#, fuzzy
+msgid "Not selected"
+msgstr "Интиқоли интихобшудаҳо"
+
+#: confirm
+msgid "Confirm"
+msgstr ""
+
+#: select_the_new_parent_organisation_unit_for_the_one_to_move
+msgid "Select the new parent organisation unit for the one to move"
+msgstr ""
+
+#: reset
+msgid "Reset"
+msgstr ""
+
+#: organisation_unit
+msgid "Organisation Unit"
+msgstr ""
+
+#: organisation_unit_group
+msgid "Organisation Unit Group"
+msgstr ""
+
+#: hierarchy_operations_menu
+msgid "Hierarchy Operations"
+msgstr ""
+
+#: organisation_unit_level
+msgid "Organisation Unit Level"
+msgstr ""
+
+#: organisation_unit_management
+msgid "Organisation unit management"
+msgstr ""
+
+#: this_organisation_unit_has_no_children
+msgid "This organisation unit has no children"
+msgstr ""
+
+#: organisation_unit_group_management
+msgid "Organisation unit group management"
+msgstr ""
+
+#: number_of_group_members
+msgid "Number of group members"
+msgstr ""
+
+#: edit_organisation_unit
+msgid "Edit organisation unit"
+msgstr ""
+
+#: edit_organisation_unit_group
+msgid "Edit organisation unit group"
+msgstr ""
+
+#: the_selected_organisation_unit_is_already_a_root
+msgid ""
+"The selected organisation unit is already a root. Please select a new parent "
+"organisation unit"
+msgstr ""
+
+#: the_selected_organisation_unit_will_be_moved_to_root
+msgid "The selected organisation unit will be moved to root"
+msgstr ""
+
+#: an_organisation_unit_cannot_be_moved_to_itself
+msgid ""
+"An organisation unit cannot be moved to itself. Please select a new parent "
+"organisation unit"
+msgstr ""
+
+#: an_organisation_unit_cannot_be_moved_to_be_its_own_child
+msgid ""
+"An organisation unit cannot be moved to be its own child. Please select a "
+"new parent organisation unit"
+msgstr ""
+
+#: the_new_parent_organisation_unit_is_approved
+msgid "The new parent organisation unit is approved"
+msgstr ""
+
+#: name_in_use
+msgid "The name is already in use. Please choose a different name."
+msgstr ""
+
+#: code_in_use
+msgid "The code is already in use. Please choose a different code."
+msgstr ""
+
+#: this_organisation_unit_cannot_moved
+msgid ""
+"This organisation unit cannot be moved. Please select a new organisation "
+"unit to move"
+msgstr ""
+
+#: the_organisation_unit_to_move_is_approved
+msgid "The organisation unit to move is approved"
+msgstr ""
+
+#: not_selected_moved_to_root_position
+msgid "Not selected, moved to root position"
+msgstr ""
+
+#: verification_of_the_new_parent_organisation_unit_failed
+msgid ""
+"Verification of the new parent organisation unit failed with the following "
+"message"
+msgstr ""
+
+#: confirm_to_delete_organisation_unit
+#, fuzzy
+msgctxt "confirm_to_delete_organisation_unit"
+msgid "Are you sure you want to delete this organisation unit?"
+msgstr "Оё боварӣ доред, ки ин навъи индикаторро нест кардан мехоҳед?"
+
+#: adding_the_organisation_unit_failed
+#, fuzzy
+msgid "Adding the organisation unit failed with the following message"
+msgstr "Иловаи навъи индикаторҳо бо паёми зерин иҷро нашуд"
+
+#: saving_the_organisation_unit_failed
+#, fuzzy
+msgid "Saving the organisation unit failed with the following message"
+msgstr "Захиракунии навъи индикаторҳо бо паёми зерин иҷро нашуд"
+
+#: confirm_to_delete_organisation_unit_group
+#, fuzzy
+msgctxt "confirm_to_delete_organisation_unit_group"
+msgid "Are you sure you want to delete this Organisation Unit Group?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи индикаторҳоро нест кардан мехоҳед?"
+
+#: confirm_to_delete_organisation_unit_group_set
+#, fuzzy
+msgctxt "confirm_to_delete_organisation_unit_group_set"
+msgid "Are you sure you want to delete this organisation unit group set?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи индикаторҳоро нест кардан мехоҳед?"
+
+#: organisation_unit_group_set_management
+msgid "Organisation unit group set management"
+msgstr ""
+
+#: organisation_unit_group_set
+msgid "Organisation Unit Group Set"
+msgstr ""
+
+#: saving_the_organisation_unit_group_set_failed
+#, fuzzy
+msgid ""
+"Saving the organisation unit group set failed with the following message"
+msgstr "Захиракунии навъи индикаторҳо бо паёми зерин иҷро нашуд"
+
+#: exclusive
+msgid "Exclusive"
+msgstr ""
+
+#: create_new_organisation_unit_group_set
+msgid "Create new organisation unit group set"
+msgstr ""
+
+#: edit_organisation_unit_group_set
+msgid "Edit organisation unit group set"
+msgstr ""
+
+#: the_group_set_can_not_be_creat_bec_it_is_exc_and
+msgid "The group set can not be created because it is exclusive and"
+msgstr ""
+
+#: is_a_member_of_more_than_one_selected_group
+msgid "is a member of more than one selected group"
+msgstr ""
+
+#: move_all
+msgid "Move all"
+msgstr ""
+
+#: organisation_unit_level_management
+msgid "Organisation unit level management"
+msgstr ""
+
+#: level
+msgid "Level"
+msgstr ""
+
+#: code
+msgid "Code"
+msgstr ""
+
+#: registers_date
+msgid "Registers date"
+msgstr ""
+
+#: latitude
+msgid "Latitude"
+msgstr ""
+
+#: longitude
+msgid "Longitude"
+msgstr ""
+
+#: latitude_optional
+msgid "Latitude (optional)"
+msgstr ""
+
+#: longitude_optional
+msgid "Longitude (optional)"
+msgstr ""
+
+#: assign_to_compulsory_group_set
+msgid "Assign to compulsory organisation unit group set"
+msgstr ""
+
+#: intro_organisation_unit
+msgid ""
+"Create, modify, view and delete organisation units, which can be "
+"departments, offices, hospitals and clinics."
+msgstr ""
+
+#: intro_organisation_unit_group
+msgid ""
+"Create, modify, view and delete organisation unit groups. Groups are used "
+"for improved analysis."
+msgstr ""
+
+#: intro_organisation_unit_group_set
+msgid ""
+"Create, modify, view and delete organisation unit group sets. Group sets are "
+"used for improved analysis."
+msgstr ""
+
+#: intro_organisation_unit_level
+msgid ""
+"Create, modify, view and delete descriptive names for the organisation unit "
+"levels in the system."
+msgstr ""
+
+#: intro_organisation_unit_search
+msgid ""
+"Search organisation units based on name and group sets. View extended "
+"information for individual units."
+msgstr ""
+
+#: intro_hierarchy_operations_menu
+msgid ""
+"Move organisation units in the organisation unit tree. All children will be "
+"moved along with the unit."
+msgstr ""
+
+#: loading
+msgid "Loading"
+msgstr ""
+
+#: coordinates
+msgid "Coordinates"
+msgstr ""
+
+#: organisation_unit_search
+msgid "Organisation Unit Search"
+msgstr ""
+
+#: organisation_unit_search_management
+msgid "Organisation unit search"
+msgstr ""
+
+#: criteria
+msgid "Criteria"
+msgstr ""
+
+#: options
+msgid "Options"
+msgstr ""
+
+#: organisation_units
+msgid "organisation units"
+msgstr ""
+
+#: found
+msgid "Found"
+msgstr ""
+
+#: all
+msgid "All"
+msgstr ""
+
+#: please_select_from_tree
+msgid "Please select from tree (optional)"
+msgstr ""
+
+#: polygon
+msgid "Polygon"
+msgstr ""
+
+#: point
+msgid "Point"
+msgstr ""
+
+#: offline_levels
+msgid "Offline levels"
+msgstr ""
+
+#: available_data_sets
+#, fuzzy
+msgid "Available data sets"
+msgstr "Унсурҳои иттилооти мавҷуда"
+
+#: selected_data_sets
+#, fuzzy
+msgid "Selected data sets"
+msgstr "Унсурҳои иттилооти интихобшуда"
+
+#: limited
+msgid "Limited"
+msgstr ""
+
+#: get_report_as_xls
+msgid "Download as Excel"
+msgstr ""
+
+#: get_report_as_csv
+msgid "Download as CSV"
+msgstr ""
+
+#: get_report_as_pdf
+msgid "Download as PDF"
+msgstr ""
+
+#: please_wait_while_downloading
+msgid "Please wait while downloading report"
+msgstr ""
+
+#: please_wait_while_searching
+msgid "Please wait while searching"
+msgstr ""
+
+#: hierarchy
+msgid "Hierarchy"
+msgstr ""
+
+#: data_sets
+msgid "Data sets"
+msgstr ""
+
+#: organisation_unit_groups
+msgid "Organisation unit groups"
+msgstr ""
+
+#: phone_number
+msgid "Phone number"
+msgstr ""
+
+#: select_symbol
+msgid "Select symbol"
+msgstr ""
+
+#: symbol
+msgid "Symbol"
+msgstr ""
+
+#: name_code_identifier
+msgid "Name, code or identifier"
+msgstr ""
+
+#: identifier
+msgid "Identifier"
+msgstr ""
+
+#: short_name_in_use
+msgid "The short name is already in use. Please choose a different short name"
+msgstr ""
+
+#: show_all_sections
+msgid "Show all sections"
+msgstr ""
+
+#: organisation_unit_levels_not_yet_saved
+msgid "Organisation unit level is not yet saved, please save"
+msgstr ""
+
+#: no_value
+msgid "<No value>"
+msgstr ""
+
+#: determining_your_root_orgunits
+msgid "Determining your root organisation units"
+msgstr ""
+
+#: filter_organisation_units_by_name
+msgid "Filtering organisation units by name"
+msgstr ""
+
+#: organisation_units_selected
+msgid "Organisation units selected"
+msgstr ""
+
+#: address
+msgid "Address"
+msgstr ""
+
+#: contact_person
+msgid "Contact person"
+msgstr ""
+
+#: opening_date
+msgid "Opening date"
+msgstr ""
+
+#: closed_date
+msgid "Closed date"
+msgstr ""
+
+#: comment
+msgid "Comment"
+msgstr ""
+
+#: saving
+msgid "Saving"
+msgstr ""
+
+#: data_element_section
+#, fuzzy
+msgid "Data Elements"
+msgstr "Унсури иттилоот"
+
+#: indicator_section
+#, fuzzy
+msgctxt "indicator_section"
+msgid "Indicators"
+msgstr "Индикатор"
+
+#: organisation_unit_section
+msgid "Organisation Units"
+msgstr ""
+
+#: href
+msgid "Api URL"
+msgstr ""
+
+#: actions
+msgid "Actions"
+msgstr ""
+
+#. # Error codes can be translated as follows. If no translation is found the `message` property on the errorMessage object is used
+#: move_$$ouCount$$_organisation_units
+msgid "Move $$ouCount$$ organisation units"
+msgstr ""
+
+#: successfully_moved_$$ouName$$
+msgid "Successfully moved $$ouName$$"
+msgstr ""
+
+#: failed_to_move_$$ouName$$_($$errorMessage$$)
+msgid "Failed to move $$ouName$$ ($$errorMessage$$)"
+msgstr ""
+
+#: move
+msgid "Move"
+msgstr ""
+
+#: select_organisation_units_to_move_from_the_left_tree
+msgid "Select organisation unit(s) to move from the left"
+msgstr ""
+
+#: new_parent
+msgid "New parent"
+msgstr ""
+
+#: select_new_parent_for_organisation_units_from_the_right_tree
+msgid "Select new parent for organisation unit(s) from the right tree"
+msgstr ""
+
+#: public_can_edit
+msgid "Public view/edit"
+msgstr ""
+
+#: public_can_view
+msgid "Public view"
+msgstr ""
+
+#: public_none
+msgid "No public access"
+msgstr ""
+
+#: you_can_not_move_higher_level_organisation_units_to_its_descendants
+msgid "You can not move an organisation unit to one of its descendants."
+msgstr ""
+
+#: confirm_delete_organisation_unit
+#, fuzzy
+msgctxt "confirm_delete_organisation_unit"
+msgid "Are you sure you want to delete this organisation unit?"
+msgstr "Оё боварӣ доред, ки ин навъи индикаторро нест кардан мехоҳед?"
+
+#: confirm_delete_organisation_unit_group
+#, fuzzy
+msgctxt "confirm_delete_organisation_unit_group"
+msgid "Are you sure you want to delete this Organisation Unit Group?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи индикаторҳоро нест кардан мехоҳед?"
+
+#: confirm_delete_organisation_unit_group_set
+#, fuzzy
+msgctxt "confirm_delete_organisation_unit_group_set"
+msgid "Are you sure you want to delete this organisation unit group set?"
+msgstr "Оё боварӣ доред, ки ин гурӯҳи индикаторҳоро нест кардан мехоҳед?"
+
+#: organisation_unit_levels_save_success
+msgid "Organisation unit levels saved!"
+msgstr ""
+
+#: organisation_unit_levels_save_failed
+msgid "Could not save organisation unit levels."
+msgstr ""
+
+#. # Data administration section
+#: data_administration_section
+msgid "Data administration"
+msgstr ""
+
+#. # Data administration section -- Constants
+#: constant_management
+#, fuzzy
+msgid "Constant management"
+msgstr "Идоракунии консепсияҳо"
+
+#: constant
+msgctxt "constant"
+msgid "Constant"
+msgstr ""
+
+#. # Data administration section -- Attribute
+#: attribute_management
+msgid "Attribute management"
+msgstr ""
+
+#: mandatory
+msgid "Mandatory"
+msgstr ""
+
+#: unique
+msgid "Unique"
+msgstr ""
+
+#: data_element_attribute
+#, fuzzy
+msgid "Data element"
+msgstr "Унсури иттилоот"
+
+#: data_element_group_attribute
+#, fuzzy
+msgid "Data element group"
+msgstr "Гурӯҳи унсурҳои иттилоот"
+
+#: indicator_attribute
+msgctxt "indicator_attribute"
+msgid "Indicator"
+msgstr "Индикатор"
+
+#: indicator_group_attribute
+#, fuzzy
+msgid "Indicator group"
+msgstr "Гурӯҳи индикаторҳо"
+
+#: data_set_attribute
+msgid "Data set"
+msgstr ""
+
+#: organisation_unit_attribute
+msgid "Organisation unit"
+msgstr ""
+
+#: organisation_unit_group_attribute
+msgid "Organisation unit group"
+msgstr ""
+
+#: organisation_unit_group_set_attribute
+msgid "Organisation unit group set"
+msgstr ""
+
+#: user_attribute
+msgid "User"
+msgstr ""
+
+#: user_group_attribute
+msgid "User group"
+msgstr ""
+
+#: program_attribute
+msgid "Program"
+msgstr ""
+
+#: program_stage_attribute
+msgid "Program stage"
+msgstr ""
+
+#: tracked_entity_attribute
+msgid "Tracked entity"
+msgstr ""
+
+#: tracked_entity_attribute_attribute
+msgid "Tracked entity attribute"
+msgstr ""
+
+#: category_option_attribute
+#, fuzzy
+msgid "Category option"
+msgstr "Имконоти категорияҳо"
+
+#: category_option_group_attribute
+msgid "Category option group"
+msgstr ""
+
+#: document_attribute
+msgid "Document"
+msgstr ""
+
+#: option_attribute
+msgid "Option"
+msgstr ""
+
+#: option_set_attribute
+msgctxt "option_set_attribute"
+msgid "Option set"
+msgstr "Маҷмӯи имконот"
+
+#: constant_attribute
+msgctxt "constant_attribute"
+msgid "Constant"
+msgstr ""
+
+#: legend_set_attribute
+msgid "Legend"
+msgstr ""
+
+#~ msgid "Indicator"
+#~ msgstr "Индикатор"
+
+#~ msgid "Integer"
+#~ msgstr "Рақам"
+
+#~ msgid "Option set"
+#~ msgstr "Маҷмӯи имконот"
+
+#~ msgid "Translate"
+#~ msgstr "Тарҷума"

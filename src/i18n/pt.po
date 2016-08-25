@@ -1,0 +1,2207 @@
+#. extracted from i18n_module_en.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-30 01:55-0400\n"
+"PO-Revision-Date: 2016-07-27 20:49+0000\n"
+"Last-Translator: jcmavimbe <jcmavimbe@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.8\n"
+"X-POOTLE-MTIME: 1469652542.000000\n"
+
+#: aggregate
+msgid "Aggregate"
+msgstr "Agregado"
+
+#: tracker
+msgid "Tracker"
+msgstr "Seguimento"
+
+#: no_option_assigned
+msgid "Use of category with an empty option is not allowed!"
+msgstr "Uso de categorias com opcções nulas não permitido"
+
+#: number_of_category_options
+msgid "Number of category options"
+msgstr "Número de opcções de categorias"
+
+#: number_of_categories
+msgid "Number of categories"
+msgstr "Número de categorias"
+
+#: sort
+msgid "Sort"
+msgstr "Ordenar"
+
+#: create_new_data_element_category
+msgid "Create new data element category"
+msgstr "Criar nova categoria de elemento de dados"
+
+#: selected_categories
+msgid "Selected categories"
+msgstr "Categorias seleccionadas"
+
+#: available_categories
+msgid "Available categories"
+msgstr "Categorias disponíveis"
+
+#: category_management
+msgid "Data element category management"
+msgstr "Gestão da categoria do elemento de dados"
+
+#: category_combo_management
+msgid "Data element category combination management"
+msgstr "Gestão da combinação de categoria do elemento de dados"
+
+#: create_new_data_element_category_combo
+#, fuzzy
+msgid "Create new data element category combination"
+msgstr "Créer une nouvelle combinaison de catégories"
+
+#: confirm_delete_category_option
+#, fuzzy
+msgid "Are you sure you want to delete this data element category option?"
+msgstr "Etes vous sûr de vouloir supprimer ce groupe d'élément de données ?"
+
+#: confirm_delete_category
+#, fuzzy
+msgid "Are you sure you want to delete this data element category?"
+msgstr "Etes vous sûr de vouloir supprimer ce groupe d'élément de données ?"
+
+#: confirm_delete_category_combo
+#, fuzzy
+msgid "Are you sure you want to delete this data element category combo?"
+msgstr "Etes vous sûr de vouloir supprimer ce groupe d'élément de données ?"
+
+#: edit_data_element_category
+#, fuzzy
+msgid "Edit data element category"
+msgstr "Modifier la catégorie d'élément de donnée"
+
+#: edit_data_element_category_combo
+#, fuzzy
+msgid "Edit data element category combination"
+msgstr "Modifier la combinaison de catégories d'élément de donnée"
+
+#: category_combination
+#, fuzzy
+msgctxt "category_combination"
+msgid "Category Combination"
+msgstr "Combinaison de Catégories"
+
+#: data_element_category_combo_details
+#, fuzzy
+msgid "Data element category combo details"
+msgstr "Détails de la combo de catégorie d'élément de donnée"
+
+#: data_element_category
+#, fuzzy
+msgid "Data Element Category"
+msgstr "Catégories d'élément de donnée"
+
+#: data_element_category_combo
+#, fuzzy
+msgid "Data Element Category Combination"
+msgstr "Combinaison de catégories d'élément de donnée"
+
+#: select
+#, fuzzy
+msgid "Select"
+msgstr "Selectionner"
+
+#: data_element
+#, fuzzy
+msgid "Data Element"
+msgstr "Élément de donnée"
+
+#: data_element_group
+#, fuzzy
+msgid "Data Element Group"
+msgstr "Groupe d'éléments de données"
+
+#: data_element_groups
+#, fuzzy
+msgid "Data Element Groups"
+msgstr "Groupes d'éléments de données"
+
+#: data_elements
+#, fuzzy
+msgctxt "data_elements"
+msgid "Data elements"
+msgstr "Elemento de Dados"
+
+#: indicator
+msgctxt "indicator"
+msgid "Indicator"
+msgstr "Indicador"
+
+#: indicator_group
+#, fuzzy
+msgid "Indicator Group"
+msgstr "Groupe d'indicateurs"
+
+#: indicator_groups
+#, fuzzy
+msgid "Indicator Groups"
+msgstr "Groupes d'indicateurs"
+
+#: create_new_data_element
+#, fuzzy
+msgid "Create new data element"
+msgstr "Créer un nouvel élément de données"
+
+#: domain_type
+#, fuzzy
+msgid "Domain Type"
+msgstr "Type de domaine"
+
+#: create_new_data_element_group
+#, fuzzy
+msgid "Create new data element group"
+msgstr "Créer un nouveau groupe d'éléments de données"
+
+#: group_members
+#, fuzzy
+msgid "Group members"
+msgstr "Membres du groupe"
+
+#: available_data_elements
+#, fuzzy
+msgid "Available data elements"
+msgstr "Eléments de données disponibles"
+
+#: create_new_indicator
+#, fuzzy
+msgid "Create new indicator"
+msgstr "Créer un nouvel indicateur"
+
+#: create_new_indicator_group
+#, fuzzy
+msgid "Create new indicator group"
+msgstr "Créer un nouveau groupe d'indicateurs"
+
+#: create_new_indicator_type
+#, fuzzy
+msgid "Create new indicator type"
+msgstr "Créer un nouveau type d'indicateurs"
+
+#: factor
+#, fuzzy
+msgid "Factor"
+msgstr "Facteur"
+
+#: data_element_management
+#, fuzzy
+msgid "Data element management"
+msgstr "Gestion d'éléments de données"
+
+#: data_element_group_management
+#, fuzzy
+msgid "Data element group management"
+msgstr "Gestion de groupes d'éléments de données"
+
+#: number_of_members
+#, fuzzy
+msgid "Number of members"
+msgstr "Nombre de membres"
+
+#: export
+#, fuzzy
+msgid "Export"
+msgstr "Exporter"
+
+#: import
+#, fuzzy
+msgid "Import"
+msgstr "Importer"
+
+#: indicator_management
+#, fuzzy
+msgid "Indicator management"
+msgstr "Gestion d'indicateurs"
+
+#: indicator_group_management
+#, fuzzy
+msgid "Indicator group management"
+msgstr "Gestion groupes d'indicateurs"
+
+#: indicator_type_management
+#, fuzzy
+msgid "Indicator type management"
+msgstr "Gestion de types d'indicateurs"
+
+#: edit_data_element
+#, fuzzy
+msgid "Edit data element"
+msgstr "Modifier l'élément de donnée"
+
+#: edit_data_element_group
+#, fuzzy
+msgid "Edit data element group"
+msgstr "Modifier un groupe d'éléments de données"
+
+#: edit_indicator
+#, fuzzy
+msgid "Edit indicator"
+msgstr "Modifier l'indicateur"
+
+#: edit_indicator_group
+#, fuzzy
+msgid "Edit indicator group"
+msgstr "Modifier le groupe d'indicateurs"
+
+#: edit_indicator_type
+#, fuzzy
+msgid "Edit indicator type"
+msgstr "Modifier le type d'indicateur"
+
+#: edit_numerator
+#, fuzzy
+msgid "Edit numerator"
+msgstr "Modifier le numérateur"
+
+#: edit_denominator
+#, fuzzy
+msgid "Edit denominator"
+msgstr "Modifier le dénominateur"
+
+#: confirm_delete_data_element
+#, fuzzy
+msgid "Are you sure you want to delete this data element?"
+msgstr "Etes vous sûr de vouloir supprimer cet élément de données ?"
+
+#: confirm_delete_data_element_group
+#, fuzzy
+msgid "Are you sure you want to delete this data element group?"
+msgstr "Etes vous sûr de vouloir supprimer ce groupe d'élément de données ?"
+
+#: confirm_delete_data_element_group_set
+#, fuzzy
+msgid "Are you sure you want to delete this data element group set?"
+msgstr "Etes vous sûr de vouloir supprimer ce groupe d'élément de données ?"
+
+#: confirm_delete_indicator_group
+#, fuzzy
+msgid "Are you sure you want to delete this indicator group?"
+msgstr "Etes vous sûr de vouloir supprimer ce groupe d'indicateurs ?"
+
+#: confirm_delete_indicator_type
+#, fuzzy
+msgid "Are you sure you want to delete this indicator type?"
+msgstr "Etes vous sûr de vouloir supprimer ce type d'indicateur ?"
+
+#: confirm_delete_data_dictionary
+#, fuzzy
+msgid "Are you sure you want to delete this data dictionary?"
+msgstr "Etes-vous sûr de vouloir supprimer ce dictionnaire de données?"
+
+#: everything_is_ok
+#, fuzzy
+msgid "Everything is OK"
+msgstr "Tout est ok"
+
+#: adding_data_element_group_failed
+#, fuzzy
+msgid "Adding the data element group failed with the following message"
+msgstr "L'ajout du groupe d'élément de données a échoué avec le message suivant"
+
+#: saving_data_element_group_failed
+#, fuzzy
+msgid "Saving the data element group failed with the following message"
+msgstr ""
+"L'enregistrement du groupe d'éléments de données a échoué avec le message "
+"suivant"
+
+#: adding_indicator_group_failed
+#, fuzzy
+msgid "Adding the indicator group failed with the following message"
+msgstr "L'ajout du groupe d'indicateurs a échoué avec le message suivant"
+
+#: saving_indicator_group_failed
+#, fuzzy
+msgid "Saving the indicator group failed with the following message"
+msgstr ""
+"L'enregistrement du groupe d'indicateurs a échoué avec le message suivant"
+
+#: adding_indicator_type_failed
+#, fuzzy
+msgid "Adding the indicator type failed with the following message"
+msgstr "L'ajout du type d'indicateur a échoué avec le message suivant"
+
+#: saving_indicator_type_failed
+#, fuzzy
+msgid "Saving the indicator type failed with the following message"
+msgstr "L'enregistrement du type d'indicateur a échoué avec le message suivant"
+
+#: calculated
+#, fuzzy
+msgid "Calculated"
+msgstr "Calculé"
+
+#: available_dataelements
+#, fuzzy
+msgid "Available Data Elements"
+msgstr "Eléments de données disponibles"
+
+#: selected_dataelements
+#, fuzzy
+msgid "Selected Data Elements"
+msgstr "Eléments de données sélectionnés"
+
+#: add_selected
+#, fuzzy
+msgid "Add selected"
+msgstr "Ajouter la sélection"
+
+#: remove_all
+#, fuzzy
+msgid "Remove all"
+msgstr "Supprimer tout"
+
+#: assign_all
+msgid "Assign all"
+msgstr ""
+
+#: create_new_data_dictionary
+#, fuzzy
+msgid "Create new data dictionary"
+msgstr "Créer un nouveau dictionnaire de données"
+
+#: region
+#, fuzzy
+msgid "Region"
+msgstr "Région"
+
+#: select_domain_type
+msgid "Select domain type"
+msgstr "Veuillez sélectionner un type de domaine"
+
+#: current
+#, fuzzy
+msgid "Current"
+msgstr "Courant"
+
+#: date
+#, fuzzy
+msgid "Date"
+msgstr "Date"
+
+#: selected_data_elements
+#, fuzzy
+msgid "Selected data elements"
+msgstr "Eléments de donnée sélectionnés"
+
+#: selected_indicators
+#, fuzzy
+msgid "Selected indicators"
+msgstr "Indicateurs sélectionnés"
+
+#: available_indicators
+msgid "Available indicators"
+msgstr "Indicadores disponíveis"
+
+#: item_deleted_successfully
+#, fuzzy
+msgid "Item deleted successfully"
+msgstr "Item supprimé avec succès"
+
+#: value
+#, fuzzy
+msgid "Value"
+msgstr "Valeur"
+
+#: confirm_delete_indicator
+msgid "Do you want to delete indicator?"
+msgstr "Do you want to delete indicator?"
+
+#: adding_indicator_failed
+msgid "Adding indicator failed"
+msgstr "Adding indicator failed"
+
+#: saving_indicator_failed
+msgid "Saving indicator failed"
+msgstr "Saving indicator failed"
+
+#: translate
+msgctxt "translate"
+msgid "Translate"
+msgstr "Traduire"
+
+#: select_indicator
+#, fuzzy
+msgid "Please select indicator"
+msgstr "Veuillez selectionner un indicateur"
+
+#: object_not_deleted_associated_by_objects
+#, fuzzy
+msgid "Object not deleted because it is associated by objects of type"
+msgstr "L'objet n'est pas supprimé parce qu'il est associé aux objets de type"
+
+#: hide_warning
+#, fuzzy
+msgid "Hide warning"
+msgstr "Masquer l'avertissement"
+
+#: update_dataelement_group_members
+#, fuzzy
+msgid "Update Data Element Group Member"
+msgstr "Mise à jour le membre du groupe d'élément de données"
+
+#: update_success
+#, fuzzy
+msgid "Update was successful"
+msgstr "Mise à jour réussie"
+
+#: member_of
+#, fuzzy
+msgid "Member of"
+msgstr "Membre de"
+
+#: data_element_group_editor
+#, fuzzy
+msgid "Data Element Group Editor"
+msgstr "Editeur de groupes d'éléments de données"
+
+#: move_up
+#, fuzzy
+msgid "Move up"
+msgstr "Monter"
+
+#: move_down
+#, fuzzy
+msgid "Move down"
+msgstr "Abaisser"
+
+#: move_to_top
+#, fuzzy
+msgid "Move to top"
+msgstr "Déplacer en haut"
+
+#: move_to_bottom
+#, fuzzy
+msgid "Move to bottom"
+msgstr "Déplacer en bas"
+
+#: indicator_sort_order
+#, fuzzy
+msgid "Indicator sort order"
+msgstr "Ordre de tri des indicateurs"
+
+#: data_element_sort_order
+#, fuzzy
+msgid "Data element sort order"
+msgstr "Ordre de tri des éléments de données"
+
+#: indicator_group_editor
+#, fuzzy
+msgid "Indicator Group Editor"
+msgstr "Editeur de groupes d'indicateurs"
+
+#: update_indicator_group_member
+#, fuzzy
+msgid "Update Indicator Member"
+msgstr "Mettre à jour le membre du groupe d'indicateurs"
+
+#: factor_cannot_be_zero
+#, fuzzy
+msgid "Factor cannot be zero"
+msgstr "Le facteur ne peut pas être zéro"
+
+#: url
+msgid "URL"
+msgstr "URL"
+
+#: aggregation_levels
+#, fuzzy
+msgid "Aggregation levels"
+msgstr "Niveaux d'agrégation"
+
+#: available_aggregation_levels
+#, fuzzy
+msgid "Available aggregation levels"
+msgstr "Niveaux d'agrégation disponibles"
+
+#: selected_aggregation_levels
+#, fuzzy
+msgid "Selected aggregation levels"
+msgstr "Niveaux d'agrégation sélectionnés"
+
+#: remove_selected
+#, fuzzy
+msgid "Remove selected"
+msgstr "Supprimer la selection"
+
+#: category_options
+#, fuzzy
+msgid "Category options"
+msgstr "Options de catégorie"
+
+#: add_category_option
+#, fuzzy
+msgid "Add category option"
+msgstr "Ajouter option de catégorie"
+
+#: must_include_category_option
+#, fuzzy
+msgid "Please include one or more category options"
+msgstr "Veuillez inclure une ou plusieurs options de catégorie"
+
+#: specify_category_option_name
+#, fuzzy
+msgid "Please specify a category option name"
+msgstr "Veuillez spécifier le nom de l'option de catégorie"
+
+#: category_option_name_already_exists
+#, fuzzy
+msgid "The category option name already exists"
+msgstr "Le nom de l'option la catégorie existe déjà"
+
+#: data_element_group_set
+#, fuzzy
+msgid "Data Element Group Set"
+msgstr "Ensemble du groupes d'éléments de données"
+
+#: data_element_group_set_management
+#, fuzzy
+msgid "Data element group set management"
+msgstr "Gestion de groupes d'éléments de données"
+
+#: indicator_group_set
+#, fuzzy
+msgid "Indicator Group Set"
+msgstr "Ensemble de groupes d'indicateurs"
+
+#: name_aldready_exists
+#, fuzzy
+msgid "Name already exists !"
+msgstr "Le nom existe déjà!"
+
+#: available_dataelementgroup
+#, fuzzy
+msgid "Available Data Element Groups"
+msgstr "Groupes d'éléments de données disponibles"
+
+#: selected_dataelementgroup
+#, fuzzy
+msgid "Selected Data Element Groups"
+msgstr "Groupes d'éléments de données sélectionnés"
+
+#: add_dataelementgroupset
+#, fuzzy
+msgid "Add Data Element Group Set"
+msgstr "Ajouter un ensemble de groupes d'éléments de données"
+
+#: update_dataelementgroupset
+#, fuzzy
+msgid "Update Data Element Group Set"
+msgstr "Mettre à jour l'ensemble de groupes d'éléments de données"
+
+#: add_indicatorgroupset
+#, fuzzy
+msgid "Add Indicator Group Set"
+msgstr "Ajouter un ensemble de groupes d'indicateurs"
+
+#: update_indicatorgroupset
+#, fuzzy
+msgid "Update Indicator Group Set"
+msgstr "Mettre à jour l' ensemble de groupes d'indicateurs"
+
+#: available_indicatorgroup
+#, fuzzy
+msgid "Available Indicator Groups"
+msgstr "Groupes d'indicateurs disponbles"
+
+#: selected_indicatorgroup
+#, fuzzy
+msgid "Selected Indicator Groups"
+msgstr "Groupes d'indicateurs sélectionnés"
+
+#: last_updated
+#, fuzzy
+msgid "Last updated"
+msgstr "Mis à jour dernièrement"
+
+#: dataelement_id_not_numeric
+#, fuzzy
+msgid "Data element identifier must be a number"
+msgstr "L'identifiant d'élément de donnée doit être un nombre"
+
+#: category_option_combo_id_not_numeric
+#, fuzzy
+msgid "Category option combo identifier must be a number"
+msgstr "La combo d'options de catégorie doit être un nombre"
+
+#: data_element_does_not_exist
+#, fuzzy
+msgid "Identifier does not reference a data element"
+msgstr "L'identifiant ne fait pas référence à un élément de donnée"
+
+#: category_option_combo_does_not_exist
+#, fuzzy
+msgid "Identifier does not reference a category option combo"
+msgstr "L'identifiant ne fait référence à aucune combo d'options de catégorie"
+
+#: expression_not_well_formed
+#, fuzzy
+msgid "Expression is not well formed"
+msgstr "L'expression n'est pas bien formulée"
+
+#: intro_data_element
+#, fuzzy
+msgid ""
+"Create, modify, view and delete data elements. Data elements are phenomena "
+"for which will be captured and analyzed."
+msgstr ""
+"Créer, modifier, voir et supprimer des éléments de données.Les éléments de "
+"données sont des phénomènes pour lesquels les données seront collectées et "
+"analysées"
+
+#: intro_data_element_group
+#, fuzzy
+msgid ""
+"Create, modify, view and delete data element groups. Groups are used for "
+"improved analysis."
+msgstr ""
+"Créer, modifier, voir et supprimer des groupes d'éléments de données. Les "
+"groupes sont utilisés pour affiner les analyses."
+
+#: intro_data_element_group_editor
+#, fuzzy
+msgid ""
+"Easily add or remove data elements to and from data element groups, as well "
+"as deleted data elements."
+msgstr ""
+"Ajouter ou retirer facilement un élément de donnée d'un groupe ainsi qu'en "
+"supprimer."
+
+#: intro_data_element_group_set
+#, fuzzy
+msgid ""
+"Create, modify, view and delete data element group sets. Group sets are used "
+"for improved analysis."
+msgstr ""
+"Créer, modifier, voir et supprimer les ensembles groupes d'éléments de "
+"données.Les ensembles de groupes d'éléments de données sont utilisés pour "
+"affiner les analyses"
+
+#: intro_category_option
+msgid ""
+"Create, modify, view and delete data element category options. Category "
+"options are options with in category."
+msgstr ""
+"Create, modify, view and delete data element category options. Category "
+"Option are fine-grained break-downs of catagory."
+
+#: intro_category
+msgid ""
+"Create, modify, view and delete data element categories. Categories are used "
+"for disaggregation of data elements."
+msgstr ""
+"Create, modify, view and delete data element categories. Categories are fine-"
+"grained break-downs of data elements."
+
+#: intro_category_combo
+msgid "Create, modify, view and delete data element category combinations."
+msgstr "Create, modify, view and delete data element category combinations."
+
+#: intro_category_option_group
+msgid ""
+"Create, modify, view and delete category option groups, which can be used to "
+"classify category options."
+msgstr ""
+"Create, modify, view and delete category option groups, which can be used to "
+"classify category options."
+
+#: intro_category_option_group_set
+msgid ""
+"Create, modify, view and delete category option group sets, which can be "
+"used for improved data analysis."
+msgstr ""
+"Create, modify, view and delete category option group sets, which can be "
+"used for improved data analysis."
+
+#: intro_indicator
+#, fuzzy
+msgid ""
+"Create, modify, view and delete indicators. An indicator is a formula "
+"consisting of data elements and numbers."
+msgstr ""
+"Créer, modifier, voir et supprimer des indicateurs. Un indicateur est une "
+"formule contenant des éléments de données et des nombres."
+
+#: intro_indicator_type
+#, fuzzy
+msgid ""
+"Create, modify, view and delete indicator types. An indicator type is a "
+"factor for an indicator, like percentage."
+msgstr ""
+"Créer, modifier, voir et supprimer des types d'indicateurs. Un type "
+"d'indicateur est un facteur pour un indicateur, genre pourcentage."
+
+#: intro_indicator_group
+#, fuzzy
+msgid ""
+"Create, modify, view and delete indicator groups. Groups are used for "
+"improved analysis."
+msgstr ""
+"Créer, modifier, voir et supprimer des groupes d'indicateurs. Les groupes "
+"sont utilisés pour affiner les analyses."
+
+#: intro_indicator_group_editor
+#, fuzzy
+msgid ""
+"Easily add or remove indicators to and from indicator groups, as well as "
+"delete indicators."
+msgstr ""
+"Ajouter ou retirer facilement un indicateur à d'un groupe  ainsi qu'en "
+"supprimer."
+
+#: intro_indicator_group_set
+#, fuzzy
+msgid ""
+"Create, modify, view and delete indicator group sets. Group sets are used "
+"for improved analysis."
+msgstr ""
+"Créer, modifier, voir et supprimer des ensembles de groupes d'indicateurs. "
+"Les ensemles de groupes sont utilisés pour affiner les analyses."
+
+#: intro_data_dictionary
+#, fuzzy
+msgid ""
+"Create, modify, view and delete data dictionaries. A data dictionary is a "
+"set of meta-data."
+msgstr ""
+"Créer, modifier, voir et supprimer des dictionnaires de données.Un "
+"dictionnaire de données est un ensemble de métadonnées."
+
+#: intro_concept
+#, fuzzy
+msgid ""
+"Create, modify, view and delete concepts. A concept can be used by a "
+"category."
+msgstr ""
+"Créer, modifier, voir et supprimer des concepts. Un concept peut être "
+"utilisé par une catégorie."
+
+#: available_data_element_group_sets
+#, fuzzy
+msgid "Available data element group sets"
+msgstr "Ensembles de groupes d'éléments de données disponibles"
+
+#: selected_data_element_group_sets
+#, fuzzy
+msgid "Selected data element group sets"
+msgstr "Ensembles de groupes d'éléments de données sélectionnés"
+
+#: available_groups
+#, fuzzy
+msgid "Available Groups"
+msgstr "Groupes disponibles"
+
+#: selected_groups
+#, fuzzy
+msgid "Selected Groups"
+msgstr "Groupes sélectionnés"
+
+#: assign_groups_for_dataelement
+#, fuzzy
+msgid "Assign Groups for Data Element"
+msgstr "Assigner des groupes aux éléments de données"
+
+#: select_dataelement
+#, fuzzy
+msgid "Please select data element"
+msgstr "Veuillez selectionner un élément de donnée"
+
+#: option_rename_successfully
+#, fuzzy
+msgid "Category option renamed successfully"
+msgstr "Option de catégorie renommée avec succès"
+
+#: create_new_concept
+#, fuzzy
+msgid "Create new concept"
+msgstr "Créer nouveau concept"
+
+#: edit_concept
+#, fuzzy
+msgid "Edit concept"
+msgstr "Modifier le concept"
+
+#: concept_name
+msgid "Concept name"
+msgstr "Nome do conceito"
+
+#: confirm_delete_concept
+#, fuzzy
+msgid "Are you sure you want to delete this concept?"
+msgstr "Etes-vous sûr de vouloir supprimer ce concept?"
+
+#: adding_concept_failed
+#, fuzzy
+msgid "Adding concept failed"
+msgstr "L'ajout du concept a échoué"
+
+#: saving_concept_failed
+#, fuzzy
+msgid "Saving concept failed"
+msgstr "Echec de l'enregistrement du concept"
+
+#: regex_add_edit_concept
+#, fuzzy
+msgid ""
+"Enter alphabet (a-z A-Z), number (0-9) and underscore (_) characters only."
+msgstr ""
+"Entrer uniquement caractères alphabétiques (a-z A-Z), numérique (0-9) et "
+"soulignement (_)."
+
+#: concept_management
+#, fuzzy
+msgid "Concept management"
+msgstr "Gestion de concepts"
+
+#: concept
+#, fuzzy
+msgid "Concept"
+msgstr "Concept"
+
+#: selected_name
+#, fuzzy
+msgid "Selected name"
+msgstr "Nom séléctionné"
+
+#: update_category_option
+#, fuzzy
+msgid "Update category option"
+msgstr "Mettre à jour l'option de catégorie"
+
+#: move_selected
+#, fuzzy
+msgid "Move selected"
+msgstr "Déplacer la sélection"
+
+#: number_value_type
+#, fuzzy
+msgid "Number type"
+msgstr "Type numérique"
+
+#: number
+msgid "Number"
+msgstr ""
+
+#: int
+msgctxt "int"
+msgid "Integer"
+msgstr "Número"
+
+#: view_1
+#, fuzzy
+msgid "View 1"
+msgstr "Vue 1"
+
+#: view_2
+#, fuzzy
+msgid "View 2"
+msgstr "Vue 2"
+
+#: zero_is_significant
+#, fuzzy
+msgid "Store zero data values"
+msgstr "Enregistrer les valeurs zéro"
+
+#: form_name
+#, fuzzy
+msgid "Form name"
+msgstr "Nom dans le formulaire"
+
+#: compulsory
+#, fuzzy
+msgid "Compulsory"
+msgstr "Obligatoire"
+
+#: data_dimension
+msgid "Data Dimension"
+msgstr "Data Dimension"
+
+#: select_group
+#, fuzzy
+msgid "Select group"
+msgstr "Sélectionner un groupe"
+
+#: option_set
+msgctxt "option_set"
+msgid "Option set"
+msgstr "Conjunto de opções"
+
+#: please_select
+#, fuzzy
+msgid "Please select"
+msgstr "Veuillez sélectionner"
+
+#: formula
+#, fuzzy
+msgid "Formula"
+msgstr "Formule"
+
+#: legend_set
+#, fuzzy
+msgid "Legend set"
+msgstr "Jeu de légendes"
+
+#: skip_total
+#, fuzzy
+msgid "Skip category total in reports"
+msgstr "Passer les totaux dans les rapports"
+
+#: data_element_category_option
+#, fuzzy
+msgid "Data Element Category Option"
+msgstr "Option de catégorie d'élément de donnée"
+
+#: category_option_management
+#, fuzzy
+msgid "Data element category option management"
+msgstr "Gestion d'options de catégorie d'élément de donnée"
+
+#: category_option_combo_management
+#, fuzzy
+msgid "Data element category option combination management"
+msgstr "Gestion de combinaison de catégories d'élément de donnée"
+
+#: create_new_data_element_category_option
+#, fuzzy
+msgid "Create new data element category option"
+msgstr "Créer une nouvelle option de catégorie d'élément de donnée"
+
+#: edit_data_element_category_option
+#, fuzzy
+msgid "Edit data element category option"
+msgstr "Modifier l'option de catégorie d'élément de donnée"
+
+#: available_category_options
+#, fuzzy
+msgid "Available category options"
+msgstr "Options de catégorie disponibles"
+
+#: selected_category_options
+#, fuzzy
+msgid "Selected category options"
+msgstr "Options de catégorie selectionnées"
+
+#: use_as_data_dimension
+#, fuzzy
+msgid "Use as data dimension"
+msgstr "Utiliser comme dimension de donnée"
+
+#: tip
+#, fuzzy
+msgid "Tip"
+msgstr "Conseil"
+
+#: use
+#, fuzzy
+msgid "use"
+msgstr "utiliser"
+
+#: dimension_type
+msgid "Dimension type"
+msgstr "Dimension type"
+
+#: disaggregation
+msgid "Disaggregation"
+msgstr "Disaggregation"
+
+#: attribute
+msgid "Attribute"
+msgstr "Attribute"
+
+#: option_set_for_data_values
+msgid "Option set for data values"
+msgstr "Option set for data values"
+
+#: comment_option_set
+msgid "Option set for comments"
+msgstr "Option set for comments"
+
+#: organisation_unit_counts
+msgid "Organisation unit counts"
+msgstr "Organisation unit counts"
+
+#: category_option
+msgid "Category Option"
+msgstr "Opções de categorias"
+
+#: category
+#, fuzzy
+msgid "Category"
+msgstr "Catégorie"
+
+#: category_combo
+#, fuzzy
+msgctxt "category_combo"
+msgid "Category Combination"
+msgstr "Combinaison de Catégories"
+
+#: category_option_group
+msgid "Category Option Group"
+msgstr "Category Option Group"
+
+#: category_option_group_management
+msgid "Category option group management"
+msgstr "Category option group management"
+
+#: create_new_category_option_group
+msgid "Create new category option group"
+msgstr "Create new category option group"
+
+#: edit_category_option_group
+msgid "Edit category option group"
+msgstr "Edit category option group"
+
+#: confirm_delete_category_option_group
+#, fuzzy
+msgid "Are you sure you want to delete this category option group?"
+msgstr "Are you sure you want to delete this category option group set?"
+
+#: category_option_group_set
+msgid "Category Option Group Set"
+msgstr "Category Option Group Set"
+
+#: category_option_group_set_management
+msgid "Category option group set management"
+msgstr "Category option group set management"
+
+#: create_new_category_option_group_set
+msgid "Create new category option group set"
+msgstr "Create new category option group set"
+
+#: edit_category_option_group_set
+msgid "Edit category option group set"
+msgstr "Edit category option group set"
+
+#: available_category_option_groups
+msgid "Available category option groups"
+msgstr "Available category option groups"
+
+#: selected_category_option_groups
+#, fuzzy
+msgid "Selected category option groups"
+msgstr "Options de catégorie selectionnées"
+
+#: confirm_delete_category_option_group_set
+msgid "Are you sure you want to delete this category option group set?"
+msgstr "Are you sure you want to delete this category option group set?"
+
+#: show_more_options
+msgid "Show more options"
+msgstr ""
+
+#: show_fewer_options
+msgid "Show fewer options"
+msgstr ""
+
+#: id
+msgid "Id"
+msgstr ""
+
+#: min
+msgid "Min"
+msgstr ""
+
+#: max
+msgid "Max"
+msgstr ""
+
+#: category_option_combo
+msgid "Category Option Combination"
+msgstr ""
+
+#: intro_category_option_combo
+msgid ""
+"View and edit data element category option combinations. Category option "
+"combinations are break-downs of category."
+msgstr ""
+
+#: edit_data_element_category_option_combo
+#, fuzzy
+msgid "Edit data element category option combo"
+msgstr "Modifier l'option de catégorie d'élément de donnée"
+
+#: approve_data
+msgid "Approve data"
+msgstr ""
+
+#: decimals_in_data_output
+msgctxt "decimals_in_data_output"
+msgid "Decimals in data output"
+msgstr ""
+
+#: categories
+msgid "Categories"
+msgstr ""
+
+#: ignore_data_approval
+msgid "Ignore data approval"
+msgstr "Ignorar aprovação de dados"
+
+#: data_dimension_type
+msgid "Data dimension type"
+msgstr ""
+
+#: indicator_type
+msgid "Indicator Type"
+msgstr ""
+
+#: indicator_group_set_management
+msgid "Indicator type group set management"
+msgstr ""
+
+#: of_page
+msgid "of"
+msgstr ""
+
+#: management
+msgid "management"
+msgstr ""
+
+#: search_by_name
+msgid "Search by name"
+msgstr "Rechercher par nom"
+
+#: press_enter_to_search
+msgid "(Press enter to search)"
+msgstr ""
+
+#: filter_menu_items_by_name
+msgid "Filter by name"
+msgstr ""
+
+#: press_enter_to_go_to_first
+msgid "(Press enter to go to first item)"
+msgstr ""
+
+#: search_available
+msgid "Search available"
+msgstr ""
+
+#: search_selected
+msgid "Search selected"
+msgstr ""
+
+#: required
+msgid "(required)"
+msgstr "(obligatoire)"
+
+#: aggregation_type
+msgid "Aggregation operator"
+msgstr ""
+
+#: ok
+msgid "Ok!"
+msgstr ""
+
+#: dismiss
+msgid "Dismiss"
+msgstr ""
+
+#: description
+msgctxt "description"
+msgid "Description"
+msgstr ""
+
+#: search_available_selected_items
+msgid "Search available/selected items"
+msgstr ""
+
+#: selected
+msgid "selected"
+msgstr ""
+
+#: indicators
+#, fuzzy
+msgctxt "indicators"
+msgid "Indicators"
+msgstr "Indicador"
+
+#: category_option_groups
+#, fuzzy
+msgid "Category Option Groups"
+msgstr "Category Option Group"
+
+#: annualized
+msgid "Annualized"
+msgstr ""
+
+#: decimals
+msgctxt "decimals"
+msgid "Decimals in data output"
+msgstr ""
+
+#: constants
+msgid "Constants"
+msgstr ""
+
+#: sharing
+msgid "Sharing"
+msgstr ""
+
+#: search
+msgid "Search"
+msgstr ""
+
+#: program_tracked_entity_attributes
+msgid "Attributes"
+msgstr ""
+
+#: program_indicators
+#, fuzzy
+msgctxt "program_indicators"
+msgid "Indicators"
+msgstr "Indicador"
+
+#: program_data_elements
+#, fuzzy
+msgctxt "program_data_elements"
+msgid "Data elements"
+msgstr "Elemento de Dados"
+
+#: please_select_a_program
+msgid "Please select a program"
+msgstr ""
+
+#: no_tracked_entity_attributes
+msgid "No tracked entity attributes for this program"
+msgstr ""
+
+#: no_program_indicators
+msgid "No program indicators for this program"
+msgstr ""
+
+#: no_program_data_elements
+msgid "No program data elements for this program"
+msgstr ""
+
+#: members
+msgid "Members"
+msgstr ""
+
+#: can_edit
+msgid "Can Edit"
+msgstr ""
+
+#: hidden_by_filters
+msgid "hidden by filters"
+msgstr ""
+
+#: value_type
+msgid "Value type"
+msgstr ""
+
+#: value_required
+msgid "This field is required"
+msgstr ""
+
+#: value_not_unique
+msgid "This field requires a unique value"
+msgstr ""
+
+#: value_should_be_empty_string_or_undefined
+msgid "Value should be empty"
+msgstr ""
+
+#: value_should_be_a_url
+msgid "This field required a valid url"
+msgstr ""
+
+#: value_should_be_a_relative_url
+msgid "This field requires a relative URL"
+msgstr ""
+
+#: value_should_be_list_of_urls
+msgid "This field requires a list of URLs"
+msgstr ""
+
+#: value_should_be_an_email
+msgid "This field contains an e-mail address"
+msgstr ""
+
+#: value_should_be_a_number
+msgid "This field should contain a number"
+msgstr ""
+
+#: number_should_not_have_decimals
+msgid "The number should not have decimals"
+msgstr ""
+
+#: value_not_max
+msgid "The value is to long/large"
+msgstr ""
+
+#: value_not_min
+msgid "The value is to short/small"
+msgstr ""
+
+#: could_not_run_async_validation
+msgid "Unable to run async validator"
+msgstr ""
+
+#: list
+msgid "List"
+msgstr ""
+
+#: add
+msgid "Add"
+msgstr ""
+
+#: done
+msgid "Done"
+msgstr ""
+
+#: letter
+msgid "Letter"
+msgstr ""
+
+#: boolean
+msgid "Yes/No"
+msgstr ""
+
+#: true_only
+msgid "Yes Only"
+msgstr ""
+
+#: file_resource
+msgid "File"
+msgstr "Fichier"
+
+#: integer_positive
+msgid "Positive Integer"
+msgstr "Entier positif"
+
+#: integer_zero_or_positive
+msgid "Positive or Zero Integer"
+msgstr ""
+
+#: coordinate
+msgid "Coordinate"
+msgstr ""
+
+#: integer_negative
+msgid "Negative Integer"
+msgstr ""
+
+#: integer
+msgctxt "integer"
+msgid "Integer"
+msgstr "Número"
+
+#: datetime
+msgid "Date & Time"
+msgstr "Date & Heure"
+
+#: time
+msgid "Time"
+msgstr ""
+
+#: tracker_associate
+msgid "Tracker Associate"
+msgstr ""
+
+#: average_sum_org_unit
+msgid "Average (sum in org unit hierarchy)"
+msgstr ""
+
+#: average_sum_int
+msgid "Average (sum of numbers)"
+msgstr ""
+
+#: average_sum_int_disaggregation
+msgid "Average (sum of numbers, disaggregation)"
+msgstr ""
+
+#: average_int
+msgid "Average (number)"
+msgstr ""
+
+#: average_int_disaggregation
+msgid "Average (number, disaggregation)"
+msgstr ""
+
+#: average_bool
+msgid "Average (Yes/No)"
+msgstr ""
+
+#: created
+msgid "Created"
+msgstr ""
+
+#: display_description
+msgctxt "display_description"
+msgid "Description"
+msgstr ""
+
+#: details
+msgid "Show details"
+msgstr ""
+
+#: share
+msgid "Share"
+msgstr ""
+
+#: metadata_management_overview
+msgid "Metadata management overview"
+msgstr ""
+
+#: metadata_group_editor
+msgid "Metadata group editor"
+msgstr ""
+
+#: please_select_object_type
+msgid "Please select an object type"
+msgstr ""
+
+#: back
+msgid "Back"
+msgstr ""
+
+#: public_access
+msgid "Public access"
+msgstr "Accès public"
+
+#: view
+msgid "View"
+msgstr ""
+
+#: was_not_deleted
+msgid "was not deleted"
+msgstr ""
+
+#: was_deleted
+msgid "was deleted"
+msgstr ""
+
+#: select_locale
+msgid "Select locale"
+msgstr ""
+
+#: translation_dialog_title
+msgctxt "translation_dialog_title"
+msgid "Translate"
+msgstr "Traduire"
+
+#: translation_saved
+msgid "Translation saved"
+msgstr ""
+
+#: translation_save_error
+msgid "Could not save the translation."
+msgstr ""
+
+#: select_a_locale_to_enter_translations_for_that_language
+msgid "Select a locale to enter translations for"
+msgstr ""
+
+#. # Data Set
+#. #TODO: used to be dataset_management
+#: data_set_management
+#, fuzzy
+msgid "Data set management"
+msgstr "Gestão de categoria de elemento de dado"
+
+#. #TODO: used to be dataset
+#: data_set
+msgid "Data Set"
+msgstr ""
+
+#: intro_data_set
+msgid ""
+"Create, update, view and delete data sets and custom forms. A data set is a "
+"collection of data elements for which data is entered."
+msgstr ""
+
+#: pdfDataSetForm
+msgid "Get PDF for data entry"
+msgstr ""
+
+#. # Organisation units
+#: create_new_root
+#, fuzzy
+msgid "Are you sure you want to create a new root organisation unit?"
+msgstr "Tem certeza de que deseja excluir este tipo de indicador?"
+
+#: create_new_organisation_unit
+msgid "Create new organisation unit"
+msgstr ""
+
+#: registers_data
+msgid "Registers data"
+msgstr ""
+
+#: crease_new_organisation_unit_group
+msgid "Create new organisation unit group"
+msgstr ""
+
+#: hierarchy_operations
+msgid "Hierarchy operations"
+msgstr ""
+
+#: select_an_organisation_unit_to_move
+msgid "Select an organisation unit to move"
+msgstr ""
+
+#: not_selected
+#, fuzzy
+msgid "Not selected"
+msgstr "Mover seleccionado"
+
+#: confirm
+msgid "Confirm"
+msgstr ""
+
+#: select_the_new_parent_organisation_unit_for_the_one_to_move
+msgid "Select the new parent organisation unit for the one to move"
+msgstr ""
+
+#: reset
+msgid "Reset"
+msgstr ""
+
+#: organisation_unit
+msgid "Organisation Unit"
+msgstr ""
+
+#: organisation_unit_group
+msgid "Organisation Unit Group"
+msgstr ""
+
+#: hierarchy_operations_menu
+msgid "Hierarchy Operations"
+msgstr ""
+
+#: organisation_unit_level
+msgid "Organisation Unit Level"
+msgstr ""
+
+#: organisation_unit_management
+msgid "Organisation unit management"
+msgstr ""
+
+#: this_organisation_unit_has_no_children
+msgid "This organisation unit has no children"
+msgstr ""
+
+#: organisation_unit_group_management
+msgid "Organisation unit group management"
+msgstr ""
+
+#: number_of_group_members
+msgid "Number of group members"
+msgstr ""
+
+#: edit_organisation_unit
+msgid "Edit organisation unit"
+msgstr ""
+
+#: edit_organisation_unit_group
+msgid "Edit organisation unit group"
+msgstr ""
+
+#: the_selected_organisation_unit_is_already_a_root
+msgid ""
+"The selected organisation unit is already a root. Please select a new parent "
+"organisation unit"
+msgstr ""
+
+#: the_selected_organisation_unit_will_be_moved_to_root
+msgid "The selected organisation unit will be moved to root"
+msgstr ""
+
+#: an_organisation_unit_cannot_be_moved_to_itself
+msgid ""
+"An organisation unit cannot be moved to itself. Please select a new parent "
+"organisation unit"
+msgstr ""
+
+#: an_organisation_unit_cannot_be_moved_to_be_its_own_child
+msgid ""
+"An organisation unit cannot be moved to be its own child. Please select a "
+"new parent organisation unit"
+msgstr ""
+
+#: the_new_parent_organisation_unit_is_approved
+msgid "The new parent organisation unit is approved"
+msgstr ""
+
+#: name_in_use
+msgid "The name is already in use. Please choose a different name."
+msgstr ""
+
+#: code_in_use
+msgid "The code is already in use. Please choose a different code."
+msgstr ""
+
+#: this_organisation_unit_cannot_moved
+msgid ""
+"This organisation unit cannot be moved. Please select a new organisation "
+"unit to move"
+msgstr ""
+
+#: the_organisation_unit_to_move_is_approved
+msgid "The organisation unit to move is approved"
+msgstr ""
+
+#: not_selected_moved_to_root_position
+msgid "Not selected, moved to root position"
+msgstr ""
+
+#: verification_of_the_new_parent_organisation_unit_failed
+msgid ""
+"Verification of the new parent organisation unit failed with the following "
+"message"
+msgstr ""
+
+#: confirm_to_delete_organisation_unit
+#, fuzzy
+msgctxt "confirm_to_delete_organisation_unit"
+msgid "Are you sure you want to delete this organisation unit?"
+msgstr "Tem certeza de que deseja excluir este tipo de indicador?"
+
+#: adding_the_organisation_unit_failed
+#, fuzzy
+msgid "Adding the organisation unit failed with the following message"
+msgstr "Adição de tipo de indicador falhou com a seguinte mensagem"
+
+#: saving_the_organisation_unit_failed
+#, fuzzy
+msgid "Saving the organisation unit failed with the following message"
+msgstr "Salvando o tipo de indicador falhou com a seguinte mensagem"
+
+#: confirm_to_delete_organisation_unit_group
+#, fuzzy
+msgctxt "confirm_to_delete_organisation_unit_group"
+msgid "Are you sure you want to delete this Organisation Unit Group?"
+msgstr "Tem certeza de que deseja excluir este grupo indicador?"
+
+#: confirm_to_delete_organisation_unit_group_set
+#, fuzzy
+msgctxt "confirm_to_delete_organisation_unit_group_set"
+msgid "Are you sure you want to delete this organisation unit group set?"
+msgstr "Tem certeza de que deseja excluir este grupo indicador?"
+
+#: organisation_unit_group_set_management
+msgid "Organisation unit group set management"
+msgstr ""
+
+#: organisation_unit_group_set
+msgid "Organisation Unit Group Set"
+msgstr ""
+
+#: saving_the_organisation_unit_group_set_failed
+#, fuzzy
+msgid ""
+"Saving the organisation unit group set failed with the following message"
+msgstr "Salvando o tipo de indicador falhou com a seguinte mensagem"
+
+#: exclusive
+msgid "Exclusive"
+msgstr ""
+
+#: create_new_organisation_unit_group_set
+msgid "Create new organisation unit group set"
+msgstr ""
+
+#: edit_organisation_unit_group_set
+msgid "Edit organisation unit group set"
+msgstr ""
+
+#: the_group_set_can_not_be_creat_bec_it_is_exc_and
+msgid "The group set can not be created because it is exclusive and"
+msgstr ""
+
+#: is_a_member_of_more_than_one_selected_group
+msgid "is a member of more than one selected group"
+msgstr ""
+
+#: move_all
+msgid "Move all"
+msgstr ""
+
+#: organisation_unit_level_management
+msgid "Organisation unit level management"
+msgstr ""
+
+#: level
+msgid "Level"
+msgstr ""
+
+#: code
+msgid "Code"
+msgstr ""
+
+#: registers_date
+msgid "Registers date"
+msgstr ""
+
+#: latitude
+msgid "Latitude"
+msgstr ""
+
+#: longitude
+msgid "Longitude"
+msgstr ""
+
+#: latitude_optional
+msgid "Latitude (optional)"
+msgstr ""
+
+#: longitude_optional
+msgid "Longitude (optional)"
+msgstr ""
+
+#: assign_to_compulsory_group_set
+msgid "Assign to compulsory organisation unit group set"
+msgstr ""
+
+#: intro_organisation_unit
+msgid ""
+"Create, modify, view and delete organisation units, which can be "
+"departments, offices, hospitals and clinics."
+msgstr ""
+
+#: intro_organisation_unit_group
+msgid ""
+"Create, modify, view and delete organisation unit groups. Groups are used "
+"for improved analysis."
+msgstr ""
+
+#: intro_organisation_unit_group_set
+msgid ""
+"Create, modify, view and delete organisation unit group sets. Group sets are "
+"used for improved analysis."
+msgstr ""
+
+#: intro_organisation_unit_level
+msgid ""
+"Create, modify, view and delete descriptive names for the organisation unit "
+"levels in the system."
+msgstr ""
+
+#: intro_organisation_unit_search
+msgid ""
+"Search organisation units based on name and group sets. View extended "
+"information for individual units."
+msgstr ""
+
+#: intro_hierarchy_operations_menu
+msgid ""
+"Move organisation units in the organisation unit tree. All children will be "
+"moved along with the unit."
+msgstr ""
+
+#: loading
+msgid "Loading"
+msgstr ""
+
+#: coordinates
+msgid "Coordinates"
+msgstr ""
+
+#: organisation_unit_search
+msgid "Organisation Unit Search"
+msgstr ""
+
+#: organisation_unit_search_management
+msgid "Organisation unit search"
+msgstr ""
+
+#: criteria
+msgid "Criteria"
+msgstr ""
+
+#: options
+msgid "Options"
+msgstr ""
+
+#: organisation_units
+msgid "organisation units"
+msgstr ""
+
+#: found
+msgid "Found"
+msgstr ""
+
+#: all
+msgid "All"
+msgstr ""
+
+#: please_select_from_tree
+msgid "Please select from tree (optional)"
+msgstr ""
+
+#: polygon
+msgid "Polygon"
+msgstr ""
+
+#: point
+msgid "Point"
+msgstr ""
+
+#: offline_levels
+msgid "Offline levels"
+msgstr ""
+
+#: available_data_sets
+#, fuzzy
+msgid "Available data sets"
+msgstr "Elementos de dados disponíveis"
+
+#: selected_data_sets
+#, fuzzy
+msgid "Selected data sets"
+msgstr "Elementos de dados seleccionados"
+
+#: limited
+msgid "Limited"
+msgstr ""
+
+#: get_report_as_xls
+msgid "Download as Excel"
+msgstr ""
+
+#: get_report_as_csv
+msgid "Download as CSV"
+msgstr ""
+
+#: get_report_as_pdf
+msgid "Download as PDF"
+msgstr ""
+
+#: please_wait_while_downloading
+msgid "Please wait while downloading report"
+msgstr ""
+
+#: please_wait_while_searching
+msgid "Please wait while searching"
+msgstr ""
+
+#: hierarchy
+msgid "Hierarchy"
+msgstr ""
+
+#: data_sets
+msgid "Data sets"
+msgstr ""
+
+#: organisation_unit_groups
+msgid "Organisation unit groups"
+msgstr ""
+
+#: phone_number
+msgid "Phone number"
+msgstr ""
+
+#: select_symbol
+msgid "Select symbol"
+msgstr ""
+
+#: symbol
+msgid "Symbol"
+msgstr ""
+
+#: name_code_identifier
+msgid "Name, code or identifier"
+msgstr ""
+
+#: identifier
+msgid "Identifier"
+msgstr ""
+
+#: short_name_in_use
+msgid "The short name is already in use. Please choose a different short name"
+msgstr ""
+
+#: show_all_sections
+msgid "Show all sections"
+msgstr ""
+
+#: organisation_unit_levels_not_yet_saved
+msgid "Organisation unit level is not yet saved, please save"
+msgstr ""
+
+#: no_value
+msgid "<No value>"
+msgstr ""
+
+#: determining_your_root_orgunits
+msgid "Determining your root organisation units"
+msgstr ""
+
+#: filter_organisation_units_by_name
+msgid "Filtering organisation units by name"
+msgstr ""
+
+#: organisation_units_selected
+msgid "Organisation units selected"
+msgstr ""
+
+#: address
+msgid "Address"
+msgstr ""
+
+#: contact_person
+msgid "Contact person"
+msgstr ""
+
+#: opening_date
+msgid "Opening date"
+msgstr ""
+
+#: closed_date
+msgid "Closed date"
+msgstr ""
+
+#: comment
+msgid "Comment"
+msgstr ""
+
+#: saving
+msgid "Saving"
+msgstr ""
+
+#: data_element_section
+#, fuzzy
+msgid "Data Elements"
+msgstr "Elemento de Dados"
+
+#: indicator_section
+#, fuzzy
+msgctxt "indicator_section"
+msgid "Indicators"
+msgstr "Indicador"
+
+#: organisation_unit_section
+msgid "Organisation Units"
+msgstr ""
+
+#: href
+msgid "Api URL"
+msgstr ""
+
+#: actions
+msgid "Actions"
+msgstr ""
+
+#. # Error codes can be translated as follows. If no translation is found the `message` property on the errorMessage object is used
+#: move_$$ouCount$$_organisation_units
+msgid "Move $$ouCount$$ organisation units"
+msgstr ""
+
+#: successfully_moved_$$ouName$$
+msgid "Successfully moved $$ouName$$"
+msgstr ""
+
+#: failed_to_move_$$ouName$$_($$errorMessage$$)
+msgid "Failed to move $$ouName$$ ($$errorMessage$$)"
+msgstr ""
+
+#: move
+msgid "Move"
+msgstr ""
+
+#: select_organisation_units_to_move_from_the_left_tree
+msgid "Select organisation unit(s) to move from the left"
+msgstr ""
+
+#: new_parent
+msgid "New parent"
+msgstr ""
+
+#: select_new_parent_for_organisation_units_from_the_right_tree
+msgid "Select new parent for organisation unit(s) from the right tree"
+msgstr ""
+
+#: public_can_edit
+msgid "Public view/edit"
+msgstr ""
+
+#: public_can_view
+msgid "Public view"
+msgstr ""
+
+#: public_none
+msgid "No public access"
+msgstr ""
+
+#: you_can_not_move_higher_level_organisation_units_to_its_descendants
+msgid "You can not move an organisation unit to one of its descendants."
+msgstr ""
+
+#: confirm_delete_organisation_unit
+#, fuzzy
+msgctxt "confirm_delete_organisation_unit"
+msgid "Are you sure you want to delete this organisation unit?"
+msgstr "Tem certeza de que deseja excluir este tipo de indicador?"
+
+#: confirm_delete_organisation_unit_group
+#, fuzzy
+msgctxt "confirm_delete_organisation_unit_group"
+msgid "Are you sure you want to delete this Organisation Unit Group?"
+msgstr "Tem certeza de que deseja excluir este grupo indicador?"
+
+#: confirm_delete_organisation_unit_group_set
+#, fuzzy
+msgctxt "confirm_delete_organisation_unit_group_set"
+msgid "Are you sure you want to delete this organisation unit group set?"
+msgstr "Tem certeza de que deseja excluir este grupo indicador?"
+
+#: organisation_unit_levels_save_success
+msgid "Organisation unit levels saved!"
+msgstr ""
+
+#: organisation_unit_levels_save_failed
+msgid "Could not save organisation unit levels."
+msgstr ""
+
+#. # Data administration section
+#: data_administration_section
+msgid "Data administration"
+msgstr ""
+
+#. # Data administration section -- Constants
+#: constant_management
+#, fuzzy
+msgid "Constant management"
+msgstr "Gestão de conceito"
+
+#: constant
+msgctxt "constant"
+msgid "Constant"
+msgstr ""
+
+#. # Data administration section -- Attribute
+#: attribute_management
+msgid "Attribute management"
+msgstr ""
+
+#: mandatory
+msgid "Mandatory"
+msgstr ""
+
+#: unique
+msgid "Unique"
+msgstr ""
+
+#: data_element_attribute
+#, fuzzy
+msgid "Data element"
+msgstr "Elemento de Dados"
+
+#: data_element_group_attribute
+#, fuzzy
+msgid "Data element group"
+msgstr "Grupo de Elemento de Dados"
+
+#: indicator_attribute
+msgctxt "indicator_attribute"
+msgid "Indicator"
+msgstr "Indicador"
+
+#: indicator_group_attribute
+#, fuzzy
+msgid "Indicator group"
+msgstr "Grupo de Indicador"
+
+#: data_set_attribute
+msgid "Data set"
+msgstr ""
+
+#: organisation_unit_attribute
+msgid "Organisation unit"
+msgstr ""
+
+#: organisation_unit_group_attribute
+msgid "Organisation unit group"
+msgstr ""
+
+#: organisation_unit_group_set_attribute
+msgid "Organisation unit group set"
+msgstr ""
+
+#: user_attribute
+msgid "User"
+msgstr ""
+
+#: user_group_attribute
+msgid "User group"
+msgstr ""
+
+#: program_attribute
+msgid "Program"
+msgstr ""
+
+#: program_stage_attribute
+msgid "Program stage"
+msgstr ""
+
+#: tracked_entity_attribute
+msgid "Tracked entity"
+msgstr ""
+
+#: tracked_entity_attribute_attribute
+msgid "Tracked entity attribute"
+msgstr ""
+
+#: category_option_attribute
+#, fuzzy
+msgid "Category option"
+msgstr "Opções de categorias"
+
+#: category_option_group_attribute
+msgid "Category option group"
+msgstr ""
+
+#: document_attribute
+msgid "Document"
+msgstr ""
+
+#: option_attribute
+msgid "Option"
+msgstr ""
+
+#: option_set_attribute
+msgctxt "option_set_attribute"
+msgid "Option set"
+msgstr "Conjunto de opções"
+
+#: constant_attribute
+msgctxt "constant_attribute"
+msgid "Constant"
+msgstr ""
+
+#: legend_set_attribute
+msgid "Legend"
+msgstr ""
+
+#~ msgid "Data elements"
+#~ msgstr "Data elements"
+
+#~ msgid "Indicator"
+#~ msgstr "Indicateur"
+
+#~ msgid "Integer"
+#~ msgstr "Entier"
+
+#~ msgid "Option set"
+#~ msgstr "Ensemble d'options"
+
+#, fuzzy
+#~ msgid "Indicators"
+#~ msgstr "Indicateur"
+
+#~ msgid "Translate"
+#~ msgstr "Traduire"
