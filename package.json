@@ -79,6 +79,7 @@
     "react-router": "^2.6.1",
     "react-sticky": "^2.5.2",
     "react-tap-event-plugin": "^0.2.2",
+    "recompose": "^0.20.2",
     "rx": "^4.1.0",
     "sass-loader": "^4.0.0",
     "sinon": "^1.17.4",

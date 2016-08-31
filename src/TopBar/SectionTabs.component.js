@@ -60,10 +60,7 @@ function SectionTabs(props) {
             <div style={styles.tabsWrap}>
                 <Tabs
                     value={props.current}
-                    onChange={((...args) => {
-                        console.log('Clicked!', args);
-                        props.changeSection(...args)
-                    })}
+                    onChange={props.changeSection}
                     style={styles.tabsStyle}
                     tabItemContainerStyle={styles.tabItemContainerStyle}
                 >

@@ -2,7 +2,6 @@ import Action from 'd2-ui/lib/action/Action';
 import modelToEditStore from './modelToEditStore';
 import log from 'loglevel';
 import { getInstance } from 'd2/lib/d2';
-
 import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
 

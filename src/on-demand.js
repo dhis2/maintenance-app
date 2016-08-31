@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Observable } from 'rx';
+import log from 'loglevel';
 
 class LoadOnDemand extends Component {
     constructor(props, context) {
@@ -27,8 +28,6 @@ class LoadOnDemand extends Component {
     }
 
     render() {
-        const { loadComponent, other } = this.props;
-
         const {
             loadingComponent: LoadingComponent,
             loadingMessage,
@@ -71,10 +70,9 @@ export function loadDefaultOnDemand(loadComponentFactory, loadingOptions) {
         .resolve(loadComponentFactory())
         .then(module => module.default)
         .catch(error => {
-            console.log('Failed to load component.', error);
-            console.error(error);
+            log.error('Failed to load component.', error);
             return Promise.reject(error);
-        })
+        });
 
     return loadOnDemand(loadDefaultFromFactory, loadingOptions);
 }

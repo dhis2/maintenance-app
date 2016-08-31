@@ -36,7 +36,7 @@ const webpackConfig = {
     contentBase: __dirname,
     entry: {
         maintenance: './src/maintenance.js',
-        vendor: ['material-ui'],
+        vendor: ['material-ui', 'loglevel'],
     },
     devtool: 'source-map',
     output: {
@@ -87,7 +87,7 @@ const webpackConfig = {
         new webpack.DefinePlugin({
             DHIS_CONFIG: JSON.stringify(dhisConfig)
         }),
-        new webpack.LoaderOptionsPlugin({
+        isDevBuild ? undefined : new webpack.LoaderOptionsPlugin({
             minimize: false,
             debug: true,
         }),
@@ -96,23 +96,22 @@ const webpackConfig = {
             vendorScripts: [
                 "polyfill.min.js",
                 "jquery.min.js",
-                "react-with-touch.js",
-                "rx.lite.js",
+                "core-resource-app/react-15/react-15.js",
+                "core-resource-app/rxjs/4.1.0/rx.lite.js",
                 "ckeditor/ckeditor.js",
-                "lodash.js",
-                "lodash-functional.js",
+                "core-resource-app/lodash/4.15.0/lodash.min.js",
+                "core-resource-app/lodash-functional/lodash-functional.js",
             ]
                 .map(script => (`<script src="${script}"></script>`))
                 .join("\n"),
         }),
-        new webpack.optimize.UglifyJsPlugin({
+        isDevBuild ? undefined : new webpack.optimize.UglifyJsPlugin({
             comments: false,
             beautify: false,
             sourceMap: true,
-            // mangle: false,
         }),
-        new Visualizer,
-    ],
+        isDevBuild ? undefined : new Visualizer,
+    ].filter(v => v),
     progress: true,
 
     devServer: {
@@ -151,24 +150,20 @@ const webpackConfig = {
             '/ckeditor/*': {
                 target: 'http://localhost:8081/node_modules',
             },
-            '/react-with-touch.js': {
-                target: 'http://localhost:8081/build/react-with-touch.js',
+            '/core-resource-app/react-15/react-15.js': {
+                target: 'http://localhost:8080/dhis/api/apps/core-resource-app/react-15/react-15.js',
                 ignorePath: true,
             },
-            '/react-dom.js': {
-                target: 'http://localhost:8081/node_modules/react-dom/dist/react-dom.js',
-                ignorePath:true,
-            },
-            '/rx.lite.js': {
-                target: 'http://localhost:8081/node_modules/rx/dist/rx.all.js',
+            '/core-resource-app/rxjs/4.1.0/rx.lite.js': {
+                target: 'http://localhost:8080/dhis/api/apps/core-resource-app/rxjs/4.1.0/rx.lite.js',
                 ignorePath: true,
             },
-            '/lodash-functional.js': {
-                target: 'http://localhost:8081/build/lodash-functional.js',
+            '/core-resource-app/lodash-functional/lodash-functional.js': {
+                target: 'http://localhost:8080/dhis/api/apps/core-resource-app/lodash-functional/lodash-functional.js',
                 ignorePath: true,
             },
-            '/lodash.js': {
-                target: 'http://localhost:8081/node_modules/lodash/lodash.min.js',
+            '/core-resource-app/lodash/4.15.0/lodash.min.js': {
+                target: 'http://localhost:8080/dhis/api/apps/core-resource-app/lodash/4.15.0/lodash.min.js',
                 ignorePath: true,
             }
         },

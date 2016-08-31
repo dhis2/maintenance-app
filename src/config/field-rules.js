@@ -139,4 +139,58 @@ export default new Map([['dataElement',
             }
         ]
     }
-]]]);
+]],
+['trackedEntityAttribute', [
+    {
+        field: 'valueType',
+        when: [{
+            operator: 'ONEOF',
+            value: [
+                'BOOLEAN',
+                'TRUE_ONLY',
+                'DATE',
+                'TRACKER_ASSOCIATE',
+                'USERNAME',
+                'OPTION_SET',
+            ],
+        }],
+        operations: [
+            {
+                field: 'unique',
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            },
+            {
+                field: 'unique',
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.property] = false;
+                },
+            }
+        ],
+    },
+    {
+        field: 'valueType',
+        when: {
+            field: 'optionSet',
+            operator: 'HAS_VALUE',
+        },
+        operations: [
+            {
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            },
+            {
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.property] = model.optionSet.valueType;
+                },
+            }
+        ]
+    }
+]],
+]);

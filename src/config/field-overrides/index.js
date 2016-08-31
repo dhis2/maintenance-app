@@ -6,6 +6,7 @@ import organisationUnitGroup from './organisationUnitGroup';
 import categoryOption from './categoryOption';
 import validationRule from './validationRule';
 import legendSet from './legendSet';
+import trackedEntityAttribute from './trackedEntityAttribute';
 
 const overridesByType = {
     dataElement,
@@ -16,6 +17,7 @@ const overridesByType = {
     categoryOption,
     validationRule,
     legendSet,
+    trackedEntityAttribute,
 };
 
 export default {
