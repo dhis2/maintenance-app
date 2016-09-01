@@ -96,11 +96,11 @@ const webpackConfig = {
             vendorScripts: [
                 "polyfill.min.js",
                 "jquery.min.js",
-                "core-resource-app/react-15/react-15.js",
-                "core-resource-app/rxjs/4.1.0/rx.lite.js",
+                dhisConfig.baseUrl + "/dhis-web-core-resource/react-15/react-15.js",
+                dhisConfig.baseUrl + "/dhis-web-core-resource/rxjs/4.1.0/rx.lite.js",
                 "ckeditor/ckeditor.js",
-                "core-resource-app/lodash/4.15.0/lodash.min.js",
-                "core-resource-app/lodash-functional/lodash-functional.js",
+                dhisConfig.baseUrl + "/dhis-web-core-resource/lodash/4.15.0/lodash.min.js",
+                dhisConfig.baseUrl + "/dhis-web-core-resource/lodash-functional/lodash-functional.js",
             ]
                 .map(script => (`<script src="${script}"></script>`))
                 .join("\n"),
@@ -150,54 +150,8 @@ const webpackConfig = {
             '/ckeditor/*': {
                 target: 'http://localhost:8081/node_modules',
             },
-            '/core-resource-app/react-15/react-15.js': {
-                target: 'http://localhost:8080/dhis/api/apps/core-resource-app/react-15/react-15.js',
-                ignorePath: true,
-            },
-            '/core-resource-app/rxjs/4.1.0/rx.lite.js': {
-                target: 'http://localhost:8080/dhis/api/apps/core-resource-app/rxjs/4.1.0/rx.lite.js',
-                ignorePath: true,
-            },
-            '/core-resource-app/lodash-functional/lodash-functional.js': {
-                target: 'http://localhost:8080/dhis/api/apps/core-resource-app/lodash-functional/lodash-functional.js',
-                ignorePath: true,
-            },
-            '/core-resource-app/lodash/4.15.0/lodash.min.js': {
-                target: 'http://localhost:8080/dhis/api/apps/core-resource-app/lodash/4.15.0/lodash.min.js',
-                ignorePath: true,
-            }
         },
     },
 };
-
-// if (!isDevBuild) {
-//     webpackConfig.plugins = [
-//         // Replace any occurance of process.env.NODE_ENV with the string 'production'
-//         new webpack.DefinePlugin({
-//             'process.env.NODE_ENV': '"production"',
-//             DHIS_CONFIG: JSON.stringify({}),
-//         }),
-//         new webpack.optimize.DedupePlugin(),
-//         // new webpack.optimize.OccurrenceOrderPlugin(),
-//         // new webpack.optimize.UglifyJsPlugin({
-//         //     comments: false,
-//         //     beautify: false,
-//         //     sourceMap: true,
-//         // }),
-//         // new Visualizer(),
-//     ];
-// } else {
-//     webpackConfig.plugins = [
-//         new webpack.DefinePlugin({
-//             DHIS_CONFIG: JSON.stringify(dhisConfig)
-//         }),
-//         new webpack.LoaderOptionsPlugin({
-//             minimize: false,
-//             debug: true,
-//         }),
-//         new webpack.optimize.DedupePlugin(),
-//
-//     ];
-// }
 
 module.exports = webpackConfig;
