@@ -36,7 +36,7 @@ const webpackConfig = {
     contentBase: __dirname,
     entry: {
         maintenance: './src/maintenance.js',
-        vendor: ['material-ui', 'loglevel'],
+        commons: ['material-ui'],
     },
     devtool: 'source-map',
     output: {
@@ -81,8 +81,8 @@ const webpackConfig = {
 
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            filename: 'vendor-[hash].js',
+            name: "commons",
+            filename: "commons-[hash].js",
         }),
         new webpack.DefinePlugin({
             DHIS_CONFIG: JSON.stringify(dhisConfig)
