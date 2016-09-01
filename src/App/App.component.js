@@ -16,9 +16,6 @@ import { Observable } from 'rx';
 import SinglePanelLayout from 'd2-ui/lib/layout/SinglePanel.component';
 import TwoPanelLayout from 'd2-ui/lib/layout/TwoPanel.component';
 import { goToRoute } from '../router-utils';
-
-log.setLevel(log.levels.INFO);
-
 import appState, { setAppState } from './appStateStore';
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);

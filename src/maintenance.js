@@ -5,8 +5,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 Error.stackTraceLimit = Infinity;
 
-
-
 import React from 'react';
 import { render } from 'react-dom';
 import { init, config, getUserSettings, getManifest } from 'd2/lib/d2';
