@@ -9,7 +9,7 @@ import detailsStore from './details.store';
 import listStore from './list.store';
 import listActions from './list.actions';
 import ObserverRegistry from '../utils/ObserverRegistry.mixin';
-import Paper from 'material-ui/lib/paper';
+import Paper from 'material-ui/Paper/Paper';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';

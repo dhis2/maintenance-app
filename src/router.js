@@ -7,7 +7,7 @@ import objectActions from './EditModel/objectActions';
 import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
 import {initAppState, default as appState} from './App/appStateStore';
-import LinearProgress from 'material-ui/lib/linear-progress';
+import LinearProgress from 'material-ui/LinearProgress';
 
 import onDemand from './on-demand';
 

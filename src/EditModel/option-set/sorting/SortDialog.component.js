@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
-import RaisedButton from 'material-ui/lib/raised-button';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import modelToEditStore from '../../modelToEditStore';
-import Dialog from 'material-ui/lib/dialog';
+import Dialog from 'material-ui/Dialog/Dialog';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
-import LinearProgress from 'material-ui/lib/linear-progress';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Heading from 'd2-ui/lib/headings/Heading.component';

@@ -1,22 +1,17 @@
 import React from 'react';
 import { getInstance as getD2, config } from 'd2/lib/d2';
 import Pager from 'd2/lib/pager/Pager';
-import Dialog from 'material-ui/lib/dialog';
-import RaisedButton from 'material-ui/lib/raised-button';
-import FlatButton from 'material-ui/lib/flat-button';
-
-// Indicator expression manager
+import Dialog from 'material-ui/Dialog/Dialog';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import FlatButton from 'material-ui/FlatButton/FlatButton';
 import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerContainer.component';
 import dataElementOperandStore from 'd2-ui/lib/indicator-expression-manager/dataElementOperand.store';
 import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
 import { Observable } from 'rx';
 import modelToEditStore from './modelToEditStore';
-
 import DataIndicatorGroupsAssignment from './DataIndicatorGroupsAssignment.component';
 import DataElementGroupsAssignment from './data-element/DataElementGroupsAssignment.component';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-
-config.i18n.strings.add('done');
 
 const createFakePager = response => {
     // Fake the modelCollection since dataElementOperands do not have a valid uid

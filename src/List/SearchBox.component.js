@@ -1,11 +1,9 @@
 import React from 'react';
 import ObservedEvents from '../utils/ObservedEvents.mixin';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField/TextField';
 import { config } from 'd2/lib/d2';
 import { currentSubSection$ } from '../App/appStateStore';
-
-config.i18n.strings.add('search_by_name');
 
 const SearchBox = React.createClass({
     propTypes: {

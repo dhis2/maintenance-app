@@ -1,7 +1,7 @@
 import React from 'react';
-import IconButton from 'material-ui/lib/icon-button';
-import AddCircleOutlineIcon from 'material-ui/lib/svg-icons/content/add-circle-outline';
-import RefreshIcon from 'material-ui/lib/svg-icons/navigation/refresh';
+import IconButton from 'material-ui/IconButton/IconButton';
+import AddCircleOutlineIcon from 'material-ui/svg-icons/content/add-circle-outline';
+import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import { getSectionForType } from '../../../config/maintenance-models';
 import { Link } from 'react-router';
 

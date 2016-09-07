@@ -4,9 +4,9 @@ import log from 'loglevel';
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import RaisedButton from 'material-ui/lib/raised-button';
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import FontIcon from 'material-ui/lib/font-icon';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
 
 import SectionDialog from './SectionDialog.component';
 import GreyFieldDialog from './GreyFieldDialog.component';

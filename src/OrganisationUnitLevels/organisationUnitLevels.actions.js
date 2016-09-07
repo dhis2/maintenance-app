@@ -3,9 +3,9 @@ import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rx';
 import { getInstance } from 'd2/lib/d2';
 import organisationUnitLevelsStore from './organisationUnitLevels.store';
-import TextField from 'material-ui/lib/text-field';
-import SelectField from 'material-ui/lib/select-field';
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import TextField from 'material-ui/TextField/TextField';
+import SelectField from 'material-ui/SelectField/SelectField';
+import MenuItem from 'material-ui/MenuItem/MenuItem';
 import fieldOrder from '../config/field-config/field-order';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 

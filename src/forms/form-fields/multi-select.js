@@ -5,13 +5,11 @@ import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import Action from 'd2-ui/lib/action/Action';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField/TextField';
 import { config } from 'd2/lib/d2';
 import log from 'loglevel';
 import QuickAddLink from './helpers/QuickAddLink.component';
 import RefreshMask from './helpers/RefreshMask.component';
-
-config.i18n.strings.add('search_available_selected_items');
 
 export const multiSelectActions = Action.createActionsFromNames([
     'addItemsToModelCollection',

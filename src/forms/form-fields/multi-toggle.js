@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Material UI
-import Checkbox from 'material-ui/lib/checkbox';
+import Checkbox from 'material-ui/Checkbox/Checkbox';
 
 export default React.createClass({
     propTypes: {

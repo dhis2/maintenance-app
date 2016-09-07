@@ -1,11 +1,9 @@
 import React from 'react';
-
-import Card from 'material-ui/lib/card/card';
-import CardHeader from 'material-ui/lib/card/card-header';
-import CardText from 'material-ui/lib/card/card-text';
-import CardActions from 'material-ui/lib/card/card-actions';
-import IconButton from 'material-ui/lib/icon-button';
-
+import Card from 'material-ui/Card/Card';
+import CardHeader from 'material-ui/Card/CardHeader';
+import CardText from 'material-ui/Card/CardText';
+import CardActions from 'material-ui/Card/CardActions';
+import IconButton from 'material-ui/IconButton/IconButton';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 export default React.createClass({
@@ -48,6 +46,12 @@ export default React.createClass({
             textAlign: 'right',
         };
 
+        const styles = {
+            cardHeaderText: {
+                paddingRight: 0,
+            },
+        };
+
         const actionButtons = [];
 
         if (details.canCreate) {
@@ -78,7 +82,7 @@ export default React.createClass({
                     onClick={details.list}
                     style={headerStyle}
                     title={details.name}
-                    avatar={<span style={{ display: 'none' }} />}
+                    textStyle={styles.cardHeaderText}
                 />
                 <CardText style={textStyle}>{details.description}</CardText>
                 <CardActions style={actionStyle}>

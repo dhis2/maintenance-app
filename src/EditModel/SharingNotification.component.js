@@ -2,11 +2,8 @@ import React from 'react';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import { config } from 'd2/lib/d2';
-import FontIcon from 'material-ui/lib/font-icon';
-import Paper from 'material-ui/lib/paper';
-
-config.i18n.strings.add('object_will_created_public');
-config.i18n.strings.add('object_will_created_private');
+import FontIcon from 'material-ui/FontIcon/FontIcon';
+import Paper from 'material-ui/Paper/Paper';
 
 const SharingNotification = React.createClass({
     propTypes: {

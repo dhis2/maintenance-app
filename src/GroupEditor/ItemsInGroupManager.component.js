@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField/TextField';
 import log from 'loglevel';
 
 import d2lib from 'd2/lib/d2';

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Dialog from 'material-ui/lib/dialog';
-import CircularProgress from 'material-ui/lib/circular-progress';
-import FlatButton from 'material-ui/lib/flat-button';
-import RaisedButton from 'material-ui/lib/raised-button';
+import Dialog from 'material-ui/Dialog/Dialog';
+import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
+import FlatButton from 'material-ui/FlatButton/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';

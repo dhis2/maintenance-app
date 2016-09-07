@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField/TextField';
 import Action from 'd2-ui/lib/action/Action';
 
 export default class TextFormField extends Component {

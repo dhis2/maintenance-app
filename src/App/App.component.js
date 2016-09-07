@@ -6,10 +6,7 @@ import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
 import { getInstance } from 'd2/lib/d2';
 import AppWithD2 from 'd2-ui/lib/app/AppWithD2.component';
-import log from 'loglevel';
-import appTheme from './app.theme';
 import LoadingMask from '../loading-mask/LoadingMask.component';
-import '../translationRegistration';
 import SectionTabs from '../TopBar/SectionTabs.component';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import { Observable } from 'rx';
@@ -36,14 +33,7 @@ const sections$ = appState
 
 const SectionTabsWrap = withStateFrom(sections$, SectionTabs);
 
-const withMuiContext = Object.assign(AppWithD2.childContextTypes, { muiTheme: React.PropTypes.object });
 class App extends AppWithD2 {
-    getChildContext() {
-        return Object.assign({}, super.getChildContext(), {
-            muiTheme: appTheme,
-        });
-    }
-
     componentDidMount() {
         super.componentDidMount();
 
@@ -91,7 +81,8 @@ class App extends AppWithD2 {
                 <HeaderBar />
                 <SectionTabsWrap />
                 {this.state.hasSection && !this.props.children.props.route.disableSidebar ? <TwoPanelLayout>
-                    <SideBar activeGroupName={this.props.params.groupName} activeModelType={this.props.params.modelType} />
+                    <SideBar activeGroupName={this.props.params.groupName}
+                             activeModelType={this.props.params.modelType}/>
                     <MainContent>
                         {this.props.children}
                     </MainContent>
@@ -106,6 +97,5 @@ class App extends AppWithD2 {
 App.defaultProps = {
     d2: getInstance(),
 };
-App.childContextTypes = withMuiContext;
 
 export default App;

@@ -2,7 +2,7 @@ import React from 'react';
 // import Legend from 'd2-ui/lib/legend/Legend.component';
 import { getInstance } from 'd2/lib/d2';
 import Store from 'd2-ui/lib/store/Store';
-import LinearProgress from 'material-ui/lib/linear-progress';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import modelToEditStore from '../../EditModel/modelToEditStore';
 import log from 'loglevel';
 

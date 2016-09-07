@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Tabs from 'material-ui/lib/tabs/tabs';
-import Tab from 'material-ui/lib/tabs/tab';
-import Paper from 'material-ui/lib/paper';
+import Tabs from 'material-ui/Tabs/Tabs';
+import Tab from 'material-ui/Tabs/Tab';
+import Paper from 'material-ui/Paper/Paper';
 
 import ItemsInGroupManager from './ItemsInGroupManager.component';
 import GroupsForItemManager from './GroupsForItemManager.component';

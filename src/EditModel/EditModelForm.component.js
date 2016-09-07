@@ -15,7 +15,7 @@ import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import log from 'loglevel';
 import extraFields from './extraFields';
-import CircularProgress from 'material-ui/lib/circular-progress';
+import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import { createFieldConfig, typeToFieldMap } from '../forms/fields';
@@ -23,10 +23,6 @@ import appState from '../App/appStateStore';
 import { Observable } from 'rx';
 
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
-
-config.i18n.strings.add('name');
-config.i18n.strings.add('code');
-config.i18n.strings.add('short_name');
 
 function createUniqueValidator(fieldConfig, modelDefinition, uid) {
     return function checkAgainstServer(value) {

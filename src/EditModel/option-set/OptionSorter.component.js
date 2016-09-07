@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import optionSorter from './optionSorter';
-import RaisedButton from 'material-ui/lib/raised-button';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from '../modelToEditStore';
 import { Observable } from 'rx';

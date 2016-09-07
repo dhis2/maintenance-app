@@ -1,5 +1,5 @@
 import React from 'react';
-import LinearProgress from 'material-ui/lib/circular-progress';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import IconPicker from '../../forms/form-fields/icon-picker';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
 import { getManifest } from 'd2/lib/d2';

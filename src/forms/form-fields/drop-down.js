@@ -1,11 +1,11 @@
 import React from 'react';
-import SelectField from 'material-ui/lib/select-field';
+import SelectField from 'material-ui/SelectField/SelectField';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import isString from 'd2-utilizr/lib/isString';
 
 import MuiThemeMixin from '../mui-theme.mixin';
 
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import MenuItem from 'material-ui/MenuItem/MenuItem';
 
 export default React.createClass({
     propTypes: {

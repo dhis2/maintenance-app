@@ -1,5 +1,5 @@
 import React from 'react';
-import LinearProgress from 'material-ui/lib/linear-progress';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 
 export default React.createClass({
     propTypes: {

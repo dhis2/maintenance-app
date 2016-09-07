@@ -1,11 +1,11 @@
 import React from 'react';
 import log from 'loglevel';
 
-import Dialog from 'material-ui/lib/dialog';
-import FlatButton from 'material-ui/lib/flat-button';
-import RaisedButton from 'material-ui/lib/raised-button';
+import Dialog from 'material-ui/Dialog/Dialog';
+import FlatButton from 'material-ui/FlatButton/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import DropDown from '../forms/form-fields/drop-down';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField/TextField';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import Store from 'd2-ui/lib/store/Store';
 import snackActions from '../Snackbar/snack.actions';

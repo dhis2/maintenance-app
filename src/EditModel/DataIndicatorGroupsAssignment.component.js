@@ -1,6 +1,6 @@
 import React from 'react';
 import { getInstance } from 'd2/lib/d2';
-import CircularProgress from 'material-ui/lib/circular-progress';
+import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 
 import DropDown from '../forms/form-fields/drop-down';
 import store from './indicatorGroupsStore';

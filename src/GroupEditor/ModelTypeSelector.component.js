@@ -1,8 +1,6 @@
 import React from 'react';
-
-import Select from 'material-ui/lib/select-field';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-
+import SelectField from 'material-ui/SelectField/SelectField';
+import MenuItem from 'material-ui/MenuItem/MenuItem';
 import d2lib from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
@@ -71,7 +69,7 @@ export default React.createClass({
     render() {
         return (
             <div>
-                <Select
+                <SelectField
                     value={this.state.selectedModel}
                     hintText={this.getTranslation('select_an_object_type')}
                     fullWidth
@@ -79,7 +77,7 @@ export default React.createClass({
                     onChange={this._onChange}
                 >
                     {this.renderOptions()}
-                </Select>
+                </SelectField>
             </div>
         );
     },

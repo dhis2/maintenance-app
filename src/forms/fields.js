@@ -3,8 +3,6 @@ import isString from 'd2-utilizr/lib/isString';
 import isNumber from 'lodash.isnumber';
 import log from 'loglevel';
 import { config, getInstance } from 'd2/lib/d2';
-
-// FormField components
 import TextField from './form-fields/text-field';
 import MultiSelect from './form-fields/multi-select';
 import CheckBox from './form-fields/check-box';
@@ -24,17 +22,6 @@ export const IDENTIFIER = Symbol('IDENTIFIER');
 export const URL = Symbol('URL');
 export const EMAIL = Symbol('EMAIL');
 export const NUMBER = Symbol('NUMBER');
-
-config.i18n.strings.add(isRequired.message);
-config.i18n.strings.add(isUrl.message);
-config.i18n.strings.add(isNumberValidator.message);
-config.i18n.strings.add(isEmail.message);
-config.i18n.strings.add('value_not_max');
-config.i18n.strings.add('value_not_min');
-config.i18n.strings.add('value_not_max');
-config.i18n.strings.add('value_not_min');
-config.i18n.strings.add('could_not_run_async_validation');
-config.i18n.strings.add('value_not_unique');
 
 function toInteger(value) {
     return Number.parseInt(value, 10);

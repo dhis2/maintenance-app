@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Observable } from 'rx';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import { getInstance } from 'd2/lib/d2';
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import ContentAdd from 'material-ui/lib/svg-icons/content/add';
-import Dialog from 'material-ui/lib/dialog';
+import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import Dialog from 'material-ui/Dialog/Dialog';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import FormButtons from '../FormButtons.component';
@@ -20,8 +20,8 @@ import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import { calculatePageValue } from '../../List/helpers/pagination'; // TODO: Move this out to some other file.
 import actions from './actions';
 import { optionDialogStore, optionsForOptionSetStore } from './stores.js';
-import LinearProgress from 'material-ui/lib/linear-progress';
-import AlertIcon from 'material-ui/lib/svg-icons/alert/warning';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
+import AlertIcon from 'material-ui/svg-icons/alert/warning';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 const optionList$ = Observable.combineLatest(

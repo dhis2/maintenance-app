@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from 'classnames';
 
-import FontIcon from 'material-ui/lib/font-icon';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
 
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';

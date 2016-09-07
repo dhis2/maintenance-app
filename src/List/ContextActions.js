@@ -13,17 +13,6 @@ import appStore from '../App/appStateStore';
 import { goToRoute } from '../router-utils';
 import { Subject } from 'rx';
 
-config.i18n.strings.add('edit');
-config.i18n.strings.add('clone');
-config.i18n.strings.add('delete');
-config.i18n.strings.add('details');
-config.i18n.strings.add('translate');
-config.i18n.strings.add('sharing');
-config.i18n.strings.add('assignToOrgUnits');
-config.i18n.strings.add('sectionForm');
-config.i18n.strings.add('dataEntryForm');
-config.i18n.strings.add('pdfDataSetForm');
-
 export const afterDeleteHook$ = new Subject();
 
 const contextActions = Action.createActionsFromNames([

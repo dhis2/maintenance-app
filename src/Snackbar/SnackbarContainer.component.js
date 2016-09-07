@@ -1,5 +1,5 @@
 import React from 'react';
-import Snackbar from 'material-ui/lib/snackbar';
+import Snackbar from 'material-ui/Snackbar/Snackbar';
 import snackStore from './snack.store';
 import ObserverRegistry from '../utils/ObserverRegistry.mixin';
 import log from 'loglevel';

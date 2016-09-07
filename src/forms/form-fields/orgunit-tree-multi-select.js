@@ -3,14 +3,10 @@ import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.compon
 import OrgUnitSelectByLevel from 'd2-ui/lib/org-unit-select/OrgUnitSelectByLevel.component';
 import OrgUnitSelectByGroup from 'd2-ui/lib/org-unit-select/OrgUnitSelectByGroup.component';
 import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.component';
-import TextField from 'material-ui/lib/text-field';
+import TextField from 'material-ui/TextField/TextField';
 import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rx';
 import { config } from 'd2/lib/d2';
-
-config.i18n.strings.add('determining_your_root_orgunits');
-config.i18n.strings.add('filter_organisation_units_by_name');
-config.i18n.strings.add('organisation_units_selected');
 
 export default class OrganisationUnitTreeMultiSelect extends React.Component {
     constructor(...args) {

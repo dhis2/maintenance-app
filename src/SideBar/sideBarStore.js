@@ -1,6 +1,6 @@
 import React from 'react';
 import appStateStore, { reloadUserOrganisationUnits } from '../App/appStateStore';
-import FontIcon from 'material-ui/lib/font-icon';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
 import objectActions from '../EditModel/objectActions';
 import modelToEditStore from '../EditModel/modelToEditStore';
 import { afterDeleteHook$ } from '../List/ContextActions.js';

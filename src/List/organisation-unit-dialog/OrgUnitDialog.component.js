@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Dialog from 'material-ui/lib/dialog';
-import FlatButton from 'material-ui/lib/flat-button';
-import RaisedButton from 'material-ui/lib/raised-button';
+import Dialog from 'material-ui/Dialog/Dialog';
+import FlatButton from 'material-ui/FlatButton/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { hashHistory } from 'react-router';
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import FontIcon from 'material-ui/lib/font-icon';
+import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import { goToRoute } from '../router-utils';
 

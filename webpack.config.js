@@ -71,6 +71,7 @@ const webpackConfig = {
             'react-addons-create-fragment': 'var React.addons.createFragment',
             'react-addons-update': 'var React.addons.update',
             'react-addons-pure-render-mixin': 'var React.addons.PureRenderMixin',
+            'react-addons-shallow-compare': 'var React.addons.ShallowCompare',
             'lodash': 'var _',
             'lodash/fp': 'var fp',
         },

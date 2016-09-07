@@ -1,10 +1,10 @@
 import React from 'react';
 import log from 'loglevel';
 
-import Dialog from 'material-ui/lib/dialog';
-import FlatButton from 'material-ui/lib/flat-button';
-import RaisedButton from 'material-ui/lib/raised-button';
-import Checkbox from 'material-ui/lib/checkbox';
+import Dialog from 'material-ui/Dialog/Dialog';
+import FlatButton from 'material-ui/FlatButton/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Checkbox from 'material-ui/Checkbox/Checkbox';
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 
 import snackActions from '../Snackbar/snack.actions';

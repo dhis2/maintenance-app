@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
-import InfoIcon from 'material-ui/lib/svg-icons/action/info-outline';
+import InfoIcon from 'material-ui/svg-icons/action/info-outline';
 
 export default function InfoMessage({ message, ...wrapperProps }) {
     const styles = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import sideBarStore, { organisationUnitTreeChanged$ } from './sideBarStore';
-import LinearProgress from 'material-ui/lib/linear-progress';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import { onSectionChanged, onOrgUnitSearch } from './sideBarActions';
 import { setAppState } from '../App/appStateStore';
 import MaintenanceSideBar from './MaintenanceSidebar.component';

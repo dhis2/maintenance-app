@@ -2,13 +2,13 @@ import React from 'react';
 import Rx from 'rx';
 import log from 'loglevel';
 
-import RaisedButton from 'material-ui/lib/raised-button';
-import FlatButton from 'material-ui/lib/flat-button';
-import SelectField from 'material-ui/lib/select-field';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import Paper from 'material-ui/lib/paper';
-import TextField from 'material-ui/lib/text-field';
-import CheckBox from 'material-ui/lib/checkbox';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import FlatButton from 'material-ui/FlatButton/FlatButton';
+import SelectField from 'material-ui/SelectField/SelectField';
+import MenuItem from 'material-ui/MenuItem/MenuItem';
+import Paper from 'material-ui/Paper/Paper';
+import TextField from 'material-ui/TextField/TextField';
+import Checkbox from 'material-ui/Checkbox/Checkbox';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
