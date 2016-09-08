@@ -114,7 +114,7 @@ const SkipLogicDepth = (props) => {
     );
 };
 
-const TrackedEntityField = withD2Context((props, { d2 }) => { console.log(props); return (
+const TrackedEntityField = withD2Context((props, { d2 }) => { return (
     <SkipLogicDepth level="1">
         <DropDownAsync
             labelText={d2.i18n.getTranslation('tracked_entity')}

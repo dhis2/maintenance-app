@@ -260,6 +260,19 @@ const fieldOrderByName = new Map([
         'userGroupsToAlert',
         'alertByOrgUnits',
     ]],
+    ['predictor', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'periodType',
+        'organisationUnitLevels',
+        'generator',
+        'sampleSkipTest',
+        'sequentialSampleCount',
+        'annualSampleCount',
+        'sequentialSkipCount',
+    ]]
 ]);
 
 export default {

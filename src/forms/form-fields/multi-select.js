@@ -6,7 +6,6 @@ import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrder
 import Action from 'd2-ui/lib/action/Action';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/TextField/TextField';
-import { config } from 'd2/lib/d2';
 import log from 'loglevel';
 import QuickAddLink from './helpers/QuickAddLink.component';
 import RefreshMask from './helpers/RefreshMask.component';

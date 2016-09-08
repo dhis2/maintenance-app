@@ -7,6 +7,7 @@ import categoryOption from './categoryOption';
 import validationRule from './validationRule';
 import legendSet from './legendSet';
 import trackedEntityAttribute from './trackedEntityAttribute';
+import predictor from './predictor';
 
 const overridesByType = {
     dataElement,
@@ -18,6 +19,7 @@ const overridesByType = {
     validationRule,
     legendSet,
     trackedEntityAttribute,
+    predictor,
 };
 
 export default {

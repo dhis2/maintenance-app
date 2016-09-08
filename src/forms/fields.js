@@ -22,6 +22,7 @@ export const IDENTIFIER = Symbol('IDENTIFIER');
 export const URL = Symbol('URL');
 export const EMAIL = Symbol('EMAIL');
 export const NUMBER = Symbol('NUMBER');
+export const COMPLEX = Symbol('COMPLEX');
 
 function toInteger(value) {
     return Number.parseInt(value, 10);
@@ -204,7 +205,7 @@ export const typeToFieldMap = new Map([
     ['DATE', DATE],
     ['URL', URL],
     ['NUMBER', NUMBER],
-    ['COMPLEX', INPUT],
+    ['COMPLEX', COMPLEX],
     ['GEOLOCATION', INPUT],
     ['TRUE_ONLY', CHECKBOX],
 ]);
