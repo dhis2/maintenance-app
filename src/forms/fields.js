@@ -187,7 +187,7 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
         basicFieldConfig.translate = true;
     }
 
-    const validators = [].concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition));
+    const validators = [].concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition)).concat(fieldConfig.validators || []);
 
     return Object.assign(fieldConfig, { validators }, basicFieldConfig);
 }

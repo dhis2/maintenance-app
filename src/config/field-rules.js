@@ -1,5 +1,3 @@
-import { getInstance } from 'd2/lib/d2';
-
 /**
  * Rules for the form fields.
  * If multiple `when` objects are specified these are evaluated as an OR.

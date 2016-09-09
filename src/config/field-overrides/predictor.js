@@ -126,6 +126,11 @@ class ExpressionField extends Component {
             fieldWrap: {
                 padding: '1rem 0',
             },
+
+            errorText: {
+                paddingTop: '0.5rem',
+                color: 'red',
+            },
         };
 
         return (
@@ -134,6 +139,7 @@ class ExpressionField extends Component {
                     label={this.props.labelText}
                     onTouchTap={this.handleOpen}
                 />
+                {props.errorText ? <div style={styles.errorText}>{props.errorText}</div> : null}
                 <ExpressionModal
                     {...props}
                     open={this.state.open}
@@ -160,16 +166,15 @@ export default new Map([
     }],
     ['generator', {
         component: ExpressionField,
-        fieldOptions: {
-            props: {
-                validators: [],
+        validators: [
+            {
+                validator: (value) => Boolean(value && value.description),
+                message: 'description_is_required',
             },
-        },
-    }],
-    ['sampleSkipTest', {
-        component: ExpressionField,
-        props: {
-            validators: [],
-        },
+            {
+                validator: (value) => Boolean(value && value.expression),
+                message: 'expression_is_required',
+            },
+        ]
     }],
 ]);
