@@ -16,7 +16,7 @@
     "lint": "eslint src && eslint --env node,mocha --global expect,sinon --rule 'no-unused-expressions: 0' test && scss-lint",
     "__prebuild": "npm test && npm run lint",
     "build": "rm -rf build && webpack && npm run manifest",
-    "postbuild": "cp -rv src/i18n index.html icon.png node_modules/babel-polyfill/dist/polyfill.min.js node_modules/jquery/dist/jquery.min.js node_modules/ckeditor ./build/",
+    "postbuild": "cp -r src/i18n index.html icon.png node_modules/babel-polyfill/dist/polyfill.min.js node_modules/jquery/dist/jquery.min.js node_modules/ckeditor ./build/",
     "validate": "npm ls",
     "manifest": "d2-manifest package.json build/manifest.webapp"
   },
