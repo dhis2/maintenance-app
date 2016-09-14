@@ -17,7 +17,6 @@ const columnObservable = appState
         return ['name', 'publicAccess', 'lastUpdated'];
     });
 
-
 export default Store.create({
     listSourceSubject: new Subject(),
 

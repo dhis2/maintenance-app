@@ -1,5 +1,5 @@
 import { SELECT } from '../../forms/fields';
-import IndicatorExpressionManager from 'd2-ui/lib/indicator-expression-manager/IndicatorExpressionManager.component';
+import ExpressionManager from 'd2-ui/lib/indicator-expression-manager/IndicatorExpressionManager.component';
 import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
 import Store from 'd2-ui/lib/store/Store';
 import Action from 'd2-ui/lib/action/Action';
@@ -30,23 +30,6 @@ expressionStatusActions.requestExpressionStatus
         expressionStatusStore.setState(response);
     });
 
-function GeneratorExpression(props) {
-    return (
-        <IndicatorExpressionManager
-            descriptionLabel={'description'}
-            descriptionValue={props.value ? props.value.description : ''}
-            formulaValue={props.value ? props.value.expression : ''}
-            organisationUnitGroupOptions={[]}
-            constantOptions={[]}
-            expressionStatusActions={expressionStatusActions}
-            expressionStatusStore={expressionStatusStore}
-            dataElementOperandSelectorActions={dataElementOperandSelectorActions}
-            indicatorExpressionChanged={(...args) => console.log(args)}
-            titleText={props.labelText}
-        />
-    );
-}
-
 function ExpressionModal({ open, handleClose, handleSaveAndClose, ...props }) {
     const customContentStyle = {
         width: '100%',
@@ -74,15 +57,11 @@ function ExpressionModal({ open, handleClose, handleSaveAndClose, ...props }) {
             contentStyle={customContentStyle}
             style={{padding: '1rem'}}
         >
-            <IndicatorExpressionManager
+            <ExpressionManager
                 descriptionLabel={'description'}
                 descriptionValue={props.value ? props.value.description : ''}
                 formulaValue={props.value ? props.value.expression : ''}
-                organisationUnitGroupOptions={[]}
-                constantOptions={[]}
-                expressionStatusActions={expressionStatusActions}
                 expressionStatusStore={expressionStatusStore}
-                dataElementOperandSelectorActions={dataElementOperandSelectorActions}
                 indicatorExpressionChanged={props.indicatorExpressionChanged}
                 titleText={props.labelText}
             />

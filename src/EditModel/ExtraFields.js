@@ -1,115 +1,13 @@
 import React from 'react';
-import { getInstance as getD2, config } from 'd2/lib/d2';
-import Pager from 'd2/lib/pager/Pager';
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerContainer.component';
-import dataElementOperandStore from 'd2-ui/lib/indicator-expression-manager/dataElementOperand.store';
-import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
 import { Observable } from 'rx';
 import modelToEditStore from './modelToEditStore';
 import DataIndicatorGroupsAssignment from './DataIndicatorGroupsAssignment.component';
 import DataElementGroupsAssignment from './data-element/DataElementGroupsAssignment.component';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-
-const createFakePager = response => {
-    // Fake the modelCollection since dataElementOperands do not have a valid uid
-    return {
-        pager: new Pager(response.pager, {
-            list(pager) {
-                return getD2()
-                    .then(d2 => {
-                        if (this.searchValue) {
-                            return d2.Api.getApi().get('dataElementOperands', { page: pager.page, fields: 'id,displayName', filter: ['dataElement.domainType:eq:AGGREGATE', `name:ilike:${encodeURIComponent(this.searchValue)}`], totals: true });
-                        }
-
-                        return d2.Api.getApi().get('dataElementOperands', { page: pager.page, fields: 'id,displayName', totals: true, filter: ['dataElement.domainType:eq:AGGREGATE'] });
-                    });
-            },
-        }),
-        toArray() {
-            return response.dataElementOperands;
-        },
-    };
-};
-
-dataElementOperandSelectorActions.loadList.subscribe(() => {
-    getD2()
-        .then(d2 => d2.Api.getApi().get('dataElementOperands', { fields: 'id,displayName', totals: true, filter: ['dataElement.domainType:eq:AGGREGATE'] }))
-        .then(createFakePager)
-        .then(collection => {
-            dataElementOperandStore.setState(collection);
-        });
-});
-
-dataElementOperandSelectorActions.search
-    .throttle(500)
-    .distinctUntilChanged(action => action.data)
-    .map(action => {
-        const searchPromise = getD2()
-            .then(d2 => {
-                if (action.data) {
-                    return d2.Api.getApi().get('dataElementOperands', { fields: 'id,displayName', totals: true, filter: ['dataElement.domainType:eq:AGGREGATE', `name:ilike:${encodeURIComponent(action.data)}`] });
-                }
-                return d2.Api.getApi().get('dataElementOperands', { fields: 'id,displayName', totals: true, filter: ['dataElement.domainType:eq:AGGREGATE'] });
-            })
-            .then(createFakePager)
-            .then(collection => {
-                return {
-                    complete: action.complete,
-                    error: action.error,
-                    collection: collection,
-                };
-            });
-
-        return Observable.fromPromise(searchPromise);
-    })
-    .concatAll()
-    .subscribe(actionResult => {
-        dataElementOperandStore.setState(actionResult.collection);
-        actionResult.complete();
-    });
-
-dataElementOperandSelectorActions.getNextPage
-    .subscribe((action) => {
-        const [pager, searchValue] = action.data;
-        pager.pagingHandler.searchValue = searchValue;
-
-        pager.getNextPage()
-            .then(createFakePager)
-            .then(collection => {
-                return {
-                    complete: action.complete,
-                    error: action.error,
-                    collection: collection,
-                };
-            })
-            .then(actionResult => {
-                dataElementOperandStore.setState(actionResult.collection);
-                actionResult.complete();
-            });
-    });
-
-dataElementOperandSelectorActions.getPreviousPage
-    .subscribe((action) => {
-        const [pager, searchValue] = action.data;
-        pager.pagingHandler.searchValue = searchValue;
-
-        pager.getPreviousPage()
-            .then(createFakePager)
-            .then(collection => {
-                return {
-                    complete: action.complete,
-                    error: action.error,
-                    collection: collection,
-                };
-            })
-            .then(actionResult => {
-                dataElementOperandStore.setState(actionResult.collection);
-                actionResult.complete();
-            });
-    });
 
 class IndicatorExtraFields extends React.Component {
     constructor(props, state) {
