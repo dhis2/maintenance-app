@@ -2,7 +2,6 @@ import React from 'react';
 import Action from 'd2-ui/lib/action/Action';
 import IndicatorExpressionManager from 'd2-ui/lib/indicator-expression-manager/IndicatorExpressionManager.component';
 import indicatorExpressionStatusStore from 'd2-ui/lib/indicator-expression-manager/indicatorExpressionStatus.store';
-import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { Observable } from 'rx';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
@@ -69,11 +68,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
                 descriptionLabel={this.getTranslation('description')}
                 descriptionValue={this.props.description}
                 formulaValue={this.props.formula}
-                organisationUnitGroupOptions={this.state.organisationUnitGroups}
-                constantOptions={this.state.constants}
-                expressionStatusActions={indicatorExpressionStatusActions}
                 expressionStatusStore={indicatorExpressionStatusStore}
-                dataElementOperandSelectorActions={dataElementOperandSelectorActions}
                 indicatorExpressionChanged={this.props.indicatorExpressionChanged}
                 titleText={this.props.titleText}
                 ref="expressionManager"

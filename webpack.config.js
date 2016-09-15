@@ -31,6 +31,8 @@ function bypass(req, res, opt) {
     console.log('[PROXY]'.cyan.bold, req.method.green.bold, req.url.magenta, '=>'.dim, opt.target.dim);
 }
 
+const scriptPrefix = (isDevBuild ? dhisConfig.baseUrl + '/' : '..');
+
 const webpackConfig = {
     context: __dirname,
     contentBase: __dirname,
@@ -97,11 +99,11 @@ const webpackConfig = {
             vendorScripts: [
                 "polyfill.min.js",
                 "jquery.min.js",
-                dhisConfig.baseUrl + "/dhis-web-core-resource/react-15/react-15.js",
-                dhisConfig.baseUrl + "/dhis-web-core-resource/rxjs/4.1.0/rx.lite.js",
+                `${scriptPrefix}/dhis-web-core-resource/react-15/react-15${isDevBuild ? '' : '.min'}.js`,
+                `${scriptPrefix}/dhis-web-core-resource/rxjs/4.1.0/rx.lite${isDevBuild ? '' : '.min'}.js`,
                 "ckeditor/ckeditor.js",
-                dhisConfig.baseUrl + "/dhis-web-core-resource/lodash/4.15.0/lodash.min.js",
-                dhisConfig.baseUrl + "/dhis-web-core-resource/lodash-functional/lodash-functional.js",
+                `${scriptPrefix}/dhis-web-core-resource/lodash/4.15.0/lodash${isDevBuild ? '' : '.min'}.js`,
+                `${scriptPrefix}/dhis-web-core-resource/lodash-functional/lodash-functional.js`,
             ]
                 .map(script => (`<script src="${script}"></script>`))
                 .join("\n"),
