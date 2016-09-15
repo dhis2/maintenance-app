@@ -159,14 +159,11 @@ function cloneObject({params}, replace, callback) {
 
 function delayRender(importFactory) {
     return (props) => {
-        const BaseComponent = onDemand.loadDefault(importFactory, {loadingComponent: () => (<LinearProgress indeterminate />)})
+        const BaseComponent = onDemand.loadDefault(importFactory, {loadingComponent: () => (<LinearProgress />)})
 
         return <BaseComponent {...props} />
     };
 }
-
-const errorLoading = error => `Dynamic page loading failed ${error}`;
-const loadModule = cb => module => cb(null, module.default);
 
 const routes = (
     <Router history={hashHistory}>
