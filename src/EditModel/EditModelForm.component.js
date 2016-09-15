@@ -66,10 +66,11 @@ export async function createFieldConfigForModelTypes(modelType) {
         .map(fieldConfig => {
             // Translate the sync validator messages if there are any validators
             if (fieldConfig.validators) {
-                fieldConfig.validators
-                    .forEach(validator => {
-                        validator.message = d2.i18n.getTranslation(validator.message);
-                    });
+                fieldConfig.validators = fieldConfig.validators
+                    .map(validator => ({
+                        ...validator,
+                        message: d2.i18n.getTranslation(validator.message),
+                    }));
             }
 
             // Get translation for the field label
