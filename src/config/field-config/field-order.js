@@ -268,6 +268,7 @@ const fieldOrderByName = new Map([
         'periodType',
         'organisationUnitLevels',
         'generator',
+        'sampleSkipTest',
         'sequentialSampleCount',
         'annualSampleCount',
         'sequentialSkipCount',

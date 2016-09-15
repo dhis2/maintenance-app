@@ -20,7 +20,7 @@ export default function RefreshMask({horizontal}, { d2 }) {
 
     return (
         <div style={styles.fieldMask}>
-            <CircularProgress indeterminate />
+            <CircularProgress />
             <div>{d2.i18n.getTranslation('reloading_available_values')}</div>
         </div>
     );

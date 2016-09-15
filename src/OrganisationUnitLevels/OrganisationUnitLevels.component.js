@@ -24,7 +24,7 @@ function saveOrganisationUnitLevels(i18n) {
 function OrganisationUnitLevels(props, context) {
     if (props.isLoading) {
         return (
-            <LinearProgress indeterminate />
+            <LinearProgress />
         );
     }
 

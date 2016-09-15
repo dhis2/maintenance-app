@@ -239,7 +239,7 @@ class OptionManagement extends Component {
                 {this.props.pager && this.props.pager.total > 50 ? this.displayInCorrectOrderWarning() : undefined}
                 {this.renderPagination()}
                 <div style={styles.dataTableWrap}>
-                    {this.props.isLoading ? <LinearProgress indeterminate /> : undefined}
+                    {this.props.isLoading ? <LinearProgress /> : undefined}
                     <DataTable
                         rows={this.props.rows}
                         columns={this.props.columns}

@@ -156,4 +156,18 @@ export default new Map([
             },
         ]
     }],
+
+    ['sampleSkipTest', {
+        component: ExpressionField,
+        validators: [
+            {
+                validator: (value) => Boolean(value && value.description),
+                message: 'description_is_required',
+            },
+            {
+                validator: (value) => Boolean(value && value.expression),
+                message: 'expression_is_required',
+            },
+        ]
+    }],
 ]);

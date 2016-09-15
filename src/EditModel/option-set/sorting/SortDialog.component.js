@@ -194,7 +194,7 @@ class SortDialog extends Component {
         if (this.props.isLoading) {
             return (
                 <div>
-                    {this.props.isLoading ? <LinearProgress indeterminate /> : undefined}
+                    {this.props.isLoading ? <LinearProgress /> : undefined}
                 </div>
             );
         }

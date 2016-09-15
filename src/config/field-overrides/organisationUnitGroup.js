@@ -22,7 +22,7 @@ class SymbolPickerField extends React.Component {
 
     render() {
         if (!this.state.baseUrl) {
-            return (<LinearProgress indeterminate/>);
+            return (<LinearProgress />);
         }
         return (
             <IconPicker

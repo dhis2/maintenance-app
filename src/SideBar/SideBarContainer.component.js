@@ -62,7 +62,7 @@ class SideBarContainer extends React.Component {
             }
 
             return (
-                <LinearProgress indeterminate />
+                <LinearProgress />
             );
         }
         return null;
@@ -101,7 +101,7 @@ class SideBarContainer extends React.Component {
     render() {
         if (!this.state || !this.state.sections) {
             return (
-                <LinearProgress indeterminate />
+                <LinearProgress />
             );
         }
 
