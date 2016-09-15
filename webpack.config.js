@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const path = require('path');
 const colors = require('colors');
 
+const nodeEnv = process.env.NODE_ENV || 'development';
 const isDevBuild = process.argv[1].indexOf('webpack-dev-server') !== -1;
 const dhisConfigPath = process.env.DHIS2_HOME && `${process.env.DHIS2_HOME}/config`;
 
@@ -88,7 +89,8 @@ const webpackConfig = {
             filename: "commons-[hash].js",
         }),
         new webpack.DefinePlugin({
-            DHIS_CONFIG: JSON.stringify(dhisConfig)
+            DHIS_CONFIG: isDevBuild ? JSON.stringify(dhisConfig) : {},
+            'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
         }),
         isDevBuild ? undefined : new webpack.LoaderOptionsPlugin({
             minimize: false,
@@ -114,8 +116,12 @@ const webpackConfig = {
                 .join("\n"),
         }),
         isDevBuild ? undefined : new webpack.optimize.UglifyJsPlugin({
-            comments: false,
-            beautify: false,
+            compress: {
+                warnings: false,
+            },
+            output: {
+                comments: false,
+            },
             sourceMap: true,
         }),
         isDevBuild ? undefined : new Visualizer,
