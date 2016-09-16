@@ -1,50 +1,109 @@
-import React from 'react';
-// import Legend from 'd2-ui/lib/legend/Legend.component';
+import React, { Component } from 'react';
 import { getInstance } from 'd2/lib/d2';
-import Store from 'd2-ui/lib/store/Store';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
+import Dialog from 'material-ui/Dialog/Dialog';
+import FlatButton from 'material-ui/FlatButton/FlatButton';
 import modelToEditStore from '../../EditModel/modelToEditStore';
 import log from 'loglevel';
 
-const legendStore = Store.create();
+class LegendSetErrorMessage extends Component {
+    constructor(props, context) {
+        super(props, context);
 
-// TODO: Integrate these validation functions before saving.
-// validateLegends = function() {
-//     var items = tmpLegendStore.data.items,
-//         item,
-//         prevItem;
-//
-//     if (items.length === 0) {
-//         gis.alert('At least one legend is required');
-//         return false;
-//     }
-//
-//     for (var i = 1; i < items.length; i++) {
-//         item = items[i].data;
-//         prevItem = items[i - 1].data;
-//
-//         if (item.startValue < prevItem.endValue) {
-//             var msg = 'Overlapping legends not allowed!\n\n' +
-//                 prevItem.name + ' (' + prevItem.startValue + ' - ' + prevItem.endValue + ')\n' +
-//                 item.name + ' (' + item.startValue + ' - ' + item.endValue + ')';
-//             gis.alert(msg);
-//             return false;
-//         }
-//
-//         if (prevItem.endValue < item.startValue) {
-//             var msg = 'Legend gaps detected!\n\n' +
-//                 prevItem.name + ' (' + prevItem.startValue + ' - ' + prevItem.endValue + ')\n' +
-//                 item.name + ' (' + item.startValue + ' - ' + item.endValue + ')\n\n' +
-//                 'Proceed anyway?';
-//
-//             if (!confirm(msg)) {
-//                 return false;
-//             }
-//         }
-//     }
-//
-//     return true;
-// };
+        this.state = {
+            open: false,
+            message: ''
+        };
+    }
+
+    componentDidMount() {
+        this.runValidation(this.props.legends);
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (newProps.legends !== this.props.legends) {
+            this.runValidation(this.props.legends);
+        }
+    }
+
+    // TODO: Adopted code from the GIS validation (should to be reworked to not have a for loop)
+    runValidation(legends) {
+        const items = legends;
+
+        for (var i = 1; i < items.length; i++) {
+            const item = items[i];
+            const prevItem = items[i - 1];
+            let msg;
+            let title;
+
+            if (item.startValue < prevItem.endValue) {
+                title = 'Overlapping legends not allowed!';
+                msg = (
+                    <div>
+                        <p>{prevItem.name + ' (' + prevItem.startValue + ' - ' + prevItem.endValue + ')'}</p>
+                        <p>{item.name + ' (' + item.startValue + ' - ' + item.endValue + ')'}</p>
+                    </div>
+                );
+            }
+
+            if (prevItem.endValue < item.startValue) {
+                title = 'Legend gaps detected!';
+                msg = (
+                    <div>
+                        <p>{prevItem.name + ' (' + prevItem.startValue + ' - ' + prevItem.endValue + ')'}</p>
+                        <p>{item.name + ' (' + item.startValue + ' - ' + item.endValue + ')'}</p>
+                    </div>
+                );
+            }
+
+            if (msg) {
+                this.setState({
+                    title,
+                    message: msg,
+                    open: true,
+                });
+                return
+            } else {
+                this.setState({
+                    open: false,
+                });
+            }
+        }
+    }
+
+    handleClose = () => {
+        this.setState({
+            open: false,
+        });
+    }
+
+    render() {
+        const actions = [
+            <FlatButton
+                label="Cancel"
+                primary
+                onTouchTap={this.handleClose}
+            />,
+            <FlatButton
+                label="Discard"
+                primary
+                onTouchTap={this.handleClose}
+            />,
+        ];
+
+        return (
+            <Dialog
+                actions={actions}
+                open={this.state.open}
+                onRequestClose={this.handleClose}
+                modal
+                title={this.state.title}
+            >
+                {this.state.message}
+            </Dialog>
+        );
+    }
+}
 
 export default new Map([
     ['legends', {
@@ -54,7 +113,6 @@ export default new Map([
 
                 this.state = {
                     isLoading: true,
-                    legends: [],
                     Legend: null,
                 };
             }
@@ -64,33 +122,29 @@ export default new Map([
                     .then(module => {
                         this.setState({
                             Legend: module.default,
+                            isLoading: false,
                         });
                     });
 
             }
 
             componentDidMount() {
-                this.initLegends(this.props);
                 this.loadLegendComponent()
             }
 
-            componentWillReceiveProps(props) {
-                this.initLegends(props);
-            }
-
-            initLegends(props) {
-                this.setState({
-                    legends: props.value.toArray(),
-                    isLoading: false,
-                });
-            }
-
             render() {
+                const legends = this.props.value.toArray();
+
                 if (this.state.isLoading || !this.state.Legend) {
-                    return (<LinearProgress indetermined />);
+                    return (<LinearProgress />);
                 }
 
-                return <this.state.Legend items={this.state.legends} onItemsChange={this.updateLegends} />
+                return (
+                    <div>
+                        <this.state.Legend items={legends} onItemsChange={this.updateLegends} />
+                        <LegendSetErrorMessage legends={legends} />
+                    </div>
+                )
             }
 
             updateLegends = (newLegends) => {
@@ -115,10 +169,11 @@ export default new Map([
                                 value: model[this.props.referenceProperty],
                             }
                         });
+
+
                     })
                     .catch(log.error);
             }
         },
-        fieldOptions: {},
     }],
 ]);

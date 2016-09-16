@@ -66,6 +66,7 @@ export async function createFieldConfigForModelTypes(modelType) {
         .map(fieldConfig => {
             // Translate the sync validator messages if there are any validators
             if (fieldConfig.validators) {
+                console.log(fieldConfig.validators);
                 fieldConfig.validators = fieldConfig.validators
                     .map(validator => ({
                         ...validator,
@@ -325,7 +326,7 @@ export default React.createClass({
         // Set state to saving so forms actions are being prevented
         this.setState({ isSaving: true });
 
-        objectActions.saveObject({ id: this.props.modelId })
+        objectActions.saveObject({ id: this.props.modelId, modelType: this.props.modelType })
             .subscribe(
                 (message) => {
                     this.setState({ isSaving: false });

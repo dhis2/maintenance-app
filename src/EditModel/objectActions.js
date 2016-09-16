@@ -4,6 +4,8 @@ import log from 'loglevel';
 import { getInstance } from 'd2/lib/d2';
 import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
+import { Observable } from 'rx';
+import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 
 const objectActions = Action.createActionsFromNames([
     'getObjectOfTypeById',
@@ -40,7 +42,7 @@ const hackedSaves = {
                 return Promise.all(saveUrls.map(url => api.post(url)));
             });
 
-        return Rx.Observable.fromPromise(Promise.all([removePromises, savePromises]));
+        return Observable.fromPromise(Promise.all([removePromises, savePromises]));
     },
     indicator: function indicatorAfterSave(model, lastImportedId) {
         const removeUrls = indicatorGroupsStore.state.remove
@@ -66,7 +68,7 @@ const hackedSaves = {
                 return Promise.all(saveUrls.map(url => api.post(url)));
             });
 
-        return Rx.Observable.fromPromise(Promise.all([removePromises, savePromises]));
+        return Observable.fromPromise(Promise.all([removePromises, savePromises]));
     },
 };
 
@@ -99,7 +101,9 @@ objectActions.getObjectOfTypeByIdAndClone
             .subscribe(complete, error);
     });
 
-objectActions.saveObject.subscribe(action => {
+objectActions.saveObject
+    .filter(({ data }) => data.modelType !== 'legendSet')
+    .subscribe(action => {
     const errorHandler = (message) => {
         action.error(message);
     };
@@ -123,6 +127,40 @@ objectActions.saveObject.subscribe(action => {
 }, (e) => {
     log.error(e);
 });
+
+function on(property, func, object) {
+    return {
+        ...object,
+        [property]: func(object[property]),
+    };
+}
+
+objectActions.saveObject
+    .filter(({ data }) => data.modelType === 'legendSet')
+    .subscribe(async ({ complete, error }) => {
+        const legendSet = getOwnedPropertyJSON(modelToEditStore.getState());
+        const legends = legendSet.legends;
+        const metadataPayload = {
+            legendSets: [on('legends', _.map(_.pick('id')), legendSet)],
+            legends: legends,
+        };
+
+        const d2 = await getInstance();
+        const api = d2.Api.getApi();
+
+        try {
+            const response = api.post('metadata', metadataPayload);
+
+            if (response.status !== 'ERROR') {
+                complete('save_success');
+            } else {
+                error('could_not_save_legend_set');
+            }
+        } catch (e) {
+            error('could_not_save_legend_set');
+            log.error(e);
+        }
+    }, (e) => log.error(e));
 
 objectActions.update.subscribe(action => {
     const { fieldName, value } = action.data;
