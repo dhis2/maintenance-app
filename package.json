@@ -44,7 +44,6 @@
     "html-webpack-plugin": "^2.22.0",
     "http-proxy": "git+https://github.com/nicolayr/node-http-proxy.git",
     "istanbul": "0.3.18",
-    "jquery": "^2.2.3",
     "karma": "0.13.9",
     "karma-babel-preprocessor": "5.2.1",
     "karma-chai": "0.1.0",
@@ -91,8 +90,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.13.0",
-    "ckeditor": "^4.5.9",
-    "jquery": "^2.2.3"
+    "ckeditor": "^4.5.9"
   },
   "pre-commit": [
     "validate"

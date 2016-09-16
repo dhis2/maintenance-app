@@ -100,7 +100,6 @@ const webpackConfig = {
             template: './index.ejs',
             vendorScripts: [
                 "polyfill.min.js",
-                "jquery.min.js",
                 `${scriptPrefix}/dhis-web-core-resource/react-15/react-15${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/rxjs/4.1.0/rx.lite${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/lodash/4.15.0/lodash${isDevBuild ? '' : '.min'}.js`,
@@ -154,9 +153,6 @@ const webpackConfig = {
             },
             '/i18n/*': {
                 target: 'http://localhost:8081/src',
-            },
-            '/jquery.min.js': {
-                target: 'http://localhost:8081/node_modules/jquery/dist',
             },
             '/polyfill.min.js': {
                 target: 'http://localhost:8081/node_modules/babel-polyfill/dist',

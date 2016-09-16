@@ -1,7 +1,4 @@
 const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
-if (process.env.NODE_ENV !== 'production') {
-    jQuery.ajaxSetup({ headers: { Authorization: dhisDevConfig.authorization } }); // eslint-disable-line
-}
 
 Error.stackTraceLimit = Infinity;
 
