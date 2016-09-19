@@ -272,6 +272,14 @@ const fieldOrderByName = new Map([
         'sequentialSampleCount',
         'annualSampleCount',
         'sequentialSkipCount',
+    ]],
+    ['pushAnalysis', [
+        'name',
+        'message',
+        'dashboard',
+        'recipientUserGroups',
+        'schedulingFrequency',
+        'enabled',
     ]]
 ]);
 

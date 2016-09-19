@@ -3,6 +3,7 @@ import { getInstance } from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import isObject from 'd2-utilizr/lib/isObject';
 import snackActions from '../Snackbar/snack.actions';
+import { uniq, keys } from 'lodash';
 
 import maintenanceModels from '../config/maintenance-models';
 const sideBarConfig = maintenanceModels.getSideBarConfig();
@@ -17,7 +18,7 @@ function isInPredefinedList(predefinedList) {
 
 async function loadSideBarState() {
     const d2 = await getInstance();
-    const modelDefinitionNames = d2.models.mapThroughDefinitions(definition => definition.name);
+    const modelDefinitionNames = uniq(keys(d2.models));
 
     return Object.keys(sideBarConfig)
         .map(sideBarCategory => ({

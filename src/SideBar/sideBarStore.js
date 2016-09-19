@@ -41,6 +41,9 @@ const sideBarState = appStateStore
 
         return {
             sections: (appState.sideBar[currentSection] || appState.sideBar.mainSections)
+                .map((v) => {
+                    return v;
+                })
                 .map(section => Object.assign({ icon: <DefaultSideBarIcon /> }, section))
                 .concat(getAdditionalSideBarFields(currentSection, d2.i18n)),
             currentSection,

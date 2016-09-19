@@ -7,6 +7,7 @@ import categoryOption from './categoryOption';
 import legendSet from './legendSet';
 import trackedEntityAttribute from './trackedEntityAttribute';
 import predictor from './predictor';
+import pushAnalysis from './pushAnalysis';
 
 const overridesByType = {
     dataElement,
@@ -18,6 +19,7 @@ const overridesByType = {
     legendSet,
     trackedEntityAttribute,
     predictor,
+    pushAnalysis,
 };
 
 export default {

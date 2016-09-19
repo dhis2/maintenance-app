@@ -54,7 +54,8 @@ export function getSideBarConfig() {
                     'attribute',
                     'optionSet',
                     'legendSet',
-                    'predictor'
+                    'predictor',
+                    'pushAnalysis',
                 ],
             },
         };

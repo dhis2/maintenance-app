@@ -6,8 +6,10 @@ import { get, compose, curry } from 'lodash/fp';
 import actions from '../../EditModel/objectActions';
 import TextField from '../../forms/form-fields/text-field';
 import ConfidentialField from './tracked-entity-attribute/ConfidentialField';
-import switchOnBoolean from './tracked-entity-attribute/switchOnBoolean';
+import switchOnBoolean from './helpers/switchOnBoolean';
 import withD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import withSkipLogic from './helpers/withSkipLogic';
+import SubFieldWrap from './helpers/SubFieldWrap';
 
 const isUniqueInSystem = (trackedEntityAttribute) => (trackedEntityAttribute.orgunitScope === false || trackedEntityAttribute.orgunitScope === undefined) &&
     (trackedEntityAttribute.programScope === false || trackedEntityAttribute.programScope === undefined);
@@ -29,25 +31,6 @@ const updateValueForField = curry((fieldName, value) => {
         value,
     });
 });
-
-const styles = {
-    uniqueFieldWrap: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-
-    formFieldSubFields: {
-        transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
-        boxSizing: 'content-box',
-        borderRadius: '2px',
-        padding: '1rem',
-        width: '100%',
-        backgroundColor: 'rgb(250, 250, 250)',
-        marginLeft: '-5rem',
-        paddingLeft: '7rem',
-        paddingRight: '3rem',
-    },
-};
 
 const GenerateFields = (props, context) => {
     return (
@@ -85,7 +68,7 @@ const UniqueSubFields = (props, context) => {
     const GenerateFieldsSwitch = switchOnBoolean((props) => isUniqueInSystem(props.model), GenerateFields);
 
     return (
-        <div style={styles.formFieldSubFields}>
+        <SubFieldWrap>
             <DropDown
                 options={uniqueWithinOption}
                 translateOptions
@@ -102,27 +85,19 @@ const UniqueSubFields = (props, context) => {
                         }, get('target.value'))}
             />
             <GenerateFieldsSwitch {...props} />
-        </div>
-    );
-};
-
-const SkipLogicDepth = (props) => {
-    return (
-        <div style={styles.formFieldSubFields}>
-            {props.children}
-        </div>
+        </SubFieldWrap>
     );
 };
 
 const TrackedEntityField = withD2Context((props, { d2 }) => { return (
-    <SkipLogicDepth level="1">
+    <SubFieldWrap>
         <DropDownAsync
             labelText={d2.i18n.getTranslation('tracked_entity')}
             referenceType="trackedEntity"
             value={props.model.trackedEntity}
             onChange={compose((value) => actions.update({fieldName: 'trackedEntity', value, }), get('target.value'))}
         />
-    </SkipLogicDepth>
+    </SubFieldWrap>
 )});
 
 export default new Map([
@@ -151,16 +126,3 @@ export default new Map([
         component: withSkipLogic((props) => props.value === 'TRACKER_ASSOCIATE', TrackedEntityField, DropDown),
     }],
 ]);
-
-// WithSkipLogic(predicate, ExtraFields, NormalField)
-
-function withSkipLogic(predicate, ExtraFields, BaseField) {
-    const ExtraFieldsWrap = switchOnBoolean(predicate, ExtraFields);
-
-    return (props) => (
-        <div style={styles.uniqueFieldWrap}>
-            <BaseField {...props} />
-            <ExtraFieldsWrap {...props} />
-        </div>
-    );
-}

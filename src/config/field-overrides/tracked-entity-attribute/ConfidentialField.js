@@ -1,5 +1,5 @@
 import React from 'react';
-import switchOnBoolean from './switchOnBoolean';
+import switchOnBoolean from '../helpers/switchOnBoolean';
 import Checkbox from '../../../forms/form-fields/check-box';
 import InfoMessage from './InfoMessage';
 
