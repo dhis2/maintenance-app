@@ -280,6 +280,17 @@ const fieldOrderByName = new Map([
         'recipientUserGroups',
         'schedulingFrequency',
         'enabled',
+    ]],
+    ['externalMapLayer', [
+        'name',
+        'mapService',
+        'url',
+        'attribution',
+        'layers',
+        'imageFormat',
+        'mapLayerPosition',
+        'legendSet',
+        'legendSetUrl',
     ]]
 ]);
 

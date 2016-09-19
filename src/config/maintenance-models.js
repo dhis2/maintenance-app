@@ -56,6 +56,7 @@ export function getSideBarConfig() {
                     'legendSet',
                     'predictor',
                     'pushAnalysis',
+                    'externalMapLayer',
                 ],
             },
         };
