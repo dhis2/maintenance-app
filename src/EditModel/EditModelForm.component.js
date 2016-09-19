@@ -306,6 +306,8 @@ export default React.createClass({
     },
 
     _onUpdateField(fieldName, value) {
+        console.log('updating form field');
+
         const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name == fieldName);
 
         if (fieldConfig && fieldConfig.beforeUpdateConverter) {

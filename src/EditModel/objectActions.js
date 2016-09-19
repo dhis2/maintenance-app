@@ -6,6 +6,9 @@ import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
 import { Observable } from 'rx';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
+import { map, pick, get, filter, flatten, compose, identity, head } from 'lodash';
+
+const extractErrorMessagesFromResponse = compose(filter(identity), map(get('message')), flatten, map('errorReports'), flatten, map('objectReports'), get('typeReports'));
 
 const objectActions = Action.createActionsFromNames([
     'getObjectOfTypeById',
@@ -141,7 +144,7 @@ objectActions.saveObject
         const legendSet = getOwnedPropertyJSON(modelToEditStore.getState());
         const legends = legendSet.legends;
         const metadataPayload = {
-            legendSets: [on('legends', _.map(_.pick('id')), legendSet)],
+            legendSets: [on('legends', map(pick('id')), legendSet)],
             legends: legends,
         };
 
@@ -149,15 +152,17 @@ objectActions.saveObject
         const api = d2.Api.getApi();
 
         try {
-            const response = api.post('metadata', metadataPayload);
+            const response = await api.post('metadata', metadataPayload);
 
             if (response.status !== 'ERROR') {
                 complete('save_success');
             } else {
-                error('could_not_save_legend_set');
+                const errorMessages = extractErrorMessagesFromResponse(response);
+
+                error(d2.i18n.getTranslation('could_not_save_legend_set_($$message$$)', { message: head(errorMessages) || 'Unknown error!' }));
             }
         } catch (e) {
-            error('could_not_save_legend_set');
+            error(d2.i18n.getTranslation('could_not_save_legend_set'));
             log.error(e);
         }
     }, (e) => log.error(e));
