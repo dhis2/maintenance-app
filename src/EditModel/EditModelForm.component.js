@@ -66,7 +66,6 @@ export async function createFieldConfigForModelTypes(modelType) {
         .map(fieldConfig => {
             // Translate the sync validator messages if there are any validators
             if (fieldConfig.validators) {
-                console.log(fieldConfig.validators);
                 fieldConfig.validators = fieldConfig.validators
                     .map(validator => ({
                         ...validator,
@@ -306,8 +305,6 @@ export default React.createClass({
     },
 
     _onUpdateField(fieldName, value) {
-        console.log('updating form field');
-
         const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name == fieldName);
 
         if (fieldConfig && fieldConfig.beforeUpdateConverter) {
