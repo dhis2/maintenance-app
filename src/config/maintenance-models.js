@@ -39,14 +39,6 @@ export function getSideBarConfig() {
                 ],
             },
 
-            // TODO: 2.25
-            // validationSection: {
-            //     items: [
-            //         'validationRule',
-            //         'validationRuleGroup',
-            //     ],
-            // },
-
             trackerSection: {
                 items: [
                     'trackedEntityAttribute',

@@ -4,7 +4,6 @@ import dataSet from './dataSet';
 import organisationUnit from './organisationUnit';
 import organisationUnitGroup from './organisationUnitGroup';
 import categoryOption from './categoryOption';
-import validationRule from './validationRule';
 import legendSet from './legendSet';
 import trackedEntityAttribute from './trackedEntityAttribute';
 import predictor from './predictor';
@@ -16,7 +15,6 @@ const overridesByType = {
     organisationUnit,
     organisationUnitGroup,
     categoryOption,
-    validationRule,
     legendSet,
     trackedEntityAttribute,
     predictor,
