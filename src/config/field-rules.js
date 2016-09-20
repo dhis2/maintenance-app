@@ -191,4 +191,40 @@ export default new Map([['dataElement',
         ]
     }
 ]],
+    ['externalMapLayer', [
+        {
+            // When legendSet has value, clear and disable the legendSetUrl field
+            field: 'legendSetUrl',
+            when: [{
+                field: 'legendSet',
+                operator: 'HAS_VALUE'
+            }],
+            operations: [
+                {
+                    field: 'legendSetUrl',
+                    type: 'SET_PROP',
+                    propName: 'disabled',
+                    thenValue: true,
+                    elseValue: false,
+                }
+            ]
+        },
+        {
+            // When legendSetUrl has value, clear and disable the legendSet field
+            field: 'legendSet',
+            when: [{
+                field: 'legendSetUrl',
+                operator: 'HAS_STRING_VALUE',
+            }],
+            operations: [
+                {
+                    field: 'legendSet',
+                    type: 'SET_PROP',
+                    propName: 'disabled',
+                    thenValue: true,
+                    elseValue: false,
+                }
+            ]
+        }
+    ]]
 ]);

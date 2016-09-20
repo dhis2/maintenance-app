@@ -8,6 +8,7 @@ import legendSet from './legendSet';
 import trackedEntityAttribute from './trackedEntityAttribute';
 import predictor from './predictor';
 import pushAnalysis from './pushAnalysis';
+import externalMapLayer from './externalMapLayer';
 
 const overridesByType = {
     dataElement,
@@ -20,6 +21,7 @@ const overridesByType = {
     trackedEntityAttribute,
     predictor,
     pushAnalysis,
+    externalMapLayer,
 };
 
 export default {
