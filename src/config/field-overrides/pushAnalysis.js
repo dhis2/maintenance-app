@@ -50,5 +50,6 @@ SchedulingDayOfFrequency.contextTypes = {
 export default new Map([
     ['schedulingFrequency', {
         component: withSkipLogic((props) => ['WEEKLY', 'MONTHLY'].indexOf(props.value) >= 0 , SchedulingDayOfFrequency, DropDown),
+        required: true,
     }],
 ]);
