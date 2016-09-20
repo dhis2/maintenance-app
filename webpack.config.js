@@ -36,7 +36,6 @@ const scriptPrefix = (isDevBuild ? dhisConfig.baseUrl + '/' : '..');
 
 const webpackConfig = {
     context: __dirname,
-    contentBase: __dirname,
     entry: {
         maintenance: './src/maintenance.js',
         commons: ['material-ui'],
@@ -125,7 +124,6 @@ const webpackConfig = {
         }),
         isDevBuild ? undefined : new Visualizer,
     ].filter(v => v),
-    progress: true,
 
     devServer: {
         colors: true,
