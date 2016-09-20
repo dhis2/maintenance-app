@@ -284,10 +284,10 @@ const fieldOrderByName = new Map([
     ['externalMapLayer', [
         'name',
         'mapService',
+        'imageFormat',
         'url',
         'attribution',
         'layers',
-        'imageFormat',
         'mapLayerPosition',
         'legendSet',
         'legendSetUrl',
