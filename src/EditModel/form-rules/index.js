@@ -6,7 +6,8 @@ import isArray from 'd2-utilizr/lib/isArray';
 const whenOperatorMap = new Map([
     ['EQUALS', equalsOperator],
     ['HAS_VALUE', hasValueOperator],
-    ['ONEOF', oneOfOperator]
+    ['HAS_STRING_VALUE', hasStringValueOperator],
+    ['ONEOF', oneOfOperator],
 ]);
 
 const operationsMap = new Map([
@@ -47,6 +48,10 @@ function getWhenOperator(operatorType) {
 
 function hasValueOperator(value) {
     return value !== undefined && value !== null;
+}
+
+function hasStringValueOperator(value) {
+    return hasValueOperator(value) && value.toString().trim().length > 0;
 }
 
 function equalsOperator(left, right) {
