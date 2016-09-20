@@ -87,7 +87,7 @@ export default new Map([
                             return true;
                         }
 
-                        return nextLegend.startValue >= legend.endValue;
+                        return Number(nextLegend.startValue) >= Number(legend.endValue);
                     });
                 },
             },
@@ -101,7 +101,7 @@ export default new Map([
                             return true;
                         }
 
-                        return legend.endValue >= nextLegend.startValue;
+                        return Number(legend.endValue) >= Number(nextLegend.startValue);
                     });
                 },
             }
