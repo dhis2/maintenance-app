@@ -275,6 +275,7 @@ const fieldOrderByName = new Map([
     ]],
     ['pushAnalysis', [
         'name',
+        'code',
         'message',
         'dashboard',
         'recipientUserGroups',
@@ -283,11 +284,11 @@ const fieldOrderByName = new Map([
     ]],
     ['externalMapLayer', [
         'name',
+        'code',
         'mapService',
         'imageFormat',
         'url',
         'attribution',
-        'layers',
         'mapLayerPosition',
         'legendSet',
         'legendSetUrl',
