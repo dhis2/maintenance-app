@@ -44,18 +44,34 @@ export default class TextFormField extends Component {
     }
 
     render() {
-        const props = this.props;
+        const {
+            label,
+            labelText,
+            multiLine,
+            model,
+            modelDefinition,
+            models,
+            referenceType,
+            referenceProperty,
+            isInteger,
+            translateOptions,
+            isRequired,
+            options,
+            ...rest
+        } = this.props;
         const errorStyle = {
-            lineHeight: props.multiLine ? '48px' : '12px',
-            marginTop: props.multiLine ? -16 : -12,
+            lineHeight: multiLine ? '48px' : '12px',
+            marginTop: multiLine ? -16 : -12,
         };
 
         return (
             <TextField
                 errorStyle={errorStyle}
-                {...props}
+                label={label}
+                multiLine={multiLine}
+                {...rest}
                 value={this.state.fieldValue}
-                floatingLabelText={props.labelText}
+                floatingLabelText={labelText}
                 onChange={this._onValueChanged}
             />
         );

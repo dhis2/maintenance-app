@@ -67,14 +67,28 @@ export default React.createClass({
     },
 
     render() {
-        const { onFocus, onBlur, ...other } = this.props;
+        const {
+            onFocus,
+            onBlur,
+            labelText,
+            modelDefinition,
+            models,
+            referenceType,
+            referenceProperty,
+            isInteger,
+            translateOptions,
+            isRequired,
+            options,
+            model,
+            ...other
+        } = this.props;
 
         return (
             <SelectField
                 value={this.state.value}
                 {...other}
                 onChange={this._onChange}
-                floatingLabelText={this.props.labelText}
+                floatingLabelText={labelText}
             >
                 {this.renderOptions()}
             </SelectField>

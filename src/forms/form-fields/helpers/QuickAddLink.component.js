@@ -26,8 +26,6 @@ export default function QuickAddLink(props) {
     return (
         <div style={styles.quickAddWrap}>
             <Link
-                tooltip="Add some related object"
-                tooltipPosition="top-left"
                 to={`/edit/${sectionForReferenceType}/${referenceType}/add`}
                 target="_blank"
                 rel="noopener noreferrer"
