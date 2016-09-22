@@ -30,6 +30,17 @@ function configI18n(userSettings) {
 
     // Add english as locale for all cases (either as primary or fallback)
     config.i18n.sources.add('./i18n/i18n_module_en.properties');
+
+    // Force load strings for the header-bar
+    config.i18n.strings.add('app_search_placeholder');
+    config.i18n.strings.add('manage_my_apps');
+    config.i18n.strings.add('log_out');
+    config.i18n.strings.add('account');
+    config.i18n.strings.add('profile');
+    config.i18n.strings.add('settings');
+    config.i18n.strings.add('about_dhis2');
+    config.i18n.strings.add('help');
+    config.i18n.strings.add('no_results_found');
 }
 
 function startApp() {
