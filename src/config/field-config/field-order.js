@@ -276,6 +276,7 @@ const fieldOrderByName = new Map([
     ['pushAnalysis', [
         'name',
         'code',
+        'title',
         'message',
         'dashboard',
         'recipientUserGroups',
