@@ -77,6 +77,22 @@ export default React.createClass({
     },
 
     render() {
+        const {
+            errorStyle,
+            errorText,
+            modelDefinition,
+            models,
+            referenceType,
+            referenceProperty,
+            isInteger,
+            multiLine,
+            fullWidth,
+            translateOptions,
+            isRequired,
+            options,
+            model,
+            ...other,
+        } = this.props;
         const styles = {
             wrap: {
                 display: 'flex',
@@ -88,7 +104,7 @@ export default React.createClass({
             <div style={styles.wrap}>
                 {this.state.isRefreshing ? <RefreshMask horizontal={true} /> : null}
                 <DropDown
-                    {...this.props}
+                    {...other}
                     options={this.state.options}
                     value={this.props.value ? this.props.value.id : undefined}
                     onChange={this._onChange}

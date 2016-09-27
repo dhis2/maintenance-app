@@ -14,7 +14,24 @@ export default React.createClass({
 
     render() {
         // Do not pass the value on to the CheckBox component
-        const { value, ...otherProps } = this.props;
+        const {
+            value,
+            errorStyle,
+            errorText,
+            labelText,
+            modelDefinition,
+            models,
+            referenceType,
+            referenceProperty,
+            isInteger,
+            multiLine,
+            fullWidth,
+            translateOptions,
+            isRequired,
+            options,
+            model,
+            ...otherProps,
+        } = this.props;
 
         return (
             <div style={{ marginTop: 12, marginBottom: 12 }}>

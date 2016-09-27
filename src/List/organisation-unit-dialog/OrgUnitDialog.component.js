@@ -129,30 +129,30 @@ class OrgUnitDialog extends React.Component {
 
         const styles = {
             dialog: {
-                minWidth: 875, maxWidth: '100%',
+                minWidth: '875px', maxWidth: '100%',
             },
             wrapper: {
                 position: 'relative',
-                height: 450, minHeight: 450, maxHeight: 450,
-                minWidth: 800,
+                height: '450px', minHeight: '450px', maxHeight: '450px',
+                minWidth: '800px',
             },
             loadingMask: {
                 position: 'fixed',
-                top: 54, right: 22,
-                width: 480,
-                height: 250,
+                top: '54px', right: '22px',
+                width: '480px',
+                height: '250px',
                 background: 'rgba(255,255,255,0.6)',
                 zIndex: 5,
             },
             controls: {
                 position: 'fixed',
-                top: 56, right: 24,
-                width: 475,
+                top: '56px', right: '24px',
+                width: '475px',
                 zIndex: 1,
                 background: 'white',
             },
             cancelButton: {
-                marginRight: 16,
+                marginRight: '16px',
             },
         };
 
