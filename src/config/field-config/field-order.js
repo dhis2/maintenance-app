@@ -15,6 +15,8 @@ const fieldOrderByName = new Map([
         'commentOptionSet',
         'legendSet',
         'aggregationLevels',
+        'aggregateExportCategoryOptionCombo',
+        'aggregateExportAttributeOptionCombo',
     ]],
     ['dataElementGroup', [
         'name',
@@ -83,6 +85,8 @@ const fieldOrderByName = new Map([
         'indicatorType',
         'legendSet',
         'url',
+        'aggregateExportCategoryOptionCombo',
+        'aggregateExportAttributeOptionCombo',
     ]],
     ['indicatorGroup', [
         'name',
@@ -121,6 +125,8 @@ const fieldOrderByName = new Map([
         'renderAsTabs',
         'renderHorizontally',
         'dataElements',
+        'aggregateExportCategoryOptionCombo',
+        'aggregateExportAttributeOptionCombo',
         'indicators',
         'organisationUnits',
     ]],
