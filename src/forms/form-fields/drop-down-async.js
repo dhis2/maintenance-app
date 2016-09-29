@@ -91,6 +91,7 @@ export default React.createClass({
             isRequired,
             options,
             model,
+            queryParamFilter,
             ...other,
         } = this.props;
         const styles = {

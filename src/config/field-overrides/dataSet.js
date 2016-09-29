@@ -17,11 +17,6 @@ export default new Map([
             ],
         },
     }],
-    ['expiryDays', {
-        fieldOptions: {
-            defaultValue: 0,
-        },
-    }],
     ['organisationUnits', {
         component: OrganisationUnitTreeMultiSelect,
         fieldOptions: {},
