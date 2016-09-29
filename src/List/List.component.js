@@ -261,6 +261,10 @@ const List = React.createClass({
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'pdfDataSetForm':
             return model.modelDefinition.name === 'dataSet' && model.access.read;
+        case 'runNow':
+            return model.modelDefinition.name === 'pushAnalysis' && model.access.write;
+        case 'preview':
+            return model.modelDefinition.name === 'pushAnalysis' && model.access.write;
         default:
             return true;
         }
@@ -343,6 +347,8 @@ const List = React.createClass({
             dataEntryForm: 'assignment',
             pdfDataSetForm: 'picture_as_pdf',
             compulsoryDataElements: 'border_color',
+            runNow: 'queue_play_next',
+            preview: 'dashboard',
         };
 
         return (

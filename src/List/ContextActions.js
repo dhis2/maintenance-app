@@ -27,6 +27,8 @@ const contextActions = Action.createActionsFromNames([
     'sectionForm',
     'dataEntryForm',
     'pdfDataSetForm',
+    'preview',
+    'runNow',
 ]);
 
 const confirm = (message) => new Promise((resolve, reject) => {
@@ -214,4 +216,32 @@ contextActions.pdfDataSetForm
             .then(complete)
             .catch(error);
     });
+
+contextActions.runNow
+    .subscribe(({ data: model, complete: actionComplete, error: actionFailed }) => {
+        getD2()
+            .then(d2 => {
+                d2.Api.getApi().post([model.modelDefinition.name, model.id, 'run'].join('/'));
+                snackActions.show({ message: d2.i18n.getTranslation('report_queued_for_delivery') });
+            })
+            .then(actionComplete)
+            .catch(err => {
+                snackActions.show({ message: d2.i18n.getTranslation('failed_to_schedule_report') });
+                actionFailed(err);
+            });
+    });
+
+contextActions.preview
+    .subscribe(({ data: model, complete: actionComplete, error: actionFailed }) => {
+        getD2()
+            .then(d2 => {
+                window.open(`${d2.Api.getApi().baseUrl}/${[model.modelDefinition.name, model.id, 'render'].join('/')}`);
+            })
+            .then(actionComplete)
+            .catch(err => {
+                snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview') });
+                actionFailed(err);
+            });
+    });
+
 export default contextActions;
