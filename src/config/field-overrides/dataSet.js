@@ -6,7 +6,7 @@ export default new Map([
     ['categoryCombo', {
         referenceType: 'categoryCombo',
         fieldOptions: {
-            queryParamFilter: ['dataDimensionType:eq:ATTRIBUTE'],
+            queryParamFilter: ['dataDimensionType:eq:ATTRIBUTE', 'name:eq:default'],
         },
     }],
     ['periodType', {

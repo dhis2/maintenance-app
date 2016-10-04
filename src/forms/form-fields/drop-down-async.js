@@ -21,10 +21,19 @@ export default React.createClass({
     },
 
     loadOptions() {
-        const fieldsForReferenceType = this.props.referenceType === 'optionSet' ? 'id,displayName,name,valueType' : 'id,displayName,name';
+        const fieldsForReferenceType = this.props.referenceType === 'optionSet'
+            ? 'id,displayName,name,valueType'
+            : 'id,displayName,name';
+        const filter = this.props.queryParamFilter;
 
         return getInstance()
-            .then(d2 => d2.models[this.props.referenceType].list({ fields: fieldsForReferenceType, paging: false, filter: this.props.queryParamFilter }))
+            .then(d2 => d2.models[this.props.referenceType].list(Object.assign({
+                fields: fieldsForReferenceType,
+                paging: false,
+                filter,
+            }, filter && filter.length > 1 ? {
+                rootJunction: 'OR',
+            } : {})))
             .then(modelCollection => modelCollection.toArray())
             .then(values => values.map(model => {
                 return {
@@ -35,7 +44,16 @@ export default React.createClass({
             }))
             .then(options => {
                 this.setState({
-                    options: options,
+                    // TODO: Behold the very special hack for renaming the very special 'default' cat combo to 'None'
+                    options: options.map(option => Object.assign(
+                        option,
+                        option.model &&
+                        option.model.modelDefinition &&
+                        option.model.modelDefinition.name === 'categoryCombo' &&
+                        option.text === 'default'
+                            ? { text: 'None' }
+                            : {}
+                    )),
                 }, () => {
                     // TODO: Hack to default categoryCombo to 'default'
                     const defaultOption = this.state.options.find(option => {
@@ -88,7 +106,6 @@ export default React.createClass({
             multiLine,
             fullWidth,
             translateOptions,
-            isRequired,
             options,
             model,
             queryParamFilter,
