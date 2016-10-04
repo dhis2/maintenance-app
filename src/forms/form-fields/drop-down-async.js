@@ -126,6 +126,7 @@ export default React.createClass({
                     options={this.state.options}
                     value={this.props.value ? this.props.value.id : undefined}
                     onChange={this._onChange}
+                    fullWidth
                 />
                 <QuickAddLink
                     referenceType={this.props.referenceType}
