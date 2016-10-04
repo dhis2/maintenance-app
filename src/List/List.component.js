@@ -394,6 +394,7 @@ const List = React.createClass({
                     objectToShare={this.state.sharing.model}
                     open={this.state.sharing.open && this.state.sharing.model}
                     onRequestClose={this._closeSharingDialog}
+                    bodyStyle={{ minHeight: '400px' }}
                 /> : null }
                 {this.state.translation.model ? <TranslationDialog
                     objectToTranslate={this.state.translation.model}
