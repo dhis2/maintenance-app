@@ -49,10 +49,14 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
     }
 
     const d2 = await getInstance();
-    const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits();
+    const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits({ paging: false });
 
     if (d2.currentUser.authorities.has('ALL') && !organisationUnitsCollection.size) {
-        const rootLevelOrgUnits = await d2.models.organisationUnits.list({level: 1});
+        const rootLevelOrgUnits = await d2.models.organisationUnits.list({
+            level: 1,
+            paging: false,
+            fields: 'id,displayName|rename(name),publicAccess,lastUpdated,children[id,displayName,children::isNotEmpty]',
+        });
 
         getCurrentUserOrganisationUnits.currentUserOrganisationUnits = rootLevelOrgUnits;
 
@@ -72,11 +76,11 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
 }
 
 async function loadSelectedOrganisationUnitState() {
-    if (appState.state && appState.state.selectedOrganisationUnit) {
+    if (appState.state && appState.state.selectedOrganisationUnit && appState.state.selectedOrganisationUnit.length) {
         return appState.state.selectedOrganisationUnit;
     }
 
-    const organisationUnitsCollection = await getCurrentUserOrganisationUnits();
+    const organisationUnitsCollection = await getCurrentUserOrganisationUnits(true);
 
     return organisationUnitsCollection.toArray()
         .reduce((selectedOU, orgUnit) => {

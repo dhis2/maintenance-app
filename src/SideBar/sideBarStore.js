@@ -59,8 +59,8 @@ export default sideBarState;
 
 const organisationUnitAdded$ = objectActions.saveObject
     .map(() => modelToEditStore.state)
-    .filter((modelToEdit) => modelToEdit.modelDefinition.name === 'organisationUnit')
-    .map((modelToEdit) => modelToEdit.parent);
+    .filter(modelToEdit => modelToEdit.modelDefinition.name === 'organisationUnit')
+    .map((modelToEdit) => modelToEdit.parent || modelToEdit);
 
 const afterOrganisationUnitDeleted$ = afterDeleteHook$
     .filter(data => data.modelType && data.modelType === 'organisationUnit')

@@ -17,6 +17,7 @@ class SideBarContainer extends React.Component {
             });
 
         this.organisationUnitSaved = organisationUnitTreeChanged$
+            .filter(orgUnits => orgUnits)
             .subscribe(organisationUnitToReload => {
                 this.setState({ organisationUnitsToReload: [organisationUnitToReload.id] }, () => this.forceUpdate());
             });
@@ -50,8 +51,8 @@ class SideBarContainer extends React.Component {
                         <OrganisationUnitTreeWithSingleSelectionAndSearch
                             onUpdateInput={this._searchOrganisationUnits.bind(this)}
                             onAutoCompleteValueSelected={this._onAutoCompleteValueSelected.bind(this)}
-                            autoCompleteDataSource={(this.state.autoCompleteOrganisationUnits || []).map(model => model.displayName)}
-                            roots={this.state.userOrganisationUnits.toArray()}
+                            autoCompleteDataSource={(this.state.autoCompleteOrganisationUnits || []).map(model => model.name)}
+                            roots={this.state.userOrganisationUnits.toArray().map(ou => Object.assign(ou, { displayName: ou.name }))}
                             selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
                             initiallyExpanded={this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || [])}
                             onClick={this._onChangeSelectedOrgUnit.bind(this)}
