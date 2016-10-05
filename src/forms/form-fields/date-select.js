@@ -23,7 +23,6 @@ export default React.createClass({
     },
 
     render() {
-        console.warn(this.props);
         const styles = {
             closeButton: {
                 position: 'absolute',

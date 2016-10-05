@@ -75,7 +75,7 @@ function startApp() {
     render(
         <MuiThemeProvider muiTheme={appTheme}>
             <div>
-                {routes},
+                {routes}
             </div>
         </MuiThemeProvider>,
         document.getElementById('app')
