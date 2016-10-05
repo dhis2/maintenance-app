@@ -124,7 +124,7 @@ const fieldOrderByName = new Map([
         'dataElementDecoration',
         'renderAsTabs',
         'renderHorizontally',
-        'dataElements',
+        'dataSetElements',
         'aggregateExportCategoryOptionCombo',
         'aggregateExportAttributeOptionCombo',
         'indicators',

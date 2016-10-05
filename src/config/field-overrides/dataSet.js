@@ -1,6 +1,7 @@
+import React from 'react';
 import { SELECT } from '../../forms/fields';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
-import React from 'react';
+import DataSetElementField from './data-set/DataSetElementField.component';
 
 export default new Map([
     ['categoryCombo', {
@@ -21,9 +22,7 @@ export default new Map([
         component: OrganisationUnitTreeMultiSelect,
         fieldOptions: {},
     }],
-    ['dataElements', {
-        fieldOptions: {
-            queryParamFilter: ['domainType:eq:AGGREGATE'],
-        }
-    }]
+    ['dataSetElements', {
+        component: DataSetElementField,
+    }],
 ]);

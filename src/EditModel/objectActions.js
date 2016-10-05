@@ -105,7 +105,7 @@ objectActions.getObjectOfTypeByIdAndClone
     });
 
 objectActions.saveObject
-    .filter(({ data }) => data.modelType !== 'legendSet')
+    .filter(({ data }) => ['legendSet', 'dataSet'].indexOf(data.modelType) === -1)
     .subscribe(action => {
     const errorHandler = (message) => {
         action.error(message);
@@ -166,6 +166,40 @@ objectActions.saveObject
             log.error(e);
         }
     }, (e) => log.error(e));
+
+objectActions.saveObject
+    .filter(({ data }) => data.modelType === 'dataSet')
+    .subscribe(async ({ complete, error }) => {
+        const dataSetModel = modelToEditStore.getState();
+        const dataSet = getOwnedPropertyJSON(dataSetModel);
+        const dataSetElements = Array
+            .from(dataSetModel.dataSetElements.values())
+            .map(dataSetElement => getOwnedPropertyJSON(dataSetElement));
+
+        console.log(dataSet, dataSetElements);
+        const metadataPayload = {
+            dataSets: [dataSet],
+            dataSetElements,
+        };
+
+        const d2 = await getInstance();
+        const api = d2.Api.getApi();
+
+        try {
+            const response = await api.post('metadata', metadataPayload);
+
+            if (response.status === 'OK') {
+                complete('save_success');
+            } else {
+                const errorMessages = extractErrorMessagesFromResponse(response);
+
+                error(d2.i18n.getTranslation('could_not_save_data_set_($$message$$)', { message: head(errorMessages) || 'Unknown error!' }));
+            }
+        } catch (e) {
+            error(d2.i18n.getTranslation('could_not_save_data_set'));
+            log.error(e);
+        }
+    });
 
 objectActions.update.subscribe(action => {
     const { fieldName, value } = action.data;
