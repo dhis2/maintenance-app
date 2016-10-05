@@ -45,7 +45,8 @@ const enhanceCategoryComboSelectField = compose(
 
 const CategoryComboSelectField = enhanceCategoryComboSelectField(
     function CategoryComboSelectField({ categoryCombos, value, onChange, d2 }) {
-        const options = getOptions(categoryCombos);
+        const options = [<MenuItem key="none" label=" " primaryText={d2.i18n.getTranslation('none')} value={undefined} />]
+            .concat(getOptions(categoryCombos));
 
         return (
             <SelectField
