@@ -87,6 +87,7 @@ export default React.createClass({
             assignedItemStore,
             filterText: '',
             isRefreshing: false,
+            canCreate: false,
         };
     },
 
@@ -96,6 +97,7 @@ export default React.createClass({
         }
 
         getInstance()
+            .then(this.checkCreateAuthority)
             .then(this.loadAvailableItems)
             .then(this.populateItemStore)
             .then(this.populateAssignedStore);
@@ -156,10 +158,12 @@ export default React.createClass({
                 {this.state.isRefreshing ? <RefreshMask /> : null }
                 <div style={styles.labelWrap}>
                     <label style={styles.labelStyle}>{this.props.labelText || ''}</label>
-                    <QuickAddLink
-                        referenceType={this.props.referenceType}
-                        onRefreshClick={this.reloadAvailableItems}
-                    />
+                    {this.state.canCreate ? (
+                        <QuickAddLink
+                            referenceType={this.props.referenceType}
+                            onRefreshClick={this.reloadAvailableItems}
+                        />
+                    ) : null}
                 </div>
                 <TextField
                     fullWidth
@@ -285,6 +289,14 @@ export default React.createClass({
                     isRefreshing: false,
                 });
             });
+    },
+
+    checkCreateAuthority(d2) {
+        const key = this.props.referenceType;
+        if (d2.currentUser.canCreate(d2.models[key])) {
+            this.setState({ canCreate: true });
+        }
+        return d2;
     },
 
     loadAvailableItems(d2) {
