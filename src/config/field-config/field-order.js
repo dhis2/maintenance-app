@@ -271,6 +271,7 @@ const fieldOrderByName = new Map([
         'shortName',
         'code',
         'description',
+        'output',
         'periodType',
         'organisationUnitLevels',
         'generator',
