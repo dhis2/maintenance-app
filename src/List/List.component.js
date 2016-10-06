@@ -390,6 +390,9 @@ const List = React.createClass({
                             />
                         : null}
                 </div>
+                <div style={{ marginTop: '-2rem', paddingBottom: '0.5rem' }}>
+                    <Pagination {...paginationProps} />
+                </div>
                 {this.state.sharing.model ? <SharingDialog
                     objectToShare={this.state.sharing.model}
                     open={this.state.sharing.open && this.state.sharing.model}
