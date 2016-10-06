@@ -84,9 +84,23 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
     }
 
     renderRoots() {
+        const treeWrapperStyle = {
+            minHeight: 250,
+            maxHeight: 350,
+            minWidth: 350,
+            maxWidth: 480,
+            overflow: 'auto',
+            border: '1px solid #bdbdbd',
+            borderRadius: 3,
+            padding: 4,
+            margin: '4px 0',
+            display: 'inline-block',
+            verticalAlign: 'top',
+        };
+
         if (this.state.rootOrgUnits.length) {
             return (
-                <div style={{ maxHeight: 350, maxWidth: 480, overflow: 'auto' }}>
+                <div style={treeWrapperStyle}>
                     {this.state.rootOrgUnits.map(rootOu => (
                         <OrgUnitTree
                             key={rootOu.id}
@@ -112,12 +126,11 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
         }
 
         const controlStyles = {
-            float: 'right',
-            // position: 'absolute',
-            // top: 64, right: 24,
             width: 475,
             zIndex: 1,
             background: 'white',
+            marginLeft: '1rem',
+            display: 'inline-block',
         };
 
         return (
@@ -128,6 +141,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                     fullWidth
                 />
                 <div className="organisation-unit-tree__selected">{this.state.selectedOrgUnits.length} {this.context.d2.i18n.getTranslation('organisation_units_selected')}</div>
+                {this.renderRoots()}
                 {this.state.orgUnitGroups && this.state.orgUnitLevels && (
                     <div style={controlStyles}>
                         <OrgUnitSelectByLevel
@@ -148,7 +162,6 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                         </div>
                     </div>
                 )}
-                {this.renderRoots()}
             </div>
         );
     }
