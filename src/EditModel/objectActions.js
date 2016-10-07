@@ -170,20 +170,31 @@ objectActions.saveObject
 objectActions.saveObject
     .filter(({ data }) => data.modelType === 'dataSet')
     .subscribe(async ({ complete, error }) => {
-        const dataSetModel = modelToEditStore.getState();
-        const dataSet = getOwnedPropertyJSON(dataSetModel);
-        const dataSetElements = Array
-            .from(dataSetModel.dataSetElements.values())
-            .map(dataSetElement => getOwnedPropertyJSON(dataSetElement));
-
-        console.log(dataSet, dataSetElements);
-        const metadataPayload = {
-            dataSets: [dataSet],
-            dataSetElements,
-        };
-
         const d2 = await getInstance();
         const api = d2.Api.getApi();
+
+        const dataSetModel = modelToEditStore.getState();
+        const dataSetPayload = getOwnedPropertyJSON(dataSetModel);
+
+        if (!dataSetPayload.id) {
+            const dataSetId = await api.get('system/uid', { limit: 1 }).then(({ codes }) => codes[0]);
+            dataSetPayload.id = dataSetId;
+        }
+
+        const dataSetElements = Array
+            .from(dataSetModel.dataSetElements.values())
+            .map(dataSetElement => getOwnedPropertyJSON(dataSetElement))
+            .map(({ dataSet, ...other }) => {
+                return {
+                    dataSet: { ...dataSet, id: dataSet.id || dataSetPayload.id },
+                    ...other,
+                }
+            });
+
+        const metadataPayload = {
+            dataSets: [dataSetPayload],
+            dataSetElements,
+        };
 
         try {
             const response = await api.post('metadata', metadataPayload);
