@@ -78,24 +78,60 @@ class CompulsoryDataElementOperandDialog extends Component {
 
         this.i18n = context.d2.i18n;
 
-        itemsAvailableStore.setState(props.dataElementOperands
-            .map(operand => {
-                return {
+        if (props.dataElementOperands && props.model) {
+            itemsAvailableStore.setState(
+                props.dataElementOperands.map(operand => ({
                     text: operand.displayName,
                     value: [operand.dataElementId, operand.optionComboId].join('.'),
-                };
-            }));
+                }))
+            );
 
-        itemsSelectedStore.setState(
-            props.model.compulsoryDataElementOperands
-                .filter(deo => deo.dataElement && deo.categoryOptionCombo)
-                .map(deo => [deo.dataElement.id, deo.categoryOptionCombo.id].join('.'))
-        );
+            itemsSelectedStore.setState(
+                props.model.compulsoryDataElementOperands
+                    .filter(deo => deo.dataElement && deo.categoryOptionCombo)
+                    .map(deo => [deo.dataElement.id, deo.categoryOptionCombo.id].join('.'))
+            );
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        if (!props.open) {
+            itemsAvailableStore.setState(undefined);
+            itemsSelectedStore.setState([]);
+        } else if (props.dataElementOperands && props.model) {
+            itemsAvailableStore.setState(
+                props.dataElementOperands.map(operand => ({
+                    text: operand.displayName,
+                    value: [operand.dataElementId, operand.optionComboId].join('.'),
+                }))
+            );
+
+            itemsSelectedStore.setState(
+                props.model.compulsoryDataElementOperands
+                    .filter(deo => deo.dataElement && deo.categoryOptionCombo)
+                    .map(deo => [deo.dataElement.id, deo.categoryOptionCombo.id].join('.'))
+            );
+        }
     }
 
     render() {
-        const isLoaded = Boolean(this.props.dataElementOperands);
         const saveButtonText = this.state.isSaving ? this.i18n.getTranslation('saving') : this.i18n.getTranslation('save');
+        const dialogActions = [
+            <FlatButton
+                disabled={this.state.isSaving}
+                style={{marginRight: '1rem'}}
+                onClick={this.props.onRequestClose}
+                label={this.i18n.getTranslation('close')}
+            />,
+            <RaisedButton
+                labelColor="white"
+                disabledLabelColor="#666"
+                disabled={this.state.isSaving}
+                primary
+                onClick={this._saveCollection}
+                label={saveButtonText}
+            />
+        ];
 
         return (
             <Dialog
@@ -103,31 +139,20 @@ class CompulsoryDataElementOperandDialog extends Component {
                 onRequestClose={this.props.onRequestClose}
                 autoScrollBodyContent={true}
                 modal={true}
+                actions={dialogActions}
             >
-                <div>
-                    <Heading>{this.i18n.getTranslation('edit_compulsory_data_elements')} - {this.props.model.displayName}</Heading>
-                    {isLoaded ? this.renderDialogContent() : <CircularProgress indetermined />}
-                    <div style={styles.formButtons}>
-                        <RaisedButton labelColor="white" disabledLabelColor="#666" disabled={this.state.isSaving} primary onClick={this._saveCollection} label={saveButtonText} />
-                        <FlatButton disabled={this.state.isSaving} style={{marginLeft: '1rem'}} onClick={this.props.onRequestClose}>{this.i18n.getTranslation('close')}</FlatButton>
-                    </div>
+                <div style={{ marginBottom: '3.5rem' }}>
+                    <Heading>{this.i18n.getTranslation('edit_compulsory_data_elements')} - {this.props.model && this.props.model.displayName}</Heading>
+                    <GroupEditor
+                        itemStore={itemsAvailableStore}
+                        assignedItemStore={itemsSelectedStore}
+                        onAssignItems={this._assignItems}
+                        onRemoveItems={this._removeItems}
+                        height={350}
+                        filterText={this.state.filterText}
+                    />
                 </div>
             </Dialog>
-        );
-    }
-
-    renderDialogContent() {
-        return (
-            <div style={styles.groupEditorWrap}>
-                <GroupEditor
-                    itemStore={itemsAvailableStore}
-                    assignedItemStore={itemsSelectedStore}
-                    onAssignItems={this._assignItems}
-                    onRemoveItems={this._removeItems}
-                    height={250}
-                    filterText={this.state.filterText}
-                />
-            </div>
         );
     }
 
@@ -137,7 +162,7 @@ class CompulsoryDataElementOperandDialog extends Component {
         itemsSelectedStore.setState(newState);
 
         return Promise.resolve(true);
-    }
+    };
 
     _removeItems = (selectedItems) => {
         const newState = itemsSelectedStore.getState()
@@ -146,7 +171,7 @@ class CompulsoryDataElementOperandDialog extends Component {
         itemsSelectedStore.setState(newState);
 
         return Promise.resolve(true);
-    }
+    };
 
     _saveCollection = () => {
         const collectionToSave = itemsSelectedStore.getState()
@@ -194,7 +219,7 @@ class CompulsoryDataElementOperandDialog extends Component {
                 this.props.onRequestClose();
             });
 
-    }
+    };
 }
 
 export default addD2Context(CompulsoryDataElementOperandDialog);

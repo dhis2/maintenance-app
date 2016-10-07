@@ -152,7 +152,13 @@ contextActions.compulsoryDataElements
     .subscribe(async ({ data: model }) => {
         const d2 = await getD2();
         const api = d2.Api.getApi();
-        const getModelItem = () => d2.models[model.modelDefinition.name].get(model.id);
+        const getModelItem = () => d2.models[model.modelDefinition.name].get(model.id, {
+            fields: [
+                ':all',
+                'id,dataSetElements[id,dataElement[id]]',
+                'compulsoryDataElementOperands[id,dataElement[id],categoryOptionCombo[id]]'
+            ].join(','),
+        });
         const getDataElementOperands = () => api
             .get(
                 'dataElementOperands',
@@ -167,13 +173,15 @@ contextActions.compulsoryDataElements
         // Open dialog immediately so we can show a progress indicator
         compulsoryDataElementStore.setState({
             open: true,
+            model: undefined,
+            dataElementOperands: [],
         });
 
         const [modelItem, dataElementOperands] = await Promise.all([getModelItem(), getDataElementOperands()]);
 
-        const dataSetDataElementIds = modelItem.dataElements
+        const dataSetDataElementIds = modelItem.dataSetElements
             .toArray()
-            .map(dataElement => dataElement.id);
+            .map(dataSetElement => dataSetElement.dataElement.id);
 
         const dataElementOperandsForDataSet = dataElementOperands
             .filter(dataElementOperand => dataSetDataElementIds.indexOf(dataElementOperand.dataElementId) >= 0);

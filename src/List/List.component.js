@@ -416,16 +416,14 @@ const List = React.createClass({
                     onOrgUnitAssignmentError={this._orgUnitAssignmentError}
                     onRequestClose={this._closeOrgUnitDialog}
                 /> : null }
-                {this.state.dataElementOperand.model ? (
-                    <CompulsoryDataElementOperandDialog
-                        model={this.state.dataElementOperand.model}
-                        dataElementOperands={this.state.dataElementOperand.dataElementOperands}
-                        open={this.state.dataElementOperand.open}
-                        onDataElementOperandsSaved={this._orgUnitAssignmentSaved}
-                        onDataElementOperandsError={this._orgUnitAssignmentError}
-                        onRequestClose={this._closeDataElementOperandDialog}
-                    />
-                ) : null}
+                <CompulsoryDataElementOperandDialog
+                    model={this.state.dataElementOperand.model}
+                    dataElementOperands={this.state.dataElementOperand.dataElementOperands}
+                    open={this.state.dataElementOperand.open}
+                    onDataElementOperandsSaved={this._orgUnitAssignmentSaved}
+                    onDataElementOperandsError={this._orgUnitAssignmentError}
+                    onRequestClose={this._closeDataElementOperandDialog}
+                />
             </div>
         );
     },
