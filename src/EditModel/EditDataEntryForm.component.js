@@ -8,7 +8,7 @@ import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import Paper from 'material-ui/Paper/Paper';
 import TextField from 'material-ui/TextField/TextField';
-import Checkbox from 'material-ui/Checkbox/Checkbox';
+import CheckBox from 'material-ui/Checkbox/Checkbox';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
@@ -93,7 +93,7 @@ class EditDataEntryForm extends React.Component {
                 paging: false,
                 totals: true,
                 fields: 'id,displayName',
-                filter: [`dataElement.dataSets.id:eq:${props.params.modelId}`],
+                filter: [`dataElement.dataSetElements.dataSet.id:eq:${props.params.modelId}`],
             }),
             context.d2.Api.getApi().get('system/flags'),
         ]).then(([
