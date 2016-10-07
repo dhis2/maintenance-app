@@ -198,21 +198,21 @@ const List = React.createClass({
     },
 
     _translationSaved() {
-        snackActions.show({ message: 'translation_saved', action: 'ok', translate: true });
+        snackActions.show({ message: 'translation_saved', translate: true });
     },
 
     _translationError(errorMessage) {
         log.error(errorMessage);
-        snackActions.show({ message: 'translation_save_error', translate: true });
+        snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
     },
 
     _orgUnitAssignmentSaved() {
-        snackActions.show({ message: 'organisation_unit_assignment_saved', action: 'ok', translate: true });
+        snackActions.show({ message: 'organisation_unit_assignment_saved', translate: true });
     },
 
     _orgUnitAssignmentError(errorMessage) {
         log.error(errorMessage);
-        snackActions.show({ message: 'organisation_unit_assignment_save_error', translate: true });
+        snackActions.show({ message: 'organisation_unit_assignment_save_error', action: 'ok', translate: true });
     },
 
     isContextActionAllowed(model, action) {

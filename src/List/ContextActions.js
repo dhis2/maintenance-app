@@ -97,6 +97,7 @@ contextActions.delete
                                 message: response.message
                                     ? response.message
                                     : `${model.name} ${d2.i18n.getTranslation('was_not_deleted')}`,
+                                action: 'ok',
                             });
                         });
                 }
@@ -234,7 +235,7 @@ contextActions.runNow
             })
             .then(actionComplete)
             .catch(err => {
-                snackActions.show({ message: d2.i18n.getTranslation('failed_to_schedule_report') });
+                snackActions.show({ message: d2.i18n.getTranslation('failed_to_schedule_report'), action: 'ok' });
                 actionFailed(err);
             });
     });
@@ -247,7 +248,7 @@ contextActions.preview
             })
             .then(actionComplete)
             .catch(err => {
-                snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview') });
+                snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview'), action: 'ok' });
                 actionFailed(err);
             });
     });

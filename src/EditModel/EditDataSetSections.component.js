@@ -119,13 +119,13 @@ class EditDataSetSections extends React.Component {
             onActionTouchTap: () => {
                 section.delete()
                     .then(() => {
-                        snackActions.show({ message: this.getTranslation('section_deleted'), action: 'ok' });
+                        snackActions.show({ message: this.getTranslation('section_deleted') });
                         this.setState(state => ({
                             sections: state.sections.filter(s => s.id !== section.id),
                         }));
                     })
                     .catch(err => {
-                        snackActions.show({ message: this.getTranslation('failed_to_delete_section') });
+                        snackActions.show({ message: this.getTranslation('failed_to_delete_section'), action: 'ok' });
                         log.warn('Failed to delete section', err);
                     });
             }
@@ -139,12 +139,12 @@ class EditDataSetSections extends React.Component {
     }
 
     handleTranslationSaved() {
-        snackActions.show({ message: 'translation_saved', action: 'ok', translate: true });
+        snackActions.show({ message: 'translation_saved', translate: true });
     }
 
     handleTranslationErrored(errorMessage) {
         log.error(errorMessage);
-        snackActions.show({ message: 'translation_save_error', translate: true });
+        snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
     }
 
     handleSectionGreyFieldsClick(section) {
@@ -162,11 +162,11 @@ class EditDataSetSections extends React.Component {
                 sectionB.save(),
             ])
                 .then(() => {
-                    snackActions.show({ message: this.getTranslation('section_moved'), action: 'ok' });
+                    snackActions.show({ message: this.getTranslation('section_moved') });
                 })
                 .catch(err => {
                     log.warn('Failed to swap sections:', err);
-                    snackActions.show({ message: this.getTranslation('failed_to_move_section') });
+                    snackActions.show({ message: this.getTranslation('failed_to_move_section'), action: 'ok' });
                 });
 
             return {

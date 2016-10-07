@@ -204,13 +204,13 @@ class CompulsoryDataElementOperandDialog extends Component {
             .then(() => {
                 snackActions.show({
                     message: 'saved_compulsory_data_elements',
-                    action: 'ok',
                     translate: true,
                 });
             })
             .catch(() => {
                 snackActions.show({
                     message: 'failed_to_save_compulsory_data_elements',
+                    action: 'ok',
                     translate: true,
                 });
             })

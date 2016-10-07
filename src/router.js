@@ -82,7 +82,7 @@ function loadObject({params}, replace, callback) {
                 () => callback(),
                 (errorMessage) => {
                     replace(`/list/${params.modelType}`);
-                    snackActions.show({message: errorMessage});
+                    snackActions.show({message: errorMessage, action: 'ok'});
                     callback();
                 }
             );
@@ -151,7 +151,7 @@ function cloneObject({params}, replace, callback) {
             () => callback(),
             (errorMessage) => {
                 replace(`/list/${params.modelType}`);
-                snackActions.show({message: errorMessage});
+                snackActions.show({message: errorMessage, action: 'ok'});
                 callback();
             }
         );

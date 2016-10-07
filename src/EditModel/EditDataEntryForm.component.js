@@ -224,12 +224,15 @@ class EditDataEntryForm extends React.Component {
         this.context.d2.Api.getApi().post(['dataSets', this.props.params.modelId, 'form'].join('/'), payload)
             .then(() => {
                 log.info('Form saved successfully');
-                snackActions.show({ message: this.getTranslation('form_saved'), action: 'ok' });
+                snackActions.show({ message: this.getTranslation('form_saved') });
                 goBack();
             })
             .catch(e => {
                 log.warn('Failed to save form:', e);
-                snackActions.show({ message: this.getTranslation('failed_to_save_form') });
+                snackActions.show({
+                    message: `${this.getTranslation('failed_to_save_form')}${e.message ? ': ' + e.message : ''}`,
+                    action: this.context.d2.i18n.getTranslation('ok'),
+                });
             });
     }
 
@@ -245,12 +248,12 @@ class EditDataEntryForm extends React.Component {
                 this.context.d2.Api.getApi()
                     .delete(['dataEntryForms', modelToEditStore.state.dataEntryForm.id].join('/'))
                     .then(() => {
-                        snackActions.show({ message: this.getTranslation('form_deleted'), action: 'ok' });
+                        snackActions.show({ message: this.getTranslation('form_deleted') });
                         goBack();
                     })
                     .catch(err => {
                         log.error('Failed to delete form:', err);
-                        snackActions.show({ message: this.getTranslation('failed_to_delete_form') });
+                        snackActions.show({ message: this.getTranslation('failed_to_delete_form'), action: 'ok' });
                     });
             },
         });

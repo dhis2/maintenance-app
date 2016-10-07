@@ -68,7 +68,7 @@ class GreyFieldDialog extends React.Component {
             const dataElements = props.sectionModel.dataElements.toArray();
             if (dataElements.length < 1) {
                 log.info(`Section ${props.sectionModel.displayName} contains no data elements`);
-                snackActions.show({ message: this.getTranslation('this_section_has_no_data_elements') });
+                snackActions.show({ message: this.getTranslation('this_section_has_no_data_elements'), action: 'ok' });
                 this.props.onRequestClose();
                 return;
             }
@@ -186,7 +186,7 @@ class GreyFieldDialog extends React.Component {
             })
             .catch(err => {
                 log.error('Failed to save section:', err);
-                snackActions.show({ message: this.getTranslation('failed_to_save_section') });
+                snackActions.show({ message: this.getTranslation('failed_to_save_section'), action: 'ok' });
             });
     }
 

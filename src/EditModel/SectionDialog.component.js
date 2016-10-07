@@ -167,7 +167,7 @@ class SectionDialog extends React.Component {
         });
         sectionModel.save()
             .then((res) => {
-                snackActions.show({ message: this.getTranslation('section_saved'), action: 'ok' });
+                snackActions.show({ message: this.getTranslation('section_saved') });
                 this.context.d2.models.sections.get(res.response.uid, {
                     fields: [
                         ':all,dataElements[id,categoryCombo[id,displayName]]',
@@ -180,7 +180,10 @@ class SectionDialog extends React.Component {
             })
             .catch(err => {
                 log.warn('Failed to save section:', err);
-                snackActions.show({ message: this.getTranslation('failed_to_save_section') });
+                snackActions.show({
+                    message: this.getTranslation('failed_to_save_section'),
+                    action: this.getTranslation('ok'),
+                });
             });
     }
 

@@ -93,9 +93,9 @@ class OptionSorter extends Component {
                             },
                             isSorting: false,
                         });
-                        snackActions.show({ message: 'options_sorted_and_saved', action: 'ok', translate: true });
+                        snackActions.show({ message: 'options_sorted_and_saved', translate: true });
                     },
-                    () => snackActions.show({ message: 'options_not_sorted', translate: true })
+                    () => snackActions.show({ message: 'options_not_sorted', action: 'ok', translate: true })
                 );
         });
     }

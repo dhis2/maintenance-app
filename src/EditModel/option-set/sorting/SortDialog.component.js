@@ -245,7 +245,6 @@ class SortDialog extends Component {
 
                 snackActions.show({
                     message: 'options_sorted_and_saved',
-                    action: 'ok',
                     translate: true,
                 });
 
@@ -259,6 +258,7 @@ class SortDialog extends Component {
 
                 snackActions.show({
                     message: 'failed_to_save_order',
+                    action: 'ok',
                     translate: true,
                 });
             });

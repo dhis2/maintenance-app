@@ -16,8 +16,8 @@ import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 function saveOrganisationUnitLevels(i18n) {
     actions.saveOrganisationUnitLevels()
         .subscribe(
-            () => snackActions.show({ message: i18n.getTranslation('organisation_unit_levels_save_success'), action: 'ok' }),
-            () => snackActions.show({ message: i18n.getTranslation('organisation_unit_levels_save_failed') })
+            () => snackActions.show({ message: i18n.getTranslation('organisation_unit_levels_save_success') }),
+            () => snackActions.show({ message: i18n.getTranslation('organisation_unit_levels_save_failed'), action: 'ok' })
         );
 }
 
@@ -159,11 +159,11 @@ export default addD2Context(class extends React.Component {
     }
 
     _translationSaved() {
-        snackActions.show({ message: this.context.d2.i18n.getTranslation('translation_saved'), action: 'ok' });
+        snackActions.show({ message: this.context.d2.i18n.getTranslation('translation_saved') });
     }
 
     _translationErrored() {
-        snackActions.show({ message: this.context.d2.i18n.getTranslation('translation_save_error') });
+        snackActions.show({ message: this.context.d2.i18n.getTranslation('translation_save_error'), action: 'ok' });
     }
 
     _closeTranslationDialog() {

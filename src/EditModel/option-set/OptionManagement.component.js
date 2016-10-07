@@ -141,7 +141,7 @@ class AddOptionDialog extends Component {
         actions.saveOption(this.props.model, this.props.parentModel)
             .subscribe(
                 () => {
-                    snackActions.show({message: 'option_saved', action: 'ok', translate: true});
+                    snackActions.show({message: 'option_saved', translate: true});
                     this.setState({
                         isSaving: false,
                     });
@@ -151,7 +151,7 @@ class AddOptionDialog extends Component {
                     actions.getOptionsFor(this.props.parentModel);
                 },
                 (e) => {
-                    snackActions.show({message: 'option_failed_to_save', translate: true});
+                    snackActions.show({message: 'option_failed_to_save', action: 'ok', translate: true});
                     this.setState({
                         isSaving: false,
                     });
@@ -324,12 +324,12 @@ class OptionManagement extends Component {
     }
 
     _translationSaved() {
-        snackActions.show({ message: 'translation_saved', action: 'ok', translate: true });
+        snackActions.show({ message: 'translation_saved', translate: true });
     }
 
     _translationErrored(errorMessage) {
         log.error(errorMessage);
-        snackActions.show({ message: 'translation_save_error', translate: true });
+        snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
     }
 
     _onAddOption() {

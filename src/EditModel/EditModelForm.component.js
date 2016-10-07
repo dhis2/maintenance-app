@@ -231,7 +231,7 @@ export default React.createClass({
                     });
 
                 }, (errorMessage) => {
-                    snackActions.show({ message: errorMessage });
+                    snackActions.show({ message: errorMessage, action: 'ok' });
                 });
 
             this.setState({
@@ -330,7 +330,7 @@ export default React.createClass({
                 (message) => {
                     this.setState({ isSaving: false });
 
-                    snackActions.show({ message, action: 'ok', translate: true });
+                    snackActions.show({ message, translate: true });
 
                     this.props.onSaveSuccess(this.state.modelToEdit);
                 },
@@ -350,7 +350,7 @@ export default React.createClass({
 
                     if (isString(errorMessage)) {
                         log.debug(errorMessage);
-                        snackActions.show({ message: errorMessage });
+                        snackActions.show({ message: errorMessage, action: 'ok' });
                     }
 
                     this.props.onSaveError(errorMessage);
