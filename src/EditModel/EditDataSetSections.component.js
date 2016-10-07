@@ -45,12 +45,13 @@ class EditDataSetSections extends React.Component {
                 ['dataSets', props.params.modelId, 'categoryCombos'].join('/'),
                 { fields: 'id,displayName', paging: false }
             ),
-        ]).then(([
-            catComboList,
-        ]) => {
+        ]).then(([catComboList]) => {
             this.setState({
                 sections: modelToEditStore.state.sections.toArray().sort((a, b) => a.sortOrder - b.sortOrder),
-                categoryCombos: catComboList.categoryCombos.map(cc => ({ value: cc.id, text: cc.displayName })),
+                categoryCombos: catComboList.categoryCombos.map(cc => ({
+                    value: cc.id,
+                    text: cc.displayName === 'default' ? this.getTranslation('none') : cc.displayName,
+                })),
             });
         });
 
@@ -227,14 +228,13 @@ class EditDataSetSections extends React.Component {
                     rows={this.state.sections}
                     contextMenuActions={contextActions}
                     contextMenuIcons={contextMenuIcons}
+                    primaryAction={contextActions.edit}
                     isContextActionAllowed={contextActionChecker}
                 />
                 <SectionDialog
                     open={!!this.state.editSectionModel}
-                    categoryCombos={this.state.categoryCombos}
-                    dataElements={modelToEditStore.state.dataElements}
-                    indicators={modelToEditStore.state.indicators}
                     sectionModel={this.state.editSectionModel}
+                    categoryCombos={this.state.categoryCombos}
                     onRequestClose={() => { this.setState({ editSectionModel: false }); }}
                     onSaveSection={this.handleSectionSaved}
                 />
