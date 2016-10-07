@@ -93,14 +93,16 @@ class SectionDialog extends React.Component {
     handleCategoryComboChange(event) {
         const categoryComboId = event.target.value;
 
-        dataElementStore.setState(
-            modelToEditStore.state.dataElements
-                .toArray()
-                .filter(de => de.categoryCombo.id === categoryComboId)
-                .map(de => ({ value: de.id, text: de.displayName }))
-                .sort((a, b) => a.text.localeCompare(b.text))
-        );
-        assignedDataElementStore.setState([]);
+        if (modelToEditStore.state.dataSetElements) {
+            dataElementStore.setState(
+                modelToEditStore.state.dataSetElements
+                    .toArray()
+                    .filter(dse => dse.dataElement.categoryCombo.id === categoryComboId)
+                    .map(dse => ({ value: dse.dataElement.id, text: dse.dataElement.displayName }))
+                    .sort((a, b) => a.text.localeCompare(b.text))
+            );
+            assignedDataElementStore.setState([]);
+        }
 
         this.setState({
             categoryCombo: categoryComboId,
