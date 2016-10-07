@@ -3,7 +3,8 @@ export function getSideBarConfig() {
             all: {
                 items: [],
             },
-            dataElementSection: {
+
+            categorySection: {
                 items: [
                     'categoryOption',
                     'category',
@@ -11,6 +12,11 @@ export function getSideBarConfig() {
                     'categoryOptionCombo',
                     'categoryOptionGroup',
                     'categoryOptionGroupSet',
+                ]
+            },
+
+            dataElementSection: {
+                items: [
                     'dataElement',
                     'dataElementGroup',
                     'dataElementGroupSet',
@@ -39,7 +45,7 @@ export function getSideBarConfig() {
                 ],
             },
 
-            trackerSection: {
+            programSection: {
                 items: [
                     'trackedEntityAttribute',
                     'trackedEntityAttributeGroup',
