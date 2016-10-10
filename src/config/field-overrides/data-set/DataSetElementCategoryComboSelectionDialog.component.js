@@ -61,10 +61,14 @@ const CategoryComboSelectField = enhanceCategoryComboSelectField(
     }
 );
 
-function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSelected }) {
+function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSelected }, { d2 }) {
     const styles = {
         elementListItem: {
             width: '49%',
+        },
+
+        noDataElementMessage: {
+            paddingTop: '2rem',
         },
     };
 
@@ -85,11 +89,23 @@ function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSe
             )
         });
 
+    if (dataSetElementsRows.length === 0) {
+        return (
+            <div style={styles.noDataElementMessage}>
+                {d2.i18n.getTranslation('select_a_data_element_before_applying_an_override')}
+            </div>
+        );
+    }
+
     return (
         <Column>
             {dataSetElementsRows}
         </Column>
     );
+}
+
+DataSetElementList.contextTypes = {
+    d2: PropTypes.object,
 }
 
 export function DataSetElementCategoryComboSelection(props) {
