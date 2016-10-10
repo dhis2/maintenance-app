@@ -29,7 +29,7 @@ const requestParams = new Map([
         fields: [
             ':all',
             'attributeValues[:all,attribute[id,name,displayName]]',
-            'dataSetElements[id,dataSet[id],dataElement[id,displayName,categoryCombo[id,displayName]]]',
+            'dataSetElements[id,dataSet[id],dataElement[id,displayName,categoryCombo[id,displayName]],categoryCombo[id,displayName]]',
             'indicators[id,displayName,categoryCombo[id,displayName]]',
             'organisationUnits[id]',
             'sections[:all,dataElements[id,displayName,categoryCombo[id,displayName]]',
