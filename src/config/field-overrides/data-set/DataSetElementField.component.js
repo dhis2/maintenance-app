@@ -8,6 +8,7 @@ import Store from 'd2-ui/lib/store/Store';
 import Row from 'd2-ui/lib/layout/Row.component';
 import DataSetElementCategoryComboSelectionDialog from './DataSetElementCategoryComboSelectionDialog.component';
 import { uniq, includes, curry, get, isUndefined } from 'lodash';
+import TextField from 'material-ui/TextField/TextField';
 
 function getCategoryComboNameForDataElement(dses, de) {
     const dataSetElementForDataElement = Array
@@ -35,7 +36,6 @@ const styles = {
     },
 
     label: {
-        float: 'left',
         position: 'relative',
         display: 'block',
         width: 'calc(100% - 60px)',
@@ -173,6 +173,12 @@ class DataSetElementField extends Component {
         });
     }
 
+    setFilterText = (event, value) => {
+        this.setState({
+            filterText: value,
+        });
+    }
+
     render() {
         const  {
             categoryCombos,
@@ -181,8 +187,14 @@ class DataSetElementField extends Component {
 
         return (
             <div style={styles.fieldWrap}>
+                <label style={styles.label}>{this.props.labelText}</label>
                 <Row flexValue="0 0 auto" style={{ justifyContent: 'space-between' }}>
-                    <label style={styles.label}>{this.props.labelText}</label>
+                    <TextField
+                        value={this.state.filterText}
+                        onChange={this.setFilterText}
+                        fullWidth
+                        hintText={this.context.d2.i18n.getTranslation('search_available_selected_items')}
+                    />
                     <DataSetElementCategoryComboSelectionDialog
                         dataSetElements={dataSet.dataSetElements}
                         categoryCombos={categoryCombos}
