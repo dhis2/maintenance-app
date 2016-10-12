@@ -6,7 +6,7 @@ import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
 import { Observable } from 'rx';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
-import { map, pick, get, filter, flatten, compose, identity, head } from 'lodash';
+import { map, pick, get, filter, flatten, compose, identity, head } from 'lodash/fp';
 
 const extractErrorMessagesFromResponse = compose(filter(identity), map(get('message')), flatten, map('errorReports'), flatten, map('objectReports'), get('typeReports'));
 

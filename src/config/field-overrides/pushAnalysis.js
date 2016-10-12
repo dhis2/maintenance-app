@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import withSkipLogic from './helpers/withSkipLogic';
 import DropDown from '../../forms/form-fields/drop-down';
 import SubFieldWrap from './helpers/SubFieldWrap';
-import { range, compose, map, get } from 'lodash';
+import { range, compose, map, get } from 'lodash/fp';
 import actions from '../../EditModel/objectActions';
 
 function createWeekOption(weekDayNr) {

@@ -3,7 +3,7 @@ import { getInstance } from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import isObject from 'd2-utilizr/lib/isObject';
 import snackActions from '../Snackbar/snack.actions';
-import { uniq, keys } from 'lodash';
+import { uniq, keys } from 'lodash/fp';
 
 import maintenanceModels from '../config/maintenance-models';
 const sideBarConfig = maintenanceModels.getSideBarConfig();

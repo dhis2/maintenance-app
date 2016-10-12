@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import withD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import wrapDisplayName from 'recompose/wrapDisplayName';
-import { memoize } from 'lodash';
+import { memoize } from 'lodash/fp';
 
 class Empty extends Component {
     render() {

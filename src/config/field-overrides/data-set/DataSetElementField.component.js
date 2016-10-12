@@ -7,7 +7,7 @@ import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Store from 'd2-ui/lib/store/Store';
 import Row from 'd2-ui/lib/layout/Row.component';
 import DataSetElementCategoryComboSelectionDialog from './DataSetElementCategoryComboSelectionDialog.component';
-import { uniq, includes, curry, get, isUndefined } from 'lodash';
+import { uniq, includes, curry, get, isUndefined } from 'lodash/fp';
 import TextField from 'material-ui/TextField/TextField';
 
 function getCategoryComboNameForDataElement(dses, de) {
