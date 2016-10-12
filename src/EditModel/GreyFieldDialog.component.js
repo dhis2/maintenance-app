@@ -73,7 +73,7 @@ class GreyFieldDialog extends React.Component {
                 return;
             }
 
-            const catComboId = props.sectionModel.dataElements.toArray()[0].categoryCombo.id;
+            const catComboId = props.sectionModel.categoryCombo.id || props.sectionModel.dataElements.toArray()[0].categoryCombo.id;
             this.context.d2.models.categoryCombos
                 .get(catComboId, {
                     fields: [

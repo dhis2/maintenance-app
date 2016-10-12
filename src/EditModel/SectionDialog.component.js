@@ -53,12 +53,16 @@ class SectionDialog extends React.Component {
 
     componentWillReceiveProps(props) {
         if (props.sectionModel) {
-            const categoryComboId =
-                props.sectionModel.dataElements &&
-                props.sectionModel.dataElements.size &&
-                props.sectionModel.dataElements.toArray().length > 0 &&
-                props.sectionModel.dataElements.toArray()[0].categoryCombo.id ||
-                props.categoryCombos[0].value;
+            const categoryComboId = (
+                    // Use the category combo of this section, if any
+                    props.sectionModel.categoryCombo && props.sectionModel.categoryCombo.id
+                ) || (
+                    // Otherwise use the category combo of the first assigned data element
+                    props.sectionModel.dataElements &&
+                    props.sectionModel.dataElements.size &&
+                    props.sectionModel.dataElements.toArray().length > 0 &&
+                    props.sectionModel.dataElements.toArray()[0].categoryCombo.id
+                ) || props.categoryCombos[0].value; // Fall back to the first category combo for this data set
 
             this.handleCategoryComboChange({ target: { value: categoryComboId } });
 
@@ -97,7 +101,10 @@ class SectionDialog extends React.Component {
             dataElementStore.setState(
                 modelToEditStore.state.dataSetElements
                     .toArray()
-                    .filter(dse => dse.dataElement.categoryCombo.id === categoryComboId)
+                    .filter(dse =>
+                        (dse.categoryCombo && dse.categoryCombo.id === categoryComboId) ||
+                        (!dse.categoryCombo && dse.dataElement.categoryCombo.id === categoryComboId)
+                    )
                     .map(dse => ({ value: dse.dataElement.id, text: dse.dataElement.displayName }))
                     .sort((a, b) => a.text.localeCompare(b.text))
             );
