@@ -167,6 +167,7 @@ contextActions.compulsoryDataElements
                     fields: 'dataElementId,optionComboId,displayName',
                     totals: false,
                     paging: false,
+                    dataSet: model.id,
                 }
             )
             .then(responseData => responseData.dataElementOperands);

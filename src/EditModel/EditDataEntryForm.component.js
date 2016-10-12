@@ -93,7 +93,7 @@ class EditDataEntryForm extends React.Component {
                 paging: false,
                 totals: true,
                 fields: 'id,displayName',
-                filter: [`dataElement.dataSetElements.dataSet.id:eq:${props.params.modelId}`],
+                dataSet: props.params.modelId,
             }),
             context.d2.Api.getApi().get('system/flags'),
         ]).then(([
