@@ -3,6 +3,7 @@ import Dialog from 'material-ui/Dialog/Dialog';
 import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import TextField from 'material-ui/TextField/TextField';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
@@ -125,7 +126,6 @@ class CompulsoryDataElementOperandDialog extends Component {
             />,
             <RaisedButton
                 labelColor="white"
-                disabledLabelColor="#666"
                 disabled={this.state.isSaving}
                 primary
                 onClick={this._saveCollection}
@@ -143,6 +143,11 @@ class CompulsoryDataElementOperandDialog extends Component {
             >
                 <div style={{ marginBottom: '3.5rem' }}>
                     <Heading>{this.i18n.getTranslation('edit_compulsory_data_elements')} - {this.props.model && this.props.model.displayName}</Heading>
+                    <TextField
+                        floatingLabelText={this.i18n.getTranslation('filter')}
+                        style={{ width: '100%' }}
+                        onChange={this._changeFilter}
+                    />
                     <GroupEditor
                         itemStore={itemsAvailableStore}
                         assignedItemStore={itemsSelectedStore}
@@ -155,6 +160,10 @@ class CompulsoryDataElementOperandDialog extends Component {
             </Dialog>
         );
     }
+
+    _changeFilter = (event) => {
+        this.setState({ filterText: event.target.value });
+    };
 
     _assignItems = async (selectedItems) => {
         const newState = itemsSelectedStore.getState().concat(selectedItems);
