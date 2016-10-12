@@ -151,7 +151,7 @@ class EditDataEntryForm extends React.Component {
             // Create element filtering action
             this.filterAction = Action.create('filter');
             this.filterAction
-                .map(({ data, complete, error }) => ({ data: data.target.value, complete, error }))
+                .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
                 .debounce(75)
                 .subscribe(args => {
                     const filter = args.data
