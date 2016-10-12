@@ -107,29 +107,29 @@ objectActions.getObjectOfTypeByIdAndClone
 objectActions.saveObject
     .filter(({ data }) => ['legendSet', 'dataSet'].indexOf(data.modelType) === -1)
     .subscribe(action => {
-    const errorHandler = (message) => {
-        action.error(message);
-    };
+        const errorHandler = (message) => {
+            action.error(message);
+        };
 
-    const successHandler = (response) => {
-        if (hasAfterSave(modelToEditStore.state)) {
-            log.debug('Handling after save');
-            getAfterSave(modelToEditStore.state, response.response.uid)
-                .subscribe(
-                    () => action.complete('success'),
-                    errorHandler
-                );
-        } else {
-            action.complete('success');
-        }
-    };
+        const successHandler = (response) => {
+            if (hasAfterSave(modelToEditStore.state)) {
+                log.debug('Handling after save');
+                getAfterSave(modelToEditStore.state, response.response.uid)
+                    .subscribe(
+                        () => action.complete('success'),
+                        errorHandler
+                    );
+            } else {
+                action.complete('success');
+            }
+        };
 
-    return modelToEditStore
-        .save(action.data.id)
-        .subscribe(successHandler, errorHandler);
-}, (e) => {
-    log.error(e);
-});
+        return modelToEditStore
+            .save(action.data.id)
+            .subscribe(successHandler, errorHandler);
+    }, (e) => {
+        log.error(e);
+    });
 
 function on(property, func, object) {
     return {
