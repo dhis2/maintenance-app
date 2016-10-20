@@ -1,9 +1,12 @@
-import Action from 'd2-ui/lib/action/Action';
-import detailsStore from './details.store';
-import { config, getInstance as getD2 } from 'd2/lib/d2';
-import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import snackActions from '../Snackbar/snack.actions';
+import { Subject } from 'rx';
 import log from 'loglevel';
+
+import { config, getInstance as getD2 } from 'd2/lib/d2';
+import Action from 'd2-ui/lib/action/Action';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
+
+import detailsStore from './details.store';
+import snackActions from '../Snackbar/snack.actions';
 import listStore from './list.store';
 import sharingStore from './sharing.store';
 import translateStore from './translation-dialog/translationStore';
@@ -11,7 +14,6 @@ import orgUnitAssignmentDialogStore from './organisation-unit-dialog/organisatio
 import compulsoryDataElementStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
 import appStore from '../App/appStateStore';
 import { goToRoute } from '../router';
-import { Subject } from 'rx';
 
 config.i18n.strings.add('edit');
 config.i18n.strings.add('clone');
@@ -144,15 +146,10 @@ contextActions.assignToOrgUnits
     .subscribe(async({ data: model }) => {
         const d2 = await getD2();
         const modelItem = await d2.models[model.modelDefinition.name].get(model.id);
-        const rootOrgUnit = await d2.models.organisationUnits.list({
-            paging: false,
-            level: 1,
-            fields: 'id,displayName,children[id,displayName,children::isNotEmpty]',
-        }).then(rootLevel => rootLevel.toArray()[0]);
 
         orgUnitAssignmentDialogStore.setState({
             model: modelItem,
-            root: rootOrgUnit,
+            roots: appStore.getState().userOrganisationUnits.toArray(),
             open: true,
         });
     });
