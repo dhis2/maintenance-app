@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 
-import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';
+import OrgUnitTreeMultipleRoots from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.component';
 import OrgUnitSelectByLevel from 'd2-ui/lib/org-unit-select/OrgUnitSelectByLevel.component';
 import OrgUnitSelectByGroup from 'd2-ui/lib/org-unit-select/OrgUnitSelectByGroup.component';
 import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.component';
@@ -124,7 +124,7 @@ class OrgUnitDialog extends React.Component {
 
     render() {
         const {
-            root,
+            roots,
         } = { ...this.props };
 
         const styles = {
@@ -207,10 +207,9 @@ class OrgUnitDialog extends React.Component {
                     <div className="organisation-unit-tree__selected">
                         {`${this.state.selected.length} ${this.getTranslation('organisation_units_selected')}`}
                     </div>
-                    <OrgUnitTree
-                        root={root}
+                    <OrgUnitTreeMultipleRoots
+                        roots={roots}
                         selected={this.state.selected}
-                        initiallyExpanded={[root.id]}
                         onClick={this.toggleOrgUnit}
                     />
                 </div>
@@ -220,7 +219,7 @@ class OrgUnitDialog extends React.Component {
 }
 OrgUnitDialog.propTypes = {
     onRequestClose: React.PropTypes.func.isRequired,
-    root: React.PropTypes.object.isRequired,
+    roots: React.PropTypes.array.isRequired,
     model: React.PropTypes.object.isRequired,
     onOrgUnitAssignmentSaved: React.PropTypes.func.isRequired,
     onOrgUnitAssignmentError: React.PropTypes.func.isRequired,
