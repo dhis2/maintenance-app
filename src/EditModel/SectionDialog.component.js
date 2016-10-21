@@ -32,6 +32,7 @@ class SectionDialog extends React.Component {
         this.handleCategoryComboChange = this.handleCategoryComboChange.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleCodeChange = this.handleCodeChange.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.assignDataElements = this.assignDataElements.bind(this);
         this.removeDataElements = this.removeDataElements.bind(this);
@@ -82,6 +83,7 @@ class SectionDialog extends React.Component {
 
             this.setState({
                 name: props.sectionModel.name,
+                code: props.sectionModel.code,
                 description: props.sectionModel.description,
                 filterText: '',
             }, () => {
@@ -124,6 +126,10 @@ class SectionDialog extends React.Component {
         this.setState({ name: e.target.value });
     }
 
+    handleCodeChange(e) {
+        this.setState({ code: e.target.value });
+    }
+
     handleDescriptionChange(e) {
         this.setState({ description: e.target.value });
     }
@@ -163,6 +169,7 @@ class SectionDialog extends React.Component {
         Object.assign(sectionModel, {
             dataSet: { id: modelToEditStore.state.id },
             name: this.state.name,
+            code: this.state.code,
             description: this.state.description,
             dataElements: assignedDataElementStore.state.map(de => ({ id: de })),
             indicators: assignedIndicatorStore.state.map(i => ({ id: i })),
@@ -285,13 +292,19 @@ class SectionDialog extends React.Component {
             >
                 <TextField
                     floatingLabelText={this.getTranslation('name')}
-                    value={this.state.name}
+                    value={this.state.name || ''}
                     style={{ width: '100%' }}
                     onChange={this.handleNameChange}
                 />
                 <TextField
+                    floatingLabelText={this.getTranslation('code')}
+                    value={this.state.code || ''}
+                    style={{ width: '100%' }}
+                    onChange={this.handleCodeChange}
+                />
+                <TextField
                     floatingLabelText={this.getTranslation('description')}
-                    value={this.state.description}
+                    value={this.state.description || ''}
                     style={{ width: '100%' }}
                     multiLine
                     onChange={this.handleDescriptionChange}
