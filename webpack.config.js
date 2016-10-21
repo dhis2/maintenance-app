@@ -71,7 +71,7 @@ const webpackConfig = {
         compress: true,
         proxy: [
             { path: '/api/*', target: dhisConfig.baseUrl, bypass },
-            { path: '/dhis-web-commons/*', target: dhisConfig.baseUrl, bypass },
+            { path: '/dhis-web-commons/**', target: dhisConfig.baseUrl, bypass },
             { path: '/icons/*', target: dhisConfig.baseUrl, bypass },
             { path: '/css/*', target: 'http://localhost:8081/src', bypass },
             { path: '/i18n/*', target: 'http://localhost:8081/src', bypass },
