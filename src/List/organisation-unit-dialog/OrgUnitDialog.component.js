@@ -146,7 +146,7 @@ class OrgUnitDialog extends React.Component {
             },
             controls: {
                 position: 'fixed',
-                top: '56px', right: '24px',
+                top: '77px', right: '24px',
                 width: '475px',
                 zIndex: 1,
                 background: 'white',
