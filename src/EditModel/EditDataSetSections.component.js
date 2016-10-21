@@ -227,6 +227,7 @@ class EditDataSetSections extends React.Component {
                     rows={this.state.sections}
                     contextMenuActions={contextActions}
                     contextMenuIcons={contextMenuIcons}
+                    primaryAction={this.handleEditSectionClick}
                     isContextActionAllowed={contextActionChecker}
                 />
                 <SectionDialog
