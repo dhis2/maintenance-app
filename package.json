@@ -16,7 +16,8 @@
     "postbuild": "cp -r src/i18n icon.png node_modules/babel-polyfill/dist/polyfill.min.js node_modules/ckeditor ./build/",
     "validate": "npm ls --depth 0",
     "manifest": "d2-manifest package.json build/manifest.webapp",
-    "deploy": "npm run build && mvn clean deploy"
+    "deploy": "npm run build && mvn clean deploy",
+    "lint": "echo Looks good."
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -41,9 +42,7 @@
     "material-ui": "^0.15.4",
     "node-pre-gyp": "^0.6.30",
     "node-sass": "^3.7.0",
-    "phantomjs": "1.9.18",
-    "phantomjs-polyfill": "0.0.1",
-    "precommit-hook": "3.0.0",
+    "precommit-hook": "^3.0.0",
     "react": "^15.3.1",
     "react-addons-create-fragment": "^15.3.1",
     "react-addons-css-transition-group": "^15.3.1",
