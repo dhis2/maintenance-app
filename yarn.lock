@@ -1603,9 +1603,9 @@ d2-utilizr@^0.2.4, d2-utilizr@^0.2.9:
     lodash.isset "^4.3.0"
     lodash.isstring "^4.0.1"
 
-d2@^25.1.10:
-  version "25.1.12"
-  resolved "https://registry.yarnpkg.com/d2/-/d2-25.1.12.tgz#31897ca3e02c6993751f651752ffc45e6cf7cb1a"
+d2@25.1.14:
+  version "25.1.14"
+  resolved "https://registry.yarnpkg.com/d2/-/d2-25.1.14.tgz#f9d5a570a9eecf20f807841094640227e92ab1a4"
   dependencies:
     whatwg-fetch "^1.0.0"
 
