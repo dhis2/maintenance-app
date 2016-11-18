@@ -195,6 +195,7 @@ const fieldOrderByName = new Map([
         'trackedEntityAttribute',
         'trackedEntityAttributeAttribute',
         'categoryOptionAttribute',
+        'categoryOptionComboAttribute',
         'categoryOptionGroupAttribute',
         'documentAttribute',
         'optionAttribute',
