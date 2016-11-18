@@ -126,7 +126,6 @@ const webpackConfig = {
     ].filter(v => v),
 
     devServer: {
-        colors: true,
         port: 8081,
         inline: true,
         compress: true,

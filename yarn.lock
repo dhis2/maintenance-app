@@ -1524,22 +1524,11 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@25.1:
-  version "25.1.1"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-25.1.1.tgz#637690b702f5441c0923307f90f0ea5d2f9ec026"
-  dependencies:
-    d2-utilizr "^0.2.4"
-    d3-color "^0.4.2"
-    d3-format "^0.6.0"
-    d3-scale "^0.7.2"
-    draft-js "^0.7.0"
-    lodash "^4.12.0"
-    loglevel "1.4.0"
-    moment "^2.11.2"
-    react-color "^2.2.7"
-    rx "^4.0.8"
+d2-ui@25.4:
+  version "25.4.17"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-25.4.17.tgz#c5257a5b55f08acaf5e6674e114a77293fcff170"
 
-d2-utilizr@^0.2.4, d2-utilizr@^0.2.9:
+d2-utilizr@^0.2.9:
   version "0.2.11"
   resolved "https://registry.yarnpkg.com/d2-utilizr/-/d2-utilizr-0.2.11.tgz#addf9c70fedb04ea237115ab158ac79d75885c39"
   dependencies:
@@ -1557,53 +1546,49 @@ d2@25.1:
   dependencies:
     whatwg-fetch "^1.0.0"
 
-d3-array@~0.7.0:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-0.7.1.tgz#a321c21558459d994eb4ad47b478240e64933942"
+d3-array@1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.0.1.tgz#375c02874fcd96c16ed9f1bcf5b4a7be53f358e7"
 
-d3-collection@~0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/d3-collection/-/d3-collection-0.2.0.tgz#0a7cf362d823f0c65057cc075f4e441c31c300fa"
+d3-collection@1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/d3-collection/-/d3-collection-1.0.1.tgz#5b5c5626f731122b600b107d71a08833fec049ad"
 
-d3-color@^0.4.2, d3-color@~0.4.0:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-0.4.2.tgz#df013e789d9bfef0f8ea3986c92340cdf340d8a0"
+d3-color, d3-color@1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-1.0.2.tgz#83cb4b3a9474e40795f009d97e97a15649830bbc"
 
-d3-format@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-0.6.0.tgz#bcc1e7f2b2074216302113fb6f143c83480c016a"
+d3-format, d3-format@1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-1.0.2.tgz#138618320b4bbeb43b5c0ff30519079fbbd7375e"
 
-d3-format@~0.5.0:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-0.5.1.tgz#9447d7c95c84b15d34c138975dbf0489a412e405"
-
-d3-interpolate@~0.8.0:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-0.8.3.tgz#a8e564a60f6dc384ef112c206e51a19e6d884981"
+d3-interpolate@1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-1.1.1.tgz#f9ad4f9a421b22cad8838cf53d9bd2cbad0b8fd7"
   dependencies:
-    d3-color "~0.4.0"
+    d3-color "1"
 
-d3-scale@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-0.7.2.tgz#6b2cd8b9f4fb82b8d4a6c6879a1ef89077961105"
+d3-scale:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-1.0.3.tgz#4f9e8f0cc2ea0f3925ff04ac27adc09045fa4c90"
   dependencies:
-    d3-array "~0.7.0"
-    d3-collection "~0.2.0"
-    d3-color "~0.4.0"
-    d3-format "~0.5.0"
-    d3-interpolate "~0.8.0"
-    d3-time "~0.2.0"
-    d3-time-format "~0.3.0"
+    d3-array "1"
+    d3-collection "1"
+    d3-color "1"
+    d3-format "1"
+    d3-interpolate "1"
+    d3-time "1"
+    d3-time-format "2"
 
-d3-time-format@~0.3.0:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-0.3.2.tgz#9c30e90a4078f93fac15e27b2016865488c007c1"
+d3-time-format@2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-2.0.2.tgz#1c537e9d4558966a658c51f4ca3dd1b47369c2d5"
   dependencies:
-    d3-time "~0.2.0"
+    d3-time "1"
 
-d3-time@~0.2.0:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/d3-time/-/d3-time-0.2.6.tgz#587553e9ea9e055462d419c7aa94e9477be15cb0"
+d3-time@1:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/d3-time/-/d3-time-1.0.4.tgz#2ceba09a76b7450c992a1ded4e10fc6195e69649"
 
 d3@^3.5.6:
   version "3.5.17"
@@ -1753,13 +1738,6 @@ domutils@1.5, domutils@1.5.1:
   dependencies:
     dom-serializer "0"
     domelementtype "1"
-
-draft-js@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.7.0.tgz#29506980d2cb96db2697054fae619e6f5b5d4101"
-  dependencies:
-    fbjs "^0.8.1"
-    immutable "^3.7.4"
 
 ecc-jsbn@~0.1.1:
   version "0.1.1"
@@ -2430,10 +2408,6 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
-immutable@^3.7.4:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
-
 in-publish@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/in-publish/-/in-publish-2.0.0.tgz#e20ff5e3a2afc2690320b6dc552682a9c7fadf51"
@@ -2866,7 +2840,7 @@ lodash.words@^3.0.0:
   dependencies:
     lodash._root "^3.0.0"
 
-lodash@^4.0.0, lodash@^4.0.1, lodash@^4.12.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.16.2, lodash@^4.16.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0:
+lodash@^4.0.0, lodash@^4.0.1, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.16.2, lodash@^4.16.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0:
   version "4.17.2"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
 
@@ -2881,10 +2855,6 @@ lodash@3.7.x:
 loglevel@^1.4.0:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.4.1.tgz#95b383f91a3c2756fd4ab093667e4309161f2bcd"
-
-loglevel@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.4.0.tgz#83ab9fc6ef3e0caf7571b57182b32d8d870309dc"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -3047,7 +3017,7 @@ mkdirp@^0.5.0, mkdirp@^0.5.1, "mkdirp@>=0.5 0", mkdirp@~0.5.0, mkdirp@~0.5.1, mk
   dependencies:
     minimist "0.0.8"
 
-moment@^2.11.2:
+moment:
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.16.0.tgz#f38f2c97c9889b0ee18fc6cc392e1e443ad2da8e"
 
@@ -4143,7 +4113,7 @@ ripemd160@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-1.0.1.tgz#93a4bbd4942bc574b69a8fa57c71de10ecca7d6e"
 
-rx@^4.0.8, rx@^4.1.0:
+rx@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
 
