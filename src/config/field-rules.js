@@ -78,7 +78,7 @@ export default new Map([['dataElement',
         },
         {
             field: 'aggregationType',
-            when: [{
+            when: {
                 field: 'valueType',
                 operator: 'ONEOF',
                 value: [
@@ -92,11 +92,7 @@ export default new Map([['dataElement',
                     'FILE_RESOURCE',
                     'COORDINATE',
                 ]
-            }, {
-                field: 'domainType',
-                operator: 'EQUALS',
-                value: 'TRACKER',
-            }],
+            },
             operations: [
                 {
                     field: 'aggregationType',
