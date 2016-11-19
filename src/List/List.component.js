@@ -376,7 +376,7 @@ const List = React.createClass({
                             columns={this.state.tableColumns}
                             contextMenuActions={availableActions}
                             contextMenuIcons={contextMenuIcons}
-                            primaryAction={availableActions.edit}
+                            primaryAction={(model) => availableActions.edit(model)}
                             isContextActionAllowed={this.isContextActionAllowed}
                         />
                         {this.state.dataRows.length || this.state.isLoading ? null : <div>No results found</div>}
