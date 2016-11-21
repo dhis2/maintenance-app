@@ -30,7 +30,6 @@ class FormFieldsForModel {
         const onlyUsableFieldTypes = modelValidation => typeToFieldMap.get(modelValidation.type);
         const onlyWritableProperties = modelValidation => modelValidation.writable;
         const onlyPersistedProperties = modelValidation => modelValidation.persisted;
-        const onlyOwnedProperties = modelValidation => modelValidation.owner;
         const toArrayOfFieldConfigurations = fieldName => {
             const modelValidationForField = model.modelDefinition.modelValidations[fieldName];
             const fieldConfig = Object.create(modelValidationForField);
@@ -47,7 +46,6 @@ class FormFieldsForModel {
             .map(toArrayOfFieldConfigurations)
             .filter(onlyWritableProperties)
             .filter(onlyPersistedProperties)
-            .filter(onlyOwnedProperties)
             .filter(removeFieldsThatShouldNotBeDisplayed)
             .filter(onlyUsableFieldTypes)
             .map(modelValidation => getFieldClassInstance.bind(this)(modelValidation, model.modelDefinition)) // eslint-disable-line no-use-before-define

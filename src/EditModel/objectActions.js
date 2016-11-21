@@ -100,10 +100,12 @@ objectActions.getObjectOfTypeByIdAndClone
             .subscribe(complete, error);
     });
 
-objectActions.saveObject.subscribe(action => {
-    const errorHandler = (message) => {
-        action.error(message);
-    };
+objectActions.saveObject
+    .filter(({ data }) => ['organisationUnit'].indexOf(modelToEditStore.getState().modelDefinition.name) === -1)
+    .subscribe(action => {
+        const errorHandler = (message) => {
+            action.error(message);
+        };
 
     const successHandler = (response) => {
         if (hasAfterSave(modelToEditStore.state)) {
@@ -124,6 +126,43 @@ objectActions.saveObject.subscribe(action => {
 }, (e) => {
     log.error(e);
 });
+
+// This is an ugly-fugly backport of the implementation from 2.25 which avoids having to do additional backports in D2
+// and potentially higher risk of breakage elsewhere
+objectActions.saveObject
+    .filter(({ data }) => modelToEditStore.getState().modelDefinition.name === 'organisationUnit')
+    .subscribe(async ({ complete: completeAction, error: failAction }) => {
+        const d2 = await getInstance();
+        const organisationUnit = modelToEditStore.getState();
+
+        if (organisationUnit.isDirty()) {
+            organisationUnit.save().then(() => {
+                if (organisationUnit.dataSets.dirty) {
+                    organisationUnit.dataSets.save().then(() => completeAction('success'), err => {
+                        if (err.status === 200) {
+                            completeAction('success');
+                        } else {
+                            failAction(err);
+                        }
+                    });
+                } else {
+                    completeAction('success');
+                }
+            }, err => failAction(err));
+        } else if (organisationUnit.dataSets.dirty) {
+            organisationUnit.dataSets.save().then(() => completeAction('success'), err => {
+                if (err.status === 200) {
+                    completeAction('success');
+                } else {
+                    failAction(err);
+                }
+            });
+        } else {
+            completeAction('no_changes_to_be_saved');
+        }
+    }, (e) => {
+        log.error(e);
+    });
 
 objectActions.update.subscribe(action => {
     const { fieldName, value } = action.data;
