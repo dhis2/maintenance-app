@@ -131,6 +131,7 @@ const fieldOrderByName = new Map([
         'organisationUnits',
     ]],
     ['organisationUnit', [
+        'parent',
         'name',
         'shortName',
         'code',
