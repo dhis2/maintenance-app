@@ -144,6 +144,7 @@ const fieldOrderByName = new Map([
         'email',
         'phoneNumber',
         'coordinates',
+        'dataSets',
     ]],
     ['organisationUnitGroup', [
         'name',

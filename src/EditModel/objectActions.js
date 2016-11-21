@@ -7,6 +7,7 @@ import dataElementGroupStore from './data-element/dataElementGroupsStore';
 import { Observable } from 'rx';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 import { map, pick, get, filter, flatten, compose, identity, head } from 'lodash/fp';
+import snackActions from '../Snackbar/snack.actions';
 
 const extractErrorMessagesFromResponse = compose(filter(identity), map(get('message')), flatten, map('errorReports'), flatten, map('objectReports'), get('typeReports'));
 
@@ -20,7 +21,7 @@ const objectActions = Action.createActionsFromNames([
     'updateAttribute',
 ]);
 
-const hackedSaves = {
+const afterSaveHacks = {
     dataElement: function dataElementAfterSave(model, lastImportedId) {
         const removeUrls = dataElementGroupStore.state.remove
             .filter(id => id)
@@ -80,14 +81,14 @@ function hasAfterSave(model) {
         return false;
     }
 
-    if (Object.keys(hackedSaves).indexOf(model.modelDefinition.name) !== -1) {
+    if (Object.keys(afterSaveHacks).indexOf(model.modelDefinition.name) !== -1) {
         return true;
     }
     return false;
 }
 
 function getAfterSave(model, lastImportedId) {
-    return hackedSaves[model.modelDefinition.name](model, lastImportedId);
+    return afterSaveHacks[model.modelDefinition.name](model, lastImportedId);
 }
 
 objectActions.getObjectOfTypeById
@@ -105,7 +106,7 @@ objectActions.getObjectOfTypeByIdAndClone
     });
 
 objectActions.saveObject
-    .filter(({ data }) => ['legendSet', 'dataSet'].indexOf(data.modelType) === -1)
+    .filter(({ data }) => ['legendSet', 'dataSet', 'organisationUnit'].indexOf(data.modelType) === -1)
     .subscribe(action => {
         const errorHandler = (message) => {
             action.error(message);
@@ -137,6 +138,36 @@ function on(property, func, object) {
         [property]: func(object[property]),
     };
 }
+
+// Since the relationship between organisation unit and data set is owned by the data set object,
+// organisationUnit.dataSets is not included when the model is saved or when isDirty() is called. In order to enable
+// saving this from the organisation unit side, we manually call save() on organisationUnit.dataSets here
+objectActions.saveObject
+    .filter(({ data }) => data.modelType === 'organisationUnit')
+    .subscribe(async ({ complete: completeAction, error: failAction }) => {
+        const d2 = await getInstance();
+        const organisationUnit = modelToEditStore.getState();
+
+        if (!organisationUnit.isDirty() && !organisationUnit.dataSets.isDirty()) {
+            completeAction('no_changes_to_be_saved');
+        } else {
+            // The orgunit has to be saved before it can be linked to datasets so these operations are done sequentially
+            organisationUnit.save()
+                .then(() => organisationUnit.dataSets.save(), error => {
+                    log.error(error);
+                    snackActions.show({
+                        message: Array.isArray(error.messages)
+                            ? error.messages[0].message
+                            : d2.i18n.getTranslation('failed_to_save_organisation_unit'),
+                        action: 'ok',
+                    });
+                    failAction(error);
+                })
+                .then(() => completeAction('success'), error => failAction(error));
+        }
+    }, (e) => {
+        log.error(e);
+    });
 
 objectActions.saveObject
     .filter(({ data }) => data.modelType === 'legendSet')
