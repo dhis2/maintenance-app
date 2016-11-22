@@ -32,7 +32,7 @@ function bypass(req, res, opt) {
     console.log('[PROXY]'.cyan.bold, req.method.green.bold, req.url.magenta, '=>'.dim, opt.target.dim);
 }
 
-const scriptPrefix = (isDevBuild ? dhisConfig.baseUrl + '/' : '..');
+const scriptPrefix = (isDevBuild ? dhisConfig.baseUrl : '..');
 
 const webpackConfig = {
     context: __dirname,
