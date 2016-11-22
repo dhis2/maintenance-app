@@ -222,7 +222,7 @@ OrganisationUnitTreeMultiSelect.contextTypes = {
 };
 OrganisationUnitTreeMultiSelect.propTypes = {
     value: React.PropTypes.object,
-}
+};
 OrganisationUnitTreeMultiSelect.defaultProps = {
     value: [],
 };

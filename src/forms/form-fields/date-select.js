@@ -4,19 +4,35 @@ import IconButton from 'material-ui/IconButton/IconButton';
 
 export default React.createClass({
     propTypes: {
-        value: React.PropTypes.string,
+        value: React.PropTypes.oneOfType([
+            React.PropTypes.string,
+            React.PropTypes.object,
+        ]),
         labelText: React.PropTypes.string.isRequired,
         onChange: React.PropTypes.func.isRequired,
     },
 
     renderDatePicker() {
+        const {
+            labelText,
+            referenceType,
+            referenceProperty,
+            isInteger,
+            translateOptions,
+            isRequired,
+            options,
+            model,
+            models,
+            modelDefinition,
+            ...other
+        } = this.props;
         return (
             <DatePicker
-                {...this.props}
+                {...other}
                 value={this.props.value && new Date(this.props.value)}
                 mode="portrait"
                 autoOk
-                floatingLabelText={this.props.labelText}
+                floatingLabelText={labelText}
                 onChange={this._onDateSelect}
             />
         );
