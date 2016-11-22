@@ -22,15 +22,17 @@ class OrgUnitTreeSingleSelect extends React.Component {
             initiallyExpanded: [],
         };
 
-        context.d2.models.organisationUnits.get(props.value.id, { fields: 'id,displayName,path', }).then(orgUnit => {
-            this.setState({
-                initiallyExpanded: orgUnit.path
-                    .split('/')
-                    .filter(ou => ou.trim().length > 0)
-                    .filter(ou => ou !== orgUnit.id),
-                parentName: orgUnit.displayName,
+        if (props.value) {
+            context.d2.models.organisationUnits.get(props.value.id, { fields: 'id,displayName,path', }).then(orgUnit => {
+                this.setState({
+                    initiallyExpanded: orgUnit.path
+                        .split('/')
+                        .filter(ou => ou.trim().length > 0)
+                        .filter(ou => ou !== orgUnit.id),
+                    parentName: orgUnit.displayName,
+                });
             });
-        });
+        }
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
         this.handleSelectClick = this.handleSelectClick.bind(this);
@@ -90,7 +92,7 @@ class OrgUnitTreeSingleSelect extends React.Component {
             />,
         ];
 
-        return (
+        return this.props.value ? (
             <div style={styles.wrapper}>
                 <TextField
                     floatingLabelText={this.props.labelText}
@@ -116,7 +118,7 @@ class OrgUnitTreeSingleSelect extends React.Component {
                     </div>
                 </Dialog>
             </div>
-        );
+        ) : null;
     }
 }
 OrgUnitTreeSingleSelect.contextTypes = {
