@@ -34,7 +34,7 @@ class SideBarContainer extends React.Component {
     }
 
     getSideBarItems() {
-        if (this.state.currentSubSection === 'organisationUnit') {
+        if (this.state.currentSubSection === 'organisationUnit' && !/#\/edit\//.test(document.location.hash)) {
             if (this.state.userOrganisationUnits && this.state.selectedOrganisationUnit) {
                 const styles = {
                     wrapperStyle: {
