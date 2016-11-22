@@ -2,7 +2,7 @@ import React from 'react';
 import sideBarStore, { organisationUnitTreeChanged$ } from './sideBarStore';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import { onSectionChanged, onOrgUnitSearch } from './sideBarActions';
-import { setAppState } from '../App/appStateStore';
+import { setAppState, default as appState } from '../App/appStateStore';
 import MaintenanceSideBar from './MaintenanceSidebar.component';
 import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
 
@@ -46,17 +46,27 @@ class SideBarContainer extends React.Component {
                     },
                 };
 
+                const orgUnitSearchHits = appState.getState().sideBar.organisationUnits;
+                const roots = Array.isArray(orgUnitSearchHits)
+                    ? orgUnitSearchHits
+                    : this.state.userOrganisationUnits.toArray().map(ou => Object.assign(ou, { displayName: ou.name }));
+
+                const initiallyExpanded = orgUnitSearchHits && orgUnitSearchHits.length
+                    ? []
+                    : this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || []);
+
                 return (
                     <div style={styles.wrapperStyle}>
                         <OrganisationUnitTreeWithSingleSelectionAndSearch
                             onUpdateInput={this._searchOrganisationUnits.bind(this)}
                             onAutoCompleteValueSelected={this._onAutoCompleteValueSelected.bind(this)}
                             autoCompleteDataSource={(this.state.autoCompleteOrganisationUnits || []).map(model => model.name)}
-                            roots={this.state.userOrganisationUnits.toArray().map(ou => Object.assign(ou, { displayName: ou.name }))}
+                            roots={roots}
                             selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
-                            initiallyExpanded={this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || [])}
+                            initiallyExpanded={initiallyExpanded}
                             onClick={this._onChangeSelectedOrgUnit.bind(this)}
-                            idsThatShouldBeReloaded={this.state.organisationUnitsToReload}
+                            idsThatShouldBeReloaded={orgUnitSearchHits || this.state.organisationUnitsToReload}
+                            noHitsLabel={this.context.d2.i18n.getTranslation('no_matching_organisation_units')}
                         />
                     </div>
                 );
@@ -70,8 +80,15 @@ class SideBarContainer extends React.Component {
     }
 
     _searchOrganisationUnits(searchValue) {
-        onOrgUnitSearch(searchValue)
-            .subscribe(() => {}, (e) => console.error(e));
+        if (searchValue.trim().length) {
+            onOrgUnitSearch(searchValue)
+                .subscribe(() => {
+                }, (e) => console.error(e));
+        } else {
+            setAppState({
+                sideBar: Object.assign({ ...appState.state.sideBar }, { organisationUnits: undefined }),
+            });
+        }
     }
 
     _onChangeSelectedOrgUnit(event, model) {
@@ -83,6 +100,7 @@ class SideBarContainer extends React.Component {
             initiallyExpanded: model.path ? model.path.split('/').filter(v => v).slice(0, -1) : [],
         });
     }
+
     _onAutoCompleteValueSelected(displayName) {
         const ouToSelect = (this.state.autoCompleteOrganisationUnits || [])
             .find(model => model.displayName === displayName);
@@ -128,5 +146,6 @@ class SideBarContainer extends React.Component {
         );
     }
 }
+SideBarContainer.contextTypes = { d2: React.PropTypes.object };
 
 export default SideBarContainer;

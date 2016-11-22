@@ -1,6 +1,6 @@
 import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete/AutoComplete';
-import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.component';
+import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import noop from 'd2-utilizr/lib/noop';
 
@@ -9,6 +9,10 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
         labelStyle: {
             whiteSpace: 'nowrap',
         },
+        noHitsLabel: {
+            fontStyle: 'italic',
+            color: 'rgba(0, 0, 0, 0.4)',
+        }
     };
 
     return (
@@ -20,14 +24,18 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                 dataSource={props.autoCompleteDataSource}
                 filter={AutoComplete.noFilter}
             />
-            <OrganisationUnitTree
-                roots={props.roots}
-                selected={props.selected}
-                initiallyExpanded={props.initiallyExpanded}
-                labelStyle={styles.labelStyle}
-                onClick={props.onClick}
-                idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
-            />
+            {Array.isArray(props.roots) && props.roots.length > 0 ? props.roots.map(root => (
+                <OrganisationUnitTree
+                    key={root.id}
+                    root={root}
+                    selected={props.selected}
+                    initiallyExpanded={props.initiallyExpanded}
+                    labelStyle={styles.labelStyle}
+                    onClick={props.onClick}
+                    idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
+                    hideLeafNodes
+                />
+            )) : <div style={styles.noHitsLabel}>{props.noHitsLabel}</div>}
         </div>
     );
 }
@@ -44,6 +52,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.propTypes = {
     selected: React.PropTypes.array,
     initiallyExpanded: React.PropTypes.array,
     onClick: React.PropTypes.func,
+    noHitsLabel: React.PropTypes.string.isRequired,
 };
 OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onOrgUnitSearch: noop,
