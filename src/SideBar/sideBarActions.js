@@ -41,7 +41,6 @@ onBackToSections
 
 export const onOrgUnitSearch = Action.create('onOrgUnitSearch', 'SideBar');
 onOrgUnitSearch
-    .filter(action => action.data)
     .distinctUntilChanged()
     .debounce(400)
     .map(({ complete, error, data }) => Observable.fromPromise(searchForOrganisationUnitsWithinHierarchy(data))

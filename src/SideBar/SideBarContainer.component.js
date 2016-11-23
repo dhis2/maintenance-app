@@ -80,15 +80,8 @@ class SideBarContainer extends React.Component {
     }
 
     _searchOrganisationUnits(searchValue) {
-        if (searchValue.trim().length) {
-            onOrgUnitSearch(searchValue)
-                .subscribe(() => {
-                }, (e) => console.error(e));
-        } else {
-            setAppState({
-                sideBar: Object.assign({ ...appState.state.sideBar }, { organisationUnits: undefined }),
-            });
-        }
+        onOrgUnitSearch(searchValue)
+            .subscribe(() => {}, (e) => console.error(e));
     }
 
     _onChangeSelectedOrgUnit(event, model) {
