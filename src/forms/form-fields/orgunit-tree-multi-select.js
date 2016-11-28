@@ -106,7 +106,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                             key={rootOu.id}
                             selected={this.state.selectedOrgUnits}
                             root={rootOu}
-                            onClick={this._handleClick}
+                            onSelectClick={this._handleClick}
                             emitModel
                             initiallyExpanded={[rootOu.id]}
                         />
