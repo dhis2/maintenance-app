@@ -16,6 +16,7 @@ import appTheme from './App/app.theme';
 import { Observable } from 'rx';
 import setObservableConfig from 'recompose/setObservableConfig';
 import $$observable from 'symbol-observable';
+import systemSettingsStore from './App/systemSettingsStore';
 
 const recomposeConfig = {
     fromESObservable: observable => Observable.create(observer => {
@@ -23,7 +24,7 @@ const recomposeConfig = {
             next: val => observer.onNext(val),
             error: error => observer.onError(error),
             complete: () => observer.onCompleted()
-        })
+        });
         return unsubscribe
     }),
     toESObservable: rxObservable => ({
@@ -32,7 +33,7 @@ const recomposeConfig = {
                 val => observer.next(val),
                 error => observer.error(error),
                 () => (observer.complete && observer.complete())
-            )
+            );
             return { unsubscribe: () => subscription.dispose() }
         },
         [$$observable]() {
@@ -71,6 +72,10 @@ function configI18n(userSettings) {
     config.i18n.strings.add('no_results_found');
 }
 
+function getSystemSettings(d2) {
+    return d2.system.settings.all().then(settings => systemSettingsStore.setState(settings));
+}
+
 function startApp() {
     render(
         <MuiThemeProvider muiTheme={appTheme}>
@@ -104,5 +109,6 @@ getManifest('./manifest.webapp')
     .then(getUserSettings)
     .then(configI18n)
     .then(init)
+    .then(getSystemSettings)
     .then(startApp)
     .catch(log.error.bind(log));
