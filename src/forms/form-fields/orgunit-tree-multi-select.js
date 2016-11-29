@@ -85,8 +85,8 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
 
     renderRoots() {
         const treeWrapperStyle = {
-            minHeight: 250,
-            maxHeight: 350,
+            minHeight: 300,
+            maxHeight: 450,
             minWidth: 350,
             maxWidth: 480,
             overflow: 'auto',
@@ -104,9 +104,11 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                     {this.state.rootOrgUnits.map(rootOu => (
                         <OrgUnitTree
                             key={rootOu.id}
-                            selected={this.state.selectedOrgUnits}
                             root={rootOu}
+                            selected={this.state.selectedOrgUnits}
                             onSelectClick={this._handleClick}
+                            currentRoot={this.state.currentRoot}
+                            onChangeCurrentRoot={(currentRoot) => this.setState({ currentRoot })}
                             emitModel
                             initiallyExpanded={[rootOu.id]}
                         />
@@ -130,11 +132,32 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             zIndex: 1,
             background: 'white',
             marginLeft: '1rem',
+            marginTop: '1rem',
             display: 'inline-block',
+        };
+        const helpStyles = {
+            width: 475,
+            zIndex: 1,
+            background: 'white',
+            marginLeft: '1rem',
+            marginTop: '1rem',
+            verticalAlign: 'middle',
+            display: 'inline-block',
+            color: 'rgba(0,0,0,0.5)',
+        };
+        const controlOverlayStyles = this.state.currentRoot ? {} : {
+            position: 'absolute',
+            width: 495,
+            height: 240,
+            marginLeft: -10,
+            marginTop: 4,
+            backgroundColor: 'rgba(230,230,230,0.3)',
+            zIndex: 2,
+            borderRadius: 8,
         };
 
         return (
-            <div style={{ position: 'relative', minWidth: 800 }}>
+            <div style={{ position: 'relative', minWidth: 850 }}>
                 <TextField
                     onChange={(event) => this._searchOrganisationUnits(event.target.value)}
                     floatingLabelText={this.context.d2.i18n.getTranslation('filter_organisation_units_by_name')}
@@ -144,20 +167,28 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 {this.renderRoots()}
                 {this.state.orgUnitGroups && this.state.orgUnitLevels && (
                     <div style={controlStyles}>
+                        {this.state.currentRoot
+                            ? (<span>{this.context.d2.i18n.getTranslation('for_organisation_units_within')} {this.state.currentRoot.displayName}:</span>)
+                            : (<span>&larr; {this.context.d2.i18n.getTranslation('select_a_parent_organisation_unit')}</span>)
+                        }
+                        <div style={controlOverlayStyles}></div>
                         <OrgUnitSelectByLevel
                             levels={this.state.orgUnitLevels}
                             selected={this.state.selectedOrgUnits}
+                            currentRoot={this.state.currentRoot}
                             onUpdateSelection={this._setSelection}
                         />
                         <OrgUnitSelectByGroup
                             groups={this.state.orgUnitGroups}
                             selected={this.state.selectedOrgUnits}
+                            currentRoot={this.state.currentRoot}
                             onUpdateSelection={this._setSelection}
-                        />
-                        <div style={{ marginTop: 16 }}>
+                            />
+                            <div style={{ marginTop: 16 }}>
                             <OrgUnitSelectAll
-                                selected={this.state.selectedOrgUnits}
-                                onUpdateSelection={this._setSelection}
+                            selected={this.state.selectedOrgUnits}
+                            currentRoot={this.state.currentRoot}
+                            onUpdateSelection={this._setSelection}
                             />
                         </div>
                     </div>
