@@ -20,8 +20,6 @@ import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import sharingStore from './sharing.store';
 import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
-import orgUnitDialogStore from './organisation-unit-dialog/organisationUnitDialogStore';
-import OrgUnitDialog from './organisation-unit-dialog/OrgUnitDialog.component';
 import dataElementOperandStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
 import CompulsoryDataElementOperandDialog from './compulsory-data-elements-dialog/CompulsoryDataElementOperandDialog.component';
 import snackActions from '../Snackbar/snack.actions';
@@ -168,12 +166,6 @@ const List = React.createClass({
             });
         });
 
-        const orgUnitAssignmentStoreDisposable = orgUnitDialogStore.subscribe(orgunitassignmentState => {
-            this.setState({
-                orgunitassignment: orgunitassignmentState,
-            });
-        });
-
         const dataElementOperandStoreDisposable = dataElementOperandStore.subscribe(state => {
             this.setState({
                 dataElementOperand: state,
@@ -184,7 +176,6 @@ const List = React.createClass({
         this.registerDisposable(detailsStoreDisposable);
         this.registerDisposable(sharingStoreDisposable);
         this.registerDisposable(translationStoreDisposable);
-        this.registerDisposable(orgUnitAssignmentStoreDisposable);
         this.registerDisposable(dataElementOperandStoreDisposable);
     },
 
@@ -204,15 +195,6 @@ const List = React.createClass({
     _translationError(errorMessage) {
         log.error(errorMessage);
         snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
-    },
-
-    _orgUnitAssignmentSaved() {
-        snackActions.show({ message: 'organisation_unit_assignment_saved', translate: true });
-    },
-
-    _orgUnitAssignmentError(errorMessage) {
-        log.error(errorMessage);
-        snackActions.show({ message: 'organisation_unit_assignment_save_error', action: 'ok', translate: true });
     },
 
     isContextActionAllowed(model, action) {
@@ -251,8 +233,6 @@ const List = React.createClass({
             return model.access.read;
         case 'share':
             return model.modelDefinition.isShareable === true; // TODO: Sharing is filtered out twice...
-        case 'assignToOrgUnits':
-            return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'compulsoryDataElements':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'sectionForm':
@@ -342,7 +322,6 @@ const List = React.createClass({
         const contextMenuIcons = {
             clone: 'content_copy',
             sharing: 'share',
-            assignToOrgUnits: 'business',
             sectionForm: 'assignment_turned_in',
             dataEntryForm: 'assignment',
             pdfDataSetForm: 'picture_as_pdf',
@@ -408,20 +387,10 @@ const List = React.createClass({
                     onRequestClose={this._closeTranslationDialog}
                     fieldsToTranslate={getTranslatablePropertiesForModelType(this.props.params.modelType)}
                 /> : null }
-                {this.state.orgunitassignment.model ? <OrgUnitDialog
-                    model={this.state.orgunitassignment.model}
-                    roots={this.state.orgunitassignment.roots}
-                    open={this.state.orgunitassignment.open}
-                    onOrgUnitAssignmentSaved={this._orgUnitAssignmentSaved}
-                    onOrgUnitAssignmentError={this._orgUnitAssignmentError}
-                    onRequestClose={this._closeOrgUnitDialog}
-                /> : null }
                 <CompulsoryDataElementOperandDialog
                     model={this.state.dataElementOperand.model}
                     dataElementOperands={this.state.dataElementOperand.dataElementOperands}
                     open={this.state.dataElementOperand.open}
-                    onDataElementOperandsSaved={this._orgUnitAssignmentSaved}
-                    onDataElementOperandsError={this._orgUnitAssignmentError}
                     onRequestClose={this._closeDataElementOperandDialog}
                 />
             </div>
@@ -444,14 +413,8 @@ const List = React.createClass({
         }));
     },
 
-    _closeOrgUnitDialog() {
-        orgUnitDialogStore.setState(Object.assign({}, orgUnitDialogStore.state, {
-            open: false,
-        }));
-    },
-
     _closeDataElementOperandDialog() {
-        dataElementOperandStore.setState(Object.assign({}, orgUnitDialogStore.state, {
+        dataElementOperandStore.setState(Object.assign({}, dataElementOperandStore.state, {
             open: false,
         }));
     },

@@ -72,7 +72,6 @@ import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from 'd2-ui
     'details',
     'translate',
     'sharing',
-    'assignToOrgUnits',
     'sectionForm',
     'dataEntryForm',
     'pdfDataSetForm',

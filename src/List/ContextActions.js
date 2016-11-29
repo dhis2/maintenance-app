@@ -10,7 +10,6 @@ import snackActions from '../Snackbar/snack.actions';
 import listStore from './list.store';
 import sharingStore from './sharing.store';
 import translateStore from './translation-dialog/translationStore';
-import orgUnitAssignmentDialogStore from './organisation-unit-dialog/organisationUnitDialogStore';
 import compulsoryDataElementStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
 import appStore from '../App/appStateStore';
 import { goToRoute } from '../router-utils';
@@ -24,7 +23,6 @@ const contextActions = Action.createActionsFromNames([
     'delete',
     'details',
     'translate',
-    'assignToOrgUnits',
     'compulsoryDataElements',
     'sectionForm',
     'dataEntryForm',
@@ -130,18 +128,6 @@ contextActions.translate
 
         translateStore.setState({
             model: modelToTranslate,
-            open: true,
-        });
-    });
-
-contextActions.assignToOrgUnits
-    .subscribe(async({ data: model }) => {
-        const d2 = await getD2();
-        const modelItem = await d2.models[model.modelDefinition.name].get(model.id);
-
-        orgUnitAssignmentDialogStore.setState({
-            model: modelItem,
-            roots: appStore.getState().userOrganisationUnits.toArray(),
             open: true,
         });
     });
