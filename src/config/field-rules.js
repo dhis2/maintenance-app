@@ -222,5 +222,20 @@ export default new Map([['dataElement',
                 }
             ]
         }
-    ]]
+    ]],
+    ['organisationUnit', [
+        {
+            field: 'dataSets',
+            when: [{
+                operator: 'SYSTEM_SETTING_IS_FALSE',
+                value: 'keyAllowObjectAssignment',
+            }],
+            operations: [
+                {
+                    field: 'dataSets',
+                    type: 'HIDE_FIELD',
+                }
+            ]
+        }
+    ]],
 ]);

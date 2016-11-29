@@ -2,18 +2,21 @@ import noop from 'd2-utilizr/lib/noop';
 import log from 'loglevel';
 import fieldRules from '../../config/field-rules';
 import isArray from 'd2-utilizr/lib/isArray';
+import systemSettingsStore from '../../App/systemSettingsStore';
 
 const whenOperatorMap = new Map([
     ['EQUALS', equalsOperator],
     ['HAS_VALUE', hasValueOperator],
     ['HAS_STRING_VALUE', hasStringValueOperator],
     ['ONEOF', oneOfOperator],
+    ['SYSTEM_SETTING_IS_TRUE', systemSettingIsTrueOperator],
+    ['SYSTEM_SETTING_IS_FALSE', systemSettingIsFalseOperator],
 ]);
 
 const operationsMap = new Map([
     ['SET_PROP', setProp],
     ['CHANGE_VALUE', changeValue],
-
+    ['HIDE_FIELD', hideField],
 ]);
 
 export function getRulesForModelType(fieldName) {
@@ -36,6 +39,12 @@ function setProp(fieldConfig, operationParams, ruleResult) {
     }
 
     return fieldConfig.props[operationParams.propName] = operationParams.elseValue;
+}
+
+function hideField(fieldConfig, operationParams, ruleResult) {
+    if (ruleResult) {
+        fieldConfig.component = () => null;
+    }
 }
 
 function getOperation(operationType) {
@@ -62,7 +71,17 @@ function oneOfOperator(value, list) {
     return list.indexOf(value) >= 0;
 }
 
-function ruleRunner({whenFieldName, operatorFn, whenValue}, fieldConfig, model) {
+function systemSettingIsTrueOperator(value, settingKey) {
+    const settingsValue = systemSettingsStore.getState() ? systemSettingsStore.getState()[settingKey] : undefined;
+    return settingsValue === true;
+}
+
+function systemSettingIsFalseOperator(value, settingKey) {
+    const settingsValue = systemSettingsStore.getState() ? systemSettingsStore.getState()[settingKey] : undefined;
+    return settingsValue === false;
+}
+
+function ruleRunner({ whenFieldName, operatorFn, whenValue }, fieldConfig, model) {
     return operatorFn(model[whenFieldName], whenValue)
 }
 
@@ -75,7 +94,7 @@ function rulesRunner(rules, rule, modelToEdit, fieldConfigs) {
         const operatorFn = getWhenOperator(whenRule.operator);
         const whenValue = whenRule.value;
 
-        return ruleRunner({whenFieldName, operatorFn, whenValue}, fieldConfigForRule, modelToEdit);
+        return ruleRunner({ whenFieldName, operatorFn, whenValue }, fieldConfigForRule, modelToEdit);
     });
 }
 
@@ -90,7 +109,7 @@ export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
             (rule.operations || [rule.operation])
                 .forEach((operation) => {
                     const fieldConfigForOperation = fieldConfigs.find(fieldConfig => fieldConfig.name === (operation.field || rule.field));
-                    const {field, type, ...operationParams} = operation;
+                    const { field, type, ...operationParams } = operation;
 
                     log.debug(`---- For field ${field || rule.field} execute ${getOperation(type).name} with`, operationParams);
 

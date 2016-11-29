@@ -113,7 +113,7 @@ class OrgUnitTreeSingleSelect extends React.Component {
                             roots={this.state.roots}
                             selected={[this.state.value.id]}
                             initiallyExpanded={this.state.initiallyExpanded}
-                            onClick={this.handleSelectClick}
+                            onSelectClick={this.handleSelectClick}
                         />
                     </div>
                 </Dialog>

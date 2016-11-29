@@ -33,7 +33,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                     labelStyle={styles.labelStyle}
                     onClick={props.onClick}
                     idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
-                    hideLeafNodes
+                    hideCheckboxes
                 />
             )) : <div style={styles.noHitsLabel}>{props.noHitsLabel}</div>}
         </div>

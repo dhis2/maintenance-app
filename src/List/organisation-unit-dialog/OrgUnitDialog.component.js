@@ -210,7 +210,7 @@ class OrgUnitDialog extends React.Component {
                     <OrgUnitTreeMultipleRoots
                         roots={roots}
                         selected={this.state.selected}
-                        onClick={this.toggleOrgUnit}
+                        onSelectClick={this.toggleOrgUnit}
                     />
                 </div>
             </Dialog>
