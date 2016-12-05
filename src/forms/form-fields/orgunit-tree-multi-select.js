@@ -99,10 +99,10 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             verticalAlign: 'top',
         };
 
-        if (this.state.rootOrgUnits.length) {
-            return (
-                <div style={treeWrapperStyle}>
-                    {this.state.rootOrgUnits.map(rootOu => (
+        return (
+            <div style={treeWrapperStyle}>
+                {this.state.rootOrgUnits.length
+                    ? this.state.rootOrgUnits.map(rootOu => (
                         <OrgUnitTree
                             key={rootOu.id}
                             root={rootOu}
@@ -113,13 +113,10 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                             emitModel
                             initiallyExpanded={[rootOu.id]}
                         />
-                    ))}
-                </div>
-            );
-        }
-
-        return (
-            <div>{this.context.d2.i18n.getTranslation('no_roots_found')}</div>
+                    ))
+                    : (<div>{this.context.d2.i18n.getTranslation('no_roots_found')}</div>)
+                }
+            </div>
         );
     }
 
