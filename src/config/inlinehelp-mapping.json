@@ -1,4 +1,5 @@
 {
-    "/list/otherSection/legendSet": "/en/user/html/manage_legends.html",
-    "/list/otherSection/orgnisationUnits": "/en/user/html/ch10s05.html"
+    "/list/${section}/${objectType}": "/en/user/html/manage_${objectType}.html",
+    "/edit/${section}/${objectType}": "/en/user/html/create_${objectType}.html",
+    "/clone/${section}/${objectType}": "/en/user/html/create_${objectType}.html"
 }

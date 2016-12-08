@@ -27,6 +27,7 @@ import Heading from 'd2-ui/lib/headings/Heading.component';
 import fieldOrder from '../config/field-config/field-order';
 import { Observable } from 'rx';
 import { calculatePageValue } from './helpers/pagination';
+import HelpLink from './HelpLink.component';
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
@@ -103,6 +104,8 @@ const List = React.createClass({
     mixins: [ObserverRegistry, Translate, Auth],
 
     getInitialState() {
+        console.log(this.props);
+
         return {
             dataRows: [],
             pager: {
@@ -333,7 +336,7 @@ const List = React.createClass({
         return (
             <div>
                 <div>
-                    <Heading>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}</Heading>
+                    <Heading>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}<HelpLink schema={this.props.params.modelType} /></Heading>
                     <ListActionBar modelType={this.props.params.modelType} groupName={this.props.params.groupName} />
                 </div>
                 <div>

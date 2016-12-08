@@ -1,10 +1,11 @@
 import React from 'react';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import Heading from 'd2-ui/lib/headings/Heading.component';
+import HelpLink from '../List/HelpLink.component';
 
-function FormHeading(props, context) {
+function FormHeading({ level, schema, children, ...props }, context) {
     return (
-        <Heading {...props} level={props.level || 2}>{context.d2.i18n.getTranslation(props.children)}</Heading>
+        <Heading {...props} level={level || 2}>{context.d2.i18n.getTranslation(children)}<HelpLink schema={schema} /></Heading>
     );
 }
 FormHeading.propTypes = {
