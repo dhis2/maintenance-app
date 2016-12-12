@@ -17,7 +17,7 @@
     "__prebuild": "npm test && npm run lint",
     "build": "rm -rf build && webpack && npm run manifest",
     "postbuild": "cp -rv src/i18n index.html icon.png node_modules/babel-polyfill/dist/polyfill.min.js node_modules/jquery/dist/jquery.min.js node_modules/ckeditor ./build/",
-    "validate": "npm ls",
+    "validate": "npm ls || yarn ls",
     "manifest": "d2-manifest package.json build/manifest.webapp"
   },
   "devDependencies": {
