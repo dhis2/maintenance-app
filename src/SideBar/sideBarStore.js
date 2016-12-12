@@ -17,8 +17,8 @@ DefaultSideBarIcon.defaultProps = {
     children: 'folder_open',
 };
 
-function getAdditionalSideBarFields(currentSection, i18n) {
-    if (currentSection === 'organisationUnitSection') {
+function getAdditionalSideBarFields(currentSection, {i18n, currentUser}) {
+    if (currentSection === 'organisationUnitSection' && currentUser.authorities.has('F_ORGANISATIONUNIT_MOVE')) {
         return [
             {
                 key: 'hierarchy',
@@ -45,7 +45,7 @@ const sideBarState = appStateStore
                     return v;
                 })
                 .map(section => Object.assign({ icon: <DefaultSideBarIcon /> }, section))
-                .concat(getAdditionalSideBarFields(currentSection, d2.i18n)),
+                .concat(getAdditionalSideBarFields(currentSection, d2)),
             currentSection,
             currentSubSection,
             activeItem: currentSubSection || currentSection,
