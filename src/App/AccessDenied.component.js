@@ -11,7 +11,3 @@ export default function AccessDenied() {
         </div>
     );
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> f6b49e7... Minor codestyle
