@@ -12,6 +12,7 @@ import FormButtons from '../EditModel/FormButtons.component';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import AccessDenied from '../App/AccessDenied.component';
 
 function saveOrganisationUnitLevels(i18n) {
     actions.saveOrganisationUnitLevels()
@@ -22,6 +23,8 @@ function saveOrganisationUnitLevels(i18n) {
 }
 
 function OrganisationUnitLevels(props, context) {
+    const canEdit = context.d2.currentUser.canUpdate(context.d2.models.organisationUnitLevel);
+
     if (props.isLoading) {
         return (
             <LinearProgress indeterminate />
@@ -59,7 +62,7 @@ function OrganisationUnitLevels(props, context) {
 
     const fieldRows = props.fieldsForOrganisationUnitLevel.map((fieldsForLevel, index) => {
         let translateButton = null;
-        if (fieldsForLevel.organisationUnitLevel.id) {
+        if (fieldsForLevel.organisationUnitLevel.id && canEdit) {
             translateButton = (
                 <div style={styles.translateButtonWrap}>
                     <IconButton iconClassName="material-icons" onClick={() => props.onTranslateClick(fieldsForLevel.organisationUnitLevel)}>translate</IconButton>
@@ -72,7 +75,13 @@ function OrganisationUnitLevels(props, context) {
                 <FormBuilder
                     style={styles.formWrapStyle}
                     fieldWrapStyle={styles.fieldWrapStyle}
-                    fields={fieldsForLevel}
+                    fields={fieldsForLevel.map(fieldConfig => ({
+                        ...fieldConfig,
+                        props: {
+                            ...fieldConfig.props,
+                            disabled: !canEdit,
+                        },
+                    }))}
                     onUpdateField={(fieldName, fieldValue) => actions.fieldUpdate({ organisationUnitLevel: fieldsForLevel.organisationUnitLevel, fieldName, fieldValue })}
                     onUpdateFormStatus={(formStatus) => actions.updateFormStatus({ levelIndex: index, formStatus })}
                 />
@@ -87,7 +96,7 @@ function OrganisationUnitLevels(props, context) {
             <Paper style={styles.paperWrap}>
                 {fieldRows}
                 <FormButtons>
-                    <SaveButton onClick={() => saveOrganisationUnitLevels(context.d2.i18n)} isValid={props.formStatus.every(v => v)} isSaving={props.isSaving} />
+                    {canEdit ? <SaveButton onClick={() => saveOrganisationUnitLevels(context.d2.i18n)} isValid={props.formStatus.every(v => v)} isSaving={props.isSaving} /> : []}
                 </FormButtons>
             </Paper>
         </div>
@@ -131,6 +140,7 @@ export default addD2Context(class extends React.Component {
     }
 
     render() {
+
         return (
             <div>
                 <OrganisationUnitLevelsWithState onTranslateClick={this._onTranslateClick} />
