@@ -206,6 +206,7 @@ const fieldOrderByName = new Map([
         'optionSetAttribute',
         'constantAttribute',
         'legendSetAttribute',
+        'validationRuleAttribute',
     ]],
     ['optionSet', [
         'name',
@@ -306,6 +307,12 @@ const fieldOrderByName = new Map([
         'mapLayerPosition',
         'legendSet',
         'legendSetUrl',
+    ]],
+    ['validationNotificationTemplate', [
+        'name',
+        'code',
+        'notificationRecipient',
+        'messageTemplate',
     ]]
 ]);
 

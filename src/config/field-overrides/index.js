@@ -9,6 +9,7 @@ import trackedEntityAttribute from './trackedEntityAttribute';
 import predictor from './predictor';
 import pushAnalysis from './pushAnalysis';
 import externalMapLayer from './externalMapLayer';
+import validationNotificationTemplate from './validationNotificationTemplate';
 
 const overridesByType = {
     dataElement,
@@ -22,6 +23,7 @@ const overridesByType = {
     predictor,
     pushAnalysis,
     externalMapLayer,
+    validationNotificationTemplate,
 };
 
 export default {

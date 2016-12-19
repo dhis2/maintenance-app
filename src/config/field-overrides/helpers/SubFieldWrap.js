@@ -15,9 +15,14 @@ const styles = {
     },
 };
 
-export default function SubFieldWrap({ children }) {
+export default function SubFieldWrap({ children, style={} }) {
+    const subfieldWrapStyle = {
+        ...styles.formFieldSubFields,
+        ...style,
+    };
+
     return (
-        <div style={styles.formFieldSubFields}>
+        <div style={subfieldWrapStyle}>
             {children}
         </div>
     );
