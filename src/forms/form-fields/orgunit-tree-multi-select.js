@@ -51,6 +51,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 this.setState({
                     originalRoots: rootOrgUnits,
                     rootOrgUnits,
+                    currentRoot: rootOrgUnits[0],
                     selectedOrgUnits: this.props.value
                         .toArray()
                         .map(ou => ou.id),
@@ -98,10 +99,10 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             verticalAlign: 'top',
         };
 
-        if (this.state.rootOrgUnits.length) {
-            return (
-                <div style={treeWrapperStyle}>
-                    {this.state.rootOrgUnits.map(rootOu => (
+        return (
+            <div style={treeWrapperStyle}>
+                {this.state.rootOrgUnits.length
+                    ? this.state.rootOrgUnits.map(rootOu => (
                         <OrgUnitTree
                             key={rootOu.id}
                             root={rootOu}
@@ -112,13 +113,10 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                             emitModel
                             initiallyExpanded={[rootOu.id]}
                         />
-                    ))}
-                </div>
-            );
-        }
-
-        return (
-            <div>{this.context.d2.i18n.getTranslation('no_roots_found')}</div>
+                    ))
+                    : (<div>{this.context.d2.i18n.getTranslation('no_roots_found')}</div>)
+                }
+            </div>
         );
     }
 
@@ -155,6 +153,13 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             zIndex: 2,
             borderRadius: 8,
         };
+        const currentRootStyle = {
+            border: '1px solid rgba(0,0,0,0.1)',
+            borderRadius: 3,
+            backgroundColor: 'rgba(0,0,0,0.05)',
+            padding: 2,
+            margin: 4,
+        };
 
         return (
             <div style={{ position: 'relative', minWidth: 850 }}>
@@ -168,8 +173,13 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 {this.state.orgUnitGroups && this.state.orgUnitLevels && (
                     <div style={controlStyles}>
                         {this.state.currentRoot
-                            ? (<span>{this.context.d2.i18n.getTranslation('for_organisation_units_within')} {this.state.currentRoot.displayName}:</span>)
-                            : (<span>&larr; {this.context.d2.i18n.getTranslation('select_a_parent_organisation_unit')}</span>)
+                            ? (
+                                <span>{this.context.d2.i18n.getTranslation('for_organisation_units_within')}
+                                    <span style={currentRootStyle}>{this.state.currentRoot.displayName}</span>:
+                                </span>
+                            ) : (
+                                <span>{this.context.d2.i18n.getTranslation('select_a_parent_organisation_unit')}</span>
+                            )
                         }
                         <div style={controlOverlayStyles}></div>
                         <OrgUnitSelectByLevel

@@ -4,7 +4,6 @@ import log from 'loglevel';
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 

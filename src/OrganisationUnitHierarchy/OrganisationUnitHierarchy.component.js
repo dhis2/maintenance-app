@@ -13,6 +13,7 @@ import Heading from 'd2-ui/lib/headings/Heading.component';
 import searchForOrganisationUnitsWithinHierarchy from './searchForOrganisationUnitsWithinHierarchy';
 import log from 'loglevel';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
+import AccessDenied from '../App/AccessDenied.component';
 
 function identity(v) {
     return v;
@@ -358,6 +359,12 @@ function OrganisationUnitHierarchy(props, context) {
             color: 'orange',
         }
     };
+
+    if (!context.d2.currentUser.authorities.has('F_ORGANISATIONUNIT_MOVE')) {
+        return (
+            <AccessDenied />
+        );
+    }
 
     const buttonLabel = context.d2.i18n.getTranslation('move_$$ouCount$$_organisation_units', { ouCount: (props.selectedLeft && props.selectedLeft.length) || 0 });
     const headingTitle = context.d2.i18n.getTranslation('hierarchy_operations');

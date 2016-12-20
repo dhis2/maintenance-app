@@ -184,6 +184,7 @@ const fieldOrderByName = new Map([
         'unique',
         'dataElementAttribute',
         'dataElementGroupAttribute',
+        'dataElementGroupSetAttribute',
         'indicatorAttribute',
         'indicatorGroupAttribute',
         'dataSetAttribute',
@@ -196,6 +197,7 @@ const fieldOrderByName = new Map([
         'programStageAttribute',
         'trackedEntityAttribute',
         'trackedEntityAttributeAttribute',
+        'categoryAttribute',
         'categoryOptionAttribute',
         'categoryOptionComboAttribute',
         'categoryOptionGroupAttribute',
@@ -204,6 +206,7 @@ const fieldOrderByName = new Map([
         'optionSetAttribute',
         'constantAttribute',
         'legendSetAttribute',
+        'validationRuleAttribute',
     ]],
     ['optionSet', [
         'name',
@@ -304,6 +307,12 @@ const fieldOrderByName = new Map([
         'mapLayerPosition',
         'legendSet',
         'legendSetUrl',
+    ]],
+    ['validationNotificationTemplate', [
+        'name',
+        'code',
+        'notificationRecipient',
+        'messageTemplate',
     ]]
 ]);
 

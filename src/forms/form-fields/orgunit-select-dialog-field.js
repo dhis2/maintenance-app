@@ -114,6 +114,7 @@ class OrgUnitTreeSingleSelect extends React.Component {
                             selected={[this.state.value.id]}
                             initiallyExpanded={this.state.initiallyExpanded}
                             onSelectClick={this.handleSelectClick}
+                            hideCheckboxes
                         />
                     </div>
                 </Dialog>
