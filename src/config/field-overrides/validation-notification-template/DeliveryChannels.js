@@ -18,7 +18,7 @@ function createChangeHandler(model, deliveryChannel) {
 }
 
 function hasDeliveryChannel(model, deliveryChannel) {
-    return model.deliveryChannels.indexOf(deliveryChannel) >= 0;
+    return model.deliveryChannels && model.deliveryChannels.indexOf(deliveryChannel) >= 0;
 }
 
 const createDeliveryChannelCheckBox = memoize((deliveryChannel) => {

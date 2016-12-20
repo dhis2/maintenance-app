@@ -1,4 +1,11 @@
 {
-    "/list/otherSection/legendSet": "/en/user/html/manage_legends.html",
-    "/list/otherSection/orgnisationUnits": "/en/user/html/ch10s05.html"
+    "/list/otherSection/legendSet": "/en/user/html/manage_legend.html",
+    "/edit/otherSection/legendSet/add": "/en/user/html/manage_legend.html#create_legend",
+
+    "/list/otherSection/validationNotificationTemplate": "/en/user/html/manage_validation_notification.html",
+    "/edit/otherSection/validationNotificationTemplate/add": "/en/user/html/manage_validation_notification.html#create_validation_notification",
+    
+    
+    "/list/${section}/${objectType}": "/en/user/html/manage_${objectType}.html",
+    "/edit/${section}/${objectType}": "/en/user/html/manage_${objectType}.html#create_${objectType}"
 }
