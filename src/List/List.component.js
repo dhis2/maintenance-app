@@ -104,8 +104,6 @@ const List = React.createClass({
     mixins: [ObserverRegistry, Translate, Auth],
 
     getInitialState() {
-        console.log(this.props);
-
         return {
             dataRows: [],
             pager: {

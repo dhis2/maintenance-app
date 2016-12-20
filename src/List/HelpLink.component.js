@@ -73,7 +73,13 @@ export default function HelpLink({ schema }, { d2 }) {
 
     if (helpLink) {
         return (
-            <IconButton href={`${docsLink}${helpLink}`} target="_blank" rel="noopener noreferrer">
+            <IconButton
+                href={`${docsLink}${helpLink}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                tooltip={d2.i18n.getTranslation('open_user_guide')}
+                tooltipPosition="bottom-center"
+                >
                 <InfoOutlineIcon /> 
             </IconButton>
         )
