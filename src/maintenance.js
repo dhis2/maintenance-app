@@ -13,6 +13,7 @@ import LoadingMask from './loading-mask/LoadingMask.component';
 import dhis2 from 'd2-ui/lib/header-bar/dhis2';
 import routes from './router';
 import '../scss/maintenance.scss';
+import systemSettingsStore from './App/systemSettingsStore';
 
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
@@ -30,6 +31,10 @@ function configI18n(userSettings) {
 
     // Add english as locale for all cases (either as primary or fallback)
     config.i18n.sources.add('./i18n/i18n_module_en.properties');
+}
+
+function getSystemSettings(d2) {
+    return d2.system.settings.all().then(settings => systemSettingsStore.setState(settings));
 }
 
 function startApp() {
@@ -56,5 +61,6 @@ getManifest('./manifest.webapp')
     .then(getUserSettings)
     .then(configI18n)
     .then(init)
+    .then(getSystemSettings)
     .then(startApp)
     .catch(log.error.bind(log));
