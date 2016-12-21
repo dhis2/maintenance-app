@@ -13,7 +13,7 @@ export default function UserGroupRecipientFields({ model }, { d2 }) {
                 referenceProperty="recipientUserGroups"
                 model={model}
                 labelText={d2.i18n.getTranslation('recipient_user_groups')}
-                onChange={(value) => actions.update({fieldName: 'recipientUserGroups', value, })}
+                onChange={compose((value) => actions.update({fieldName: 'recipientUserGroups', value, }), get('target.value'))}
                 value={model.recipientUserGroups}
             />
             <CheckBox
