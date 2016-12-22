@@ -8,6 +8,7 @@ import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
 import {initAppState, default as appState} from './App/appStateStore';
 import LinearProgress from 'material-ui/LinearProgress';
+import App from './App/App.component';
 
 import onDemand from './on-demand';
 
@@ -157,9 +158,9 @@ function cloneObject({params}, replace, callback) {
         );
 }
 
-function delayRender(importFactory) {
+function delayRender(importFactory, loadingComponent = <LinearProgress />) {
     return (props) => {
-        const BaseComponent = onDemand.loadDefault(importFactory, {loadingComponent: () => (<LinearProgress />)})
+        const BaseComponent = onDemand.loadDefault(importFactory, {loadingComponent: () => loadingComponent})
 
         return <BaseComponent {...props} />
     };
@@ -169,7 +170,7 @@ const routes = (
     <Router history={hashHistory}>
         <Route
             path="/"
-            component={delayRender(() => System.import('./App/App.component'))}
+            component={App}
         >
             <IndexRedirect to="/list/all"/>
             <Route

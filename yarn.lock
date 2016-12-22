@@ -1522,9 +1522,9 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@^25.5.1:
-  version "25.5.2"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-25.5.2.tgz#19933c98efadec33bb4bcebc576fc28b21c1d337"
+d2-ui@25.5:
+  version "25.5.4"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-25.5.4.tgz#30a0b6828d3d1d867578b24820bc44dc2038d665"
 
 d2-utilizr@^0.2.9:
   version "0.2.11"
@@ -4726,17 +4726,13 @@ websocket-extensions@>=0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.1.tgz#76899499c184b6ef754377c2dbb0cd6cb55d29e7"
 
-whatwg-fetch@>=0.10.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.1.tgz#078b9461bbe91cea73cbce8bb122a05f9e92b772"
+whatwg-fetch@>=0.10.0, whatwg-fetch@^1.0.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-1.1.1.tgz#ac3c9d39f320c6dce5339969d054ef43dd333319"
 
 whatwg-fetch@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-0.9.0.tgz#0e3684c6cb9995b43efc9df03e4c365d95fd9cc0"
-
-whatwg-fetch@^1.0.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-1.1.1.tgz#ac3c9d39f320c6dce5339969d054ef43dd333319"
 
 whet.extend@~0.9.9:
   version "0.9.9"
