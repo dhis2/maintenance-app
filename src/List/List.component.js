@@ -31,7 +31,7 @@ import { Observable } from 'rx';
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
-    if ((action !== 'edit' && action !== 'clone') || this.getCurrentUser().canUpdate(this.getModelDefinitionByName(this.props.params.modelType))) {
+    if ((action !== 'edit' && action !== 'clone' && action !== 'translate' && action !== 'share') || this.getCurrentUser().canUpdate(this.getModelDefinitionByName(this.props.params.modelType))) {
         return true;
     }
     return false;
@@ -256,11 +256,11 @@ const List = React.createClass({
         case 'clone':
             return model.modelDefinition.name !== 'dataSet' && model.access.write;
         case 'translate':
-            return model.access.read && model.modelDefinition.identifiableObject;
+            return model.access.write && model.modelDefinition.identifiableObject;
         case 'details':
             return model.access.read;
         case 'share':
-            return model.modelDefinition.isShareable === true; // TODO: Sharing is filtered out twice...
+            return model.access.write && model.modelDefinition.isShareable === true; // TODO: Sharing is filtered out twice...
         case 'assignToOrgUnits':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'compulsoryDataElements':
