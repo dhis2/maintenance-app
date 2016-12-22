@@ -140,6 +140,7 @@ class CompulsoryDataElementOperandDialog extends Component {
                 autoScrollBodyContent={true}
                 modal={true}
                 actions={dialogActions}
+                contentStyle={{ maxWidth: 'none', width: '95%' }}
             >
                 <div style={{ marginBottom: '3.5rem' }}>
                     <Heading>{this.i18n.getTranslation('edit_compulsory_data_elements')} - {this.props.model && this.props.model.displayName}</Heading>
