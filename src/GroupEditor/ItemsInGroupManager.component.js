@@ -13,6 +13,10 @@ import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 export default React.createClass({
     mixins: [Translate],
 
+    contextTypes: {
+        d2: React.PropTypes.object,
+    },
+
     getInitialState() {
         const itemStore = Store.create();
         const assignedItemStore = Store.create();
@@ -67,6 +71,11 @@ export default React.createClass({
     },
 
     render() {
+        const d2 = this.context.d2;
+
+        const accessibleGroups = ['indicatorGroup', 'dataElementGroup']
+            .filter(groupName => d2.currentUser.canCreate(d2.models[groupName]))
+
         const contentStyle = {
             padding: '2rem',
         };
@@ -74,7 +83,7 @@ export default React.createClass({
         return (
             <div style={contentStyle}>
                 <ModelTypeSelector
-                    nameListFilter={['indicatorGroup', 'dataElementGroup']}
+                    nameListFilter={accessibleGroups}
                     onChange={this._typeChanged}
                 />
                 {this.renderGroupEditor()}

@@ -3,41 +3,63 @@ import { getInstance } from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import isObject from 'd2-utilizr/lib/isObject';
 import snackActions from '../Snackbar/snack.actions';
-
+import { curry, map, contains, __, compose, get, filter } from 'lodash/fp';
 import maintenanceModels from '../config/maintenance-models';
-const sideBarConfig = maintenanceModels.getSideBarConfig();
+import systemSettingsStore from './systemSettingsStore';
 
 const appState = Store.create();
 
-function isInPredefinedList(predefinedList) {
-    return function isInPredefinedListFunc(name) {
-        return predefinedList.indexOf(name) >= 0;
-    };
+const requireAddToView = curry((d2, systemSettings, schemaName) => {
+    console.log(systemSettings.keyRequireAddToView);
+    if (systemSettings.keyRequireAddToView === true) {
+        return d2.currentUser.canUpdate(d2.models[schemaName]) || d2.currentUser.canCreate(d2.models[schemaName]);
+    }
+
+    return  true;
+});
+
+function getItemsForCategory(d2, items) {
+    const modelDefinitionNames = d2.models.mapThroughDefinitions(get('name'));
+    const systemSettings = systemSettingsStore.getState();
+
+    const onlyModelsThatExist = contains(__, modelDefinitionNames);
+    const onlyAccessibleModels = requireAddToView(d2, systemSettings);
+    const onlyExistingAndAccessibleModels = (value) => onlyModelsThatExist(value) && onlyAccessibleModels(value);
+    
+    return items
+        .filter(onlyExistingAndAccessibleModels)
+        .map(key => ({
+            key,
+            label: d2.i18n.getTranslation(camelCaseToUnderscores(key)),
+        }));
+}
+
+async function mapSideBarConfigToSideBarItems(sideBarConfig) {
+    const d2 = await getInstance();
+
+    return map(sideBarCategory => ({
+            name: sideBarCategory,
+            items: getItemsForCategory(d2, sideBarConfig[sideBarCategory].items),
+        }), Object.keys(sideBarConfig));
 }
 
 async function loadSideBarState() {
     const d2 = await getInstance();
-    const modelDefinitionNames = d2.models.mapThroughDefinitions(definition => definition.name);
+    const sideBarConfig = maintenanceModels.getSideBarConfig();
+    const sideBarState = await mapSideBarConfigToSideBarItems(sideBarConfig);
 
-    return Object.keys(sideBarConfig)
-        .map(sideBarCategory => ({
-            name: sideBarCategory,
-            items: sideBarConfig[sideBarCategory].items
-                .filter(isInPredefinedList(modelDefinitionNames))
-                .map(key => ({
-                    key,
-                    label: d2.i18n.getTranslation(camelCaseToUnderscores(key)),
-                })),
-        }))
+    return sideBarState
         .reduce((acc, sideBarCategory) => {
-            acc[sideBarCategory.name] = sideBarCategory.items; // eslint-disable-line no-param-reassign
+            if (sideBarCategory.items.length || sideBarCategory.name === 'all') {
+                acc[sideBarCategory.name] = sideBarCategory.items; // eslint-disable-line no-param-reassign
+                acc.mainSections = acc.mainSections.concat([{
+                    key: sideBarCategory.name,
+                    label: d2.i18n.getTranslation(camelCaseToUnderscores(sideBarCategory.name))
+                }]);
+            }
             return acc;
         }, {
-            mainSections: Object.keys(sideBarConfig)
-                .map(sideBarCategory => ({
-                    key: sideBarCategory,
-                    label: d2.i18n.getTranslation(camelCaseToUnderscores(sideBarCategory)),
-                })),
+            mainSections: [],
         });
 }
 

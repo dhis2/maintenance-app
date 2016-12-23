@@ -64,10 +64,14 @@ export default React.createClass({
             padding: '2rem',
         };
 
+        const d2 = this.context.d2;
+        const accessibleModels = ['indicator', 'dataElement']
+            .filter(schemaName => d2.currentUser.canCreate(d2.models[`${schemaName}Group`]))
+
         return (
             <div style={contentStyle}>
                 <ModelTypeSelector
-                    nameListFilter={['indicator', 'dataElement']}
+                    nameListFilter={accessibleModels}
                     onChange={this._typeChanged}
                 />
                 {this.renderGroupEditor()}
