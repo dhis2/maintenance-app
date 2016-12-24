@@ -10,7 +10,6 @@ import systemSettingsStore from './systemSettingsStore';
 const appState = Store.create();
 
 const requireAddToView = curry((d2, systemSettings, schemaName) => {
-    console.log(systemSettings.keyRequireAddToView);
     if (systemSettings.keyRequireAddToView === true) {
         return d2.currentUser.canUpdate(d2.models[schemaName]) || d2.currentUser.canCreate(d2.models[schemaName]);
     }
