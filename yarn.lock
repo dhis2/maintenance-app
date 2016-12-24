@@ -1520,9 +1520,9 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@25.5:
-  version "25.5.4"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-25.5.4.tgz#30a0b6828d3d1d867578b24820bc44dc2038d665"
+d2-ui@26.0:
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-26.0.0.tgz#c03492c59f8c9750d58b6ed236286ff7d2ebdda5"
 
 d2-utilizr@^0.2.9:
   version "0.2.11"
