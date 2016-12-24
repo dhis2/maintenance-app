@@ -1,6 +1,6 @@
 import { SELECT } from '../../forms/fields';
-import ExpressionManager from 'd2-ui/lib/indicator-expression-manager/IndicatorExpressionManager.component';
-import dataElementOperandSelectorActions from 'd2-ui/lib/indicator-expression-manager/dataElementOperandSelector.actions';
+import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
+import dataElementOperandSelectorActions from 'd2-ui/lib/expression-manager/dataElementOperandSelector.actions';
 import Store from 'd2-ui/lib/store/Store';
 import Action from 'd2-ui/lib/action/Action';
 import { getInstance } from 'd2/lib/d2';
@@ -62,7 +62,7 @@ function ExpressionModal({ open, handleClose, handleSaveAndClose, ...props }) {
                 descriptionValue={props.value ? props.value.description : ''}
                 formulaValue={props.value ? props.value.expression : ''}
                 expressionStatusStore={expressionStatusStore}
-                indicatorExpressionChanged={props.indicatorExpressionChanged}
+                expressionChanged={props.indicatorExpressionChanged}
                 titleText={props.labelText}
             />
         </Dialog>
@@ -124,7 +124,7 @@ class ExpressionField extends Component {
                     open={this.state.open}
                     handleClose={this.handleClose}
                     handleSaveAndClose={this.handleSaveAndClose}
-                    indicatorExpressionChanged={this.indicatorExpressionChanged}
+                    expressionChanged={this.indicatorExpressionChanged}
                 />
             </div>
         );

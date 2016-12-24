@@ -54,6 +54,14 @@ export function getSideBarConfig() {
                 ],
             },
 
+            validationSection: {
+                items: [
+                    'validationRule',
+                    'validationRuleGroup',
+                    'validationNotificationTemplate',
+                ]
+            },
+
             otherSection: {
                 items: [
                     'constant',
