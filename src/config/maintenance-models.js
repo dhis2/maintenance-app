@@ -71,7 +71,6 @@ export function getSideBarConfig() {
                     'predictor',
                     'pushAnalysis',
                     'externalMapLayer',
-                    'validationNotificationTemplate',
                 ],
             },
         };

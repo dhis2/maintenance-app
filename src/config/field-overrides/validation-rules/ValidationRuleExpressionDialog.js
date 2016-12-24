@@ -32,13 +32,13 @@ function ValidationRuleExpressionDialog({ open, close, actions, expressionDetail
             />
             <ExpressionManager
                 descriptionLabel={d2.i18n.getTranslation('description')}
-                descriptionValue={expressionDetails.description}
+                descriptionValue={expressionDetails.description || ''}
                 expressionStatusStore={expressionStatusStore}
                 expressionChanged={(expressionStatus) => updateExpressionDetails({
                     ...expressionDetails,
                     expression: expressionStatus.formula,
                 })}
-                formulaValue={expressionDetails.expression}
+                formulaValue={expressionDetails.expression || ''}
             />
         </Dialog>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SELECT } from '../../forms/fields';
+import DropDown from '../../forms/form-fields/drop-down';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
 import DataSetElementField from './data-set/DataSetElementField.component';
 
@@ -11,10 +11,19 @@ export default new Map([
         },
     }],
     ['periodType', {
-        type: SELECT,
+        component: DropDown,
         fieldOptions: {
             options: [
-                'Daily', 'Weekly', 'Monthly', 'BiMonthly', 'Quarterly', 'SixMonthlyApril', 'Yearly', 'FinancialApril', 'FinancialJuly', 'FinancialOctober',
+                'Daily',
+                'Weekly',
+                'Monthly',
+                'BiMonthly',
+                'Quarterly',
+                'SixMonthlyApril',
+                'Yearly',
+                'FinancialApril',
+                'FinancialJuly',
+                'FinancialOctober',
             ],
         },
     }],
