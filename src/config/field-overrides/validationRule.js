@@ -1,23 +1,13 @@
 import DropDown from '../../forms/form-fields/drop-down';
 import LeftSideExpressionField from './validation-rules/LeftSideExpressionField';
 import RightSideExpressionField from './validation-rules/RightSideExpressionField';
+import periodTypes from '../periodTypes';
 
 export default new Map([
     ['periodType', {
         component: DropDown,
         fieldOptions: {
-            options: [
-                'Daily',
-                'Weekly',
-                'Monthly',
-                'BiMonthly',
-                'Quarterly',
-                'SixMonthlyApril',
-                'Yearly',
-                'FinancialApril',
-                'FinancialJuly',
-                'FinancialOctober',
-            ],
+            options: periodTypes,
         },
     }],
     ['importance', {
