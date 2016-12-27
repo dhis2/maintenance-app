@@ -23,7 +23,7 @@ export default new Map([
                 'Yearly',
                 'FinancialApril',
                 'FinancialJuly',
-                'FinancialOctober',
+                'FinancialOct',
             ],
         },
     }],
