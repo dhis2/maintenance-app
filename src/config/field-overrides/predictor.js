@@ -139,7 +139,16 @@ export default new Map([
         type: SELECT,
         fieldOptions: {
             options: [
-                'Daily', 'Weekly', 'Monthly', 'BiMonthly', 'Quarterly', 'SixMonthlyApril', 'Yearly', 'FinancialApril', 'FinancialJuly', 'FinancialOctober',
+                'Daily',
+                'Weekly',
+                'Monthly',
+                'BiMonthly',
+                'Quarterly',
+                'SixMonthlyApril',
+                'Yearly',
+                'FinancialApril',
+                'FinancialJuly',
+                'FinancialOct',
             ],
         },
     }],
