@@ -15,8 +15,6 @@ const fieldOrderByName = new Map([
         'commentOptionSet',
         'legendSets',
         'aggregationLevels',
-        'aggregateExportCategoryOptionCombo',
-        'aggregateExportAttributeOptionCombo',
     ]],
     ['dataElementGroup', [
         'name',
@@ -125,8 +123,6 @@ const fieldOrderByName = new Map([
         'renderAsTabs',
         'renderHorizontally',
         'dataSetElements',
-        'aggregateExportCategoryOptionCombo',
-        'aggregateExportAttributeOptionCombo',
         'indicators',
         'organisationUnits',
     ]],
