@@ -13,7 +13,7 @@
     "start": "webpack-dev-server",
     "test": "echo Everything probably works great\\! ## karma start test/config/karma.config.js --single-run true",
     "build": "rm -rf build && NODE_ENV=production webpack && npm run manifest",
-    "postbuild": "cp -r src/i18n icon.png node_modules/babel-polyfill/dist/polyfill.min.js node_modules/ckeditor ./build/",
+    "postbuild": "cp -r src/i18n icon.png ./build/",
     "validate": "npm ls --depth 0",
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "deploy": "npm run build && mvn clean deploy",
@@ -70,8 +70,7 @@
     "webpack-visualizer-plugin": "^0.1.5"
   },
   "dependencies": {
-    "babel-polyfill": "^6.13.0",
-    "ckeditor": "^4.5.9"
+    "babel-polyfill": "^6.13.0"
   },
   "pre-commit": [
     "validate"

@@ -107,7 +107,7 @@ const webpackConfig = {
                 `${scriptPrefix}/dhis-web-core-resource/rxjs/4.1.0/rx.lite${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/lodash/4.15.0/lodash${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/lodash-functional/1.0.1/lodash-functional.js`,
-                ['ckeditor/ckeditor.js', 'defer async']
+                [`${scriptPrefix}/dhis-web-core-resource/ckeditor/4.6.1/ckeditor.js`, 'defer async'],
             ]
                 .map(script => {
                     if (Array.isArray(script)) {
@@ -135,6 +135,11 @@ const webpackConfig = {
         compress: true,
         proxy: {
             '/dhis-web-commons/**': {
+                target: dhisConfig.baseUrl,
+                changeOrigin: true,
+                bypass
+            },
+            '/dhis-web-core-resource/**': {
                 target: dhisConfig.baseUrl,
                 changeOrigin: true,
                 bypass
