@@ -102,11 +102,11 @@ const webpackConfig = {
         new HTMLWebpackPlugin({
             template: './index.ejs',
             vendorScripts: [
-                "polyfill.min.js",
-                `${scriptPrefix}/dhis-web-core-resource/react-15/react-15${isDevBuild ? '' : '.min'}.js`,
+                `${scriptPrefix}/dhis-web-core-resource/babel-polyfill/6.20.0/dist/polyfill${isDevBuild ? '' : '.min'}.js`,
+                `${scriptPrefix}/dhis-web-core-resource/react/15.3.2/react-with-touch-tap-plugin${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/rxjs/4.1.0/rx.lite${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/lodash/4.15.0/lodash${isDevBuild ? '' : '.min'}.js`,
-                `${scriptPrefix}/dhis-web-core-resource/lodash-functional/lodash-functional.js`,
+                `${scriptPrefix}/dhis-web-core-resource/lodash-functional/1.0.1/lodash-functional.js`,
                 ['ckeditor/ckeditor.js', 'defer async']
             ]
                 .map(script => {
