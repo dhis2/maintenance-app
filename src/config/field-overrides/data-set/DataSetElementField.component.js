@@ -56,16 +56,7 @@ class DataSetElementField extends Component {
             filterText: '',
         };
 
-        // Give all the dataSetElements that do not have a category combo assign the dataElement's category combo.
-        // This is required due to the API giving dataSetElements that do not provide a categoryCombo the `default` categoryCombo.
-        Array.from(props.dataSet.dataSetElements.values())
-            .forEach(dataSetElement => {
-                const isDataSetElementDoesNotHaveCategoryCombo = dataSetElement.dataElement && dataSetElement.dataElement.categoryCombo && !dataSetElement.categoryCombo;
-
-                if (isDataSetElementDoesNotHaveCategoryCombo) {
-                    dataSetElement.categoryCombo = dataSetElement.dataElement.categoryCombo;
-                }
-            });
+        this.updateCategoryCombosForDataSetElements();
 
         // TODO: Should update this with the assigned category combo name
         this.state.itemStore.setState(
@@ -100,6 +91,19 @@ class DataSetElementField extends Component {
         );
     }
 
+    updateCategoryCombosForDataSetElements() {
+        // Give all the dataSetElements that do not have a category combo assign the dataElement's category combo.
+        // This is required due to the API giving dataSetElements that do not provide a categoryCombo the `default` categoryCombo.
+        Array.from(this.props.dataSet.dataSetElements.values())
+            .forEach(dataSetElement => {
+                const isDataSetElementDoesNotHaveCategoryCombo = dataSetElement.dataElement && dataSetElement.dataElement.categoryCombo && !dataSetElement.categoryCombo;
+
+                if (isDataSetElementDoesNotHaveCategoryCombo) {
+                    dataSetElement.categoryCombo = dataSetElement.dataElement.categoryCombo;
+                }
+            });
+    }
+
     _assignItems = (items) => {
         const updateGroupEditorState = () => {
             const uniqueItems = new Set(this.state.assignedItemStore.getState().concat(items));
@@ -107,6 +111,7 @@ class DataSetElementField extends Component {
             this.state.assignedItemStore.setState(Array.from(uniqueItems));
 
             this.updateForm(Array.from(uniqueItems));
+            this.updateCategoryCombosForDataSetElements();
         };
 
         const d2 = this.context.d2;
