@@ -15,7 +15,7 @@ function getCategoryComboNameForDataElement(dses, de) {
         .from(dses.values())
         .find(dse => dse.dataElement && dse.dataElement.id === de.id);
 
-    if (dataSetElementForDataElement && dataSetElementForDataElement.categoryCombo) {
+    if (dataSetElementForDataElement && dataSetElementForDataElement.categoryCombo && dataSetElementForDataElement.categoryCombo.id !== de.categoryCombo.id) {
         return dataSetElementForDataElement.categoryCombo.displayName;
     }
 }
@@ -55,6 +55,17 @@ class DataSetElementField extends Component {
             assignedItemStore: Store.create(),
             filterText: '',
         };
+
+        // Give all the dataSetElements that do not have a category combo assign the dataElement's category combo.
+        // This is required due to the API giving dataSetElements that do not provide a categoryCombo the `default` categoryCombo.
+        Array.from(props.dataSet.dataSetElements.values())
+            .forEach(dataSetElement => {
+                const isDataSetElementDoesNotHaveCategoryCombo = dataSetElement.dataElement && dataSetElement.dataElement.categoryCombo && !dataSetElement.categoryCombo;
+
+                if (isDataSetElementDoesNotHaveCategoryCombo) {
+                    dataSetElement.categoryCombo = dataSetElement.dataElement.categoryCombo;
+                }
+            });
 
         // TODO: Should update this with the assigned category combo name
         this.state.itemStore.setState(
@@ -223,10 +234,9 @@ async function dataSetElementFieldData() {
     const api = d2.Api.getApi();
 
     const { system, ...metadata } = await api.get('metadata', {
-        'dataElements:fields': 'id,displayName',
+        'dataElements:fields': 'id,displayName,categoryCombo[id]',
         'dataElements:filter': 'domainType:eq:AGGREGATE',
         'categoryCombos:fields': 'id,displayName',
-        'categoryCombos:filter': 'name:ne:default',
     });
 
     return {

@@ -12,6 +12,7 @@ import Row from 'd2-ui/lib/layout/Row.component';
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import { map, memoize } from 'lodash/fp';
+import Translate from 'd2-ui/lib/i18n/Translate.component';
 
 const enhance = compose(
     getContext({ d2: PropTypes.object }),
@@ -32,34 +33,47 @@ const getOptions = memoize(function (categoryCombos) {
     ), categoryCombos);
 });
 
-const enhanceCategoryComboSelectField = compose(
-    getContext({
-        d2: PropTypes.object,
-    }),
-    withHandlers({
+const enhanceCategoryComboSelectField = withHandlers({
         onChange: ({ categoryCombos = new Map, onChange }) => (event, index, value) => {
             onChange(categoryCombos.find(categoryCombo => categoryCombo.id === value));
         },
-    })
-);
+    });
 
 const CategoryComboSelectField = enhanceCategoryComboSelectField(
-    function CategoryComboSelectField({ categoryCombos, value, onChange, d2 }) {
-        const options = [<MenuItem key="none" label=" " primaryText={d2.i18n.getTranslation('none')} value={undefined} />]
-            .concat(getOptions(categoryCombos));
+    function CategoryComboSelectField({ categoryCombos, value, onChange }) {
+        const options = getOptions(categoryCombos)
 
         return (
             <SelectField
                 value={value}
                 onChange={onChange}
                 fullWidth
-                floatingLabelText={d2.i18n.getTranslation('override_data_element_category_combo')}
+                floatingLabelText={<Translate>override_data_element_category_combo</Translate>}
             >
                 {options}
             </SelectField>
         );
     }
 );
+
+const createGetCategoryCombosForSelect = (d2, categoryCombos) => {
+    return memoize(dataElementCategoryComboId => {
+        return categoryCombos
+        .reduce((acc, categoryCombo) => {
+            if (categoryCombo.id === dataElementCategoryComboId) {
+                acc.unshift({
+                    ...categoryCombo,
+                    displayName: d2.i18n.getTranslation('no_override'),
+                });
+                return acc;
+            }
+
+            acc.push(categoryCombo);
+            return acc;
+        }, []);
+    });
+};
+
 
 function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSelected }, { d2 }) {
     const styles = {
@@ -70,17 +84,30 @@ function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSe
         noDataElementMessage: {
             paddingTop: '2rem',
         },
+
+        originalCategoryCombo: {
+            color: '#CCC',
+            fontSize: '1rem',
+            fontWeight: '300',
+        },
     };
+
+    const getCategoryCombosForSelect = createGetCategoryCombosForSelect(d2, categoryCombos);
 
     const dataSetElementsRows = dataSetElements
         .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
         .map(({ categoryCombo = {}, dataElement = {}, id }) => {
+            const categoryCombosForSelect = getCategoryCombosForSelect(dataElement.categoryCombo.id);
+
             return (
                 <Row key={id} style={{ alignItems: 'center' }}>
-                    <div style={styles.elementListItem}>{dataElement.displayName}</div>
+                    <div style={styles.elementListItem}>
+                        <div>{dataElement.displayName}</div>
+                        <div style={styles.originalCategoryCombo}>{dataElement.categoryCombo.displayName}</div>
+                    </div>
                     <div style={styles.elementListItem}>
                         <CategoryComboSelectField
-                            categoryCombos={categoryCombos}
+                            categoryCombos={categoryCombosForSelect}
                             value={categoryCombo.id}
                             onChange={(categoryCombo) => onCategoryComboSelected(id, categoryCombo)}
                         />
