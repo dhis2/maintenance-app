@@ -1,16 +1,15 @@
 import IconButton from 'material-ui/IconButton';
-import InfoOutlineIcon from 'material-ui/svg-icons/action/info-outline';
 import inlineHelpMapping from '../config/inlinehelp-mapping';
 import { camelCaseToUnderscores } from 'd2-utilizr';
 
 /**
  * Returns the "version" of the documentation that corresponds with the current dhis2 version.
- * 
+ *
  * @param {Object} version - The version definition as provided by d2.system.version.
  * @param {number} version.minor - The minor dhis2 version. e.g. The 25 in 2.25.
  * @param {boolean} version.snapshot - True when the current version is the snapshot(master/development) branch.
- * 
- * @returns {string} `master` for a snapshot branch. `25` for 2.25 etc. 
+ *
+ * @returns {string} `master` for a snapshot branch. `25` for 2.25 etc.
  */
 function getDocsVersion({ minor, snapshot }) {
     if (snapshot) {
@@ -22,12 +21,13 @@ function getDocsVersion({ minor, snapshot }) {
 /**
  * Attempts to find a help link as defined in the inlinehelp-mapping.js It will always pick the first match that it finds.
  * The search is done using a regular expression that matches the path from the start. This means that paths that are longer/dynamic can still show help links.
- * 
+ *
  * For example a help link key that is defined as  `/edit/dataElementSection/dataElement` would show up on both `/edit/dataElementSection/dataElement/add` and `/edit/dataElementSection/dataElement/wap68IYzTXr`.
- * 
+ *
  * @param {string} path The current path/route that the browser is on. This is the path that the help link should be used for.
- * 
- * @returns {string} The partial path that the refers to the help content in the documentation.  e.g. `/en/user/html/manage_org_unit.html` 
+ * @param {string} schema The name of the schema to find help for.
+ *
+ * @returns {string} The partial path that the refers to the help content in the documentation.  e.g. `/en/user/html/manage_org_unit.html`
  */
 function findHelpLinkForPath(path, schema) {
     const variablesToReplace = new Map([
@@ -79,8 +79,9 @@ export default function HelpLink({ schema }, { d2 }) {
                 rel="noopener noreferrer"
                 tooltip={d2.i18n.getTranslation('open_user_guide')}
                 tooltipPosition="bottom-center"
+                iconClassName="material-icons"
                 >
-                <InfoOutlineIcon /> 
+                help_outline
             </IconButton>
         )
     }
