@@ -5,7 +5,10 @@ import HelpLink from '../List/HelpLink.component';
 
 function FormHeading({ level, schema, children, ...props }, context) {
     return (
-        <Heading {...props} level={level || 2}>{context.d2.i18n.getTranslation(children)}<HelpLink schema={schema} /></Heading>
+        <Heading {...props} level={level || 2}>
+            {context.d2.i18n.getTranslation(children)}
+            {schema && (<HelpLink schema={schema} />)}
+        </Heading>
     );
 }
 FormHeading.propTypes = {
