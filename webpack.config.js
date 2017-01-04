@@ -133,40 +133,31 @@ const webpackConfig = {
         port: 8081,
         inline: true,
         compress: true,
-        proxy: {
-            '/dhis-web-commons/**': {
+        proxy: [
+            {
+                context: [
+                    '/api/**',
+                    '/dhis-web-commons/**',
+                    '/dhis-web-core-resource/**',
+                    '/icons/**',
+                    '/css/**',
+                    '/images/**',
+                ],
                 target: dhisConfig.baseUrl,
                 changeOrigin: true,
-                bypass
+                bypass,
             },
-            '/dhis-web-core-resource/**': {
-                target: dhisConfig.baseUrl,
-                changeOrigin: true,
-                bypass
-            },
-            '/icons': {
-                target: dhisConfig.baseUrl,
-                changeOrigin: true,
-                bypass
-            },
-            '/icons/*': {
-                target: dhisConfig.baseUrl,
-                changeOrigin: true,
-                bypass
-            },
-            '/css/*': {
+            {
+                path: '/i18n/**',
                 target: 'http://localhost:8081/src',
+                bypass,
             },
-            '/i18n/*': {
-                target: 'http://localhost:8081/src',
-            },
-            '/polyfill.min.js': {
+            {
+                path: '/polyfill.min.js',
                 target: 'http://localhost:8081/node_modules/babel-polyfill/dist',
+                bypass,
             },
-            '/ckeditor/*': {
-                target: 'http://localhost:8081/node_modules',
-            },
-        },
+        ],
     },
 };
 
