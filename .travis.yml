@@ -4,7 +4,7 @@ node_js:
 cache: yarn
 script:
 - npm run build
-after_success: '[[ -n $TRAVIS_TAG ]] && mvn clean deploy --settings settings.xml'
+- '[[ -z $TRAVIS_TAG ]] || mvn clean deploy --settings settings.xml'
 env:
   global:
   - secure: IlNXgeOjSPPgm2+l0Ue0xgogRDIUMkkoHSqsJPBNVs7eph330zV09nrKl6Xp6YRx8MXn7iV1BZRBZ5Ccc4i4YRJLwR0e+oYRVCxwx9KWl5kU5AzdTCNNpcWBjLW0YoT5O8rg6a9kqNOmNTHuD35qbSzKit6JKcXWPeFGXfO3lrDW3jM/aTtnNzL43J7qRsIbA4+MrYBzSk/idZgO/MMik3Mt50ocotLPwZWwkFWV/zhHRRobJnAJw+pawoTGAQGAOaRQUAjYoLst3gvYQHViywMif/NboonNAPjl7iJPV81uwmWFQSFiY4MiCof5R3dWGomwlEvcPEnhme1iwVW4xKSAWrRlPPXcPjxVYgvFlOoI9gRKel63D8NB89jYrGgRF0XsA6trKnpNCYk9IE7JHWFsOgtqxv3RI5Rb1tAVzy/I9PlaTlkZoIBFB+AZx+pDFFvA/e5uzln5CvOdzu2hR6kb5mkQHOEEOyHOFfuao0jW5SmNRg+WYsK1RL2Y3S+NanGVfQRomh4hz057WT0Davfcm+7Y5PwO6d6xDnjQ66Jy6k7Q7HTEBNLxoDCw9IikyDs947EMRMikXnYYDW1YgS7+GJ9rTzAL8c4Zgr9v4BokBFei0cfDa5nHvB3XaZhguxoewt3kv0P1N7sAlx4bp+wjpTj/DEEUKc3XXn+b/E4=
