@@ -29,13 +29,28 @@ const requestParams = new Map([
         fields: [
             ':all',
             'attributeValues[:all,attribute[id,name,displayName]]',
-            'dataSetElements[id,dataSet[id],dataElement[id,displayName,categoryCombo[id,displayName]],categoryCombo[id,displayName]]',
+            'dataSetElements[id,dataSet[id],dataElement[id,displayName,categoryCombo[id,displayName]]',
+            'categoryCombo[id,displayName]]',
             'indicators[id,displayName,categoryCombo[id,displayName]]',
-            'organisationUnits[id]',
+            'organisationUnits[id,path]',
             'sections[:all,dataElements[id,displayName,categoryCombo[id,displayName]]',
             'greyedFields[categoryOptionCombo,dataElement]]',
         ].join(','),
     }],
+    ['categoryOption', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'organisationUnits[id,path,displayName]',
+        ].join(','),
+    }],
+    ['organisationUnitGroup', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'organisationUnits[id,path,displayName]',
+        ].join(','),
+    }]
 ]);
 
 function loadModelFromD2(objectType, objectId) {
