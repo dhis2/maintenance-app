@@ -268,15 +268,25 @@ class SectionDialog extends React.Component {
     }
 
     render() {
-        const title = this.props.sectionModel.id
-            ? this.getTranslation('edit_section')
-            : this.getTranslation('add_section');
+        let title = this.getTranslation('add_section');
+        let sectionIdDiv = null;
+
+        if (this.props.sectionModel.id) {
+            title = this.getTranslation('edit_section');
+            sectionIdDiv = (
+                <div style={{float: 'left', padding: 8, color: 'rgba(0,0,0,0.5)'}}>
+                    {this.getTranslation('section_id')}:
+                    <span style={{fontFamily: 'monospace'}}>{this.props.sectionModel.id}</span>
+                </div>
+            );
+        }
 
         return (
             <Dialog
                 autoScrollBodyContent
                 title={title}
                 actions={[
+                    sectionIdDiv,
                     <FlatButton
                         label={this.getTranslation('cancel')}
                         onTouchTap={this.props.onRequestClose}
