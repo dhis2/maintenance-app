@@ -158,6 +158,7 @@ const fieldOrderByName = new Map([
         'description',
         'compulsory',
         'dataDimension',
+        'includeSubhierarchyInAnalytics',
         'organisationUnitGroups',
     ]],
     ['organisationUnitLevel', [
