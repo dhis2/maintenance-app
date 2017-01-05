@@ -310,6 +310,7 @@ const fieldOrderByName = new Map([
         'recipientUserGroups',
         'notifyUsersInHierarchyOnly',
         'messageTemplate',
+        'validationRules',
     ]]
 ]);
 
