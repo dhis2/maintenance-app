@@ -146,6 +146,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
                     </Column>
                     <VariableList onItemSelected={this.insertVariable} />
                 </Row>
+                <Divider style={styles.divider} />
             </div>
         );
     }
