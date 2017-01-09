@@ -4,10 +4,12 @@ import log from 'loglevel';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import DropDown from '../forms/form-fields/drop-down';
 import TextField from 'material-ui/TextField/TextField';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import Store from 'd2-ui/lib/store/Store';
+import Checkbox from 'material-ui/Checkbox';
+
+import DropDown from '../forms/form-fields/drop-down';
 import snackActions from '../Snackbar/snack.actions';
 
 import modelToEditStore from './modelToEditStore';
@@ -41,6 +43,9 @@ class SectionDialog extends React.Component {
         this.removeIndicators = this.removeIndicators.bind(this);
         this.setAssignedIndicators = this.setAssignedIndicators.bind(this);
         this.saveSection = this.saveSection.bind(this);
+
+        this.handleRowTotalsChange = (e, value) => { this.setState({ showRowTotals: value }); };
+        this.handleColumnTotalsChange = (e, value) => { this.setState({ showColumnTotals: value }); };
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
@@ -85,6 +90,8 @@ class SectionDialog extends React.Component {
                 name: props.sectionModel.name,
                 code: props.sectionModel.code,
                 description: props.sectionModel.description,
+                showRowTotals: props.sectionModel.showRowTotals,
+                showColumnTotals: props.sectionModel.showColumnTotals,
                 filterText: '',
             }, () => {
                 this.forceUpdate();
@@ -171,6 +178,8 @@ class SectionDialog extends React.Component {
             name: this.state.name,
             code: this.state.code,
             description: this.state.description,
+            showRowTotals: this.state.showRowTotals,
+            showColumnTotals: this.state.showColumnTotals,
             dataElements: assignedDataElementStore.state.map(de => ({ id: de })),
             indicators: assignedIndicatorStore.state.map(i => ({ id: i })),
             sortOrder: this.props.sectionModel.sortOrder || modelToEditStore
@@ -318,6 +327,18 @@ class SectionDialog extends React.Component {
                     style={{ width: '100%' }}
                     multiLine
                     onChange={this.handleDescriptionChange}
+                />
+                <Checkbox
+                    label={this.getTranslation('show_row_totals')}
+                    checked={this.state.showRowTotals}
+                    style={{ margin: '16px 0' }}
+                    onCheck={this.handleRowTotalsChange}
+                />
+                <Checkbox
+                    label={this.getTranslation('show_column_totals')}
+                    checked={this.state.showColumnTotals}
+                    style={{ margin: '16px 0' }}
+                    onCheck={this.handleColumnTotalsChange}
                 />
                 {this.renderFilters()}
                 {this.renderAvailableOptions()}
