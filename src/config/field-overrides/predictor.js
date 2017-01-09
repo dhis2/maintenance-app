@@ -144,6 +144,7 @@ export default new Map([
                 'Monthly',
                 'BiMonthly',
                 'Quarterly',
+                'SixMonthly',
                 'SixMonthlyApril',
                 'Yearly',
                 'FinancialApril',
