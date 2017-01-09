@@ -117,7 +117,6 @@ class SectionDialog extends React.Component {
                     .map(dse => ({ value: dse.dataElement.id, text: dse.dataElement.displayName }))
                     .sort((a, b) => a.text.localeCompare(b.text))
             );
-            assignedDataElementStore.setState([]);
         }
 
         this.setState({
@@ -211,8 +210,6 @@ class SectionDialog extends React.Component {
     }
 
     renderFilters() {
-        const hasAssignment = assignedDataElementStore.state.length > 0;
-
         return (
             <div style={{ minWidth: 605 }}>
                 <DropDown
@@ -221,7 +218,6 @@ class SectionDialog extends React.Component {
                     onChange={this.handleCategoryComboChange}
                     defaultValue={this.state.categoryCombo}
                     isRequired
-                    disabled={hasAssignment}
                     style={{ width: 284 }}
                 />
                 <TextField
