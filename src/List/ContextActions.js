@@ -12,6 +12,7 @@ import sharingStore from './sharing.store';
 import translateStore from './translation-dialog/translationStore';
 import compulsoryDataElementStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
 import appStore from '../App/appStateStore';
+import predictorDialogStore from './predictor-dialog/predictorDialogStore';
 import { goToRoute } from '../router-utils';
 
 export const afterDeleteHook$ = new Subject();
@@ -211,17 +212,22 @@ contextActions.pdfDataSetForm
     });
 
 contextActions.runNow
-    .subscribe(({ data: model, complete: actionComplete, error: actionFailed }) => {
-        getD2()
-            .then(d2 => {
-                d2.Api.getApi().post([model.modelDefinition.name, model.id, 'run'].join('/'));
-                snackActions.show({ message: d2.i18n.getTranslation('report_queued_for_delivery') });
-            })
-            .then(actionComplete)
-            .catch(err => {
-                snackActions.show({ message: d2.i18n.getTranslation('failed_to_schedule_report'), action: 'ok' });
-                actionFailed(err);
-            });
+    .subscribe(async ({ data: model, complete: actionComplete, error: actionFailed }) => {
+        const d2 = await getD2();
+
+        if (model.modelDefinition.name === 'predictor') {
+            predictorDialogStore.setState({ model, open: true });
+        } else {
+            d2.Api.getApi().post([model.modelDefinition.plural, model.id, 'run'].join('/'))
+                .then(() => {
+                    snackActions.show({ message: d2.i18n.getTranslation('report_queued_for_delivery') });
+                    actionComplete();
+                })
+                .catch(err => {
+                    snackActions.show({ message: d2.i18n.getTranslation('failed_to_schedule_report'), action: 'ok' });
+                    actionFailed(err);
+                });
+        }
     });
 
 contextActions.preview

@@ -22,6 +22,8 @@ import translationStore from './translation-dialog/translationStore';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import dataElementOperandStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
 import CompulsoryDataElementOperandDialog from './compulsory-data-elements-dialog/CompulsoryDataElementOperandDialog.component';
+import predictorDialogStore from './predictor-dialog/predictorDialogStore';
+import PredictorDialog from './predictor-dialog/PredictorDialog.component';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import fieldOrder from '../config/field-config/field-order';
@@ -127,6 +129,9 @@ const List = React.createClass({
                 model: null,
                 open: false,
             },
+            predictorDialog: {
+                open: false,
+            },
         };
     },
 
@@ -173,11 +178,16 @@ const List = React.createClass({
             });
         });
 
+        const predictorDialogStoreDisposable = predictorDialogStore.subscribe(state => {
+            this.setState({ predictorDialog: state });
+        });
+
         this.registerDisposable(sourceStoreDisposable);
         this.registerDisposable(detailsStoreDisposable);
         this.registerDisposable(sharingStoreDisposable);
         this.registerDisposable(translationStoreDisposable);
         this.registerDisposable(dataElementOperandStoreDisposable);
+        this.registerDisposable(predictorDialogStoreDisposable);
     },
 
     componentWillReceiveProps(newProps) {
@@ -220,6 +230,10 @@ const List = React.createClass({
         // Shortcut for access detection where action names match to access properties
         if (model.access.hasOwnProperty(action)) {
             return model.access[action];
+        }
+
+        if (action === 'runNow' && model.modelDefinition.name === 'predictor') {
+            return this.context.d2.currentUser.authorities.has('F_PREDICTOR_RUN');
         }
 
         // Switch action for special cases
@@ -394,6 +408,7 @@ const List = React.createClass({
                     open={this.state.dataElementOperand.open}
                     onRequestClose={this._closeDataElementOperandDialog}
                 />
+                {this.state.predictorDialog && <PredictorDialog />}
             </div>
         );
     },
