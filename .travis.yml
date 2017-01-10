@@ -8,15 +8,15 @@ cache:
 script:
 - npm run build
 after_success:
-- if ( [ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG" == "dhis2/maintenance-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ];then 
-     mvn clean deploy --settings deploy/settings.xml && exit 0; 
-  fi
-env:
-  global:
-  - secure: h0v3/UP6Iw1c2bMaMX6av7XiGg7AbBZdYnp8ntwxpVQA5fw0EXL61pUSgIeLOwIoM0JlO81sG7yJg6Tr0IzRzwmMaLWuSYb6Tn7CPeMp1xQ9BvXHkvQmaltoAJJocjBD4VRvNBHYauDW5M0tszJT/PQN2QaKS9DY7zzXTKGoKzPteDu50n8+P21rZJjXmYpkNE6Gf9eSp39CAtg6JSo+TIPwXjLOdnXZnrTY91Bjkz3ZpDOIR48c9bf/w0vkodF851532Nj3POVTGQFqdIMYPN0mW6Kr5kkizXVjFmOwJ9AS6mnkWpKCnAt446QQEtHxgVmJqGcI6x938ZjzIScbw0ZraKBsN55CglWwuFkpZT2PbJMr/R31gFOn8MhbmnSQduZAF+pjByRXf2M8Ev6cXMV08hisUerafROUHjDxUDr47hUyZATPUBk1wWxGlW5JT8AouYrQjer4xvbFSN/IQpzF9TA8CulxzyoJB94A4iqby6LPYocDOmIUU4Qsr55HHVuSpRhzzJS4IUToFKdlTULcRTST4IJdxIX3dtPKhR+P210JgOz7FTLJQCE5qg5A16SxHWTigjxYM/7eWaUvwBha/ddA41MYu+Hmkgx+WWCgO+UqH7E3JNt6cZjka2eWUoQMEpTwT3S9Ug3IS7MNxfJxTNBjG6dqAZ+R/3VDmU8=
-  - secure: DhDb2RVi2TWJqdTkTmiwz1l/Qw+oVmbbk9eOTPf7vV+ZRCHEAOG4YsfkvPnf5gJDtaVWhVRjPmliEzGzxgP3zOaOFx1wb+CjI/NN5lQeQI+HYc+Wa0JVGJD93AFURkAjq5239b9oZxa7XaTZc9HKXaMMYGXElVdv3Gaf99FWPhRBS0sfw8XoJaHPOjxJgtS5OAtOoMexLanZLjJZtUePIsDCE3oqb9qXQRUlimH1eQOKsnOgzJ7U77CPnqCAxzMp0Qgf5s9Qm/PTpIkTEUrwuBRB6NHy9sZTqO55tJOyvfIVkmV7XP1Vql/DRzHKPE5LWQwdWAIPfPXEWRkvcCUWv3WDFNcmRcpCPUyepKqwffFzRLBFKFa7FtWIAGkzcJWd+qx8gXG/2jj/Au5c0PlsAbzYy9Us1z7DObZKtNkAX6gNwNNzEMKq3Dp4yqqO0XOnU98WlFgRXQEUlZVwSjkx2of7hf/s5QsU6/c3rk5M47IFKXcQ2XkMxFlSH9kcBp/N+K+ePQknrRSrlsBC+qxza1rL6j2DSxc9y2RWjkCnF13FrnfA6jnJRTrwckKEzU7/eQi83ELky4fL149iQrfaGjheyaU1llQp4vr+FaprNpf9k6v9TgN/SaOJLGWtOLntKO1pJ/pCFCuCqRtTvfcCNre8Szym8AFLjCRbu+2p9MA=
+- if ( [ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG"
+  == "dhis2/maintenance-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ];then mvn
+  clean deploy --settings deploy/settings.xml && exit 0; fi
 notifications:
   slack:
     secure: ebgMYULQtJ8znNboQgD46c0SFriyfMVFujDBrq9vOdJiMC2PEX3numNDHSCyfQz2L3/lsRhDQ1ex687pMh2m+wQR1937z1jvOANsLnBuhVRKAwFu3L9YSLqhzJ/Nyz+uE8g6QBdYBPoN7DvntClr0tiWXxj+Zg3e2lN2PLrRvnp9Opp9h71b43fXbMPDqISoU8q/EmkzLnGoO6u7t3QgE7FQezdq9JUrTL+5UKQwyv7C3psEr1ytXGpyMxT0K2aikbyF8TF/2hIlrD8ibQt6iuuf7CSpzUq8VGVUffBJLOPiu8N0/GgAq/39UvOgq/Ic+uPoXmFLg2lfCnGaKoYhye4J0iiMdkU04UdQdnqcvoEFgHsVYgT2exUtdOLzxxkmq7NgHrBq3hpKC9ay6ENUsBVo4rj2Lev9KQPLZIILzX8rFAqfG1jsVi89R8yaepMvWQeqAI0VHPHpm7uyf5BjP9dEHIH/ms3+voptx6wbQ5KfU4LqcOeMKj+EAD3vCsxcE6DkC6lwx/9BwGTjShcByc60c519qc1Ft56fDU28W1szYPAurPzmLsPDenT5xTcr7Xmv6v7HMslblHH4n7bQpHoi9haJlKGbvZXOqsUK4fFI35+vTsjams8oyYMTwpF4cXnb6EmPPO9742xgSFtmbaqxMgAEAuTsHNEbyyRmZ+U=
     on_success: change
     on_failure: always
+env:
+  global:
+  - secure: tj3WTPhPoX08dX21q6ntwTQEyjerMbSnFVfg/7MSvcS/9+0fZx+z6wpgKhJDnamL04U+zttKzWbdPaUzWl65uDmilKX9epX0FqsDZmiE5L2BG082rpcg7h6bgUX0Z2eeOhmmT3Q2snEtbgGIsajbdRfHq6TP2lqBnUQDWPlEjHVJ+sUQc9uYJ+Noqh3+E0n5pZkIscM59d4JuGDQDMoHLI20NXKrlzUcxlVSZ99s92ti/SUki8CgXEOr1U0IgM0/8t3y7gvoxzWanic7OpHQllwWsLNm6vxv5FjJgx+R+V40bL11+pTORxZ+50n80hr5p67GxTbI2PS8ncwyX5EW/KDZ06CQpvOZuk0SMyQKn7O85XCJbv+mnE1zjNPJPszVby0xB71iHNrDA3JImA9dUdm+6eCisW0wI43XHahGks8gXY7d/q0MxfLRnaZR6PVimMdL6FmlgYkyBDKQAUoaXm8Fkg8in6j3uYXRts9s7Iah0oB+ppX9YyhBfPx9y+IpcLyu5Z+MRxi7R1ENpJqZR9q9vf8Pns1jRUSwnMNqXWKZYUcak6kw/369YEV030f3oXzoPWc6rNUhKj1WqN/A+PuV9gYMwLZyyI1dNMu8oAWXbdC/uh3/zahbZikRQolkWYVJXdR5ET192KhPiRC+oC/WJQhS5RT40Zjrm0gp+zw=
+  - secure: NkdQO/ktS/dAD/sUL1MPLIQWXJ8lUkdFtqb4RIDu+VX1ARUhSkyEdFl5e/NclPDcn2bg/EvTEMDXDbpUccepy2cShKMM0tXSlNPkYWBGRozLCj02elIU9mIkXSEI36nHqizfDGt8ZjUp49YqK249nGS+UF8UQzgwJOBMoQ/ydPFo0b+9ebYyAG5VAatkkOEFGEpcvV+7kObUwzy6oDmPOl8oXKaAuo/VydSIyGrHm2zLkgXuMFmRz7RSYItpdLEeiwc5soJV7dgpfzGE+i9aGAeWUQdYQCqgUAkHV9cTM98d1ABdLK2DxMo6sF2LiP90ZKmGkBzrnbFU2xiZOcHFGVpz7FoqExoc01vdx4hEYyxMG+uPSGF7BqMVYgL5U8ETcWZdJPdvnItBzTO+0RS9ekF3g2z71FHiaN5wdEbTsrzabTQuumq/fu3hSoBBExvN2bZWNxRgrqnyY4ByvGM52WIdkly0cx+Ib0ibg+TCcSkAX0XyKF6f5jjn5ASY1fEG60rQvUIwvK1S5ONkFLPkSaWejfOnyMkOTIu91BpEnCiNo7eoIRgaPysr/YLY+1O5+ftXHZ9iv5xeNla5teKTLfT0BJ6C26bq2z6XIz2SMAeyyFxn9H0A6h1F5T7h6gN9dEtaM/BNWKAtd3W7b14Mj4K3N6tj8oCJdPXgZdQMlfc=
