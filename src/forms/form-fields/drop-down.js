@@ -1,42 +1,28 @@
 import React from 'react';
 import SelectField from 'material-ui/SelectField/SelectField';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import TextField from 'material-ui/TextField';
 import isString from 'd2-utilizr/lib/isString';
-
-import MuiThemeMixin from '../mui-theme.mixin';
+import Dialog from 'material-ui/Dialog';
 
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 
-export default React.createClass({
-    propTypes: {
-        defaultValue: React.PropTypes.oneOfType([
-            React.PropTypes.string,
-            React.PropTypes.number,
-            React.PropTypes.bool,
-        ]),
-        onFocus: React.PropTypes.func,
-        onBlur: React.PropTypes.func,
-        options: React.PropTypes.array.isRequired,
-        isRequired: React.PropTypes.bool,
-        labelText: React.PropTypes.string.isRequired,
-        translateOptions: React.PropTypes.bool,
-    },
+class Dropdown extends React.Component {
+    constructor(...args) {
+        super(...args);
 
-    mixins: [MuiThemeMixin, Translate],
-
-    getInitialState() {
-        return {
+        this.state = {
             value: (this.props.value !== undefined && this.props.value !== null) ? this.props.value : '',
             options: this.getOptions(this.props.options, this.props.isRequired),
+            dialogOpen: false,
         };
-    },
+    }
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            value: (newProps.defaultValue !== undefined && newProps.defaultValue !== null) ? newProps.defaultValue : '',
+            value: this.state.value || ((newProps.defaultValue !== undefined && newProps.defaultValue !== null) ? newProps.defaultValue : ''),
             options: this.getOptions(newProps.options, newProps.isRequired),
         });
-    },
+    }
 
     getOptions(options, required = false) {
         let opts = options
@@ -47,16 +33,14 @@ export default React.createClass({
                 };
             });
 
-        const translatedOpts = opts
+        return opts
             .map(option => {
                 if (option.text && this.props.translateOptions) {
                     option.text = isString(option.text) ? this.getTranslation(option.text.toLowerCase()) : option.text;
                 }
                 return option;
             });
-
-        return translatedOpts;
-    },
+    }
 
     _onChange(event, index, value) {
         this.props.onChange({
@@ -64,7 +48,13 @@ export default React.createClass({
                 value,
             }
         });
-    },
+    }
+
+    getOptionText(value) {
+        return value && this.state.options.length
+            ? this.state.options.find(option => option.value === value).text
+            : '??';
+    }
 
     render() {
         const {
@@ -80,20 +70,44 @@ export default React.createClass({
             isRequired,
             options,
             model,
+            limit,
+            fullWidth,
             ...other
         } = this.props;
 
-        return (
-            <SelectField
-                value={this.state.value}
-                {...other}
-                onChange={this._onChange}
-                floatingLabelText={labelText}
-            >
-                {this.renderOptions()}
-            </SelectField>
-        );
-    },
+        return this.state.options.length > limit
+            ? (
+                <div style={{ width: fullWidth ? '100%' : 'inherit' }}>
+                    <Dialog
+                        title={labelText}
+                        open={this.state.dialogOpen}
+                        onRequestClose={() => { this.setState({ dialogOpen: false }); }}
+                        autoScrollBodyContent
+                        autoDetectWindowHeight
+                        actions={[<div onClick={() => { this.setState({ dialogOpen: false }); }}>Cancel</div>]}
+                    >
+                        {this.state.options.map(o => (<div style={{ cursor: 'pointer', color: 'blue' }} key={o.value} onClick={() => { this.setState({ dialogOpen: false, value: o.value }) }}>{o.text}</div>))}
+                    </Dialog>
+                    <TextField
+                        {...other}
+                        fullWidth={fullWidth}
+                        value={this.getOptionText(this.state.value)}
+                        onChange={this._onChange}
+                        onClick={() => { this.setState({ dialogOpen: true }) }}
+                        floatingLabelText={labelText}
+                    />
+                </div>
+            ) : (
+                <SelectField
+                    value={this.state.value}
+                    {...other}
+                    onChange={this._onChange}
+                    floatingLabelText={labelText}
+                >
+                    {this.renderOptions()}
+                </SelectField>
+            );
+    }
 
     renderOptions() {
         const options = this.state.options
@@ -122,4 +136,24 @@ export default React.createClass({
 
         return options;
     }
-});
+}
+
+Dropdown.propTypes = {
+    defaultValue: React.PropTypes.oneOfType([
+        React.PropTypes.string,
+        React.PropTypes.number,
+        React.PropTypes.bool,
+    ]),
+    onFocus: React.PropTypes.func,
+    onBlur: React.PropTypes.func,
+    options: React.PropTypes.array.isRequired,
+    isRequired: React.PropTypes.bool,
+    labelText: React.PropTypes.string.isRequired,
+    translateOptions: React.PropTypes.bool,
+    limit: React.PropTypes.number,
+};
+Dropdown.defaultProps = {
+    limit: 50,
+};
+
+export default Dropdown;

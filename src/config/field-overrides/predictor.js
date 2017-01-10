@@ -131,6 +131,9 @@ class ExpressionField extends Component {
         );
     }
 }
+ExpressionField.defaultProps = {
+    indicatorExpressionChanged: () => {},
+};
 ExpressionField.contextTypes = {
     d2: PropTypes.object,
 };
