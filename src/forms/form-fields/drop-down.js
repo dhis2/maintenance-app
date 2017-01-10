@@ -86,14 +86,32 @@ class Dropdown extends React.Component {
                         autoDetectWindowHeight
                         actions={[<div onClick={() => { this.setState({ dialogOpen: false }); }}>Cancel</div>]}
                     >
-                        {this.state.options.map(o => (<div style={{ cursor: 'pointer', color: 'blue' }} key={o.value} onClick={() => { this.setState({ dialogOpen: false, value: o.value }) }}>{o.text}</div>))}
+                        <TextField
+                            floatingLabelText='Filter list'
+                            onChange={(e, value) => { this.setState({ filterText: value }); }}
+                            style={{ marginBottom: 16 }}
+                        />
+                        {this.state.options
+                            .filter(o => !this.state.filterText || this.state.filterText
+                                .trim().toLocaleLowerCase().split(' ').every(
+                                    f => o.text.toLocaleLowerCase().includes(f.toLocaleLowerCase())
+                                )
+                            )
+                            .map(o => (
+                                <div
+                                    style={{ cursor: 'pointer', color: 'blue' }}
+                                    key={o.value}
+                                    onClick={() => { this.setState({ dialogOpen: false, value: o.value }) }}
+                                >{o.text}</div>
+                            ))
+                        }
                     </Dialog>
                     <TextField
                         {...other}
                         fullWidth={fullWidth}
                         value={this.getOptionText(this.state.value)}
                         onChange={this._onChange}
-                        onClick={() => { this.setState({ dialogOpen: true }) }}
+                        onClick={() => { this.setState({ dialogOpen: true, filterText: '' }); }}
                         floatingLabelText={labelText}
                     />
                 </div>
