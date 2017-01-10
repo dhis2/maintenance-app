@@ -8,9 +8,9 @@ cache:
 script:
 - npm run build
 after_success:
-- if ( [ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG"
-  == "dhis2/maintenance-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ];then mvn
-  clean deploy --settings deploy/settings.xml && exit 0; fi
+- if ( [ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG" == "dhis2/maintenance-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ];then 
+     mvn clean deploy --settings deploy/settings.xml && exit 0; 
+  fi
 env:
   global:
   - secure: h0v3/UP6Iw1c2bMaMX6av7XiGg7AbBZdYnp8ntwxpVQA5fw0EXL61pUSgIeLOwIoM0JlO81sG7yJg6Tr0IzRzwmMaLWuSYb6Tn7CPeMp1xQ9BvXHkvQmaltoAJJocjBD4VRvNBHYauDW5M0tszJT/PQN2QaKS9DY7zzXTKGoKzPteDu50n8+P21rZJjXmYpkNE6Gf9eSp39CAtg6JSo+TIPwXjLOdnXZnrTY91Bjkz3ZpDOIR48c9bf/w0vkodF851532Nj3POVTGQFqdIMYPN0mW6Kr5kkizXVjFmOwJ9AS6mnkWpKCnAt446QQEtHxgVmJqGcI6x938ZjzIScbw0ZraKBsN55CglWwuFkpZT2PbJMr/R31gFOn8MhbmnSQduZAF+pjByRXf2M8Ev6cXMV08hisUerafROUHjDxUDr47hUyZATPUBk1wWxGlW5JT8AouYrQjer4xvbFSN/IQpzF9TA8CulxzyoJB94A4iqby6LPYocDOmIUU4Qsr55HHVuSpRhzzJS4IUToFKdlTULcRTST4IJdxIX3dtPKhR+P210JgOz7FTLJQCE5qg5A16SxHWTigjxYM/7eWaUvwBha/ddA41MYu+Hmkgx+WWCgO+UqH7E3JNt6cZjka2eWUoQMEpTwT3S9Ug3IS7MNxfJxTNBjG6dqAZ+R/3VDmU8=
