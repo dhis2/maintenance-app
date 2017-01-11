@@ -1766,9 +1766,9 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@24.2.2:
-  version "24.2.2"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-24.2.2.tgz#aaad83cd036b1147b6e9fa2597ecccbdae77cffa"
+d2-ui@24.3:
+  version "24.3.0"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-24.3.0.tgz#f7b7c95128947173ef56d076b3d70a7bbaddf913"
   dependencies:
     d2-utilizr "^0.2.4"
     d3-color "^0.4.2"
@@ -4013,6 +4013,10 @@ lodash@3.7.x:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.7.0.tgz#3678bd8ab995057c07ade836ed2ef087da811d45"
 
+lodash@4, lodash@^4.0.0, lodash@^4.0.1, lodash@^4.12.0, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0:
+  version "4.17.2"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
+
 lodash@^2.4.1:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-2.4.2.tgz#fadd834b9683073da179b3eae6d9c0d15053f73e"
@@ -4020,10 +4024,6 @@ lodash@^2.4.1:
 lodash@^3.10.0, lodash@^3.10.1, lodash@^3.6.0, lodash@^3.8.0, lodash@^3.9.3:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
-
-lodash@^4.0.0, lodash@^4.0.1, lodash@^4.12.0, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0:
-  version "4.17.2"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
 
 lodash@~4.16.4:
   version "4.16.6"
