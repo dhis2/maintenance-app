@@ -109,6 +109,7 @@ const fieldOrderByName = new Map([
         'openFuturePeriods',
         'timelyDays',
         'periodType',
+        'dataInputPeriods',
         'categoryCombo',
         'notificationRecipients',
         'notifyCompletingUser',
@@ -267,8 +268,6 @@ const fieldOrderByName = new Map([
         'code',
         'description',
         'validationRules',
-        'userGroupsToAlert',
-        'alertByOrgUnits',
     ]],
     ['predictor', [
         'name',
@@ -308,10 +307,10 @@ const fieldOrderByName = new Map([
     ['validationNotificationTemplate', [
         'name',
         'code',
+        'validationRules',
         'recipientUserGroups',
         'notifyUsersInHierarchyOnly',
         'messageTemplate',
-        'validationRules',
     ]]
 ]);
 
