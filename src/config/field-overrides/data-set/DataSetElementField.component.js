@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { getInstance } from 'd2/lib/d2';
-import { Observable } from 'rx';
+import { Observable, BehaviorSubject } from 'rx';
 import componentFromStream from 'recompose/componentFromStream';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
@@ -70,6 +70,10 @@ class DataSetElementField extends Component {
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
                 .map(dse => dse.dataElement.id)
         );
+    }
+
+    componentDidMount() {
+        this.props.loadMetaData();
     }
 
     componentWillReceiveProps(props) {
@@ -234,12 +238,14 @@ async function dataSetElementFieldData() {
     };
 }
 
-const metadata$ = Observable.fromPromise(dataSetElementFieldData());
+const metadata$ = Store.create();
+const loadMetaDataForDataSetElementField = () => dataSetElementFieldData().then(metadata => metadata$.setState(metadata));
 
 const enhancedDataElementField$ = (props$) => Observable
     .combineLatest(
         props$,
-        metadata$,
+        metadata$
+            .startWith({ dataElements: [], categoryCombos: [] }),
         (props, metadata) => ({
             ...metadata,
             ...props,
@@ -252,6 +258,7 @@ const enhancedDataElementField$ = (props$) => Observable
             dataElements={dataElements}
             categoryCombos={categoryCombos}
             onChange={props.onChange}
+            loadMetaData={loadMetaDataForDataSetElementField}
         />
     ))
     .startWith(<LinearProgress />);
