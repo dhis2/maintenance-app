@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { getInstance } from 'd2/lib/d2';
+import { generateUid } from 'd2/lib/uid';
 import { Observable, BehaviorSubject } from 'rx';
 import componentFromStream from 'recompose/componentFromStream';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
@@ -7,7 +8,7 @@ import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Store from 'd2-ui/lib/store/Store';
 import Row from 'd2-ui/lib/layout/Row.component';
 import DataSetElementCategoryComboSelectionDialog from './DataSetElementCategoryComboSelectionDialog.component';
-import { uniq, includes, curry, get, isUndefined } from 'lodash/fp';
+import { uniq, includes, curry, get, isUndefined, range } from 'lodash/fp';
 import TextField from 'material-ui/TextField/TextField';
 
 function getCategoryComboNameForDataElement(dses, de) {
@@ -120,26 +121,27 @@ class DataSetElementField extends Component {
 
         const d2 = this.context.d2;
         const api = d2.Api.getApi();
+        const generateUids = (numberofUids) => range(0, numberofUids, 1).map(() => generateUid())
+        const codes = generateUids(items.length);
 
-        return api.get('system/uid', { limit: items.length })
-            .then(({ codes }) => {
-                items
-                    .map(dataElementId => this.props.dataElements.find(dataElement => dataElement.id === dataElementId))
-                    .filter(de => de)
-                    .forEach((dataElement, index) => {
-                        const dataSetElement = d2.models.dataSetElement.create({
-                            id: codes[index],
-                            dataElement,
-                            dataSet: {
-                                id: this.props.dataSet.id,
-                            },
-                        });
+        items
+            .map(dataElementId => this.props.dataElements.find(dataElement => dataElement.id === dataElementId))
+            .filter(de => de)
+            .forEach((dataElement, index) => {
+                const dataSetElement = d2.models.dataSetElement.create({
+                    id: codes[index],
+                    dataElement,
+                    dataSet: {
+                        id: this.props.dataSet.id,
+                    },
+                });
 
-                        this.props.dataSet.dataSetElements.add(dataSetElement);
-                    });
-            })
-            .then(updateGroupEditorState)
-            .catch(error => console.log(error));
+                this.props.dataSet.dataSetElements.add(dataSetElement);
+            });
+
+        updateGroupEditorState();
+
+        return Promise.resolve();
     }
 
     _removeItems = (items) => {
