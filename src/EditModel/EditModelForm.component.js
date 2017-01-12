@@ -14,7 +14,7 @@ import { isString, camelCaseToUnderscores } from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import log from 'loglevel';
-import extraFields from './extraFields';
+import extraFields from './ExtraFields';
 import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
