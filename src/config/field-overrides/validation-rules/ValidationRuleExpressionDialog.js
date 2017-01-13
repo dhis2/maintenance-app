@@ -13,7 +13,7 @@ const customContentStyle = {
   maxWidth: 'none',
 };
 
-function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, updateExpressionDetails, expressionStatusStore }, { d2 }) {
+function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, updateExpressionDetails, expressionStatusStore, onExpressionChanged, onMissingStrategyChanged }, { d2 }) {
     return (
         <Dialog 
             open={open}
@@ -25,19 +25,13 @@ function ValidationRuleExpressionDialog({ open, close, actions, expressionDetail
         >
             <MissingValueStrategy
                 value={expressionDetails.missingValueStrategy}
-                onChange={(missingValueStrategy) => updateExpressionDetails({
-                    ...expressionDetails,
-                    missingValueStrategy,
-                })}
+                onChange={onMissingStrategyChanged}
             />
             <ExpressionManager
                 descriptionLabel={d2.i18n.getTranslation('description')}
                 descriptionValue={expressionDetails.description || ''}
                 expressionStatusStore={expressionStatusStore}
-                expressionChanged={(expressionStatus) => updateExpressionDetails({
-                    ...expressionDetails,
-                    expression: expressionStatus.formula,
-                })}
+                expressionChanged={onExpressionChanged}
                 formulaValue={expressionDetails.expression || ''}
             />
         </Dialog>
@@ -50,7 +44,7 @@ ValidationRuleExpressionDialog.contextTypes = {
 const enhanceExpressionDialog = compose(
     withState('expressionDetails', 'updateExpressionDetails', ({ value }) => ({...value})),
     withState('expressionStatusStore', 'updateStore', () => Store.create()),
-    withProps(({ close, save, value, store, expressionDetails, expressionStatusStore }) => {
+    withProps(({ close, save, value, store, expressionDetails, expressionStatusStore, updateExpressionDetails }) => {
         const isExpressionValid = isUndefined(expressionStatusStore.getState()) || expressionStatusStore.getState().status === 'OK';
 
         return ({
@@ -58,6 +52,15 @@ const enhanceExpressionDialog = compose(
                 <RaisedButton onClick={() => save(expressionDetails)} primary={true} disabled={!isExpressionValid}><Translate>save</Translate></RaisedButton>,
                 <RaisedButton onClick={close}><Translate>close</Translate></RaisedButton>
             ],
+            onExpressionChanged: ({ description, formula }) => updateExpressionDetails({
+                ...expressionDetails,
+                description,
+                expression: formula,
+            }),
+            onMissingStrategyChanged: (missingValueStrategy) => updateExpressionDetails({
+                ...expressionDetails,
+                missingValueStrategy,
+            }),
         })
     })
 );
