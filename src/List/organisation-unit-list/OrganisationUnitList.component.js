@@ -2,8 +2,7 @@ import React from 'react';
 import List from '../List.component';
 import appState from '../../App/appStateStore';
 import { getInstance } from 'd2/lib/d2';
-import { fieldFilteringForQuery } from '../list.store';
-import listActions from '../list.actions';
+import listActions, { fieldFilteringForQuery } from '../list.actions';
 import log from 'loglevel';
 import ModelCollection from 'd2/lib/model/ModelCollection';
 
