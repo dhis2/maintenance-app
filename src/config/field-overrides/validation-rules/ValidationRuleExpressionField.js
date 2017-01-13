@@ -1,13 +1,29 @@
 import React, { PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import { withState, withProps, compose, onlyUpdateForKeys } from 'recompose';
+import { Row } from 'd2-ui/lib/layout';
 import ValidationRuleExpressionDialog from './ValidationRuleExpressionDialog';
+
+const styles = {
+    field: {
+        padding: '1rem 0',
+    },
+    expressionButton: {
+        flex: '0 0 10rem',
+    },
+    expressionDescription: {
+        padding: '.75rem 1rem',
+        color: '#666',
+    },
+};
 
 function ValidationRuleExpressionField({ value = {}, onButtonClick, open, close, onChange, buttonLabel }) {
     return (
-        <div>
-            <RaisedButton onClick={onButtonClick}>{buttonLabel}</RaisedButton>
-            <div>{value.description}</div>
+        <div style={styles.field}>
+            <Row>
+                <RaisedButton style={styles.expressionButton} onClick={onButtonClick}>{buttonLabel}</RaisedButton>
+                <div style={styles.expressionDescription}>{value.description}</div>
+            </Row>
             <ValidationRuleExpressionDialog
                 open={open}
                 close={close}
