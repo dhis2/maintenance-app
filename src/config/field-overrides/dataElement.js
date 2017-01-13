@@ -1,5 +1,3 @@
-import DropDownAsync from '../../forms/form-fields/drop-down-async';
-
 export default new Map([
     ['aggregationLevels', {
         referenceType: 'organisationUnitLevel',
@@ -19,8 +17,5 @@ export default new Map([
                 'AVERAGE_SUM_ORG_UNIT',
             ]
         }
-    }],
-    ['categoryCombo', {
-        component: DropDownAsync,
     }],
 ]);
