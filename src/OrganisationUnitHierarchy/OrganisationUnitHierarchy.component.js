@@ -377,7 +377,7 @@ function OrganisationUnitHierarchy(props, context) {
                     <OrganisationUnitTreeWithSingleSelectionAndSearch
                         roots={props.leftRoots}
                         initiallyExpanded={props.initiallyExpanded}
-                        selected={props.selectedLeft.map(model => model.id)}
+                        selected={props.selectedLeft.map(model => model.path)}
                         onClick={onClickLeft}
                         onUpdateInput={value => leftTreeSearch(value)}
                         idsThatShouldBeReloaded={props.reload}
@@ -386,7 +386,7 @@ function OrganisationUnitHierarchy(props, context) {
                 <Paper style={styles.ouTreeRight}>
                     <OrganisationUnitTreeWithSingleSelectionAndSearch
                         roots={props.rightRoots}
-                        selected={props.selectedRight.map(model => model.id)}
+                        selected={props.selectedRight.map(model => model.path)}
                         initiallyExpanded={props.initiallyExpanded}
                         onClick={onClickRight}
                         onUpdateInput={value => rightTreeSearch(value)}

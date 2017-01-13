@@ -62,7 +62,7 @@ class SideBarContainer extends React.Component {
                             onAutoCompleteValueSelected={this._onAutoCompleteValueSelected.bind(this)}
                             autoCompleteDataSource={(this.state.autoCompleteOrganisationUnits || []).map(model => model.name)}
                             roots={roots}
-                            selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
+                            selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.path]}
                             initiallyExpanded={initiallyExpanded}
                             onClick={this._onChangeSelectedOrgUnit.bind(this)}
                             idsThatShouldBeReloaded={orgUnitSearchHits || this.state.organisationUnitsToReload}
