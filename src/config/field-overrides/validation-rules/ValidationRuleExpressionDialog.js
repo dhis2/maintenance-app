@@ -9,8 +9,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { isUndefined } from 'lodash/fp';
 
 const customContentStyle = {
-  width: '100%',
-  maxWidth: 'none',
+    width: '100%',
+    maxWidth: 'none',
 };
 
 function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, updateExpressionDetails, expressionStatusStore, onExpressionChanged, onMissingStrategyChanged }, { d2 }) {
