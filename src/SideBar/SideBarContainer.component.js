@@ -53,7 +53,7 @@ class SideBarContainer extends React.Component {
 
                 const initiallyExpanded = orgUnitSearchHits && orgUnitSearchHits.length
                     ? []
-                    : this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || []);
+                    : this.state.userOrganisationUnits.toArray().map(v => v.path).concat(this.state.initiallyExpanded || []);
 
                 return (
                     <div style={styles.wrapperStyle}>
