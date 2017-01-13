@@ -191,6 +191,7 @@ const fieldOrderByName = new Map([
         'userAttribute',
         'userGroupAttribute',
         'programAttribute',
+        'programIndicatorAttribute',
         'programStageAttribute',
         'trackedEntityAttribute',
         'trackedEntityAttributeAttribute',
