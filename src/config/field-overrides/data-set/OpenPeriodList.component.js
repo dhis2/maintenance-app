@@ -7,6 +7,11 @@ import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import DateSelect from '../../../forms/form-fields/date-select';
 import { compose, withState, withProps, withHandlers } from 'recompose';
 
+const styles = {
+    row: { boxSizing: 'border-box', justifyContent: 'space-between' },
+    field: { position: 'relative', flex: '0 0 auto', margin: '0 .5rem' },
+};
+
 function OpenPeriod({ period, startDate, endDate, onChangeStartDate, onChangeEndDate }, {d2}) {
     const periods = ['2016Q1', '2016Q2', '2016Q3', '2016Q4']
         .map((p) => (
@@ -14,18 +19,23 @@ function OpenPeriod({ period, startDate, endDate, onChangeStartDate, onChangeEnd
         ));
 
     return (
-        <Row style={{ boxSizing: 'border-box' }}>
-            <SelectField value={period}>
-                {periods}
-            </SelectField>
-            <div style={{ position: 'relative' }}>
+        <Row style={styles.row}>
+            <div style={styles.field}>
+                <SelectField
+                    value={period}
+                    floatingLabelText={d2.i18n.getTranslation('period')}
+                >
+                    {periods}
+                </SelectField>
+            </div>
+            <div style={styles.field}>
                 <DateSelect
                     labelText={d2.i18n.getTranslation('start_date')}
                     onChange={onChangeStartDate}
                     value={startDate}
                 />
             </div>
-            <div style={{ position: 'relative' }}>
+            <div style={styles.field}>
                 <DateSelect
                     labelText={d2.i18n.getTranslation('end_date')}
                     onChange={onChangeEndDate}
@@ -49,14 +59,13 @@ const OpenPeriodRow = compose(
     addD2Context
 )(OpenPeriod);
 
-export function OpenPeriodList({ openPeriods }, { d2 }) {
-    console.log(openPeriods);
+export function OpenPeriodList({ openPeriods, periodType }, { d2 }) {
     const periods = ['2016Q1', '2016Q2', '2016Q3', '2016Q4'].map((p) => (<OpenPeriodRow period={p} />));
 
     return (
-        <Paper>
+        <div style={{ boxSizing: 'border-box' }}>
             {periods}
-        </Paper>
+        </div>
     );
 }
 
