@@ -47,9 +47,6 @@ function OpenPeriod({ period, startDate, endDate, onChangeStartDate, onChangeEnd
 };
 
 const OpenPeriodRow = compose(
-    withProps(({ startDate }) => ({
-
-    })),
     withState('startDate', 'changeStartDate', undefined),
     withState('endDate', 'changeEndDate', undefined),
     withHandlers({
