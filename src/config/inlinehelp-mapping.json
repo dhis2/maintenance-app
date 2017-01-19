@@ -2,8 +2,45 @@
     "/list/otherSection/legendSet": "/en/user/html/manage_legend.html",
     "/edit/otherSection/legendSet/add": "/en/user/html/manage_legend.html#create_legend",
 
+    
     "/list/otherSection/validationNotificationTemplate": "/en/user/html/manage_validation_notification.html",
     "/edit/otherSection/validationNotificationTemplate/add": "/en/user/html/manage_validation_notification.html#create_validation_notification",
+    
+    
+    "/list/category/categoryOption": "/en/user/html/maintenance_app.html#manage_category",
+    "/edit/categry/categoryOption/add": "/en/user/html/maintenance_app.html#create_category_option",
+
+    "/list/category/category": "/en/user/html/maintenance_app.html#manage_category",
+    "/edit/categry/category/add": "/en/user/html/maintenance_app.html#create_category",
+
+    "/list/category/categoryCombo": "/en/user/html/maintenance_app.html#manage_category",
+    "/edit/categry/categoryCombo/add": "/en/user/html/maintenance_app.html#create_category_combination",
+    
+    "/list/category/categoryOptionCombo": "/en/user/html/maintenance_app.html#manage_category",
+    "/edit/categry/categoryOptionCombo/add": "/en/user/html/maintenance_app.html#assign_code_category_option_combo",
+
+    "/list/category/categoryOptionGroup": "/en/user/html/maintenance_app.html#manage_category",
+    "/edit/categry/categoryOptionGroup/add": "/en/user/html/maintenance_app.html#create_category_option_group",
+
+    "/list/category/categoryOptionGroupSet": "/en/user/html/maintenance_app.html#manage_category",
+    "/edit/categry/categoryOptionGroupSet/add": "/en/user/html/maintenance_app.html#create_category_option_group_set",
+
+        
+    "/list/dataElementSection/dataElementGroup": "/en/user/html/manage_data_element.html",
+    "/edit/dataElementSection/dataElementGroup/add": "/en/user/html/manage_data_element.html#create_data_element_group",
+
+    "/list/dataElementSection/dataElementGroupSet": "/en/user/html/manage_data_element.html",
+    "/edit/dataElementSection/dataElementGroupSet/add": "/en/user/html/manage_data_element.html#create_data_element_group_set",
+
+            
+    "/list/indicatorSection/indicatorType": "/en/user/html/manage_indicator.html",
+    "/edit/indicatorSection/indicatorType/add": "/en/user/html/manage_indicator.html#create_indicator_type",
+    
+    "/list/indicatorSection/indicatorGroup": "/en/user/html/manage_indicator.html",
+    "/edit/indicatorSection/indicatorGroup/add": "/en/user/html/manage_indicator.html#create_indicator_group",
+    
+    "/list/indicatorSection/indicatorGroupSet": "/en/user/html/manage_indicator.html",
+    "/edit/indicatorSection/indicatorGroupSet/add": "/en/user/html/manage_indicator.html#create_indicator_group_set",
     
     
     "/list/${section}/${objectType}": "/en/user/html/manage_${objectType}.html",
