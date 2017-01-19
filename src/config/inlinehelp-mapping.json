@@ -7,23 +7,23 @@
     "/edit/otherSection/validationNotificationTemplate/add": "/en/user/html/manage_validation_notification.html#create_validation_notification",
     
     
-    "/list/category/categoryOption": "/en/user/html/maintenance_app.html#manage_category",
+    "/list/category/categoryOption": "/en/user/html/manage_category.html",
     "/edit/categry/categoryOption/add": "/en/user/html/maintenance_app.html#create_category_option",
 
-    "/list/category/category": "/en/user/html/maintenance_app.html#manage_category",
-    "/edit/categry/category/add": "/en/user/html/maintenance_app.html#create_category",
+    "/list/category/category": "/en/user/html/manage_category.html",
+    "/edit/categry/category/add": "/en/user/html/manage_category.html#create_category",
 
-    "/list/category/categoryCombo": "/en/user/html/maintenance_app.html#manage_category",
-    "/edit/categry/categoryCombo/add": "/en/user/html/maintenance_app.html#create_category_combination",
+    "/list/category/categoryCombo": "/en/user/html/manage_category.html",
+    "/edit/categry/categoryCombo/add": "/en/user/html/manage_category.html#create_category_combination",
     
-    "/list/category/categoryOptionCombo": "/en/user/html/maintenance_app.html#manage_category",
-    "/edit/categry/categoryOptionCombo/add": "/en/user/html/maintenance_app.html#assign_code_category_option_combo",
+    "/list/category/categoryOptionCombo": "/en/user/html/manage_category.html",
+    "/edit/categry/categoryOptionCombo/add": "/en/user/html/manage_category.html#assign_code_category_option_combo",
 
-    "/list/category/categoryOptionGroup": "/en/user/html/maintenance_app.html#manage_category",
-    "/edit/categry/categoryOptionGroup/add": "/en/user/html/maintenance_app.html#create_category_option_group",
+    "/list/category/categoryOptionGroup": "/en/user/html/manage_category.html",
+    "/edit/categry/categoryOptionGroup/add": "/en/user/html/manage_category.html#create_category_option_group",
 
-    "/list/category/categoryOptionGroupSet": "/en/user/html/maintenance_app.html#manage_category",
-    "/edit/categry/categoryOptionGroupSet/add": "/en/user/html/maintenance_app.html#create_category_option_group_set",
+    "/list/category/categoryOptionGroupSet": "/en/user/html/manage_category.html",
+    "/edit/categry/categoryOptionGroupSet/add": "/en/user/html/manage_category.html#create_category_option_group_set",
 
         
     "/list/dataElementSection/dataElementGroup": "/en/user/html/manage_data_element.html",
