@@ -111,15 +111,15 @@ class DataSetElementField extends Component {
                     .map(dataElementId => this.props.dataElements.find(dataElement => dataElement.id === dataElementId))
                     .filter(de => de)
                     .forEach((dataElement, index) => {
-                        const dataSetElement = d2.models.dataSetElement.create({
+                        const dataSetElement = {
                             id: codes[index],
                             dataElement,
                             dataSet: {
                                 id: this.props.dataSet.id,
                             },
-                        });
+                        };
 
-                        this.props.dataSet.dataSetElements.add(dataSetElement);
+                        this.props.dataSet.dataSetElements.push(dataSetElement);
                     });
             })
             .then(updateGroupEditorState)
@@ -139,13 +139,12 @@ class DataSetElementField extends Component {
 
         return Promise.resolve(true)
             .then(() => {
-                const dataSetElementsWithDataElement = (dataElementIds) => ({ dataElement = {} }) => !isUndefined(dataElement.id) && includes(dataElement.id, dataElementIds);
-                const removeObjectFromMap = curry((collection, object) => collection.delete(get('id', object)));
+                const dataSetElementsThatAreNotInItemsToRemove = (itemsToRemove = []) => ({ dataElement = {} }) => get('id', dataElement) && !itemsToRemove.includes(get('id', dataElement));
 
                 // Remove the items from the modelCollection
-                Array.from(this.props.dataSet.dataSetElements.values())
-                    .filter(dataSetElementsWithDataElement(items))
-                    .forEach(removeObjectFromMap(this.props.dataSet.dataSetElements));
+                this.props.dataSet.dataSetElements = Array.from(this.props.dataSet.dataSetElements)
+                    // Only keep dataSetElements that do not exist in the `items` collection
+                    .filter(dataSetElementsThatAreNotInItemsToRemove(items));
             })
             .then(updateGroupEditorStore)
             .catch(e => console.log(e));
