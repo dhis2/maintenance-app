@@ -12,7 +12,7 @@ import TextField from 'material-ui/TextField/TextField';
 
 function getCategoryComboNameForDataElement(dses, de) {
     const dataSetElementForDataElement = Array
-        .from(dses.values())
+        .from(dses || [])
         .find(dse => dse.dataElement && dse.dataElement.id === de.id);
 
     if (dataSetElementForDataElement && dataSetElementForDataElement.categoryCombo) {
@@ -65,7 +65,7 @@ class DataSetElementField extends Component {
                 }))
         );
         this.state.assignedItemStore.setState(
-            Array.from(props.dataSet.dataSetElements.values())
+            Array.from(props.dataSet.dataSetElements || [])
                 .filter(dse => dse.dataElement)
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
                 .map(dse => dse.dataElement.id)
@@ -86,7 +86,7 @@ class DataSetElementField extends Component {
         );
 
         this.state.assignedItemStore.setState(
-            Array.from(props.dataSet.dataSetElements.values())
+            Array.from(props.dataSet.dataSetElements || [])
                 .filter(dse => dse.dataElement)
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
                 .map(dse => dse.dataElement.id)
@@ -119,7 +119,7 @@ class DataSetElementField extends Component {
                             },
                         };
 
-                        this.props.dataSet.dataSetElements.push(dataSetElement);
+                        this.props.dataSet.dataSetElements = [].concat(this.props.dataSet.dataSetElements || []).concat([ dataSetElement ]);
                     });
             })
             .then(updateGroupEditorState)
@@ -153,8 +153,8 @@ class DataSetElementField extends Component {
     _updateCategoryComboForDataSetElement = (dataSetElementId, categoryCombo) => {
         const dataSetElements = this.props.dataSet.dataSetElements;
 
-        if (dataSetElements.has(dataSetElementId)) {
-            const dataSetElement = dataSetElements.get(dataSetElementId);
+        if (dataSetElements.some(dataSetElement => dataSetElement.id === dataSetElementId)) {
+            const dataSetElement = dataSetElements.find(dataSetElement => dataSetElement.id === dataSetElementId)
             dataSetElement.categoryCombo = categoryCombo;
 
             this.props.onChange({
