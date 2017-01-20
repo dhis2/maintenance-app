@@ -9,6 +9,7 @@ import ModelCollection from 'd2/lib/model/ModelCollection';
 export default class OrganisationUnitList extends React.Component {
     componentDidMount() {
         this.disposable = appState
+            .filter(({ sideBar = {} }) => sideBar.currentSubSection === 'organisationUnit')
             .map(({ selectedOrganisationUnit, userOrganisationUnits }) => ({
                 selectedOrganisationUnit,
                 userOrganisationUnitIds: userOrganisationUnits
@@ -16,7 +17,7 @@ export default class OrganisationUnitList extends React.Component {
                     .map(model => model.id),
             }))
             .filter(state => state.selectedOrganisationUnit)
-            .distinctUntilChanged(state => state.selectedOrganisationUnit)
+            .distinctUntilChanged(state => state.selectedOrganisationUnit && state.selectedOrganisationUnit.id)
             .subscribe(
                 async ({ selectedOrganisationUnit, userOrganisationUnitIds }) => {
                     const d2 = await getInstance();
