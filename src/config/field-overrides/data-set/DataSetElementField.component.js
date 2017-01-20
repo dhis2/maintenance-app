@@ -171,8 +171,8 @@ class DataSetElementField extends Component {
     _updateCategoryComboForDataSetElement = (dataSetElementId, categoryCombo) => {
         const dataSetElements = this.props.dataSet.dataSetElements;
 
-        if (dataSetElements.has(dataSetElementId)) {
-            const dataSetElement = dataSetElements.get(dataSetElementId);
+        if (dataSetElements.some(dataSetElement => dataSetElement.id === dataSetElementId)) {
+            const dataSetElement = dataSetElements.find(dataSetElement => dataSetElement.id === dataSetElementId)
             dataSetElement.categoryCombo = categoryCombo;
 
             this.props.onChange({
