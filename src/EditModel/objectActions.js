@@ -214,17 +214,20 @@ objectActions.saveObject
 
         const dataSetElements = Array
             .from(dataSetModel.dataSetElements.values())
-            .map(dataSetElement => getOwnedPropertyJSON(dataSetElement))
-            .map(({ dataSet, ...other }) => {
+            .map(({ dataSet, dataElement, ...other }) => {
                 return {
                     dataSet: { ...dataSet, id: dataSet.id || dataSetPayload.id },
                     ...other,
+                    dataElement: {
+                        id: dataElement.id,
+                    }
                 }
             });
 
+        dataSetPayload.dataSetElements = dataSetElements;
+
         const metadataPayload = {
             dataSets: [dataSetPayload],
-            dataSetElements,
         };
 
         try {
