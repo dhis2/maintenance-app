@@ -1,11 +1,48 @@
 {
     "/list/otherSection/legendSet": "/en/user/html/manage_legend.html",
-    "/edit/otherSection/legendSet/add": "/en/user/html/manage_legend.html#create_legend",
+    "/edit/otherSection/legendSet/add": "/en/user/html/create_legend.html",
 
-    "/list/otherSection/validationNotificationTemplate": "/en/user/html/manage_validation_notification.html",
-    "/edit/otherSection/validationNotificationTemplate/add": "/en/user/html/manage_validation_notification.html#create_validation_notification",
+    
+    "/list/otherSection/validationNotificationTemplate": "/en/user/html/about_validation_rule.html",
+    "/edit/otherSection/validationNotificationTemplate/add": "/en/user/html/create_validation_notification.html",
     
     
-    "/list/${section}/${objectType}": "/en/user/html/manage_${objectType}.html",
-    "/edit/${section}/${objectType}": "/en/user/html/manage_${objectType}.html#create_${objectType}"
+    "/list/category/categoryOption": "/en/user/html/about_category.html",
+    "/edit/categry/categoryOption/add": "/en/user/html/create_category_option.html",
+
+    "/list/category/category": "/en/user/html/about_category.html",
+    "/edit/categry/category/add": "/en/user/html/create_category.html",
+
+    "/list/category/categoryCombo": "/en/user/html/about_category.html",
+    "/edit/categry/categoryCombo/add": "/en/user/html/create_category_combination.html",
+    
+    "/list/category/categoryOptionCombo": "/en/user/html/about_category.html",
+    "/edit/categry/categoryOptionCombo/add": "/en/user/html/assign_code_category_option_combo.html",
+
+    "/list/category/categoryOptionGroup": "/en/user/html/about_category.html",
+    "/edit/categry/categoryOptionGroup/add": "/en/user/html/create_category_option_group.html",
+
+    "/list/category/categoryOptionGroupSet": "/en/user/html/about_category.html",
+    "/edit/categry/categoryOptionGroupSet/add": "/en/user/html/create_category_option_group_set.html",
+
+        
+    "/list/dataElementSection/dataElementGroup": "/en/user/html/about_data_element.html",
+    "/edit/dataElementSection/dataElementGroup/add": "/en/user/html/create_data_element_group.html",
+
+    "/list/dataElementSection/dataElementGroupSet": "/en/user/html/about_data_element.html",
+    "/edit/dataElementSection/dataElementGroupSet/add": "/en/user/html/create_data_element_group_set.html",
+
+            
+    "/list/indicatorSection/indicatorType": "/en/user/html/about_indicator.html",
+    "/edit/indicatorSection/indicatorType/add": "/en/user/html/create_indicator_type.html",
+    
+    "/list/indicatorSection/indicatorGroup": "/en/user/html/about_indicator.html",
+    "/edit/indicatorSection/indicatorGroup/add": "/en/user/html/create_indicator_group.html",
+    
+    "/list/indicatorSection/indicatorGroupSet": "/en/user/html/about_indicator.html",
+    "/edit/indicatorSection/indicatorGroupSet/add": "/en/user/html/create_indicator_group_set.html",
+    
+    
+    "/list/${section}/${objectType}": "/en/user/html/about_${objectType}.html",
+    "/edit/${section}/${objectType}": "/en/user/html/create_${objectType}.html"
 }
