@@ -13,7 +13,7 @@ import TextField from 'material-ui/TextField/TextField';
 
 function getCategoryComboNameForDataElement(dses, de) {
     const dataSetElementForDataElement = Array
-        .from(dses.values())
+        .from(dses || [])
         .find(dse => dse.dataElement && dse.dataElement.id === de.id);
 
     if (dataSetElementForDataElement && dataSetElementForDataElement.categoryCombo && dataSetElementForDataElement.categoryCombo.id !== de.categoryCombo.id) {
@@ -68,7 +68,7 @@ class DataSetElementField extends Component {
                 }))
         );
         this.state.assignedItemStore.setState(
-            Array.from(props.dataSet.dataSetElements.values())
+            Array.from(props.dataSet.dataSetElements || [])
                 .filter(dse => dse.dataElement)
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
                 .map(dse => dse.dataElement.id)
@@ -89,7 +89,7 @@ class DataSetElementField extends Component {
         );
 
         this.state.assignedItemStore.setState(
-            Array.from(props.dataSet.dataSetElements.values())
+            Array.from(props.dataSet.dataSetElements || [])
                 .filter(dse => dse.dataElement)
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
                 .map(dse => dse.dataElement.id)
@@ -99,7 +99,7 @@ class DataSetElementField extends Component {
     updateCategoryCombosForDataSetElements() {
         // Give all the dataSetElements that do not have a category combo assign the dataElement's category combo.
         // This is required due to the API giving dataSetElements that do not provide a categoryCombo the `default` categoryCombo.
-        Array.from(this.props.dataSet.dataSetElements.values())
+        Array.from(this.props.dataSet.dataSetElements || [])
             .forEach(dataSetElement => {
                 const isDataSetElementDoesNotHaveCategoryCombo = dataSetElement.dataElement && dataSetElement.dataElement.categoryCombo && !dataSetElement.categoryCombo;
 
@@ -136,7 +136,7 @@ class DataSetElementField extends Component {
                     },
                 };
 
-                this.props.dataSet.dataSetElements.push(dataSetElement);
+                this.props.dataSet.dataSetElements = [].concat(this.props.dataSet.dataSetElements || []).concat([ dataSetElement ]);
             });
 
         updateGroupEditorState();
