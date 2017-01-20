@@ -76,6 +76,7 @@ contextActions.delete
                             // Remove deleted item from the listStore
                             if (listStore.getState() && listStore.getState().list) {
                                 listStore.setState({
+                                    ...listStore.getState(),
                                     pager: listStore.getState().pager,
                                     list: listStore.getState().list
                                         .filter(modelToCheck => modelToCheck.id !== model.id),
@@ -83,7 +84,7 @@ contextActions.delete
                             }
 
                             snackActions.show({
-                                message: `${model.name} ${d2.i18n.getTranslation('was_deleted')}`,
+                                message: `${model.displayName} ${d2.i18n.getTranslation('was_deleted')}`,
                             });
 
                             // Fire the afterDeleteHook
