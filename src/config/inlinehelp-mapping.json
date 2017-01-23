@@ -75,10 +75,10 @@
     "/edit/validationSection/validationRule/add": "/en/user/html/create_validation_rule.html",
     
     "/list/validationSection/validationRuleGroup": "/en/user/html/about_validation_rule.html",
-    "/edit/validationSection/validationRuleGroup/add": "/en/user/html/create_validation_rule_group.html"
+    "/edit/validationSection/validationRuleGroup/add": "/en/user/html/create_validation_rule_group.html",
     
     "/list/validationSection/validationNotificationTemplate": "/en/user/html/about_validation_rule.html",
-    "/edit/validationSection/validationNotificationTemplate/add": "/en/user/html/create_validation_notification.html"
+    "/edit/validationSection/validationNotificationTemplate/add": "/en/user/html/create_validation_notification.html",
     
     
     "/list/otherSection/legendSet": "/en/user/html/about_legend.html",
