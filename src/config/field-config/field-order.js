@@ -109,6 +109,7 @@ const fieldOrderByName = new Map([
         'openFuturePeriods',
         'timelyDays',
         'periodType',
+        'dataInputPeriods',
         'categoryCombo',
         'notificationRecipients',
         'notifyCompletingUser',
