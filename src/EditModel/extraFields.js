@@ -9,6 +9,16 @@ import DataIndicatorGroupsAssignment from './DataIndicatorGroupsAssignment.compo
 import DataElementGroupsAssignment from './data-element/DataElementGroupsAssignment.component';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 
+const styles = {
+    saveButton: {
+        marginRight: '1rem',
+    },
+    customContentStyle: {
+        width: '95%',
+        maxWidth: 'none',
+    },
+};
+
 class IndicatorExtraFields extends React.Component {
     constructor(props, state) {
         super(props, state);
@@ -27,7 +37,6 @@ class IndicatorExtraFields extends React.Component {
     renderExpressionManager() {
         return (
             <IndicatorExpressionManagerContainer
-                titleText={`Edit ${this.state.type}`}
                 indicatorExpressionChanged={this.indicatorExpressionChanged}
                 formula={this.props.modelToEdit[this.state.type] || ''}
                 description={this.props.modelToEdit[`${this.state.type}Description`] || ''}
@@ -37,23 +46,25 @@ class IndicatorExtraFields extends React.Component {
     }
 
     render() {
+        const d2 = this.context.d2;
+
         const dialogActions = [
             // TODO: This button should "commit" the change to the model where a cancel button will discard any changes made
-            <FlatButton label={this.context.d2.i18n.getTranslation('cancel')} onTouchTap={this.closeDialog} />,
-            <FlatButton label={this.context.d2.i18n.getTranslation('done')} onTouchTap={this.saveToModelAndCloseDialog} disabled={!this.state.dialogValid} />,
+            <FlatButton label={d2.i18n.getTranslation('cancel')} onTouchTap={this.closeDialog} />,
+            <FlatButton label={d2.i18n.getTranslation('done')} onTouchTap={this.saveToModelAndCloseDialog} disabled={!this.state.dialogValid} />,
         ];
 
         return (
             <div>
                 <div style={{ marginTop: '2rem' }}>
-                    <RaisedButton label={this.context.d2.i18n.getTranslation('edit_numerator')} onClick={this.setNumerator} style={{ marginRight: '2rem' }} />
-                    <RaisedButton label={this.context.d2.i18n.getTranslation('edit_denominator')} onClick={this.setDenominator} />
+                    <RaisedButton label={d2.i18n.getTranslation('edit_numerator')} onClick={this.setNumerator} style={{ marginRight: '2rem' }} />
+                    <RaisedButton label={d2.i18n.getTranslation('edit_denominator')} onClick={this.setDenominator} />
                     <Dialog
+                        title={d2.i18n.getTranslation(`edit_${this.state.type}`)}
                         open={this.state.dialogOpen}
                         modal
                         actions={dialogActions}
-                        contentStyle={{ maxWidth: '90%' }}
-                        bodyStyle={{ padding: '0' }}
+                        contentStyle={styles.customContentStyle}
                         autoScrollBodyContent
                     >
                         {this.state ? this.renderExpressionManager() : null}
