@@ -169,7 +169,7 @@ export function DataSetElementCategoryComboSelection(props) {
                 autoScrollBodyContent
             >
                 <DataSetElementList
-                    dataSetElements={Array.from(dataSetElements.values())}
+                    dataSetElements={Array.from(dataSetElements || [])}
                     categoryCombos={categoryCombos}
                     onCategoryComboSelected={onCategoryComboSelected}
                 />

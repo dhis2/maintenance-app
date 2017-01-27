@@ -8,7 +8,10 @@ class SymbolPickerField extends React.Component {
         super(props, context);
 
         const baseUrl = context.d2.Api.getApi().baseUrl;
-        this.imgPath = `${baseUrl.substr(0, -7)}/images/orgunitgroup`;
+        const apiUrlSectionRegexp = /\/api(?:\/[0-9]{2})?$/;
+        const systemRootFolder = baseUrl.replace(apiUrlSectionRegexp, '');
+
+        this.imgPath = `${systemRootFolder}/images/orgunitgroup`;
     }
 
     render() {

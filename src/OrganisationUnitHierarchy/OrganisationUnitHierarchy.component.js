@@ -24,68 +24,65 @@ const d2$ = Observable.fromPromise(getInstance());
 const hierarchy$ = appState
     .map(state => state.hierarchy || {});
 
-function getOrgUnitTreeSearchFromAction(action) {
-    return action
-        .debounce(400)
-        .filter(action => action.data)
-        .map(({ complete, error, data }) => {
-            return Observable.fromPromise(searchForOrganisationUnitsWithinHierarchy(data, 50))
-                .map(organisationUnits => {
-                    return {
-                        complete,
-                        error,
-                        organisationUnits,
-                    };
-                });
-        })
-        .concatAll()
-        .flatMap((v) => {
-            return Observable.just(v).combineLatest(hierarchy$.take(1));
-        });
-}
-
 const rightTreeSearch = Action.create('rightTreeSearch', 'Hierarchy');
-getOrgUnitTreeSearchFromAction(rightTreeSearch)
-    .subscribe(([result, hierarchy]) => {
-        setAppState({
-            hierarchy:  {
-                ...hierarchy,
-                rightRoots: result.organisationUnits,
-            },
-        });
-    });
-rightTreeSearch
-    .filter(action => !action.data)
-    .flatMap(action => hierarchy$.take(1))
-    .subscribe((appState) => {
-        setAppState({
-            hierarchy:  {
-                ...appState.hierarchy,
-                // Reset the roots of the right tree to the original root(s)
-                leftRoots: appState.userOrganisationUnits.toArray(),
-            },
-        });
-    });
-
 const leftTreeSearch = Action.create('leftTreeSearch', 'Hierarchy');
-getOrgUnitTreeSearchFromAction(leftTreeSearch)
-    .subscribe(([result, hierarchy]) => {
+
+Observable
+    // Merge the search action streams for the left and right side trees as we handle them the same
+    .merge(
+        leftTreeSearch
+            .map(action => ({ ...action, side: 'left' }))
+            .debounce(400),
+        rightTreeSearch
+            .map(action => ({ ...action, side: 'right' }))
+            .debounce(400)
+    )
+    // Only search when we have values
+    .filter(action => action.data)
+    // Do the actual search
+    .map(({ complete, error, data, side }) => Observable
+        .fromPromise(searchForOrganisationUnitsWithinHierarchy(data, 50))
+        .map(organisationUnits => ({ complete, error, organisationUnits, side }))
+    )
+    // Make sure we only take the latest
+    .concatAll()
+    // Grab the current state from the appState
+    .flatMap(v => Observable
+        .just(v)
+        .combineLatest(hierarchy$.take(1), (result, hierarchy) => ({ result, hierarchy }))
+    )
+    // Update the app state with the result
+    .subscribe(({result, hierarchy}) => {
         setAppState({
             hierarchy:  {
                 ...appState.state.hierarchy,
-                leftRoots: result.organisationUnits,
+                [`${result.side}Roots`]: result.organisationUnits,
             },
         });
     });
-leftTreeSearch
-    .filter(action => !action.data)
-    .flatMap(action => appState.take(1))
-    .subscribe((appState) => {
+
+// Reset the trees to the userOrganisationUnits when no search value was found
+Observable
+    .merge(
+        // Emit for the empty left searchfield
+        leftTreeSearch
+            .filter(action => !action.data)
+            .map(() => 'left'),
+        // Emit for the empty right searchfield
+        rightTreeSearch
+            .filter(action => !action.data)
+            .map(() => 'right')
+    )
+    .flatMap(side => appState
+        .take(1)
+        .map(state => ({ side, state }))
+    )
+    .subscribe(({ side, state }) => {
         setAppState({
             hierarchy:  {
-                ...appState.hierarchy,
-                // Reset the roots of the left tree to the original root(s)
-                leftRoots: appState.userOrganisationUnits.toArray(),
+                ...state.hierarchy,
+                // Reset the roots of the left or right tree to the original root(s)
+                [`${side}Roots`]: state.userOrganisationUnits.toArray(),
             },
         });
     });
@@ -96,7 +93,7 @@ const organisationUnitHierarchy$ = appState
             roots: userOrganisationUnits.toArray(),
             leftRoots: hierarchy.leftRoots,
             rightRoots: hierarchy.rightRoots,
-            initiallyExpanded: userOrganisationUnits.toArray().map(model => model.id),
+            initiallyExpanded: userOrganisationUnits.toArray().map(model => model.path),
             selectedLeft: hierarchy.selectedLeft || [],
             selectedRight: hierarchy.selectedRight || [],
             isProcessing: hierarchy.isProcessing,
@@ -377,20 +374,22 @@ function OrganisationUnitHierarchy(props, context) {
                     <OrganisationUnitTreeWithSingleSelectionAndSearch
                         roots={props.leftRoots}
                         initiallyExpanded={props.initiallyExpanded}
-                        selected={props.selectedLeft.map(model => model.id)}
+                        selected={props.selectedLeft.map(model => model.path)}
                         onClick={onClickLeft}
                         onUpdateInput={value => leftTreeSearch(value)}
                         idsThatShouldBeReloaded={props.reload}
+                        noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
                     />
                 </Paper>
                 <Paper style={styles.ouTreeRight}>
                     <OrganisationUnitTreeWithSingleSelectionAndSearch
                         roots={props.rightRoots}
-                        selected={props.selectedRight.map(model => model.id)}
+                        selected={props.selectedRight.map(model => model.path)}
                         initiallyExpanded={props.initiallyExpanded}
                         onClick={onClickRight}
                         onUpdateInput={value => rightTreeSearch(value)}
                         idsThatShouldBeReloaded={props.reload}
+                        noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
                     />
                 </Paper>
             </div>

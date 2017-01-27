@@ -53,7 +53,7 @@ class SideBarContainer extends React.Component {
 
                 const initiallyExpanded = orgUnitSearchHits && orgUnitSearchHits.length
                     ? []
-                    : this.state.userOrganisationUnits.toArray().map(v => v.id).concat(this.state.initiallyExpanded || []);
+                    : this.state.userOrganisationUnits.toArray().map(v => v.path).concat(this.state.initiallyExpanded || []);
 
                 return (
                     <div style={styles.wrapperStyle}>
@@ -62,7 +62,7 @@ class SideBarContainer extends React.Component {
                             onAutoCompleteValueSelected={this._onAutoCompleteValueSelected.bind(this)}
                             autoCompleteDataSource={(this.state.autoCompleteOrganisationUnits || []).map(model => model.name)}
                             roots={roots}
-                            selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.id]}
+                            selected={[this.state.selectedOrganisationUnit && this.state.selectedOrganisationUnit.path]}
                             initiallyExpanded={initiallyExpanded}
                             onClick={this._onChangeSelectedOrgUnit.bind(this)}
                             idsThatShouldBeReloaded={orgUnitSearchHits || this.state.organisationUnitsToReload}

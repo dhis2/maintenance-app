@@ -68,9 +68,10 @@ export default React.createClass({
         model: React.PropTypes.object.isRequired,
         labelText: React.PropTypes.string.isRequired,
         onChange: React.PropTypes.func.isRequired,
-        value: React.PropTypes.shape({
-            values: React.PropTypes.func.isRequired,
-        }).isRequired,
+        value: React.PropTypes.oneOfType([
+            React.PropTypes.shape({ values: React.PropTypes.func.isRequired }),
+            React.PropTypes.arrayOf(React.PropTypes.func)
+        ]),
     },
 
     mixins: [Translate],

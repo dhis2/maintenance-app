@@ -1,18 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import { getInstance } from 'd2/lib/d2';
-import { Observable } from 'rx';
+import { generateUid } from 'd2/lib/uid';
+import { Observable, BehaviorSubject } from 'rx';
 import componentFromStream from 'recompose/componentFromStream';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Store from 'd2-ui/lib/store/Store';
 import Row from 'd2-ui/lib/layout/Row.component';
 import DataSetElementCategoryComboSelectionDialog from './DataSetElementCategoryComboSelectionDialog.component';
-import { uniq, includes, curry, get, isUndefined } from 'lodash/fp';
+import { uniq, includes, curry, get, isUndefined, range } from 'lodash/fp';
 import TextField from 'material-ui/TextField/TextField';
 
 function getCategoryComboNameForDataElement(dses, de) {
     const dataSetElementForDataElement = Array
-        .from(dses.values())
+        .from(dses || [])
         .find(dse => dse.dataElement && dse.dataElement.id === de.id);
 
     if (dataSetElementForDataElement && dataSetElementForDataElement.categoryCombo && dataSetElementForDataElement.categoryCombo.id !== de.categoryCombo.id) {
@@ -67,11 +68,15 @@ class DataSetElementField extends Component {
                 }))
         );
         this.state.assignedItemStore.setState(
-            Array.from(props.dataSet.dataSetElements.values())
+            Array.from(props.dataSet.dataSetElements || [])
                 .filter(dse => dse.dataElement)
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
                 .map(dse => dse.dataElement.id)
         );
+    }
+
+    componentDidMount() {
+        this.props.loadMetaData();
     }
 
     componentWillReceiveProps(props) {
@@ -84,7 +89,7 @@ class DataSetElementField extends Component {
         );
 
         this.state.assignedItemStore.setState(
-            Array.from(props.dataSet.dataSetElements.values())
+            Array.from(props.dataSet.dataSetElements || [])
                 .filter(dse => dse.dataElement)
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
                 .map(dse => dse.dataElement.id)
@@ -94,7 +99,7 @@ class DataSetElementField extends Component {
     updateCategoryCombosForDataSetElements() {
         // Give all the dataSetElements that do not have a category combo assign the dataElement's category combo.
         // This is required due to the API giving dataSetElements that do not provide a categoryCombo the `default` categoryCombo.
-        Array.from(this.props.dataSet.dataSetElements.values())
+        Array.from(this.props.dataSet.dataSetElements || [])
             .forEach(dataSetElement => {
                 const isDataSetElementDoesNotHaveCategoryCombo = dataSetElement.dataElement && dataSetElement.dataElement.categoryCombo && !dataSetElement.categoryCombo;
 
@@ -116,26 +121,27 @@ class DataSetElementField extends Component {
 
         const d2 = this.context.d2;
         const api = d2.Api.getApi();
+        const generateUids = (numberofUids) => range(0, numberofUids, 1).map(() => generateUid())
+        const codes = generateUids(items.length);
 
-        return api.get('system/uid', { limit: items.length })
-            .then(({ codes }) => {
-                items
-                    .map(dataElementId => this.props.dataElements.find(dataElement => dataElement.id === dataElementId))
-                    .filter(de => de)
-                    .forEach((dataElement, index) => {
-                        const dataSetElement = d2.models.dataSetElement.create({
-                            id: codes[index],
-                            dataElement,
-                            dataSet: {
-                                id: this.props.dataSet.id,
-                            },
-                        });
+        items
+            .map(dataElementId => this.props.dataElements.find(dataElement => dataElement.id === dataElementId))
+            .filter(de => de)
+            .forEach((dataElement, index) => {
+                const dataSetElement = {
+                    id: codes[index],
+                    dataElement,
+                    dataSet: {
+                        id: this.props.dataSet.id,
+                    },
+                };
 
-                        this.props.dataSet.dataSetElements.add(dataSetElement);
-                    });
-            })
-            .then(updateGroupEditorState)
-            .catch(error => console.log(error));
+                this.props.dataSet.dataSetElements = [].concat(this.props.dataSet.dataSetElements || []).concat([ dataSetElement ]);
+            });
+
+        updateGroupEditorState();
+
+        return Promise.resolve();
     }
 
     _removeItems = (items) => {
@@ -151,13 +157,12 @@ class DataSetElementField extends Component {
 
         return Promise.resolve(true)
             .then(() => {
-                const dataSetElementsWithDataElement = (dataElementIds) => ({ dataElement = {} }) => !isUndefined(dataElement.id) && includes(dataElement.id, dataElementIds);
-                const removeObjectFromMap = curry((collection, object) => collection.delete(get('id', object)));
+                const dataSetElementsThatAreNotInItemsToRemove = (itemsToRemove = []) => ({ dataElement = {} }) => get('id', dataElement) && !itemsToRemove.includes(get('id', dataElement));
 
                 // Remove the items from the modelCollection
-                Array.from(this.props.dataSet.dataSetElements.values())
-                    .filter(dataSetElementsWithDataElement(items))
-                    .forEach(removeObjectFromMap(this.props.dataSet.dataSetElements));
+                this.props.dataSet.dataSetElements = Array.from(this.props.dataSet.dataSetElements)
+                    // Only keep dataSetElements that do not exist in the `items` collection
+                    .filter(dataSetElementsThatAreNotInItemsToRemove(items));
             })
             .then(updateGroupEditorStore)
             .catch(e => console.log(e));
@@ -166,8 +171,8 @@ class DataSetElementField extends Component {
     _updateCategoryComboForDataSetElement = (dataSetElementId, categoryCombo) => {
         const dataSetElements = this.props.dataSet.dataSetElements;
 
-        if (dataSetElements.has(dataSetElementId)) {
-            const dataSetElement = dataSetElements.get(dataSetElementId);
+        if (dataSetElements.some(dataSetElement => dataSetElement.id === dataSetElementId)) {
+            const dataSetElement = dataSetElements.find(dataSetElement => dataSetElement.id === dataSetElementId)
             dataSetElement.categoryCombo = categoryCombo;
 
             this.props.onChange({
@@ -249,12 +254,14 @@ async function dataSetElementFieldData() {
     };
 }
 
-const metadata$ = Observable.fromPromise(dataSetElementFieldData());
+const metadata$ = Store.create();
+const loadMetaDataForDataSetElementField = () => dataSetElementFieldData().then(metadata => metadata$.setState(metadata));
 
 const enhancedDataElementField$ = (props$) => Observable
     .combineLatest(
         props$,
-        metadata$,
+        metadata$
+            .startWith({ dataElements: [], categoryCombos: [] }),
         (props, metadata) => ({
             ...metadata,
             ...props,
@@ -267,6 +274,7 @@ const enhancedDataElementField$ = (props$) => Observable
             dataElements={dataElements}
             categoryCombos={categoryCombos}
             onChange={props.onChange}
+            loadMetaData={loadMetaDataForDataSetElementField}
         />
     ))
     .startWith(<LinearProgress />);
