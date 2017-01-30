@@ -109,7 +109,6 @@ class SectionDialog extends React.Component {
         if (modelToEditStore.state.dataSetElements) {
             dataElementStore.setState(
                 modelToEditStore.state.dataSetElements
-                    .toArray()
                     .filter(dse =>
                         (dse.categoryCombo && dse.categoryCombo.id === categoryComboId) ||
                         (!dse.categoryCombo && dse.dataElement.categoryCombo.id === categoryComboId)
