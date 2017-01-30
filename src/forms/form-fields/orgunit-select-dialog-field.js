@@ -9,9 +9,8 @@ import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.compon
 
 import appStateStore from '../../App/appStateStore';
 
-// TODO: Search?
 
-class OrgUnitTreeSingleSelect extends React.Component {
+class OrgUnitSelectDialog extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -122,12 +121,12 @@ class OrgUnitTreeSingleSelect extends React.Component {
         ) : null;
     }
 }
-OrgUnitTreeSingleSelect.contextTypes = {
+OrgUnitSelectDialog.contextTypes = {
     d2: React.PropTypes.object.isRequired,
 };
-OrgUnitTreeSingleSelect.propTypes = {
-    value: React.PropTypes.object.isRequired,
+OrgUnitSelectDialog.propTypes = {
+    value: React.PropTypes.object,
     readOnly: React.PropTypes.bool,
 };
 
-export default OrgUnitTreeSingleSelect;
+export default OrgUnitSelectDialog;
