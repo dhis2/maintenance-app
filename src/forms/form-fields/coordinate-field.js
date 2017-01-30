@@ -43,7 +43,7 @@ class CoordinateField extends React.Component {
             coords: isPoint(state.coords) && lat && long ? [long, lat] : state.coords,
         }), () => {
             if (lat && long && isPoint(this.state.coords)) {
-                this.props.onChange({ target: { value: JSON.stringify(this.state.coords) } });
+                this.props.onChange({ target: { value: `[${this.state.coords[0]},${this.state.coords[1]}]` } });
             } else {
                 this.props.onChange({ target: { value: '' } });
             }
