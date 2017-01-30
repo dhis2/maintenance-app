@@ -36,6 +36,7 @@ const scriptPrefix = (isDevBuild ? dhisConfig.baseUrl : '..');
 
 const webpackConfig = {
     context: __dirname,
+    performance: { hints: false },
     entry: {
         maintenance: './src/maintenance.js',
         commons: ['material-ui'],
