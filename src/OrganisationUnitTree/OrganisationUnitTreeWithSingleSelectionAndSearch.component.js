@@ -31,7 +31,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                     selected={props.selected}
                     initiallyExpanded={props.initiallyExpanded}
                     labelStyle={styles.labelStyle}
-                    onClick={props.onClick}
+                    onSelectClick={props.onSelectClick}
                     idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
                     hideCheckboxes
                 />
@@ -51,7 +51,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.propTypes = {
     onUpdateInput: React.PropTypes.func,
     selected: React.PropTypes.array,
     initiallyExpanded: React.PropTypes.array,
-    onClick: React.PropTypes.func,
+    onSelectClick: React.PropTypes.func,
     noHitsLabel: React.PropTypes.string.isRequired,
 };
 OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {

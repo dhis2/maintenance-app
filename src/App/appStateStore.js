@@ -24,7 +24,7 @@ function getItemsForCategory(d2, items) {
     const onlyModelsThatExist = contains(__, modelDefinitionNames);
     const onlyAccessibleModels = requireAddToView(d2, systemSettings);
     const onlyExistingAndAccessibleModels = (value) => onlyModelsThatExist(value) && onlyAccessibleModels(value);
-    
+
     return items
         .filter(onlyExistingAndAccessibleModels)
         .map(key => ({
@@ -75,7 +75,7 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
         const rootLevelOrgUnits = await d2.models.organisationUnits.list({
             level: 1,
             paging: false,
-            fields: 'id,displayName|rename(name),publicAccess,lastUpdated,children[id,displayName,children::isNotEmpty]',
+            fields: 'id,displayName,path,publicAccess,lastUpdated,children[id,displayName,path,children::isNotEmpty]',
         });
 
         getCurrentUserOrganisationUnits.currentUserOrganisationUnits = rootLevelOrgUnits;

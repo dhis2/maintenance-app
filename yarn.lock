@@ -1528,9 +1528,9 @@ d2-utilizr@^0.2.9:
     lodash.isset "^4.3.0"
     lodash.isstring "^4.0.1"
 
-d2@^26.1.9:
-  version "26.1.9"
-  resolved "https://registry.yarnpkg.com/d2/-/d2-26.1.9.tgz#f8cf07a8c6e632e1b62c1c148f2ebbfbfd48f9b8"
+d2@^26.1.10:
+  version "26.1.10"
+  resolved "https://registry.yarnpkg.com/d2/-/d2-26.1.10.tgz#7f53a36f8f09e6282a3bd93acb8e02d45f123344"
   dependencies:
     whatwg-fetch "^2.0.1"
 
