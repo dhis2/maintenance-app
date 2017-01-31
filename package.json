@@ -12,7 +12,7 @@
     "prestart": "d2-manifest package.json manifest.webapp",
     "start": "webpack-dev-server",
     "test": "echo Everything probably works great\\! ## karma start test/config/karma.config.js --single-run true",
-    "build": "rm -rf build && NODE_ENV=production webpack && npm run manifest",
+    "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest",
     "postbuild": "cp -r src/i18n icon.png ./build/",
     "validate": "npm ls --depth 0",
     "manifest": "d2-manifest package.json build/manifest.webapp",
