@@ -213,7 +213,7 @@ objectActions.saveObject
         }
 
         const dataSetElements = Array
-            .from(dataSetModel.dataSetElements.values())
+            .from(dataSetModel.dataSetElements ? dataSetModel.dataSetElements.values() : [])
             .map(({ dataSet, dataElement, ...other }) => {
                 return {
                     dataSet: { ...dataSet, id: dataSet.id || dataSetPayload.id },

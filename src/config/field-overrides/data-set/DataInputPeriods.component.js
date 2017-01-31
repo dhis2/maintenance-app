@@ -8,6 +8,8 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 
+import { generateUid } from 'd2/lib/uid';
+
 import getPeriod from 'd2/lib/period/parser';
 import PeriodPicker from 'd2-ui/lib/period-picker/PeriodPicker.component';
 
@@ -47,7 +49,7 @@ class DataInputPeriods extends React.Component {
     openDialog() {
         this.setState({
             dialogOpen: true,
-            dataInputPeriods: this.props.value.sort((a, b) => a.period.id.localeCompare(b.period.id))
+            dataInputPeriods: (this.props.value || []).sort((a, b) => a.period.id.localeCompare(b.period.id))
         });
     }
 
@@ -58,26 +60,21 @@ class DataInputPeriods extends React.Component {
     }
 
     addPeriod(periodId) {
-        if (this.state.dataInputPeriods.filter(dip => dip.period.id === periodId).length > 0) {
-            console.info('Period was already added');
-            return;
-        }
-
         this.setState({
-            dataInputPeriods: this.state.dataInputPeriods.concat({ period: { id: periodId } }),
+            dataInputPeriods: this.state.dataInputPeriods.concat({ id: generateUid(), period: { id: periodId } }),
         });
     }
 
-    removePeriod(periodId) {
+    removePeriod(uid) {
         this.setState({
-            dataInputPeriods: this.state.dataInputPeriods.filter(dip => dip.period.id !== periodId),
+            dataInputPeriods: this.state.dataInputPeriods.filter(dip => dip.id !== uid),
         });
     }
 
-    changePeriodDate(periodId, dateField, nothing, value) {
+    changePeriodDate(uid, dateField, nothing, value) {
         this.setState({
             dataInputPeriods: this.state.dataInputPeriods.map(dip => {
-                if (dip.period.id === periodId) {
+                if (dip.id === uid) {
                     dip[dateField] = value;
                 }
 
@@ -94,6 +91,7 @@ class DataInputPeriods extends React.Component {
         this.props.onChange({
             target: {
                 value: this.state.dataInputPeriods.map(dip => ({
+                    id: dip.id,
                     period: {
                         id: dip.period.id,
                     },
@@ -132,12 +130,12 @@ class DataInputPeriods extends React.Component {
     }
 
     renderPeriods() {
-        const removePeriodProxy = (periodId) => {
-            return () => this.removePeriod(periodId);
+        const removePeriodProxy = (uid) => {
+            return () => this.removePeriod(uid);
         };
 
-        const changeDateProxy = (periodId, dateField) => {
-            return this.changePeriodDate.bind(this, periodId, dateField);
+        const changeDateProxy = (uid, dateField) => {
+            return this.changePeriodDate.bind(this, uid, dateField);
         };
 
         const removeDateProxy = (periodId, dateField) => {
@@ -145,10 +143,10 @@ class DataInputPeriods extends React.Component {
         };
 
         return (this.state.dataInputPeriods && this.state.dataInputPeriods.map(dataInputPeriod =>
-            <div key={dataInputPeriod.period.id}>
+            <div key={dataInputPeriod.id}>
                 <div style={styles.periodRow}>
                     <div style={styles.periodColumn}>
-                        <IconButton style={styles.iconButton} onClick={removePeriodProxy(dataInputPeriod.period.id)}>
+                        <IconButton style={styles.iconButton} onClick={removePeriodProxy(dataInputPeriod.id)}>
                             <FontIcon
                                 className="material-icons"
                                 color="rgba(0,0,0,0.35)"
@@ -161,14 +159,14 @@ class DataInputPeriods extends React.Component {
                     {this.renderDatePicker(
                         this.getTranslation('opening_date'),
                         dataInputPeriod.openingDate && new Date(dataInputPeriod.openingDate),
-                        changeDateProxy(dataInputPeriod.period.id, 'openingDate'),
-                        removeDateProxy(dataInputPeriod.period.id, 'openingDate')
+                        changeDateProxy(dataInputPeriod.id, 'openingDate'),
+                        removeDateProxy(dataInputPeriod.id, 'openingDate')
                     )}
                     {this.renderDatePicker(
                         this.getTranslation('closing_date'),
                         dataInputPeriod.closingDate && new Date(dataInputPeriod.closingDate),
-                        changeDateProxy(dataInputPeriod.period.id, 'closingDate'),
-                        removeDateProxy(dataInputPeriod.period.id, 'closingDate')
+                        changeDateProxy(dataInputPeriod.id, 'closingDate'),
+                        removeDateProxy(dataInputPeriod.id, 'closingDate')
                     )}
                 </div>
                 <Divider style={styles.divider}/>
