@@ -125,7 +125,7 @@ class ExpressionField extends Component {
                     open={this.state.open}
                     handleClose={this.handleClose}
                     handleSaveAndClose={this.handleSaveAndClose}
-                    expressionChanged={this.indicatorExpressionChanged}
+                    indicatorExpressionChanged={this.indicatorExpressionChanged}
                 />
             </div>
         );
