@@ -111,7 +111,7 @@ class AddOptionDialog extends Component {
     render() {
         return (
             <Dialog
-                open={this.props.isDialogOpen}
+                open={this.props.isDialogOpen || false}
                 onRequestClose={this.props.onRequestClose}
                 autoScrollBodyContent
             >
