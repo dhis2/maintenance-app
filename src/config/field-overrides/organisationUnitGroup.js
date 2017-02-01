@@ -1,37 +1,26 @@
 import React from 'react';
-import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import IconPicker from '../../forms/form-fields/icon-picker';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
-import { getManifest } from 'd2/lib/d2';
 
 class SymbolPickerField extends React.Component {
-    constructor(...args) {
-        super(...args);
+    constructor(props, context) {
+        super(props, context);
 
-        this.state = {};
-    }
-
-    componentDidMount() {
-        getManifest('./manifest.webapp')
-            .then(manifest => {
-                this.setState({
-                    baseUrl: (process.env.NODE_ENV === 'production') ? manifest.getBaseUrl() + '/images/orgunitgroup' : 'http://localhost:8080/dhis/images/orgunitgroup',
-                });
-            });
+        const apiBaseUrl = context.d2.Api.getApi().baseUrl;
+        const baseUrl = apiBaseUrl.substr(0, apiBaseUrl.lastIndexOf('/api'));
+        this.baseUrl = `${baseUrl}/images/orgunitgroup`;
     }
 
     render() {
-        if (!this.state.baseUrl) {
-            return (<LinearProgress />);
-        }
         return (
             <IconPicker
                 {...this.props}
-                imgPath={this.state.baseUrl}
+                imgPath={this.baseUrl}
             />
         );
     }
 }
+SymbolPickerField.contextTypes = { d2: React.PropTypes.object };
 
 export default new Map([
     ['symbol', {
