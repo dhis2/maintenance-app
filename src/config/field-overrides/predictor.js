@@ -1,6 +1,5 @@
 import { SELECT } from '../../forms/fields';
 import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
-import dataElementOperandSelectorActions from 'd2-ui/lib/expression-manager/dataElementOperandSelector.actions';
 import Store from 'd2-ui/lib/store/Store';
 import Action from 'd2-ui/lib/action/Action';
 import { getInstance } from 'd2/lib/d2';
@@ -31,7 +30,7 @@ expressionStatusActions.requestExpressionStatus
         expressionStatusStore.setState(response);
     });
 
-function ExpressionModal({ open, handleClose, handleSaveAndClose, ...props }) {
+function ExpressionDialog({ open, handleClose, handleSaveAndClose, ...props }) {
     const customContentStyle = {
         width: '100%',
         maxWidth: 'none',
@@ -54,9 +53,9 @@ function ExpressionModal({ open, handleClose, handleSaveAndClose, ...props }) {
         <Dialog
             open={open}
             actions={actions}
-            modal={true}
             contentStyle={customContentStyle}
             style={{padding: '1rem'}}
+            onRequestClose={handleClose}
         >
             <ExpressionManager
                 descriptionLabel={'description'}
@@ -77,7 +76,9 @@ class ExpressionField extends Component {
     };
 
     handleOpen = () => {
-        this.setState({open: true});
+        // Clear previous expression validation status
+        expressionStatusStore.setState({});
+        this.setState({open: true, value: this.props.value});
     };
 
     handleClose = () => {
@@ -120,7 +121,7 @@ class ExpressionField extends Component {
                     onTouchTap={this.handleOpen}
                 />
                 {props.errorText ? <div style={styles.errorText}>{props.errorText}</div> : null}
-                <ExpressionModal
+                <ExpressionDialog
                     {...props}
                     open={this.state.open}
                     handleClose={this.handleClose}
