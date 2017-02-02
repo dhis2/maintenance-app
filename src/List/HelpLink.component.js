@@ -11,11 +11,11 @@ import { camelCaseToUnderscores } from 'd2-utilizr';
  *
  * @returns {string} `master` for a snapshot branch. `25` for 2.25 etc.
  */
-function getDocsVersion({ minor, snapshot }) {
+function getDocsVersion({ major, minor, snapshot }) {
     if (snapshot) {
         return 'master';
     }
-    return minor;
+    return `${major}.${minor}`;
 }
 
 /**
