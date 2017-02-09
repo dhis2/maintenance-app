@@ -167,7 +167,6 @@ contextActions.compulsoryDataElements
         const [modelItem, dataElementOperands] = await Promise.all([getModelItem(), getDataElementOperands()]);
 
         const dataSetDataElementIds = modelItem.dataSetElements
-            .toArray()
             .map(dataSetElement => dataSetElement.dataElement.id);
 
         const dataElementOperandsForDataSet = dataElementOperands
