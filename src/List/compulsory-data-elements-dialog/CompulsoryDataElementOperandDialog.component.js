@@ -204,13 +204,10 @@ class CompulsoryDataElementOperandDialog extends Component {
 
         const payload = getOwnedPropertyJSON.bind(this.props.model.modelDefinition)(this.props.model);
         const d2 = this.context.d2;
-        const api = d2.Api.getApi();
-
-        payload.compulsoryDataElementOperands = collectionToSave;
 
         // TODO: Should be done propery without modifying props and preferably without saving the whole model
         this.props.model.compulsoryDataElementOperands = collectionToSave;
-        api.update(updateAPIUrlWithBaseUrlVersionNumber(this.props.model.href, api.baseUrl), payload, false)
+        this.props.model.save()
             .then(() => {
                 snackActions.show({
                     message: 'saved_compulsory_data_elements',
