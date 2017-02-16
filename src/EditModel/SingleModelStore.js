@@ -33,8 +33,7 @@ const requestParams = new Map([
             'categoryCombo[id,displayName]]',
             'indicators[id,displayName,categoryCombo[id,displayName]]',
             'organisationUnits[id,path]',
-            'sections[:all,dataElements[id,displayName,categoryCombo[id,displayName]]',
-            'greyedFields[categoryOptionCombo,dataElement]]',
+            'sections[:all,dataElements[id,displayName],categoryCombos[id,displayName],greyedFields[categoryOptionCombo[id,displayName],dataElement[id,displayName]]]',
         ].join(','),
     }],
     ['categoryOption', {

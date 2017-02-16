@@ -240,6 +240,7 @@ class EditDataSetSections extends React.Component {
                 <GreyFieldDialog
                     open={!!this.state.greyFieldSectionModel}
                     sectionModel={this.state.greyFieldSectionModel}
+                    dataSetElements={modelToEditStore.state.dataSetElements}
                     onRequestClose={() => { this.setState({ greyFieldSectionModel: false }); }}
                     onRequestSave={this.handleSectionSaved}
                 />
