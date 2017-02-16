@@ -59,18 +59,22 @@ class SectionDialog extends React.Component {
 
     componentWillReceiveProps(props) {
         if (props.sectionModel) {
-            const categoryComboId = (
-                    // Use the category combo of this section, if any
-                    props.sectionModel.categoryCombo && props.sectionModel.categoryCombo.id
-                ) || (
-                    // Otherwise use the category combo of the first assigned data element
-                    props.sectionModel.dataElements &&
-                    props.sectionModel.dataElements.size &&
-                    props.sectionModel.dataElements.toArray().length > 0 &&
-                    props.sectionModel.dataElements.toArray()[0].categoryCombo.id
-                ) || props.categoryCombos[0].value; // Fall back to the first category combo for this data set
+            const sectionId = props.sectionModel.id;
+            const otherSections = modelToEditStore.state.sections.toArray().filter(section => section.id != sectionId);
+            const filterDataElementIds = otherSections.reduce((elements, section) => {
+                return elements.concat((Array.isArray(section.dataElements)
+                        ? section.dataElements
+                        : section.dataElements.toArray()
+                ).map(de => de.id));
+            }, []);
 
-            this.handleCategoryComboChange({ target: { value: categoryComboId } });
+            const categoryComboId = (
+                    // Use the first category combo of this section
+                    props.sectionModel.categoryCombos.size > 0 && props.sectionModel.categoryCombos.toArray()[0].id
+                ) || (
+                    // Fall back to the first category combo for this data set
+                    Array.isArray(props.categoryCombos) && props.categoryCombos.length && props.categoryCombos[0].value
+                );
 
             assignedDataElementStore.setState(
                 props.sectionModel.dataElements && props.sectionModel.dataElements.toArray().map(de => de.id) || []
@@ -93,7 +97,9 @@ class SectionDialog extends React.Component {
                 showRowTotals: props.sectionModel.showRowTotals,
                 showColumnTotals: props.sectionModel.showColumnTotals,
                 filterText: '',
+                filterDataElementIds,
             }, () => {
+                this.handleCategoryComboChange({ target: { value: categoryComboId } });
                 this.forceUpdate();
             });
         }
@@ -112,6 +118,10 @@ class SectionDialog extends React.Component {
                     .filter(dse =>
                         (dse.categoryCombo && dse.categoryCombo.id === categoryComboId) ||
                         (!dse.categoryCombo && dse.dataElement.categoryCombo.id === categoryComboId)
+                    )
+                    .filter(dse => this.state.filterDataElementIds
+                        ? !this.state.filterDataElementIds.includes(dse.dataElement.id)
+                        : true
                     )
                     .map(dse => ({ value: dse.dataElement.id, text: dse.dataElement.displayName }))
                     .sort((a, b) => a.text.localeCompare(b.text))
@@ -215,7 +225,7 @@ class SectionDialog extends React.Component {
                     options={this.props.categoryCombos}
                     labelText={this.getTranslation('category_combo')}
                     onChange={this.handleCategoryComboChange}
-                    defaultValue={this.state.categoryCombo}
+                    value={this.state.categoryCombo}
                     isRequired
                     style={{ width: 284 }}
                 />
