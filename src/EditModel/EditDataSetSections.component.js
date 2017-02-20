@@ -73,8 +73,9 @@ class EditDataSetSections extends React.Component {
     }
 
     handleAddSectionClick() {
+        const newSection = this.context.d2.models.sections.create();
         this.setState(state => ({
-            editSectionModel: Object.assign(modelToEditStore.state.sections.modelDefinition.create(), {
+            editSectionModel: Object.assign(newSection, {
                 dataSet: { id: modelToEditStore.state.id },
                 sortOrder: state.sections.reduce((p, s) => Math.max(s.sortOrder, p), 0) + 1,
             })
@@ -101,6 +102,7 @@ class EditDataSetSections extends React.Component {
                 sections.push(savedSection);
             }
 
+            modelToEditStore.setState(Object.assign(modelToEditStore.state, { sections }));
             return {
                 editSectionModel: false,
                 greyFieldSectionModel: false,
@@ -118,6 +120,11 @@ class EditDataSetSections extends React.Component {
             onActionTouchTap: () => {
                 section.delete()
                     .then(() => {
+                        const newSections = modelToEditStore.state.sections;
+                        modelToEditStore.setState(Object.assign(modelToEditStore.state, {
+                            sections: (Array.isArray(newSections) ? newSections : newSections.toArray()).filter(s => s.id !== section.id),
+                        }));
+
                         snackActions.show({ message: this.getTranslation('section_deleted') });
                         this.setState(state => ({
                             sections: state.sections.filter(s => s.id !== section.id),
@@ -240,7 +247,6 @@ class EditDataSetSections extends React.Component {
                 <GreyFieldDialog
                     open={!!this.state.greyFieldSectionModel}
                     sectionModel={this.state.greyFieldSectionModel}
-                    dataSetElements={modelToEditStore.state.dataSetElements}
                     onRequestClose={() => { this.setState({ greyFieldSectionModel: false }); }}
                     onRequestSave={this.handleSectionSaved}
                 />

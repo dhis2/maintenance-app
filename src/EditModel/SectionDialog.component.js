@@ -59,9 +59,12 @@ class SectionDialog extends React.Component {
 
     componentWillReceiveProps(props) {
         if (props.sectionModel) {
-            const sectionId = props.sectionModel.id;
-            const otherSections = modelToEditStore.state.sections.toArray().filter(section => section.id != sectionId);
-            const filterDataElementIds = otherSections.reduce((elements, section) => {
+            const currentSectionId = props.sectionModel.id;
+            const sections = modelToEditStore.state.sections;
+            const sectionArray = Array.isArray(sections) ? sections : sections.toArray();
+            const otherSections = sectionArray.filter(s => s.id !== currentSectionId);
+            const filterDataElementIds = otherSections
+                .reduce((elements, section) => {
                 return elements.concat((Array.isArray(section.dataElements)
                         ? section.dataElements
                         : section.dataElements.toArray()
@@ -116,8 +119,9 @@ class SectionDialog extends React.Component {
             dataElementStore.setState(
                 modelToEditStore.state.dataSetElements
                     .filter(dse =>
-                        (dse.categoryCombo && dse.categoryCombo.id === categoryComboId) ||
-                        (!dse.categoryCombo && dse.dataElement.categoryCombo.id === categoryComboId)
+                        dse.categoryCombo
+                            ? dse.categoryCombo.id === categoryComboId
+                            : dse.dataElement.categoryCombo.id === categoryComboId
                     )
                     .filter(dse => this.state.filterDataElementIds
                         ? !this.state.filterDataElementIds.includes(dse.dataElement.id)

@@ -9,6 +9,8 @@ import DropDown from '../forms/form-fields/drop-down';
 
 import snackActions from '../Snackbar/snack.actions';
 
+import modelToEditStore from './modelToEditStore';
+
 
 const styles = {
     dialogContent: {
@@ -307,8 +309,10 @@ class GreyFieldDialog extends React.Component {
                 }, []);
         };
 
+        const currentSectionDataElementIds = this.props.sectionModel.dataElements.toArray().map(de => de.id);
         return this.state.currentCategoryCombo ?
-            this.props.dataSetElements
+            modelToEditStore.state.dataSetElements
+                .filter(dse => currentSectionDataElementIds.includes(dse.dataElement.id))
                 .filter(dse => dse.categoryCombo.id === this.state.currentCategoryCombo)
                 .map((dse, deNum) => {
                 const cocFields = getCocFields();
@@ -327,6 +331,13 @@ class GreyFieldDialog extends React.Component {
             open,
             ...extraProps,
         } = this.props;
+
+        const sectionDataElementIds = this.props.sectionModel ? this.props.sectionModel.dataElements.toArray().map(de => de.id) : [];
+        const categoryCombosForSection = this.props.sectionModel
+            ? [...new Set(modelToEditStore.state.dataSetElements
+                .filter(dse => sectionDataElementIds.includes(dse.dataElement.id))
+                .map(dse => dse.categoryCombo))]
+            : [];
 
         return (
             <Dialog
@@ -351,13 +362,12 @@ class GreyFieldDialog extends React.Component {
                 ]}
                 onRequestClose={this.closeDialog}
             >
+                {this.props.sectionModel && this.props.sectionModel.categoryCombos && this.props.sectionModel.categoryCombos.size > 1 ? (
                 <DropDown
-                    options={this.props.sectionModel
-                        ? this.props.sectionModel.categoryCombos.toArray().map(cc => ({
+                    options={categoryCombosForSection.map(cc => ({
                             value: cc.id,
-                            text: cc.displayName === 'default' ? 'None' : cc.displayName
-                        }))
-                        : []}
+                            text: cc.displayName === 'default' ? this.getTranslation('none') : cc.displayName
+                        }))}
                     labelText={this.getTranslation('category_combo')}
                     value={this.state.currentCategoryCombo}
                     onChange={e => this.setState({
@@ -366,11 +376,12 @@ class GreyFieldDialog extends React.Component {
                     style={{ width: '33%' }}
                     isRequired
                 />
+                ) : null}
                 <div style={styles.dialogDiv}>
                     <table style={styles.table}>
                         <tbody>
                         {this.renderTableHeader()}
-                        {this.state.currentCategoryCombo && this.props.dataSetElements && this.renderDataElements()}
+                        {this.state.currentCategoryCombo && this.props.sectionModel && this.renderDataElements()}
                         </tbody>
                     </table>
                 </div>
