@@ -83,14 +83,14 @@ class CompulsoryDataElementOperandDialog extends Component {
             itemsAvailableStore.setState(
                 props.dataElementOperands.map(operand => ({
                     text: operand.displayName,
-                    value: [operand.dataElementId, operand.optionComboId].join('.'),
+                    value: `${operand.dataElementId}.${operand.optionComboId}`,
                 }))
             );
 
             itemsSelectedStore.setState(
                 props.model.compulsoryDataElementOperands
                     .filter(deo => deo.dataElement && deo.categoryOptionCombo)
-                    .map(deo => [deo.dataElement.id, deo.categoryOptionCombo.id].join('.'))
+                    .map(deo => `${deo.dataElement.id}.${deo.categoryOptionCombo.id}`)
             );
         }
     }

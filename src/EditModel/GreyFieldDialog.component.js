@@ -332,12 +332,24 @@ class GreyFieldDialog extends React.Component {
             ...extraProps,
         } = this.props;
 
-        const sectionDataElementIds = this.props.sectionModel ? this.props.sectionModel.dataElements.toArray().map(de => de.id) : [];
-        const categoryCombosForSection = this.props.sectionModel
-            ? [...new Set(modelToEditStore.state.dataSetElements
+        let uniqueCatComboIds = [], sectionDataElementIds = [], categoryCombosForSection = [];
+
+        if (this.props.sectionModel) {
+            // Get data element ids for the current section
+            sectionDataElementIds = this.props.sectionModel.dataElements.toArray().map(de => de.id);
+
+            // Get unique cat combos for data elements in current section
+            categoryCombosForSection = modelToEditStore.state.dataSetElements
                 .filter(dse => sectionDataElementIds.includes(dse.dataElement.id))
-                .map(dse => dse.categoryCombo))]
-            : [];
+                .map(dse => dse.categoryCombo)
+                .reduce((catCombos, catCombo) => {
+                    if (!uniqueCatComboIds.includes(catCombo.id)) {
+                        uniqueCatComboIds.push(catCombo.id);
+                        catCombos.push(catCombo);
+                    }
+                    return catCombos;
+                }, []);
+        }
 
         return (
             <Dialog
