@@ -231,6 +231,7 @@ class SectionDialog extends React.Component {
                     onChange={this.handleCategoryComboChange}
                     value={this.state.categoryCombo}
                     isRequired
+                    disabled={this.props.categoryCombos.length === 1}
                     style={{ width: 284 }}
                 />
                 <TextField
