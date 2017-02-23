@@ -4,13 +4,13 @@ import fieldOrderNames from '../config/field-config/field-order';
 import disabledOnEdit from '../config/disabled-on-edit';
 import FormFieldsForModel from '../forms/FormFieldsForModel';
 import FormFieldsManager from '../forms/FormFieldsManager';
-import { config, getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
-import { isString, camelCaseToUnderscores } from 'd2-utilizr';
+import { isString } from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import log from 'loglevel';
@@ -18,75 +18,10 @@ import extraFields from './ExtraFields';
 import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
-import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import appState from '../App/appStateStore';
 import { Observable } from 'rx';
-
+import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttributeFieldConfigs } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
-
-function createUniqueValidator(fieldConfig, modelDefinition, uid) {
-    return function checkAgainstServer(value) {
-        // Don't validate against the server when we have no value
-        if (!value || !value.trim()) {
-            return Promise.resolve(true);
-        }
-
-        let modelDefinitionWithFilter = modelDefinition
-            .filter().on(fieldConfig.fieldOptions.referenceProperty).equals(value);
-
-        if (uid) {
-            modelDefinitionWithFilter = modelDefinitionWithFilter.filter().on('id').notEqual(uid);
-        }
-
-        return modelDefinitionWithFilter
-            .list()
-            .then(collection => {
-                if (collection.size !== 0) {
-                    return getInstance()
-                        .then(d2 => d2.i18n.getTranslation('value_not_unique'))
-                        .then(message => Promise.reject(message));
-                }
-                return Promise.resolve(true);
-            });
-    };
-}
-
-function getLabelText(labelText, fieldConfig = {}) {
-    // Add required indicator when the field is required
-    if (fieldConfig.props && fieldConfig.props.isRequired) {
-        return `${labelText} (*)`;
-    }
-    return labelText;
-}
-
-// TODO: Move this outside of this function as it is used with more than just this component
-export async function createFieldConfigForModelTypes(modelType) {
-    const d2 = await getInstance();
-
-    const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
-    formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
-
-    for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
-        formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
-    }
-
-    return formFieldsManager.getFormFieldsForModel({ modelDefinition: d2.models[modelType] })
-        .map(fieldConfig => {
-            // Translate the sync validator messages if there are any validators
-            if (fieldConfig.validators) {
-                fieldConfig.validators = fieldConfig.validators
-                    .map(validator => ({
-                        ...validator,
-                        message: d2.i18n.getTranslation(validator.message),
-                    }));
-            }
-
-            // Get the field's label with required indicator if the field is required
-            fieldConfig.props.labelText = getLabelText(d2.i18n.getTranslation(fieldConfig.props.labelText), fieldConfig);
-
-            return fieldConfig;
-        });
-}
 
 const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
@@ -97,44 +32,6 @@ const currentSection$ = appState
 const editFormFieldsForCurrentSection$ = currentSection$
     .flatMap((modelType) => Observable.fromPromise(createFieldConfigForModelTypes(modelType)));
 
-function getAttributeFieldConfigs(modelToEdit) {
-    Object
-        .keys(modelToEdit.modelDefinition.attributeProperties)
-        .forEach((key) => {
-            this.context.d2.i18n.translations[key] = key;
-            return key;
-        });
-
-    return Object
-        .keys(modelToEdit.modelDefinition.attributeProperties)
-        .map(attributeName => {
-            const attribute = modelToEdit.modelDefinition.attributeProperties[attributeName];
-
-            return createFieldConfig({
-                name: attribute.name,
-                valueType: attribute.valueType,
-                type: typeToFieldMap.get(attribute.optionSet ? 'CONSTANT' : attribute.valueType),
-                required: Boolean(attribute.mandatory),
-                fieldOptions: {
-                    labelText: attribute.name,
-                    options: attribute.optionSet ? attribute.optionSet.options.map(option => {
-                        return {
-                            name: option.displayName || option.name,
-                            value: option.code,
-                        };
-                    }) : [],
-                },
-            }, modelToEdit.modelDefinition, this.context.d2.models, modelToEdit);
-        })
-        .map(attributeFieldConfig => {
-            attributeFieldConfig.value = modelToEdit.attributes[attributeFieldConfig.name];
-
-            attributeFieldConfig.props.labelText = getLabelText(attributeFieldConfig.props.labelText, attributeFieldConfig);
-
-            return attributeFieldConfig;
-        });
-}
-
 const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, editFormFieldsForCurrentSection$, currentSection$)
     .filter(([modelToEdit, formFields, currentType]) => {
         if (modelToEdit && modelToEdit.modelDefinition && modelToEdit.modelDefinition.name) {
@@ -143,15 +40,6 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
         return false;
     });
 
-function addUniqueValidatorWhenUnique(fieldConfig, modelToEdit) {
-    if (fieldConfig.unique) {
-        fieldConfig.asyncValidators = [createUniqueValidator(fieldConfig, modelToEdit.modelDefinition, modelToEdit.id)];
-    }
-
-    return fieldConfig;
-}
-
-// TODO: Gives a flash of the old content when switching models (Should probably display a loading bar)
 export default React.createClass({
     propTypes: {
         modelId: React.PropTypes.string.isRequired,
@@ -219,7 +107,7 @@ export default React.createClass({
                     const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(modelToEdit.modelDefinition.name), fieldConfigs, modelToEdit);
                     const fieldConfigsWithAttributeFields = [].concat(
                         fieldConfigsAfterRules,
-                        getAttributeFieldConfigs.call(this, modelToEdit),
+                        getAttributeFieldConfigs(this.context.d2, modelToEdit),
                         (extraFields[modelType] || []).map(config => {
                             config.props = config.props || {};
                             config.props.modelToEdit = modelToEdit;

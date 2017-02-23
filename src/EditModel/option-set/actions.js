@@ -1,9 +1,11 @@
+import log from 'loglevel';
 import Action from 'd2-ui/lib/action/Action';
 import { getInstance } from 'd2/lib/d2';
 import { optionDialogStore, optionsForOptionSetStore } from './stores.js';
 import isArray from 'd2-utilizr/lib/isArray';
 import modelToEditStore from '../modelToEditStore';
 import snackActions from '../../Snackbar/snack.actions';
+import { isAttribute } from '../formHelpers';
 
 const actions = Action.createActionsFromNames(['saveOption', 'setActiveModel', 'closeOptionDialog', 'getOptionsFor', 'deleteOption', 'updateModel'], 'optionSet');
 
@@ -47,7 +49,14 @@ function processResponse(options) {
 
 actions.updateModel.subscribe(({ data: [modelToEdit, field, value] }) => {
     const model = modelToEdit;
-    model[field] = value;
+
+    if (isAttribute(model, { name: field })) {
+        modelToEdit.attributes[field] = value;
+        log.debug(`Value for custom attribute '${field}' is now: ${modelToEdit.attributes[field]}`);
+    } else {
+        model[field] = value;
+        log.debug(`Value for '${field}' is now: ${modelToEdit[field]}`);
+    }
 
     optionDialogStore.setState({
         ...optionDialogStore.state,
@@ -85,7 +94,13 @@ actions.saveOption
                 return true;
             })
             .then(complete)
-            .catch(error);
+            .catch(response => {
+                if (response.response && response.response.errorReports && response.response.errorReports.length && response.response.errorReports[0].message) {
+                    return error({ message: response.response.errorReports[0].message, translate: false });
+                }
+
+                return error({ message: 'option_failed_to_save', translate: true });
+            });
     });
 
 actions.getOptionsFor.subscribe(async ({ data: model, complete }) => {
@@ -133,7 +148,7 @@ export async function loadOptionsForOptionSet(optionSetId, paging) {
 
     return d2.models.option
         .filter().on('optionSet.id').equals(optionSetId)
-        .list({ fields: ':all,href', paging });
+        .list({ fields: ':all,attributeValues[:owner,attribute[id,name]', paging });
 }
 
 export default actions;

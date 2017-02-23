@@ -15,7 +15,7 @@ import CancelButton from '../CancelButton.component';
 import modelToEditStore from '../modelToEditStore';
 import OptionSorter from './OptionSorter.component';
 import { typeToFieldMap, getFieldUIComponent, getValidatorsFromModelValidation } from '../../forms/fields';
-import { createFieldConfigForModelTypes } from '../EditModelForm.component';
+import { createFieldConfigForModelTypes, getAttributeFieldConfigs, isAttribute } from '../formHelpers';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import { calculatePageValue } from '../../List/helpers/pagination'; // TODO: Move this out to some other file.
 import actions from './actions';
@@ -60,7 +60,8 @@ const optionForm$ = Observable.combineLatest(
                 }
                 // For the code field we replace the fieldConfig with a config that matches the type of the optionSet
                 return fieldConfig;
-            });
+            })
+            .concat(getAttributeFieldConfigs(d2, modelToEdit));
     });
 
 const optionFormData$ = Observable.combineLatest(
@@ -77,9 +78,13 @@ const optionFormData$ = Observable.combineLatest(
 
         return Promise.resolve({
             fieldConfigs: fieldConfigs.map((fieldConfig) => {
-                fieldConfig.value = model[fieldConfig.name];
+                if (isAttribute(model, fieldConfig)) {
+                    fieldConfig.value = model.attributes[fieldConfig.name];
+                } else {
+                    fieldConfig.value = model[fieldConfig.name];
+                }
 
-                if (fieldConfig.name === 'code' && model.id) {
+                if (fieldConfig.name === 'code' && !isAdd) {
                     fieldConfig.props.disabled = true;
                 } else {
                     fieldConfig.props.disabled = false;
@@ -111,7 +116,8 @@ class AddOptionDialog extends Component {
     render() {
         return (
             <Dialog
-                open={this.props.isDialogOpen}
+                open={this.props.isDialogOpen || false}
+                modal
                 onRequestClose={this.props.onRequestClose}
                 autoScrollBodyContent
             >
@@ -150,8 +156,8 @@ class AddOptionDialog extends Component {
                     // After the save was successful we request the options from the server to get the updated list
                     actions.getOptionsFor(this.props.parentModel);
                 },
-                (e) => {
-                    snackActions.show({message: 'option_failed_to_save', action: 'ok', translate: true});
+                ({ message, translate }) => {
+                    snackActions.show({message, action: 'ok', translate});
                     this.setState({
                         isSaving: false,
                     });
