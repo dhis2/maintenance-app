@@ -140,7 +140,7 @@ contextActions.compulsoryDataElements
         const getModelItem = () => d2.models[model.modelDefinition.name].get(model.id, {
             fields: [
                 ':all',
-                'id,dataSetElements[id,dataElement[id]]',
+                'id,dataSetElements[id,dataElement[id],categoryCombo[id]]',
                 'compulsoryDataElementOperands[id,dataElement[id],categoryOptionCombo[id]]'
             ].join(','),
         });
@@ -166,7 +166,6 @@ contextActions.compulsoryDataElements
         const [modelItem, dataElementOperands] = await Promise.all([getModelItem(), getDataElementOperands()]);
 
         const dataSetDataElementIds = modelItem.dataSetElements
-            .toArray()
             .map(dataSetElement => dataSetElement.dataElement.id);
 
         const dataElementOperandsForDataSet = dataElementOperands
