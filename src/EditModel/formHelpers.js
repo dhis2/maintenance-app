@@ -113,3 +113,10 @@ export function getAttributeFieldConfigs(d2, modelToEdit) {
             return attributeFieldConfig;
         });
 }
+
+export function isAttribute(model, fieldConfig) {
+    if (model.attributes && new Set(Object.keys(model.attributes)).has(fieldConfig.name)) {
+        return true;
+    }
+    return false;
+}
