@@ -51,6 +51,14 @@ function createUniqueValidator(fieldConfig, modelDefinition, uid) {
     };
 }
 
+function getLabelText(labelText, fieldConfig = {}) {
+    // Add required indicator when the field is required
+    if (fieldConfig.props && fieldConfig.props.isRequired) {
+        return `${labelText} (*)`;
+    }
+    return labelText;
+}
+
 // TODO: Move this outside of this function as it is used with more than just this component
 export async function createFieldConfigForModelTypes(modelType) {
     const d2 = await getInstance();
@@ -73,13 +81,8 @@ export async function createFieldConfigForModelTypes(modelType) {
                     }));
             }
 
-            // Get translation for the field label
-            fieldConfig.props.labelText = d2.i18n.getTranslation(fieldConfig.props.labelText);
-
-            // Add required indicator when the field is required
-            if (fieldConfig.props.isRequired) {
-                fieldConfig.props.labelText = `${fieldConfig.props.labelText} (*)`;
-            }
+            // Get the field's label with required indicator if the field is required
+            fieldConfig.props.labelText = getLabelText(d2.i18n.getTranslation(fieldConfig.props.labelText), fieldConfig);
 
             return fieldConfig;
         });
@@ -125,6 +128,9 @@ function getAttributeFieldConfigs(modelToEdit) {
         })
         .map(attributeFieldConfig => {
             attributeFieldConfig.value = modelToEdit.attributes[attributeFieldConfig.name];
+
+            attributeFieldConfig.props.labelText = getLabelText(attributeFieldConfig.props.labelText, attributeFieldConfig);
+
             return attributeFieldConfig;
         });
 }
