@@ -15,7 +15,7 @@ import CancelButton from '../CancelButton.component';
 import modelToEditStore from '../modelToEditStore';
 import OptionSorter from './OptionSorter.component';
 import { typeToFieldMap, getFieldUIComponent, getValidatorsFromModelValidation } from '../../forms/fields';
-import { createFieldConfigForModelTypes } from '../EditModelForm.component';
+import { createFieldConfigForModelTypes } from '../formHelpers';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import { calculatePageValue } from '../../List/helpers/pagination'; // TODO: Move this out to some other file.
 import actions from './actions';
