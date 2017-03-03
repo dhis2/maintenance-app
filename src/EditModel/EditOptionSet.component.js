@@ -42,7 +42,11 @@ class EditOptionSet extends Component {
         };
         const activeTab = props.params.activeView ? props.params.activeView : '';
         const isAddOperation = params.modelId === 'add';
-        const onTabChanged = (tabsValue, event) => {
+        const onTabChanged = (tabsValue) => {
+            // The following check prevents propagated change events to change the tabs. (https://jira.dhis2.org/browse/DHIS2-1059)
+            // TODO: This has been fixed in material-ui 0.16. So this can be removed when upgraded. (https://github.com/callemall/material-ui/issues/2189)
+            if (typeof tabsValue !== 'string') { return; };
+
             this.setState({
                 tabsValue,
             });
