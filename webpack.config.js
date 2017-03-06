@@ -6,10 +6,12 @@ const colors = require('colors');
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isDevBuild = process.argv[1].indexOf('webpack-dev-server') !== -1;
+const isProfileBuild = process.argv[1].indexOf('--profile') !== -1;
 const dhisConfigPath = process.env.DHIS2_HOME && `${process.env.DHIS2_HOME}/config`;
 
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 var dhisConfig;
 
@@ -39,7 +41,7 @@ const webpackConfig = {
     performance: { hints: false },
     entry: {
         maintenance: './src/maintenance.js',
-        commons: ['material-ui'],
+        commons: ['material-ui', 'd2-utilizr'],
     },
     devtool: 'source-map',
     output: {
@@ -85,6 +87,8 @@ const webpackConfig = {
         /^react-addons/,
         /^react-dom$/,
         /^rx$/,
+        /^lodash$/,
+        /^lodash\/fp$/,
     ],
 
     plugins: [
@@ -104,7 +108,7 @@ const webpackConfig = {
             template: './index.ejs',
             vendorScripts: [
                 `${scriptPrefix}/dhis-web-core-resource/babel-polyfill/6.20.0/dist/polyfill${isDevBuild ? '' : '.min'}.js`,
-                `${scriptPrefix}/dhis-web-core-resource/react/15.3.2/react-with-touch-tap-plugin${isDevBuild ? '' : '.min'}.js`,
+                `${scriptPrefix}/dhis-web-core-resource/react/15.4.2/react-with-touch-tap-plugin${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/rxjs/4.1.0/rx.lite${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/lodash/4.15.0/lodash${isDevBuild ? '' : '.min'}.js`,
                 `${scriptPrefix}/dhis-web-core-resource/lodash-functional/1.0.1/lodash-functional.js`,
@@ -127,7 +131,8 @@ const webpackConfig = {
             },
             sourceMap: true,
         }),
-        isDevBuild ? undefined : new Visualizer,
+        isProfileBuild ? new BundleAnalyzerPlugin() : undefined,
+        isProfileBuild ? new Visualizer : undefined,
     ].filter(v => v),
 
     devServer: {

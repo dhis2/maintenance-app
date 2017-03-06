@@ -1,6 +1,6 @@
 import React from 'react';
 import { getInstance } from 'd2/lib/d2';
-import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
+import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
 import DropDown from '../../forms/form-fields/drop-down';
 import store from './dataElementGroupsStore';
@@ -8,7 +8,7 @@ import store from './dataElementGroupsStore';
 function getLoadingdataElement() {
     return (
         <div style={{ textAlign: 'center' }}>
-            <CircularProgress mode="indeterminate" />
+            <CircularProgress />
         </div>
     );
 }
