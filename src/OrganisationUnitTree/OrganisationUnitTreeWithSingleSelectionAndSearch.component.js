@@ -34,6 +34,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                     onSelectClick={props.onSelectClick}
                     idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
                     hideCheckboxes
+                    hideMemberCount={props.hideMemberCount}
                 />
             )) : <div style={styles.noHitsLabel}>{props.noHitsLabel}</div>}
         </div>
@@ -53,6 +54,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.propTypes = {
     initiallyExpanded: React.PropTypes.array,
     onSelectClick: React.PropTypes.func,
     noHitsLabel: React.PropTypes.string.isRequired,
+    hideMemberCount: React.PropTypes.bool,
 };
 OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onOrgUnitSearch: noop,
@@ -66,6 +68,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     autoCompleteDataSource: [],
     idsThatShouldBeReloaded: [],
     onClick: noop,
+    hideMemberCount: false,
 };
 
 export default addD2Context(OrganisationUnitTreeWithSingleSelectionAndSearch);
