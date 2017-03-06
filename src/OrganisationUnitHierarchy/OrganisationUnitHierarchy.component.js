@@ -375,7 +375,7 @@ function OrganisationUnitHierarchy(props, context) {
                         roots={props.leftRoots}
                         initiallyExpanded={props.initiallyExpanded}
                         selected={props.selectedLeft.map(model => model.path)}
-                        onClick={onClickLeft}
+                        onSelectClick={onClickLeft}
                         onUpdateInput={value => leftTreeSearch(value)}
                         idsThatShouldBeReloaded={props.reload}
                         noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
@@ -386,10 +386,12 @@ function OrganisationUnitHierarchy(props, context) {
                         roots={props.rightRoots}
                         selected={props.selectedRight.map(model => model.path)}
                         initiallyExpanded={props.initiallyExpanded}
-                        onClick={onClickRight}
+                        onSelectClick={onClickRight}
                         onUpdateInput={value => rightTreeSearch(value)}
                         idsThatShouldBeReloaded={props.reload}
                         noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
+                        hideCheckboxes
+                        hideMemberCount
                     />
                 </Paper>
             </div>
