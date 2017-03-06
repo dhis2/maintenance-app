@@ -33,7 +33,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                     labelStyle={styles.labelStyle}
                     onSelectClick={props.onSelectClick}
                     idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
-                    hideCheckboxes
+                    hideCheckboxes={props.hideCheckboxes}
                     hideMemberCount={props.hideMemberCount}
                 />
             )) : <div style={styles.noHitsLabel}>{props.noHitsLabel}</div>}
@@ -69,6 +69,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     idsThatShouldBeReloaded: [],
     onClick: noop,
     hideMemberCount: false,
+    hideCheckboxes: false,
 };
 
 export default addD2Context(OrganisationUnitTreeWithSingleSelectionAndSearch);
