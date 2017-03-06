@@ -68,6 +68,7 @@ class SideBarContainer extends React.Component {
                             idsThatShouldBeReloaded={orgUnitSearchHits || this.state.organisationUnitsToReload}
                             noHitsLabel={this.context.d2.i18n.getTranslation('no_matching_organisation_units')}
                             hideMemberCount={true}
+                            hideCheckboxes={true}
                         />
                     </div>
                 );
