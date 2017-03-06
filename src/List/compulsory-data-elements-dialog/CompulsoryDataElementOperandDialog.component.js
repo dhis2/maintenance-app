@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog/Dialog';
-import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import TextField from 'material-ui/TextField/TextField';
@@ -9,7 +8,6 @@ import Heading from 'd2-ui/lib/headings/Heading.component';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Store from 'd2-ui/lib/store/Store';
 import snackActions from '../../Snackbar/snack.actions';
-import { updateAPIUrlWithBaseUrlVersionNumber } from 'd2/lib/lib/utils';
 
 const styles = {
     groupEditorWrap: {
