@@ -1,3 +1,4 @@
+import attribute from './attribute';
 import dataElement from './dataElement';
 import indicator from './indicator';
 import dataSet from './dataSet';
@@ -13,6 +14,7 @@ import validationRule from './validationRule';
 import validationNotificationTemplate from './validationNotificationTemplate';
 
 const overridesByType = {
+    attribute,
     dataElement,
     indicator,
     dataSet,
