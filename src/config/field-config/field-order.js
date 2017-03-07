@@ -178,6 +178,7 @@ const fieldOrderByName = new Map([
         'code',
         'valueType',
         'optionSet',
+        'sortOrder',
         'mandatory',
         'unique',
         'dataElementAttribute', // TODO: This currently serves as the override for all <type>Attribute fields
