@@ -55,6 +55,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.propTypes = {
     onSelectClick: React.PropTypes.func,
     noHitsLabel: React.PropTypes.string.isRequired,
     hideMemberCount: React.PropTypes.bool,
+    hideCheckboxes: React.PropTypes.bool,
 };
 OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onOrgUnitSearch: noop,
