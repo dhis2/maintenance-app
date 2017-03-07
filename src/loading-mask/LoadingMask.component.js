@@ -1,5 +1,5 @@
 import React from 'react';
-import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
+import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
 export default React.createClass({
     render() {
@@ -10,11 +10,9 @@ export default React.createClass({
         };
 
         return (
-            <CircularProgress
-                mode="indeterminate"
-                size={1.5}
-                style={loadingStatusMask}
-            />
+            <div style={loadingStatusMask}>
+                <CircularProgress />
+            </div>
         );
     },
 });

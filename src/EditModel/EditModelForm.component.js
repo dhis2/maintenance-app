@@ -15,7 +15,7 @@ import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
 import log from 'loglevel';
 import extraFields from './extraFields';
-import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
+import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import appState from '../App/appStateStore';
@@ -162,7 +162,7 @@ export default React.createClass({
 
         if (this.state.isLoading) {
             return (
-                <CircularProgress mode="indeterminate" />
+                <CircularProgress />
             );
         }
 

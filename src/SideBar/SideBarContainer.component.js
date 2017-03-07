@@ -67,6 +67,7 @@ class SideBarContainer extends React.Component {
                             onSelectClick={this._onChangeSelectedOrgUnit.bind(this)}
                             idsThatShouldBeReloaded={orgUnitSearchHits || this.state.organisationUnitsToReload}
                             noHitsLabel={this.context.d2.i18n.getTranslation('no_matching_organisation_units')}
+                            hideMemberCount={true}
                         />
                     </div>
                 );
@@ -90,7 +91,7 @@ class SideBarContainer extends React.Component {
         });
 
         this.setState({
-            initiallyExpanded: model.path ? model.path.split('/').filter(v => v).slice(0, -1) : [],
+            initiallyExpanded: model.path || [],
         });
     }
 
