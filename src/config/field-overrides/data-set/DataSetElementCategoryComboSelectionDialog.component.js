@@ -155,13 +155,13 @@ export function DataSetElementCategoryComboSelection(props) {
         <div>
             <IconButton
                 onClick={props.onRequestOpen}
-                tooltip={i18n.getTranslation('Override the data element category combination')}
+                tooltip={i18n.getTranslation('Override_the_data_element_category_combination')}
                 tooltipPosition="top-left"
             >
                 <BuildIcon />
             </IconButton>
             <Dialog
-                title={i18n.getTranslation('Override the data element category combination')}
+                title={i18n.getTranslation('Override_the_data_element_category_combination')}
                 open={props.open}
                 onRequestClose={props.onRequestClose}
                 actions={actions}
