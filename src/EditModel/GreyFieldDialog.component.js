@@ -313,7 +313,7 @@ class GreyFieldDialog extends React.Component {
         return this.state.currentCategoryCombo ?
             modelToEditStore.state.dataSetElements
                 .filter(dse => currentSectionDataElementIds.includes(dse.dataElement.id))
-                .filter(dse => dse.categoryCombo.id === this.state.currentCategoryCombo)
+                .filter(dse => (dse.categoryCombo ? dse.categoryCombo.id : dse.dataElement.categoryCombo.id) === this.state.currentCategoryCombo)
                 .map((dse, deNum) => {
                 const cocFields = getCocFields();
                 return (
@@ -341,7 +341,7 @@ class GreyFieldDialog extends React.Component {
             // Get unique cat combos for data elements in current section
             categoryCombosForSection = modelToEditStore.state.dataSetElements
                 .filter(dse => sectionDataElementIds.includes(dse.dataElement.id))
-                .map(dse => dse.categoryCombo)
+                .map(dse => dse.categoryCombo || dse.dataElement.categoryCombo)
                 .reduce((catCombos, catCombo) => {
                     if (!uniqueCatComboIds.includes(catCombo.id)) {
                         uniqueCatComboIds.push(catCombo.id);
