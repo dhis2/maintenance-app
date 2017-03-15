@@ -275,7 +275,7 @@ class GreyFieldDialog extends React.Component {
         return (
             <td key={fieldNum} style={styles.td}>
                 <Checkbox
-                    defaultChecked={!isGreyed}
+                    checked={!isGreyed}
                     label={isGreyed ? this.getTranslation('disabled') : this.getTranslation('enabled')}
                     labelPosition="right"
                     labelStyle={{ whiteSpace: 'nowrap' }}
