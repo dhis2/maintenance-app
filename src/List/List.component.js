@@ -388,8 +388,9 @@ const List = React.createClass({
                     <Pagination {...paginationProps} />
                 </div>
                 {this.state.sharing.model ? <SharingDialog
-                    objectToShare={this.state.sharing.model}
-                    open={this.state.sharing.open && this.state.sharing.model}
+                    id={this.state.sharing.model.id}
+                    type={this.props.params.modelType}
+                    open={this.state.sharing.open}
                     onRequestClose={this._closeSharingDialog}
                     bodyStyle={{ minHeight: '400px' }}
                 /> : null }

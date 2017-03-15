@@ -87,6 +87,12 @@ const webpackConfig = {
         /^rx$/,
     ],
 
+    resolve: {
+      alias: {
+          d2: __dirname+'/node_modules/d2',
+        },
+    },
+
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
             name: "commons",
