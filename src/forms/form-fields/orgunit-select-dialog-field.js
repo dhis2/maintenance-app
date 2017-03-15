@@ -18,16 +18,13 @@ class OrgUnitSelectDialog extends React.Component {
             dialogOpen: false,
             value: props.value,
             roots: [],
-            initiallyExpanded: [],
+            selected: [],
         };
 
         if (props.value) {
             context.d2.models.organisationUnits.get(props.value.id, { fields: 'id,displayName,path', }).then(orgUnit => {
                 this.setState({
-                    initiallyExpanded: orgUnit.path
-                        .split('/')
-                        .filter(ou => ou.trim().length > 0)
-                        .filter(ou => ou !== orgUnit.id),
+                    selected: [orgUnit.path],
                     parentName: orgUnit.displayName,
                 });
             });
@@ -49,8 +46,8 @@ class OrgUnitSelectDialog extends React.Component {
         this.disposables.forEach(disposable => disposable.dispose && disposable.dispose());
     }
 
-    handleSelectClick(e, orgUnit) {
-        this.setState({ value: orgUnit });
+    handleSelectClick(e, orgUnit) {console.warn('click', orgUnit.displayName, orgUnit.path);
+        this.setState({ value: orgUnit, selected: [orgUnit.path] });
     }
 
     save() {
@@ -58,10 +55,7 @@ class OrgUnitSelectDialog extends React.Component {
         this.setState({
             dialogOpen: false,
             parentName: this.state.value.displayName,
-            initiallyExpanded: this.state.value.path
-                .split('/')
-                .filter(ou => ou.trim().length > 0)
-                .filter(ou => ou !== this.state.value.id)
+            selected: [this.state.value.path],
         });
     }
 
@@ -110,10 +104,11 @@ class OrgUnitSelectDialog extends React.Component {
                     <div style={styles.dialogContent}>
                         <OrgUnitTree
                             roots={this.state.roots}
-                            selected={[this.state.value.id]}
-                            initiallyExpanded={this.state.initiallyExpanded}
+                            selected={this.state.selected}
+                            initiallyExpanded={this.state.selected}
                             onSelectClick={this.handleSelectClick}
                             hideCheckboxes
+                            hideMemberCount
                         />
                     </div>
                 </Dialog>

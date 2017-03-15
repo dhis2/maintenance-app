@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
+import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
 export default function RefreshMask({horizontal}, { d2 }) {
     const styles = {

@@ -5,6 +5,10 @@ import TextField from 'material-ui/TextField/TextField';
 import { config } from 'd2/lib/d2';
 import { currentSubSection$ } from '../App/appStateStore';
 
+const unsearchableSections = [
+    'organisationUnit',
+];
+
 const SearchBox = React.createClass({
     propTypes: {
         searchObserverHandler: React.PropTypes.func.isRequired,
@@ -14,6 +18,7 @@ const SearchBox = React.createClass({
 
     getInitialState() {
         return {
+            showSearchField: false,
             value: ''
         };
     },
@@ -31,7 +36,10 @@ const SearchBox = React.createClass({
         this.props.searchObserverHandler(searchObserver);
 
         this.disposable = currentSubSection$
-            .subscribe((appState) => this.setState({ value: '' }));
+            .subscribe(currentSection => this.setState({
+                value: '',
+                showSearchField: !unsearchableSections.includes(currentSection),
+            }));
     },
 
     componentWillUnmount() {
@@ -39,7 +47,7 @@ const SearchBox = React.createClass({
     },
 
     render() {
-        return (
+        return this.state.showSearchField ? (
             <div className="search-list-items">
                 <TextField
                     className="list-search-field"
@@ -50,7 +58,7 @@ const SearchBox = React.createClass({
                     hintText={`${this.getTranslation('search_by_name')}`}
                 />
             </div>
-        );
+        ) : null;
     },
 
     _onKeyUp(event) {
