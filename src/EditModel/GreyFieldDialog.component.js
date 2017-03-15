@@ -252,9 +252,13 @@ class GreyFieldDialog extends React.Component {
             this.setState(state => {
                 const greyedCocs = (state.greyedFields[dataElementId] || []).slice();
                 if (disable) {
-                    greyedCocs.splice(greyedCocs.indexOf(categoryOptionComboId), 1);
+                    if (greyedCocs.includes(categoryOptionComboId)) {
+                        greyedCocs.splice(greyedCocs.indexOf(categoryOptionComboId), 1);
+                    } else { console.info('boops1'); }
                 } else {
-                    greyedCocs.push(categoryOptionComboId);
+                    if (!greyedCocs.includes(categoryOptionComboId)) {
+                        greyedCocs.push(categoryOptionComboId);
+                    } else { console.info('boops2'); }
                 }
 
                 const greyedFields = Object.keys(state.greyedFields)
@@ -275,7 +279,7 @@ class GreyFieldDialog extends React.Component {
         return (
             <td key={fieldNum} style={styles.td}>
                 <Checkbox
-                    defaultChecked={!isGreyed}
+                    checked={!isGreyed}
                     label={isGreyed ? this.getTranslation('disabled') : this.getTranslation('enabled')}
                     labelPosition="right"
                     labelStyle={{ whiteSpace: 'nowrap' }}
