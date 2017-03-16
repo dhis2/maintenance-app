@@ -110,6 +110,16 @@ function loadOptionSetObject({params}, replace, callback) {
     }, replace, callback);
 }
 
+function loadEventProgramObject({ params }, replace, callback) {
+    loadObject({
+        params: {
+            modelType: 'program',
+            groupName: params.groupName,
+            modelId: params.modelId,
+        }
+    }, replace, callback);
+}
+
 function loadList({params}, replace, callback) {
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the appState
@@ -213,6 +223,11 @@ const routes = (
                     <IndexRoute />
                     <Route path=":activeView"/>
                 </Route>
+                <Route
+                    path="program/:modelId"
+                    component={delayRender(() => System.import('./EditModel/EditEventProgram.component'))}
+                    onEnter={loadEventProgramObject}
+                />
                 <Route
                     path=":modelType/:modelId/sections"
                     component={delayRender(() => System.import('./EditModel/EditDataSetSections.component'))}

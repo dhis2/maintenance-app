@@ -47,6 +47,7 @@ export function getSideBarConfig() {
 
             programSection: {
                 items: [
+                    'program',
                     'trackedEntityAttribute',
                     'trackedEntityAttributeGroup',
                     'relationshipType',
