@@ -1,5 +1,5 @@
 import React from 'react';
-import Rx from 'rx';
+import Rx from 'rxjs';
 import log from 'loglevel';
 
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
@@ -152,7 +152,7 @@ class EditDataEntryForm extends React.Component {
             this.filterAction = Action.create('filter');
             this.filterAction
                 .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
-                .debounce(75)
+                .debounceTime(75)
                 .subscribe(args => {
                     const filter = args.data
                         .split(' ')
@@ -192,7 +192,7 @@ class EditDataEntryForm extends React.Component {
                 Rx.Observable.fromEventPattern((x) => {
                     this._editor.on('change', x);
                 })
-                    .debounce(250)
+                    .debounceTime(250)
                     .subscribe(() => {
                         this.processFormData.call(this, this._editor.getData());
                     });

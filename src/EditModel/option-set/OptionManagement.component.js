@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import { getInstance } from 'd2/lib/d2';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
@@ -26,7 +26,7 @@ import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 const optionList$ = Observable.combineLatest(
     optionsForOptionSetStore,
-    Observable.just(['name', 'code']),
+    Observable.of(['name', 'code']),
     ({options, pager, ...other}, columns) => ({
         ...other,
         rows: options,
@@ -192,8 +192,8 @@ class OptionManagement extends Component {
     }
 
     componentWillUnmount() {
-        if (this.disposable && this.disposable.dispose) {
-            this.disposable.dispose();
+        if (this.disposable && this.disposable.unsubscribe) {
+            this.disposable.unsubscribe();
         }
     }
 

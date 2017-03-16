@@ -46,7 +46,7 @@ export default class OrganisationUnitList extends React.Component {
     }
 
     componentWillUnmount() {
-        this.disposable && this.disposable.dispose && this.disposable.dispose();
+        this.disposable && this.disposable.unsubscribe && this.disposable.unsubscribe();
     }
 
     render() {

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
-import { Observable, BehaviorSubject } from 'rx';
+import { Observable, BehaviorSubject } from 'rxjs';
 import componentFromStream from 'recompose/componentFromStream';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';

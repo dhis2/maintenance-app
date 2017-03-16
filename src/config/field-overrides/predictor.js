@@ -3,7 +3,7 @@ import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
 import Store from 'd2-ui/lib/store/Store';
 import Action from 'd2-ui/lib/action/Action';
 import { getInstance } from 'd2/lib/d2';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -14,7 +14,7 @@ const expressionStatusStore = Store.create();
 
 const expressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
 expressionStatusActions.requestExpressionStatus
-    .throttle(500)
+    .debounceTime(500)
     .map(action => {
         const encodedFormula = encodeURIComponent(action.data);
         const url = `expressions/description?expression=${encodedFormula}`;

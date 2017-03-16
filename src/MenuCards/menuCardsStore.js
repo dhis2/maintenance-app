@@ -1,6 +1,6 @@
 import appStateStore from '../App/appStateStore';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
 import { goToRoute } from '../router-utils';
 

@@ -1,4 +1,4 @@
-import { Subject } from 'rx';
+import { Subject } from 'rxjs';
 import log from 'loglevel';
 
 const ObservedEvents = {
@@ -28,7 +28,7 @@ const ObservedEvents = {
             }
 
             return (event) => {
-                subject.onNext(event);
+                subject.next(event);
             };
         };
     }()),
