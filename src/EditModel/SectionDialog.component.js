@@ -118,11 +118,14 @@ class SectionDialog extends React.Component {
         if (modelToEditStore.state.dataSetElements) {
             dataElementStore.setState(
                 modelToEditStore.state.dataSetElements
-                    .filter(dse =>
-                        dse.categoryCombo
-                            ? dse.categoryCombo.id === categoryComboId
-                            : dse.dataElement.categoryCombo.id === categoryComboId
-                    )
+                    .filter(dse => {
+                        if (categoryComboId) {
+                            return dse.categoryCombo
+                                ? dse.categoryCombo.id === categoryComboId
+                                : dse.dataElement.categoryCombo.id === categoryComboId;
+                        }
+                        return true;
+                    })
                     .filter(dse => this.state.filterDataElementIds
                         ? !this.state.filterDataElementIds.includes(dse.dataElement.id)
                         : true
@@ -226,8 +229,8 @@ class SectionDialog extends React.Component {
         return (
             <div style={{ minWidth: 605 }}>
                 <DropDown
-                    options={this.props.categoryCombos}
-                    labelText={this.getTranslation('category_combo')}
+                    options={[{ value: false, text: this.getTranslation('show_all') }].concat(this.props.categoryCombos)}
+                    labelText={this.getTranslation('category_combo_filter')}
                     onChange={this.handleCategoryComboChange}
                     value={this.state.categoryCombo}
                     isRequired
