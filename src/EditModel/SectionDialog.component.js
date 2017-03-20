@@ -229,7 +229,7 @@ class SectionDialog extends React.Component {
         return (
             <div style={{ minWidth: 605 }}>
                 <DropDown
-                    options={[{ value: false, text: this.getTranslation('show_all') }].concat(this.props.categoryCombos)}
+                    options={[{ value: false, text: this.getTranslation('no_filter') }].concat(this.props.categoryCombos)}
                     labelText={this.getTranslation('category_combo_filter')}
                     onChange={this.handleCategoryComboChange}
                     value={this.state.categoryCombo}
