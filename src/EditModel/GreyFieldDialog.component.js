@@ -219,7 +219,7 @@ class GreyFieldDialog extends React.Component {
                                         <th key={`${optNum}.${rep}`}
                                             colSpan={colSpan}
                                             style={styles.th}
-                                        >{opt.displayName}</th>
+                                        >{opt.displayName === 'default' ? '' : opt.displayName}</th>
                                     );
                                 });
                             })
@@ -252,9 +252,13 @@ class GreyFieldDialog extends React.Component {
             this.setState(state => {
                 const greyedCocs = (state.greyedFields[dataElementId] || []).slice();
                 if (disable) {
-                    greyedCocs.splice(greyedCocs.indexOf(categoryOptionComboId), 1);
+                    if (greyedCocs.includes(categoryOptionComboId)) {
+                        greyedCocs.splice(greyedCocs.indexOf(categoryOptionComboId), 1);
+                    }
                 } else {
-                    greyedCocs.push(categoryOptionComboId);
+                    if (!greyedCocs.includes(categoryOptionComboId)) {
+                        greyedCocs.push(categoryOptionComboId);
+                    }
                 }
 
                 const greyedFields = Object.keys(state.greyedFields)
@@ -275,7 +279,7 @@ class GreyFieldDialog extends React.Component {
         return (
             <td key={fieldNum} style={styles.td}>
                 <Checkbox
-                    defaultChecked={!isGreyed}
+                    checked={!isGreyed}
                     label={isGreyed ? this.getTranslation('disabled') : this.getTranslation('enabled')}
                     labelPosition="right"
                     labelStyle={{ whiteSpace: 'nowrap' }}
@@ -313,16 +317,17 @@ class GreyFieldDialog extends React.Component {
         return this.state.currentCategoryCombo ?
             modelToEditStore.state.dataSetElements
                 .filter(dse => currentSectionDataElementIds.includes(dse.dataElement.id))
-                .filter(dse => dse.categoryCombo.id === this.state.currentCategoryCombo)
+                .filter(dse => (dse.categoryCombo ? dse.categoryCombo.id : dse.dataElement.categoryCombo.id) === this.state.currentCategoryCombo)
+                .sort((a, b) => currentSectionDataElementIds.indexOf(a.dataElement.id) - currentSectionDataElementIds.indexOf(b.dataElement.id))
                 .map((dse, deNum) => {
-                const cocFields = getCocFields();
-                return (
-                    <tr key={deNum} style={{ background: deNum % 2 === 0 ? 'none' : '#f0f0f0' }}>
-                        <td style={styles.tdDataElement}>{dse.dataElement.displayName}</td>
-                        {cocFields.map((fields, fieldNum) => this.renderCheckbox(dse.dataElement, fields, fieldNum))}
-                    </tr>
-                );
-            }) : null;
+                    const cocFields = getCocFields();
+                    return (
+                        <tr key={deNum} style={{ background: deNum % 2 === 0 ? 'none' : '#f0f0f0' }}>
+                            <td style={styles.tdDataElement}>{dse.dataElement.displayName}</td>
+                            {cocFields.map((fields, fieldNum) => this.renderCheckbox(dse.dataElement, fields, fieldNum))}
+                        </tr>
+                    );
+                }) : null;
     }
 
     render() {
@@ -341,14 +346,15 @@ class GreyFieldDialog extends React.Component {
             // Get unique cat combos for data elements in current section
             categoryCombosForSection = modelToEditStore.state.dataSetElements
                 .filter(dse => sectionDataElementIds.includes(dse.dataElement.id))
-                .map(dse => dse.categoryCombo)
+                .map(dse => dse.categoryCombo || dse.dataElement.categoryCombo)
                 .reduce((catCombos, catCombo) => {
                     if (!uniqueCatComboIds.includes(catCombo.id)) {
                         uniqueCatComboIds.push(catCombo.id);
                         catCombos.push(catCombo);
                     }
                     return catCombos;
-                }, []);
+                }, [])
+                .sort((a, b) => a.displayName.localeCompare(b.displayName));
         }
 
         return (

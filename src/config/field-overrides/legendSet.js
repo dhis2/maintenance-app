@@ -78,7 +78,7 @@ export default new Map([
         component: LegendsField,
         validators: [
             {
-                message: 'Overlapping legends not allowed!',
+                message: 'overlapping_legends_not_allowed',
                 validator(value) {
                     return Array.from(value.values()).every((legend, index, legends) => {
                         const nextLegend = legends[index + 1];
@@ -92,7 +92,7 @@ export default new Map([
                 },
             },
             {
-                message: 'Gaps in the legends are not allowed!',
+                message: 'Gaps_in_the_legends_are_not_allowed',
                 validator(value) {
                     return Array.from(value.values()).every((legend, index, legends) => {
                         const nextLegend = legends[index + 1];
