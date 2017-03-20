@@ -3,7 +3,7 @@ import optionSorter from './optionSorter';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from '../modelToEditStore';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import snackActions from '../../Snackbar/snack.actions';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import { optionsForOptionSetStore } from './stores.js';

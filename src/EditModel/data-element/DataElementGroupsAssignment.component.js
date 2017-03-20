@@ -50,8 +50,8 @@ export default React.createClass({
     },
 
     componentWillUnmount() {
-        if (this.disposable && this.disposable.dispose) {
-            this.disposable.dispose();
+        if (this.disposable && this.disposable.unsubscribe) {
+            this.disposable.unsubscribe();
         }
     },
 

@@ -12,7 +12,7 @@ import '../scss/maintenance.scss';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './translationRegistration';
 import appTheme from './App/app.theme';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import setObservableConfig from 'recompose/setObservableConfig';
 import $$observable from 'symbol-observable';
 import systemSettingsStore from './App/systemSettingsStore';
@@ -20,7 +20,7 @@ import systemSettingsStore from './App/systemSettingsStore';
 const recomposeConfig = {
     fromESObservable: observable => Observable.create(observer => {
         const { unsubscribe } = observable.subscribe({
-            next: val => observer.onNext(val),
+            next: val => observer.next(val),
             error: error => observer.onError(error),
             complete: () => observer.onCompleted()
         });
@@ -33,7 +33,7 @@ const recomposeConfig = {
                 error => observer.error(error),
                 () => (observer.complete && observer.complete())
             );
-            return { unsubscribe: () => subscription.dispose() }
+            return { unsubscribe: () => subscription.unsubscribe() }
         },
         [$$observable]() {
             return this

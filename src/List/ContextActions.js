@@ -1,4 +1,4 @@
-import { Subject } from 'rx';
+import { Subject } from 'rxjs';
 import log from 'loglevel';
 
 import { config, getInstance as getD2 } from 'd2/lib/d2';
@@ -88,7 +88,7 @@ contextActions.delete
                             });
 
                             // Fire the afterDeleteHook
-                            afterDeleteHook$.onNext({
+                            afterDeleteHook$.next({
                                 model,
                                 modelType: model.modelDefinition.name,
                             });

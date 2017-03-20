@@ -1,7 +1,7 @@
 import Action from 'd2-ui/lib/action/Action';
 import { setAppState, default as appState } from '../App/appStateStore';
 import { goToRoute } from '../router-utils';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import searchForOrganisationUnitsWithinHierarchy from '../OrganisationUnitHierarchy/searchForOrganisationUnitsWithinHierarchy';
 
 export const onSectionChanged = Action.create('onSectionChanged', 'SideBar');
@@ -42,7 +42,7 @@ onBackToSections
 export const onOrgUnitSearch = Action.create('onOrgUnitSearch', 'SideBar');
 onOrgUnitSearch
     .distinctUntilChanged()
-    .debounce(400)
+    .debounceTime(400)
     .map(({ complete, error, data }) => Observable.fromPromise(searchForOrganisationUnitsWithinHierarchy(data))
         .map(organisationUnits => ({
             complete,

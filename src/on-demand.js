@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import log from 'loglevel';
 
 class LoadOnDemand extends Component {
@@ -22,8 +22,8 @@ class LoadOnDemand extends Component {
     }
 
     componentWillUnmount() {
-        if (this.subscription && this.subscription.dispose) {
-            this.subscription.dispose();
+        if (this.subscription && this.subscription.unsubscribe) {
+            this.subscription.unsubscribe();
         }
     }
 

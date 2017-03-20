@@ -24,7 +24,7 @@ const SearchBox = React.createClass({
 
     componentDidMount() {
         const searchObserver = this.events.searchBox
-            .debounce(400)
+            .debounceTime(400)
             .map(event => event && event.target && event.target.value ? event.target.value : '')
             .distinctUntilChanged();
 
@@ -35,7 +35,7 @@ const SearchBox = React.createClass({
     },
 
     componentWillUnmount() {
-        this.disposable && this.disposable.dispose && this.disposable.dispose();
+        this.disposable && this.disposable.unsubscribe && this.disposable.unsubscribe();
     },
 
     render() {

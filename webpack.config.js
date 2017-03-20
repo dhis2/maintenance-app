@@ -137,7 +137,7 @@ const webpackConfig = {
 
     resolve: {
         alias: {
-            d2: __dirname+'/node_modules/d2',
+            d2: __dirname + '/node_modules/d2',
         },
     },
 

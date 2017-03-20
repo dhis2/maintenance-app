@@ -10,7 +10,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import OptionValue from './OptionValue.component';
 import { sortDialogStore, optionsForOptionSetStore } from '../stores';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import snackActions from '../../../Snackbar/snack.actions';
 
 export function setSortDialogOpenTo(status) {

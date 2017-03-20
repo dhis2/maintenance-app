@@ -27,7 +27,7 @@ import PredictorDialog from './predictor-dialog/PredictorDialog.component';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import fieldOrder from '../config/field-config/field-order';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import { calculatePageValue } from './helpers/pagination';
 import HelpLink from './HelpLink.component';
 
@@ -72,13 +72,13 @@ class DetailsBoxWithScroll extends Component {
     componentDidMount() {
         this.disposable = Observable
             .fromEvent(global, 'scroll')
-            .debounce(200)
+            .debounceTime(200)
             .map(() => document.querySelector('body').scrollTop)
             .subscribe(() => this.forceUpdate());
     }
 
     componentWillUnmount() {
-        this.disposable && this.disposable.dispose();
+        this.disposable && this.disposable.unsubscribe();
     }
 
     render() {

@@ -19,7 +19,7 @@ import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import appState from '../App/appStateStore';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttributeFieldConfigs } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
 
@@ -135,7 +135,7 @@ export default React.createClass({
     },
 
     componentWillUnmount() {
-        this.disposable && this.disposable.dispose();
+        this.disposable && this.disposable.unsubscribe();
     },
 
     renderSharingNotification() {

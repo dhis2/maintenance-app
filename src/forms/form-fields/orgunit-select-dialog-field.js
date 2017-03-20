@@ -43,7 +43,7 @@ class OrgUnitSelectDialog extends React.Component {
     }
 
     componentWillUnmount() {
-        this.disposables.forEach(disposable => disposable.dispose && disposable.dispose());
+        this.disposables.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
     handleSelectClick(e, orgUnit) {console.warn('click', orgUnit.displayName, orgUnit.path);

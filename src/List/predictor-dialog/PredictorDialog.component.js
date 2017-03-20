@@ -31,7 +31,7 @@ class PredictorDialog extends React.Component {
     }
 
     componentWillUnmount() {
-        this.disposables.forEach(disposable => disposable.dispose && disposable.dispose());
+        this.disposables.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
     requestClose() {

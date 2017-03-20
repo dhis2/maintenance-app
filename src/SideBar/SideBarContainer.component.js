@@ -25,11 +25,11 @@ class SideBarContainer extends React.Component {
 
     componentWillUnmount() {
         if (this.disposable && this.disposable) {
-            this.disposable.dispose();
+            this.disposable.unsubscribe();
         }
 
-        if (this.organisationUnitSaved && this.organisationUnitSaved.dispose) {
-            this.organisationUnitSaved.dispose();
+        if (this.organisationUnitSaved && this.organisationUnitSaved.unsubscribe) {
+            this.organisationUnitSaved.unsubscribe();
         }
     }
 

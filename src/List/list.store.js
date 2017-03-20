@@ -1,5 +1,5 @@
 import { getInstance as getD2 } from 'd2/lib/d2';
-import { Subject, Observable } from 'rx';
+import { Subject, Observable } from 'rxjs';
 import Store from 'd2-ui/lib/store/Store';
 import appState from '../App/appStateStore';
 
@@ -33,10 +33,10 @@ export default Store.create({
     },
 
     getNextPage() {
-        this.listSourceSubject.onNext(Observable.fromPromise(this.state.pager.getNextPage()));
+        this.listSourceSubject.next(Observable.fromPromise(this.state.pager.getNextPage()));
     },
 
     getPreviousPage() {
-        this.listSourceSubject.onNext(Observable.fromPromise(this.state.pager.getPreviousPage()));
+        this.listSourceSubject.next(Observable.fromPromise(this.state.pager.getPreviousPage()));
     },
 }).initialise();

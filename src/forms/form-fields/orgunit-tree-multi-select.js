@@ -5,7 +5,7 @@ import OrgUnitSelectByGroup from 'd2-ui/lib/org-unit-select/OrgUnitSelectByGroup
 import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.component';
 import TextField from 'material-ui/TextField/TextField';
 import Action from 'd2-ui/lib/action/Action';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import { config } from 'd2/lib/d2';
 
 export default class OrganisationUnitTreeMultiSelect extends React.Component {
@@ -71,10 +71,10 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             });
 
         this.disposable = this._searchOrganisationUnits.map(action => action.data)
-            .debounce(400)
+            .debounceTime(400)
             .map(searchValue => {
                 if (!searchValue.trim()) {
-                    return Observable.just(this.state.originalRoots);
+                    return Observable.of(this.state.originalRoots);
                 }
 
                 const organisationUnitRequest = this.context.d2.models.organisationUnits
@@ -91,7 +91,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
     }
 
     componentWillUnmount() {
-        this.disposable && this.disposable.dispose();
+        this.disposable && this.disposable.unsubscribe();
     }
 
     renderRoots() {
