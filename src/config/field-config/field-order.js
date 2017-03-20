@@ -194,16 +194,6 @@ const fieldOrderByName = new Map([
         'code',
         'legends',
     ]],
-    ['program', [ // TODO: Should be event program
-        'name',
-        'shortName',
-        'description',
-        'version',
-        'categoryCombo',
-        'workflow',
-        'completeEventsExpiryDays',
-        'expiryDays',
-    ]],
     ['trackedEntityAttribute', [
         'name',
         'shortName',
