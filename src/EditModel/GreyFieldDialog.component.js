@@ -219,7 +219,7 @@ class GreyFieldDialog extends React.Component {
                                         <th key={`${optNum}.${rep}`}
                                             colSpan={colSpan}
                                             style={styles.th}
-                                        >{opt.displayName}</th>
+                                        >{opt.displayName === 'default' ? '' : opt.displayName}</th>
                                     );
                                 });
                             })
@@ -254,11 +254,11 @@ class GreyFieldDialog extends React.Component {
                 if (disable) {
                     if (greyedCocs.includes(categoryOptionComboId)) {
                         greyedCocs.splice(greyedCocs.indexOf(categoryOptionComboId), 1);
-                    } else { console.info('boops1'); }
+                    }
                 } else {
                     if (!greyedCocs.includes(categoryOptionComboId)) {
                         greyedCocs.push(categoryOptionComboId);
-                    } else { console.info('boops2'); }
+                    }
                 }
 
                 const greyedFields = Object.keys(state.greyedFields)
@@ -318,15 +318,16 @@ class GreyFieldDialog extends React.Component {
             modelToEditStore.state.dataSetElements
                 .filter(dse => currentSectionDataElementIds.includes(dse.dataElement.id))
                 .filter(dse => (dse.categoryCombo ? dse.categoryCombo.id : dse.dataElement.categoryCombo.id) === this.state.currentCategoryCombo)
+                .sort((a, b) => currentSectionDataElementIds.indexOf(a.dataElement.id) - currentSectionDataElementIds.indexOf(b.dataElement.id))
                 .map((dse, deNum) => {
-                const cocFields = getCocFields();
-                return (
-                    <tr key={deNum} style={{ background: deNum % 2 === 0 ? 'none' : '#f0f0f0' }}>
-                        <td style={styles.tdDataElement}>{dse.dataElement.displayName}</td>
-                        {cocFields.map((fields, fieldNum) => this.renderCheckbox(dse.dataElement, fields, fieldNum))}
-                    </tr>
-                );
-            }) : null;
+                    const cocFields = getCocFields();
+                    return (
+                        <tr key={deNum} style={{ background: deNum % 2 === 0 ? 'none' : '#f0f0f0' }}>
+                            <td style={styles.tdDataElement}>{dse.dataElement.displayName}</td>
+                            {cocFields.map((fields, fieldNum) => this.renderCheckbox(dse.dataElement, fields, fieldNum))}
+                        </tr>
+                    );
+                }) : null;
     }
 
     render() {
@@ -352,7 +353,8 @@ class GreyFieldDialog extends React.Component {
                         catCombos.push(catCombo);
                     }
                     return catCombos;
-                }, []);
+                }, [])
+                .sort((a, b) => a.displayName.localeCompare(b.displayName));
         }
 
         return (
