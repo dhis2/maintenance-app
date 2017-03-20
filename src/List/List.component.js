@@ -351,29 +351,32 @@ const List = React.createClass({
                     <Heading>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}<HelpLink schema={this.props.params.modelType} /></Heading>
                     <ListActionBar modelType={this.props.params.modelType} groupName={this.props.params.groupName} />
                 </div>
-                <div>
-                    <div style={{ float: 'left', width: '50%' }}>
-                        <SearchBox searchObserverHandler={this.searchListByName}/>
-                    </div>
+                {this.state.dataRows && this.state.dataRows.length ? (
                     <div>
-                        <Pagination {...paginationProps} />
+                        <div style={{ float: 'left', width: '50%' }}>
+                            <SearchBox searchObserverHandler={this.searchListByName}/>
+                        </div>
+                        <div>
+                            <Pagination {...paginationProps} />
+                        </div>
                     </div>
-                </div>
+                ) : null}
                 <LoadingStatus
                     loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')}
                     isLoading={this.state.isLoading}
                 />
                 <div style={styles.listDetailsWrap}>
                     <div style={styles.dataTableWrap}>
-                        <DataTable
-                            rows={this.state.dataRows}
-                            columns={this.state.tableColumns}
-                            contextMenuActions={availableActions}
-                            contextMenuIcons={contextMenuIcons}
-                            primaryAction={(model) => availableActions.edit(model)}
-                            isContextActionAllowed={this.isContextActionAllowed}
-                        />
-                        {this.state.dataRows.length || this.state.isLoading ? null : <div>No results found</div>}
+                        {(this.state.dataRows && this.state.dataRows.length) || this.state.isLoading ? (
+                            <DataTable
+                                rows={this.state.dataRows}
+                                columns={this.state.tableColumns}
+                                contextMenuActions={availableActions}
+                                contextMenuIcons={contextMenuIcons}
+                                primaryAction={(model) => availableActions.edit(model)}
+                                isContextActionAllowed={this.isContextActionAllowed}
+                            />
+                        ) : <div>{this.getTranslation('no_results_found')}</div>}
                     </div>
                     {
                         this.state.detailsObject ?
@@ -384,9 +387,11 @@ const List = React.createClass({
                             />
                         : null}
                 </div>
-                <div style={{ marginTop: '-2rem', paddingBottom: '0.5rem' }}>
-                    <Pagination {...paginationProps} />
-                </div>
+                {this.state.dataRows && this.state.dataRows.length ? (
+                    <div style={{ marginTop: '-2rem', paddingBottom: '0.5rem' }}>
+                        <Pagination {...paginationProps} />
+                    </div>
+                ) : null}
                 {this.state.sharing.model ? <SharingDialog
                     objectToShare={this.state.sharing.model}
                     open={this.state.sharing.open && this.state.sharing.model}
