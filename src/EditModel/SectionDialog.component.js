@@ -221,10 +221,13 @@ class SectionDialog extends React.Component {
     }
 
     renderFilters() {
+        const catCombos = [{ value: false, text: this.getTranslation('no_filter') }]
+            .concat(this.props.categoryCombos.sort((a, b) => a.text.localeCompare(b.text)));
+
         return (
             <div style={{ minWidth: 605 }}>
                 <DropDown
-                    options={[{ value: false, text: this.getTranslation('no_filter') }].concat(this.props.categoryCombos)}
+                    options={catCombos}
                     labelText={this.getTranslation('category_combo_filter')}
                     onChange={this.handleCategoryComboChange}
                     value={this.state.categoryCombo}
