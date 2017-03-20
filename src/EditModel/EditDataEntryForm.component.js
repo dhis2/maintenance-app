@@ -385,7 +385,6 @@ class EditDataEntryForm extends React.Component {
 
         const cellClass = label === this.state.expand ? 'cell expanded' : 'cell';
 
-
         const expandClick = () => {
             this.setState({ expand: label });
         };
@@ -400,6 +399,7 @@ class EditDataEntryForm extends React.Component {
                 <div className="items">
                     {
                         filteredItems
+                            .sort((a, b) => keySet[a] ? keySet[a].localeCompare(keySet[b]) : a.localeCompare(b))
                             .map(key => {
                                 // Active items are items that are not already added to the form
                                 const isActive = this.state.usedIds.indexOf(key) === -1;
@@ -424,7 +424,7 @@ class EditDataEntryForm extends React.Component {
 
         return (
             <div className="paletteContainer" style={{ width: this.state.paletteWidth }}>
-                <div className="resizeHandle" onMouseDown={this.startResize}></div>
+                <div className="resizeHandle" onMouseDown={this.startResize} />
                 <div className="palette">
                     <div style={styles.paletteFilter}>
                         <TextField
