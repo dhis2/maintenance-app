@@ -70,7 +70,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 });
             });
 
-        this.disposable = this._searchOrganisationUnits.map(action => action.data)
+        this.subscription = this._searchOrganisationUnits.map(action => action.data)
             .debounceTime(400)
             .map(searchValue => {
                 if (!searchValue.trim()) {
@@ -91,7 +91,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
     }
 
     componentWillUnmount() {
-        this.disposable && this.disposable.unsubscribe();
+        this.subscription && this.subscription.unsubscribe();
     }
 
     renderRoots() {

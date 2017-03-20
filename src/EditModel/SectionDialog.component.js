@@ -51,8 +51,8 @@ class SectionDialog extends React.Component {
     }
 
     componentDidMount() {
-        this.disposables = [];
-        this.disposables.push(assignedDataElementStore.subscribe(() => {
+        this.subscriptions = [];
+        this.subscriptions.push(assignedDataElementStore.subscribe(() => {
             this.forceUpdate();
         }));
     }
@@ -109,7 +109,7 @@ class SectionDialog extends React.Component {
     }
 
     componentWillUnmount() {
-        this.disposables.forEach(disposable => disposable.unsubscribe());
+        this.subscriptions.forEach(disposable => disposable.unsubscribe());
     }
 
     handleCategoryComboChange(event) {

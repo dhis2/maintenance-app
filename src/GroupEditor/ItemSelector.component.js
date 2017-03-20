@@ -16,7 +16,7 @@ export default React.createClass({
     },
 
     componentWillMount() {
-        this.disposable = this.props.itemListStore
+        this.subscription = this.props.itemListStore
             .map(modelList => {
                 return modelList
                     .map(model => {
@@ -37,8 +37,8 @@ export default React.createClass({
     },
 
     componentWillUnmount() {
-        if (this.disposable && this.disposable.unsubscribe) {
-            this.disposable.unsubscribe();
+        if (this.subscription && this.subscription.unsubscribe) {
+            this.subscription.unsubscribe();
         }
     },
 

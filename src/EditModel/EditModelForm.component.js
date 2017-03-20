@@ -79,7 +79,7 @@ export default React.createClass({
                 formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
             }
 
-            this.disposable = modelToEditAndModelForm$
+            this.subscription = modelToEditAndModelForm$
                 .subscribe(([modelToEdit, editFormFieldsForCurrentModelType]) => {
                     const fieldConfigs = editFormFieldsForCurrentModelType
                     // TODO: When switching to the FormBuilder that manages state this function for all values
@@ -135,7 +135,7 @@ export default React.createClass({
     },
 
     componentWillUnmount() {
-        this.disposable && this.disposable.unsubscribe();
+        this.subscription && this.subscription.unsubscribe();
     },
 
     renderSharingNotification() {

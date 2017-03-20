@@ -188,12 +188,12 @@ class OptionManagement extends Component {
     }
 
     componentDidMount() {
-        this.disposable = actions.getOptionsFor(this.props.model).subscribe(() => this.forceUpdate());
+        this.subscription = actions.getOptionsFor(this.props.model).subscribe(() => this.forceUpdate());
     }
 
     componentWillUnmount() {
-        if (this.disposable && this.disposable.unsubscribe) {
-            this.disposable.unsubscribe();
+        if (this.subscription && this.subscription.unsubscribe) {
+            this.subscription.unsubscribe();
         }
     }
 

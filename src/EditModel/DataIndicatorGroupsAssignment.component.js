@@ -46,12 +46,12 @@ export default React.createClass({
             .then(response => response.indicatorGroupSets)
             .then(indicatorGroupSets => this.setState({ indicatorGroupSets }));
 
-        this.disposable = store.subscribe(() => this.forceUpdate());
+        this.subscription = store.subscribe(() => this.forceUpdate());
     },
 
     componentWillUnmount() {
-        if (this.disposable) {
-            this.disposable && this.disposable.unsubscribe();
+        if (this.subscription) {
+            this.subscription && this.subscription.unsubscribe();
         }
     },
 

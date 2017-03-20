@@ -8,7 +8,7 @@ import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUni
 
 class SideBarContainer extends React.Component {
     componentWillMount() {
-        this.disposable = sideBarStore
+        this.subscription = sideBarStore
             .subscribe(sideBarState => {
                 this.setState({
                     ...sideBarState,
@@ -24,8 +24,8 @@ class SideBarContainer extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.disposable && this.disposable) {
-            this.disposable.unsubscribe();
+        if (this.subscription && this.subscription) {
+            this.subscription.unsubscribe();
         }
 
         if (this.organisationUnitSaved && this.organisationUnitSaved.unsubscribe) {

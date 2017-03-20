@@ -70,7 +70,7 @@ function getTranslatablePropertiesForModelType(modelType) {
 class DetailsBoxWithScroll extends Component {
 
     componentDidMount() {
-        this.disposable = Observable
+        this.subscription = Observable
             .fromEvent(global, 'scroll')
             .debounceTime(200)
             .map(() => document.querySelector('body').scrollTop)
@@ -78,7 +78,7 @@ class DetailsBoxWithScroll extends Component {
     }
 
     componentWillUnmount() {
-        this.disposable && this.disposable.unsubscribe();
+        this.subscription && this.subscription.unsubscribe();
     }
 
     render() {

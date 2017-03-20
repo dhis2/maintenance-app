@@ -52,7 +52,7 @@ class App extends AppWithD2 {
                 state.mainSections.some(mainSection => mainSection.key === state.sideBar.currentSection)
             ));
 
-        this.disposable = Observable
+        this.subscription = Observable
             .merge(allSectionSelected$, nonAllSectionSelected$)
             // Do not emit the value more often than needed to prevent unnecessary react triggers
             .distinctUntilChanged()
@@ -66,8 +66,8 @@ class App extends AppWithD2 {
         if (super.componentWillUnmount)
             super.componentWillUnmount();
 
-        if (this.disposable && this.disposable.unsubscribe) {
-            this.disposable.unsubscribe();
+        if (this.subscription && this.subscription.unsubscribe) {
+            this.subscription.unsubscribe();
         }
     }
 

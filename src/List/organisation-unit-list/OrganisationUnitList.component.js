@@ -8,7 +8,7 @@ import ModelCollection from 'd2/lib/model/ModelCollection';
 
 export default class OrganisationUnitList extends React.Component {
     componentDidMount() {
-        this.disposable = appState
+        this.subscription = appState
             .map(({ selectedOrganisationUnit, userOrganisationUnits }) => ({
                 selectedOrganisationUnit,
                 userOrganisationUnitIds: userOrganisationUnits
@@ -46,7 +46,7 @@ export default class OrganisationUnitList extends React.Component {
     }
 
     componentWillUnmount() {
-        this.disposable && this.disposable.unsubscribe && this.disposable.unsubscribe();
+        this.subscription && this.subscription.unsubscribe && this.subscription.unsubscribe();
     }
 
     render() {

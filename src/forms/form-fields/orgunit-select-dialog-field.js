@@ -36,14 +36,14 @@ class OrgUnitSelectDialog extends React.Component {
     }
 
     componentWillMount() {
-        this.disposables = [];
-        this.disposables.push(appStateStore.subscribe((appState) => {
+        this.subscriptions = [];
+        this.subscriptions.push(appStateStore.subscribe((appState) => {
             this.setState({ roots: appState.userOrganisationUnits.toArray() });
         }));
     }
 
     componentWillUnmount() {
-        this.disposables.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
+        this.subscriptions.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
     handleSelectClick(e, orgUnit) {console.warn('click', orgUnit.displayName, orgUnit.path);
