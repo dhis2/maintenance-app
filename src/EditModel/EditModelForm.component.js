@@ -1,9 +1,5 @@
 import React from 'react';
-import fieldOverrides from '../config/field-overrides/index';
-import fieldOrderNames from '../config/field-config/field-order';
 import disabledOnEdit from '../config/disabled-on-edit';
-import FormFieldsForModel from '../forms/FormFieldsForModel';
-import FormFieldsManager from '../forms/FormFieldsManager';
 import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
@@ -88,7 +84,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
             modelToEdit: modelToEdit,
             isLoading: false,
         };
-    })
+    });
 
 
 export default React.createClass({
