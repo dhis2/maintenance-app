@@ -58,13 +58,40 @@ const createStepperWithFromConfig = (stepperConfig) => ({ activeStep, stepperCli
     </Stepper>
 );
 
-const StepperContent = ({ activeStep, schema, ...props }) => (
-    activeStep === 'details' ? <EditModel
-        groupName={props.params.groupName}
-        modelType={schema}
-        modelId={props.params.modelId}
-    /> : null
-);
+const StepperContent = ({ activeStep, schema, ...props }) => {
+    switch (activeStep) {
+        case 'details':
+            return (
+                <EditModel
+                    groupName={props.params.groupName}
+                    modelType={schema}
+                    modelId={props.params.modelId}
+                />
+            );
+
+        case 'data_elements':
+            return (
+                <div>Data element management</div>
+            );
+
+        case 'data_entry_forms':
+            return (
+                <div>Data entry form management</div>
+            );
+
+        case 'organisation_units':
+            return (
+                <div>Organisation units management</div>
+            );
+
+        case 'notifications':
+            return (
+                <div>Notifications management</div>
+            );
+    }
+
+    return null;
+};
 
 const EventProgramStepper = connect(mapStateToProps, mapDispatchToProps)(createStepperWithFromConfig(steps));
 const EventProgramStepperContent = connect(mapStateToProps)(StepperContent);
