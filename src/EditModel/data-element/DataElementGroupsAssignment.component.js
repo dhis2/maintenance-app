@@ -46,12 +46,12 @@ export default React.createClass({
             .then(response => response.dataElementGroupSets)
             .then(dataElementGroupSets => this.setState({ dataElementGroupSets }));
 
-        this.disposable = store.subscribe(() => this.forceUpdate());
+        this.subscription = store.subscribe(() => this.forceUpdate());
     },
 
     componentWillUnmount() {
-        if (this.disposable && this.disposable.dispose) {
-            this.disposable.dispose();
+        if (this.subscription && this.subscription.unsubscribe) {
+            this.subscription.unsubscribe();
         }
     },
 

@@ -15,8 +15,8 @@ export default class TextFormField extends Component {
 
     componentDidMount() {
         // Debounce the value, so the request handler does not get executed on each change event
-        this.disposable = this.updateOnChange
-            .debounce(300)
+        this.subscription = this.updateOnChange
+            .debounceTime(300)
             .map(action => action.data)
             .distinctUntilChanged()
             .subscribe((value) => {
@@ -29,8 +29,8 @@ export default class TextFormField extends Component {
     }
 
     componentWillUnmount() {
-        if (this.disposable && this.disposable.dispose) {
-            this.disposable.dispose();
+        if (this.subscription && this.subscription.unsubscribe) {
+            this.subscription.unsubscribe();
         }
     }
 

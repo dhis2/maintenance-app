@@ -135,6 +135,12 @@ const webpackConfig = {
         isProfileBuild ? new Visualizer : undefined,
     ].filter(v => v),
 
+    resolve: {
+        alias: {
+            d2: __dirname + '/node_modules/d2',
+        },
+    },
+
     devServer: {
         port: 8081,
         inline: true,

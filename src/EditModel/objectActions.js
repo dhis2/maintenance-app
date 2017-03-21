@@ -4,7 +4,7 @@ import log from 'loglevel';
 import { getInstance } from 'd2/lib/d2';
 import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 import { map, pick, get, filter, flatten, compose, identity, head } from 'lodash/fp';
 import snackActions from '../Snackbar/snack.actions';

@@ -3,7 +3,7 @@ import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerContainer.component';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import modelToEditStore from './modelToEditStore';
 import DataIndicatorGroupsAssignment from './DataIndicatorGroupsAssignment.component';
 import DataElementGroupsAssignment from './data-element/DataElementGroupsAssignment.component';

@@ -2,7 +2,7 @@ import Action from 'd2-ui/lib/action/Action';
 import listStore from './list.store';
 import detailsStore from './details.store';
 import { getInstance } from 'd2/lib/d2';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import Store from 'd2-ui/lib/store/Store';
 import appState from '../App/appStateStore';
 import { isUndefined } from 'lodash/fp';
@@ -30,7 +30,7 @@ function getQueryForSchema(schema, modelName) {
 }
 
 listActions.setListSource.subscribe((action) => {
-    listStore.listSourceSubject.onNext(Observable.just(action.data));
+    listStore.listSourceSubject.next(Observable.of(action.data));
 });
 
 listActions.loadList
@@ -43,7 +43,7 @@ listActions.loadList
             throw new Error(`${modelName} is not a valid schema name`);
         }
 
-        return Observable.just({
+        return Observable.of({
             schema: getSchemaWithFilters(d2.models[modelName], modelName),
             query: getQueryForSchema(d2.models[modelName], modelName),
             complete,

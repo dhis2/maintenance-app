@@ -1,4 +1,4 @@
-import {Observable} from 'rx';
+import {Observable} from 'rxjs';
 
 export default function optionSorter(options, sortProperty, sortOrder = 'ASC') {
     const sortedOptions = options.sort(function (left, right) {
@@ -6,5 +6,5 @@ export default function optionSorter(options, sortProperty, sortOrder = 'ASC') {
     });
 
     return Observable
-        .just(sortOrder === 'ASC' ? sortedOptions : sortedOptions.reverse());
+        .of(sortOrder === 'ASC' ? sortedOptions : sortedOptions.reverse());
 }

@@ -26,12 +26,12 @@ class PredictorDialog extends React.Component {
     }
 
     componentDidMount() {
-        this.disposables = [];
-        this.disposables.push(predictorDialogStore.subscribe(state => this.setState(state)));
+        this.subscriptions = [];
+        this.subscriptions.push(predictorDialogStore.subscribe(state => this.setState(state)));
     }
 
     componentWillUnmount() {
-        this.disposables.forEach(disposable => disposable.dispose && disposable.dispose());
+        this.subscriptions.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
     requestClose() {

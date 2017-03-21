@@ -122,6 +122,7 @@ function loadList({params}, replace, callback) {
 
     initState({params});
     return listActions.loadList(params.modelType)
+        .take(1)
         .subscribe(
             (message) => {
                 log.debug(message);
