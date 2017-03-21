@@ -12,35 +12,7 @@ import '../scss/maintenance.scss';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './translationRegistration';
 import appTheme from './App/app.theme';
-import { Observable } from 'rxjs';
-import setObservableConfig from 'recompose/setObservableConfig';
-import $$observable from 'symbol-observable';
 import systemSettingsStore from './App/systemSettingsStore';
-
-const recomposeConfig = {
-    fromESObservable: observable => Observable.create(observer => {
-        const { unsubscribe } = observable.subscribe({
-            next: val => observer.next(val),
-            error: error => observer.onError(error),
-            complete: () => observer.onCompleted()
-        });
-        return unsubscribe
-    }),
-    toESObservable: rxObservable => ({
-        subscribe: observer => {
-            const subscription = rxObservable.subscribe(
-                val => observer.next(val),
-                error => observer.error(error),
-                () => (observer.complete && observer.complete())
-            );
-            return { unsubscribe: () => subscription.unsubscribe() }
-        },
-        [$$observable]() {
-            return this
-        }
-    })
-};
-setObservableConfig(recomposeConfig);
 
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
