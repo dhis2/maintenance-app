@@ -1,6 +1,6 @@
 import Store from 'd2-ui/lib/store/Store';
 import { getInstance as getD2 } from 'd2/lib/d2';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import isString from 'd2-utilizr/lib/isString';
 
 const requestParams = new Map([

@@ -9,7 +9,7 @@ import AppWithD2 from 'd2-ui/lib/app/AppWithD2.component';
 import LoadingMask from '../loading-mask/LoadingMask.component';
 import SectionTabs from '../TopBar/SectionTabs.component';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import SinglePanelLayout from 'd2-ui/lib/layout/SinglePanel.component';
 import TwoPanelLayout from 'd2-ui/lib/layout/TwoPanel.component';
 import { goToRoute } from '../router-utils';
@@ -52,7 +52,7 @@ class App extends AppWithD2 {
                 state.mainSections.some(mainSection => mainSection.key === state.sideBar.currentSection)
             ));
 
-        this.disposable = Observable
+        this.subscription = Observable
             .merge(allSectionSelected$, nonAllSectionSelected$)
             // Do not emit the value more often than needed to prevent unnecessary react triggers
             .distinctUntilChanged()
@@ -66,8 +66,8 @@ class App extends AppWithD2 {
         if (super.componentWillUnmount)
             super.componentWillUnmount();
 
-        if (this.disposable && this.disposable.dispose) {
-            this.disposable.dispose();
+        if (this.subscription && this.subscription.unsubscribe) {
+            this.subscription.unsubscribe();
         }
     }
 

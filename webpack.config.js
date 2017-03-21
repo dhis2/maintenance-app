@@ -91,6 +91,12 @@ const webpackConfig = {
         /^lodash\/fp$/,
     ],
 
+    resolve: {
+      alias: {
+          d2: __dirname+'/node_modules/d2',
+        },
+    },
+
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
             name: "commons",
@@ -137,7 +143,7 @@ const webpackConfig = {
 
     resolve: {
         alias: {
-            d2: __dirname+'/node_modules/d2',
+            d2: __dirname + '/node_modules/d2',
         },
     },
 

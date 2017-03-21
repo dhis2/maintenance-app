@@ -29,13 +29,13 @@ const SearchBox = React.createClass({
 
     componentDidMount() {
         const searchObserver = this.events.searchBox
-            .debounce(400)
+            .debounceTime(400)
             .map(event => event && event.target && event.target.value ? event.target.value : '')
             .distinctUntilChanged();
 
         this.props.searchObserverHandler(searchObserver);
 
-        this.disposable = currentSubSection$
+        this.subscription = currentSubSection$
             .subscribe(currentSection => this.setState({
                 value: '',
                 showSearchField: !unsearchableSections.includes(currentSection),
@@ -43,7 +43,7 @@ const SearchBox = React.createClass({
     },
 
     componentWillUnmount() {
-        this.disposable && this.disposable.dispose && this.disposable.dispose();
+        this.subscription && this.subscription.unsubscribe && this.subscription.unsubscribe();
     },
 
     render() {

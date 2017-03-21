@@ -7,7 +7,7 @@ import Action from 'd2-ui/lib/action/Action';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import { getInstance } from 'd2/lib/d2';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import searchForOrganisationUnitsWithinHierarchy from './searchForOrganisationUnitsWithinHierarchy';
@@ -32,10 +32,10 @@ Observable
     .merge(
         leftTreeSearch
             .map(action => ({ ...action, side: 'left' }))
-            .debounce(400),
+            .debounceTime(400),
         rightTreeSearch
             .map(action => ({ ...action, side: 'right' }))
-            .debounce(400)
+            .debounceTime(400)
     )
     // Only search when we have values
     .filter(action => action.data)
@@ -48,7 +48,7 @@ Observable
     .concatAll()
     // Grab the current state from the appState
     .flatMap(v => Observable
-        .just(v)
+        .of(v)
         .combineLatest(hierarchy$.take(1), (result, hierarchy) => ({ result, hierarchy }))
     )
     // Update the app state with the result

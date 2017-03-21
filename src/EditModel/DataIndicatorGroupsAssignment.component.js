@@ -46,12 +46,12 @@ export default React.createClass({
             .then(response => response.indicatorGroupSets)
             .then(indicatorGroupSets => this.setState({ indicatorGroupSets }));
 
-        this.disposable = store.subscribe(() => this.forceUpdate());
+        this.subscription = store.subscribe(() => this.forceUpdate());
     },
 
     componentWillUnmount() {
-        if (this.disposable) {
-            this.disposable && this.disposable.dispose();
+        if (this.subscription) {
+            this.subscription && this.subscription.unsubscribe();
         }
     },
 
@@ -79,7 +79,7 @@ export default React.createClass({
                                 labelText={indicatorGroupSet.displayName}
                                 translateLabel={false}
                                 options={optionList}
-                                defaultValue={value}
+                                value={value}
                                 onChange={this._updateGroupStatus.bind(this, indicatorGroupSet.id, findValue(optionList, this.props.source))}
                                 fullWidth
                             />
@@ -91,6 +91,7 @@ export default React.createClass({
     },
 
     _updateGroupStatus(indicatorGroupSetId, oldValue, event) {
+        console.log(indicatorGroupSetId, oldValue, event);
         // TODO: Very bad to change props and set d2.model.dirty manually
         this.props.source.dirty = true;
 

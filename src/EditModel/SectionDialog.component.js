@@ -24,7 +24,7 @@ class SectionDialog extends React.Component {
         super(props, context);
 
         this.state = {
-            categoryCombo: null,
+            categoryCombo: false,
         };
         dataElementStore.setState([]);
         assignedDataElementStore.setState([]);
@@ -51,8 +51,8 @@ class SectionDialog extends React.Component {
     }
 
     componentDidMount() {
-        this.disposables = [];
-        this.disposables.push(assignedDataElementStore.subscribe(() => {
+        this.subscriptions = [];
+        this.subscriptions.push(assignedDataElementStore.subscribe(() => {
             this.forceUpdate();
         }));
     }
@@ -71,13 +71,8 @@ class SectionDialog extends React.Component {
                 ).map(de => de.id));
             }, []);
 
-            const categoryComboId = (
-                    // Use the first category combo of this section
-                    props.sectionModel.categoryCombos.size > 0 && props.sectionModel.categoryCombos.toArray()[0].id
-                ) || (
-                    // Fall back to the first category combo for this data set
-                    Array.isArray(props.categoryCombos) && props.categoryCombos.length && props.categoryCombos[0].value
-                );
+            // Default category combo filter = no filter
+            const categoryComboId = false;
 
             assignedDataElementStore.setState(
                 props.sectionModel.dataElements && props.sectionModel.dataElements.toArray().map(de => de.id) || []
@@ -109,7 +104,7 @@ class SectionDialog extends React.Component {
     }
 
     componentWillUnmount() {
-        this.disposables.forEach(disposable => disposable.dispose());
+        this.subscriptions.forEach(disposable => disposable.unsubscribe());
     }
 
     handleCategoryComboChange(event) {
@@ -226,10 +221,13 @@ class SectionDialog extends React.Component {
     }
 
     renderFilters() {
+        const catCombos = [{ value: false, text: this.getTranslation('no_filter') }]
+            .concat(this.props.categoryCombos.sort((a, b) => a.text.localeCompare(b.text)));
+
         return (
             <div style={{ minWidth: 605 }}>
                 <DropDown
-                    options={[{ value: false, text: this.getTranslation('no_filter') }].concat(this.props.categoryCombos)}
+                    options={catCombos}
                     labelText={this.getTranslation('category_combo_filter')}
                     onChange={this.handleCategoryComboChange}
                     value={this.state.categoryCombo}

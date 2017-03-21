@@ -3,12 +3,12 @@ import Action from 'd2-ui/lib/action/Action';
 import IndicatorExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
 import indicatorExpressionStatusStore from 'd2-ui/lib/expression-manager/ExpressionStatus.store';
 import { getInstance as getD2 } from 'd2/lib/d2';
-import { Observable } from 'rx';
+import { Observable } from 'rxjs';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
 const indicatorExpressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
 indicatorExpressionStatusActions.requestExpressionStatus
-    .throttle(500)
+    .debounceTime(500)
     .map(action => {
         const encodedFormula = encodeURIComponent(action.data);
         const url = `expressions/description?expression=${encodedFormula}`;
