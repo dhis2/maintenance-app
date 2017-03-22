@@ -49,6 +49,15 @@ const requestParams = new Map([
             'attributeValues[:all,attribute[id,name,displayName]]',
             'organisationUnits[id,path,displayName]',
         ].join(','),
+    }],
+    ['program', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'organisationUnits[id,path]',
+            'dataEntryForm[:owner]',
+            'programStages[:owner]',
+        ].join(','),
     }]
 ]);
 

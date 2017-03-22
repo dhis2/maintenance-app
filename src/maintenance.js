@@ -13,6 +13,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './translationRegistration';
 import appTheme from './App/app.theme';
 import systemSettingsStore from './App/systemSettingsStore';
+import rxjsconfig from 'recompose/rxjsObservableConfig';
+import { setObservableConfig } from 'recompose';
+setObservableConfig(rxjsconfig)
 
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);

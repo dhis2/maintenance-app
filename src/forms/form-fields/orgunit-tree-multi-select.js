@@ -130,8 +130,8 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
     }
 
     render() {
-        if (!this.state.rootOrgUnits) {
-            return (<div>this.context.d2.i18n.getTranslation('determining_your_root_orgunits')</div>);
+        if (!this.state.rootOrgUnits.length) {
+            return (<div>{this.context.d2.i18n.getTranslation('determining_your_root_orgunits')}</div>);
         }
 
         const controlStyles = {

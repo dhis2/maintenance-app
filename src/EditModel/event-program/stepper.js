@@ -1,7 +1,11 @@
 // TODO: Move this to d2-ui?
+import React from 'react';
 import Stepper from 'material-ui/Stepper/Stepper';
 import StepButton from 'material-ui/Stepper/StepButton';
 import Step from 'material-ui/Stepper/Step';
+import IconButton from 'material-ui/IconButton/IconButton';
+import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
+import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
 import log from 'loglevel';
 
@@ -66,3 +70,26 @@ export const createStepperContentFromConfig = (stepperConfig) => ({ activeStep, 
 
     return null;
 };
+
+const styles = {
+    buttons: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+};
+
+export function StepperNavigationButtons({ onBackClick, onForwardClick, style }) {
+    const wrapStyle = Object.assign({}, styles.buttons, style);
+
+    return (
+        <div style={wrapStyle}>
+            <IconButton onClick={onBackClick}>
+                <BackwardIcon />
+            </IconButton>
+            <IconButton onClick={onForwardClick}>
+                <ForwardIcon />
+            </IconButton>
+        </div>
+    );
+}

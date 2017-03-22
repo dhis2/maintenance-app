@@ -226,7 +226,7 @@ const routes = (
                 </Route>
                 <Route
                     path="program/:modelId"
-                    component={delayRender(() => System.import('./EditModel/EditEventProgram.component'))}
+                    component={delayRender(() => System.import('./EditModel/event-program/EditEventProgram.component'))}
                     onEnter={loadEventProgramObject}
                 />
                 <Route

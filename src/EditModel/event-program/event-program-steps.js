@@ -1,6 +1,7 @@
 import React from 'react';
-import EditModel from '../EditModel.component';
 import mapProps from 'recompose/mapProps';
+import EditModel from '../EditModel.component';
+import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
 
 const EditProgramDetailsForm = mapProps(props => ({
     groupName: props.params.groupName,
@@ -17,7 +18,10 @@ const steps = [
     {
         key: 'data_elements',
         name: 'assign_data_elements',
-        component: () => (<div>Data element management</div>),
+        component: (props) => {
+            console.log(props.modelToEdit.name)
+            return (<div>Data element management</div>);
+        },
     },
     {
         key: 'data_entry_forms',
@@ -27,7 +31,7 @@ const steps = [
     {
         key: 'organisation_units',
         name: 'assign_organisation_units',
-        component: () => (<div>Orgunits management</div>),
+        component: AssignOrganisationUnits,
     },
     {
         key: 'notifications',
