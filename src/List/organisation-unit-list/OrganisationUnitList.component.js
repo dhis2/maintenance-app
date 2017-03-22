@@ -16,7 +16,7 @@ export default class OrganisationUnitList extends React.Component {
                     .map(model => model.id),
             }))
             .filter(state => state.selectedOrganisationUnit)
-            .distinctUntilChanged(state => state.selectedOrganisationUnit)
+            .distinctUntilChanged(null, state => state.selectedOrganisationUnit)
             .subscribe(
                 async ({ selectedOrganisationUnit, userOrganisationUnitIds }) => {
                     const d2 = await getInstance();
