@@ -173,10 +173,8 @@ objectActions.saveObject
     .filter(({ data }) => data.modelType === 'legendSet')
     .subscribe(async ({ complete, error }) => {
         const legendSet = getOwnedPropertyJSON(modelToEditStore.getState());
-        const legends = legendSet.legends;
         const metadataPayload = {
-            legendSets: [on('legends', map(pick('id')), legendSet)],
-            legends: legends,
+            legendSets: [legendSet],
         };
 
         const d2 = await getInstance();
