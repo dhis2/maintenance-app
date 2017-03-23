@@ -31,7 +31,7 @@ class LegendsField extends Component {
     }
 
     render() {
-        const legends = this.props.value.toArray();
+        const legends = this.props.value || [];
 
         if (this.state.isLoading || !this.state.Legend) {
             return (<LinearProgress />);
@@ -46,30 +46,14 @@ class LegendsField extends Component {
     }
 
     updateLegends = (newLegends) => {
-        getInstance()
-            .then(d2 => d2.Api.getApi())
-            .then(api => api.get('system/uid', { limit: newLegends.length }))
-            .then(response => response.codes)
-            .then(codes => newLegends.map((legend, index) => {
-                legend.id = codes[index];
+        const model = modelToEditStore.getState();
+        model[this.props.referenceProperty] = newLegends;
 
-                return legend;
-            }))
-            .then(legends => {
-                const model = modelToEditStore.getState();
-                model[this.props.referenceProperty].clear();
-
-                legends.forEach(legend => model[this.props.referenceProperty].add(legend));
-
-                this.props.onChange({
-                    target: {
-                        value: model[this.props.referenceProperty],
-                    }
-                });
-
-
-            })
-            .catch(log.error);
+        this.props.onChange({
+            target: {
+                value: model[this.props.referenceProperty],
+            }
+        });
     }
 }
 
