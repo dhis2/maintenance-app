@@ -8,5 +8,13 @@
         ],
         "react",
         "stage-0"
-    ]
+    ],
+    "env": {
+        "test": {
+            "presets": ["stage-0", "react", "es2015"],
+            "plugins": [
+                "transform-class-properties"
+            ]
+        },
+    }
 }

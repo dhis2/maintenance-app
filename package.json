@@ -11,6 +11,7 @@
   "scripts": {
     "prestart": "d2-manifest package.json manifest.webapp",
     "start": "webpack-dev-server",
+    "coverage": "NODE_ENV=test nyc --include src --exclude src/**/*.spec.js --require babel-register --require babel-polyfill mocha --reporter dot --require config/setup.js --recursive src/**/*.spec.js && nyc report --reporter=lcov",
     "test": "echo Everything probably works great\\! ## karma start test/config/karma.config.js --single-run true",
     "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest",
     "postbuild": "cp -r src/i18n icon.png ./build/",

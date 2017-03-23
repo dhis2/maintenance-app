@@ -1,3 +1,5 @@
-export const activeStepSelector = state => state.step.activeStep;
+import { get } from 'lodash/fp';
 
-export const modelSelector = state => state.model;
+export const activeStepSelector = get('step.activeStep');
+
+export const modelSelector = get('model');
