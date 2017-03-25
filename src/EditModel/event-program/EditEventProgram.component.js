@@ -53,7 +53,6 @@ const styles = {
 
 function EditEventProgram(props) {
     const schema = props.params.modelType || 'program';
-    console.log(props.model);
 
     return (
         <Provider store={eventProgramStore}>

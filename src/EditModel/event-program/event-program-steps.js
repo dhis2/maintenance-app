@@ -2,6 +2,7 @@ import React from 'react';
 import mapProps from 'recompose/mapProps';
 import EditModel from '../EditModel.component';
 import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
+import EventProgramNotifications from './notifications/EventProgramNotifications';
 
 const EditProgramDetailsForm = mapProps(props => ({
     groupName: props.params.groupName,
@@ -36,7 +37,7 @@ const steps = [
     {
         key: 'notifications',
         name: 'create_notifications',
-        component: () => (<div>Notifications management</div>),
+        component: EventProgramNotifications,
     },
 ];
 

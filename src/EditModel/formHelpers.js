@@ -13,11 +13,11 @@ function getLabelText(labelText, fieldConfig = {}) {
     return labelText;
 }
 
-export async function createFieldConfigForModelTypes(modelType) {
+export async function createFieldConfigForModelTypes(modelType, forcedFieldOrderNames) {
     const d2 = await getInstance();
 
     const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
-    formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
+    formFieldsManager.setFieldOrder(forcedFieldOrderNames || fieldOrderNames.for(modelType));
 
     for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
         formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
