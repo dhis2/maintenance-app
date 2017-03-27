@@ -73,7 +73,7 @@ export default React.createClass({
     render() {
         const d2 = this.context.d2;
 
-        const accessibleGroups = ['indicatorGroup', 'dataElementGroup']
+        const accessibleGroups = ['indicatorGroup', 'dataElementGroup', 'categoryOptionGroup']
             .filter(groupName => d2.currentUser.canCreate(d2.models[groupName]))
 
         const contentStyle = {
