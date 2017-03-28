@@ -91,6 +91,8 @@ class SectionDialog extends React.Component {
             this.setState({
                 name: props.sectionModel.name,
                 code: props.sectionModel.code,
+                nameError: '',
+                codeError: '',
                 description: props.sectionModel.description,
                 showRowTotals: props.sectionModel.showRowTotals,
                 showColumnTotals: props.sectionModel.showColumnTotals,
@@ -140,11 +142,25 @@ class SectionDialog extends React.Component {
     }
 
     handleNameChange(e) {
-        this.setState({ name: e.target.value });
+        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
+            ? modelToEditStore.getState().sections
+            : modelToEditStore.getState().sections.toArray();
+        const nameDupe = sectionArray
+            .filter(s => s.id !== this.props.sectionModel.id)
+            .reduce((res, s) => res || s.name === e.target.value, false);
+
+        this.setState({ name: e.target.value, nameError: nameDupe ? this.getTranslation('value_not_unique') : '' });
     }
 
     handleCodeChange(e) {
-        this.setState({ code: e.target.value });
+        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
+            ? modelToEditStore.getState().sections
+            : modelToEditStore.getState().sections.toArray();
+        const codeDupe = sectionArray
+            .filter(s => s.id !== this.props.sectionModel.id)
+            .reduce((res, s) => res || (s.code && s.code === e.target.value), false);
+
+        this.setState({ code: e.target.value, codeError: codeDupe ? this.getTranslation('value_not_unique') : '' });
     }
 
     handleDescriptionChange(e) {
@@ -325,12 +341,14 @@ class SectionDialog extends React.Component {
                     value={this.state.name || ''}
                     style={{ width: '100%' }}
                     onChange={this.handleNameChange}
+                    errorText={this.state.nameError}
                 />
                 <TextField
                     floatingLabelText={this.getTranslation('code')}
                     value={this.state.code || ''}
                     style={{ width: '100%' }}
                     onChange={this.handleCodeChange}
+                    errorText={this.state.codeError}
                 />
                 <TextField
                     floatingLabelText={this.getTranslation('description')}
