@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
@@ -6,61 +6,161 @@ import { createStepperFromConfig } from '../stepper';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withProps from 'recompose/withProps';
-import withHandlers from 'recompose/withHandlers';
 import { modelToEditSelector } from './selectors';
-import { setEditModel } from './actions';
+import { setEditModel, setStageNotificationValue, saveStageNotification } from './actions';
 import { bindActionCreators } from 'redux';
 import { get } from 'lodash/fp';
 import { createFieldConfigForModelTypes } from '../../formHelpers';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import mapPropsStream from 'recompose/mapPropsStream';
+import branch from 'recompose/branch';
+import renderNothing from 'recompose/renderNothing';
 import { Observable } from 'rxjs';
-
-import TextField from 'material-ui/TextField';
+import { identity } from 'lodash/fp';
 
 const mapStateToProps = (state) => ({
     model: modelToEditSelector(state),
 });
 
+const _mapDispatchToProps = (dispatch) => ({
+    onUpdateField(fieldName, value) {
+        dispatch(setStageNotificationValue(fieldName, value))
+    }
+});
+
+const addModelToFieldConfigProps = model => fieldConfig => ({
+    ...fieldConfig,
+    props: { ...fieldConfig.props, model, }
+});
+
+function addValuesToFieldConfigs(fieldConfigs, model) {
+    return fieldConfigs
+        .map(fieldConfig => ({
+            ...fieldConfig,
+            value: model[fieldConfig.name]
+        }))
+        .map(addModelToFieldConfigProps(model));
+}
+
+function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity) {
+    return mapPropsStream(props$ => props$
+        .filter(({ model }) => model)
+        .combineLatest(
+            Observable.fromPromise(createFieldConfigForModelTypes(schema, fieldNames)),
+            (props, fieldConfigs) => ({
+                ...props,
+                fieldConfigs: filterFieldConfigs(addValuesToFieldConfigs(fieldConfigs, props.model)),
+            })
+        )
+    );
+}
+
+// TODO: Can not modify the fieldConfigs props as the FormBuilder will fail when it can not find old formConfigs. Therefore we'll need to return the same number of fieldConfigs
+function skipLogicForNotificationTrigger(fieldConfigs = []) {
+    const [notificationTriggerConfig, ...rest] = fieldConfigs;
+
+    // The relativeScheduledDays field only makes sense if the notificationTrigger field is set to 'SCHEDULED_DAYS_DUE_DATE'
+    if (notificationTriggerConfig.value !== 'SCHEDULED_DAYS_DUE_DATE') {
+        const restRenderingNothing = rest.map(fieldConfig => ({ ...fieldConfig, component: renderNothing() }));
+        return [notificationTriggerConfig, ...restRenderingNothing];
+    }
+
+    return [notificationTriggerConfig, ...rest];
+}
+
+// TODO: Can not modify the fieldConfigs props as the FormBuilder will fail when it can not find old formConfigs. Therefore we'll need to return the same number of fieldConfigs
+function skipLogicForRecipients(fieldConfigs = []) {
+    const [notificationRecipient, recipientUserGroup, deliveryChannels] = fieldConfigs;
+
+    const recipientsWithDeliveryChannels = new Set(['TRACKED_ENTITY_INSTANCE', 'ORGANISATION_UNIT_CONTACT']);
+    if (recipientsWithDeliveryChannels.has(notificationRecipient.value)) {
+        return [
+            notificationRecipient,
+            { ...recipientUserGroup, component: renderNothing() },
+            deliveryChannels
+        ];
+    }
+
+    if (notificationRecipient.value === 'USER_GROUP') {
+        return [
+            notificationRecipient,
+            recipientUserGroup,
+            { ...deliveryChannels, component: renderNothing() },
+        ];
+    }
+
+    return [
+        notificationRecipient,
+        { ...recipientUserGroup, component: renderNothing() },
+        { ...deliveryChannels, component: renderNothing() },
+    ];
+}
 
 const steps = [
     {
         key: 'what',
-        name: 'what',
-        content: connect(mapStateToProps)(({ model = {} }) => (
-            <TextField
-                name="name"
-                floatingLabelText={'name'}
-                value={get('name', model) || ''}
-            />
-        )),
+        name: 'what_to_send',
+        content: compose(
+            connect(mapStateToProps, _mapDispatchToProps, undefined, { pure: false }),
+            createFieldConfigsFor(
+                'programNotificationTemplate',
+                ['name', 'messageTemplate'],
+            ),
+        )(class extends Component {
+            componentDidMount() {
+                // FIXME: Hack to reposition the dialog when the first step is clicked (https://github.com/callemall/material-ui/issues/5793)
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 600);
+            }
+
+            render() {
+                const { fieldConfigs = [], onUpdateField } = this.props;
+
+                return (
+                    <FormBuilder
+                        fields={fieldConfigs}
+                        onUpdateField={onUpdateField}
+                    />
+                );
+            }
+        }),
     },
     {
         key: 'when',
-        name: 'when',
-        content: () => (<div>When</div>),
+        name: 'when_to_send_it',
+        content:
+            compose(
+                connect(mapStateToProps, _mapDispatchToProps, undefined, { pure: false }),
+                createFieldConfigsFor(
+                    'programNotificationTemplate',
+                    ['notificationTrigger', 'relativeScheduledDays'],
+                    skipLogicForNotificationTrigger
+                ),
+            )(({ fieldConfigs = [], onUpdateField }) => {
+                return (
+                    <FormBuilder
+                        fields={fieldConfigs}
+                        onUpdateField={onUpdateField}
+                    />
+                );
+            })
     },
     {
         key: 'who',
-        name: 'who',
+        name: 'who_to_send_it_to',
         content:
             compose(
-                connect(mapStateToProps, undefined, undefined, { pure: false }),
-                mapPropsStream(props$ => props$
-                    .combineLatest(
-                        Observable.fromPromise(createFieldConfigForModelTypes('programNotificationTemplate', ['notificationRecipient', 'recipientUserGroup', 'deliveryChannels'])),
-                        (props, fieldConfigs) => ({ ...props, fieldConfigs: fieldConfigs
-                            .map(fieldConfig => {
-                                console.log(fieldConfig.name, props.model[fieldConfig.name]);
-                                return ({ ...fieldConfig, value: props.model[fieldConfig.name] })
-                            })
-                        })
-                    )
+                connect(mapStateToProps, _mapDispatchToProps, undefined, { pure: false }),
+                createFieldConfigsFor(
+                    'programNotificationTemplate',
+                    ['notificationRecipient', 'recipientUserGroup', 'deliveryChannels'],
+                    skipLogicForRecipients
                 )
-            )(({ model = {}, fieldConfigs = [] }) => {
-                console.log(fieldConfigs);
+            )(({ fieldConfigs = [], onUpdateField }) => {
                 return (
-                    <FormBuilder fields={fieldConfigs} onUpdateField={(...args) => { console.log(args) }} />
+                    <FormBuilder
+                        fields={fieldConfigs}
+                        onUpdateField={onUpdateField}
+                    />
                 );
             }),
     },
@@ -75,10 +175,16 @@ const Stepper = compose(
     })),
 )(createStepperFromConfig(steps, 'vertical'));
 
-function NotificationDialog({ model, open, onCancel, onConfirm }) {
-    console.log(open, onCancel);
+const notificationDialogStyle = {
+    content: {
+        width: '60%',
+        minWidth: 700,
+        maxWidth: 'none',
+    },
+};
 
-    const t = (v) => v;
+function NotificationDialog({ model, onCancel, onConfirm }, { d2 }) {
+    const t = d2.i18n.getTranslation.bind(d2.i18n);
     const actions = [
         <FlatButton
             label={t('cancel')}
@@ -88,7 +194,7 @@ function NotificationDialog({ model, open, onCancel, onConfirm }) {
         <FlatButton
             label={t('save')}
             primary
-            onTouchTap={onConfirm}
+            onTouchTap={() => onConfirm(model)}
         />,
     ];
 
@@ -97,19 +203,25 @@ function NotificationDialog({ model, open, onCancel, onConfirm }) {
             actions={actions}
             open={!!model}
             onRequestClose={onCancel}
+            title={`${t('program_notification')} (${model.displayName || ''})`}
+            autoDetectWindowHeight
+            autoScrollBodyContent
+            contentStyle={notificationDialogStyle.content}
         >
-            <div>
-                <Stepper />
-            </div>
+            <Stepper />
         </Dialog>
     )
 }
+NotificationDialog.contextTypes = {
+    d2: PropTypes.object,
+};
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     onCancel: setEditModel.bind(null, null),
-    onConfirm: setEditModel.bind(null, null),
+    onConfirm: saveStageNotification,
 }, dispatch);
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
+    branch(({ model }) => !model, renderNothing)
 )(NotificationDialog);

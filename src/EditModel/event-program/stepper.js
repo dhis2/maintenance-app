@@ -118,3 +118,8 @@ export function StepperNavigationButtons({ onBackClick, onForwardClick, style })
         </div>
     );
 }
+StepperNavigationButtons.defaultProps = {
+    style: {
+        margin: '1rem',
+    },
+};

@@ -8,16 +8,17 @@ import NotificationList from './NotificationList';
 import { getStageNotifications } from './selectors';
 import EventProgramStageNotificationDeleteDialog from './EventProgramStageNotificationDeleteDialog';
 import EventProgramDeletionNotification from './EventProgramDeletionNotification';
-import { removeStageNotification, setEditModel } from './actions';
+import { removeStageNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
 
-function EventProgramNotifications({ notifications, askForConfirmation, onCancel, onDelete, open, setOpen, modelToDelete, setEditModel }) {
+function EventProgramNotifications({ notifications, askForConfirmation, onCancel, onDelete, open, setOpen, modelToDelete, setEditModel, setAddModel }) {
     return (
         <div>
             <NotificationList
                 notifications={notifications}
                 onRemoveNotification={askForConfirmation}
                 onEditNotification={setEditModel}
+                onAddNotification={setAddModel}
             />
             <NotificationDialog />
             <EventProgramStageNotificationDeleteDialog
@@ -32,7 +33,7 @@ function EventProgramNotifications({ notifications, askForConfirmation, onCancel
     )
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ removeStageNotification, setEditModel }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ removeStageNotification, setEditModel, setAddModel }, dispatch);
 const mapStateToProps = (state) => ({
     notifications: Array.from(getStageNotifications(state.model).values()),
 });
