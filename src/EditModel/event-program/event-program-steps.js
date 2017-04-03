@@ -9,7 +9,7 @@ import eventProgramStore from './eventProgramStore';
 import { editFieldChanged } from './actions';
 import { bindActionCreators } from 'redux';
 import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
-import EditDataEntryForm from './create-data-entry-form/EditDataEntryForm.component';
+import EditDataEntryForm from './create-data-entry-form/CreateDataEntryForm.component';
 
 export const STEP_DETAILS = 'details';
 export const STEP_DATA_ELEMENTS = 'data_elements';
