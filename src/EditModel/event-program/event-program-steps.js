@@ -9,7 +9,7 @@ import eventProgramStore from './eventProgramStore';
 import { editFieldChanged } from './actions';
 import { bindActionCreators } from 'redux';
 import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
-import EditCustomFormProgramStage from './data-entry-form/EditCustomFormProgramStage';
+import EditDataEntryForm from './EditDataEntryForm.component';
 
 export const STEP_DETAILS = 'details';
 export const STEP_DATA_ELEMENTS = 'data_elements';
@@ -43,7 +43,7 @@ const steps = [
     {
         key: STEP_DATA_ENTRY_FORMS,
         name: 'create_data_entry_form',
-        component: EditCustomFormProgramStage,
+        component: EditDataEntryForm,
     },
     {
         key: STEP_ASSIGN_ORGANISATION_UNITS,
