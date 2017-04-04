@@ -395,7 +395,7 @@ const List = React.createClass({
                 {this.state.sharing.model ? <SharingDialog
                     id={this.state.sharing.model.id}
                     type={this.props.params.modelType}
-                    open={this.state.sharing.open}
+                    open={this.state.sharing.model && this.state.sharing.open}
                     onRequestClose={this._closeSharingDialog}
                     bodyStyle={{ minHeight: '400px' }}
                 /> : null }
