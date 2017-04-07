@@ -247,7 +247,7 @@ const List = React.createClass({
         case 'details':
             return model.access.read;
         case 'share':
-            return model.modelDefinition.isShareable === true; // TODO: Sharing is filtered out twice...
+            return model.modelDefinition.isShareable === true && model.access.write;
         case 'compulsoryDataElements':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'sectionForm':
@@ -300,12 +300,6 @@ const List = React.createClass({
         const availableActions = Object.keys(contextActions)
             .filter(actionsThatRequireCreate, this)
             .filter(actionsThatRequireDelete, this)
-            .filter((actionName) => {
-                if (actionName === 'share') {
-                    return this.context.d2.models[this.props.params.modelType] && this.context.d2.models[this.props.params.modelType].isShareable;
-                }
-                return true;
-            })
             .reduce((actions, actionName) => {
                 // TODO: Don't re-assign param?
                 actions[actionName] = contextActions[actionName]; // eslint-disable-line no-param-reassign
