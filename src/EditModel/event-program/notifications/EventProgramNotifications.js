@@ -10,6 +10,11 @@ import EventProgramStageNotificationDeleteDialog from './EventProgramStageNotifi
 import EventProgramDeletionNotification from './EventProgramDeletionNotification';
 import { removeStageNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
+import mapPropsStream from 'recompose/mapPropsStream';
+import eventProgramStore from '../eventProgramStore';
+
+const notifications$ = eventProgramStore
+    .map(({ program }) => Array.from(getStageNotifications(program).values()));
 
 function EventProgramNotifications({ notifications, askForConfirmation, onCancel, onDelete, open, setOpen, modelToDelete, setEditModel, setAddModel }) {
     return (
@@ -34,13 +39,13 @@ function EventProgramNotifications({ notifications, askForConfirmation, onCancel
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({ removeStageNotification, setEditModel, setAddModel }, dispatch);
-const mapStateToProps = (state) => ({
-    notifications: Array.from(getStageNotifications(state.model).values()),
-});
+// const mapStateToProps = (state) => ({
+//     notifications: Array.from(getStageNotifications(state.model).values()),
+// });
 
 const enhance = compose(
     // TODO: Impure connect when the reducer is fixed to emit a pure model this can be a pure action
-    connect(mapStateToProps, mapDispatchToProps, undefined, { pure: false }),
+    connect(undefined, mapDispatchToProps, undefined, { pure: false }),
     withState('open', 'setOpen', false),
     withState('modelToDelete', 'setModelToDelete', null),
     withHandlers({
@@ -53,7 +58,10 @@ const enhance = compose(
             setModelToDelete(model);
             setOpen(true);
         }
-    })
+    }),
+    mapPropsStream(props$ => props$
+        .combineLatest(notifications$, (props, notifications) => ({ ...props, notifications}))
+    )
 );
 
 export default enhance(EventProgramNotifications);

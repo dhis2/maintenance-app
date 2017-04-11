@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import { getInstance } from 'd2/lib/d2';
 import { getStageNotifications } from './selectors';
-import { modelSelector } from '../selectors';
+import eventProgramStore from '../eventProgramStore';
 
 const removeProgramStageNotification = action$ => action$
     .ofType(NOTIFICATION_STAGE_REMOVE)
@@ -24,11 +24,16 @@ const saveProgramStageNotification = (action$, store) => action$
         model.dataValues.href = `${model.modelDefinition.apiEndpoint}/${model.id}`;
     })
     .mergeMap(({ payload: model }) => (
-        Observable.fromPromise(model.save())
+        Observable.zip(
+            eventProgramStore
+                .take(1)
+                .map(state => state.program),
+            Observable.fromPromise(model.save()),
+            (program, saveResult) => ({ program, saveResult })
+        )
             // FIXME: Side effects are not cool :(
-            .do(() => {
-                const programModel = modelSelector(store.getState());
-                const stageNotifications = getStageNotifications(programModel);
+            .do(({ program }) => {
+                const stageNotifications = getStageNotifications(program);
 
                 // If model is not present in the stage notifications load it and add it
                 if (!stageNotifications.has(model.id)) {
@@ -36,7 +41,12 @@ const saveProgramStageNotification = (action$, store) => action$
                         .then((addedModel) => {
                             stageNotifications.add(addedModel);
                             // FIXME: Hack to mark programModel as dirty
-                            programModel.dirty = true;
+                            program.dirty = true;
+
+                            eventProgramStore.setState({
+                                ...eventProgramStore.getState(),
+                                program,
+                            });
                         });
                 }
             })
@@ -48,6 +58,6 @@ const saveProgramStageNotification = (action$, store) => action$
 const setProgramStageNotificationAddModel = (action$, store) => action$
     .ofType(NOTIFICATION_STAGE_SET_ADD_MODEL)
     .combineLatest(Observable.fromPromise(getInstance()), ({ payload }, d2) => ({ model: payload, d2 }))
-    .map(d2 => setEditModel(d2.models.programNotificationTemplate.create()));
+    .map(({ d2 }) => setEditModel(d2.models.programNotificationTemplate.create()));
 
 export default combineEpics(removeProgramStageNotification, setProgramStageNotificationAddModel, saveProgramStageNotification);
