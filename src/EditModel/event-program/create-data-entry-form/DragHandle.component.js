@@ -1,26 +1,28 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import { SortableHandle } from 'react-sortable-hoc';
-import { orange200, orange500 } from 'material-ui/styles/colors';
+import { blue200 } from 'material-ui/styles/colors';
 import FontIcon from 'material-ui/FontIcon';
 
-const styles = {
-    dragHandle: {
-        userSelect: 'none',
-        cursor: 'move',
-        transition: 'none',
-    },
+const dragHandleColor = 'black';
+const dragHandleHoverColor = blue200;
 
-    dragHandleColor: orange500,
-    dragHandleHoverColor: orange200,
+const dragHandleStyle = {
+    userSelect: 'none',
+    cursor: 'pointer',
+    transition: 'none',
 };
 
-const DragHandle = SortableHandle(() =>
-    <FontIcon
-        color={styles.dragHandleColor}
-        hoverColor={styles.dragHandleHoverColor}
-        className="material-icons"
-        style={styles.dragHandle}
-    >reorder</FontIcon>
+const DragHandle = SortableHandle(({ active, light }) =>
+    <div style={{
+        marginRight: '2rem',
+    }}>
+        <FontIcon
+            color={active ? dragHandleHoverColor : (light ? dragHandleColor : 'white')}
+            hoverColor={dragHandleHoverColor}
+            className="material-icons"
+            style={dragHandleStyle}
+        >reorder</FontIcon>
+    </div>
 );
 
 export default DragHandle;
