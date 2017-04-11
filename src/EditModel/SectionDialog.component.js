@@ -196,6 +196,14 @@ class SectionDialog extends React.Component {
     }
 
     saveSection() {
+        if (!this.state.name || this.state.name.trim().length === 0) {
+            snackActions.show({
+                message: this.getTranslation('name_is_required'),
+                action: this.getTranslation('ok'),
+            });
+            return;
+        }
+
         const sectionModel = this.props.sectionModel.id
             ? this.props.sectionModel
             : this.props.sectionModel.modelDefinition.create();
@@ -317,6 +325,10 @@ class SectionDialog extends React.Component {
             );
         }
 
+        const validateName = (e) => {
+            this.setState({ nameError: e.target.value.trim().length > 0 ? '' : this.getTranslation('value_required') });
+        };
+
         return (
             <Dialog
                 autoScrollBodyContent
@@ -337,11 +349,12 @@ class SectionDialog extends React.Component {
                 {...this.props}
             >
                 <TextField
-                    floatingLabelText={this.getTranslation('name')}
+                    floatingLabelText={`${this.getTranslation('name')} *`}
                     value={this.state.name || ''}
                     style={{ width: '100%' }}
                     onChange={this.handleNameChange}
                     errorText={this.state.nameError}
+                    onBlur={validateName}
                 />
                 <TextField
                     floatingLabelText={this.getTranslation('code')}
