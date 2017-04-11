@@ -9,23 +9,23 @@ const rowStyle = {
     alignItems: 'center',
 };
 
-const SortableDataList = SortableContainer(({ items, isSortingIndex, darkItems }) => (
-    <div>
-        { items.map((item, index) => (
+const SortableDataList = SortableContainer(({ dataElements, isSortingIndex, darkItems }) => {
+    return <div>
+        { dataElements.map((dataElement, index) => (
             <SortableDataElement
-                index={index}
                 darkItems={darkItems}
-                sortIndex={index}
-                key={`item-${index}`}
-                item={item}
+                dataElement={dataElement}
+                index={index}
                 isSortingIndex={isSortingIndex}
+                key={`item-${index}`}
+                sortIndex={index}
             />
         ))}
-    </div>
-));
+    </div>;
+});
 
-const SortableDataElement = SortableElement(({ index, sortIndex, item, isSortingIndex, darkItems }) => (
-    <DataElement index={index} sortIndex={sortIndex} item={item} isSortingIndex={isSortingIndex} darkItems={darkItems} />
+const SortableDataElement = SortableElement(({ index, sortIndex, dataElement, isSortingIndex, darkItems }) => (
+    <DataElement index={index} sortIndex={sortIndex} dataElement={dataElement} isSortingIndex={isSortingIndex} darkItems={darkItems} />
 ));
 
 class DataElement extends Component {
@@ -83,7 +83,7 @@ class DataElement extends Component {
                     }}>
                         {this.props.sortIndex + 1}
                     </div>
-                    {this.props.item}
+                    {this.props.dataElement.displayName}
                 </div>
             </div>
         )

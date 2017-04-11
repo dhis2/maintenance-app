@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux';
 import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
 import EditDataEntryForm from './EditDataEntryForm.component';
 import EditDataEntryForm from './edit-data-entry-form/EditDataEntryForm.component';
+import EditDataEntryForm from './create-data-entry-form/EditDataEntryForm.component';
 
 export const STEP_DETAILS = 'details';
 export const STEP_DATA_ELEMENTS = 'data_elements';

@@ -143,7 +143,7 @@ class CollapsibleSection extends Component {
                             onSortStart={this.onSortStart}
                             onSortEnd={this.onSortEnd}
                             isSortingIndex={this.state.isSortingIndex}
-                            items={this.props.dataElements}
+                            dataElements={this.props.dataElements}
                         />
                     </div>
                 }
@@ -163,25 +163,33 @@ CollapsibleSection.propTypes = {
 class EditSectionEntryForm extends Component {
     constructor(props) {
         super(props);
+        console.warn('SECTIONS:', this.props.sections);
+
         this.state = {
-            sections: [
-                {
-                    sectionName: 'Section 1',
-                    dataElements: mockDataElements[0],
+            sections: this.props.sections.map(section => {
+                const dataElements = section.dataElements.map(dataElement => {
+                    for (let i = 0; i < this.props.dataElements.length; i++) {
+                        const otherElement = this.props.dataElements[i];
+                        if (dataElement.id === otherElement.id) {
+                            return {
+                                ...dataElement,
+                                displayName: otherElement.displayName,
+                            }
+                        }
+                    }
+
+                    return dataElement;
+                });
+
+                return {
                     open: true,
-                },
-                {
-                    sectionName: 'Section 2',
-                    dataElements: mockDataElements[1],
-                    open: true,
-                },
-                {
-                    sectionName: 'Section 3',
-                    dataElements: mockDataElements[2],
-                    open: true,
-                },
-            ],
+                    sectionName: section.displayName,
+                    dataElements,
+                };
+            }),
         }
+
+        console.warn('STATE!:', this.state);
     }
 
     onToggleSection = (index) => {
