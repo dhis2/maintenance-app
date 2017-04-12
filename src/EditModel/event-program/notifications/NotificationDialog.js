@@ -10,13 +10,10 @@ import { modelToEditSelector } from './selectors';
 import { setEditModel, setStageNotificationValue, saveStageNotification } from './actions';
 import { bindActionCreators } from 'redux';
 import { get } from 'lodash/fp';
-import { createFieldConfigForModelTypes } from '../../formHelpers';
+import { createFieldConfigsFor } from '../../formHelpers';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
-import mapPropsStream from 'recompose/mapPropsStream';
 import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';
-import { Observable } from 'rxjs';
-import { identity } from 'lodash/fp';
 
 const mapStateToProps = (state) => ({
     model: modelToEditSelector(state),
@@ -27,33 +24,6 @@ const _mapDispatchToProps = (dispatch) => ({
         dispatch(setStageNotificationValue(fieldName, value))
     }
 });
-
-const addModelToFieldConfigProps = model => fieldConfig => ({
-    ...fieldConfig,
-    props: { ...fieldConfig.props, model, }
-});
-
-function addValuesToFieldConfigs(fieldConfigs, model) {
-    return fieldConfigs
-        .map(fieldConfig => ({
-            ...fieldConfig,
-            value: model[fieldConfig.name]
-        }))
-        .map(addModelToFieldConfigProps(model));
-}
-
-function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity) {
-    return mapPropsStream(props$ => props$
-        .filter(({ model }) => model)
-        .combineLatest(
-            Observable.fromPromise(createFieldConfigForModelTypes(schema, fieldNames)),
-            (props, fieldConfigs) => ({
-                ...props,
-                fieldConfigs: filterFieldConfigs(addValuesToFieldConfigs(fieldConfigs, props.model)),
-            })
-        )
-    );
-}
 
 // TODO: Can not modify the fieldConfigs props as the FormBuilder will fail when it can not find old formConfigs. Therefore we'll need to return the same number of fieldConfigs
 function skipLogicForNotificationTrigger(fieldConfigs = []) {
