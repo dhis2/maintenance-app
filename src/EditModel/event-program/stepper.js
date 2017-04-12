@@ -96,30 +96,18 @@ export const createStepperContentFromConfig = (stepperConfig) => ({ activeStep, 
     return null;
 };
 
-const styles = {
-    buttons: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-};
-
-export function StepperNavigationButtons({ onBackClick, onForwardClick, style }) {
-    const wrapStyle = Object.assign({}, styles.buttons, style);
-
+export function StepperNavigationBack({ onBackClick }) {
     return (
-        <div style={wrapStyle}>
-            <IconButton onClick={onBackClick}>
-                <BackwardIcon />
-            </IconButton>
-            <IconButton onClick={onForwardClick}>
-                <ForwardIcon />
-            </IconButton>
-        </div>
+        <IconButton onClick={onBackClick}>
+            <BackwardIcon />
+        </IconButton>
     );
 }
-StepperNavigationButtons.defaultProps = {
-    style: {
-        margin: '1rem',
-    },
-};
+
+export function StepperNavigationForward({ onForwardClick }) {
+    return (
+        <IconButton onClick={onForwardClick}>
+            <ForwardIcon />
+        </IconButton>
+    );
+}

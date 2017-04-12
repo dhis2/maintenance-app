@@ -9,7 +9,6 @@ import EventProgramStepper from './EventProgramStepper';
 import EventProgramStepperContent from './EventProgramStepperContent';
 import eventProgramStore from './store';
 import EventProgramButtons from './EventProgramButtons';
-import EventProgramStepperNavigationButtons from './EventProgramStepperNavigationButtons';
 
 const withPreLoadedModel = mapPropsStream(props$ => props$.combineLatest(modelToEditStore, (props, model) => ({ ...props, model})));
 
@@ -34,13 +33,12 @@ function EditEventProgram(props) {
                 </div>
                 <div>
                     <EventProgramStepper />
-                    <EventProgramButtons groupName={groupName} schema={schema} />
                 </div>
                 <EventProgramStepperContent
                     schema={schema}
                     {...props}
                 />
-                <EventProgramStepperNavigationButtons />
+                <EventProgramButtons groupName={groupName} schema={schema} />
             </div>
         </Provider>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { StepperNavigationButtons } from './stepper';
+import { StepperNavigationBack, StepperNavigationForward } from './stepper';
 import { previousStep, nextStep } from './actions';
 
 const mapDispatchToProps = dispatch => bindActionCreators(
@@ -9,6 +9,6 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     dispatch
 );
 
-const EventProgramStepperNavigationButtons = connect(undefined, mapDispatchToProps)(StepperNavigationButtons);
+export const EventProgramStepperNavigationForward = connect(undefined, mapDispatchToProps)(StepperNavigationForward);
+export const EventProgramStepperNavigationBackward = connect(undefined, mapDispatchToProps)(StepperNavigationBack)
 
-export default EventProgramStepperNavigationButtons;

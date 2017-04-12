@@ -24,7 +24,10 @@ export const programModelEdit = action$ => action$
             .take(1)
             .map(get('program'))
             .map(program => {
+                // Change field the program model
                 program[field] = value;
+
+                // Write back the state to the eventProgramModel
                 eventProgramStore.setState({
                     ...eventProgramStore.getState(),
                     program,

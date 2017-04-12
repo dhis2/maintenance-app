@@ -1,26 +1,22 @@
 import React from 'react';
-import { goToAndScrollUp } from '../../router-utils';
-import IconButton from 'material-ui/IconButton/IconButton';
-import SaveIcon from 'material-ui/svg-icons/content/save';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import EventActionButtons from './EventActionButtons';
+import { EventProgramStepperNavigationBackward, EventProgramStepperNavigationForward } from './EventProgramStepperNavigationButtons';
 
 const styles = {
     buttons: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
+        padding: '1rem',
     },
 };
 
 const EventProgramButtons = ({ groupName, schema }) => {
     return (
         <div style={styles.buttons}>
-            <IconButton>
-                <SaveIcon />
-            </IconButton>
-            <IconButton onClick={() => goToAndScrollUp(`/list/${groupName}/${schema}`)}>
-                <CloseIcon />
-            </IconButton>
+            <EventProgramStepperNavigationBackward />
+            <EventActionButtons groupName={groupName} schema={schema} />
+            <EventProgramStepperNavigationForward />
         </div>
     );
 };
