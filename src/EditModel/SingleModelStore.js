@@ -56,7 +56,8 @@ const requestParams = new Map([
             'attributeValues[:all,attribute[id,name,displayName]]',
             'organisationUnits[id,path]',
             'dataEntryForm[:owner]',
-            'programStages[:owner]',
+            'programStages[:owner,notificationTemplates[displayName,:owner]]',
+            'notificationTemplates[:owner]',
         ].join(','),
     }]
 ]);

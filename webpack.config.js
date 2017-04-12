@@ -53,7 +53,7 @@ const webpackConfig = {
         loaders: [
             {
                 test: /\.jsx?$/,
-                exclude: /node_modules/,
+                include: path.resolve(__dirname, 'src/'),
                 loader: 'babel-loader',
             },
             {
@@ -141,12 +141,6 @@ const webpackConfig = {
         isProfileBuild ? new Visualizer : undefined,
     ].filter(v => v),
 
-    resolve: {
-        alias: {
-            d2: __dirname + '/node_modules/d2',
-        },
-    },
-
     devServer: {
         port: 8081,
         inline: true,
@@ -176,6 +170,9 @@ const webpackConfig = {
                 bypass,
             },
         ],
+        watchOptions: {
+            aggregateTimeout: 2000,
+        },
     },
 };
 

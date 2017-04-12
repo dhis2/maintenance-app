@@ -11,3 +11,6 @@ export const previousStep = () => ({ type: STEP_PREVIOUS });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Model
 export const MODEL_TO_EDIT_LOADED = 'MODEL_TO_EDIT_LOADED';
+export const MODEL_TO_EDIT_FIELD_CHANGED = 'MODEL_TO_EDIT_FIELD_CHANGED';
+
+export const editFieldChanged = (field, value) => ({ type: MODEL_TO_EDIT_FIELD_CHANGED, payload: { field, value } });

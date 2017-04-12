@@ -1,6 +1,9 @@
 import { combineReducers } from 'redux';
 import { STEP_CHANGE, STEP_NEXT, STEP_PREVIOUS, MODEL_TO_EDIT_LOADED } from './actions';
+import { NOTIFICATION_STAGE_REMOVE_SUCCESS } from './notifications/actions';
+import { getStageNotifications } from './notifications/selectors';
 import steps from './event-program-steps';
+import { stageNotificationsReducer } from './notifications/reducers';
 
 function findNextStepKey(steps, activeStep) {
     const currentStepIndex = steps.findIndex(step => step.key === activeStep);
@@ -48,10 +51,17 @@ function modelToEditReducer(state = null, action) {
         return action.payload;
     }
 
+    // TODO: Impure action...
+    if (NOTIFICATION_STAGE_REMOVE_SUCCESS === action.type) {
+        const notifications = getStageNotifications(state);
+        notifications.delete(action.payload.id);
+    }
+
     return state;
 }
 
 export default combineReducers({
     step: stepperReducer,
-    model: modelToEditReducer
+    model: modelToEditReducer,
+    stageNotifications: stageNotificationsReducer,
 });
