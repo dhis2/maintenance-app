@@ -182,7 +182,7 @@ export default new Map([['dataElement',
             {
                 type: 'CHANGE_VALUE',
                 setValue: (model, fieldConfig) => {
-                    fieldConfig.value = model[fieldConfig.property] = model.optionSet.valueType;
+                    fieldConfig.value = model[fieldConfig.name] = model.optionSet.valueType;
                 },
             }
         ]
