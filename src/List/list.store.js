@@ -1,19 +1,6 @@
-import { getInstance as getD2 } from 'd2/lib/d2';
 import { Subject, Observable } from 'rxjs';
 import Store from 'd2-ui/lib/store/Store';
-import appState from '../App/appStateStore';
-
-const columnObservable = appState
-    .filter(appState => appState.sideBar && appState.sideBar.currentSubSection)
-    .map(appState => appState.sideBar.currentSubSection)
-    .distinctUntilChanged()
-    .map(subSection => {
-        if (subSection === 'organisationUnitLevel') {
-            return ['displayName', 'level', 'lastUpdated'];
-        }
-
-        return ['displayName', 'publicAccess', 'lastUpdated'];
-    });
+import { getTableColumnsForType, getFilterFieldsForType, getFiltersForType } from '../config/maintenance-models';
 
 export default Store.create({
     listSourceSubject: new Subject(),
@@ -21,12 +8,20 @@ export default Store.create({
     initialise() {
         this.listSourceSubject
             .concatAll()
-            .combineLatest(columnObservable)
-            .subscribe(([modelCollection, columns]) => {
+            .subscribe(modelCollection => {
                 this.setState({
-                    tableColumns: columns,
+                    tableColumns: getTableColumnsForType(modelCollection.modelDefinition.name),
                     pager: modelCollection.pager,
                     list: modelCollection.toArray(),
+                    filters: this.state && this.state.filters
+                        ? Object.assign(this.state.filters, getFilterFieldsForType(modelCollection.modelDefinition.name)
+                            .filter(key => !Object.keys(this.state.filters).includes(key))
+                            .reduce((f, k) => {
+                                f[k] = null;
+                                return f;
+                            }, {}))
+                        : getFiltersForType(modelCollection.modelDefinition.name),
+                    searchString: this.state && this.state.searchString || '',
                 });
             });
         return this;

@@ -40,5 +40,6 @@ html {
 }
 
 .data-table__rows__row__column:not(:first-child) {
-  width: 200px;
+  width: 10%;
+  min-width: 150px;
 }
