@@ -283,7 +283,10 @@ const List = React.createClass({
         };
 
         const availableActions = Object.keys(contextActions)
-            .filter(actionsThatRequireCreate, this)
+            // Disable filtering on actions that require create authorities
+            // Editing is also allowed when the object is shared with you even when you do not have the authority to edit that type of object
+            // This is therefore disabled in 2.25 and 2.26 (It should be fixed in 2.27, where it'd require both)
+            // .filter(actionsThatRequireCreate, this)
             .filter(actionsThatRequireDelete, this)
             .filter((actionName) => {
                 if (actionName === 'share') {
