@@ -233,6 +233,8 @@ const List = React.createClass({
             return model.access.read;
         case 'share':
             return model.modelDefinition.isShareable === true; // TODO: Sharing is filtered out twice...
+        case 'delete':
+            return model.access.delete;
         case 'compulsoryDataElements':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'sectionForm':
@@ -283,8 +285,12 @@ const List = React.createClass({
         };
 
         const availableActions = Object.keys(contextActions)
-            .filter(actionsThatRequireCreate, this)
-            .filter(actionsThatRequireDelete, this)
+            // Disable filtering on actions that require create authorities
+            // Editing is also allowed when the object is shared with you even when you do not have the authority to edit that type of object
+            // This is therefore disabled in 2.25 and 2.26 (It should be fixed in 2.27, where it'd require both)
+            // .filter(actionsThatRequireCreate, this)
+            // Same goes for delete
+            // .filter(actionsThatRequireDelete, this)
             .filter((actionName) => {
                 if (actionName === 'share') {
                     return this.context.d2.models[this.props.params.modelType] && this.context.d2.models[this.props.params.modelType].isShareable;
