@@ -100,13 +100,14 @@ class Dropdown extends React.Component {
             model,
             limit,
             fullWidth,
+            top,
             translateLabel,
             ...other
         } = this.props;
 
         return this.state.options.length > limit
             ? (
-                <div style={{ width: fullWidth ? '100%' : 'inherit', position: 'relative' }}>
+                <div style={{ width: fullWidth ? '100%' : 'inherit', position: 'relative', top: top ? top : undefined }}>
                     <Dialog
                         title={labelText}
                         open={this.state.dialogOpen}

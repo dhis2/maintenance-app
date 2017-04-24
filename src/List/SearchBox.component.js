@@ -47,15 +47,21 @@ const SearchBox = React.createClass({
     },
 
     render() {
+        const style = {
+            display: 'inline-block',
+            marginLeft: 16,
+            position: 'relative',
+            top: -15,
+        };
         return this.state.showSearchField ? (
-            <div className="search-list-items">
+            <div className="search-list-items" style={style}>
                 <TextField
                     className="list-search-field"
                     value={this.state.value}
-                    fullWidth
+                    fullWidth={false}
                     type="search"
                     onChange={this._onKeyUp}
-                    hintText={`${this.getTranslation('search_by_name')}`}
+                    floatingLabelText={`${this.getTranslation('search_by_name')}`}
                 />
             </div>
         ) : null;
