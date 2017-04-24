@@ -44,6 +44,9 @@ function configI18n(userSettings) {
     config.i18n.strings.add('about_dhis2');
     config.i18n.strings.add('help');
     config.i18n.strings.add('no_results_found');
+
+    // Others
+    config.i18n.strings.add('version');
 }
 
 function getSystemSettings(d2) {

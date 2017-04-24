@@ -96,11 +96,12 @@ function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSe
 
     const dataSetElementsRows = dataSetElements
         .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
-        .map(({ categoryCombo = {}, dataElement = {}, id }) => {
+        .map((dataSetElement) => {
+            const { categoryCombo = {}, dataElement = {} } = dataSetElement;
             const categoryCombosForSelect = getCategoryCombosForSelect(dataElement.categoryCombo.id);
 
             return (
-                <Row key={id} style={{ alignItems: 'center' }}>
+                <Row key={dataSetElement.dataElement.id} style={{ alignItems: 'center' }}>
                     <div style={styles.elementListItem}>
                         <div>{dataElement.displayName}</div>
                         <div style={styles.originalCategoryCombo}>{dataElement.categoryCombo.displayName}</div>
@@ -109,7 +110,7 @@ function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSe
                         <CategoryComboSelectField
                             categoryCombos={categoryCombosForSelect}
                             value={categoryCombo.id}
-                            onChange={(categoryCombo) => onCategoryComboSelected(id, categoryCombo)}
+                            onChange={(categoryCombo) => onCategoryComboSelected(dataSetElement, categoryCombo)}
                         />
                     </div>
                 </Row>

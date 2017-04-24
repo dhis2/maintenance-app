@@ -9,6 +9,8 @@ import snackActions from './Snackbar/snack.actions';
 import {initAppState, default as appState} from './App/appStateStore';
 import LinearProgress from 'material-ui/LinearProgress';
 import App from './App/App.component';
+import { loadEventProgram } from './EditModel/event-program/actions';
+import eventProgramStore from './EditModel/event-program/store';
 
 import onDemand from './on-demand';
 
@@ -111,13 +113,18 @@ function loadOptionSetObject({params}, replace, callback) {
 }
 
 function loadEventProgramObject({ params }, replace, callback) {
-    loadObject({
+    initState({
         params: {
             modelType: 'program',
             groupName: params.groupName,
             modelId: params.modelId,
         }
-    }, replace, callback);
+    });
+
+    // Fire load action for the event program program to be edited
+    eventProgramStore.dispatch(loadEventProgram({ schema: 'program', id: params.modelId }));
+
+    callback();
 }
 
 function loadList({params}, replace, callback) {
@@ -126,7 +133,7 @@ function loadList({params}, replace, callback) {
         // Also load the initialState without cache so we refresh the assigned organisation units
         // These could have changed by adding an organisation unit which would need to be reflected in the
         // organisation unit tree
-        initState({params}, true);
+        initState({ params });
         return callback();
     }
 

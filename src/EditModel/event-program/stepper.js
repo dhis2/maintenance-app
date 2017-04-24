@@ -2,12 +2,23 @@
 import React from 'react';
 import Stepper from 'material-ui/Stepper/Stepper';
 import StepButton from 'material-ui/Stepper/StepButton';
+import StepContent from 'material-ui/Stepper/StepContent';
 import Step from 'material-ui/Stepper/Step';
 import IconButton from 'material-ui/IconButton/IconButton';
 import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
 import log from 'loglevel';
+import { isString } from 'lodash/fp';
+import { isNumber } from 'lodash/fp';
+
+function isActiveStep(activeStep, step, index) {
+    if (isString(activeStep)) {
+        return activeStep === step.key;
+    }
+
+    return activeStep === index;
+}
 
 /**
  * Create a Stepper component from a configuration object.
@@ -27,15 +38,29 @@ import log from 'loglevel';
  * // <MyStepperComponent activeStep={activeStep.key} />
  * ```
  */
-export const createStepperFromConfig = (stepperConfig) => ({ activeStep, stepperClicked }) => (
-    <Stepper linear={false}>
-        {stepperConfig.map(step => (
-            <Step key={step.key} active={activeStep === step.key}>
-                <StepButton onClick={() => stepperClicked(step.key)}><Translate>{step.name}</Translate></StepButton>
-            </Step>
-        ))}
-    </Stepper>
-);
+export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal') => ({ activeStep, stepperClicked }) => {
+    const getStepChildren  = (step) => {
+          const stepChildren = [];
+
+          stepChildren.push(<StepButton key="button" onClick={() => stepperClicked(step.key)}><Translate>{step.name}</Translate></StepButton>);
+
+          if (step.content) {
+              stepChildren.push(<StepContent key="content"><step.content /></StepContent>)
+          }
+
+          return stepChildren;
+    };
+
+    return (
+        <Stepper linear={false} orientation={orientation} activeStep={isNumber(activeStep) ? activeStep : undefined}>
+            {stepperConfig.map((step, index) => (
+                <Step key={step.key} active={isActiveStep(activeStep, step, index)}>
+                    {getStepChildren(step)}
+                </Step>
+            ))}
+        </Stepper>
+    );
+};
 
 /**
  * Create a StepperContent component from a configuration object. The StepperContent component renders the content that
@@ -71,25 +96,18 @@ export const createStepperContentFromConfig = (stepperConfig) => ({ activeStep, 
     return null;
 };
 
-const styles = {
-    buttons: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-};
-
-export function StepperNavigationButtons({ onBackClick, onForwardClick, style }) {
-    const wrapStyle = Object.assign({}, styles.buttons, style);
-
+export function StepperNavigationBack({ onBackClick }) {
     return (
-        <div style={wrapStyle}>
-            <IconButton onClick={onBackClick}>
-                <BackwardIcon />
-            </IconButton>
-            <IconButton onClick={onForwardClick}>
-                <ForwardIcon />
-            </IconButton>
-        </div>
+        <IconButton onClick={onBackClick}>
+            <BackwardIcon />
+        </IconButton>
+    );
+}
+
+export function StepperNavigationForward({ onForwardClick }) {
+    return (
+        <IconButton onClick={onForwardClick}>
+            <ForwardIcon />
+        </IconButton>
     );
 }

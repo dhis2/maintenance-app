@@ -119,8 +119,6 @@ class DataSetElementField extends Component {
             this.updateCategoryCombosForDataSetElements();
         };
 
-        const d2 = this.context.d2;
-        const api = d2.Api.getApi();
         const generateUids = (numberofUids) => range(0, numberofUids, 1).map(() => generateUid())
         const codes = generateUids(items.length);
 
@@ -168,11 +166,12 @@ class DataSetElementField extends Component {
             .catch(e => console.log(e));
     }
 
-    _updateCategoryComboForDataSetElement = (dataSetElementId, categoryCombo) => {
+    _updateCategoryComboForDataSetElement = (selectedDataSetElement, categoryCombo) => {
         const dataSetElements = this.props.dataSet.dataSetElements;
 
-        if (dataSetElements.some(dataSetElement => dataSetElement.id === dataSetElementId)) {
-            const dataSetElement = dataSetElements.find(dataSetElement => dataSetElement.id === dataSetElementId)
+        if (dataSetElements.some(dataSetElement => dataSetElement === selectedDataSetElement)) {
+            const dataSetElement = dataSetElements.find(dataSetElement => dataSetElement === selectedDataSetElement);
+
             dataSetElement.categoryCombo = categoryCombo;
 
             this.props.onChange({

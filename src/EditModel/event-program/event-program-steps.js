@@ -1,13 +1,7 @@
 import React from 'react';
-import mapProps from 'recompose/mapProps';
-import EditModel from '../EditModel.component';
 import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
-
-const EditProgramDetailsForm = mapProps(props => ({
-    groupName: props.params.groupName,
-    modelType: props.schema,
-    modelId: props.params.modelId })
-)(EditModel);
+import EventProgramNotifications from './notifications/EventProgramNotifications';
+import EditProgramDetailsForm from './program-details/EditProgramDetailsForm';
 
 const steps = [
     {
@@ -19,7 +13,6 @@ const steps = [
         key: 'data_elements',
         name: 'assign_data_elements',
         component: (props) => {
-            console.log(props.modelToEdit.name)
             return (<div>Data element management</div>);
         },
     },
@@ -36,7 +29,7 @@ const steps = [
     {
         key: 'notifications',
         name: 'create_notifications',
-        component: () => (<div>Notifications management</div>),
+        component: EventProgramNotifications,
     },
 ];
 

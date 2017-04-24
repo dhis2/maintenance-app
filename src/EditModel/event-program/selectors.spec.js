@@ -1,4 +1,4 @@
-import { activeStepSelector, modelSelector } from './selectors';
+import { activeStepSelector } from './selectors';
 
 describe('Event Program selectors', () => {
     describe('activeStepSelector', () => {
@@ -22,23 +22,6 @@ describe('Event Program selectors', () => {
             let state;
 
             expect(activeStepSelector(state)).to.be.undefined;
-        });
-    });
-
-    describe('modelSelector', () => {
-        it('should return the model from the state', () => {
-            const fakeModel = {};
-            const state = {
-                model: fakeModel,
-            };
-
-            expect(modelSelector(state)).to.equal(fakeModel);
-        });
-
-        it('should return undefined if state is undefined', () => {
-            let state;
-
-            expect(modelSelector(state)).to.be.undefined;
         });
     });
 });

@@ -12,7 +12,7 @@
     "prestart": "d2-manifest package.json manifest.webapp",
     "start": "webpack-dev-server",
     "coverage": "NODE_ENV=test nyc --include src --exclude src/**/*.spec.js --require babel-register --require babel-polyfill mocha --reporter dot --require config/setup.js --recursive src/**/*.spec.js && nyc report --reporter=lcov",
-    "test": "echo Everything probably works great\\! ## karma start test/config/karma.config.js --single-run true",
+    "test": "NODE_ENV=test mocha --require babel-register --require babel-polyfill --reporter dot --require config/setup.js --recursive src/**/*.spec.js",
     "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest",
     "postbuild": "cp -r src/i18n icon.png ./build/",
     "validate": "npm ls --depth 0 || yarn list",
@@ -32,9 +32,9 @@
     "babel-preset-stage-0": "^6.5.0",
     "classnames": "^2.2.3",
     "css-loader": "^0.26.2",
-    "d2": "27.0.0-1",
+    "d2": "27.0.0-4",
     "d2-manifest": "^1.0.0-2",
-    "d2-ui": "27.0.0-3",
+    "d2-ui": "27.0.0-4",
     "d2-utilizr": "^0.2.9",
     "d3-color": "^1.0.2",
     "d3-format": "^1.0.2",
@@ -73,10 +73,17 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.13.0",
+    "chai": "^3.5.0",
+    "chai-enzyme": "^0.6.1",
+    "enzyme": "^2.8.0",
+    "mocha": "^3.2.0",
+    "nyc": "10.1.2",
     "react-redux": "^5.0.3",
     "redux": "^3.6.0",
     "redux-observable": "^0.14.1",
-    "rxjs": "^5.2.0"
+    "rxjs": "^5.2.0",
+    "sinon": "^2.1.0",
+    "sinon-chai": "^2.9.0"
   },
   "pre-commit": [
     "validate"

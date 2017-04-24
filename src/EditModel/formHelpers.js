@@ -4,6 +4,9 @@ import FormFieldsManager from '../forms/FormFieldsManager';
 import fieldOrderNames from '../config/field-config/field-order';
 import fieldOverrides from '../config/field-overrides/index';
 import { createFieldConfig, typeToFieldMap } from '../forms/fields';
+import mapPropsStream from 'recompose/mapPropsStream';
+import { identity } from 'lodash/fp';
+import { Observable } from 'rxjs';
 
 function getLabelText(labelText, fieldConfig = {}) {
     // Add required indicator when the field is required
@@ -13,11 +16,11 @@ function getLabelText(labelText, fieldConfig = {}) {
     return labelText;
 }
 
-export async function createFieldConfigForModelTypes(modelType) {
+export async function createFieldConfigForModelTypes(modelType, forcedFieldOrderNames) {
     const d2 = await getInstance();
 
     const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
-    formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
+    formFieldsManager.setFieldOrder(forcedFieldOrderNames || fieldOrderNames.for(modelType));
 
     for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
         formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
@@ -119,4 +122,32 @@ export function isAttribute(model, fieldConfig) {
         return true;
     }
     return false;
+}
+
+
+const addModelToFieldConfigProps = model => fieldConfig => ({
+    ...fieldConfig,
+    props: { ...fieldConfig.props, model, }
+});
+
+function addValuesToFieldConfigs(fieldConfigs, model) {
+    return fieldConfigs
+        .map(fieldConfig => ({
+            ...fieldConfig,
+            value: model[fieldConfig.name]
+        }))
+        .map(addModelToFieldConfigProps(model));
+}
+
+export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity) {
+    return mapPropsStream(props$ => props$
+        .filter(({ model }) => model)
+        .combineLatest(
+            Observable.fromPromise(createFieldConfigForModelTypes(schema, fieldNames)),
+            (props, fieldConfigs) => ({
+                ...props,
+                fieldConfigs: filterFieldConfigs(addValuesToFieldConfigs(fieldConfigs, props.model)),
+            })
+        )
+    );
 }
