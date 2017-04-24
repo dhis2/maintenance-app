@@ -1598,9 +1598,9 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@27.0.0-4:
-  version "27.0.0-4"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-27.0.0-4.tgz#417f218d76c19f65ff709e95b53953f1197384ab"
+d2-ui@27.0.0-5:
+  version "27.0.0-5"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-27.0.0-5.tgz#62bde1d1635398efec4102b3f541ae320169dfa8"
 
 d2-utilizr@^0.2.9:
   version "0.2.13"
