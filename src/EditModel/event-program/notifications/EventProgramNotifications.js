@@ -7,14 +7,13 @@ import withHandlers from 'recompose/withHandlers';
 import NotificationList from './NotificationList';
 import { getStageNotifications } from './selectors';
 import EventProgramStageNotificationDeleteDialog from './EventProgramStageNotificationDeleteDialog';
-import EventProgramDeletionNotification from './EventProgramDeletionNotification';
 import { removeStageNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
 import mapPropsStream from 'recompose/mapPropsStream';
 import eventProgramStore from '../eventProgramStore';
+import { __, first, get } from 'lodash/fp';
 
-const notifications$ = eventProgramStore
-    .map(({ program }) => Array.from(getStageNotifications(program).values()));
+const notifications$ = eventProgramStore.map(getStageNotifications);
 
 function EventProgramNotifications({ notifications, askForConfirmation, onCancel, onDelete, open, setOpen, modelToDelete, setEditModel, setAddModel }) {
     return (
@@ -33,15 +32,11 @@ function EventProgramNotifications({ notifications, askForConfirmation, onCancel
                 onConfirm={onDelete}
                 name={modelToDelete && modelToDelete.name}
             />
-            <EventProgramDeletionNotification />
         </div>
     )
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({ removeStageNotification, setEditModel, setAddModel }, dispatch);
-// const mapStateToProps = (state) => ({
-//     notifications: Array.from(getStageNotifications(state.model).values()),
-// });
 
 const enhance = compose(
     // TODO: Impure connect when the reducer is fixed to emit a pure model this can be a pure action

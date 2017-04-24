@@ -1534,11 +1534,11 @@ d2-utilizr@^0.2.9:
     lodash.isset "^4.3.0"
     lodash.isstring "^4.0.1"
 
-d2@27.0.0-1:
-  version "27.0.0-1"
-  resolved "https://registry.yarnpkg.com/d2/-/d2-27.0.0-1.tgz#0660f3c0d3cc9ad838e25fbc2cadbcb995243c7a"
+d2@27.0.0-4:
+  version "27.0.0-4"
+  resolved "https://registry.yarnpkg.com/d2/-/d2-27.0.0-4.tgz#a449f0185c9d2c3522a5a7ac826f56bee2562d3e"
   dependencies:
-    whatwg-fetch "^2.0.1"
+    whatwg-fetch "^2.0.3"
 
 d3-array@1:
   version "1.1.1"
@@ -4789,7 +4789,7 @@ websocket-extensions@>=0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.1.tgz#76899499c184b6ef754377c2dbb0cd6cb55d29e7"
 
-whatwg-fetch@>=0.10.0, whatwg-fetch@^2.0.1:
+whatwg-fetch@>=0.10.0, whatwg-fetch@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.3.tgz#9c84ec2dcf68187ff00bc64e1274b442176e1c84"
 

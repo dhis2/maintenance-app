@@ -146,6 +146,9 @@ export function getFieldUIComponent(type) {
 }
 
 export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
+    const fieldConstants = modelDefinition.modelProperties[fieldConfig.name] &&
+        modelDefinition.modelProperties[fieldConfig.name].constants ||
+        [];
     const basicFieldConfig = {
         name: fieldConfig.name,
         component: fieldConfig.component || getFieldUIComponent(fieldConfig.type),
@@ -158,9 +161,9 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
             isInteger: fieldConfig.type === INTEGER,
             multiLine: fieldConfig.name === 'description',
             fullWidth: true,
-            translateOptions: fieldConfig.constants && !!fieldConfig.constants.length,
+            translateOptions: fieldConstants && !!fieldConstants.length,
             isRequired: fieldConfig.required,
-            options: (fieldConfig.fieldOptions.options || fieldConfig.constants || [])
+            options: (fieldConfig.fieldOptions.options || fieldConstants)
                 .map((constant) => {
                     if (constant.name && constant.value) {
                         return {

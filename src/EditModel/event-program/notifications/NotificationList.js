@@ -45,7 +45,7 @@ export default function NotificationList({ notifications, onRemoveNotification, 
             />
             <DataTable
                 rows={notifications}
-                columns={['displayName', 'lastUpdated']}
+                columns={['name', 'lastUpdated']}
                 contextMenuActions={{ // TODO: Check for permissions
                     edit: onEditNotification,
                     delete: onRemoveNotification,

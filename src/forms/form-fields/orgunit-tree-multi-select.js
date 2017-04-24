@@ -6,7 +6,6 @@ import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.compone
 import TextField from 'material-ui/TextField/TextField';
 import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rxjs';
-import { config } from 'd2/lib/d2';
 
 export default class OrganisationUnitTreeMultiSelect extends React.Component {
     constructor(...args) {

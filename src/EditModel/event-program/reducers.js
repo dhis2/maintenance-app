@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { STEP_CHANGE, STEP_NEXT, STEP_PREVIOUS, MODEL_TO_EDIT_LOADED } from './actions';
+import { STEP_CHANGE, STEP_NEXT, STEP_PREVIOUS, MODEL_TO_EDIT_LOADED, EVENT_PROGRAM_LOAD_SUCCESS, NOTIFY_USER, EVENT_PROGRAM_SAVE_ERROR } from './actions';
 import { NOTIFICATION_STAGE_REMOVE_SUCCESS } from './notifications/actions';
 import { getStageNotifications } from './notifications/selectors';
 import steps from './event-program-steps';
@@ -47,14 +47,25 @@ function stepperReducer(state = { activeStep: 'details' }, action) {
 }
 
 function modelToEditReducer(state = null, action) {
+    if (NOTIFY_USER === action.type) {
+        console.log(action.payload);
+    }
+
+    if (EVENT_PROGRAM_LOAD_SUCCESS === action.type) {
+        console.log(action);
+    }
+
     if (MODEL_TO_EDIT_LOADED === action.type) {
         return action.payload;
     }
 
-    // TODO: Impure action...
     if (NOTIFICATION_STAGE_REMOVE_SUCCESS === action.type) {
-        const notifications = getStageNotifications(state);
-        notifications.delete(action.payload.id);
+        // Set notification state
+        console.log('show notification deleted message');
+    }
+
+    if (EVENT_PROGRAM_SAVE_ERROR === action.type) {
+        console.error(action.payload);
     }
 
     return state;

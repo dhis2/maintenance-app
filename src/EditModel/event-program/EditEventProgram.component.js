@@ -1,16 +1,16 @@
 import React from 'react';
 import { camelCaseToUnderscores } from 'd2-utilizr';
 import mapPropsStream from 'recompose/mapPropsStream';
-import modelToEditStore from '../modelToEditStore';
 import FormHeading from '../FormHeading';
 import FormSubHeading from '../FormSubHeading';
 import { Provider } from 'react-redux';
 import EventProgramStepper from './EventProgramStepper';
 import EventProgramStepperContent from './EventProgramStepperContent';
-import eventProgramStore from './store';
+import store from './store';
+import eventProgramStoreData from './eventProgramStore';
 import EventProgramButtons from './EventProgramButtons';
 
-const withPreLoadedModel = mapPropsStream(props$ => props$.combineLatest(modelToEditStore, (props, model) => ({ ...props, model})));
+const withPreLoadedModel = mapPropsStream(props$ => props$.combineLatest(eventProgramStoreData, (props, eventProgramState) => ({ ...props, model: eventProgramState.program}) ));
 
 const styles = {
     heading: {
@@ -25,7 +25,7 @@ function EditEventProgram(props) {
     const { groupName } = props.params;
 
     return (
-        <Provider store={eventProgramStore}>
+        <Provider store={store}>
             <div>
                 <div style={styles.heading}>
                     <FormHeading schema={schema}>{camelCaseToUnderscores(schema)}</FormHeading>

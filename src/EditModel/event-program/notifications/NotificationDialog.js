@@ -126,6 +126,7 @@ const steps = [
                     skipLogicForRecipients
                 )
             )(({ fieldConfigs = [], onUpdateField }) => {
+                console.log(fieldConfigs);
                 return (
                     <FormBuilder
                         fields={fieldConfigs}

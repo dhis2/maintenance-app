@@ -6,7 +6,7 @@ import Paper from 'material-ui/Paper/Paper';
 import { createFieldConfigsFor } from '../../formHelpers';
 import mapPropsStream from 'recompose/mapPropsStream';
 import eventProgramStore from '../eventProgramStore';
-import { get } from 'lodash/fp';
+import { get, noop } from 'lodash/fp';
 import { editFieldChanged } from '../actions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -36,14 +36,13 @@ const styles = {
     },
 };
 
-function EditProgramDetailsForm({ fieldConfigs, model, editFieldChanged, ...props }) {
-    console.log(model.dirty, model.name);
+function EditProgramDetailsForm({ fieldConfigs, editFieldChanged, detailsFormStatusChange = noop }) {
     return (
         <Paper style={styles.paper}>
             <FormBuilder
                 fields={fieldConfigs}
                 onUpdateField={editFieldChanged}
-                onUpdateFormStatus={console.log.bind(console, 'status:')}
+                onUpdateFormStatus={detailsFormStatusChange}
             />
         </Paper>
     );

@@ -8,13 +8,16 @@ const styles = {
     },
 };
 
-export default function AssignOrganisationUnits({model}) {
+export default function AssignOrganisationUnits({ modelToEdit }) {
+    if (!modelToEdit) {
+        return null;
+    }
     return (
         <Paper style={styles.paper}>
             <OrganisationUnitTreeMultiSelect
-                value={model.organisationUnits}
-                model={model}
-                modelDefinition={model.modelDefinition}
+                value={modelToEdit.organisationUnits}
+                model={modelToEdit}
+                modelDefinition={modelToEdit.modelDefinition}
             />
         </Paper>
     );
