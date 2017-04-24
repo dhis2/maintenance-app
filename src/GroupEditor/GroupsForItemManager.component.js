@@ -65,7 +65,7 @@ export default React.createClass({
         };
 
         const d2 = this.context.d2;
-        const accessibleModels = ['indicator', 'dataElement']
+        const accessibleModels = ['indicator', 'dataElement', 'categoryOption']
             .filter(schemaName => d2.currentUser.canCreate(d2.models[`${schemaName}Group`]))
 
         return (

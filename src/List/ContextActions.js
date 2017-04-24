@@ -149,7 +149,7 @@ contextActions.compulsoryDataElements
             .get(
                 'dataElementOperands',
                 {
-                    fields: 'dataElementId,optionComboId,displayName',
+                    fields: 'dataElement[id],categoryOptionCombo[id],displayName',
                     totals: false,
                     paging: false,
                     dataSet: model.id,
@@ -170,6 +170,7 @@ contextActions.compulsoryDataElements
             .map(dataSetElement => dataSetElement.dataElement.id);
 
         const dataElementOperandsForDataSet = dataElementOperands
+            .map(dataElementOperand => Object.assign(dataElementOperand, { dataElementId: dataElementOperand.dataElement.id, optionComboId: dataElementOperand.categoryOptionCombo.id }))
             .filter(dataElementOperand => dataSetDataElementIds.indexOf(dataElementOperand.dataElementId) >= 0);
 
         compulsoryDataElementStore.setState({
