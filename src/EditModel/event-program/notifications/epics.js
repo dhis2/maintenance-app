@@ -54,7 +54,6 @@ const saveProgramStageNotification = (action$, store) => action$
                 return Observable.of(eventProgramState);
             })
             .map(eventProgramState => eventProgramStore.setState(eventProgramState))
-            .catch((err) => console.log(err))
             .mapTo(Observable.of(saveStageNotificationSuccess(), setEditModel(null)))
             .mergeAll()
             .catch(() => Observable.of(saveStageNotificationError()))

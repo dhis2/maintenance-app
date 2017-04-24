@@ -67,7 +67,6 @@ export const programModel = action$ => action$
     .flatMap(loadEventProgramMetadataByProgramId)
     .flatMap(createEventProgramStoreStateFromMetadataResponse)
     .do(storeState => eventProgramStore.setState(storeState))
-    .do(() => console.log(eventProgramStore.getState()))
     .mapTo(loadEventProgramSuccess());
 
 export const programModelEdit = action$ => action$

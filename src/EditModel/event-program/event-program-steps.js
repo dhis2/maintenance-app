@@ -13,7 +13,6 @@ const steps = [
         key: 'data_elements',
         name: 'assign_data_elements',
         component: (props) => {
-            console.log(props.modelToEdit.name)
             return (<div>Data element management</div>);
         },
     },

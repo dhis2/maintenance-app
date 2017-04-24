@@ -12,8 +12,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 const program$ = eventProgramStore
-    .map(get('program'))
-    .do(console.log.bind(console));
+    .map(get('program'));
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({ editFieldChanged }, dispatch);
 

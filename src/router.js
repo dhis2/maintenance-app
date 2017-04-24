@@ -121,7 +121,7 @@ function loadEventProgramObject({ params }, replace, callback) {
         }
     });
 
-    console.log('Fire load action for event program', 'program', params);
+    // Fire load action for the event program program to be edited
     eventProgramStore.dispatch(loadEventProgram({ schema: 'program', id: params.modelId }));
 
     callback();

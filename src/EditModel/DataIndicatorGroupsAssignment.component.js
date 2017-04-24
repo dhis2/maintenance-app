@@ -91,7 +91,6 @@ export default React.createClass({
     },
 
     _updateGroupStatus(indicatorGroupSetId, oldValue, event) {
-        console.log(indicatorGroupSetId, oldValue, event);
         // TODO: Very bad to change props and set d2.model.dirty manually
         this.props.source.dirty = true;
 

@@ -48,24 +48,20 @@ function stepperReducer(state = { activeStep: 'details' }, action) {
 
 function modelToEditReducer(state = null, action) {
     if (NOTIFY_USER === action.type) {
-        console.log(action.payload);
+        // TODO: Hook up to Snackbar
     }
 
-    if (EVENT_PROGRAM_LOAD_SUCCESS === action.type) {
-        console.log(action);
-    }
 
     if (MODEL_TO_EDIT_LOADED === action.type) {
         return action.payload;
     }
 
     if (NOTIFICATION_STAGE_REMOVE_SUCCESS === action.type) {
-        // Set notification state
-        console.log('show notification deleted message');
+        // TODO: Hook up to Snackbar
     }
 
     if (EVENT_PROGRAM_SAVE_ERROR === action.type) {
-        console.error(action.payload);
+        // TODO: Hook up to Snackbar
     }
 
     return state;
