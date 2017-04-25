@@ -1,3 +1,0 @@
-describe('Store: listStore', () => {
-
-});
