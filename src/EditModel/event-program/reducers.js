@@ -46,29 +46,7 @@ function stepperReducer(state = { activeStep: 'details' }, action) {
     return state;
 }
 
-function modelToEditReducer(state = null, action) {
-    if (NOTIFY_USER === action.type) {
-        // TODO: Hook up to Snackbar
-    }
-
-
-    if (MODEL_TO_EDIT_LOADED === action.type) {
-        return action.payload;
-    }
-
-    if (NOTIFICATION_STAGE_REMOVE_SUCCESS === action.type) {
-        // TODO: Hook up to Snackbar
-    }
-
-    if (EVENT_PROGRAM_SAVE_ERROR === action.type) {
-        // TODO: Hook up to Snackbar
-    }
-
-    return state;
-}
-
 export default combineReducers({
     step: stepperReducer,
-    model: modelToEditReducer,
     stageNotifications: stageNotificationsReducer,
 });

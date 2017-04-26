@@ -1,5 +1,5 @@
 import Store from 'd2-ui/lib/store/Store';
-import { equals, first, negate, some, get, compose, find, identity, map, __, concat } from 'lodash/fp';
+import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, findIndex, isObject } from 'lodash/fp';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 
 // programSelector :: StoreState -> Model<Program>
@@ -12,7 +12,7 @@ const programStagesSelector = get('programStages');
 const programStageNotificationsSelector = get('programStageNotifications');
 
 // checkIfDirty :: Model -> Boolean
-const checkIfDirty = model => model.isDirty();
+const checkIfDirty = model => model && model.isDirty();
 
 // modelToJson :: Model -> Object
 const modelToJson = getOwnedPropertyJSON;
@@ -60,6 +60,17 @@ export const getMetaDataToSend = state => {
     return payload;
 };
 
+// isValidState :: StoreState -> Boolean
+function isValidState(state) {
+    const acceptedKeys = ['program', 'programStages', 'programStageSections', 'programStageNotifications'];
+
+    return Object
+        .keys(state)
+        .every((key) => {
+            return some(equals(key), acceptedKeys);
+        });
+}
+
 /**
  * Contains all the event related d2 models.
  * We can't store these in the redux store since they are mutable objects. This store works similar to the Redux store
@@ -88,5 +99,22 @@ export const getMetaDataToSend = state => {
      &programStageSections:filter=programStage.program.id:eq:VBqh0ynB2wv
  */
 const eventProgramStore = Store.create();
+
+const storeSetState = eventProgramStore.setState.bind(eventProgramStore);
+
+eventProgramStore.setState = newState => {
+    if (!isObject(newState)) {
+        throw new Error('You are attempting to set a state that is a non object');
+    }
+
+    if (!isValidState(newState)) {
+        throw new Error('You are attempting to set an invalid state onto the eventProgramStore');
+    }
+
+    storeSetState({
+        ...eventProgramStore.getState(),
+        ...newState,
+    });
+};
 
 export default eventProgramStore;

@@ -3,31 +3,37 @@ import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisat
 import EventProgramNotifications from './notifications/EventProgramNotifications';
 import EditProgramDetailsForm from './program-details/EditProgramDetailsForm';
 
+export const STEP_DETAILS = 'details';
+export const STEP_DATA_ELEMENTS = 'data_elements';
+export const STEP_DATA_ENTRY_FORMS = 'data_entry_forms';
+export const STEP_ASSIGN_ORGANISATION_UNITS = 'assign_organisation_units';
+export const STEP_NOTIFICATIONS = 'notifications';
+
 const steps = [
     {
-        key: 'details',
+        key: STEP_DETAILS,
         name: 'add_program_details',
         component: EditProgramDetailsForm,
     },
     {
-        key: 'data_elements',
+        key: STEP_DATA_ELEMENTS,
         name: 'assign_data_elements',
         component: (props) => {
             return (<div>Data element management</div>);
         },
     },
     {
-        key: 'data_entry_forms',
+        key: STEP_DATA_ENTRY_FORMS,
         name: 'create_data_entry_form',
         component: () => (<div>Data entry form management</div>),
     },
     {
-        key: 'organisation_units',
+        key: STEP_ASSIGN_ORGANISATION_UNITS,
         name: 'assign_organisation_units',
         component: AssignOrganisationUnits,
     },
     {
-        key: 'notifications',
+        key: STEP_NOTIFICATIONS,
         name: 'create_notifications',
         component: EventProgramNotifications,
     },

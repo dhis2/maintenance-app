@@ -11,8 +11,11 @@
   "scripts": {
     "prestart": "d2-manifest package.json manifest.webapp",
     "start": "webpack-dev-server",
-    "coverage": "NODE_ENV=test nyc --include src --exclude src/**/*.spec.js --require babel-register --require babel-polyfill mocha --reporter dot --require config/setup.js --recursive src/**/*.spec.js && nyc report --reporter=lcov",
+    "coverage": "NODE_ENV=test nyc --include src --exclude src/**/*.spec.js --require babel-register --require babel-polyfill mocha --reporter dot --require config/setup.js --recursive src/**/*.spec.js",
+    "postcoverage": " nyc report --reporter=lcov",
     "test": "NODE_ENV=test mocha --require babel-register --require babel-polyfill --reporter spec  --require config/setup.js --recursive src/**/*.spec.js",
+    "test:watch": "yarn test -- --watch",
+    "prebuild": "yarn test",
     "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest",
     "postbuild": "cp -r src/i18n icon.png ./build/",
     "validate": "npm ls --depth 0 || yarn list",
@@ -88,7 +91,8 @@
     "sinon-chai": "^2.9.0"
   },
   "pre-commit": [
-    "validate"
+    "validate",
+    "test"
   ],
   "manifest.webapp": {
     "name": "Maintenance app",

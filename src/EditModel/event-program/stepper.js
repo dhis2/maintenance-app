@@ -24,6 +24,7 @@ function isActiveStep(activeStep, step, index) {
  * Create a Stepper component from a configuration object.
  *
  * @param {Array} stepperConfig Config array that defines the steps that should be shown.
+ * @param {String} [orientation='horizontal'] The orientation in which to render the Stepper.
  *
  * @returns {ReactComponent} A React component that will render the steps as defined by the `stepperConfig`
  *
@@ -72,17 +73,6 @@ export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal
  * currently active step.
  *
  * @returns {ReactComponent} A React component that will render the `component` property of the currently active step.
- *
- * @example
- * ```
- * const steps = [
- *      { key: 'first', name: 'First step!', component: () => (<div>First</div>) },
- *      { key: 'last', name: 'My last step!', component: () => (<div>First</div>) },
- * ];
- * const MyStepperComponent = createStepperFromConfig(steps)
- *
- * // <MyStepperComponent activeStep="first" /> // Will render <div>First</div>
- * ```
  */
 export const createStepperContentFromConfig = (stepperConfig) => ({ activeStep, ...props }) => {
     const step = stepperConfig.find(stepConfig => stepConfig.key === activeStep);
@@ -91,7 +81,11 @@ export const createStepperContentFromConfig = (stepperConfig) => ({ activeStep, 
         return <step.component {...props} />
     }
 
-    log.warn(`Could not find a content component for a step with key (${activeStep} in`, stepperConfig);
+    if (activeStep) {
+        log.warn(`Could not find a content component for a step with key (${activeStep}) in`, stepperConfig);
+    } else {
+        log.warn('The `activeStep` prop is undefined, therefore the component created by `createStepperContentFromConfig` will render null');
+    }
 
     return null;
 };

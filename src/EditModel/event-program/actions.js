@@ -12,6 +12,13 @@ export const previousStep = () => ({ type: STEP_PREVIOUS });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Model
+export const MODEL_TO_EDIT_LOADED = 'MODEL_TO_EDIT_LOADED';
+export const MODEL_TO_EDIT_FIELD_CHANGED = 'MODEL_TO_EDIT_FIELD_CHANGED';
+
+export const editFieldChanged = (field, value) => ({ type: MODEL_TO_EDIT_FIELD_CHANGED, payload: { field, value } });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Event program
 export const EVENT_PROGRAM_LOAD = 'EVENT_PROGRAM_LOAD';
 export const EVENT_PROGRAM_LOAD_SUCCESS = 'EVENT_PROGRAM_LOAD_SUCCESS';
 export const EVENT_PROGRAM_LOAD_ERROR = 'EVENT_PROGRAM_LOAD_ERROR';
@@ -19,11 +26,6 @@ export const EVENT_PROGRAM_LOAD_ERROR = 'EVENT_PROGRAM_LOAD_ERROR';
 export const loadEventProgram = createActionCreator(EVENT_PROGRAM_LOAD);
 export const loadEventProgramSuccess = createActionCreator(EVENT_PROGRAM_LOAD_SUCCESS);
 export const loadEventProgramFailure = createActionCreator(EVENT_PROGRAM_LOAD_ERROR);
-
-export const MODEL_TO_EDIT_LOADED = 'MODEL_TO_EDIT_LOADED';
-export const MODEL_TO_EDIT_FIELD_CHANGED = 'MODEL_TO_EDIT_FIELD_CHANGED';
-
-export const editFieldChanged = (field, value) => ({ type: MODEL_TO_EDIT_FIELD_CHANGED, payload: { field, value } });
 
 export const EVENT_PROGRAM_SAVE = 'EVENT_PROGRAM_SAVE';
 export const EVENT_PROGRAM_SAVE_SUCCESS = 'EVENT_PROGRAM_SAVE_SUCCESS';
