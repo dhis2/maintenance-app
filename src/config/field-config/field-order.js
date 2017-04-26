@@ -230,6 +230,7 @@ const fieldOrderByName = new Map([
         'shortName',
         'code',
         'description',
+        'instruction',
         'importance',
         'ruleType',
         'importance',
@@ -286,6 +287,7 @@ const fieldOrderByName = new Map([
         'code',
         'validationRules',
         'recipientUserGroups',
+        'sendStrategy',
         'notifyUsersInHierarchyOnly',
         'messageTemplate',
     ]]
