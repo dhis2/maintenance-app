@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withState, withProps, compose, onlyUpdateForKeys } from 'recompose';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
 import MissingValueStrategy from './MissingValueStrategy';
+import SlidingWindow from './SlidingWindow';
 import Dialog from 'material-ui/Dialog';
 import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
 import Store from 'd2-ui/lib/store/Store';
@@ -18,9 +19,9 @@ const styles = {
     },
 };
 
-function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, updateExpressionDetails, expressionStatusStore, onExpressionChanged, onMissingStrategyChanged }, { d2 }) {
+function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, updateExpressionDetails, expressionStatusStore, onExpressionChanged, onMissingStrategyChanged, onSlidingWindowChanged }, { d2 }) {
     return (
-        <Dialog 
+        <Dialog
             open={open}
             onRequestClose={close}
             modal
@@ -32,6 +33,10 @@ function ValidationRuleExpressionDialog({ open, close, actions, expressionDetail
             <MissingValueStrategy
                 value={expressionDetails.missingValueStrategy}
                 onChange={onMissingStrategyChanged}
+            />
+            <SlidingWindow
+                value={expressionDetails.slidingWindow}
+                onChange={onSlidingWindowChanged}
             />
             <ExpressionManager
                 descriptionLabel={d2.i18n.getTranslation('description')}
@@ -74,6 +79,10 @@ const enhanceExpressionDialog = compose(
             onMissingStrategyChanged: (missingValueStrategy) => updateExpressionDetails({
                 ...expressionDetails,
                 missingValueStrategy,
+            }),
+            onSlidingWindowChanged: (slidingWindow) => updateExpressionDetails({
+                ...expressionDetails,
+                slidingWindow,
             }),
         })
     })
