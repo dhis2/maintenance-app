@@ -2,6 +2,7 @@ import React from 'react';
 import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
 import EventProgramNotifications from './notifications/EventProgramNotifications';
 import EditProgramDetailsForm from './program-details/EditProgramDetailsForm';
+import AssignDataElements from './assign-data-elements/AssignDataElements';
 
 export const STEP_DETAILS = 'details';
 export const STEP_DATA_ELEMENTS = 'data_elements';
@@ -18,9 +19,7 @@ const steps = [
     {
         key: STEP_DATA_ELEMENTS,
         name: 'assign_data_elements',
-        component: (props) => {
-            return (<div>Data element management</div>);
-        },
+        component: AssignDataElements,
     },
     {
         key: STEP_DATA_ENTRY_FORMS,

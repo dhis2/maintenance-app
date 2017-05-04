@@ -1,21 +1,24 @@
-import { NOTIFICATION_STATE_SET_EDIT_MODEL, NOTIFICATION_STAGE_SET_VALUE } from './actions';
+import { NOTIFICATION_STATE_SET_EDIT_MODEL, NOTIFICATION_STAGE_SET_VALUE, NOTIFICATION_STAGE_SAVE_ERROR } from './actions';
 
 export function stageNotificationsReducer(state = { isDeleting: false }, action) {
-    if (NOTIFICATION_STATE_SET_EDIT_MODEL === action.type) {
-        return {
-            ...state,
-            modelToEdit: action.payload,
-        }
-    }
+    switch(action.type) {
+        case NOTIFICATION_STAGE_SET_VALUE:
+            const model = state.modelToEdit;
+            model[action.payload.property] = action.payload.value;
 
-    if (NOTIFICATION_STAGE_SET_VALUE === action.type) {
-        const model = state.modelToEdit;
-        model[action.payload.property] = action.payload.value;
-
-        return {
-            ...state,
-            modelToEdit: model,
-        };
+            return {
+                ...state,
+                modelToEdit: model,
+            };
+        case NOTIFICATION_STATE_SET_EDIT_MODEL:
+            return {
+                ...state,
+                modelToEdit: action.payload,
+            };
+        case NOTIFICATION_STAGE_SAVE_ERROR:
+            // TODO: Notify user of the error
+            console.error(action.payload);
+            return;
     }
 
     return state;

@@ -43,6 +43,10 @@ export default React.createClass({
                 };
             }))
             .then(options => {
+                // TODO: Remove this if and cancel the callback correctly (https://facebook.github.io/react/blog/2015/12/16/ismounted-antipattern.html)
+                if (!this.isMounted()) {
+                    return;
+                }
                 this.setState({
                     // TODO: Behold the very special hack for renaming the very special 'default' cat combo to 'None'
                     options: options.map(option => Object.assign(

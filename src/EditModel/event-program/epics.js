@@ -2,13 +2,43 @@ import { MODEL_TO_EDIT_FIELD_CHANGED, EVENT_PROGRAM_LOAD, EVENT_PROGRAM_SAVE, lo
 import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { get, first, map, compose } from 'lodash/fp';
+import { get, getOr, first, map, compose, groupBy, isEqual, find } from 'lodash/fp';
 import { getInstance } from 'd2/lib/d2';
+import { generateUid } from 'd2/lib/uid';
+import { getImportStatus } from './metadataimport-helpers';
+import { goToAndScrollUp } from '../../router-utils';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
 
 function loadEventProgramMetadataByProgramId(programId) {
+    if (programId === 'add') {
+        const programUid = generateUid();
+
+        return Observable.of({
+            programs: [{
+                id: programUid,
+            }],
+            programStages: [{
+                id: generateUid(),
+                program: {
+                    id: programUid,
+                },
+                programStageDataElements: [],
+                notificationTemplates: []
+            }],
+        })
+            .flatMap(createEventProgramStoreStateFromMetadataResponse)
+            .map(state => {
+                // Set some eventProgram defaults
+                state.program.programType = 'WITHOUT_REGISTRATION';
+
+                const programStage = first(state.programStages);
+                programStage.name = state.program.id;
+
+                return state;
+            });
+    }
     const programFields = [
         ':owner,displayName',
         'attributeValues[:all,attribute[id,name,displayName]]',
@@ -24,9 +54,10 @@ function loadEventProgramMetadataByProgramId(programId) {
             `&programs:filter=id:eq:${programId}&programStages=true`,
             `&programs:fields=${programFields}`,
             `&programStages:filter=program.id:eq:${programId}`,
-            '&programStages:fields=:owner,notificationTemplates[:owner,displayName]',
+            '&programStages:fields=:owner,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName]',
             `&programStageSections:filter=programStage.program.id:eq:${programId}`,
-        ].join(''))));
+        ].join(''))))
+        .flatMap(createEventProgramStoreStateFromMetadataResponse)
 }
 
 function createEventProgramStoreStateFromMetadataResponse(eventProgramMetadata) {
@@ -47,7 +78,7 @@ function createEventProgramStoreStateFromMetadataResponse(eventProgramMetadata) 
             // extractProgramNotifications :: Array<Object> -> Object<programStageId, Model>
             const extractProgramNotifications = programStages => programStages.reduce((acc, programStage) => ({
                 ...acc,
-                [programStage.id]: createNotificationTemplateModels(programStage.notificationTemplates),
+                [programStage.id]: createNotificationTemplateModels(getOr([], 'notificationTemplates', programStage)),
             }), {});
 
             return {
@@ -65,7 +96,6 @@ export const programModel = action$ => action$
     .ofType(EVENT_PROGRAM_LOAD)
     .map(get('payload.id'))
     .flatMap(loadEventProgramMetadataByProgramId)
-    .flatMap(createEventProgramStoreStateFromMetadataResponse)
     .do(storeState => eventProgramStore.setState(storeState))
     .mapTo(loadEventProgramSuccess());
 
@@ -94,9 +124,17 @@ const saveEventProgram = eventProgramStore
     .filter(isStoreStateDirty)
     .map(getMetaDataToSend)
     .flatMap(metaDataPayload => api$
-            .flatMap(api => Observable.fromPromise(api.post('metadata', metaDataPayload)))
-            .mapTo(saveEventProgramSuccess())
-            .catch(saveEventProgramError)
+        .flatMap(api => Observable.fromPromise(api.post('metadata', metaDataPayload)))
+        .map(getImportStatus)
+        .map(importStatus => {
+            if (importStatus.isOk()) {
+                // TODO: Not the most elegant place to do this maybe
+                goToAndScrollUp(`/list/programSection/program`);
+                return saveEventProgramSuccess();
+            }
+            return saveEventProgramError(importStatus.errorsPerObject);
+        })
+        .catch((err) => Observable.of(saveEventProgramError(err)))
     );
 
 export const programModelSave = action$ => action$

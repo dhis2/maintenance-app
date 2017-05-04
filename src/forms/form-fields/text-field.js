@@ -6,7 +6,7 @@ export default class TextFormField extends Component {
     constructor(props, ...args) {
         super(props, ...args);
         this.state = {
-            fieldValue: props.value || '',
+            fieldValue: props.value || props.value === 0 ? props.value : '',
         };
 
         this.updateOnChange = Action.create(`updateOnKeyUp - ${props.name}`);

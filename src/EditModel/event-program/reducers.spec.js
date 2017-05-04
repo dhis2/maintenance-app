@@ -6,6 +6,7 @@ import * as steps from './event-program-steps';
 describe('Event Program reducer', () => {
     it('should return the default state', () => {
         const expectedDefaultState = {
+            eventProgram: {},
             step: {
                 activeStep: 'details',
             },
@@ -34,6 +35,7 @@ describe('Event Program reducer', () => {
         describe('STEP_CHANGE', () => {
             it('should change the activeStep when receiving a STEP_CHANGE action', () => {
                 const expectedDefaultState = {
+                    eventProgram: {},
                     step: {
                         activeStep: steps.STEP_DATA_ELEMENTS,
                     },
@@ -52,6 +54,7 @@ describe('Event Program reducer', () => {
         describe('STEP_NEXT', () => {
             it('should change the activeStep to data entry', () => {
                 const expectedDefaultState = {
+                    eventProgram: {},
                     step: {
                         activeStep: steps.STEP_DATA_ENTRY_FORMS,
                     },
@@ -67,6 +70,7 @@ describe('Event Program reducer', () => {
 
             it('should not go to the next action when already at the last', () => {
                 const expectedDefaultState = {
+                    eventProgram: {},
                     step: {
                         activeStep: steps.STEP_NOTIFICATIONS,
                     },
@@ -84,6 +88,7 @@ describe('Event Program reducer', () => {
         describe('STEP_PREVIOUS', () => {
             it('should go to the next step', () => {
                 const expectedDefaultState = {
+                    eventProgram: {},
                     step: {
                         activeStep: steps.STEP_DATA_ENTRY_FORMS,
                     },
@@ -99,6 +104,7 @@ describe('Event Program reducer', () => {
 
             it('should not go to the previous action when already at the first', () => {
                 const expectedDefaultState = {
+                    eventProgram: {},
                     step: {
                         activeStep: steps.STEP_DETAILS,
                     },

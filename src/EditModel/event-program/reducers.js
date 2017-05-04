@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { STEP_CHANGE, STEP_NEXT, STEP_PREVIOUS, MODEL_TO_EDIT_LOADED, EVENT_PROGRAM_LOAD_SUCCESS, NOTIFY_USER, EVENT_PROGRAM_SAVE_ERROR } from './actions';
+import { STEP_CHANGE, STEP_NEXT, STEP_PREVIOUS, MODEL_TO_EDIT_LOADED, EVENT_PROGRAM_LOAD_SUCCESS, NOTIFY_USER, EVENT_PROGRAM_SAVE_ERROR, EVENT_PROGRAM_SAVE_SUCCESS } from './actions';
 import { NOTIFICATION_STAGE_REMOVE_SUCCESS } from './notifications/actions';
 import { getStageNotifications } from './notifications/selectors';
 import steps from './event-program-steps';
@@ -46,7 +46,22 @@ function stepperReducer(state = { activeStep: 'details' }, action) {
     return state;
 }
 
+function eventProgramReducer(state = {}, action) {
+    switch(action.type) {
+        case EVENT_PROGRAM_SAVE_SUCCESS:
+            console.log('Success', action.payload);
+            break;
+        case EVENT_PROGRAM_SAVE_ERROR: {
+            console.log('Error', action.payload);
+            break;
+        }
+    }
+
+    return state;
+}
+
 export default combineReducers({
+    eventProgram: eventProgramReducer,
     step: stepperReducer,
     stageNotifications: stageNotificationsReducer,
 });
