@@ -41,7 +41,6 @@ class EditDataEntryForm extends Component {
     }
 
     sectionsChanged = (newSections) => {
-        console.warn('New sections:', newSections);
         this.setState({
             sections: newSections,
         });

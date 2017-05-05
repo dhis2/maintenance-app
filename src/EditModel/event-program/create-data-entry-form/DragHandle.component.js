@@ -8,7 +8,7 @@ const dragHandleHoverColor = blue200;
 
 const dragHandleStyle = {
     userSelect: 'none',
-    cursor: 'pointer',
+    cursor: 'move',
     transition: 'none',
 };
 
@@ -17,7 +17,7 @@ const DragHandle = SortableHandle(({ active, light }) =>
         marginRight: '2rem',
     }}>
         <FontIcon
-            color={active ? dragHandleHoverColor : (light ? dragHandleColor : 'white')}
+            color={active ? dragHandleHoverColor : (light ? 'white' : dragHandleColor)}
             hoverColor={dragHandleHoverColor}
             className="material-icons"
             style={dragHandleStyle}
