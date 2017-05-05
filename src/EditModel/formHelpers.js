@@ -7,6 +7,11 @@ import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { identity } from 'lodash/fp';
 import { Observable } from 'rxjs';
+import React from 'react';
+import compose from 'recompose/compose';
+import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { noop, } from 'lodash/fp';
+import { wrapInPaper } from './componentHelpers';
 
 function getLabelText(labelText, fieldConfig = {}) {
     // Add required indicator when the field is required
@@ -150,4 +155,26 @@ export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = i
             })
         )
     );
+}
+
+export function createFormFor(source$, schema, properties) {
+    const enhance = compose(
+        mapPropsStream(props$ => props$
+            .combineLatest(source$, (props, model) => ({ ...props, model}))
+        ),
+        createFieldConfigsFor(schema, properties),
+        wrapInPaper
+    );
+
+    function CreatedFormBuilderForm({ fieldConfigs, editFieldChanged, detailsFormStatusChange = noop }) {
+        return (
+            <FormBuilder
+                fields={fieldConfigs}
+                onUpdateField={editFieldChanged}
+                onUpdateFormStatus={detailsFormStatusChange}
+            />
+        );
+    }
+
+    return enhance(CreatedFormBuilderForm);
 }

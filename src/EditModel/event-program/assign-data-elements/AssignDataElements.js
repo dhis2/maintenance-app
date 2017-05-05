@@ -21,8 +21,10 @@ import pure from 'recompose/pure';
 
 const d2$ = Observable.fromPromise(getInstance());
 
+const getFirstProgramStage = compose(first, get('programStages'));
+
 const programStage$ = eventProgramStore
-    .map(compose(first, get('programStages')))
+    .map(getFirstProgramStage)
     .do(console.log.bind(console));
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

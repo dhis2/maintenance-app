@@ -33,6 +33,8 @@ export function getSideBarConfig() {
                     'indicatorType',
                     'indicatorGroup',
                     'indicatorGroupSet',
+                    'programIndicator',
+                    'programIndicatorGroup',
                 ],
             },
 

@@ -2,13 +2,13 @@ const createActionCreator = (type) => (payload) => ({ type, payload });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Stepper
-export const STEP_CHANGE = 'STEP_CHANGE';
-export const STEP_NEXT = 'STEP_NEXT';
-export const STEP_PREVIOUS = 'STEP_PREVIOUS';
+export const EVENT_PROGRAM_STEP_CHANGE = 'EVENT_PROGRAM_STEP_CHANGE';
+export const EVENT_PROGRAM_STEP_NEXT = 'EVENT_PROGRAM_STEP_NEXT';
+export const EVENT_PROGRAM_STEP_PREVIOUS = 'EVENT_PROGRAM_STEP_PREVIOUS';
 
-export const changeStep = (stepKey) => ({ type: STEP_CHANGE, payload: stepKey });
-export const nextStep = () => ({ type: STEP_NEXT });
-export const previousStep = () => ({ type: STEP_PREVIOUS });
+export const changeStep = (stepKey) => ({ type: EVENT_PROGRAM_STEP_CHANGE, payload: stepKey });
+export const nextStep = () => ({ type: EVENT_PROGRAM_STEP_NEXT });
+export const previousStep = () => ({ type: EVENT_PROGRAM_STEP_PREVIOUS });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Model

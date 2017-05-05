@@ -3,14 +3,17 @@ import { camelCaseToUnderscores } from 'd2-utilizr';
 import mapPropsStream from 'recompose/mapPropsStream';
 import FormHeading from '../FormHeading';
 import FormSubHeading from '../FormSubHeading';
-import { Provider } from 'react-redux';
 import EventProgramStepper from './EventProgramStepper';
 import EventProgramStepperContent from './EventProgramStepperContent';
-import store from './store';
-import eventProgramStoreData from './eventProgramStore';
+import eventProgramStore$ from './eventProgramStore';
 import EventProgramButtons from './EventProgramButtons';
 
-const withPreLoadedModel = mapPropsStream(props$ => props$.combineLatest(eventProgramStoreData, (props, eventProgramState) => ({ ...props, model: eventProgramState.program}) ));
+const withPreLoadedModel = mapPropsStream(props$ => props$
+    .combineLatest(
+        eventProgramStore$,
+        (props, eventProgramState) => ({ ...props, model: eventProgramState.program})
+    )
+);
 
 const styles = {
     heading: {
@@ -22,25 +25,23 @@ const styles = {
 
 function EditEventProgram(props) {
     const schema = props.params.modelType || 'program';
-    const { groupName } = props.params;
+    const {groupName} = props.params;
 
     return (
-        <Provider store={store}>
-            <div>
-                <div style={styles.heading}>
-                    <FormHeading schema={schema}>{camelCaseToUnderscores(schema)}</FormHeading>
-                    <FormSubHeading>{props.model.displayName}</FormSubHeading>
-                </div>
-                <div>
-                    <EventProgramStepper />
-                </div>
-                <EventProgramStepperContent
-                    schema={schema}
-                    {...props}
-                />
-                <EventProgramButtons groupName={groupName} schema={schema} />
+        <div>
+            <div style={styles.heading}>
+                <FormHeading schema={schema}>{camelCaseToUnderscores(schema)}</FormHeading>
+                <FormSubHeading>{props.model.displayName}</FormSubHeading>
             </div>
-        </Provider>
+            <div>
+                <EventProgramStepper />
+            </div>
+            <EventProgramStepperContent
+                schema={schema}
+                {...props}
+            />
+            <EventProgramButtons groupName={groupName} schema={schema}/>
+        </div>
     );
 }
 

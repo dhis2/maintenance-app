@@ -1,10 +1,10 @@
 import { activeStepSelector } from './selectors';
 
-describe('Event Program selectors', () => {
+describe('Program indicator selectors', () => {
     describe('activeStepSelector', () => {
         it('should return the activeStep from the state', () => {
             const state = {
-                eventProgram: {
+                programIndicator: {
                     step: {
                         activeStep: 'details',
                     },

@@ -3,7 +3,7 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 import { Observable } from 'rxjs';
 import isString from 'd2-utilizr/lib/isString';
 
-const requestParams = new Map([
+export const requestParams = new Map([
     ['dataElement', {
         fields: [
             ':all',
@@ -58,6 +58,13 @@ const requestParams = new Map([
             'dataEntryForm[:owner]',
             'programStages[:owner,notificationTemplates[displayName,:owner]]',
             'notificationTemplates[:owner]',
+        ].join(','),
+    }],
+    ['programIndicator', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'program[id,displayName]',
         ].join(','),
     }]
 ]);

@@ -7,6 +7,8 @@ import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
 import { getImportStatus } from './metadataimport-helpers';
 import { goToAndScrollUp } from '../../router-utils';
+import notificationEpics from './notifications/epics';
+import createAssignDataElementEpics from './assign-data-elements/epics';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
@@ -56,6 +58,7 @@ function loadEventProgramMetadataByProgramId(programId) {
             `&programStages:filter=program.id:eq:${programId}`,
             '&programStages:fields=:owner,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName]',
             `&programStageSections:filter=programStage.program.id:eq:${programId}`,
+            `&programStageSections:fields=:owner,displayName,dataElements[id,displayName]`,
         ].join(''))))
         .flatMap(createEventProgramStoreStateFromMetadataResponse)
 }
@@ -148,4 +151,4 @@ export const programModelSave = action$ => action$
         return Observable.of(notifyUser('no_changes_to_be_saved'));
     });
 
-export default combineEpics(programModel, programModelEdit, programModelSave);
+export default combineEpics(programModel, programModelEdit, programModelSave, notificationEpics, createAssignDataElementEpics(eventProgramStore));

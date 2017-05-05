@@ -12,6 +12,7 @@ import pushAnalysis from './pushAnalysis';
 import externalMapLayer from './externalMapLayer';
 import validationRule from './validationRule';
 import validationNotificationTemplate from './validationNotificationTemplate';
+import programIndicator from './programIndicator';
 import programNotificationTemplate from './programNotificationTemplate';
 
 const overridesByType = {
@@ -28,6 +29,7 @@ const overridesByType = {
     pushAnalysis,
     externalMapLayer,
     validationNotificationTemplate,
+    programIndicator,
     programNotificationTemplate,
     validationRule,
 };

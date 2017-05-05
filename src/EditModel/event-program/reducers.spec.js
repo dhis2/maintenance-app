@@ -32,8 +32,8 @@ describe('Event Program reducer', () => {
             };
         });
 
-        describe('STEP_CHANGE', () => {
-            it('should change the activeStep when receiving a STEP_CHANGE action', () => {
+        describe('EVENT_PROGRAM_STEP_CHANGE', () => {
+            it('should change the activeStep when receiving a EVENT_PROGRAM_STEP_CHANGE action', () => {
                 const expectedDefaultState = {
                     eventProgram: {},
                     step: {
@@ -45,13 +45,13 @@ describe('Event Program reducer', () => {
                 };
 
                 expect(reducer(initialDefaultState, {
-                    type: actions.STEP_CHANGE,
+                    type: actions.EVENT_PROGRAM_STEP_CHANGE,
                     payload: steps.STEP_DATA_ELEMENTS
                 })).to.deep.equal(expectedDefaultState);
             });
         });
 
-        describe('STEP_NEXT', () => {
+        describe('EVENT_PROGRAM_STEP_NEXT', () => {
             it('should change the activeStep to data entry', () => {
                 const expectedDefaultState = {
                     eventProgram: {},
@@ -65,7 +65,7 @@ describe('Event Program reducer', () => {
 
                 initialDefaultState.step.activeStep = steps.STEP_DATA_ELEMENTS;
 
-                expect(reducer(initialDefaultState, { type: actions.STEP_NEXT })).to.deep.equal(expectedDefaultState);
+                expect(reducer(initialDefaultState, { type: actions.EVENT_PROGRAM_STEP_NEXT })).to.deep.equal(expectedDefaultState);
             });
 
             it('should not go to the next action when already at the last', () => {
@@ -81,11 +81,11 @@ describe('Event Program reducer', () => {
 
                 initialDefaultState.step.activeStep = steps.STEP_NOTIFICATIONS;
 
-                expect(reducer(initialDefaultState, { type: actions.STEP_NEXT })).to.deep.equal(expectedDefaultState);
+                expect(reducer(initialDefaultState, { type: actions.EVENT_PROGRAM_STEP_NEXT })).to.deep.equal(expectedDefaultState);
             });
         });
 
-        describe('STEP_PREVIOUS', () => {
+        describe('EVENT_PROGRAM_STEP_PREVIOUS', () => {
             it('should go to the next step', () => {
                 const expectedDefaultState = {
                     eventProgram: {},
@@ -99,7 +99,7 @@ describe('Event Program reducer', () => {
 
                 initialDefaultState.step.activeStep = steps.STEP_ASSIGN_ORGANISATION_UNITS;
 
-                expect(reducer(initialDefaultState, { type: actions.STEP_PREVIOUS })).to.deep.equal(expectedDefaultState);
+                expect(reducer(initialDefaultState, { type: actions.EVENT_PROGRAM_STEP_PREVIOUS })).to.deep.equal(expectedDefaultState);
             });
 
             it('should not go to the previous action when already at the first', () => {
@@ -113,7 +113,7 @@ describe('Event Program reducer', () => {
                     },
                 };
 
-                expect(reducer(initialDefaultState, { type: actions.STEP_PREVIOUS })).to.deep.equal(expectedDefaultState);
+                expect(reducer(initialDefaultState, { type: actions.EVENT_PROGRAM_STEP_PREVIOUS })).to.deep.equal(expectedDefaultState);
             });
         });
     });

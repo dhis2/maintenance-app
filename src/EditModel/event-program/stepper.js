@@ -105,3 +105,23 @@ export function StepperNavigationForward({ onForwardClick }) {
         </IconButton>
     );
 }
+
+export function findNextStepKey(steps, activeStep) {
+    const currentStepIndex = steps.findIndex(step => step.key === activeStep);
+
+    if (steps[currentStepIndex + 1]) {
+        return steps[currentStepIndex + 1].key;
+    }
+
+    return activeStep;
+}
+
+export function findPreviousStepKey(steps, activeStep) {
+    const currentStepIndex = steps.findIndex(step => step.key === activeStep);
+
+    if (steps[currentStepIndex - 1]) {
+        return steps[currentStepIndex - 1].key;
+    }
+
+    return activeStep;
+}

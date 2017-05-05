@@ -9,8 +9,9 @@ import snackActions from './Snackbar/snack.actions';
 import {initAppState, default as appState} from './App/appStateStore';
 import LinearProgress from 'material-ui/LinearProgress';
 import App from './App/App.component';
+import store from './store';
 import { loadEventProgram } from './EditModel/event-program/actions';
-import eventProgramStore from './EditModel/event-program/store';
+import { loadProgramIndicator } from './EditModel/program-indicator/actions';
 
 import onDemand from './on-demand';
 
@@ -112,19 +113,21 @@ function loadOptionSetObject({params}, replace, callback) {
     }, replace, callback);
 }
 
-function loadEventProgramObject({ params }, replace, callback) {
-    initState({
-        params: {
-            modelType: 'program',
-            groupName: params.groupName,
-            modelId: params.modelId,
-        }
-    });
+function createLoaderForSchema(schema, actionCreatorForLoadingObject) {
+    return ({ params }, replace, callback) => {
+        initState({
+            params: {
+                modelType: schema,
+                groupName: params.groupName,
+                modelId: params.modelId,
+            }
+        });
 
-    // Fire load action for the event program program to be edited
-    eventProgramStore.dispatch(loadEventProgram({ schema: 'program', id: params.modelId }));
+        // Fire load action for the event program program to be edited
+        store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId }));
 
-    callback();
+        callback();
+    };
 }
 
 function loadList({params}, replace, callback) {
@@ -234,7 +237,12 @@ const routes = (
                 <Route
                     path="program/:modelId"
                     component={delayRender(() => System.import('./EditModel/event-program/EditEventProgram.component'))}
-                    onEnter={loadEventProgramObject}
+                    onEnter={createLoaderForSchema('program', loadEventProgram)}
+                />
+                <Route
+                    path="programIndicator/:modelId"
+                    component={delayRender(() => System.import('./EditModel/program-indicator/EditProgramIndicator'))}
+                    onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator)}
                 />
                 <Route
                     path=":modelType/:modelId/sections"

@@ -1,14 +1,32 @@
 import React from 'react';
 import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
 import EventProgramNotifications from './notifications/EventProgramNotifications';
-import EditProgramDetailsForm from './program-details/EditProgramDetailsForm';
 import AssignDataElements from './assign-data-elements/AssignDataElements';
+import { createFormFor } from '../formHelpers';
+import { get, compose } from 'lodash/fp';
+import { connect } from 'react-redux';
+import eventProgramStore from './eventProgramStore';
+import { editFieldChanged } from './actions';
+import { bindActionCreators } from 'redux';
+import { flattenRouterProps } from '../componentHelpers';
 
 export const STEP_DETAILS = 'details';
 export const STEP_DATA_ELEMENTS = 'data_elements';
 export const STEP_DATA_ENTRY_FORMS = 'data_entry_forms';
 export const STEP_ASSIGN_ORGANISATION_UNITS = 'assign_organisation_units';
 export const STEP_NOTIFICATIONS = 'notifications';
+
+const program$ = eventProgramStore
+    .map(get('program'));
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({ editFieldChanged }, dispatch);
+
+const connectExpressionField = compose(
+    flattenRouterProps,
+    connect(null, mapDispatchToProps)
+);
+
+const EditProgramDetailsForm = connectExpressionField(createFormFor(program$, 'program'));
 
 const steps = [
     {

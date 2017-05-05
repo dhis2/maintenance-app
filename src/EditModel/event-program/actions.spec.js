@@ -3,25 +3,25 @@ import * as actions from './actions';
 describe('Event Program actions', () => {
     describe('for stepper', () => {
         it('should have defined the stepper constants', () => {
-            expect(actions.STEP_PREVIOUS).to.equal('STEP_PREVIOUS');
-            expect(actions.STEP_NEXT).to.equal('STEP_NEXT');
-            expect(actions.STEP_CHANGE).to.equal('STEP_CHANGE');
+            expect(actions.EVENT_PROGRAM_STEP_PREVIOUS).to.equal('EVENT_PROGRAM_STEP_PREVIOUS');
+            expect(actions.EVENT_PROGRAM_STEP_NEXT).to.equal('EVENT_PROGRAM_STEP_NEXT');
+            expect(actions.EVENT_PROGRAM_STEP_CHANGE).to.equal('EVENT_PROGRAM_STEP_CHANGE');
         });
 
-        it('should create the STEP_CHANGE action', () => {
-            expect(actions.changeStep()).to.deep.equal({ type: actions.STEP_CHANGE, payload: undefined });
+        it('should create the EVENT_PROGRAM_STEP_CHANGE action', () => {
+            expect(actions.changeStep()).to.deep.equal({ type: actions.EVENT_PROGRAM_STEP_CHANGE, payload: undefined });
         });
 
         it('should use the parameter as the payload', () => {
-            expect(actions.changeStep('details')).to.deep.equal({ type: actions.STEP_CHANGE, payload: 'details' });
+            expect(actions.changeStep('details')).to.deep.equal({ type: actions.EVENT_PROGRAM_STEP_CHANGE, payload: 'details' });
         });
 
-        it('should create the STEP_NEXT action', () => {
-            expect(actions.nextStep()).to.deep.equal({ type: actions.STEP_NEXT });
+        it('should create the EVENT_PROGRAM_STEP_NEXT action', () => {
+            expect(actions.nextStep()).to.deep.equal({ type: actions.EVENT_PROGRAM_STEP_NEXT });
         });
 
-        it('should create the STEP_PREVIOUS action', () => {
-            expect(actions.previousStep()).to.deep.equal({ type: actions.STEP_PREVIOUS });
+        it('should create the EVENT_PROGRAM_STEP_PREVIOUS action', () => {
+            expect(actions.previousStep()).to.deep.equal({ type: actions.EVENT_PROGRAM_STEP_PREVIOUS });
         });
     });
 
