@@ -7,6 +7,8 @@ import Translate from 'd2-ui/lib/i18n/Translate.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import DragHandle from './DragHandle.component';
 import SortableDataList from './SortableDataList.component';
+import IconButton from 'material-ui/IconButton';
+import TextField from 'material-ui/TextField';
 
 const sectionPaperStyle = {
     width: '100%',
@@ -18,19 +20,21 @@ const sectionContentStyle = {
 };
 
 const sectionHeaderStyle = {
-    color: 'white',
+    color: 'black',
     padding: '0rem 1rem',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: blue500,
+    backgroundColor: '#d7d7d7',
     borderRadius: '4px 4px 0 0',
 };
 
 const collapsibleArrowStyle = {
-    color: 'white',
+    color: 'black',
+    cursor: 'pointer',
     transition: 'none',
+    userSelect: 'none',
 };
 
 const rowStyle = {
@@ -40,65 +44,40 @@ const rowStyle = {
     alignItems: 'center',
 };
 
-const mockDataElements = [
-    [
-        'Ambigous data element',
-        'Unambigous data element',
-        'Incomprehensible data element',
-    ],
-    [
-        'Death by Thomas the Tank Engine',
-        'One fourth of a hamburger from McDonald\'s',
-        'This is a common data element',
-        'This is another really common data element.',
-    ],
-    [
-        'Crazy data element',
-    ],
-];
-
-// SORTABLE SECTIONS
-
-const SortableSectionList = SortableContainer(({ sections, onToggleSection, sortItems }) => (
-    <SectionList sections={sections} onToggleSection={onToggleSection} sortItems={sortItems} />
+const SortableSectionList = SortableContainer(({ sections, onToggleSection, onSectionNameChanged, sortItems }) => (
+    <SectionList sections={sections} onToggleSection={onToggleSection} onSectionNameChanged={onSectionNameChanged} sortItems={sortItems} />
 ));
 
-class SectionList extends Component {
-    onToggleSection = (index) => {
-        this.props.onToggleSection(index);
-    }
+const SectionList = ({ sections, onToggleSection, onSectionNameChanged, sortItems }) => (
+    <div>
+        { sections.map((section, index) => (
+            <SortableSection
+                key={`section-${index}`}
+                index={index}
+                sectionData={{
+                    sectionName: section.sectionName,
+                    dataElements: section.dataElements,
+                    open: section.open,
+                }}
+                onToggleOpen={() => { onToggleSection(index) }}
+                onNameChanged={(newName) => {
+                    onSectionNameChanged(index, newName);
+                }}
+                sortItems={({oldIndex, newIndex}) => {
+                    sortItems(index, oldIndex, newIndex);
+                }}
+            />
+        ))}
+    </div>
+);
 
-    render() {
-        return (
-            <div>
-                { this.props.sections.map((section, index) => (
-                    <SortableSection
-                        key={`section-${index}`}
-                        index={index}
-                        sectionData={{
-                            sectionName: section.sectionName,
-                            dataElements: section.dataElements,
-                            open: section.open,
-                        }}
-                        onToggleOpen={() => {
-                            this.onToggleSection(index);
-                        }}
-                        sortItems={({oldIndex, newIndex}) => {
-                            this.props.sortItems(index, oldIndex, newIndex);
-                        }}
-                    />
-                ))}
-            </div>
-        );
-    }
-}
-
-const SortableSection = SortableElement(({ sectionData, onToggleOpen, sortItems }) =>
+const SortableSection = SortableElement(({ sectionData, onToggleOpen, onNameChanged, sortItems }) =>
     <CollapsibleSection
         dataElements={sectionData.dataElements}
         sectionName={sectionData.sectionName}
         open={sectionData.open}
         onToggleOpen={onToggleOpen}
+        onNameChanged={onNameChanged}
         sortItems={sortItems}
     />
 );
@@ -108,6 +87,8 @@ class CollapsibleSection extends Component {
         super(props);
         this.state = {
             isSortingIndex: null,
+            isEditingName: false,
+            newName: '',
         };
     }
 
@@ -121,7 +102,48 @@ class CollapsibleSection extends Component {
         this.props.sortItems(oldIndex, newIndex);
         this.setState({
             isSortingIndex: null,
+        });
+    }
+
+    startEditingName = (event) => {
+        event.stopPropagation();
+        this.setState({
+            newName: '',
+            isEditingName: !this.state.isEditingName,
+        });
+    }
+
+    focusTitleInputField = titleInput => {
+        if (titleInput) {
+            setTimeout(() => { titleInput.focus(); }, 20);
+        }
+    }
+
+    stopEditingName = (event) => {
+        event.stopPropagation();
+        this.setState({
+            isEditingName: false,
         })
+
+        if (this.state.newName && this.state.newName !== '') {
+            console.warn('Sending', this.state.newName);
+            this.props.onNameChanged(this.state.newName);
+        }
+    }
+
+    onNameChanged = (event, newValue) => {
+        this.setState({
+            newName: newValue,
+        });
+    }
+
+    getSectionNameStyle = editing => {
+        return {
+            textAlign: 'center',
+            color: editing ? 'gray' : 'black',
+            fontSize: '1.7rem',
+            fontWeight: editing ? '300' : '400',
+        };
     }
 
     render() {
@@ -130,7 +152,28 @@ class CollapsibleSection extends Component {
                 <div onClick={this.props.onToggleOpen} style={sectionHeaderStyle}>
                     <div style={rowStyle}>
                         <DragHandle />
-                        <Heading level={4} style={{ padding: '1rem 0', color: 'white' }}>{this.props.sectionName}</Heading>
+
+                        { this.state.isEditingName ?
+                            <IconButton style={{ transition: 'none' }} iconStyle={{ transition: 'none' }} onClick={this.stopEditingName}>
+                                <FontIcon color="gray" className="material-icons">done</FontIcon>
+                            </IconButton> :
+                            <IconButton style={{ transition: 'none' }} iconStyle={{ transition: 'none' }} onClick={this.startEditingName}>
+                                <FontIcon color="gray" className="material-icons">mode_edit</FontIcon>
+                            </IconButton>
+                        }
+
+                        { this.state.isEditingName
+                            ? <TextField
+                                ref={this.focusTitleInputField}
+                                inputStyle={{ transition: 'none' }}
+                                style={this.getSectionNameStyle(true)}
+                                underlineShow={false}
+                                onClick={(e) => e.stopPropagation()}
+                                hintText={this.props.sectionName}
+                                onChange={this.onNameChanged} />
+
+                            : <div style={this.getSectionNameStyle(false)}>{this.props.sectionName}</div>
+                        }
                     </div>
                     <FontIcon className="material-icons" style={collapsibleArrowStyle}>
                         {this.props.open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
@@ -156,40 +199,37 @@ CollapsibleSection.propTypes = {
     dataElements: PropTypes.array.isRequired,
     sectionName: PropTypes.string.isRequired,
     open: PropTypes.bool.isRequired,
+    onNameChanged: PropTypes.func.isRequired,
     onToggleOpen: PropTypes.func.isRequired,
     sortItems: PropTypes.func.isRequired,
 }
 
-class EditSectionEntryForm extends Component {
+class SectionForm extends Component {
     constructor(props) {
         super(props);
-        console.warn('SECTIONS:', this.props.sections);
-
         this.state = {
-            sections: this.props.sections.map(section => {
-                const dataElements = section.dataElements.map(dataElement => {
-                    for (let i = 0; i < this.props.dataElements.length; i++) {
-                        const otherElement = this.props.dataElements[i];
-                        if (dataElement.id === otherElement.id) {
-                            return {
-                                ...dataElement,
-                                displayName: otherElement.displayName,
-                            }
-                        }
-                    }
+            sections: this.props.sections.map(section => ({
+                open: true,
+                sectionName: section.displayName,
+                dataElements: this.getDataElementsForSection(section),
+            })),
+        };
+    }
 
-                    return dataElement;
-                });
+    getDataElementsForSection = (section) => {
+        return section.dataElements.map(dataElement => {
+            for (let i = 0; i < this.props.dataElements.length; i++) {
+                const otherElement = this.props.dataElements[i];
+                if (dataElement.id === otherElement.id) {
+                    return {
+                        ...dataElement,
+                        displayName: otherElement.displayName,
+                    };
+                }
+            }
 
-                return {
-                    open: true,
-                    sectionName: section.displayName,
-                    dataElements,
-                };
-            }),
-        }
-
-        console.warn('STATE!:', this.state);
+            return dataElement;
+        });
     }
 
     onToggleSection = (index) => {
@@ -203,7 +243,21 @@ class EditSectionEntryForm extends Component {
 
         this.setState({
             sections,
-        })
+        });
+    }
+
+    onSectionNameChanged = (index, newName) => {
+        const newSection = {
+            ...this.state.sections[index],
+            sectionName: newName,
+        };
+
+        let sections = this.state.sections;
+        sections[index] = newSection;
+
+        this.setState({
+            sections,
+        });
     }
 
     onSortEnd = ({oldIndex, newIndex}) => {
@@ -238,6 +292,7 @@ class EditSectionEntryForm extends Component {
                     useDragHandle
                     sections={this.state.sections}
                     onToggleSection={this.onToggleSection}
+                    onSectionNameChanged={this.onSectionNameChanged}
                     onSortEnd={this.onSortEnd}
                     sortItems={this.sortItems}
                 />
@@ -246,4 +301,4 @@ class EditSectionEntryForm extends Component {
     }
 }
 
-export default EditSectionEntryForm;
+export default SectionForm;
