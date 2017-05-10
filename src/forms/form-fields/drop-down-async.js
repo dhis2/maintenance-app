@@ -34,9 +34,11 @@ export default React.createClass({
             ? 'id,displayName,name,valueType'
             : 'id,displayName,name';
         const filter = this.props.queryParamFilter;
+        let d2i = {};
 
         return getInstance()
             .then(d2 => {
+                d2i = d2;
                 if (d2.models.hasOwnProperty(this.props.referenceType)) {
                     return d2.models[this.props.referenceType].list(Object.assign({
                         fields: fieldsForReferenceType,
@@ -45,14 +47,18 @@ export default React.createClass({
                     }, filter && filter.length > 1 ? {
                         rootJunction: 'OR',
                     } : {}))
-                } else if(this.props.referenceType.indexOf('.') !== -1) {
+                } else if (this.props.referenceType.indexOf('.') !== -1) {
                     const modelName = this.props.referenceType.substr(0, this.props.referenceType.indexOf('.'));
                     const modelProp = this.props.referenceType.substr(modelName.length + 1);
                     return d2.models[modelName].modelProperties[modelProp].constants
                         .map(v => ({ displayName: d2.i18n.getTranslation(v.toLowerCase()), id: v }));
                 }
             })
-            .then(modelCollection => modelCollection ? (modelCollection.toArray ? modelCollection.toArray() : modelCollection) : [])
+            .then(modelCollection => modelCollection
+                ? (modelCollection.toArray
+                    ? modelCollection.toArray()
+                    : modelCollection)
+                : [])
             .then(values => values.map(model => {
                 return {
                     text: model.displayName,
@@ -61,35 +67,21 @@ export default React.createClass({
                 };
             }))
             .then(options => {
-                this.setState({
-                    // TODO: Behold the very special hack for renaming the very special 'default' cat combo to 'None'
-                    options: options.map(option => Object.assign(
-                        option,
-                        option.model &&
-                        option.model.modelDefinition &&
-                        option.model.modelDefinition.name === 'categoryCombo' &&
-                        option.text === 'default'
-                            ? { text: 'None' }
-                            : {}
-                    )),
-                }, () => {
-                    if (!this.props.preventAutoDefault) {
-                        // TODO: Hack to default categoryCombo to 'default'
-                        const defaultOption = this.state.options.find(option => {
-                            return option.model.name === 'default';
-                        });
-
-                        if (!this.props.value && defaultOption) {
-                            this.props.onChange({
-                                target: {
-                                    value: defaultOption.model,
-                                },
-                            });
-                        }
-
-                        this.forceUpdate();
-                    }
-                });
+                // Behold the mother of all hacks
+                if (!this.omgLikeJustStop) {
+                    this.setState({
+                        // Behold the very special hack for renaming the very special 'default' cat combo to 'None'
+                        options: options.map(option => Object.assign(
+                            option,
+                            option.model &&
+                            option.model.modelDefinition &&
+                            option.model.modelDefinition.name === 'categoryCombo' &&
+                            option.text === 'default'
+                                ? { text: d2i.i18n.getTranslation('none') }
+                                : {}
+                        )),
+                    });
+                }
             });
     },
 
@@ -98,20 +90,25 @@ export default React.createClass({
     },
 
     // TODO: Remove this hack to update the categoryCombo property when the domainType is set to TRACKER
-    // This should probably be done in the objectActions, however there we currently do not have any knowledge of the options
-    // It might be worth loading the categoryOption with name `default` just for this.
+    // This should probably be done in the objectActions, however there we currently do not have any knowledge of the
+    // options.. It might be worth loading the categoryOption with name `default` just for this.
     componentWillReceiveProps(newProps) {
         const defaultOption = this.state.options.find(option => {
             return option.model.name === 'default';
         });
 
-        if (newProps.value && defaultOption && defaultOption.model.id !== newProps.value.id && this.props.model && this.props.model.domainType === 'TRACKER') {
+        if (newProps.value && defaultOption && defaultOption.model.id !== newProps.value.id &&
+            this.props.model && this.props.model.domainType === 'TRACKER') {
             this.props.onChange({
                 target: {
                     value: defaultOption.model,
                 },
             });
         }
+    },
+
+    componentWillUnmount() {
+        this.omgLikeJustStop = true;
     },
 
     render() {
