@@ -306,7 +306,7 @@ const List = React.createClass({
             },
             box: {
                 display: 'inline-block',
-                marginLeft: 16,
+                marginRight: 16,
                 width: 256,
             },
         };

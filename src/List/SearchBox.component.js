@@ -49,7 +49,7 @@ const SearchBox = React.createClass({
     render() {
         const style = {
             display: 'inline-block',
-            marginLeft: 16,
+            marginRight: 16,
             position: 'relative',
             top: -15,
         };

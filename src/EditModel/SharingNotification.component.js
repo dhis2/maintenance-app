@@ -17,9 +17,8 @@ const SharingNotification = React.createClass({
         const createPublic = this.getCurrentUser().canCreatePublic(this.getModelDefinitionByName(this.props.modelType));
         const createPrivate = this.getCurrentUser().canCreatePrivate(this.getModelDefinitionByName(this.props.modelType));
         const notificationStyle = Object.assign({}, this.props.style, {
-            marginBottom: '1rem',
-            padding: '0 1rem',
             background: 'none',
+            margin: '14px 0 0 -4px',
         });
         const notificationTextStyle = {
             verticalAlign: 'super',
