@@ -1,79 +1,81 @@
 export function getSideBarConfig() {
-        return {
-            all: {
-                items: [],
-            },
+    return {
+        all: {
+            items: [],
+        },
 
-            categorySection: {
-                items: [
-                    'categoryOption',
-                    'category',
-                    'categoryCombo',
-                    'categoryOptionCombo',
-                    'categoryOptionGroup',
-                    'categoryOptionGroupSet',
-                ]
-            },
+        categorySection: {
+            items: [
+                'categoryOption',
+                'category',
+                'categoryCombo',
+                'categoryOptionCombo',
+                'categoryOptionGroup',
+                'categoryOptionGroupSet',
+            ]
+        },
 
-            dataElementSection: {
-                items: [
-                    'dataElement',
-                    'dataElementGroup',
-                    'dataElementGroupSet',
-                ],
-            },
-            dataSetSection: {
-                items: [
-                    'dataSet',
-                ],
-            },
-            indicatorSection: {
-                items: [
-                    'indicator',
-                    'indicatorType',
-                    'indicatorGroup',
-                    'indicatorGroupSet',
-                ],
-            },
+        dataElementSection: {
+            items: [
+                'dataElement',
+                'dataElementGroup',
+                'dataElementGroupSet',
+            ],
+        },
+        dataSetSection: {
+            items: [
+                'dataSet',
+            ],
+        },
+        indicatorSection: {
+            items: [
+                'indicator',
+                'indicatorType',
+                'indicatorGroup',
+                'indicatorGroupSet',
+            ],
+        },
 
-            organisationUnitSection: {
-                items: [
-                    'organisationUnit',
-                    'organisationUnitGroup',
-                    'organisationUnitGroupSet',
-                    'organisationUnitLevel',
-                ],
-            },
+        organisationUnitSection: {
+            items: [
+                'organisationUnit',
+                'organisationUnitGroup',
+                'organisationUnitGroupSet',
+                'organisationUnitLevel',
+            ],
+        },
 
-            programSection: {
-                items: [
-                    'trackedEntityAttribute',
-                    'trackedEntityAttributeGroup',
-                    'relationshipType',
-                    'trackedEntity',
-                ],
-            },
+        programSection: {
+            items: [
+                'trackedEntityAttribute',
+                'trackedEntityAttributeGroup',
+                'relationshipType',
+                'trackedEntity',
+                'programRule',
+                'programRuleVariable',
+            ],
+        },
 
-            validationSection: {
-                items: [
-                    'validationRule',
-                    'validationRuleGroup',
-                    'validationNotificationTemplate',
-                ]
-            },
+        validationSection: {
+            items: [
+                'validationRule',
+                'validationRuleGroup',
+                'validationNotificationTemplate',
+            ]
+        },
 
-            otherSection: {
-                items: [
-                    'constant',
-                    'attribute',
-                    'optionSet',
-                    'legendSet',
-                    'predictor',
-                    'pushAnalysis',
-                    'externalMapLayer',
-                ],
-            },
-        };
+        otherSection: {
+            items: [
+                'constant',
+                'attribute',
+                'optionSet',
+                'legendSet',
+                'predictor',
+                'pushAnalysis',
+                'externalMapLayer',
+            ],
+        },
+    };
 }
 
 export function getSectionForType(modelType) {
@@ -138,6 +140,14 @@ const typeDetails = {
     'trackedEntityAttribute': {
         filters: ['valueType', 'aggregationType'],
         columns: ['displayName', 'valueType', 'aggregationType', 'unique', 'confidential', 'lastUpdated'],
+    },
+    'programRule': {
+        filters: ['program'],
+        columns: ['displayName', 'description', 'program[displayName]', 'lastUpdated'],
+    },
+    'programRuleVariable': {
+        filters: ['program', 'programRuleVariableSourceType'],
+        columns: ['displayName', 'program[displayName]', 'programRuleVariableSourceType', 'lastUpdated'],
     },
     'validationRule': {
         columns: ['displayName', 'importance', 'periodType', 'publicAccess', 'lastUpdated'],

@@ -50,6 +50,16 @@ const requestParams = new Map([
             'attributeValues[:all,attribute[id,name,displayName]]',
             'organisationUnits[id,path,displayName]',
         ].join(','),
+    }],
+    ['programRule', {
+        fields: [
+            ':all',
+            'programRuleActions[:all',
+            'dataElement[id,displayName]',
+            'trackedEntityAttribute[id,displayName]',
+            'programStage[id,displayName]',
+            'programStageSection[id,displayName]]'
+        ].join(','),
     }]
 ]);
 

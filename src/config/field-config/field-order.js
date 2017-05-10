@@ -288,7 +288,25 @@ const fieldOrderByName = new Map([
         'recipientUserGroups',
         'notifyUsersInHierarchyOnly',
         'messageTemplate',
-    ]]
+    ]],
+    ['programRule', [
+        // Step 1
+        'program', 'name', 'description', 'priority',
+        // Step 2
+        'condition',
+        // Step 3
+        'programRuleActions',
+    ]],
+    ['programRuleVariable', [
+        'program',
+        'name',
+        'code',
+        'programRuleVariableSourceType',
+        'dataElement',
+        'trackedEntityAttribute',
+        'useCodeForOptionSet',
+        'programStage',
+    ]],
 ]);
 
 export default {
