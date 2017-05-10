@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import SelectField from 'material-ui/SelectField/SelectField';
-import MenuItem from 'material-ui/MenuItem/MenuItem'
+import MenuItem from 'material-ui/MenuItem/MenuItem';
 
 function MissingValueStrategy({ value, onChange }, { d2 }) {
     return (
