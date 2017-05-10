@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux';
-import { EVENT_PROGRAM_STEP_CHANGE, EVENT_PROGRAM_STEP_NEXT, EVENT_PROGRAM_STEP_PREVIOUS, MODEL_TO_EDIT_LOADED, EVENT_PROGRAM_LOAD_SUCCESS, NOTIFY_USER, EVENT_PROGRAM_SAVE_ERROR, EVENT_PROGRAM_SAVE_SUCCESS } from './actions';
+import { EVENT_PROGRAM_STEP_CHANGE, EVENT_PROGRAM_STEP_NEXT, EVENT_PROGRAM_STEP_PREVIOUS, EVENT_PROGRAM_SAVE_ERROR, EVENT_PROGRAM_SAVE_SUCCESS } from './actions';
 import steps from './event-program-steps';
 import { stageNotificationsReducer } from './notifications/reducers';
 import { findNextStepKey, findPreviousStepKey } from './stepper';
-
-import { programIndicatorStepperReducer } from '../program-indicator/reducers';
 
 function eventProgramStepperReducer(state = { activeStep: 'details' }, action) {
     console.log(action.type);

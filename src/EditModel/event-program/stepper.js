@@ -1,4 +1,4 @@
-// TODO: Move this to d2-ui?
+// TODO: Move this to d2-ui
 import React from 'react';
 import Stepper from 'material-ui/Stepper/Stepper';
 import StepButton from 'material-ui/Stepper/StepButton';
@@ -11,6 +11,10 @@ import Translate from 'd2-ui/lib/i18n/Translate.component';
 import log from 'loglevel';
 import { isString } from 'lodash/fp';
 import { isNumber } from 'lodash/fp';
+
+// TODO: Redux helpers, leave these here
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 function isActiveStep(activeStep, step, index) {
     if (isString(activeStep)) {
@@ -125,3 +129,34 @@ export function findPreviousStepKey(steps, activeStep) {
 
     return activeStep;
 }
+
+export function createStepperNavigation(BackwardButton, ForwardButton) {
+    const styles = {
+        buttons: {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: '4rem 1rem 1rem',
+        },
+    };
+
+    const StepperNavigation = ({ children }) => {
+        return (
+            <div style={styles.buttons}>
+                <BackwardButton />
+                {children}
+                <ForwardButton />
+            </div>
+        );
+    };
+
+    return StepperNavigation;
+}
+
+//////////////////////////////////////////////////////////////////
+// Redux specfic helpers, don't move to
+
+const mapDispatchToProps = actionCreators => dispatch => bindActionCreators(actionCreators, dispatch);
+
+export const createConnectedForwardButton = nextStepActionCreator => connect(undefined, mapDispatchToProps({ onForwardClick: nextStepActionCreator }))(StepperNavigationForward);
+export const createConnectedBackwardButton = previousStepAcionCreator => connect(undefined, mapDispatchToProps({ onBackClick: previousStepAcionCreator }))(StepperNavigationBack);

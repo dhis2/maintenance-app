@@ -15,7 +15,7 @@ import CancelButton from '../CancelButton.component';
 import modelToEditStore from '../modelToEditStore';
 import OptionSorter from './OptionSorter.component';
 import { typeToFieldMap, getFieldUIComponent, getValidatorsFromModelValidation } from '../../forms/fields';
-import { createFieldConfigForModelTypes, getAttributeFieldConfigs, isAttribute } from '../formHelpers';
+import { createFieldConfigForModelTypes, isAttribute } from '../formHelpers';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import { calculatePageValue } from '../../List/helpers/pagination'; // TODO: Move this out to some other file.
 import actions from './actions';
@@ -60,8 +60,7 @@ const optionForm$ = Observable.combineLatest(
                 }
                 // For the code field we replace the fieldConfig with a config that matches the type of the optionSet
                 return fieldConfig;
-            })
-            .concat(getAttributeFieldConfigs(d2, modelToEdit));
+            });
     });
 
 const optionFormData$ = Observable.combineLatest(

@@ -11,7 +11,6 @@ import React from 'react';
 import compose from 'recompose/compose';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import { noop, } from 'lodash/fp';
-import { wrapInPaper } from './componentHelpers';
 
 function getLabelText(labelText, fieldConfig = {}) {
     // Add required indicator when the field is required
@@ -21,7 +20,7 @@ function getLabelText(labelText, fieldConfig = {}) {
     return labelText;
 }
 
-export async function createFieldConfigForModelTypes(modelType, forcedFieldOrderNames) {
+export async function createFieldConfigForModelTypes(modelType, forcedFieldOrderNames, includeAttributes = true) {
     const d2 = await getInstance();
 
     const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
@@ -46,7 +45,7 @@ export async function createFieldConfigForModelTypes(modelType, forcedFieldOrder
             fieldConfig.props.labelText = getLabelText(d2.i18n.getTranslation(fieldConfig.props.labelText), fieldConfig);
 
             return fieldConfig;
-        });
+        }).concat(includeAttributes ? createAttributeFieldConfigs(d2, modelType) : []);
 }
 
 function createUniqueValidator(fieldConfig, modelDefinition, uid) {
@@ -84,18 +83,13 @@ export function addUniqueValidatorWhenUnique(fieldConfig, modelToEdit) {
     return fieldConfig;
 }
 
-export function getAttributeFieldConfigs(d2, modelToEdit) {
-    Object
-        .keys(modelToEdit.modelDefinition.attributeProperties)
-        .forEach((key) => {
-            d2.i18n.translations[key] = key;
-            return key;
-        });
+function createAttributeFieldConfigs(d2, schemaName) {
+    const modelDefinition = d2.models[schemaName];
 
     return Object
-        .keys(modelToEdit.modelDefinition.attributeProperties)
+        .keys(modelDefinition.attributeProperties)
         .map(attributeName => {
-            const attribute = modelToEdit.modelDefinition.attributeProperties[attributeName];
+            const attribute = modelDefinition.attributeProperties[attributeName];
 
             return createFieldConfig({
                 name: attribute.name,
@@ -111,14 +105,7 @@ export function getAttributeFieldConfigs(d2, modelToEdit) {
                         };
                     }) : [],
                 },
-            }, modelToEdit.modelDefinition, d2.models, modelToEdit);
-        })
-        .map(attributeFieldConfig => {
-            attributeFieldConfig.value = modelToEdit.attributes[attributeFieldConfig.name];
-
-            attributeFieldConfig.props.labelText = getLabelText(attributeFieldConfig.props.labelText, attributeFieldConfig);
-
-            return attributeFieldConfig;
+            }, modelDefinition, d2.models);
         });
 }
 
@@ -137,18 +124,27 @@ const addModelToFieldConfigProps = model => fieldConfig => ({
 
 function addValuesToFieldConfigs(fieldConfigs, model) {
     return fieldConfigs
-        .map(fieldConfig => ({
-            ...fieldConfig,
-            value: model[fieldConfig.name]
-        }))
+        .map(fieldConfig => {
+            if (isAttribute(model, fieldConfig)) {
+                return ({
+                    ...fieldConfig,
+                    value: model.attributes[fieldConfig.name],
+                });
+            }
+
+            return ({
+                ...fieldConfig,
+                value: model[fieldConfig.name]
+            })
+        })
         .map(addModelToFieldConfigProps(model));
 }
 
-export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity) {
+export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity, includeAttributes) {
     return mapPropsStream(props$ => props$
         .filter(({ model }) => model)
         .combineLatest(
-            Observable.fromPromise(createFieldConfigForModelTypes(schema, fieldNames)),
+            Observable.fromPromise(createFieldConfigForModelTypes(schema, fieldNames, includeAttributes)),
             (props, fieldConfigs) => ({
                 ...props,
                 fieldConfigs: filterFieldConfigs(addValuesToFieldConfigs(fieldConfigs, props.model)),
@@ -157,13 +153,13 @@ export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = i
     );
 }
 
-export function createFormFor(source$, schema, properties) {
+// TODO: Refactor includeAttributes magic flag to separate method `createFormWithAttributesFor`
+export function createFormFor(source$, schema, properties, includeAttributes) {
     const enhance = compose(
         mapPropsStream(props$ => props$
             .combineLatest(source$, (props, model) => ({ ...props, model}))
         ),
-        createFieldConfigsFor(schema, properties),
-        wrapInPaper
+        createFieldConfigsFor(schema, properties, undefined, includeAttributes),
     );
 
     function CreatedFormBuilderForm({ fieldConfigs, editFieldChanged, detailsFormStatusChange = noop }) {
@@ -177,4 +173,8 @@ export function createFormFor(source$, schema, properties) {
     }
 
     return enhance(CreatedFormBuilderForm);
+}
+
+export function createFormActionButtonsFor() {
+
 }

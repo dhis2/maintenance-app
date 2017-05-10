@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { createFormFor } from '../formHelpers';
 import { get, compose, difference } from 'lodash/fp';
 import fieldOrder from '../../config/field-config/field-order';
-import { flattenRouterProps } from '../componentHelpers';
+import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
 
 const editDetailsFields = difference(fieldOrder.for('programIndicator'), ['expression', 'filter']);
 
@@ -21,12 +21,12 @@ export const STEP_FILTER_EDIT = 'program_indicator__edit_filter';
 
 const connectExpressionField = compose(
     flattenRouterProps,
-    connect(null, mapDispatchToProps)
+    connect(null, mapDispatchToProps),
 );
 
-const EditProgramIndicatorDetailsForm = connectExpressionField(createFormFor(programIndicator$, 'programIndicator', editDetailsFields));
-const DataExpressionForm = connectExpressionField(createFormFor(programIndicator$, 'programIndicator', ['expression']));
-const FilterExpressionForm = connectExpressionField(createFormFor(programIndicator$, 'programIndicator', ['filter']));
+const EditProgramIndicatorDetailsForm = connectExpressionField(wrapInPaper(createFormFor(programIndicator$, 'programIndicator', editDetailsFields)));
+const DataExpressionForm = connectExpressionField(createFormFor(programIndicator$, 'programIndicator', ['expression'], false));
+const FilterExpressionForm = connectExpressionField(createFormFor(programIndicator$, 'programIndicator', ['filter'], false));
 
 const steps = [
     {

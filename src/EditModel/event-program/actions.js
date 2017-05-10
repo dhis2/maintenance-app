@@ -1,4 +1,5 @@
-const createActionCreator = (type) => (payload) => ({ type, payload });
+import { createActionCreator } from '../actions';
+export { NOTIFY_USER, notifyUser } from '../actions';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Stepper
@@ -34,6 +35,3 @@ export const EVENT_PROGRAM_SAVE_ERROR = 'EVENT_PROGRAM_SAVE_ERROR'
 export const saveEventProgram = createActionCreator(EVENT_PROGRAM_SAVE);
 export const saveEventProgramSuccess = createActionCreator(EVENT_PROGRAM_SAVE_SUCCESS);
 export const saveEventProgramError = createActionCreator(EVENT_PROGRAM_SAVE_ERROR);
-
-export const NOTIFY_USER = 'NOTIFY_USER';
-export const notifyUser = createActionCreator(NOTIFY_USER);

@@ -6,7 +6,14 @@ import FormSubHeading from '../FormSubHeading';
 import EventProgramStepper from './EventProgramStepper';
 import EventProgramStepperContent from './EventProgramStepperContent';
 import eventProgramStore$ from './eventProgramStore';
-import EventProgramButtons from './EventProgramButtons';
+import EventActionButtons from './EventActionButtons';
+import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from './stepper';
+import { previousStep, nextStep } from './actions';
+
+const EventProgramStepperNavigationForward = createConnectedForwardButton(nextStep);
+const EventProgramStepperNavigationBackward = createConnectedBackwardButton(previousStep);
+
+const StepperNavigation = createStepperNavigation(EventProgramStepperNavigationBackward, EventProgramStepperNavigationForward);
 
 const withPreLoadedModel = mapPropsStream(props$ => props$
     .combineLatest(
@@ -40,7 +47,9 @@ function EditEventProgram(props) {
                 schema={schema}
                 {...props}
             />
-            <EventProgramButtons groupName={groupName} schema={schema}/>
+            <StepperNavigation>
+                <EventActionButtons groupName={groupName} schema={schema} />
+            </StepperNavigation>
         </div>
     );
 }

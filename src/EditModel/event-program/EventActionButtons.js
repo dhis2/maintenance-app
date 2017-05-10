@@ -1,20 +1,10 @@
 import React from 'react';
-import FlatButton from 'material-ui/FlatButton/FlatButton';
-import { goToAndScrollUp } from '../../router-utils';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { saveEventProgram } from './actions';
-import SaveButton from '../SaveButton.component';
+import { createConnectedFormActionButtonsForSchema } from '../FormActionButtons';
 
-export function EventActionButtons({ groupName, schema, saveEventProgram }) {
-    return (
-        <div>
-            <SaveButton onClick={saveEventProgram} isValid={true} />
-            <FlatButton onClick={() => goToAndScrollUp(`/list/${groupName}/${schema}`)}>
-                Close
-            </FlatButton>
-        </div>
-    );
-}
+const mapDispatchToProps = (dispatch) => bindActionCreators({ onSaveAction: saveEventProgram }, dispatch);
 
-export default connect(undefined, (dispatch) => bindActionCreators({ saveEventProgram }, dispatch))(EventActionButtons);
+const EventActionButtons = createConnectedFormActionButtonsForSchema(mapDispatchToProps);
+
+export default EventActionButtons;

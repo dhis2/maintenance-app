@@ -117,7 +117,4 @@ eventProgramStore.setState = newState => {
     });
 };
 
-eventProgramStore
-    .subscribe(state => console.log(state));
-
 export default eventProgramStore;

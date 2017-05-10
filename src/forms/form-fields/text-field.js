@@ -38,7 +38,7 @@ export default class TextFormField extends Component {
         // Keep local state in sync with the passed in value
         if (newProps.value !== this.props.value) {
             this.setState({
-                fieldValue: newProps.value,
+                fieldValue: newProps.value ? newProps.value : '',
             });
         }
     }

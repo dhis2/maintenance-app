@@ -53,6 +53,13 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
                     fieldConfig.props.disabled = true;
                 }
 
+                // Check if value is an attribute
+                if (Object.keys(modelToEdit.attributes || []).indexOf(fieldConfig.name) >= 0) {
+                    console.log(fieldConfig.name, ' is an attribute');
+                    fieldConfig.value = modelToEdit.attributes[fieldConfig.name];
+                    return fieldConfig;
+                }
+
                 // The value is passes through a converter before being set onto the field config.
                 // This is useful for when a value is a number and might have to be translated to a
                 // value of the type Number.
@@ -68,7 +75,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
         const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(modelToEdit.modelDefinition.name), fieldConfigs, modelToEdit);
         const fieldConfigsWithAttributeFields = [].concat(
             fieldConfigsAfterRules,
-            getAttributeFieldConfigs(d2, modelToEdit),
+            // getAttributeFieldConfigs(d2, modelToEdit),
             (extraFields[modelType] || []).map(config => {
                 config.props = config.props || {};
                 config.props.modelToEdit = modelToEdit;

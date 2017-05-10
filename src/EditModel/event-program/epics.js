@@ -2,13 +2,14 @@ import { MODEL_TO_EDIT_FIELD_CHANGED, EVENT_PROGRAM_LOAD, EVENT_PROGRAM_SAVE, lo
 import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { get, getOr, first, map, compose, groupBy, isEqual, find } from 'lodash/fp';
+import { get, getOr, set, first, map, compose, groupBy, isEqual, find } from 'lodash/fp';
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
 import { getImportStatus } from './metadataimport-helpers';
 import { goToAndScrollUp } from '../../router-utils';
 import notificationEpics from './notifications/epics';
 import createAssignDataElementEpics from './assign-data-elements/epics';
+import { createModelToEditEpic } from '../epicHelpers';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
@@ -102,25 +103,7 @@ export const programModel = action$ => action$
     .do(storeState => eventProgramStore.setState(storeState))
     .mapTo(loadEventProgramSuccess());
 
-export const programModelEdit = action$ => action$
-    .ofType(MODEL_TO_EDIT_FIELD_CHANGED)
-    .map(action => action.payload)
-    .flatMap(({ field, value }) => {
-        return eventProgramStore
-            .take(1)
-            .map(get('program'))
-            .map(program => {
-                // Change field the program model
-                program[field] = value;
-
-                // Write back the state to the eventProgramModel
-                eventProgramStore.setState({
-                    ...eventProgramStore.getState(),
-                    program,
-                });
-            });
-    })
-    .flatMapTo(Observable.never());
+export const programModelEdit = createModelToEditEpic(MODEL_TO_EDIT_FIELD_CHANGED, eventProgramStore, 'program');
 
 const saveEventProgram = eventProgramStore
     .take(1)

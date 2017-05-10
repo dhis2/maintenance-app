@@ -3,13 +3,18 @@ import { camelCaseToUnderscores } from 'd2-utilizr';
 import mapPropsStream from 'recompose/mapPropsStream';
 import FormHeading from '../FormHeading';
 import FormSubHeading from '../FormSubHeading';
-import { Provider } from 'react-redux';
 import ProgramIndicatorStepper from './ProgramIndicatorStepper';
 import ProgramIndicatorStepperContent from './ProgramIndicatorStepperContent';
-import store from '../../store';
 import programIndicatorStore from './programIndicatorStore';
 import { get } from 'lodash/fp';
-// import EventProgramButtons from './EventProgramButtons';
+import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from '../event-program/stepper';
+import { previousStep, nextStep } from './actions';
+import ProgramIndicatorActionButtons from './ProgramIndicatorActionButtons';
+
+const EventProgramStepperNavigationForward = createConnectedForwardButton(nextStep);
+const EventProgramStepperNavigationBackward = createConnectedBackwardButton(previousStep);
+
+const StepperNavigation = createStepperNavigation(EventProgramStepperNavigationBackward, EventProgramStepperNavigationForward);
 
 const withPreLoadedModel = mapPropsStream(props$ => props$
     .combineLatest(
@@ -30,28 +35,28 @@ const styles = {
 };
 
 function EditProgramIndicator({ programIndicator, ...props }) {
+    console.log(props);
     const schema = 'programIndicator';
     const { groupName } = props.params;
 
+    const programIndicatorName = get('name', programIndicator);
     const programName = get('program.displayName', programIndicator);
 
     return (
-        <Provider store={store}>
-            <div>
-                <div style={styles.heading}>
-                    <FormHeading schema={schema}>{camelCaseToUnderscores(schema)}</FormHeading>
-                    <FormSubHeading>{programName}</FormSubHeading>
-                </div>
-                <div>
-                    <ProgramIndicatorStepper />
-                </div>
-                <ProgramIndicatorStepperContent
-                    schema={schema}
-                    {...props}
-                />
-                {/*<EventProgramButtons groupName={groupName} schema={schema} />*/}
+        <div style={styles.navigationWrap}>
+            <div style={styles.heading}>
+                <FormHeading schema={schema}>{camelCaseToUnderscores(schema)}</FormHeading>
+                <FormSubHeading>{programIndicatorName + ' for '  + programName}</FormSubHeading>
             </div>
-        </Provider>
+            <ProgramIndicatorStepper />
+            <ProgramIndicatorStepperContent
+                schema={schema}
+                {...props}
+            />
+            <StepperNavigation>
+                <ProgramIndicatorActionButtons groupName={groupName} schema={schema}/>
+            </StepperNavigation>
+        </div>
     );
 }
 

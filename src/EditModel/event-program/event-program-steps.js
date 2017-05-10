@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import eventProgramStore from './eventProgramStore';
 import { editFieldChanged } from './actions';
 import { bindActionCreators } from 'redux';
-import { flattenRouterProps } from '../componentHelpers';
+import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
 
 export const STEP_DETAILS = 'details';
 export const STEP_DATA_ELEMENTS = 'data_elements';
@@ -26,7 +26,7 @@ const connectExpressionField = compose(
     connect(null, mapDispatchToProps)
 );
 
-const EditProgramDetailsForm = connectExpressionField(createFormFor(program$, 'program'));
+const EditProgramDetailsForm = connectExpressionField(wrapInPaper(createFormFor(program$, 'program')));
 
 const steps = [
     {
