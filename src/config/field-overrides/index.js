@@ -12,6 +12,8 @@ import pushAnalysis from './pushAnalysis';
 import externalMapLayer from './externalMapLayer';
 import validationRule from './validationRule';
 import validationNotificationTemplate from './validationNotificationTemplate';
+import programRule from './programRule';
+import programRuleVariable from './programRuleVariable';
 
 const overridesByType = {
     attribute,
@@ -28,6 +30,8 @@ const overridesByType = {
     externalMapLayer,
     validationNotificationTemplate,
     validationRule,
+    programRule,
+    programRuleVariable,
 };
 
 export default {

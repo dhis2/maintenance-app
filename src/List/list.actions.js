@@ -3,28 +3,53 @@ import listStore from './list.store';
 import detailsStore from './details.store';
 import { getInstance } from 'd2/lib/d2';
 import { Observable } from 'rxjs';
-import Store from 'd2-ui/lib/store/Store';
 import appState from '../App/appStateStore';
 import { isUndefined } from 'lodash/fp';
 import log from 'loglevel';
+import { getTableColumnsForType, getFilterFieldsForType } from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = 'displayName,shortName,id,lastUpdated,created,displayDescription,code,publicAccess,access,href,level';
-const listActions = Action.createActionsFromNames(['loadList', 'setListSource', 'searchByName', 'getNextPage', 'getPreviousPage', 'hideDetailsBox']);
+const listActions = Action.createActionsFromNames(['loadList', 'setListSource', 'searchByName', 'setFilterValue', 'getNextPage', 'getPreviousPage', 'hideDetailsBox']);
 
-function getSchemaWithFilters(schema, modelName) {
+// Apply current property and name filters
+function applyCurrentFilters(modelDefinitions, modelName) {
+    const modelDefinition = modelDefinitions[modelName];
+    if (listStore.state) {
+        const filterModelDefinition = Object.keys(listStore.state.filters || {})
+            // Remove empty filters
+            .filter(prop => listStore.state.filters[prop])
+            // Only include filters that apply to the current model type
+            .filter(prop => getFilterFieldsForType(modelDefinition.name).includes(prop))
+            // Apply each filter to the model definition
+            .map(key => [modelDefinitions.hasOwnProperty(key) ? `${key}.id` : key, listStore.state.filters[key]])
+            .reduce((out, [filterField, filter]) => {
+                const filterValue = filter.id || filter;
+                return out.filter().on(filterField).equals(filterValue);
+            }, modelDefinition);
+
+        // Apply name search string, if any
+        return listStore.state.searchString.trim().length > 0
+            ? filterModelDefinition.filter().on('displayName').ilike(listStore.state.searchString)
+            : filterModelDefinition;
+    }
+
+    return modelDefinition;
+}
+
+function getSchemaWithFilters(modelDefinitions, modelName) {
     const schemasThatShouldHaveDefaultInTheList = new Set([
         'categoryOptionCombo',
     ]);
 
     if (!schemasThatShouldHaveDefaultInTheList.has(modelName)) {
-        return schema.filter().on('name').notEqual('default');
+        return applyCurrentFilters(modelDefinitions, modelName).filter().on('name').notEqual('default');
     }
-    return schema;
+    return applyCurrentFilters(modelDefinitions, modelName);
 }
 
-function getQueryForSchema(schema, modelName) {
+function getQueryForSchema(modelName) {
     return {
-        fields: fieldFilteringForQuery,
+        fields: `${fieldFilteringForQuery},${getTableColumnsForType(modelName, true)}`,
         order: 'displayName:ASC',
     };
 }
@@ -33,6 +58,9 @@ listActions.setListSource.subscribe((action) => {
     listStore.listSourceSubject.next(Observable.of(action.data));
 });
 
+//~
+//~ Load object list except for Organisation Units (see OrganisationUnitList.component.js)
+//~
 listActions.loadList
     .filter(({ data }) => data !== 'organisationUnit')
     .combineLatest(Observable.fromPromise(getInstance()), (action, d2) => ({ ...action, d2 }))
@@ -43,21 +71,28 @@ listActions.loadList
             throw new Error(`${modelName} is not a valid schema name`);
         }
 
+        listStore.setState(Object.assign(listStore.state || {}, { searchString: '' }));
         return Observable.of({
-            schema: getSchemaWithFilters(d2.models[modelName], modelName),
-            query: getQueryForSchema(d2.models[modelName], modelName),
+            schema: getSchemaWithFilters(d2.models, modelName),
+            query: getQueryForSchema(modelName),
             complete,
             error,
+            d2,
         });
     })
-    .subscribe(async ({ schema, query, complete, error }) => {
-        const listResultsCollection = await schema.list(query);
+    .subscribe(async ({ schema, query, complete, error, d2 }) => {
+        const listResultsCollection = await applyCurrentFilters(d2.models, schema.name)
+            .list(Object.assign(query, getQueryForSchema(schema.name)));
 
         listActions.setListSource(listResultsCollection);
 
         complete(`${schema.name} list loading`);
     }, log.error.bind(log));
 
+
+//~
+//~ Filter current OrganisationUnit list by name
+//~
 listActions.searchByName
     .filter(({ data }) => data.modelType === 'organisationUnit')
     .subscribe(async ({ data, complete, error }) => {
@@ -71,19 +106,23 @@ listActions.searchByName
                 .filter().on('parent.id').equals(appState.state.selectedOrganisationUnit.id);
         }
         const organisationUnitsThatMatchQuery = await organisationUnitModelDefinition
-            .list({
-                fields: fieldFilteringForQuery,
+            .list(Object.assign(getQueryForSchema(data.modelType), {
                 query: data.searchString,
                 withinUserHierarchy: true,
-            });
+            }));
 
         listActions.setListSource(organisationUnitsThatMatchQuery);
         complete();
     }, log.error.bind(log));
 
 const nonDefaultSearchSchemas = new Set(['organisationUnit']);
+
+
+//~
+//~ Filter current list by name (except OrganisationUnit - see above)
+//~
 listActions.searchByName
-    .filter(({ data }) => nonDefaultSearchSchemas.has(data.modelType) === false)
+    .filter(({ data }) => !nonDefaultSearchSchemas.has(data.modelType))
     .subscribe(async ({ data, complete, error }) => {
         const d2 = await getInstance();
 
@@ -91,18 +130,53 @@ listActions.searchByName
             error(`${data.modelType} is not a valid schema name`);
         }
 
-        let modelDefinition = d2.models[data.modelType];
-
         if (data.searchString) {
-            modelDefinition = d2.models[data.modelType].filter().on('displayName').ilike(data.searchString);
+            listStore.setState(Object.assign(listStore.state, { searchString: data.searchString }));
+        } else {
+            listStore.setState(Object.assign(listStore.state, { searchString: '' }));
         }
 
-        const searchResultsCollection = await getSchemaWithFilters(modelDefinition, data.modelType)
-            .list({ fields: fieldFilteringForQuery });
+        const searchResultsCollection = await getSchemaWithFilters(d2.models, data.modelType)
+            .list(getQueryForSchema(data.modelType));
 
         listActions.setListSource(searchResultsCollection);
 
         complete(`${data.modelType} list with search on 'displayName' for '${data.searchString}' is loading`);
+    }, log.error.bind(log));
+
+
+//~
+//~ Filter current list by property
+//~
+listActions.setFilterValue
+    .subscribe(async ({ data, complete, error }) => {
+        const d2 = await getInstance();
+
+        if (!d2.models[data.modelType]) {
+            error(`${data.modelType} is not a valid schema name`);
+        }
+
+        const filterField = d2.models.hasOwnProperty(data.filterField) ? `${data.filterField}.id` : data.filterField;
+        const filterValue = data.filterValue && data.filterValue.hasOwnProperty('id')
+            ? data.filterValue.id
+            : data.filterValue;
+
+        if (filterField && filterValue) {
+            listStore.setState(Object.assign(listStore.state, {
+                filters: Object.assign(listStore.state.filters, { [data.filterField]: data.filterValue }),
+            }));
+        } else {
+            listStore.setState(Object.assign(listStore.state, {
+                filters: Object.assign(listStore.state.filters, { [data.filterField]: null }),
+            }));
+        }
+
+        const searchResultsCollection = await getSchemaWithFilters(d2.models, data.modelType)
+            .list(getQueryForSchema(data.modelType));
+
+        listActions.setListSource(searchResultsCollection);
+
+        complete(`${data.modelType} list with filter on '${filterField}' for '${filterValue}' is loading`);
     }, log.error.bind(log));
 
 // TODO: For simple action mapping like this we should be able to do something less boiler plate like

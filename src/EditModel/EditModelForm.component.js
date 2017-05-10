@@ -1,6 +1,7 @@
 import React from 'react';
 import fieldOverrides from '../config/field-overrides/index';
 import fieldOrderNames from '../config/field-config/field-order';
+import fieldGroups from '../config/field-config/field-groups';
 import disabledOnEdit from '../config/disabled-on-edit';
 import FormFieldsForModel from '../forms/FormFieldsForModel';
 import FormFieldsManager from '../forms/FormFieldsManager';
@@ -23,6 +24,8 @@ import { Observable } from 'rxjs';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttributeFieldConfigs } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
 
+import { Step, Stepper, StepButton } from 'material-ui/Stepper';
+
 const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
     .map(state => state.sideBar.currentSubSection)
@@ -39,6 +42,10 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
         }
         return false;
     });
+
+function PlaceholderComponent(props) {
+    return null;
+}
 
 export default React.createClass({
     propTypes: {
@@ -58,7 +65,9 @@ export default React.createClass({
             formState: {
                 validating: false,
                 valid: true,
+                pristine: false,
             },
+            activeStep: 0,
         };
     },
 
@@ -118,12 +127,21 @@ export default React.createClass({
                     const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
                         .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
 
+                    const groups = fieldGroups.groupsByField(modelType);
+                    const fieldConfigsThatAreSometimesHiddenButAlsoSometimesNotHidden = fieldConfigsWithAttributeFieldsAndUniqueValidators
+                        .map(field => {
+                            if (groups && groups[field.name] !== (this.state && this.state.activeStep || 0) && !field.hiddenComponent) {
+                                field.hiddenComponent = field.component;
+                                field.component = PlaceholderComponent;
+                            }
+                            return field;
+                        });
+
                     this.setState({
-                        fieldConfigs: fieldConfigsWithAttributeFieldsAndUniqueValidators,
+                        fieldConfigs: fieldConfigsThatAreSometimesHiddenButAlsoSometimesNotHidden,
                         modelToEdit: modelToEdit,
                         isLoading: false,
                     });
-
                 }, (errorMessage) => {
                     snackActions.show({ message: errorMessage, action: 'ok' });
                 });
@@ -152,6 +170,21 @@ export default React.createClass({
         return null;
     },
 
+    renderStepper() {
+        const steps = fieldGroups.for(this.props.modelType);
+        const stepCount = steps.length;
+
+        return stepCount > 1 ? (
+            <Stepper activeStep={this.state.activeStep} linear={false} style={{ margin: '0 -16px' }}>
+                {steps.map((step, s) => (
+                    <Step key={s}>
+                        <StepButton onClick={() => this.setActiveStep(s)}>{this.getTranslation(step.label)}</StepButton>
+                    </Step>
+                ))}
+            </Stepper>
+        ) : null;
+    },
+
     renderForm() {
         const formPaperStyle = {
             width: '100%',
@@ -174,6 +207,7 @@ export default React.createClass({
 
         return (
             <div style={formPaperStyle}>
+                {this.renderStepper()}
                 {this.renderSharingNotification()}
                 <FormBuilder
                     fields={this.state.fieldConfigs}
@@ -196,6 +230,30 @@ export default React.createClass({
         }
 
         return this.renderForm();
+    },
+
+    setActiveStep(step) {
+        const stepsByField = fieldGroups.groupsByField(this.props.modelType);
+        this.setState({
+            activeStep: step,
+            fieldConfigs: this.state.fieldConfigs.map(field => {
+                if (stepsByField[field.name] === step) {
+                    if (field.hiddenComponent) {
+                        field.component = field.hiddenComponent;
+                        field.hiddenComponent = undefined;
+                    }
+                    field.props.style = { display: 'inline-block' };
+                } else {
+                    if (!field.hiddenComponent) {
+                        field.hiddenComponent = field.component;
+                        field.component = PlaceholderComponent;
+                    }
+                    field.props.style = { display: 'none' };
+                }
+
+                return field;
+            }),
+        })
     },
 
     _onUpdateField(fieldName, value) {

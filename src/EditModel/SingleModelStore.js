@@ -33,7 +33,8 @@ const requestParams = new Map([
             'categoryCombo[id,displayName]]',
             'indicators[id,displayName,categoryCombo[id,displayName]]',
             'organisationUnits[id,path]',
-            'sections[:all,dataElements[id,displayName],categoryCombos[id,displayName],greyedFields[categoryOptionCombo[id,displayName],dataElement[id,displayName]]]',
+            'sections[:all,dataElements[id,displayName],categoryCombos[id,displayName],',
+            'greyedFields[categoryOptionCombo[id,displayName],dataElement[id,displayName]]]',
         ].join(','),
     }],
     ['categoryOption', {
@@ -48,6 +49,16 @@ const requestParams = new Map([
             ':all',
             'attributeValues[:all,attribute[id,name,displayName]]',
             'organisationUnits[id,path,displayName]',
+        ].join(','),
+    }],
+    ['programRule', {
+        fields: [
+            ':all',
+            'programRuleActions[:all',
+            'dataElement[id,displayName]',
+            'trackedEntityAttribute[id,displayName]',
+            'programStage[id,displayName]',
+            'programStageSection[id,displayName]]'
         ].join(','),
     }]
 ]);

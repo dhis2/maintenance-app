@@ -9,6 +9,7 @@ import snackActions from './Snackbar/snack.actions';
 import {initAppState, default as appState} from './App/appStateStore';
 import LinearProgress from 'material-ui/LinearProgress';
 import App from './App/App.component';
+import listStore from './List/list.store';
 
 import onDemand from './on-demand';
 
@@ -74,7 +75,17 @@ function loadObject({params}, replace, callback) {
                     });
             }
 
-            modelToEditStore.setState(modelToEdit);
+            // Use current list filters as default values for relevant fields
+            const listFilters = listStore.getState() && Object.keys(listStore.getState().filters)
+                    .filter(fieldName => modelToEdit.hasOwnProperty(fieldName))
+                    .filter(fieldName => listStore.getState().filters[fieldName] !== null)
+                    .filter(fieldName => modelToEdit.modelDefinition.modelValidations[fieldName].writable)
+                    .reduce((out, modelType) => {
+                        out[modelType] = listStore.getState().filters[modelType];
+                        return out;
+                    }, {});
+
+            modelToEditStore.setState(Object.assign(modelToEdit, listFilters));
             return callback();
         });
     } else {
