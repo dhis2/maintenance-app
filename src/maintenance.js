@@ -14,7 +14,7 @@ import './translationRegistration';
 import appTheme from './App/app.theme';
 import systemSettingsStore from './App/systemSettingsStore';
 import rxjsconfig from 'recompose/rxjsObservableConfig';
-import { setObservableConfig } from 'recompose';
+import setObservableConfig from 'recompose/setObservableConfig';
 setObservableConfig(rxjsconfig);
 
 if (process.env.NODE_ENV !== 'production') {
