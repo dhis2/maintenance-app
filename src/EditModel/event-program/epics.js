@@ -19,16 +19,17 @@ const api$ = d2$.map(d2 => d2.Api.getApi());
 function loadEventProgramMetadataByProgramId(programId) {
     if (programId === 'add') {
         const programUid = generateUid();
+        const programStageUid = generateUid();
 
         return Observable.of({
             programs: [{
                 id: programUid,
+                programStages: [
+                    { id: programStageUid }
+                ]
             }],
             programStages: [{
-                id: generateUid(),
-                program: {
-                    id: programUid,
-                },
+                id: programStageUid,
                 programStageDataElements: [],
                 notificationTemplates: []
             }],

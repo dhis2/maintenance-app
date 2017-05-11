@@ -45,7 +45,7 @@ const enhance = compose(
         .combineLatest(
             programStage$,
             availableTrackerDataElements$,
-            (props, model, trackerDataElements) => ({ ...props, trackerDataElements, model, items: model.programStageDataElements})
+            (props, programStage, trackerDataElements) => ({ ...props, trackerDataElements, model: programStage, items: programStage.programStageDataElements})
         )
     ),
     withHandlers({
