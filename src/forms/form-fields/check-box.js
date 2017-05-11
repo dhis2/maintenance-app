@@ -37,7 +37,7 @@ const CheckboxWrap = (props) => {
     } = props;
 
     return (
-        <div style={{ marginTop: 12, marginBottom: 12 }}>
+        <div style={{ marginTop: 24, marginBottom: 0 }}>
             <Checkbox
                 onClick={createOnClick(props)}
                 {...otherProps}

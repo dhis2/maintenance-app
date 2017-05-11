@@ -100,13 +100,19 @@ class Dropdown extends React.Component {
             model,
             limit,
             fullWidth,
+            top,
             translateLabel,
+            style,
             ...other
         } = this.props;
 
+        if (style && style.display && style.display === 'none') {
+            return null;
+        }
+
         return this.state.options.length > limit
             ? (
-                <div style={{ width: fullWidth ? '100%' : 'inherit', position: 'relative' }}>
+                <div style={{ width: fullWidth ? '100%' : 'inherit', position: 'relative', top: top ? top : undefined }}>
                     <Dialog
                         title={labelText}
                         open={this.state.dialogOpen}
@@ -142,8 +148,9 @@ class Dropdown extends React.Component {
                         inputStyle={{ cursor: 'pointer' }}
                     />
                     <div
-                        style={{ position: 'absolute', top: 38, right: 4, color: 'rgba(0,0,0,0.25)' }}
+                        style={{ position: 'absolute', top: 36, right: 10, color: 'rgba(0,0,0,0.25)', cursor: 'pointer' }}
                         className='material-icons'
+                        onClick={this.openDialog}
                     >open_in_new</div>
                 </div>
             ) : (

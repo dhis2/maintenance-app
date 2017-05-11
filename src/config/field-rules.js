@@ -238,4 +238,118 @@ export default new Map([['dataElement',
             ]
         }
     ]],
+    ['programRule', [
+        {
+            field: 'name',
+            when: [{
+                field: 'program',
+                operator: 'HAS_VALUE'
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: false,
+                elseValue: true,
+            }],
+        },
+        {
+            field: 'description',
+            when: [{
+                field: 'program',
+                operator: 'HAS_VALUE'
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: false,
+                elseValue: true,
+            }],
+        },
+        {
+            field: 'priority',
+            when: [{
+                field: 'program',
+                operator: 'HAS_VALUE'
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: false,
+                elseValue: true,
+            }],
+        },
+        {
+            field: 'condition',
+            when: [{
+                field: 'program',
+                operator: 'HAS_VALUE'
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: false,
+                elseValue: true,
+            }],
+        },
+        {
+            field: 'programRuleActions',
+            when: [{
+                field: 'program',
+                operator: 'HAS_VALUE'
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: false,
+                elseValue: true,
+            }],
+        },
+    ]],
+    ['programRuleVariable', [
+        {
+            field: 'dataElement',
+            when: [{
+                field: 'programRuleVariableSourceType',
+                operator: 'ONEOF',
+                value: [
+                    'CALCULATED_VALUE',
+                    'TEI_ATTRIBUTE',
+                ],
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+        {
+            field: 'trackedEntityAttribute',
+            when: [{
+                field: 'programRuleVariableSourceType',
+                operator: 'EQUALS',
+                value: 'TEI_ATTRIBUTE',
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: false,
+                elseValue: true,
+            }],
+        },
+        {
+            field: 'programStage',
+            when: [{
+                field: 'programRuleVariableSourceType',
+                operator: 'EQUALS',
+                value: 'DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE',
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: false,
+                elseValue: true,
+            }],
+        },
+    ]],
 ]);
