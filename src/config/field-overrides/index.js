@@ -14,6 +14,8 @@ import validationRule from './validationRule';
 import validationNotificationTemplate from './validationNotificationTemplate';
 import programIndicator from './programIndicator';
 import programNotificationTemplate from './programNotificationTemplate';
+import programRule from './programRule';
+import programRuleVariable from './programRuleVariable';
 
 const overridesByType = {
     attribute,
@@ -32,6 +34,8 @@ const overridesByType = {
     programIndicator,
     programNotificationTemplate,
     validationRule,
+    programRule,
+    programRuleVariable,
 };
 
 export default {

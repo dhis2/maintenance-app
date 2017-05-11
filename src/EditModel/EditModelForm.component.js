@@ -1,4 +1,5 @@
 import React from 'react';
+import fieldGroups from '../config/field-config/field-groups';
 import disabledOnEdit from '../config/disabled-on-edit';
 import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
@@ -18,6 +19,8 @@ import appState from '../App/appStateStore';
 import { Observable } from 'rxjs';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttributeFieldConfigs } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
+
+import { Step, Stepper, StepButton } from 'material-ui/Stepper';
 
 const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
@@ -86,13 +89,26 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
         const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
             .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
 
+        const groups = fieldGroups.groupsByField(modelType);
+        const fieldConfigsThatAreSometimesHiddenButAlsoSometimesNotHidden = fieldConfigsWithAttributeFieldsAndUniqueValidators
+            .map(field => {
+        if (groups && groups[field.name] !== (this.state && this.state.activeStep || 0) && !field.hiddenComponent) {
+            field.hiddenComponent = field.component;
+            field.component = PlaceholderComponent;
+        }
+            return field;
+        });
+
         return {
-            fieldConfigs: fieldConfigsWithAttributeFieldsAndUniqueValidators,
+            fieldConfigs: fieldConfigsThatAreSometimesHiddenButAlsoSometimesNotHidden,
             modelToEdit: modelToEdit,
             isLoading: false,
         };
     });
 
+function PlaceholderComponent(props) {
+    return null;
+}
 
 export default React.createClass({
     propTypes: {
@@ -112,7 +128,9 @@ export default React.createClass({
             formState: {
                 validating: false,
                 valid: true,
+                pristine: false,
             },
+            activeStep: 0,
         };
     },
 
@@ -127,6 +145,81 @@ export default React.createClass({
             }, (errorMessage) => {
                 snackActions.show({ message: errorMessage, action: 'ok' });
             });
+
+/*
+        const modelType = this.props.modelType;
+
+        getInstance().then(d2 => {
+            const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
+            formFieldsManager.setFieldOrder(fieldOrderNames.for(modelType));
+
+            for (const fieldOverrideConfig of fieldOverrides.for(modelType)) {
+                const [fieldName, overrideConfig] = fieldOverrideConfig;
+
+                formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
+            }
+
+            this.subscription = modelToEditAndModelForm$
+                .subscribe(([modelToEdit, editFormFieldsForCurrentModelType]) => {
+                    const fieldConfigs = editFormFieldsForCurrentModelType
+                    // TODO: When switching to the FormBuilder that manages state this function for all values
+                    // would need to be executed only for the field that actually changed and/or the values that
+                    // change because of it.
+                        .map(fieldConfig => {
+                            fieldConfig.fieldOptions.model = modelToEdit;
+
+                            if (!this.isAddOperation() && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
+                                fieldConfig.props.disabled = true;
+                            }
+
+                            // The value is passes through a converter before being set onto the field config.
+                            // This is useful for when a value is a number and might have to be translated to a
+                            // value of the type Number.
+                            if (fieldConfig.beforePassToFieldConverter) {
+                                fieldConfig.value = fieldConfig.beforePassToFieldConverter(modelToEdit[fieldConfig.name]);
+                            } else {
+                                fieldConfig.value = modelToEdit[fieldConfig.name];
+                            }
+
+                            return fieldConfig;
+                        });
+
+                    const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(modelToEdit.modelDefinition.name), fieldConfigs, modelToEdit);
+                    const fieldConfigsWithAttributeFields = [].concat(
+                        fieldConfigsAfterRules,
+                        getAttributeFieldConfigs(this.context.d2, modelToEdit),
+                        (extraFields[modelType] || []).map(config => {
+                            config.props = config.props || {};
+                            config.props.modelToEdit = modelToEdit;
+                            return config;
+                        })
+                    );
+
+                    const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
+                        .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
+
+                    const groups = fieldGroups.groupsByField(modelType);
+                    const fieldConfigsThatAreSometimesHiddenButAlsoSometimesNotHidden = fieldConfigsWithAttributeFieldsAndUniqueValidators
+                        .map(field => {
+                            if (groups && groups[field.name] !== (this.state && this.state.activeStep || 0) && !field.hiddenComponent) {
+                                field.hiddenComponent = field.component;
+                                field.component = PlaceholderComponent;
+                            }
+                            return field;
+                        });
+
+                    this.setState({
+                        fieldConfigs: fieldConfigsThatAreSometimesHiddenButAlsoSometimesNotHidden,
+                        modelToEdit: modelToEdit,
+                        isLoading: false,
+                    });
+                }, (errorMessage) => {
+                    snackActions.show({ message: errorMessage, action: 'ok' });
+                });
+
+            this.setState({
+                formFieldsManager: formFieldsManager,
+*/
     },
 
     componentWillUnmount() {
@@ -145,6 +238,21 @@ export default React.createClass({
         }
 
         return null;
+    },
+
+    renderStepper() {
+        const steps = fieldGroups.for(this.props.modelType);
+        const stepCount = steps.length;
+
+        return stepCount > 1 ? (
+            <Stepper activeStep={this.state.activeStep} linear={false} style={{ margin: '0 -16px' }}>
+                {steps.map((step, s) => (
+                    <Step key={s}>
+                        <StepButton onClick={() => this.setActiveStep(s)}>{this.getTranslation(step.label)}</StepButton>
+                    </Step>
+                ))}
+            </Stepper>
+        ) : null;
     },
 
     renderForm() {
@@ -169,6 +277,7 @@ export default React.createClass({
 
         return (
             <div style={formPaperStyle}>
+                {this.renderStepper()}
                 {this.renderSharingNotification()}
                 <FormBuilder
                     fields={this.state.fieldConfigs}
@@ -191,6 +300,30 @@ export default React.createClass({
         }
 
         return this.renderForm();
+    },
+
+    setActiveStep(step) {
+        const stepsByField = fieldGroups.groupsByField(this.props.modelType);
+        this.setState({
+            activeStep: step,
+            fieldConfigs: this.state.fieldConfigs.map(field => {
+                if (stepsByField[field.name] === step) {
+                    if (field.hiddenComponent) {
+                        field.component = field.hiddenComponent;
+                        field.hiddenComponent = undefined;
+                    }
+                    field.props.style = { display: 'inline-block' };
+                } else {
+                    if (!field.hiddenComponent) {
+                        field.hiddenComponent = field.component;
+                        field.component = PlaceholderComponent;
+                    }
+                    field.props.style = { display: 'none' };
+                }
+
+                return field;
+            }),
+        })
     },
 
     _onUpdateField(fieldName, value) {

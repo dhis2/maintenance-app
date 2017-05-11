@@ -9,6 +9,8 @@ import ModelCollection from 'd2/lib/model/ModelCollection';
 export default class OrganisationUnitList extends React.Component {
     componentDidMount() {
         this.subscription = appState
+            // Only do this is we're actually about to show organisation units
+            .filter(appState => appState.sideBar.currentSubSection === 'organisationUnit')
             .map(({ selectedOrganisationUnit, userOrganisationUnits }) => ({
                 selectedOrganisationUnit,
                 userOrganisationUnitIds: userOrganisationUnits

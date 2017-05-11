@@ -30,6 +30,9 @@ import fieldOrder from '../config/field-config/field-order';
 import { Observable } from 'rxjs';
 import { calculatePageValue } from './helpers/pagination';
 import HelpLink from './HelpLink.component';
+import Dropdown from "../forms/form-fields/drop-down";
+import DropdownAsync from '../forms/form-fields/drop-down-async';
+import { getFilterFieldsForType } from '../config/maintenance-models';
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
@@ -82,9 +85,11 @@ class DetailsBoxWithScroll extends Component {
     }
 
     render() {
+        const paperStyle = { maxWidth: 500, minWidth: 300, marginTop: document.querySelector('body').scrollTop };
+
         return (
             <div style={this.props.style}>
-                <Paper zDepth={1} rounded={false} style={{ maxWidth: 500, minWidth: 300, marginTop: document.querySelector('body').scrollTop }}>
+                <Paper zDepth={1} rounded={false} style={paperStyle}>
                     <DetailsBox
                         source={this.props.detailsObject}
                         showDetailBox={!!this.props.detailsObject}
@@ -146,6 +151,7 @@ const List = React.createClass({
                     dataRows: listStoreValue.list,
                     pager: listStoreValue.pager,
                     tableColumns: listStoreValue.tableColumns,
+                    filters: listStoreValue.filters,
                     isLoading: false,
                 });
             });
@@ -279,6 +285,75 @@ const List = React.createClass({
         this.registerDisposable(searchListByNameDisposable);
     },
 
+    renderFilters() {
+        const makeFilterSetter = (filterField) => {
+            return (e) => {
+                this.setState({ isLoading: true });
+                listActions.setFilterValue({
+                    filterField,
+                    filterValue: e.target.value,
+                    modelType: this.props.params.modelType,
+                });
+            };
+        };
+
+        const styles = {
+            inset: {
+                // background: 'rgba(255, 255, 255, 0.5)',
+                // borderRadius: 4,
+                // padding: '0 16px',
+                // boxShadow: 'inset rgba(0, 0, 0, 0.15) 1px 2px 1px 0px',
+            },
+            box: {
+                display: 'inline-block',
+                marginRight: 16,
+                width: 256,
+            },
+        };
+        return (
+            <div style={styles.inset}>
+                <SearchBox searchObserverHandler={this.searchListByName}/>
+                {getFilterFieldsForType(this.props.params.modelType).map((filterField, i) => {
+                    const modelDefinition = this.context.d2.models[this.props.params.modelType];
+                    const isConstantField =
+                        modelDefinition.modelProperties.hasOwnProperty(filterField) &&
+                        modelDefinition.modelProperties[filterField].hasOwnProperty('constants');
+                    const constants = isConstantField &&
+                        modelDefinition.modelProperties[filterField].constants.map(c => ({ text: c, value: c }));
+                    const referenceType = this.context.d2.models.hasOwnProperty(filterField)
+                        ? filterField
+                        : `${this.props.params.modelType}.${filterField}`;
+
+                    return (
+                        <div key={filterField} style={styles.box}>
+                            {isConstantField ? (
+                                <Dropdown
+                                    labelText={this.getTranslation(filterField)}
+                                    options={constants}
+                                    onChange={makeFilterSetter(filterField)}
+                                    value={this.state.filters ? this.state.filters[filterField] : null}
+                                    translateOptions={filterField !== 'periodType'}
+                                />
+                            ) : (
+                                <DropdownAsync
+                                    labelText={this.getTranslation(filterField)}
+                                    referenceType={referenceType}
+                                    onChange={makeFilterSetter(filterField)}
+                                    value={this.state.filters ? this.state.filters[filterField] : null}
+                                    quickAddLink={false}
+                                    preventAutoDefault
+                                    styles={{ display: 'relative' }}
+                                    limit={1}
+                                    top={-15}
+                                />
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    },
+
     render() {
         const currentlyShown = calculatePageValue(this.state.pager);
 
@@ -300,6 +375,13 @@ const List = React.createClass({
         const availableActions = Object.keys(contextActions)
             .filter(actionsThatRequireCreate, this)
             .filter(actionsThatRequireDelete, this)
+            .filter((actionName) => {
+                if (actionName === 'share') {
+                    return this.context.d2.models[this.props.params.modelType] &&
+                        this.context.d2.models[this.props.params.modelType].isShareable;
+                }
+                return true;
+            })
             .reduce((actions, actionName) => {
                 // TODO: Don't re-assign param?
                 actions[actionName] = contextActions[actionName]; // eslint-disable-line no-param-reassign
@@ -326,6 +408,11 @@ const List = React.createClass({
                 display: 'flex',
                 flexOrientation: 'row',
             },
+
+            filterWrap: {
+                clear: 'both',
+                minHeight: 80,
+            },
         };
 
         const contextMenuIcons = {
@@ -339,48 +426,101 @@ const List = React.createClass({
             preview: 'dashboard',
         };
 
+        // For table columns like 'a___b', flatten values to b being a child of a
+        const magicallyUnwrapChildValues = (row) => {
+            this.state.tableColumns.reduce((o, col) => {
+                if (col.includes('___')) {
+                    const objectName = col.substr(0, col.indexOf('___'));
+                    const objectProp = col.substr(col.indexOf('___') + 3);
+                    Object.assign(o, {
+                        [col]: row && row[objectName] && row[objectName][objectProp] || ''
+                    });
+                }
+                return o;
+            }, row);
+            return row;
+        };
+
+        // Because "default" really means "None" and that's something everybody knows duh
+        const defaultReallyMeansNone = (row) => {
+            if (row.categoryCombo &&
+                row.categoryCombo.displayName &&
+                row.categoryCombo.displayName === 'default' &&
+                row.categoryCombo___displayName === row.categoryCombo.displayName) {
+                row.categoryCombo.displayName = row.categoryCombo___displayName = this.getTranslation('none');
+            }
+            return row;
+        };
+
+        // Get translations for row values that are constants
+        // Some props are read only on the model object, which means the can not be translated - boo!
+        const translateConstants = (row) => {
+            const untranslatableColumnNames = {
+                organisationUnit: ['level'],
+                dataSet: ['formType'],
+            };
+            const isTranslatable = (modelType, columnName) => {
+                const b = !(
+                    untranslatableColumnNames.hasOwnProperty(modelType) &&
+                    untranslatableColumnNames[modelType].includes(columnName)
+                );
+                return b;
+            };
+
+            return row.noMoreGottaTranslateCauseIsDone ? row : this.state.tableColumns.reduce((prow, columnName) => {
+                if (isTranslatable(row.modelDefinition.name, columnName) &&
+                    row && row.modelDefinition &&
+                    row.modelDefinition.modelProperties[columnName] &&
+                    row.modelDefinition.modelProperties[columnName].constants) {
+                    // Hack it to fix another hack - sweeet
+                    row.noMoreGottaTranslateCauseIsDone = true;
+                    prow[columnName] = this.getTranslation(row[columnName].toLowerCase());
+                }
+                return prow;
+            }, row);
+        };
+
         return (
             <div>
                 <div>
-                    <Heading>{this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}<HelpLink schema={this.props.params.modelType} /></Heading>
-                    <ListActionBar modelType={this.props.params.modelType} groupName={this.props.params.groupName} />
+                    <Heading>
+                        {this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}
+                        <HelpLink schema={this.props.params.modelType}/>
+                    </Heading>
+                    <ListActionBar modelType={this.props.params.modelType} groupName={this.props.params.groupName}/>
                 </div>
-                {this.state.dataRows && this.state.dataRows.length ? (
-                    <div>
-                        <div style={{ float: 'left', width: '50%' }}>
-                            <SearchBox searchObserverHandler={this.searchListByName}/>
-                        </div>
-                        <div>
-                            <Pagination {...paginationProps} />
-                        </div>
-                    </div>
-                ) : null}
+                <div style={styles.filterWrap}>
+                    <div style={{ float: 'right' }}><Pagination {...paginationProps} /></div>
+                    {this.renderFilters()}
+                </div>
                 <LoadingStatus
                     loadingText={['Loading', this.props.params.modelType, 'list...'].join(' ')}
                     isLoading={this.state.isLoading}
                 />
-                <div style={styles.listDetailsWrap}>
-                    <div style={styles.dataTableWrap}>
-                        {(this.state.dataRows && this.state.dataRows.length) || this.state.isLoading ? (
-                            <DataTable
-                                rows={this.state.dataRows}
-                                columns={this.state.tableColumns}
-                                contextMenuActions={availableActions}
-                                contextMenuIcons={contextMenuIcons}
-                                primaryAction={(model) => availableActions.edit(model)}
-                                isContextActionAllowed={this.isContextActionAllowed}
-                            />
-                        ) : <div>{this.getTranslation('no_results_found')}</div>}
+                {this.state.isLoading ? (<div>Loading...</div>) : (
+                    <div style={styles.listDetailsWrap}>
+                        <div style={styles.dataTableWrap}>
+                            {this.state.dataRows && this.state.dataRows.length ? (
+                                <DataTable
+                                    rows={this.state.dataRows.map(magicallyUnwrapChildValues).map(defaultReallyMeansNone).map(translateConstants)}
+                                    columns={this.state.tableColumns}
+                                    contextMenuActions={availableActions}
+                                    contextMenuIcons={contextMenuIcons}
+                                    primaryAction={(model) => availableActions.edit(model)}
+                                    isContextActionAllowed={this.isContextActionAllowed}
+                                />
+                            ) : <div>{this.getTranslation('no_results_found')}</div>}
+                        </div>
+                        {
+                            this.state.detailsObject ?
+                                <DetailsBoxWithScroll
+                                    style={styles.detailsBoxWrap}
+                                    detailsObject={this.state.detailsObject}
+                                    onClose={listActions.hideDetailsBox}
+                                />
+                                : null}
                     </div>
-                    {
-                        this.state.detailsObject ?
-                            <DetailsBoxWithScroll
-                                style={styles.detailsBoxWrap}
-                                detailsObject={this.state.detailsObject}
-                                onClose={listActions.hideDetailsBox}
-                            />
-                        : null}
-                </div>
+                )}
                 {this.state.dataRows && this.state.dataRows.length ? (
                     <div style={{ marginTop: '-2rem', paddingBottom: '0.5rem' }}>
                         <Pagination {...paginationProps} />

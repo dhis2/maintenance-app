@@ -105,10 +105,16 @@ objectActions.getObjectOfTypeByIdAndClone
             .subscribe(complete, error);
     });
 
+// Standard save handler
+const specialSaveHandlers = ['legendSet', 'dataSet', 'organisationUnit', 'programRule', 'programRuleVariable'];
 objectActions.saveObject
-    .filter(({ data }) => ['legendSet', 'dataSet', 'organisationUnit'].indexOf(data.modelType) === -1)
+    .filter(({ data }) => !specialSaveHandlers.includes(data.modelType))
     .subscribe(action => {
         const errorHandler = (message) => {
+            if (message === 'Response was not a WebMessage with the expected format') {
+                action.error('Failed to save: Failed to provide proper error message: Everything is broken');
+                return;
+            }
             action.error(message);
         };
 
@@ -169,6 +175,7 @@ objectActions.saveObject
         log.error(e);
     });
 
+// Legend set save handler - uses metadata endpoint instead of legendSets endpoint
 objectActions.saveObject
     .filter(({ data }) => data.modelType === 'legendSet')
     .subscribe(async ({ complete, error }) => {
@@ -196,6 +203,7 @@ objectActions.saveObject
         }
     }, (e) => log.error(e));
 
+// Data set save handler - fetches a UID from the API and saves dataSetElements as well
 objectActions.saveObject
     .filter(({ data }) => data.modelType === 'dataSet')
     .subscribe(async ({ complete, error }) => {
@@ -242,6 +250,67 @@ objectActions.saveObject
             error(d2.i18n.getTranslation('could_not_save_data_set'));
             log.error(e);
         }
+    });
+
+// Program rule save handler - save program rule and program rule actions in one go
+objectActions.saveObject
+    .filter(({ data }) => data.modelType === 'programRule')
+    .subscribe(async ({ complete, error }) => {
+        const d2 = await getInstance();
+        const api = d2.Api.getApi();
+
+        if (!modelToEditStore.getState().program) {
+            error(d2.i18n.getTranslation('could_not_save_program_rule_no_program_specified'));
+            return;
+        }
+
+        const programRuleId = modelToEditStore.getState().id || (await api.get('/system/id')).codes[0];
+        const metadataPayload = {
+            programRules: [Object.assign(getOwnedPropertyJSON(modelToEditStore.getState()), {
+                program: { id: modelToEditStore.getState().program.id },
+                id: programRuleId,
+            })],
+            programRuleActions: modelToEditStore.getState().programRuleActions.toArray()
+                .map(action => Object.assign(action, {
+                    programRule: { id: programRuleId },
+                }))
+                .map(getOwnedPropertyJSON),
+        };
+
+        try {
+            const response = await api.post('metadata', metadataPayload);
+
+            if (response.status === 'OK') {
+                complete('save_success');
+            } else {
+                const errorMessages = extractErrorMessagesFromResponse(response);
+
+                error(d2.i18n.getTranslation('could_not_save_program_rule_($$message$$)', { message: head(errorMessages) || 'Unknown error!' }));
+            }
+        } catch (e) {
+            error(d2.i18n.getTranslation('could_not_save_program_rule'));
+            log.error(e);
+        }
+    });
+
+// Program rule variable save handler - uncomplicate program
+objectActions.saveObject
+    .filter(({ data }) => data.modelType === 'programRuleVariable')
+    .subscribe(async ({ complete, error }) => {
+        const editModel = modelToEditStore.getState();
+        const model = Object.assign(
+            editModel, {
+                program: { id: editModel.program.id },
+                programStage: editModel.programStage ? { id: editModel.programStage.id } : undefined,
+                dataElement: editModel.dataElement ? { id: editModel.dataElement.id } : undefined,
+                trackedEntityAttribute: editModel.trackedEntityAttribute ? { id: editModel.trackedEntityAttribute.id } : undefined,
+            });
+
+        model.save()
+            .then(complete('save_success'))
+            .catch(err => {
+                error(err.messages ? err.messages[0].message : err);
+            });
     });
 
 objectActions.update.subscribe(action => {
