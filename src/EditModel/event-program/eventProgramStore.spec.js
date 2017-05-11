@@ -4,13 +4,15 @@ import ModelDefinition from 'd2/lib/model/ModelDefinition';
 import ModelDefinitions from 'd2/lib/model/ModelDefinitions';
 import programSchema from '../../../test/fixtures/schemas/program';
 import programStageSchema from '../../../test/fixtures/schemas/programStage';
-import programNotificationTemplate from '../../../test/fixtures/schemas/programNotificationTemplate';
+import programNotificationTemplateSchema from '../../../test/fixtures/schemas/programNotificationTemplate';
+import dataEntryFormSchema from '../../../test/fixtures/schemas/dataEntryForm';
 import { noop, memoize } from 'lodash/fp';
 
 describe('Event Program Store', () => {
     let mockState;
     let program;
     let programStage;
+    let dataEntryForm;
     let programStageNotification;
     let modelDefinitions;
 
@@ -20,7 +22,8 @@ describe('Event Program Store', () => {
 
         program = ModelDefinition.createFromSchema(programSchema);
         programStage = ModelDefinition.createFromSchema(programStageSchema);
-        programStageNotification = ModelDefinition.createFromSchema(programNotificationTemplate);
+        programStageNotification = ModelDefinition.createFromSchema(programNotificationTemplateSchema);
+        dataEntryForm = ModelDefinition.createFromSchema(dataEntryFormSchema);
 
         modelDefinitions = ModelDefinitions.getModelDefinitions();
 
@@ -28,6 +31,7 @@ describe('Event Program Store', () => {
         modelDefinitions.program || modelDefinitions.add(program);
         modelDefinitions.programStage || modelDefinitions.add(programStage);
         modelDefinitions.programNotificationTemplate || modelDefinitions.add(programStageNotification);
+        modelDefinitions.programNotificationTemplate || modelDefinitions.add(dataEntryForm);
     });
 
     beforeEach(() => {
@@ -36,8 +40,11 @@ describe('Event Program Store', () => {
             programStages: [programStage.create({ id: 'selCNHPqm5g', notificationTemplates: [] })],
             programStageNotifications: {
                 ['selCNHPqm5g']: [
-                    programStageNotification.create()
+                    programStageNotification.create(),
                 ]
+            },
+            dataEntryFormForProgramStage: {
+                ['selCNHPqm5g']: dataEntryForm.create(),
             },
         };
 
@@ -71,7 +78,7 @@ describe('Event Program Store', () => {
         expect(() => store.setState()).to.throw('You are attempting to set a state that is a non object');
     });
 
-    it('should merge the state with the old state', () => {
+    xit('should merge the state with the old state', () => {
 
     });
 
@@ -101,6 +108,14 @@ describe('Event Program Store', () => {
                 expect(isStoreStateDirty(mockState)).to.be.false;
 
                 mockState.programStageNotifications['selCNHPqm5g'][0].name = 'Email on completion';
+
+                expect(isStoreStateDirty(mockState)).to.be.true;
+            });
+
+            it('should return true when a dataEntryForm was changed', () => {
+                expect(isStoreStateDirty(mockState)).to.be.false;
+
+                mockState.dataEntryFormForProgramStage['selCNHPqm5g'].htmlCode = '<input id="id-id-val" />';
 
                 expect(isStoreStateDirty(mockState)).to.be.true;
             });

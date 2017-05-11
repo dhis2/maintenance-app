@@ -1,36 +1,54 @@
 import Store from 'd2-ui/lib/store/Store';
-import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, findIndex, isObject } from 'lodash/fp';
+import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, findIndex, isObject, values } from 'lodash/fp';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 
-// programSelector :: StoreState -> Model<Program>
+//___ programSelector :: StoreState -> Model<Program>
 const programSelector = get('program');
 
-// programStagesSelector :: StoreState -> Array<Model<ProgramStage>>
+//___ programStagesSelector :: StoreState -> Array<Model<ProgramStage>>
 const programStagesSelector = get('programStages');
 
-// programStageNotificationsSelector :: StoreState -> Object<programStageId, programStageNotifications>
+//___ programStageNotificationsSelector :: StoreState -> Object<programStageId, programStageNotifications>
 const programStageNotificationsSelector = get('programStageNotifications');
 
-// checkIfDirty :: Model -> Boolean
+//___ dataEntryFormsSelector :: StoreState -> Object<programStageId, DataEntryForm>
+const dataEntryFormsSelector = get('dataEntryFormForProgramStage');
+
+//___ checkIfDirty :: Model -> Boolean
 const checkIfDirty = model => model && model.isDirty();
 
-// modelToJson :: Model -> Object
+//___ modelToJson :: Model -> Object
 const modelToJson = getOwnedPropertyJSON;
 
-// isProgramStageDirty :: Object<{programStages}> -> Boolean
+//___ isProgramStageDirty :: Object<StoreState> -> Object<{programStages}> -> Boolean
 const isProgramStageDirty = compose(checkIfDirty, first, programStagesSelector);
 
-// getIdForFirstProgramStage :: Object<{programStages}> -> String
+//___ getIdForFirstProgramStage : Object<StoreState> -> Object<{programStages}> -> String
 const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelector);
 
-// hasDirtyNotificationTemplate :: Object<{programStageNotifications, programStages}> -> Boolean
+//___ hasDirtyNotificationTemplate :: Object<{programStageNotifications, programStages}> -> Boolean
 const hasDirtyNotificationTemplate = state => some(checkIfDirty, get(getIdForFirstProgramStage(state), programStageNotificationsSelector(state)));
+
+//___ hasDirtyDataEntryForms :: Object<StoreState> -> Object<{programStageId: Model.DataEntryForm}> -> Boolean
+const hasDirtyDataEntryForms = compose(some(checkIfDirty), values, dataEntryFormsSelector);
 
 // isProgramDirty :: Object<{program}> -> Boolean
 const isProgramDirty = compose(checkIfDirty, programSelector);
 
 // isStoreStateDirty :: StoreState -> Boolean
-export const isStoreStateDirty = compose(some(identity), map(__, [isProgramDirty, hasDirtyNotificationTemplate, isProgramStageDirty]), value => func => func(value));
+export const isStoreStateDirty = compose(
+    some(identity),
+    map(
+        __,
+        [
+            isProgramDirty,
+            isProgramStageDirty,
+            hasDirtyNotificationTemplate,
+            hasDirtyDataEntryForms,
+        ]
+    ),
+    value => func => func(value)
+);
 
 // getMetaDataToSend :: StoreState -> SaveState
 export const getMetaDataToSend = state => {
@@ -57,12 +75,33 @@ export const getMetaDataToSend = state => {
             .map(modelToJson);
     }
 
+    try {
+        if (hasDirtyDataEntryForms(state)) {
+            const dataEntryForms = dataEntryFormsSelector(state);
+
+            payload.dataEntryForms = Object
+                .keys(dataEntryForms)
+                .map(get(__, dataEntryForms))
+                .filter(checkIfDirty)
+                .map(modelToJson);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+
     return payload;
 };
 
 // isValidState :: StoreState -> Boolean
 function isValidState(state) {
-    const acceptedKeys = ['program', 'programStages', 'programStageSections', 'programStageNotifications'];
+    const acceptedKeys = [
+        'program',
+        'programStages',
+        'programStageSections',
+        'programStageNotifications',
+        'availableDataElements',
+        'dataEntryFormForProgramStage',
+    ];
 
     return Object
         .keys(state)

@@ -3,12 +3,13 @@ import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisat
 import EventProgramNotifications from './notifications/EventProgramNotifications';
 import AssignDataElements from './assign-data-elements/AssignDataElements';
 import { createFormFor } from '../formHelpers';
-import { get, compose } from 'lodash/fp';
+import { get, compose, first } from 'lodash/fp';
 import { connect } from 'react-redux';
 import eventProgramStore from './eventProgramStore';
 import { editFieldChanged } from './actions';
 import { bindActionCreators } from 'redux';
 import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
+import EditCustomFormProgramStage from './data-entry-form/EditCustomFormProgramStage';
 
 export const STEP_DETAILS = 'details';
 export const STEP_DATA_ELEMENTS = 'data_elements';
@@ -42,7 +43,7 @@ const steps = [
     {
         key: STEP_DATA_ENTRY_FORMS,
         name: 'create_data_entry_form',
-        component: () => (<div>Data entry form management</div>),
+        component: EditCustomFormProgramStage,
     },
     {
         key: STEP_ASSIGN_ORGANISATION_UNITS,

@@ -12,20 +12,21 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import Checkbox from 'material-ui/Checkbox/Checkbox';
 import { Observable } from 'rxjs';
 import Store from 'd2-ui/lib/store/Store';
-import { getInstance } from 'd2/lib/d2';
 import { addDataElementsToStage, removeDataElementsFromStage, editProgramStageDataElement } from './actions';
 import withHandlers from 'recompose/withHandlers';
 import Visibility from 'material-ui/svg-icons/action/visibility';
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
 import pure from 'recompose/pure';
 
-const d2$ = Observable.fromPromise(getInstance());
-
 const getFirstProgramStage = compose(first, get('programStages'));
 
 const programStage$ = eventProgramStore
     .map(getFirstProgramStage)
     .do(console.log.bind(console));
+
+const availableTrackerDataElements$ = eventProgramStore
+    .map(get('availableDataElements'))
+    .take(1);
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     addDataElementsToStage,
@@ -43,12 +44,7 @@ const enhance = compose(
     mapPropsStream(props$ => props$
         .combineLatest(
             programStage$,
-            d2$
-                .flatMap(d2 => d2.models.dataElements
-                    .filter().on('domainType').equals('TRACKER')
-                    .list({ fields: 'id,displayName,valueType,optionSet', paging: false })
-                    .then(collection => collection.toArray())
-                ),
+            availableTrackerDataElements$,
             (props, model, trackerDataElements) => ({ ...props, trackerDataElements, model, items: model.programStageDataElements})
         )
     ),

@@ -20,12 +20,12 @@
   "persisted": true,
   "order": 1509,
   "references": [
-    "org.hisp.dhis.program.ProgramStageSection",
-    "org.hisp.dhis.program.Program",
-    "org.hisp.dhis.user.User",
+    "org.hisp.dhis.program.ProgramStageDataElement",
     "org.hisp.dhis.dataentryform.DataEntryForm",
-    "org.hisp.dhis.program.notification.ProgramNotificationTemplate",
-    "org.hisp.dhis.program.ProgramStageDataElement"
+    "org.hisp.dhis.user.User",
+    "org.hisp.dhis.program.Program",
+    "org.hisp.dhis.program.ProgramStageSection",
+    "org.hisp.dhis.program.notification.ProgramNotificationTemplate"
   ],
   "authorities": [
     {
