@@ -2,46 +2,57 @@ import React, { Component, PropTypes } from 'react';
 import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
-import { blue500 } from 'material-ui/styles/colors';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { grey100 } from 'material-ui/styles/colors';
 import DragHandle from './DragHandle.component';
 import SortableDataList from './SortableDataList.component';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
-const sectionPaperStyle = {
-    width: '100%',
-    marginBottom: '1rem',
-};
+const styles = {
+    sectionPaper: {
+        width: '100%',
+        marginBottom: '1rem',
+    },
 
-const sectionContentStyle = {
-    backgroundColor: 'rgb(243, 243, 243)',
-};
+    sectionContent: {
+        backgroundColor: 'white',
+    },
 
-const sectionHeaderStyle = {
-    color: 'black',
-    padding: '0rem 1rem',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#d7d7d7',
-    borderRadius: '4px 4px 0 0',
-};
+    sectionHeader: {
+        color: 'black',
+        padding: '0rem 1rem',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#d7d7d7',
+        borderRadius: '4px 4px 0 0',
+    },
 
-const collapsibleArrowStyle = {
-    color: 'black',
-    cursor: 'pointer',
-    transition: 'none',
-    userSelect: 'none',
-};
+    addNewSection: {
+        padding: '0rem 1rem',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: grey100,
+        borderRadius: '4px 4px 0 0',
+        height: 50,
+        fontSize: '1.7rem',
+    },
 
-const rowStyle = {
-    userSelect: 'none',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    collapsibleArrow: {
+        color: 'black',
+        cursor: 'pointer',
+        transition: 'none',
+        userSelect: 'none',
+    },
+
+    row: {
+        userSelect: 'none',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
 };
 
 const SortableSectionList = SortableContainer(({ sections, onToggleSection, onSectionNameChanged, sortItems }) => (
@@ -96,14 +107,14 @@ class CollapsibleSection extends Component {
         this.setState({
             isSortingIndex: index,
         })
-    }
+    };
 
     onSortEnd = (oldIndex, newIndex) => {
         this.props.sortItems(oldIndex, newIndex);
         this.setState({
             isSortingIndex: null,
         });
-    }
+    };
 
     startEditingName = (event) => {
         event.stopPropagation();
@@ -111,19 +122,19 @@ class CollapsibleSection extends Component {
             newName: '',
             isEditingName: !this.state.isEditingName,
         });
-    }
+    };
 
     focusTitleInputField = titleInput => {
         if (titleInput) {
             setTimeout(() => { titleInput.focus(); }, 20);
         }
-    }
+    };
 
     stopEditingName = (event) => {
         event.stopPropagation();
         this.setState({
             isEditingName: false,
-        })
+        });
 
         if (this.state.newName && this.state.newName !== '') {
             console.warn('Sending', this.state.newName);
@@ -135,7 +146,7 @@ class CollapsibleSection extends Component {
         this.setState({
             newName: newValue,
         });
-    }
+    };
 
     getSectionNameStyle = editing => {
         return {
@@ -144,13 +155,13 @@ class CollapsibleSection extends Component {
             fontSize: '1.7rem',
             fontWeight: editing ? '300' : '400',
         };
-    }
+    };
 
     render() {
         return (
-            <Paper style={sectionPaperStyle} zDepth={1}>
-                <div onClick={this.props.onToggleOpen} style={sectionHeaderStyle}>
-                    <div style={rowStyle}>
+            <Paper style={styles.sectionPaper} zDepth={1}>
+                <div onClick={this.props.onToggleOpen} style={styles.sectionHeader}>
+                    <div style={styles.row}>
                         <DragHandle />
 
                         { this.state.isEditingName ?
@@ -175,13 +186,13 @@ class CollapsibleSection extends Component {
                             : <div style={this.getSectionNameStyle(false)}>{this.props.sectionName}</div>
                         }
                     </div>
-                    <FontIcon className="material-icons" style={collapsibleArrowStyle}>
+                    <FontIcon className="material-icons" style={styles.collapsibleArrow}>
                         {this.props.open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
                     </FontIcon>
                 </div>
 
                 { this.props.open &&
-                    <div style={sectionContentStyle}>
+                    <div style={styles.sectionContent}>
                         <SortableDataList
                             onSortStart={this.onSortStart}
                             onSortEnd={this.onSortEnd}
@@ -202,7 +213,7 @@ CollapsibleSection.propTypes = {
     onNameChanged: PropTypes.func.isRequired,
     onToggleOpen: PropTypes.func.isRequired,
     sortItems: PropTypes.func.isRequired,
-}
+};
 
 class SectionForm extends Component {
     constructor(props) {
@@ -264,11 +275,7 @@ class SectionForm extends Component {
         this.setState({
             sections: arrayMove(this.state.sections, oldIndex, newIndex),
         });
-    }
-
-    onSortDataEnd = ({oldIndex, newIndex}) => {
-        this.sortItems(0, oldIndex, newIndex);
-    }
+    };
 
     sortItems = (sectionIndex, oldIndex, newIndex) => {
         const dataElements = arrayMove(this.state.sections[sectionIndex].dataElements, oldIndex, newIndex);
@@ -283,7 +290,7 @@ class SectionForm extends Component {
         this.setState({
             sections,
         });
-    }
+    };
 
     render() {
         return (
@@ -296,9 +303,24 @@ class SectionForm extends Component {
                     onSortEnd={this.onSortEnd}
                     sortItems={this.sortItems}
                 />
+                <AddNewSection />
             </div>
         );
     }
 }
+
+const AddNewSection = () => (
+    <Paper>
+        <div style={styles.addNewSection}>
+            <FontIcon
+                className="material-icons"
+                style={{ paddingRight: '3rem' }}
+            >
+                add_circle
+            </FontIcon>
+            Add new section
+        </div>
+    </Paper>
+);
 
 export default SectionForm;

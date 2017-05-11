@@ -1,12 +1,26 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import DragHandle from './DragHandle.component';
+import { grey200 } from "material-ui/styles/colors";
 
-const rowStyle = {
-    userSelect: 'none',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+const styles = {
+    dataElement: {
+        padding: '1rem 1rem',
+        backgroundColor: grey200,
+        marginBottom: '4px',
+        borderRadius: '8px',
+    },
+
+    row: {
+        userSelect: 'none',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    horizontalSpace: {
+        paddingLeft: '1rem',
+    },
 };
 
 const SortableDataList = SortableContainer(({ dataElements, isSortingIndex, darkItems }) => {
@@ -25,73 +39,25 @@ const SortableDataList = SortableContainer(({ dataElements, isSortingIndex, dark
 });
 
 const SortableDataElement = SortableElement(({ index, sortIndex, dataElement, isSortingIndex, darkItems }) => (
-    <DataElement index={index} sortIndex={sortIndex} dataElement={dataElement} isSortingIndex={isSortingIndex} darkItems={darkItems} />
+    <DataElement index={index} sortOrder={sortIndex} dataElement={dataElement} isSortingIndex={isSortingIndex} darkItems={darkItems} />
 ));
 
-class DataElement extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            hovering: false,
-        };
-    }
-
-    onMouseOver = () => {
-        this.setState({ hovering: true });
-    }
-
-    onMouseOut = () => {
-        this.setState({ hovering: false });
-    }
-
-    isSorting = () => (this.props.isSortingIndex === this.props.sortIndex)
-    isHovering = () => (this.props.isSortingIndex === null && this.state.hovering)
-    shouldHighlight = () => {
-        return this.isSorting() || this.isHovering()
-    }
-
-    getBackgroundColor = () => {
-        if (this.props.darkItems) {
-            return 'rgb(243, 243, 243)';
-        }
-
-        return 'white';
-    }
-
-    getStyle = () => {
-        return {
-            padding: '1rem 1rem',
-            backgroundColor: this.getBackgroundColor(),
-            marginBottom: '4px',
-            borderRadius: '8px',
-        };
-    }
-
-    render() {
-        const shouldHighlight = this.shouldHighlight();
-        return (
-            <div
-                onMouseOver={this.onMouseOver}
-                onMouseOut={this.onMouseOut}
-                style={this.getStyle()}
-            >
-                <div style={rowStyle}>
-                    <div style={{
-                        color: 'rgb(255, 152, 0)',
-                        fontSize: '1.4rem',
-                        marginRight: '1rem',
-                    }}>
-                        {this.props.sortIndex + 1}
-                    </div>
-                    {this.props.dataElement.displayName}
-                </div>
-            </div>
-        )
-    }
-}
+const DataElement = ({ sortOrder, dataElement }) => (
+    <div style={styles.dataElement}>
+        <div style={styles.row}>
+            <DragHandle />
+            <div style={styles.horizontalSpace} />
+            {`${dataElement.displayName} (${dataElement.id})`}
+        </div>
+    </div>
+);
 
 DataElement.propTypes = {
-    sortIndex: PropTypes.number.isRequired,
-}
+    dataElement: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        displayName: PropTypes.string.isRequired,
+    }),
+    sortOrder: PropTypes.number.isRequired,
+};
 
 export default SortableDataList;
