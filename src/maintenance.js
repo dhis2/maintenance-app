@@ -13,6 +13,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './translationRegistration';
 import appTheme from './App/app.theme';
 import systemSettingsStore from './App/systemSettingsStore';
+import rxjsconfig from 'recompose/rxjsObservableConfig';
+import { setObservableConfig } from 'recompose';
+setObservableConfig(rxjsconfig);
 
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
@@ -41,6 +44,9 @@ function configI18n(userSettings) {
     config.i18n.strings.add('about_dhis2');
     config.i18n.strings.add('help');
     config.i18n.strings.add('no_results_found');
+
+    // Others
+    config.i18n.strings.add('version');
 }
 
 function getSystemSettings(d2) {
@@ -68,7 +74,7 @@ render(
 getManifest('./manifest.webapp')
     .then(manifest => {
         const baseUrl = process.env.NODE_ENV === 'production' ? manifest.getBaseUrl() : dhisDevConfig.baseUrl;
-        config.baseUrl = `${baseUrl}/api/26`;
+        config.baseUrl = `${baseUrl}/api/27`;
         log.info(`Loading: ${manifest.name} v${manifest.version}`);
         log.info(`Built ${manifest.manifest_generated_at}`);
     })

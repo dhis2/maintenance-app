@@ -1,5 +1,4 @@
 import React from 'react';
-import { hashHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import Auth from 'd2-ui/lib/auth/Auth.mixin';

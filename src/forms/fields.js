@@ -145,7 +145,7 @@ export function getFieldUIComponent(type) {
     return TextField;
 }
 
-export function createFieldConfig(fieldConfig, modelDefinition, models, model) {
+export function createFieldConfig(fieldConfig, modelDefinition, models) {
     const fieldConstants = modelDefinition.modelProperties[fieldConfig.name] &&
         modelDefinition.modelProperties[fieldConfig.name].constants ||
         [];

@@ -14,6 +14,8 @@ import SinglePanelLayout from 'd2-ui/lib/layout/SinglePanel.component';
 import TwoPanelLayout from 'd2-ui/lib/layout/TwoPanel.component';
 import { goToRoute } from '../router-utils';
 import appState, { setAppState } from './appStateStore';
+import { Provider } from 'react-redux';
+import store from '../store';
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 
@@ -77,22 +79,24 @@ class App extends AppWithD2 {
         }
 
         return (
-            <div>
-                <HeaderBar />
-                <SectionTabsWrap />
-                {this.state.hasSection && !this.props.children.props.route.disableSidebar ? (
-                    <TwoPanelLayout>
-                        <SideBar activeGroupName={this.props.params.groupName}
-                                 activeModelType={this.props.params.modelType}/>
-                        <MainContent>{this.props.children}</MainContent>
-                    </TwoPanelLayout>
-                ) : (
-                    <SinglePanelLayout>
-                        <MainContent>{this.props.children}</MainContent>
-                    </SinglePanelLayout>
-                )}
-                <SnackbarContainer />
-            </div>
+            <Provider store={store}>
+                <div>
+                    <HeaderBar />
+                    <SectionTabsWrap />
+                    {this.state.hasSection && !this.props.children.props.route.disableSidebar ? (
+                        <TwoPanelLayout>
+                            <SideBar activeGroupName={this.props.params.groupName}
+                                     activeModelType={this.props.params.modelType}/>
+                            <MainContent>{this.props.children}</MainContent>
+                        </TwoPanelLayout>
+                    ) : (
+                        <SinglePanelLayout>
+                            <MainContent>{this.props.children}</MainContent>
+                        </SinglePanelLayout>
+                    )}
+                    <SnackbarContainer />
+                </div>
+            </Provider>
         );
     }
 }

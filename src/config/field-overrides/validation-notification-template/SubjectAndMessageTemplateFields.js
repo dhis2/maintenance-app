@@ -1,31 +1,10 @@
-import React, { Component, PropTypes } from 'react';
-import TextField from 'material-ui/TextField/TextField';
-import { Row, Column } from 'd2-ui/lib/layout';
-import {List, ListItem} from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import Heading from 'd2-ui/lib/headings/Heading.component';
-import { map, compose } from 'lodash/fp';
-import actions from '../../../EditModel/objectActions';
-import Paper from 'material-ui/Paper/Paper';
-
-const VALIDATION_RULE_VARIABLES = [
-    'rule_name',
-    'rule_description',
-    'operator',
-    'importance',
-    'left_side_description',
-    'right_side_description',
-    'left_side_value',
-    'right_side_value',
-    'org_unit_name',
-    'period',
-    'current_date',
-];
-
-const toVariableType = (name) => ['V', name];
-const toAttributeType = (name) => ['A', name];
-
-const variableTypes = map(toVariableType, VALIDATION_RULE_VARIABLES);
+import React, {Component, PropTypes} from "react";
+import TextField from "material-ui/TextField/TextField";
+import {Row, Column} from "d2-ui/lib/layout";
+import {List, ListItem} from "material-ui/List";
+import Divider from "material-ui/Divider";
+import Heading from "d2-ui/lib/headings/Heading.component";
+import {map, compose} from "lodash/fp";
 
 function prepareProps(d2, onItemSelected) {
     return function ([type, name]) {
@@ -38,7 +17,7 @@ function prepareProps(d2, onItemSelected) {
     }
 }
 
-const renderListItem = (props) => {
+function renderListItem(props) {
     return (
         <ListItem
             key={props.primaryText}
@@ -47,7 +26,7 @@ const renderListItem = (props) => {
     );
 }
 
-function VariableList({ store, onItemSelected }, { d2 }) {
+function VariableList({ onItemSelected, variableTypes }, { d2 }) {
     const listItems = map(compose(renderListItem, prepareProps(d2, onItemSelected)), variableTypes);
 
     return (
@@ -61,6 +40,7 @@ function VariableList({ store, onItemSelected }, { d2 }) {
         </div>
     );
 }
+
 VariableList.contextTypes = {
     d2: PropTypes.object
 };
@@ -90,7 +70,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
         const lastIndex = this.state.lastIndex;
         const currentValue = (this.props.model[this.state.lastActiveField] || '');
 
-        actions.update({
+        this.props.onUpdate({
             fieldName: this.state.lastActiveField,
             value: `${currentValue.slice(0, lastIndex)}${variable}${currentValue.slice(lastIndex)}`,
         });
@@ -98,7 +78,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
 
     render() {
         const d2 = this.context.d2;
-        const { model } = this.props;
+        const { model, onUpdate } = this.props;
 
         const styles = {
             divider: {
@@ -113,7 +93,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
             subject: {
                 flex: '0 0 72px',
             }
-        }
+        };
 
         return (
             <div>
@@ -122,13 +102,13 @@ export default class SubjectAndMessageTemplateFields extends Component {
                 <Row>
                     <Column>
                         <div style={styles.subject}>
-                            <TextField 
-                                name="subjectTemplate" 
+                            <TextField
+                                name="subjectTemplate"
                                 fullWidth
                                 floatingLabelText={d2.i18n.getTranslation('subject_template')}
                                 onBlur={this.setActiveField('subjectTemplate')}
                                 value={model.subjectTemplate || ''}
-                                onChange={(event, value) => actions.update({fieldName: 'subjectTemplate', value})}
+                                onChange={(event, value) => onUpdate({fieldName: 'subjectTemplate', value})}
                                 onKeyUp={this.setActiveField('subjectTemplate')}
                             />
                         </div>
@@ -140,11 +120,11 @@ export default class SubjectAndMessageTemplateFields extends Component {
                                 floatingLabelText={d2.i18n.getTranslation('message_template')}
                                 onBlur={this.setActiveField('messageTemplate')}
                                 value={model.messageTemplate || ''}
-                                onChange={(event, value) => actions.update({fieldName: 'messageTemplate', value})}
+                                onChange={(event, value) => onUpdate({fieldName: 'messageTemplate', value})}
                             />
                         </div>
                     </Column>
-                    <VariableList onItemSelected={this.insertVariable} />
+                    <VariableList onItemSelected={this.insertVariable} variableTypes={this.props.variableTypes} />
                 </Row>
                 <Divider style={styles.divider} />
             </div>

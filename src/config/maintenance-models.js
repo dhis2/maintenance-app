@@ -15,26 +15,28 @@ export function getSideBarConfig() {
             ]
         },
 
-        dataElementSection: {
-            items: [
-                'dataElement',
-                'dataElementGroup',
-                'dataElementGroupSet',
-            ],
-        },
-        dataSetSection: {
-            items: [
-                'dataSet',
-            ],
-        },
-        indicatorSection: {
-            items: [
-                'indicator',
-                'indicatorType',
-                'indicatorGroup',
-                'indicatorGroupSet',
-            ],
-        },
+            dataElementSection: {
+                items: [
+                    'dataElement',
+                    'dataElementGroup',
+                    'dataElementGroupSet',
+                ],
+            },
+            dataSetSection: {
+                items: [
+                    'dataSet',
+                ],
+            },
+            indicatorSection: {
+                items: [
+                    'indicator',
+                    'indicatorType',
+                    'indicatorGroup',
+                    'indicatorGroupSet',
+                    'programIndicator',
+                    'programIndicatorGroup',
+                ],
+            },
 
         organisationUnitSection: {
             items: [
@@ -45,16 +47,17 @@ export function getSideBarConfig() {
             ],
         },
 
-        programSection: {
-            items: [
-                'trackedEntityAttribute',
-                'trackedEntityAttributeGroup',
-                'relationshipType',
-                'trackedEntity',
+            programSection: {
+                items: [
+                    'program',
+                    'trackedEntityAttribute',
+                    'trackedEntityAttributeGroup',
+                    'relationshipType',
+                    'trackedEntity',
                 'programRule',
                 'programRuleVariable',
-            ],
-        },
+                ],
+            },
 
         validationSection: {
             items: [

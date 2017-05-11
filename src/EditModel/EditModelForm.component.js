@@ -1,10 +1,6 @@
 import React from 'react';
-import fieldOverrides from '../config/field-overrides/index';
-import fieldOrderNames from '../config/field-config/field-order';
 import fieldGroups from '../config/field-config/field-groups';
 import disabledOnEdit from '../config/disabled-on-edit';
-import FormFieldsForModel from '../forms/FormFieldsForModel';
-import FormFieldsManager from '../forms/FormFieldsManager';
 import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
@@ -35,12 +31,79 @@ const currentSection$ = appState
 const editFormFieldsForCurrentSection$ = currentSection$
     .flatMap((modelType) => Observable.fromPromise(createFieldConfigForModelTypes(modelType)));
 
-const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, editFormFieldsForCurrentSection$, currentSection$)
+const isAddOperation = (model) => {
+    return model.id === 'add';
+};
+
+const d2$ = Observable.fromPromise(getInstance());
+
+const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, editFormFieldsForCurrentSection$, currentSection$, d2$)
     .filter(([modelToEdit, formFields, currentType]) => {
         if (modelToEdit && modelToEdit.modelDefinition && modelToEdit.modelDefinition.name) {
             return modelToEdit.modelDefinition.name === currentType;
         }
         return false;
+    })
+    .map(([modelToEdit, editFormFieldsForCurrentModelType, modelType, d2]) => {
+        const fieldConfigs = editFormFieldsForCurrentModelType
+        // TODO: When switching to the FormBuilder that manages state this function for all values
+        // would need to be executed only for the field that actually changed and/or the values that
+        // change because of it.
+            .map(fieldConfig => {
+                fieldConfig.fieldOptions.model = modelToEdit;
+
+                if (!isAddOperation(modelToEdit) && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
+                    fieldConfig.props.disabled = true;
+                }
+
+                // Check if value is an attribute
+                if (Object.keys(modelToEdit.attributes || []).indexOf(fieldConfig.name) >= 0) {
+                    console.log(fieldConfig.name, ' is an attribute');
+                    fieldConfig.value = modelToEdit.attributes[fieldConfig.name];
+                    return fieldConfig;
+                }
+
+                // The value is passes through a converter before being set onto the field config.
+                // This is useful for when a value is a number and might have to be translated to a
+                // value of the type Number.
+                if (fieldConfig.beforePassToFieldConverter) {
+                    fieldConfig.value = fieldConfig.beforePassToFieldConverter(modelToEdit[fieldConfig.name]);
+                } else {
+                    fieldConfig.value = modelToEdit[fieldConfig.name];
+                }
+
+                return fieldConfig;
+            });
+
+        const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(modelToEdit.modelDefinition.name), fieldConfigs, modelToEdit);
+        const fieldConfigsWithAttributeFields = [].concat(
+            fieldConfigsAfterRules,
+            // getAttributeFieldConfigs(d2, modelToEdit),
+            (extraFields[modelType] || []).map(config => {
+                config.props = config.props || {};
+                config.props.modelToEdit = modelToEdit;
+                return config;
+            })
+        );
+
+        const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
+            .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
+
+        const groups = fieldGroups.groupsByField(modelType);
+        const fieldConfigsThatAreSometimesHiddenButAlsoSometimesNotHidden = fieldConfigsWithAttributeFieldsAndUniqueValidators
+            .map(field => {
+        if (groups && groups[field.name] !== (this.state && this.state.activeStep || 0) && !field.hiddenComponent) {
+            field.hiddenComponent = field.component;
+            field.component = PlaceholderComponent;
+        }
+            return field;
+        });
+
+        return {
+            fieldConfigs: fieldConfigsThatAreSometimesHiddenButAlsoSometimesNotHidden,
+            modelToEdit: modelToEdit,
+            isLoading: false,
+        };
     });
 
 function PlaceholderComponent(props) {
@@ -76,6 +139,14 @@ export default React.createClass({
     },
 
     componentWillMount() {
+        this.subscription = modelToEditAndModelForm$
+            .subscribe((newState) => {
+                this.setState(newState);
+            }, (errorMessage) => {
+                snackActions.show({ message: errorMessage, action: 'ok' });
+            });
+
+/*
         const modelType = this.props.modelType;
 
         getInstance().then(d2 => {
@@ -148,8 +219,7 @@ export default React.createClass({
 
             this.setState({
                 formFieldsManager: formFieldsManager,
-            });
-        });
+*/
     },
 
     componentWillUnmount() {

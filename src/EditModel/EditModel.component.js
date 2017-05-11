@@ -1,12 +1,7 @@
 import React from 'react';
 import Paper from 'material-ui/Paper/Paper';
 import EditModelForm from './EditModelForm.component';
-import { goToRoute } from '../router-utils';
-
-function goToAndScrollUp(url) {
-    goToRoute(url);
-    global.scrollTo && global.scrollTo(0, 0);
-}
+import { goToRoute, goToAndScrollUp } from '../router-utils';
 
 function onSaveError(errorMessage, props) {
     if (errorMessage === 'No changes to be saved') {
