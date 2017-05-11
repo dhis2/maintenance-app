@@ -4,7 +4,7 @@ import { getOr, get, map, find, compose, isEqual, includes, negate, filter, __ }
 import { generateUid } from 'd2/lib/uid';
 
 // getProgramStageToModify :: String -> ProgramStage[] -> ProgramStage
-const getProgramStageToModify = (programStageIdToModify, programStages) => find(compose(isEqual(programStageIdToModify), get('id')), programStages);
+export const getProgramStageToModify = (programStageIdToModify, programStages) => find(compose(isEqual(programStageIdToModify), get('id')), programStages);
 
 const programStageDataElementExistsInDataElementUidList = uids => compose(includes(__, uids), get('dataElement.id'));
 const keepProgramStageDataElementsNotInUidList = uids => filter(negate(programStageDataElementExistsInDataElementUidList(uids)));
