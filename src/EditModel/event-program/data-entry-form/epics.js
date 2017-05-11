@@ -47,7 +47,7 @@ const dataEntryFormRemoveEpic = action$ => action$
         const dataEntryFormsForProgramStages = storeState.dataEntryFormForProgramStage;
 
         programStage.dataEntryForm = undefined;
-        dataEntryFormsForProgramStages[programStageId] = 
+        // dataEntryFormsForProgramStages[programStageId] =
 
     })
     .mergeMapTo(Observable.never());
