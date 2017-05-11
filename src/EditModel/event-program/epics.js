@@ -9,6 +9,7 @@ import { getImportStatus } from './metadataimport-helpers';
 import { goToAndScrollUp } from '../../router-utils';
 import notificationEpics from './notifications/epics';
 import createAssignDataElementEpics from './assign-data-elements/epics';
+import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
 import dataEntryFormEpics from './data-entry-form/epics';
 import { createModelToEditEpic } from '../epicHelpers';
 
@@ -160,5 +161,6 @@ export default combineEpics(
     programModelSave,
     notificationEpics,
     createAssignDataElementEpics(eventProgramStore),
+    createCreateDataEntryFormEpics(eventProgramStore),
     dataEntryFormEpics
 );
