@@ -5,6 +5,9 @@ import { combineEpics } from 'redux-observable';
 import { PROGRAM_STAGE_DATA_ENTRY_FORM_FIELD_CHANGED, PROGRAM_STAGE_DATA_ENTRY_FORM_REMOVE } from './actions';
 import eventProgramStore from '../eventProgramStore';
 import { generateUid } from 'd2/lib/uid';
+import { getInstance } from 'd2/lib/d2';
+
+const d2$ = Observable.fromPromise(getInstance());
 
 const findById = id => find(compose(isEqual(id), get('id')));
 const findProgramStageById = programStageId => compose(
@@ -40,14 +43,15 @@ const dataEntryFormChangedEpic = action$ => action$
 
 const dataEntryFormRemoveEpic = action$ => action$
     .ofType(PROGRAM_STAGE_DATA_ENTRY_FORM_REMOVE)
-    .map((action) => {
+    .combineLatest(d2$, (action, d2) => ({ action, d2 }))
+    .map(({ action, d2 }) => {
         const storeState = eventProgramStore.getState();
         const programStageId = action.payload;
         const programStage = findProgramStageById(programStageId)(storeState);
         const dataEntryFormsForProgramStages = storeState.dataEntryFormForProgramStage;
 
         programStage.dataEntryForm = undefined;
-        // dataEntryFormsForProgramStages[programStageId] =
+        dataEntryFormsForProgramStages[programStageId] = d2.models.dataEntryForm.create();
 
     })
     .mergeMapTo(Observable.never());

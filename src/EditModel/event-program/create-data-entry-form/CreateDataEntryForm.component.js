@@ -7,6 +7,7 @@ import { arrayMove } from "react-sortable-hoc";
 
 import DefaultForm from './DefaultForm.component';
 import SectionForm from './SectionForm.component';
+import CustomForm from './CustomForm.component';
 
 import mapPropsStream from 'recompose/mapPropsStream';
 import mapProps from 'recompose/mapProps';
@@ -71,7 +72,9 @@ class CreateDataEntryForm extends Component {
                         />
                     )}
 
-                    { this.renderTab('Custom', 'Custom entry form') }
+                    { this.renderTab('Custom',
+                        <CustomForm />
+                    )}
                 </Tabs>
             </Paper>
         );

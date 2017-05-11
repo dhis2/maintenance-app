@@ -11,6 +11,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 import App from './App/App.component';
 import listStore from './List/list.store';
 import store from './store';
+import { resetActiveStep } from './EditModel/actions';
 import { loadEventProgram } from './EditModel/event-program/actions';
 import { loadProgramIndicator } from './EditModel/program-indicator/actions';
 
@@ -124,7 +125,7 @@ function loadOptionSetObject({params}, replace, callback) {
     }, replace, callback);
 }
 
-function createLoaderForSchema(schema, actionCreatorForLoadingObject) {
+function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiveStep) {
     return ({ params }, replace, callback) => {
         initState({
             params: {
@@ -136,6 +137,7 @@ function createLoaderForSchema(schema, actionCreatorForLoadingObject) {
 
         // Fire load action for the event program program to be edited
         store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId }));
+        store.dispatch(resetActiveStep())
 
         callback();
     };
@@ -248,12 +250,12 @@ const routes = (
                 <Route
                     path="program/:modelId"
                     component={delayRender(() => System.import('./EditModel/event-program/EditEventProgram.component'))}
-                    onEnter={createLoaderForSchema('program', loadEventProgram)}
+                    onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
                 />
                 <Route
                     path="programIndicator/:modelId"
                     component={delayRender(() => System.import('./EditModel/program-indicator/EditProgramIndicator'))}
-                    onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator)}
+                    onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator, resetActiveStep)}
                 />
                 <Route
                     path=":modelType/:modelId/sections"
