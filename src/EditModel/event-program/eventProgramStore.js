@@ -32,10 +32,10 @@ const hasDirtyNotificationTemplate = state => some(checkIfDirty, get(getIdForFir
 //___ hasDirtyDataEntryForms :: Object<StoreState> -> Object<{programStageId: Model.DataEntryForm}> -> Boolean
 const hasDirtyDataEntryForms = compose(some(checkIfDirty), values, dataEntryFormsSelector);
 
-// isProgramDirty :: Object<{program}> -> Boolean
+//__ isProgramDirty :: Object<{program}> -> Boolean
 const isProgramDirty = compose(checkIfDirty, programSelector);
 
-// isStoreStateDirty :: StoreState -> Boolean
+//__ isStoreStateDirty :: StoreState -> Boolean
 export const isStoreStateDirty = compose(
     some(identity),
     map(

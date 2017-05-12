@@ -44,15 +44,22 @@ const dataEntryFormChangedEpic = action$ => action$
 const dataEntryFormRemoveEpic = action$ => action$
     .ofType(PROGRAM_STAGE_DATA_ENTRY_FORM_REMOVE)
     .combineLatest(d2$, (action, d2) => ({ action, d2 }))
-    .map(({ action, d2 }) => {
+    .mergeMap(({ action, d2 }) => {
         const storeState = eventProgramStore.getState();
         const programStageId = action.payload;
         const programStage = findProgramStageById(programStageId)(storeState);
         const dataEntryFormsForProgramStages = storeState.dataEntryFormForProgramStage;
 
-        programStage.dataEntryForm = undefined;
-        dataEntryFormsForProgramStages[programStageId] = d2.models.dataEntryForm.create();
-
+        return Observable.fromPromise(
+            dataEntryFormsForProgramStages[programStageId]
+                .delete()
+                .then(() => {
+                    programStage.dataEntryForm = undefined;
+                    dataEntryFormsForProgramStages[programStageId] = d2.models.dataEntryForm.create();
+                    eventProgramStore.setState({});
+                })
+                .catch(v => console.log(v))
+        );
     })
     .mergeMapTo(Observable.never());
 
