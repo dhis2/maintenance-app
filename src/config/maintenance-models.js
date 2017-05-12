@@ -144,6 +144,13 @@ const typeDetails = {
         filters: ['valueType', 'aggregationType'],
         columns: ['displayName', 'valueType', 'aggregationType', 'unique', 'confidential', 'lastUpdated'],
     },
+    'program': {
+        columns: ['displayName', 'publicAccess', 'lastUpdated'],
+    },
+    'programIndicator': {
+        filters: ['program'],
+        columns: ['displayName', 'program[displayName]', 'lastUpdated'],
+    },
     'programRule': {
         filters: ['program'],
         columns: ['displayName', 'description', 'program[displayName]', 'lastUpdated'],
