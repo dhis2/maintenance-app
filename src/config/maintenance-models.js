@@ -146,6 +146,9 @@ const typeDetails = {
     },
     'program': {
         columns: ['displayName', 'publicAccess', 'lastUpdated'],
+        defaultFilters: [
+            ['programType', 'WITHOUT_REGISTRATION'],
+        ],
     },
     'programIndicator': {
         filters: ['program'],
@@ -211,6 +214,18 @@ export function getTableColumnsForType(modelType, preservePropNames = false) {
 
     // Default columns:
     return ['displayName', 'publicAccess', 'lastUpdated'];
+}
+
+export function getDefaultFiltersForType(modelType) {
+    console.log()
+    if (typeDetails.hasOwnProperty(modelType) &&
+        typeDetails[modelType].hasOwnProperty('defaultFilters') &&
+        Array.isArray(typeDetails[modelType].defaultFilters)
+    ) {
+        return typeDetails[modelType].defaultFilters;
+    }
+
+    return [];
 }
 
 export default {
