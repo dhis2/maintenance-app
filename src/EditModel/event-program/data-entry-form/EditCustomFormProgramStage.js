@@ -30,8 +30,6 @@ const dataEntryFormForFirstProgramStage$ = eventProgramStore
     .map(state => {
         const firstProgramStage = first(get('programStages', state));
 
-        console.log('DataEntryForm', state.dataEntryFormForProgramStage[firstProgramStage.id], state.dataEntryFormForProgramStage[firstProgramStage.id].htmlCode);
-
         return state.dataEntryFormForProgramStage[firstProgramStage.id];
     });
 
@@ -61,13 +59,14 @@ const styles = {
     },
     formContainer: {},
     formPaper: {
+        display: 'flex',
+        flexDirection: 'row',
         width: '100%',
         margin: '0 auto 2rem',
-        padding: '1px 4rem 4rem',
-        position: 'relative',
+        padding: '4rem 4rem',
+        alignItems: 'center',
     },
     formSection: {
-        marginTop: 28,
     },
     cancelButton: {
         marginLeft: '2rem',
@@ -203,7 +202,6 @@ class EditDataEntryForm extends React.Component {
                     formHtml,
                     dataEntryForm: dataEntryForm,
                     formTitle: programStage.displayName,
-                    formStyle: getOr('NORMAL', 'style', dataEntryForm),
                 });
             }));
 
@@ -214,11 +212,17 @@ class EditDataEntryForm extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this._editor) {
-            this._editor.destroy();
-        }
-
         this.disposables.forEach(disposable => disposable.unsubscribe());
+    }
+
+    componentWillReceiveProps({ dataEntryForm }) {
+        if (this.state.dataEntryForm && dataEntryForm !== this.state.dataEntryForm) {
+            const formHtml = dataEntryForm ? this.processFormData(getOr('', 'htmlCode', dataEntryForm)) : '';
+
+            console.log('This is a new form!, reset the editor');
+
+            this._editor.setData(formHtml);
+        }
     }
 
     handleDeleteClick() {
@@ -226,13 +230,9 @@ class EditDataEntryForm extends React.Component {
     }
 
     handleStyleChange(e, i, value) {
-        this.setState({
-            formStyle: value,
-        }, () => {
-            if (this.state.dataEntryForm.style !== this.state.formStyle) {
-                this.props.onStyleChange(this.state.formStyle);
-            }
-        });
+        if (this.state.dataEntryForm.style !== value) {
+            this.props.onStyleChange(value);
+        }
     }
 
     generateHtml(id, styleAttr, disabledAttr) {
@@ -289,7 +289,6 @@ class EditDataEntryForm extends React.Component {
 
             // Emit a value when the html changed
             if (this.state.dataEntryForm.htmlCode !== outHtml) {
-                console.log(outHtml);
                 this.props.onFormChange(outHtml);
             }
         });
@@ -356,6 +355,8 @@ class EditDataEntryForm extends React.Component {
         );
     }
     render() {
+        const props = this.props;
+
         return this.state.formHtml === undefined ? <LoadingMask /> : (
             <div style={Object.assign({}, styles.formContainer, {  })}>
                 <div className="programStageEditForm">
@@ -370,7 +371,7 @@ class EditDataEntryForm extends React.Component {
                         <Paper style={styles.formPaper}>
                             <div style={styles.formSection}>
                                 <SelectField
-                                    value={this.state.formStyle}
+                                    value={getOr('NORMAL', 'style', props.dataEntryForm)}
                                     floatingLabelText="Form display style"
                                     onChange={this.handleStyleChange}
                                 >
@@ -381,7 +382,7 @@ class EditDataEntryForm extends React.Component {
                                 </SelectField>
                             </div>
                             <div style={styles.formSection}>
-                                {this.state.dataEntryForm && this.state.dataEntryForm.id ? (
+                                {props.dataEntryForm && props.dataEntryForm.id ? (
                                     <FlatButton
                                         primary
                                         label={this.getTranslation('delete')}
