@@ -150,15 +150,14 @@ const enhance = compose(
 
         return {
             ...props,
-            programStageSections: sortBy(['sortOrder'], props.programStageSections.map(section => ({
-                id: section.id,
-                sortOrder: section.sortOrder,
-                displayName: section.displayName,
-                dataElements: Array.from(section.dataElements.values()).map(dataElement => ({
+            programStageSections: sortBy(['sortOrder'], props.programStageSections.map(section => {
+                section.dataElements = Array.from(section.dataElements.values()).map(dataElement => ({
                     id: dataElement.id,
                     displayName: getDisplayNameForDataElement(dataElement),
-                })),
-            }))),
+                }));
+
+                return section;
+            })),
             availableDataElements: sortBy(['sortOrder'], props.availableDataElements.map(programDataElement => ({
                 ...programDataElement.dataElement,
                 displayName: getDisplayNameForDataElement(programDataElement.dataElement),

@@ -376,10 +376,7 @@ class SectionForm extends Component {
         const dataElements = arrayMove(this.props.programStageSections[sectionIndex].dataElements, oldIndex, newIndex);
 
         let sections = this.props.programStageSections;
-        sections[sectionIndex] = {
-            ...sections[sectionIndex],
-            dataElements,
-        };
+        sections[sectionIndex].dataElements = dataElements;
 
         this.props.onSectionOrderChanged(sections);
     };

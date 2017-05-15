@@ -8,6 +8,9 @@ const programSelector = get('program');
 //___ programStagesSelector :: StoreState -> Array<Model<ProgramStage>>
 const programStagesSelector = get('programStages');
 
+//___ programStageSectionsSelector :: StoreState -> Array<Model<ProgramStageSection>>
+const programStageSectionsSelector = get('programStageSections');
+
 //___ programStageNotificationsSelector :: StoreState -> Object<programStageId, programStageNotifications>
 const programStageNotificationsSelector = get('programStageNotifications');
 
@@ -26,6 +29,9 @@ const isProgramStageDirty = compose(checkIfDirty, first, programStagesSelector);
 //___ getIdForFirstProgramStage : Object<StoreState> -> Object<{programStages}> -> String
 const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelector);
 
+//___ hasDirtyProgramStageSections :: Object<StoreState> -> Boolean
+const hasDirtyProgramStageSections = compose(some(checkIfDirty), programStageSectionsSelector);
+
 //___ hasDirtyNotificationTemplate :: Object<{programStageNotifications, programStages}> -> Boolean
 const hasDirtyNotificationTemplate = state => some(checkIfDirty, get(getIdForFirstProgramStage(state), programStageNotificationsSelector(state)));
 
@@ -43,6 +49,7 @@ export const isStoreStateDirty = compose(
         [
             isProgramDirty,
             isProgramStageDirty,
+            hasDirtyProgramStageSections,
             hasDirtyNotificationTemplate,
             hasDirtyDataEntryForms,
         ]
@@ -61,6 +68,14 @@ export const getMetaDataToSend = state => {
 
     if (isProgramStageDirty(state)) {
         payload.programStages = programStagesSelector(state)
+            .map(modelToJson);
+    }
+
+    if (hasDirtyProgramStageSections(state)) {
+        const programStages = programStageSectionsSelector(state);
+
+        payload.programStageSections = programStages
+            .filter(checkIfDirty)
             .map(modelToJson);
     }
 
@@ -138,6 +153,13 @@ function isValidState(state) {
      &programStageSections:filter=programStage.program.id:eq:VBqh0ynB2wv
  */
 const eventProgramStore = Store.create();
+
+// eventProgramStore.subscribe(state => {
+//     console.log('=====================');
+//     console.info('new store state');
+//     console.log(state);
+//     console.log('=====================');
+// });
 
 const storeSetState = eventProgramStore.setState.bind(eventProgramStore);
 

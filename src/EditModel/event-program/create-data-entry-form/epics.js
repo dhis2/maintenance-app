@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { get, getOr, compose, isEqual, find, findIndex, maxBy, filter } from 'lodash/fp';
+import { get, getOr, compose, isEqual, find, findIndex, maxBy, filter, entries, sortBy, map } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
-
+import { getInstance } from 'd2/lib/d2';
 import { getProgramStageToModify } from '../assign-data-elements/epics';
 import {
     PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE,
@@ -12,6 +12,8 @@ import {
     PROGRAM_STAGE_SECTION_NAME_EDIT,
     PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE_COMPLETE,
 } from './actions';
+
+const d2$ = Observable.fromPromise(getInstance());
 
 const changeProgramStageDataElementOrder = (store) => (action$) => {
     return action$
@@ -24,13 +26,13 @@ const changeProgramStageDataElementOrder = (store) => (action$) => {
 
             const newDataElementOrder = get('payload.newDataElementOrder', action);
             programStage.programStageDataElements = programStageDataElements
-                .map((dataElement, index) => ({
-                    ...dataElement,
-                    sortOrder: findIndex(id => id === get('dataElement.id', dataElement), newDataElementOrder),
-                }));
+                .map((dataElement) => {
+                    dataElement.sortOrder = findIndex(id => id === get('dataElement.id', dataElement), newDataElementOrder);
+
+                    return dataElement;
+                });
 
             store.setState({
-                ...store.getState(),
                 programStages,
             });
         })
@@ -46,41 +48,37 @@ const changeProgramStageSectionName = (store) => (action$) => {
             const newProgramStageSectionName = get('payload.newProgramStageSectionName', action);
 
             const programStageSections = getOr([], 'programStageSections', state)
-                .map(section =>
-                    isEqual(section.id, programStageSectionId) ? {
-                        ...section,
-                        displayName: newProgramStageSectionName,
-                    } : section);
+                .map(section => {
+                    // Modify the original Model instance
+                    if (isEqual(section.id, programStageSectionId)) {
+                        section.name = newProgramStageSectionName;
+                        section.displayName = newProgramStageSectionName;
+                    }
+
+                    return section;
+                });
 
             store.setState({
-                ...store.getState(),
                 programStageSections,
             });
         })
         .flatMapTo(Observable.never());
 };
 
+const setSortOrderToIndex = (models) => models.map((model, index) => {
+    model.sortOrder = index;
+
+    return model;
+});
+
 const changeProgramStageSectionOrder = (store) => (action$) => {
     return action$
         .ofType(PROGRAM_STAGE_SECTIONS_ORDER_CHANGE)
         .map(action => {
-            const state = store.getState();
             const newSections = get('payload.programStageSections', action);
-
-            const programStageSections = getOr([], 'programStageSections', state)
-                .map(oldSection => {
-                    const newSectionIndex = findIndex(newSection => isEqual(newSection.id, oldSection.id), newSections);
-                    const updatedValues =  newSections[newSectionIndex];
-
-                    return updatedValues ? {
-                        ...oldSection,
-                        ...updatedValues,
-                        sortOrder: newSectionIndex,
-                    } : oldSection;
-                });
+            const programStageSections = compose(sortBy('sortOrder'), setSortOrderToIndex)(newSections);
 
             store.setState({
-                ...store.getState(),
                 programStageSections,
             });
         })
@@ -90,23 +88,28 @@ const changeProgramStageSectionOrder = (store) => (action$) => {
 const addProgramStageSection = (store) => (action$) => {
     return action$
         .ofType(PROGRAM_STAGE_SECTIONS_ADD)
-        .map(action => {
+        .combineLatest(d2$, (action, d2) => ([d2, action]))
+        .map(([d2, action]) => {
             const state = store.getState();
             const newSectionName = get('payload.newSectionName', action);
             const programStageSections = getOr([], 'programStageSections', state);
             const sortOrder = get('sortOrder', maxBy(section => get('sortOrder', section), programStageSections)) + 1;
+            const programStage = get('programStages[0]', state);
 
-            const updatedProgramStageSections = getOr([], 'programStageSections', state).concat({
-                id: generateUid(),
-                displayName: newSectionName,
-                dataElements: [],
-                sortOrder,
-            });
+            // Create new section model and set the properties we can
+            const newSection = d2.models.programStageSection.create({ id: generateUid(), dataElements: [] });
+            newSection.name = newSectionName;
+            newSection.displayName = newSectionName;
+            newSection.sortOrder = sortOrder;
+
+            // Add the section to the programStage, otherwise the section won't be associated with the programStage
+            newSection.programStage = programStage;
+
+            const updatedProgramStageSections = getOr([], 'programStageSections', state).concat(newSection);
 
             console.warn('updatedProgramStageSections:', updatedProgramStageSections);
 
             store.setState({
-                ...store.getState(),
                 programStageSections: updatedProgramStageSections,
             });
         })
@@ -125,8 +128,11 @@ const removeProgramStageSection = (store) => (action$) => {
             const programStageSections = getOr([], 'programStageSections', state);
             const updatedProgramStageSections = filter(section => !isEqual(sectionToDelete, section.id), programStageSections);
 
+            // Remove section from programStage
+            const programStage = get('programStages[0]', state);
+            programStage.programStageSections = updatedProgramStageSections;
+
             store.setState({
-                ...store.getState(),
                 programStageSections: updatedProgramStageSections,
             });
         })
