@@ -38,6 +38,11 @@ function createAppTheme(style) {
         formFields: {
             secondaryColor: style.palette.accent4Color,
         },
+        tabs: {
+            backgroundColor: '#E4E4E4',
+            inkBarColor: style.palette.accent1Color,
+            textColor: '#666666',
+        },
     };
 }
 

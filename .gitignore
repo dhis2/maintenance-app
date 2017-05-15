@@ -5,6 +5,8 @@ node_modules*
 .sass-cache
 src/css/*
 coverage/*
+.nyc_output/
+
 manifest.webapp
 
 # TODO: Jshint is a dependency of the git hook which installs these files on install...
@@ -16,4 +18,5 @@ build/*
 target/*
 
 npm-debug.log
+yarn-error.log
 stats.json

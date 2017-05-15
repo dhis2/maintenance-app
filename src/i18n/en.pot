@@ -5954,7 +5954,7 @@ msgstr ""
 msgid "Are you sure you want to delete this program indicator?"
 msgstr ""
 
-#: program_indicator_details
+#: program_indicator__details
 msgid "Program indicator details"
 msgstr ""
 

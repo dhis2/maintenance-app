@@ -6,7 +6,6 @@ import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.compone
 import TextField from 'material-ui/TextField/TextField';
 import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rxjs';
-import { config } from 'd2/lib/d2';
 
 export default class OrganisationUnitTreeMultiSelect extends React.Component {
     constructor(...args) {
@@ -130,8 +129,8 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
     }
 
     render() {
-        if (!this.state.rootOrgUnits) {
-            return (<div>this.context.d2.i18n.getTranslation('determining_your_root_orgunits')</div>);
+        if (!this.state.rootOrgUnits.length) {
+            return (<div>{this.context.d2.i18n.getTranslation('determining_your_root_orgunits')}</div>);
         }
 
         const controlStyles = {

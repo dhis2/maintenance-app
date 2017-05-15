@@ -10,6 +10,10 @@ import {initAppState, default as appState} from './App/appStateStore';
 import LinearProgress from 'material-ui/LinearProgress';
 import App from './App/App.component';
 import listStore from './List/list.store';
+import store from './store';
+import { resetActiveStep } from './EditModel/actions';
+import { loadEventProgram } from './EditModel/event-program/actions';
+import { loadProgramIndicator } from './EditModel/program-indicator/actions';
 
 import onDemand from './on-demand';
 
@@ -121,13 +125,31 @@ function loadOptionSetObject({params}, replace, callback) {
     }, replace, callback);
 }
 
+function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiveStep) {
+    return ({ params }, replace, callback) => {
+        initState({
+            params: {
+                modelType: schema,
+                groupName: params.groupName,
+                modelId: params.modelId,
+            }
+        });
+
+        // Fire load action for the event program program to be edited
+        store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId }));
+        store.dispatch(resetActiveStep())
+
+        callback();
+    };
+}
+
 function loadList({params}, replace, callback) {
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the appState
         // Also load the initialState without cache so we refresh the assigned organisation units
         // These could have changed by adding an organisation unit which would need to be reflected in the
         // organisation unit tree
-        initState({params}, true);
+        initState({ params });
         return callback();
     }
 
@@ -216,19 +238,34 @@ const routes = (
                     path="organisationUnit/:modelId"
                     component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                     onEnter={loadOrgUnitObject}
+                    disableSidebar
                 />
                 <Route
                     path="optionSet/:modelId"
                     component={delayRender(() => System.import('./EditModel/EditOptionSet.component'))}
                     onEnter={loadOptionSetObject}
+                    disableSidebar
                 >
                     <IndexRoute />
                     <Route path=":activeView"/>
                 </Route>
                 <Route
+                    path="program/:modelId"
+                    component={delayRender(() => System.import('./EditModel/event-program/EditEventProgram.component'))}
+                    onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
+                    disableSidebar
+                />
+                <Route
+                    path="programIndicator/:modelId"
+                    component={delayRender(() => System.import('./EditModel/program-indicator/EditProgramIndicator'))}
+                    onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator, resetActiveStep)}
+                    disableSidebar
+                />
+                <Route
                     path=":modelType/:modelId/sections"
                     component={delayRender(() => System.import('./EditModel/EditDataSetSections.component'))}
                     onEnter={loadObject}
+                    disableSidebar
                 />
                 <Route
                     path=":modelType/:modelId/dataEntryForm"
@@ -240,12 +277,14 @@ const routes = (
                     path=":modelType/:modelId"
                     component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                     onEnter={loadObject}
+                    disableSidebar
                 />
             </Route>
             <Route
                 path="clone/:groupName/:modelType/:modelId"
                 component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                 onEnter={cloneObject}
+                disableSidebar
             />
             <Route
                 path="group-editor"
