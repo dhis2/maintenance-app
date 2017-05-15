@@ -1,19 +1,23 @@
 import React from 'react';
-import FlatButton from 'material-ui/FlatButton/FlatButton';
 import { connect } from 'react-redux';
 import withProps from 'recompose/withProps';
 import { compose } from 'lodash/fp';
 import SaveButton from './SaveButton.component';
+import CancelButton from './CancelButton.component';
 import { goToAndScrollUp } from '../router-utils';
+
+const styles = {
+    cancelButton: {
+        marginLeft: '1rem',
+    },
+};
 
 // TODO: Make the isValid prop actually useful..
 export default function FormActionButtons({ onSaveAction, onCancelAction }) {
     return (
         <div>
             <SaveButton onClick={onSaveAction} isValid={true} />
-            <FlatButton onClick={onCancelAction}>
-                Close
-            </FlatButton>
+            <CancelButton onClick={onCancelAction} style={styles.cancelButton} />
         </div>
     );
 }
