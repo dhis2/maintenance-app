@@ -156,7 +156,6 @@ class EditDataEntryForm extends React.Component {
         )
             .take(1)
             .subscribe(([ programStage, programStageDataElements, flags ]) => {
-                console.log('stuff!');
                 // Operands with ID's that contain a dot ('.') are combined dataElementId's and categoryOptionId's
                 // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
                 // custom forms: "dataElementId-categoryOptionId-val"
@@ -218,8 +217,6 @@ class EditDataEntryForm extends React.Component {
     componentWillReceiveProps({ dataEntryForm }) {
         if (this.state.dataEntryForm && dataEntryForm !== this.state.dataEntryForm) {
             const formHtml = dataEntryForm ? this.processFormData(getOr('', 'htmlCode', dataEntryForm)) : '';
-
-            console.log('This is a new form!, reset the editor');
 
             this._editor.setData(formHtml);
         }

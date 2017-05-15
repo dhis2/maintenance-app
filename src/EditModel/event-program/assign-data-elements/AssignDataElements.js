@@ -20,8 +20,7 @@ import pure from 'recompose/pure';
 const getFirstProgramStage = compose(first, get('programStages'));
 
 const programStage$ = eventProgramStore
-    .map(getFirstProgramStage)
-    .do(console.log.bind(console));
+    .map(getFirstProgramStage);
 
 const availableTrackerDataElements$ = eventProgramStore
     .map(get('availableDataElements'))
