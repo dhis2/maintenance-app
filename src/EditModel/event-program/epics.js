@@ -1,8 +1,18 @@
-import { MODEL_TO_EDIT_FIELD_CHANGED, EVENT_PROGRAM_LOAD, EVENT_PROGRAM_SAVE, loadEventProgramSuccess, notifyUser, saveEventProgramError, saveEventProgramSuccess } from './actions';
+import {
+    MODEL_TO_EDIT_FIELD_CHANGED,
+    EVENT_PROGRAM_LOAD,
+    EVENT_PROGRAM_SAVE,
+    EVENT_PROGRAM_SAVE_SUCCESS,
+    EVENT_PROGRAM_SAVE_ERROR,
+    loadEventProgramSuccess,
+    notifyUser,
+    saveEventProgramError,
+    saveEventProgramSuccess
+} from './actions';
 import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { get, getOr, set, first, map, compose, groupBy, isEqual, find, memoize } from 'lodash/fp';
+import { get, getOr, set, first, map, compose, groupBy, isEqual, find, memoize, values, flatten } from 'lodash/fp';
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
 import { getImportStatus } from './metadataimport-helpers';
@@ -174,13 +184,31 @@ export const programModelSave = action$ => action$
             return saveEventProgram;
         }
 
-        return Observable.of(notifyUser('no_changes_to_be_saved'));
+        return Observable
+            .of(notifyUser('no_changes_to_be_saved'))
+            .do(() => goToAndScrollUp(`/list/programSection/program`));
     });
+
+export const programModelSaveResponses = action$ => Observable
+    .merge(
+        action$
+            .ofType(EVENT_PROGRAM_SAVE_SUCCESS)
+            .mapTo(notifyUser('success')),
+        action$
+            .ofType(EVENT_PROGRAM_SAVE_ERROR)
+            .map(action => {
+                const getFirstErrorMessageFromAction = compose(get('message'), first, flatten, values, getOr([], 'errors'), first);
+                const firstErrorMessage = getFirstErrorMessageFromAction(action.payload);
+
+                return notifyUser({ message: firstErrorMessage, translate: false });
+            })
+    );
 
 export default combineEpics(
     programModel,
     programModelEdit,
     programModelSave,
+    programModelSaveResponses,
     notificationEpics,
     createAssignDataElementEpics(eventProgramStore),
     createCreateDataEntryFormEpics(eventProgramStore),

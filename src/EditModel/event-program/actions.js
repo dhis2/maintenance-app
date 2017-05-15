@@ -30,7 +30,7 @@ export const loadEventProgramFailure = createActionCreator(EVENT_PROGRAM_LOAD_ER
 
 export const EVENT_PROGRAM_SAVE = 'EVENT_PROGRAM_SAVE';
 export const EVENT_PROGRAM_SAVE_SUCCESS = 'EVENT_PROGRAM_SAVE_SUCCESS';
-export const EVENT_PROGRAM_SAVE_ERROR = 'EVENT_PROGRAM_SAVE_ERROR'
+export const EVENT_PROGRAM_SAVE_ERROR = 'EVENT_PROGRAM_SAVE_ERROR';
 
 export const saveEventProgram = createActionCreator(EVENT_PROGRAM_SAVE);
 export const saveEventProgramSuccess = createActionCreator(EVENT_PROGRAM_SAVE_SUCCESS);

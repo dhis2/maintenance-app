@@ -1,4 +1,14 @@
-import { PROGRAM_INDICATOR_LOAD, PROGRAM_INDICATOR_SAVE, PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED, loadProgramIndicatorSuccess, saveProgramIndicatorSuccess, saveProgramIndicatorError } from './actions';
+import {
+    PROGRAM_INDICATOR_LOAD,
+    PROGRAM_INDICATOR_SAVE,
+    PROGRAM_INDICATOR_SAVE_SUCCESS,
+    PROGRAM_INDICATOR_SAVE_ERROR,
+    PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED,
+    loadProgramIndicatorSuccess,
+    saveProgramIndicatorSuccess,
+    saveProgramIndicatorError
+} from './actions';
+import { notifyUser } from '../actions';
 import programIndicatorStore from './programIndicatorStore';
 import { get, compose } from 'lodash/fp';
 import { Observable } from 'rxjs';
@@ -42,10 +52,26 @@ export const programIndicatorSave = programIndicatorStore => action$ => action$
             .catch(error => Observable.from(saveProgramIndicatorError()));
     });
 
+export const programModelSaveResponses = action$ => Observable
+    .merge(
+        action$
+            .ofType(PROGRAM_INDICATOR_SAVE_SUCCESS)
+            .mapTo(notifyUser('success')),
+        action$
+            .ofType(PROGRAM_INDICATOR_SAVE_ERROR)
+            .map(action => {
+                const getFirstErrorMessageFromAction = compose(get('message'), first, flatten, values, getOr([], 'errors'), first);
+                const firstErrorMessage = getFirstErrorMessageFromAction(action.payload);
+
+                return notifyUser({ message: firstErrorMessage, translate: false });
+            })
+    );
+
 export default (function createEpicsForStore(store) {
     return combineEpics(
         programIndicatorLoad(store),
         programIndicatorEdit(store),
-        programIndicatorSave(store)
+        programIndicatorSave(store),
+        programModelSaveResponses,
     );
 }(programIndicatorStore));
