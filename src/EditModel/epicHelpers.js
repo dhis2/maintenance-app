@@ -2,6 +2,9 @@ import { Observable } from 'rxjs';
 import { get, set } from 'lodash/fp';
 import log from 'loglevel';
 
+const EMPTY_ACTION = '@@dhis2/EMPTY_ACTION';
+const emptyAction$ = Observable.of({ type: EMPTY_ACTION });
+
 function isAttributeValue(model, fieldName) {
     return model.attributes && Object.keys(model.attributes).indexOf(fieldName) >= 0
 }
@@ -59,5 +62,5 @@ export function createModelToEditEpic(actionType, store, storeProp) {
                     );
                 })
         )
-        .flatMapTo(Observable.never());
+        .flatMapTo(emptyAction$);
 }

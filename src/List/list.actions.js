@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import appState from '../App/appStateStore';
 import { isUndefined } from 'lodash/fp';
 import log from 'loglevel';
-import { getTableColumnsForType, getFilterFieldsForType } from '../config/maintenance-models';
+import { getTableColumnsForType, getFilterFieldsForType, getDefaultFiltersForType,  } from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = 'displayName,shortName,id,lastUpdated,created,displayDescription,code,publicAccess,access,href,level';
 const listActions = Action.createActionsFromNames(['loadList', 'setListSource', 'searchByName', 'setFilterValue', 'getNextPage', 'getPreviousPage', 'hideDetailsBox']);
@@ -22,6 +22,8 @@ function applyCurrentFilters(modelDefinitions, modelName) {
             .filter(prop => getFilterFieldsForType(modelDefinition.name).includes(prop))
             // Apply each filter to the model definition
             .map(key => [modelDefinitions.hasOwnProperty(key) ? `${key}.id` : key, listStore.state.filters[key]])
+            // Add the default filters for the modelType
+            .concat(getDefaultFiltersForType(modelName))
             .reduce((out, [filterField, filter]) => {
                 const filterValue = filter.id || filter;
                 return out.filter().on(filterField).equals(filterValue);

@@ -22,16 +22,16 @@ function loadProgramIndicator(programIndicatorId) {
     );
 }
 
-export const programIndicatorLoad = action$ => action$
+export const programIndicatorLoad = programIndicatorStore => action$ => action$
     .ofType(PROGRAM_INDICATOR_LOAD)
     .map(get('payload.id'))
     .flatMap(loadProgramIndicator)
     .do(storeState => programIndicatorStore.setState(storeState))
     .mapTo(loadProgramIndicatorSuccess());
 
-export const programIndicatorEdit = createModelToEditEpic(PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED, programIndicatorStore, 'programIndicator');
+export const programIndicatorEdit = programIndicatorStore => createModelToEditEpic(PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED, programIndicatorStore, 'programIndicator');
 
-export const programIndicatorSave = action$ => action$
+export const programIndicatorSave = programIndicatorStore => action$ => action$
     .ofType(PROGRAM_INDICATOR_SAVE)
     .mapTo(programIndicatorStore)
     .map(programIndicatorFromStoreSelector)
@@ -42,4 +42,10 @@ export const programIndicatorSave = action$ => action$
             .catch(error => Observable.from(saveProgramIndicatorError()));
     });
 
-export default combineEpics(programIndicatorLoad, programIndicatorEdit, programIndicatorSave);
+export default (function createEpicsForStore(store) {
+    return combineEpics(
+        programIndicatorLoad(store),
+        programIndicatorEdit(store),
+        programIndicatorSave(store)
+    );
+}(programIndicatorStore));

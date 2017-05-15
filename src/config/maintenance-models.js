@@ -144,6 +144,16 @@ const typeDetails = {
         filters: ['valueType', 'aggregationType'],
         columns: ['displayName', 'valueType', 'aggregationType', 'unique', 'confidential', 'lastUpdated'],
     },
+    'program': {
+        columns: ['displayName', 'publicAccess', 'lastUpdated'],
+        defaultFilters: [
+            ['programType', 'WITHOUT_REGISTRATION'],
+        ],
+    },
+    'programIndicator': {
+        filters: ['program'],
+        columns: ['displayName', 'program[displayName]', 'lastUpdated'],
+    },
     'programRule': {
         filters: ['program'],
         columns: ['displayName', 'description', 'program[displayName]', 'lastUpdated'],
@@ -204,6 +214,18 @@ export function getTableColumnsForType(modelType, preservePropNames = false) {
 
     // Default columns:
     return ['displayName', 'publicAccess', 'lastUpdated'];
+}
+
+export function getDefaultFiltersForType(modelType) {
+    console.log()
+    if (typeDetails.hasOwnProperty(modelType) &&
+        typeDetails[modelType].hasOwnProperty('defaultFilters') &&
+        Array.isArray(typeDetails[modelType].defaultFilters)
+    ) {
+        return typeDetails[modelType].defaultFilters;
+    }
+
+    return [];
 }
 
 export default {

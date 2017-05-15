@@ -21,7 +21,8 @@ function loadEventProgramMetadataByProgramId(programId) {
         const programUid = generateUid();
         const programStageUid = generateUid();
 
-        return Observable.of({
+        // A api format payload that contains a program and a programStage
+        const newProgramMetadata = {
             programs: [{
                 id: programUid,
                 programStages: [
@@ -33,7 +34,27 @@ function loadEventProgramMetadataByProgramId(programId) {
                 programStageDataElements: [],
                 notificationTemplates: []
             }],
-        })
+        };
+
+        const availableDataElements$ = d2$.flatMap(d2 => Observable
+            .fromPromise(
+                d2.models.dataElements
+                    .filter().on('domainType').equals('TRACKER')
+                    .list({ paging: false })
+                    .then(dataElements => dataElements.toArray())
+            )
+        );
+
+        return Observable
+            .combineLatest(
+                Observable.of(newProgramMetadata),
+                // Load the available dataElements from the api
+                availableDataElements$,
+                (metadata, dataElements) => ({
+                    ...metadata,
+                    dataElements,
+                })
+            )
             .flatMap(createEventProgramStoreStateFromMetadataResponse)
             .map(state => {
                 // Set some eventProgram defaults

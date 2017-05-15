@@ -134,6 +134,9 @@ describe('Event Program Store', () => {
                         name: 'Malaria Prevention',
                         notificationTemplates: [],
                         programStages: [],
+                        expiryDays: 0,
+                        completeEventsExpiryDays: 0,
+                        version: 0,
                     }],
                 });
             });

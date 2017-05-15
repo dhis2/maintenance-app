@@ -6,7 +6,6 @@ import { stageNotificationsReducer } from './notifications/reducers';
 import { findNextStepKey, findPreviousStepKey } from './stepper';
 
 function eventProgramStepperReducer(state = { activeStep: STEP_DETAILS }, action) {
-    console.log(action.type);
     switch (action.type) {
         case EVENT_PROGRAM_STEP_CHANGE:
             return {
