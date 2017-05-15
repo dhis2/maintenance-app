@@ -2,8 +2,8 @@ import React from 'react';
 import DropDown from '../../forms/form-fields/drop-down';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
 import DataSetElementField from './data-set/DataSetElementField.component';
-import periodTypes from '../periodTypes';
 import DataInputPeriods from './data-set/DataInputPeriods.component';
+import periodTypeStore from '../../App/periodTypeStore';
 
 export default new Map([
     ['categoryCombo', {
@@ -15,7 +15,7 @@ export default new Map([
     ['periodType', {
         component: DropDown,
         fieldOptions: {
-            options: periodTypes,
+            options: periodTypeStore.getState(),
         },
     }],
     ['organisationUnits', {

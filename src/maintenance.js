@@ -13,6 +13,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './translationRegistration';
 import appTheme from './App/app.theme';
 import systemSettingsStore from './App/systemSettingsStore';
+import periodTypeStore from './App/periodTypeStore';
 
 if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
@@ -44,7 +45,13 @@ function configI18n(userSettings) {
 }
 
 function getSystemSettings(d2) {
-    return d2.system.settings.all().then(settings => systemSettingsStore.setState(settings));
+    return Promise.all([
+        d2.system.settings.all(),
+        d2.Api.getApi().get('periodTypes'),
+    ]).then(([ settings, periodTypeDefs ]) => {
+        systemSettingsStore.setState(settings);
+        periodTypeStore.setState(periodTypeDefs.periodTypes.map(p => p.name));
+    });
 }
 
 function startApp() {
@@ -68,7 +75,7 @@ render(
 getManifest('./manifest.webapp')
     .then(manifest => {
         const baseUrl = process.env.NODE_ENV === 'production' ? manifest.getBaseUrl() : dhisDevConfig.baseUrl;
-        config.baseUrl = `${baseUrl}/api/26`;
+        config.baseUrl = `${baseUrl}/api`;
         log.info(`Loading: ${manifest.name} v${manifest.version}`);
         log.info(`Built ${manifest.manifest_generated_at}`);
     })

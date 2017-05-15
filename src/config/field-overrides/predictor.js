@@ -8,7 +8,7 @@ import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import periodTypes from '../periodTypes';
+import periodTypeStore from '../../App/periodTypeStore';
 
 const expressionStatusStore = Store.create();
 
@@ -143,7 +143,7 @@ export default new Map([
     ['periodType', {
         type: SELECT,
         fieldOptions: {
-            options: periodTypes,
+            options: periodTypeStore.getState(),
         },
     }],
     ['generator', {
