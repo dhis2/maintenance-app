@@ -15,6 +15,7 @@ import appTheme from './App/app.theme';
 import systemSettingsStore from './App/systemSettingsStore';
 import rxjsconfig from 'recompose/rxjsObservableConfig';
 import setObservableConfig from 'recompose/setObservableConfig';
+import periodTypeStore from './App/periodTypeStore';
 setObservableConfig(rxjsconfig);
 
 if (process.env.NODE_ENV !== 'production') {
@@ -50,7 +51,13 @@ function configI18n(userSettings) {
 }
 
 function getSystemSettings(d2) {
-    return d2.system.settings.all().then(settings => systemSettingsStore.setState(settings));
+    return Promise.all([
+        d2.system.settings.all(),
+        d2.Api.getApi().get('periodTypes'),
+    ]).then(([ settings, periodTypeDefs ]) => {
+        systemSettingsStore.setState(settings);
+        periodTypeStore.setState(periodTypeDefs.periodTypes.map(p => p.name));
+    });
 }
 
 function startApp() {

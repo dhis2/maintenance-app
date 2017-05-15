@@ -298,6 +298,13 @@ objectActions.saveObject
     .filter(({ data }) => data.modelType === 'programRuleVariable')
     .subscribe(async ({ complete, error }) => {
         const editModel = modelToEditStore.getState();
+
+        if (!editModel.program || !editModel.program.id) {
+            const d2 = await getInstance();
+            error(d2.i18n.getTranslation('could_not_save_program_rule_variable_no_program_specified'));
+            return;
+        }
+
         const model = Object.assign(
             editModel, {
                 program: { id: editModel.program.id },
@@ -307,7 +314,7 @@ objectActions.saveObject
             });
 
         model.save()
-            .then(complete('save_success'))
+            .then(() => complete('save_success'))
             .catch(err => {
                 error(err.messages ? err.messages[0].message : err);
             });
