@@ -11,7 +11,7 @@ import CustomForm from './CustomForm.component';
 
 import mapPropsStream from 'recompose/mapPropsStream';
 import mapProps from 'recompose/mapProps';
-import { sortBy, get, getOr, compose } from 'lodash/fp';
+import { sortBy, get, getOr, compose, find } from 'lodash/fp';
 import withHandlers from 'recompose/withHandlers';
 import eventProgramStore from '../eventProgramStore';
 
@@ -123,6 +123,9 @@ const programStageSections$ = eventProgramStore
 const availableProgramStageDataElements$ = eventProgramStore
     .map(getOr([], 'programStages[0].programStageDataElements'));
 
+const trackerDataElements$ = eventProgramStore
+    .map(getOr([], 'availableDataElements'));
+
 const enhance = compose(
     connect(null, mapDispatchToProps),
     mapPropsStream(props$ => props$
@@ -130,15 +133,22 @@ const enhance = compose(
             programStage$,
             programStageSections$,
             availableProgramStageDataElements$,
-            (props, programStage, programStageSections, availableProgramStageDataElements) => ({
+            trackerDataElements$,
+            (props, programStage, programStageSections, availableProgramStageDataElements, trackerDataElements) => ({
                 ...props,
                 programStage,
+                trackerDataElements,
                 sections: programStageSections,
                 programDataElements: availableProgramStageDataElements,
             })
         )
     ),
-    mapProps((props) => {
+    mapProps(({ trackerDataElements, ...props }) => {
+        const getDisplayNameForDataElement = (dataElement) => {
+            return dataElement.displayName ||
+                get('displayName', find(trackerDataElement => dataElement.id === trackerDataElement.id, trackerDataElements))
+        };
+
         return {
             ...props,
             sections: sortBy(['sortOrder'], props.sections.map(section => ({
@@ -147,11 +157,12 @@ const enhance = compose(
                 displayName: section.displayName,
                 dataElements: Array.from(section.dataElements.values()).map(dataElement => ({
                     id: dataElement.id,
-                    displayName: dataElement.displayName,
+                    displayName: getDisplayNameForDataElement(dataElement),
                 })),
             }))),
             programDataElements: sortBy(['sortOrder'], props.programDataElements.map(programDataElement => ({
                 ...programDataElement.dataElement,
+                displayName: getDisplayNameForDataElement(programDataElement.dataElement),
                 sortOrder: programDataElement.sortOrder,
             }))),
         };
