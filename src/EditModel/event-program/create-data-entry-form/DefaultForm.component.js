@@ -1,16 +1,16 @@
 import React, { PropTypes } from 'react';
 import SortableDataList from './SortableDataList.component';
 
-const DefaultForm = ({ programDataElements, onChange }) => (
+const DefaultForm = ({ availableDataElements, onChange }) => (
         <SortableDataList
             darkItems
-            dataElements={programDataElements}
+            dataElements={availableDataElements}
             onSortEnd={onChange}
         />
 );
 
 DefaultForm.propTypes = {
-    programDataElements: PropTypes.array.isRequired,
+    availableDataElements: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
 };
 

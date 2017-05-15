@@ -18,7 +18,6 @@ import eventProgramStore from '../eventProgramStore';
 import {
     changeProgramStageDataElementOrder,
     changeProgramStageSectionOrder,
-    changeProgramStageSectionDataElementOrder,
     addProgramStageSection,
     removeProgramStageSection,
     editProgramStageSectionName,
@@ -33,15 +32,9 @@ const styles = {
 
 class CreateDataEntryForm extends Component {
     programDataElementOrderChanged = ({ oldIndex, newIndex }) => {
-        this.props.onChangeOrder(
-            arrayMove(this.props.programDataElements.map(dataElement => dataElement.id), oldIndex, newIndex)
+        this.props.onChangeDefaultOrder(
+            arrayMove(this.props.availableDataElements.map(dataElement => dataElement.id), oldIndex, newIndex)
         );
-    };
-
-    sectionsChanged = (newSections) => {
-        this.setState({
-            sections: newSections,
-        });
     };
 
     renderTab = (label, contentToRender) => (
@@ -59,16 +52,19 @@ class CreateDataEntryForm extends Component {
                 <Tabs initialSelectedIndex={0}>
                     { this.renderTab('Basic',
                         <DefaultForm
-                            programDataElements={this.props.programDataElements}
+                            availableDataElements={this.props.availableDataElements}
                             onChange={this.programDataElementOrderChanged}
                         />
                     )}
 
                     { this.renderTab('Section',
                         <SectionForm
-                            dataElements={this.props.programDataElements}
-                            sections={this.props.sections}
-                            onChange={this.sectionsChanged}
+                            availableDataElements={this.props.availableDataElements}
+                            programStageSections={this.props.programStageSections}
+                            onSectionNameChanged={this.props.onSectionNameChanged}
+                            onSectionOrderChanged={this.props.onSectionOrderChanged}
+                            onSectionAdded={this.props.onSectionAdded}
+                            onSectionRemoved={this.props.onSectionRemoved}
                         />
                     )}
 
@@ -88,8 +84,12 @@ const HelpText = () => (
 );
 
 CreateDataEntryForm.propTypes = {
-    onChangeOrder: PropTypes.func.isRequired,
-    sections: PropTypes.arrayOf(PropTypes.shape({
+    onChangeDefaultOrder: PropTypes.func.isRequired,
+    onSectionOrderChanged: PropTypes.func.isRequired,
+    onSectionNameChanged: PropTypes.func.isRequired,
+    onSectionAdded: PropTypes.func.isRequired,
+    onSectionRemoved: PropTypes.func.isRequired,
+    programStageSections: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         sortOrder: PropTypes.number.isRequired,
         displayName: PropTypes.string.isRequired,
@@ -98,7 +98,7 @@ CreateDataEntryForm.propTypes = {
             displayName: PropTypes.string.isRequired,
         })).isRequired,
     })).isRequired,
-    programDataElements: PropTypes.arrayOf(PropTypes.shape({
+    availableDataElements: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         displayName: PropTypes.string.isRequired,
         sortOrder: PropTypes.number.isRequired,
@@ -108,7 +108,6 @@ CreateDataEntryForm.propTypes = {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     changeProgramStageDataElementOrder,
     changeProgramStageSectionOrder,
-    changeProgramStageSectionDataElementOrder,
     addProgramStageSection,
     removeProgramStageSection,
     editProgramStageSectionName,
@@ -133,15 +132,15 @@ const enhance = compose(
             (props, programStage, programStageSections, availableProgramStageDataElements) => ({
                 ...props,
                 programStage,
-                sections: programStageSections,
-                programDataElements: availableProgramStageDataElements,
+                programStageSections,
+                availableDataElements: availableProgramStageDataElements,
             })
         )
     ),
     mapProps((props) => {
         return {
             ...props,
-            sections: sortBy(['sortOrder'], props.sections.map(section => ({
+            programStageSections: sortBy(['sortOrder'], props.programStageSections.map(section => ({
                 id: section.id,
                 sortOrder: section.sortOrder,
                 displayName: section.displayName,
@@ -150,16 +149,32 @@ const enhance = compose(
                     displayName: dataElement.displayName,
                 })),
             }))),
-            programDataElements: sortBy(['sortOrder'], props.programDataElements.map(programDataElement => ({
+            availableDataElements: sortBy(['sortOrder'], props.availableDataElements.map(programDataElement => ({
                 ...programDataElement.dataElement,
                 sortOrder: programDataElement.sortOrder,
             }))),
         };
     }),
     withHandlers({
-        onChangeOrder: ({ programStage, changeProgramStageDataElementOrder }) => newDataElementOrder => {
+        onChangeDefaultOrder: ({ programStage, changeProgramStageDataElementOrder }) => newDataElementOrder => {
             changeProgramStageDataElementOrder({ programStage: programStage.id, newDataElementOrder });
         },
+        onSectionNameChanged: ({ programStage, editProgramStageSectionName }) => (sectionId, newName) => {
+            editProgramStageSectionName({
+                programStage: programStage.id,
+                programStageSectionId: sectionId,
+                newProgramStageSectionName: newName,
+            });
+        },
+        onSectionOrderChanged: ({ changeProgramStageSectionOrder }) => programStageSections => {
+            changeProgramStageSectionOrder({ programStageSections });
+        },
+        onSectionAdded: ({ addProgramStageSection }) => newSectionName => {
+            addProgramStageSection({ newSectionName });
+        },
+        onSectionRemoved: ({ removeProgramStageSection }) => programStageSectionId => {
+            removeProgramStageSection({ programStageSectionId });
+        }
     }),
 );
 
