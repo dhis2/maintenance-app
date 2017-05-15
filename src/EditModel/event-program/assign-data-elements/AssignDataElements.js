@@ -10,7 +10,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox/Checkbox';
-import { Observable } from 'rxjs';
 import Store from 'd2-ui/lib/store/Store';
 import { addDataElementsToStage, removeDataElementsFromStage, editProgramStageDataElement } from './actions';
 import withHandlers from 'recompose/withHandlers';
