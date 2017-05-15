@@ -23,11 +23,10 @@ const styles = {
     },
 };
 
-const SortableDataList = SortableContainer(({ dataElements, isSortingIndex, darkItems }) => {
+const SortableDataList = SortableContainer(({ dataElements, isSortingIndex }) => {
     return <div>
         { dataElements.map((dataElement, index) => (
             <SortableDataElement
-                darkItems={darkItems}
                 dataElement={dataElement}
                 index={index}
                 isSortingIndex={isSortingIndex}
@@ -38,8 +37,8 @@ const SortableDataList = SortableContainer(({ dataElements, isSortingIndex, dark
     </div>;
 });
 
-const SortableDataElement = SortableElement(({ index, sortIndex, dataElement, isSortingIndex, darkItems }) => (
-    <DataElement index={index} sortOrder={sortIndex} dataElement={dataElement} isSortingIndex={isSortingIndex} darkItems={darkItems} />
+const SortableDataElement = SortableElement(({ index, sortIndex, dataElement, isSortingIndex }) => (
+    <DataElement index={index} sortOrder={sortIndex} dataElement={dataElement} isSortingIndex={isSortingIndex} />
 ));
 
 const DataElement = ({ sortOrder, dataElement }) => (
@@ -47,7 +46,7 @@ const DataElement = ({ sortOrder, dataElement }) => (
         <div style={styles.row}>
             <DragHandle />
             <div style={styles.horizontalSpace} />
-            {`${dataElement.displayName} (${dataElement.id})`}
+            {dataElement.displayName}
         </div>
     </div>
 );
