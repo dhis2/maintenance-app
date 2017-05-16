@@ -6,13 +6,13 @@ import { ActionButton } from './SectionForm.component';
 
 const styles = {
     dataElement: {
+        height: '4rem',
         display: 'flex',
         paddingLeft: '1rem',
-        paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
         backgroundColor: grey100,
         borderRadius: '6px',
         justifyContent: 'space-between',
+        alignItems: 'center'
     },
 
     row: {

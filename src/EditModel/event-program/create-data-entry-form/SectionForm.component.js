@@ -14,14 +14,24 @@ import Heading from 'd2-ui/lib/headings/Heading.component';
 import DataElementPicker from './DataElementPicker.component';
 import { grey300, grey800 } from "material-ui/styles/colors";
 
+const maxNameLength = 230;
+
 const styles = {
-    sectionPaper: {
+    sectionContainer: {
         width: '100%',
         borderRadius: '8px',
         borderStyle: 'solid',
         borderColor: grey300,
         borderWidth: '3px',
         marginBottom: '1.2rem',
+    },
+
+    noDataElementsMessage: {
+        height: '4rem',
+        lineHeight: '4rem',
+        borderRadius: '6px',
+        backgroundColor: 'white',
+        paddingLeft: '1.5rem',
     },
 
     sectionForm: {
@@ -36,13 +46,13 @@ const styles = {
 
     sectionHeader: {
         color: 'black',
-        paddingLeft: '1rem',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: grey300,
         borderRadius: '4px 4px 0 0',
+        padding: '0.4rem 0 0.4rem 1rem',
     },
 
     collapsibleArrow: {
@@ -53,7 +63,6 @@ const styles = {
     },
 
     row: {
-        userSelect: 'none',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -63,8 +72,10 @@ const styles = {
 const SortableSectionList = SortableContainer(({
     sections,
     selectedSectionId,
+    editingSectionId,
     collapsedSections,
     onToggleSection,
+    onToggleEditing,
     onSelectSection,
     onSectionNameChanged,
     onSectionRemoved,
@@ -74,7 +85,9 @@ const SortableSectionList = SortableContainer(({
     <SectionList
         sections={sections}
         selectedSectionId={selectedSectionId}
+        editingSectionId={editingSectionId}
         collapsedSections={collapsedSections}
+        onToggleEditing={onToggleEditing}
         onToggleSection={onToggleSection}
         onSelectSection={onSelectSection}
         onSectionNameChanged={onSectionNameChanged}
@@ -84,7 +97,19 @@ const SortableSectionList = SortableContainer(({
     />
 ));
 
-const SectionList = ({ sections, selectedSectionId, collapsedSections, onToggleSection, onSelectSection, onSectionNameChanged, onSectionRemoved, onDataElementRemoved, sortItems }) => (
+const SectionList = ({
+    sections,
+    selectedSectionId,
+    editingSectionId,
+    onToggleEditing,
+    collapsedSections,
+    onToggleSection,
+    onSelectSection,
+    onSectionNameChanged,
+    onSectionRemoved,
+    onDataElementRemoved,
+    sortItems,
+}) => (
     <div>
         { sections.map((section, index) => (
             <SortableSection
@@ -93,27 +118,39 @@ const SectionList = ({ sections, selectedSectionId, collapsedSections, onToggleS
                 section={section}
                 selected={isEqual(section.id, selectedSectionId)}
                 collapsed={collapsedSections.includes(section.id)}
+                editing={isEqual(section.id, editingSectionId)}
+                onToggleEdit={() => { onToggleEditing(section.id); }}
                 onToggleOpen={() => { onToggleSection(section.id); }}
                 onSelect={() => { onSelectSection(section.id); }}
-                onNameChanged={(sectionId, newName) => {
-                    onSectionNameChanged(index, sectionId, newName);
-                }}
+                onNameChanged={newName => { onSectionNameChanged(section.id, newName); }}
                 onSectionRemoved={() => { onSectionRemoved(section.id) }}
                 onDataElementRemoved={dataElementId => { onDataElementRemoved(dataElementId, section.id); }}
-                sortItems={({oldIndex, newIndex}) => {
-                    sortItems(index, oldIndex, newIndex);
-                }}
+                sortItems={({oldIndex, newIndex}) => { sortItems(index, oldIndex, newIndex); }}
             />
-        ))}
+            ))}
     </div>
 );
 
-const SortableSection = SortableElement(({ section, selected, collapsed, onToggleOpen, onSelect, onNameChanged, onSectionRemoved, onDataElementRemoved, sortItems }) =>
+const SortableSection = SortableElement(({
+    section,
+    selected,
+    collapsed,
+    editing,
+    onToggleOpen,
+    onToggleEdit,
+    onSelect,
+    onNameChanged,
+    onSectionRemoved,
+    onDataElementRemoved,
+    sortItems,
+}) =>
     <CollapsibleSection
         section={section}
         selected={selected}
         collapsed={collapsed}
+        editing={editing}
         onToggleOpen={onToggleOpen}
+        onToggleEdit={onToggleEdit}
         onSelect={onSelect}
         onNameChanged={onNameChanged}
         onSectionRemoved={onSectionRemoved}
@@ -127,7 +164,6 @@ class CollapsibleSection extends Component {
         super(props);
         this.state = {
             showRemovalDialog: false,
-            isEditingName: false,
             newName: '',
         };
     }
@@ -137,9 +173,9 @@ class CollapsibleSection extends Component {
     };
 
     startEditingName = () => {
+        this.props.onToggleEdit();
         this.setState({
             newName: '',
-            isEditingName: !this.state.isEditingName,
         });
     };
 
@@ -150,12 +186,9 @@ class CollapsibleSection extends Component {
     };
 
     stopEditingName = () => {
-        this.setState({
-            isEditingName: false,
-        });
-
+        this.props.onToggleEdit();
         if (this.state.newName && this.state.newName !== '') {
-            this.props.onNameChanged(this.props.section.id, this.state.newName);
+            this.props.onNameChanged(this.state.newName);
         }
     };
 
@@ -180,10 +213,13 @@ class CollapsibleSection extends Component {
 
     getSectionNameStyle = editing => {
         return {
-            textAlign: 'center',
+            textAlign: 'left',
             color: editing ? 'gray' : 'black',
             fontSize: '1.7rem',
             fontWeight: editing ? '300' : '400',
+            overflowY: 'scroll',
+            wordWrap: 'break-word',
+            width: '100%',
         };
     };
 
@@ -201,34 +237,50 @@ class CollapsibleSection extends Component {
             />,
         ];
 
+        const sectionContent = (this.props.section.dataElements.length > 0) ?
+            <div style={styles.sectionContent}>
+                <SortableSectionDataList
+                    distance={4}
+                    onSortEnd={this.onSortEnd}
+                    onDataElementRemoved={this.props.onDataElementRemoved}
+                    sectionDataElements={this.props.section.dataElements}
+                />
+            </div> :
+            <div style={styles.noDataElementsMessage}>
+                No data elements
+            </div>;
+
         return (
             <div style={{
-                ...styles.sectionPaper,
+                ...styles.sectionContainer,
                 borderColor: this.props.selected ? grey800 : grey300
             }}>
                 <div onClick={this.props.onSelect} style={styles.sectionHeader}>
-                    <div style={styles.row}>
+                    <div style={{...styles.row, width: '100%'}}>
                         <DragHandle />
 
-                        { this.state.isEditingName
+                        { this.props.editing
                             ? <ActionButton onClick={this.stopEditingName} icon="done" />
                             : <ActionButton onClick={this.startEditingName} icon="mode_edit" />
                         }
 
-                        { this.state.isEditingName
+                        { this.props.editing
                             ? <TextField
                                 ref={this.focusTitleInputField}
                                 inputStyle={{ transition: 'none' }}
+                                textareaStyle={{ flex: 1 }}
                                 style={this.getSectionNameStyle(true)}
                                 underlineShow={false}
                                 onClick={(e) => e.stopPropagation()}
-                                hintText={this.props.section.displayName}
-                                onChange={this.onNameChanged} />
+                                hintText={'Write a new section name ...'}
+                                defaultValue={this.props.section.displayName}
+                                onChange={this.onNameChanged}
+                                maxLength={maxNameLength} />
 
                             : <div style={this.getSectionNameStyle(false)}>{this.props.section.displayName}</div>
                         }
                     </div>
-                    <div>
+                    <div style={styles.row}>
                         <ActionButton
                             onClick={this.props.onToggleOpen}
                             icon={this.props.collapsed ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
@@ -237,16 +289,7 @@ class CollapsibleSection extends Component {
                     </div>
                 </div>
 
-                { this.props.collapsed &&
-                    <div style={styles.sectionContent}>
-                        <SortableSectionDataList
-                            useDragHandle
-                            onSortEnd={this.onSortEnd}
-                            onDataElementRemoved={this.props.onDataElementRemoved}
-                            sectionDataElements={this.props.section.dataElements}
-                        />
-                    </div>
-                }
+                { this.props.collapsed && sectionContent }
 
                 <Dialog
                     title="Are you sure you want to remove the following section?"
@@ -265,9 +308,11 @@ CollapsibleSection.propTypes = {
     section: PropTypes.object.isRequired,
     selected: PropTypes.bool.isRequired,
     collapsed: PropTypes.bool.isRequired,
+    editing: PropTypes.bool.isRequired,
     onNameChanged: PropTypes.func.isRequired,
     onSectionRemoved: PropTypes.func.isRequired,
     onDataElementRemoved: PropTypes.func.isRequired,
+    onToggleEdit: PropTypes.func.isRequired,
     onToggleOpen: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
     sortItems: PropTypes.func.isRequired,
@@ -291,11 +336,8 @@ class SectionForm extends Component {
         this.state = {
             collapsedSections: this.props.programStageSections.map(section => section.id),
             activeDataElements: getActiveDataElements(this.props.programStageSections),
-            //activeDataElements: getActiveDataElements(
-            //    this.props.programStageSections,
-            //    this.props.availableDataElements,
-            //),
             selectedSectionId: getOr(-1, 'programStageSections[0].id', this.props.programStageSections),
+            editingSectionId: null,
         };
     }
 
@@ -320,13 +362,21 @@ class SectionForm extends Component {
         this.setState({ collapsedSections });
     };
 
+    onToggleEditing = sectionId => {
+        this.setState({
+            editingSectionId: isEqual(sectionId, this.state.editingSectionId)
+                ? null
+                : sectionId,
+        });
+    };
+
     onSelectSection = sectionId => {
         this.setState({
             selectedSectionId: sectionId,
         });
     };
 
-    onSectionNameChanged = (index, sectionId, newName) => {
+    onSectionNameChanged = (sectionId, newName) => {
         this.props.onSectionNameChanged(sectionId, newName);
     };
 
@@ -355,16 +405,13 @@ class SectionForm extends Component {
     };
 
     removeDataElementFromSection = (dataElementId, sectionId) => {
-        console.warn('Attempting to remove data element', dataElementId, 'from', sectionId);
         const programStageSectionIndex = findIndex(section =>
             isEqual(section.id, sectionId), this.props.programStageSections);
 
         const programStageSection = this.props.programStageSections[programStageSectionIndex];
 
-        console.warn('BEFORE:', programStageSection.dataElements);
         const updatedDataElements = filter(negate(dataElement =>
             isEqual(dataElement.id, dataElementId)), programStageSection.dataElements);
-        console.warn('AFTER:', updatedDataElements);
 
         const allSections = this.props.programStageSections;
         allSections[programStageSectionIndex].dataElements = updatedDataElements;
@@ -385,11 +432,13 @@ class SectionForm extends Component {
         <div style={styles.sectionForm}>
             <div style={{ flex: 2 }}>
                 <SortableSectionList
-                    useDragHandle
+                    distance={4}
                     sections={this.props.programStageSections}
                     selectedSectionId={this.state.selectedSectionId}
+                    editingSectionId={this.state.editingSectionId}
                     collapsedSections={this.state.collapsedSections}
                     onToggleSection={this.onToggleSection}
+                    onToggleEditing={this.onToggleEditing}
                     onSelectSection={this.onSelectSection}
                     onSectionNameChanged={this.onSectionNameChanged}
                     onSectionRemoved={this.props.onSectionRemoved}

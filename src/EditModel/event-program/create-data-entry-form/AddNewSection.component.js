@@ -1,21 +1,22 @@
 import React, { Component, PropTypes } from 'react';
-import Paper from 'material-ui/Paper';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
-import { grey100 } from 'material-ui/styles/colors'
+import { grey300 } from 'material-ui/styles/colors'
 
 const styles = {
     addNewSection: {
+        height: 50,
         padding: '0rem 1rem',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: grey100,
-        borderRadius: '4px 4px 0 0',
-        height: 50,
+        backgroundColor: grey300,
+        borderRadius: '8px',
         fontSize: '1.7rem',
+        cursor: 'pointer',
+        userSelect: 'none',
     },
 };
 
@@ -62,17 +63,15 @@ class AddNewSection extends Component {
 
         return (
             <div>
-                <Paper>
-                    <div style={styles.addNewSection} onClick={this.openDialog}>
-                        <FontIcon
-                            className="material-icons"
-                            style={{paddingRight: '3rem'}}
-                        >
-                            add_circle
-                        </FontIcon>
-                        Add new section
-                    </div>
-                </Paper>
+                <div style={styles.addNewSection} onClick={this.openDialog}>
+                    <FontIcon
+                        className="material-icons"
+                        style={{paddingRight: '3rem'}}
+                    >
+                        add_circle
+                    </FontIcon>
+                    Add new section
+                </div>
                 <Dialog
                     title="Add new program stage section"
                     actions={actions}
