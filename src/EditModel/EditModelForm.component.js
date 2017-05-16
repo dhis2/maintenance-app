@@ -32,7 +32,7 @@ const editFormFieldsForCurrentSection$ = currentSection$
     .flatMap((modelType) => Observable.fromPromise(createFieldConfigForModelTypes(modelType)));
 
 const isAddOperation = (model) => {
-    return model.id === 'add';
+    return model.id === undefined;
 };
 
 const d2$ = Observable.fromPromise(getInstance());
