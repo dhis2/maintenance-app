@@ -37,7 +37,8 @@ function loadEventProgramMetadataByProgramId(programId) {
                 id: programUid,
                 programStages: [
                     { id: programStageUid }
-                ]
+                ],
+                organisationUnits: [],
             }],
             programStages: [{
                 id: programStageUid,
