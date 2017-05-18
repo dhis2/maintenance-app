@@ -37,9 +37,14 @@ class AddNewSection extends Component {
         this.setState({ dialogOpen: false });
     };
 
+    clearName = () => {
+        this.setState({ sectionName: '' });
+    };
+
     confirmAddNewSection = () => {
         this.closeDialog();
         this.props.onSectionAdded(this.state.sectionName);
+        this.clearName();
     };
 
     onNameChanged = (event, sectionName) => {
