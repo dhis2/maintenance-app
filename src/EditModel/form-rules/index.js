@@ -11,6 +11,7 @@ const whenOperatorMap = new Map([
     ['ONEOF', oneOfOperator],
     ['SYSTEM_SETTING_IS_TRUE', systemSettingIsTrueOperator],
     ['SYSTEM_SETTING_IS_FALSE', systemSettingIsFalseOperator],
+    ['IS_VALID_POINT', isPointOperator],
 ]);
 
 const operationsMap = new Map([
@@ -69,6 +70,16 @@ function equalsOperator(left, right) {
 
 function oneOfOperator(value, list) {
     return list.indexOf(value) >= 0;
+}
+
+function isPointOperator(value) {
+    // TODO: Use the same validator as the one in the coordinate-field (perhaps move it to d2/d2-ui)
+    try {
+        const poly = JSON.parse(value);
+        return Array.isArray(poly) && (poly.length === 0 || (poly.length === 2 && !isNaN(poly[0]) && !isNaN(poly[1])));
+    } catch (e) {
+        return false;
+    }
 }
 
 function systemSettingIsTrueOperator(value, settingKey) {
