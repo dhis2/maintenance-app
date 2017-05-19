@@ -236,6 +236,41 @@ export default new Map([['dataElement',
                     type: 'HIDE_FIELD',
                 }
             ]
+        },
+        {
+            field: 'featureType',
+            when: [{
+                field: 'coordinates',
+                operator: 'HAS_VALUE',
+            }],
+            operations: [
+                {
+                    type: 'CHANGE_VALUE',
+                    setValue: (model) => {
+                        // TODO: this is almost the same check as in the coordinate-field we should DRY these up.
+                        const isValidPoint = (value) => {
+                            try {
+                                const poly = JSON.parse(value);
+                                return Array.isArray(poly) && (poly.length === 0 || (poly.length === 2 && !isNaN(poly[0]) && !isNaN(poly[1])));
+                            } catch (e) {}
+
+                            return false;
+                        };
+
+                        // If we have valid coordinates set the the featureType to POINT
+                        if (model.coordinates) {
+                            // Set the correct featureType if we're dealing with a point otherwise
+                            // keep the featureType the same as it was since we're not dealing with a point
+                            if (isValidPoint(model.coordinates)) {
+                                model.featureType = 'POINT';
+                            }
+                        } else {
+                            // The user might have removed the coordinates so we'll reset the featureType to `null`
+                            model.featureType = null;
+                        }
+                    },
+                }
+            ]
         }
     ]],
 ]);
