@@ -6,6 +6,16 @@ function isPoint(poly) {
     return Array.isArray(poly) && (poly.length === 0 || (poly.length === 2 && !isNaN(poly[0]) && !isNaN(poly[1])));
 }
 
+function isValidLatitude(value) {
+    return isNumber(value) && value <= 90 && value >= -90;
+}
+isValidLatitude.message = "a_latitude_should_be_a_number_between_-90_and_90";
+
+function isValidLongitude(value) {
+    return isNumber(value) && value <= 180 && value >= -180;
+}
+isValidLongitude.message = "a_longitude_should_be_a_number_between_-180_and_180";
+
 class CoordinateField extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -54,8 +64,8 @@ class CoordinateField extends React.Component {
         const lat = event.target.value.length > 0 ? event.target.value : undefined;
         const long = this.state.long;
 
-        if (!isNumber(lat)) {
-            this.setState({ latError: this.getTranslation(isNumber.message) });
+        if (!isValidLatitude(lat)) {
+            this.setState({ latError: this.getTranslation(isValidLatitude.message) });
         } else {
             this.setState({ latError: undefined });
             this.updateLatLong(lat, long);
@@ -66,8 +76,8 @@ class CoordinateField extends React.Component {
         const lat = this.state.lat;
         const long = event.target.value;
 
-        if (!isNumber(long)) {
-            this.setState({ longError: this.getTranslation(isNumber.message) });
+        if (!isValidLongitude(long)) {
+            this.setState({ longError: this.getTranslation(isValidLongitude.message) });
         } else {
             this.setState({ longError: undefined });
             this.updateLatLong(lat, long);
