@@ -37,8 +37,6 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
 
         Promise.all([
             d2.currentUser.getOrganisationUnits({
-                memberCollection: overlyComplicatedTemporaryFixForWeirdlyNamedFields(this.props.modelDefinition.plural),
-                memberObject: this.props.model.id,
                 fields: 'id,path,displayName,children::isNotEmpty',
             }),
             d2.models.organisationUnitLevels.list({
