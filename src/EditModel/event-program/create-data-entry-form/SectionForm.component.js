@@ -7,6 +7,7 @@ import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+import Snackbar from 'material-ui/Snackbar';
 
 import SortableSectionDataList from './SortableSectionDataList.component';
 import AddNewSection from './AddNewSection.component';
@@ -52,7 +53,8 @@ const styles = {
         justifyContent: 'space-between',
         backgroundColor: grey300,
         borderRadius: '4px 4px 0 0',
-        padding: '0.4rem 0 0.4rem 1rem',
+        paddingLeft: '1rem',
+        minHeight: '55px',
     },
 
     collapsibleArrow: {
@@ -283,13 +285,13 @@ class CollapsibleSection extends Component {
                     <div style={styles.row}>
                         <ActionButton
                             onClick={this.props.onToggleOpen}
-                            icon={this.props.collapsed ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+                            icon={this.props.collapsed ? 'keyboard_arrow_down' : 'keyboard_arrow_up'}
                         />
                         <ActionButton onClick={this.openRemovalDialog} icon="clear" />
                     </div>
                 </div>
 
-                { this.props.collapsed && sectionContent }
+                { !this.props.collapsed && sectionContent }
 
                 <Dialog
                     title="Are you sure you want to remove the following section?"
@@ -334,10 +336,11 @@ class SectionForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            collapsedSections: this.props.programStageSections.map(section => section.id),
+            collapsedSections: [],
             activeDataElements: getActiveDataElements(this.props.programStageSections),
             selectedSectionId: getOr(-1, 'programStageSections[0].id', this.props.programStageSections),
             editingSectionId: null,
+            showNoSelectionSectionMessage: false,
         };
     }
 
@@ -349,17 +352,26 @@ class SectionForm extends Component {
         }
     }
 
+    isSectionCollapsed = sectionId => this.state.collapsedSections.includes(sectionId);
+
     onToggleSection = sectionId => {
-        let collapsedSections = this.state.collapsedSections;
-        const isCollapsed = collapsedSections.includes(sectionId);
+        this.isSectionCollapsed(sectionId)
+            ? this.openSection(sectionId)
+            : this.closeSection(sectionId);
+    };
 
-        if (isCollapsed) {
-            collapsedSections = pull(sectionId, collapsedSections);
-        } else {
-            collapsedSections.push(sectionId);
-        }
+    openSection = sectionId => {
+        this.setState({
+            collapsedSections: pull(sectionId, this.state.collapsedSections),
+        });
+    };
 
-        this.setState({ collapsedSections });
+    closeSection = sectionId => {
+        const collapsedSections = this.state.collapsedSections;
+        collapsedSections.push(sectionId);
+        this.setState({
+            collapsedSections,
+        });
     };
 
     onToggleEditing = sectionId => {
@@ -367,6 +379,12 @@ class SectionForm extends Component {
             editingSectionId: isEqual(sectionId, this.state.editingSectionId)
                 ? null
                 : sectionId,
+        });
+    };
+
+    closeNoSelectionSectionMessage = () => {
+        this.setState({
+            showNoSelectionSectionMessage: false,
         });
     };
 
@@ -393,8 +411,10 @@ class SectionForm extends Component {
         const currentSelectedSectionIndex = findIndex(section =>
             isEqual(this.state.selectedSectionId, section.id), this.props.programStageSections);
 
-        // TODO: Show a toast message if there is no section selected.
-        if (currentSelectedSectionIndex === -1) return;
+        if (currentSelectedSectionIndex === -1) {
+            this.setState({ showNoSelectionSectionMessage: true });
+            return;
+        }
 
         const currentSelectedSection = this.props.programStageSections[currentSelectedSectionIndex];
         const updatedProgramStageSectionDataElements = currentSelectedSection.dataElements.concat(dataElementToAdd);
@@ -402,6 +422,8 @@ class SectionForm extends Component {
 
         updatedSections[currentSelectedSectionIndex].dataElements = updatedProgramStageSectionDataElements;
         this.props.onSectionOrderChanged(updatedSections);
+
+        this.isSectionCollapsed(currentSelectedSection.id) && this.openSection(currentSelectedSection.id);
     };
 
     removeDataElementFromSection = (dataElementId, sectionId) => {
@@ -432,6 +454,7 @@ class SectionForm extends Component {
         <div style={styles.sectionForm}>
             <div style={{ flex: 2 }}>
                 <SortableSectionList
+                    useDragHandle
                     distance={4}
                     sections={this.props.programStageSections}
                     selectedSectionId={this.state.selectedSectionId}
@@ -457,6 +480,12 @@ class SectionForm extends Component {
                     onElementPicked={this.onDataElementPicked}
                 />
             </div>
+            <Snackbar
+                open={this.state.showNoSelectionSectionMessage}
+                message="Select a section before adding data elements"
+                autoHideDuration={3000}
+                onRequestClose={this.closeNoSelectionSectionMessage}
+            />
         </div>
     );
 }

@@ -7,7 +7,7 @@ import { grey300 } from 'material-ui/styles/colors'
 
 const styles = {
     addNewSection: {
-        height: 50,
+        height: '55px',
         padding: '0rem 1rem',
         display: 'flex',
         flexDirection: 'row',

@@ -6,7 +6,7 @@ import { ActionButton } from './SectionForm.component';
 
 const styles = {
     dataElement: {
-        height: '4rem',
+        height: '55px',
         display: 'flex',
         paddingLeft: '1rem',
         backgroundColor: grey100,
