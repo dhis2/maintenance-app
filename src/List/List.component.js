@@ -471,10 +471,13 @@ const List = React.createClass({
                 if (isTranslatable(row.modelDefinition.name, columnName) &&
                     row && row.modelDefinition &&
                     row.modelDefinition.modelProperties[columnName] &&
-                    row.modelDefinition.modelProperties[columnName].constants) {
+                    row.modelDefinition.modelProperties[columnName].constants
+                ) {
                     // Hack it to fix another hack - sweeet
                     row.noMoreGottaTranslateCauseIsDone = true;
-                    prow[columnName] = this.getTranslation(row[columnName].toLowerCase());
+                    if (row[columnName]) {
+                        prow[columnName] = this.getTranslation(row[columnName].toLowerCase());
+                    }
                 }
                 return prow;
             }, row);
