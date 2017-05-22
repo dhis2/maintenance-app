@@ -1678,9 +1678,9 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@^27.0.0-7:
-  version "27.0.0-7"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-27.0.0-7.tgz#75326f70689af6d14d050e7d7ed6b0313f668531"
+d2-ui@27.0:
+  version "27.0.0"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-27.0.0.tgz#ca0dce783931a02ef6c5f5e64e2c248f7ea9b0a4"
 
 d2-utilizr@^0.2.9:
   version "0.2.13"
@@ -1772,7 +1772,7 @@ debug-log@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
 
-debug@2.6.0:
+debug@2.6.0, debug@^2.1.1:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.0.tgz#bc596bcabe7617f11d9fa15361eded5608b8499b"
   dependencies:
@@ -1790,7 +1790,7 @@ debug@2.6.4:
   dependencies:
     ms "0.7.3"
 
-debug@^2.1.1, debug@^2.2.0, debug@^2.6.3:
+debug@^2.2.0, debug@^2.6.3:
   version "2.6.6"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.6.tgz#a9fa6fbe9ca43cf1e79f73b75c0189cbb7d6db5a"
   dependencies:
@@ -5691,7 +5691,7 @@ style-loader@^0.16.1:
   dependencies:
     loader-utils "^1.0.2"
 
-supports-color@3.1.2, supports-color@^3.1.0, supports-color@^3.1.1:
+supports-color@3.1.2, supports-color@^3.1.0, supports-color@^3.1.1, supports-color@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.1.2.tgz#72a262894d9d408b956ca05ff37b2ed8a6e2a2d5"
   dependencies:
@@ -5701,7 +5701,7 @@ supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
 
-supports-color@^3.1.2, supports-color@^3.2.3:
+supports-color@^3.2.3:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.2.3.tgz#65ac0504b3954171d8a64946b2ae3cbb8a5f54f6"
   dependencies:
