@@ -8,7 +8,7 @@ import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import periodTypeStore from '../../App/periodTypeStore';
+import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
 
 const expressionStatusStore = Store.create();
 
@@ -141,10 +141,7 @@ ExpressionField.contextTypes = {
 
 export default new Map([
     ['periodType', {
-        type: SELECT,
-        fieldOptions: {
-            options: periodTypeStore.getState(),
-        },
+        component: PeriodTypeDropDown,
     }],
     ['generator', {
         component: ExpressionField,

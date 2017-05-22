@@ -33,12 +33,10 @@ class Dropdown extends React.Component {
 
     getOptions(options, required = false) {
         let opts = options
-            .map((option) => {
-                return {
+            .map((option) => ({
                     value: option.value,
                     text: option.text,
-                };
-            });
+                }));
 
         return opts
             .map(option => {

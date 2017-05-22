@@ -56,7 +56,7 @@ function getSystemSettings(d2) {
         d2.Api.getApi().get('periodTypes'),
     ]).then(([ settings, periodTypeDefs ]) => {
         systemSettingsStore.setState(settings);
-        periodTypeStore.setState(periodTypeDefs.periodTypes.map(p => p.name));
+        periodTypeStore.setState(periodTypeDefs.periodTypes.map(p => ({ text: p.name, value: p.name })));
     });
 }
 

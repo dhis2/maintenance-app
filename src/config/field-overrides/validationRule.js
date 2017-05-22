@@ -1,14 +1,10 @@
-import DropDown from '../../forms/form-fields/drop-down';
 import LeftSideExpressionField from './validation-rules/LeftSideExpressionField';
 import RightSideExpressionField from './validation-rules/RightSideExpressionField';
-import periodTypeStore from '../../App/periodTypeStore';
+import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
 
 export default new Map([
     ['periodType', {
-        component: DropDown,
-        fieldOptions: {
-            options: periodTypeStore.getState(),
-        },
+        component: PeriodTypeDropDown,
     }],
     ['importance', {
         required: true,
