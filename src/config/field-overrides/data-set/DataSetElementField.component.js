@@ -246,6 +246,7 @@ async function dataSetElementFieldData() {
         'dataElements:fields': 'id,displayName,categoryCombo[id]',
         'dataElements:filter': 'domainType:eq:AGGREGATE',
         'categoryCombos:fields': 'id,displayName',
+        'categoryCombos:filter': 'dataDimensionType:eq:DISAGGREGATION',
     });
 
     return {
