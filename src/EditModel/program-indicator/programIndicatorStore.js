@@ -109,7 +109,4 @@ programIndicatorStore.setState = newState => {
     });
 };
 
-programIndicatorStore
-    .subscribe(state => console.log(state));
-
 export default programIndicatorStore;

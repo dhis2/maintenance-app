@@ -35,7 +35,6 @@ const styles = {
 };
 
 function EditProgramIndicator({ programIndicator, ...props }) {
-    console.log(props);
     const schema = 'programIndicator';
     const { groupName } = props.params;
 
