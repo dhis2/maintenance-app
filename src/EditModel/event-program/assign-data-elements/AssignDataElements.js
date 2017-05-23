@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
@@ -15,7 +15,9 @@ import { addDataElementsToStage, removeDataElementsFromStage, editProgramStageDa
 import withHandlers from 'recompose/withHandlers';
 import Visibility from 'material-ui/svg-icons/action/visibility';
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
+import TextField from 'material-ui/TextField/TextField';
 import pure from 'recompose/pure';
+import withState from 'recompose/withState';
 
 const getFirstProgramStage = compose(first, get('programStages'));
 
@@ -60,6 +62,7 @@ const enhance = compose(
             programStageDataElement,
         }),
     }),
+    withState('dataElementFilter', 'setDataElementFilter', ''),
 );
 
 const flipBooleanPropertyOn = (object, key) => ({
@@ -130,7 +133,7 @@ function addDisplayProperties(dataElements) {
     };
 }
 
-function AssignDataElements(props) {
+function AssignDataElements(props, { d2 }) {
     const itemStore = Store.create();
     const assignedItemStore = Store.create();
 
@@ -159,11 +162,17 @@ function AssignDataElements(props) {
     return (
         <Paper>
             <div style={{ padding: '2rem 3rem 4rem' }}>
+                <TextField
+                    hintText={d2.i18n.getTranslation('search_available_selected_items')}
+                    onChange={compose(props.setDataElementFilter, getOr('', 'target.value'))}
+                    value={props.dataElementFilter}
+                    fullWidth
+                />
                 <GroupEditor
                     itemStore={itemStore}
                     assignedItemStore={assignedItemStore}
                     height={250}
-                    filterText={''}
+                    filterText={props.dataElementFilter}
                     onAssignItems={props.onAssignItems}
                     onRemoveItems={props.onRemoveItems}
                 />
@@ -186,5 +195,9 @@ function AssignDataElements(props) {
         </Paper>
     );
 }
+
+AssignDataElements.contextTypes = {
+    d2: PropTypes.object,
+};
 
 export default enhance(AssignDataElements);
