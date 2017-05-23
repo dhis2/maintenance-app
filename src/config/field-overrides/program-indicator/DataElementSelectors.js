@@ -1,6 +1,8 @@
 import React from 'react';
 import componentFromStream from 'recompose/componentFromStream';
-import { compose, memoize, getOr, values } from 'lodash/fp';
+import branch from 'recompose/branch';
+import renderNothing from 'recompose/renderNothing';
+import { compose, memoize, getOr, values, get, isNil } from 'lodash/fp';
 import { Observable } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
 import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
@@ -45,4 +47,7 @@ const DataElementSelectors = componentFromStream(props$ => props$
     .startWith(<CircularProgress />)
 );
 
-export default DataElementSelectors;
+const hasMissingProgram = compose(isNil, get('program'));
+
+// Render nothing if no program has been chosen
+export default branch(hasMissingProgram, renderNothing)(DataElementSelectors);
