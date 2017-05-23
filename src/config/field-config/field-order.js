@@ -334,11 +334,11 @@ const fieldOrderByName = new Map([
         'program',
         'name',
         'code',
+        'useCodeForOptionSet',
         'programRuleVariableSourceType',
+        'programStage',
         'dataElement',
         'trackedEntityAttribute',
-        'useCodeForOptionSet',
-        'programStage',
     ]],
 ]);
 
