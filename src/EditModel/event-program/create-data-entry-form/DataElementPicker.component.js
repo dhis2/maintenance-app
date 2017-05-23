@@ -10,7 +10,7 @@ const styles = {
 
     dataElementList: {
         overflowY: 'scroll',
-        height: '500px',
+        maxHeight: '500px',
     },
 
     header: {
@@ -20,10 +20,11 @@ const styles = {
     },
 
     dataElement: {
+        height: '45px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '0.8rem 0.8rem',
+        padding: '0 0.8rem',
         backgroundColor: grey200,
         marginBottom: '4px',
         borderRadius: '8px',
@@ -94,7 +95,7 @@ class AvailableDataElement extends Component {
             }}
         >
             {this.props.dataElement.displayName}
-            <FontIcon color="gray" className="material-icons">add</FontIcon>
+            {!this.props.active && <FontIcon color="gray" className="material-icons">add</FontIcon>}
         </div>
     )
 }

@@ -2,21 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import FontIcon from 'material-ui/FontIcon';
-import { grey300 } from 'material-ui/styles/colors'
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 const styles = {
-    addNewSection: {
-        height: '55px',
-        padding: '0rem 1rem',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: grey300,
-        borderRadius: '8px',
-        fontSize: '1.7rem',
-        cursor: 'pointer',
-        userSelect: 'none',
+    container: {
+        textAlign: 'right',
+        width: '100%',
     },
 };
 
@@ -51,6 +43,12 @@ class AddNewSection extends Component {
         this.setState({ sectionName })
     };
 
+    focusOnSectionName = input => {
+        if (input) {
+            setTimeout(() => { input.focus(); }, 20);
+        }
+    };
+
     render = () => {
         const actions = [
             <FlatButton
@@ -67,27 +65,19 @@ class AddNewSection extends Component {
         ];
 
         return (
-            <div>
-                <div style={styles.addNewSection} onClick={this.openDialog}>
-                    <FontIcon
-                        className="material-icons"
-                        style={{paddingRight: '3rem'}}
-                    >
-                        add_circle
-                    </FontIcon>
-                    Add new section
-                </div>
+            <div style={styles.container}>
+                <FloatingActionButton onTouchTap={this.openDialog}>
+                    <ContentAdd />
+                </FloatingActionButton>
                 <Dialog
                     title="Add new program stage section"
                     actions={actions}
                     open={this.state.dialogOpen}
                     onRequestClose={this.closeDialog}
                 >
-                    <div>
-                        Choose a name for the new section
-                    </div>
                     <TextField
-                        hintText={'New section'}
+                        ref={this.focusOnSectionName}
+                        hintText={'Name'}
                         onChange={this.onNameChanged}
                     />
                 </Dialog>

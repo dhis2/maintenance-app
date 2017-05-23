@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import FontIcon from 'material-ui/FontIcon';
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
-import { concat, sortBy, find, isEqual, get, getOr, pull, without, flatten, filter, findIndex, negate } from 'lodash/fp';
+import { concat, sortBy, find, isEqual, get, getOr, pull, without, flatten, filter, findIndex, negate, difference } from 'lodash/fp';
 import DragHandle from './DragHandle.component';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
@@ -219,7 +219,6 @@ class CollapsibleSection extends Component {
             color: editing ? 'gray' : 'black',
             fontSize: '1.7rem',
             fontWeight: editing ? '300' : '400',
-            overflowY: 'scroll',
             wordWrap: 'break-word',
             width: '100%',
         };
@@ -349,16 +348,13 @@ class SectionForm extends Component {
             this.setState({
                 activeDataElements: getActiveDataElements(newProps.programStageSections),
             });
+
+            const newSectionAdded = difference(newProps.programStageSections, this.props.programStageSections)[0];
+            if (newSectionAdded) {
+                this.selectSection(newSectionAdded.id);
+            }
         }
     }
-
-    isSectionCollapsed = sectionId => this.state.collapsedSections.includes(sectionId);
-
-    onToggleSection = sectionId => {
-        this.isSectionCollapsed(sectionId)
-            ? this.openSection(sectionId)
-            : this.closeSection(sectionId);
-    };
 
     openSection = sectionId => {
         this.setState({
@@ -374,11 +370,23 @@ class SectionForm extends Component {
         });
     };
 
+    selectSection = sectionId => {
+        this.setState({
+            selectedSectionId: sectionId,
+        });
+    };
+
     onToggleEditing = sectionId => {
         this.setState({
             editingSectionId: isEqual(sectionId, this.state.editingSectionId)
                 ? null
                 : sectionId,
+        });
+    };
+
+    openNoSelectionSectionMessage = () => {
+        this.setState({
+            showNoSelectionSectionMessage: true,
         });
     };
 
@@ -388,10 +396,21 @@ class SectionForm extends Component {
         });
     };
 
+    isSectionCollapsed = sectionId => this.state.collapsedSections.includes(sectionId);
+
+    onToggleSection = sectionId => {
+        this.isSectionCollapsed(sectionId)
+            ? this.openSection(sectionId)
+            : this.closeSection(sectionId);
+    };
+
+    openSectionIfClosed = sectionId => {
+        this.isSectionCollapsed(sectionId) && this.openSection(sectionId);
+    };
+
     onSelectSection = sectionId => {
-        this.setState({
-            selectedSectionId: sectionId,
-        });
+        this.openSectionIfClosed(sectionId);
+        this.selectSection(sectionId);
     };
 
     onSectionNameChanged = (sectionId, newName) => {
@@ -412,7 +431,7 @@ class SectionForm extends Component {
             isEqual(this.state.selectedSectionId, section.id), this.props.programStageSections);
 
         if (currentSelectedSectionIndex === -1) {
-            this.setState({ showNoSelectionSectionMessage: true });
+            this.openNoSelectionSectionMessage();
             return;
         }
 
@@ -423,7 +442,7 @@ class SectionForm extends Component {
         updatedSections[currentSelectedSectionIndex].dataElements = updatedProgramStageSectionDataElements;
         this.props.onSectionOrderChanged(updatedSections);
 
-        this.isSectionCollapsed(currentSelectedSection.id) && this.openSection(currentSelectedSection.id);
+        this.openSectionIfClosed(currentSelectedSection.id);
     };
 
     removeDataElementFromSection = (dataElementId, sectionId) => {
@@ -431,7 +450,6 @@ class SectionForm extends Component {
             isEqual(section.id, sectionId), this.props.programStageSections);
 
         const programStageSection = this.props.programStageSections[programStageSectionIndex];
-
         const updatedDataElements = filter(negate(dataElement =>
             isEqual(dataElement.id, dataElementId)), programStageSection.dataElements);
 
@@ -443,10 +461,8 @@ class SectionForm extends Component {
 
     sortItems = (sectionIndex, oldIndex, newIndex) => {
         const dataElements = arrayMove(this.props.programStageSections[sectionIndex].dataElements, oldIndex, newIndex);
-
         let sections = this.props.programStageSections;
         sections[sectionIndex].dataElements = dataElements;
-
         this.props.onSectionOrderChanged(sections);
     };
 
