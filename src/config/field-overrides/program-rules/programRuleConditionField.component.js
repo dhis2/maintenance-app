@@ -21,17 +21,20 @@ class ProgramRuleConditionField extends React.Component {
 
     componentDidMount() {
         this.sub = modelToEditStore.subscribe(modelToEdit => {
-            // const modelToEdit = modelToEditStore.getState();
-            // if (modelToEdit) {
-                this.getProgramRuleVariablesForProgram(modelToEdit.program);
-            // }
+            this.getProgramRuleVariablesForProgram(modelToEdit.program);
         });
     }
 
     getProgramRuleVariablesForProgram(program) {
         if (program) {
             this.d2.models.programRuleVariables.list({ filter: `program.id:eq:${program.id}`, paging: false })
-                .then(list => this.setState({ programRuleVariables: list.toArray() }));
+                .then(list => {
+                    // If the component has been unmounted while the query was in progress, this.sub will have been deleted
+                    // ISN'T JAVASCRIPT GREAT??
+                    if (this.sub) {
+                        this.setState({ programRuleVariables: list.toArray() })
+                    }
+                });
         } else {
             this.setState({ programRuleVariables: [] });
         }
