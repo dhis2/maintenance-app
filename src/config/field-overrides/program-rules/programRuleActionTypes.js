@@ -24,7 +24,7 @@ const actionTypeFieldMapping = {
     'ASSIGN': {
         label: 'assign_value',
         required: ['data'],
-        optional: ['dataElement', 'content'],
+        optional: ['dataElement', 'trackedEntityAttribute', 'content'],
     },
     'SHOWWARNING': {
         label: 'show_warning',
