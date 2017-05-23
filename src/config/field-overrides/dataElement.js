@@ -18,4 +18,9 @@ export default new Map([
             ]
         }
     }],
+    ['categoryCombo', {
+        fieldOptions: {
+            queryParamFilter: ['dataDimensionType:eq:DISAGGREGATION', 'name:eq:default'],
+        },
+    }],
 ]);
