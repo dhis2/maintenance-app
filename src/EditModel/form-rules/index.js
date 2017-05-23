@@ -6,6 +6,7 @@ import systemSettingsStore from '../../App/systemSettingsStore';
 
 const whenOperatorMap = new Map([
     ['EQUALS', equalsOperator],
+    ['NOT_EQUALS', notEqualsOperator],
     ['HAS_VALUE', hasValueOperator],
     ['HAS_STRING_VALUE', hasStringValueOperator],
     ['ONEOF', oneOfOperator],
@@ -18,6 +19,7 @@ const operationsMap = new Map([
     ['SET_PROP', setProp],
     ['CHANGE_VALUE', changeValue],
     ['HIDE_FIELD', hideField],
+    ['SHOW_FIELD', showField],
 ]);
 
 export function getRulesForModelType(fieldName) {
@@ -42,9 +44,23 @@ function setProp(fieldConfig, operationParams, ruleResult) {
     return fieldConfig.props[operationParams.propName] = operationParams.elseValue;
 }
 
-function hideField(fieldConfig, operationParams, ruleResult) {
+function hideField(fieldConfig, operationParams, ruleResult, x) {
     if (ruleResult) {
+        fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
         fieldConfig.component = () => null;
+    } else if (fieldConfig.hiddenComponent) {
+        fieldConfig.component = fieldConfig.hiddenComponent;
+        delete fieldConfig.hiddenComponent;
+    }
+}
+
+function showField(fieldConfig, operationParams, ruleResult) {
+    if (ruleResult && fieldConfig.hiddenComponent) {
+        fieldConfig.component = fieldConfig.hiddenComponent;
+        delete fieldConfig.hiddenComponent;
+    } else {
+        fieldConfig.component = () => null;
+        fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
     }
 }
 
@@ -66,6 +82,10 @@ function hasStringValueOperator(value) {
 
 function equalsOperator(left, right) {
     return left === right;
+}
+
+function notEqualsOperator(left, right) {
+    return left !== right;
 }
 
 function oneOfOperator(value, list) {
