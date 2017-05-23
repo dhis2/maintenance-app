@@ -23,7 +23,8 @@ import {
     editProgramStageSectionName,
 } from './actions';
 
-const helpText = "If you create both a section form and a custom form, the system displays the custom form during data entry. Users who enter data can't select which form they want to use. In web-based data entry the order of display preference is: Custom form (if it exists), Section form (if it exists), Default form. Mobile devices do not support custom forms. In mobile-based data entry, the order fo display preference is: Section form (if it exists), Default from."
+const helpText = 'Custom forms takes presedence over section forms it both are present. Only section forms are supported by the Android app. If no custom or section form is defined, the basic form will be used.';
+const sectionFormIndex = 1;
 
 const styles = {
     tabContent: { padding: '3rem' },
@@ -49,7 +50,7 @@ class CreateDataEntryForm extends Component {
     render() {
         return (
             <Paper>
-                <Tabs initialSelectedIndex={0}>
+                <Tabs initialSelectedIndex={sectionFormIndex}>
                     { this.renderTab('Basic',
                         <DefaultForm
                             availableDataElements={this.props.availableDataElements}
