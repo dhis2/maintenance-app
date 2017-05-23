@@ -50,16 +50,19 @@ class ProgramRuleActionDialog extends React.Component {
                         .reduce((a, s) => { return a.concat(s); }, [])
                         .reduce((o, de) => { o[de.id] = de; return o; }, {})
                     )
-                    .map(de => ({ text: de.displayName, value: de.id, model: de }));
+                    .map(de => ({ text: de.displayName, value: de.id, model: de }))
+                    .sort((a, b) => a.text.localeCompare(b.text));
 
                 const programSections =
                     wrappedUpDataElements.programStages.toArray()
                         .reduce((a, s) => a.concat(s.programStageSections.toArray()), [])
-                        .map(s => ({ text: s.displayName, value: s.id, model: s }));
+                        .map(s => ({ text: s.displayName, value: s.id, model: s }))
+                        .sort((a, b) => a.text.localeCompare(b.text));
 
                 const programStages =
                     wrappedUpDataElements.programStages.toArray()
-                        .map(s => ({ text: s.displayName, value: s.id, model: s }));
+                        .map(s => ({ text: s.displayName, value: s.id, model: s }))
+                        .sort((a, b) => a.text.localeCompare(b.text));
 
                 const programTrackedEntityAttributes =
                     wrappedUpTrackedEntityAttributes.programTrackedEntityAttributes
@@ -67,7 +70,8 @@ class ProgramRuleActionDialog extends React.Component {
                             text: ptea.trackedEntityAttribute.displayName,
                             value: ptea.trackedEntityAttribute.id,
                             model: ptea.trackedEntityAttribute,
-                        }));
+                        }))
+                        .sort((a, b) => a.text.localeCompare(b.text));
 
                 this.setState({
                     programStages,
