@@ -14,6 +14,7 @@ import validationRule from './validationRule';
 import validationNotificationTemplate from './validationNotificationTemplate';
 import programIndicator from './programIndicator';
 import programNotificationTemplate from './programNotificationTemplate';
+import program from './program';
 import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
 
@@ -31,11 +32,12 @@ const overridesByType = {
     pushAnalysis,
     externalMapLayer,
     validationNotificationTemplate,
+    program,
     programIndicator,
     programNotificationTemplate,
-    validationRule,
     programRule,
     programRuleVariable,
+    validationRule,
 };
 
 export default {
