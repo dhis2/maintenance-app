@@ -29,10 +29,16 @@ const actionTypeFieldMapping = {
     'HIDESECTION': {
         label: 'hide_section',
         required: ['programStageSection'],
+        labelOverrides: {
+            programStageSection: 'program_stage_section_to_hide',
+        }
     },
     'HIDEPROGRAMSTAGE': {
         label: 'hide_program_stage',
         required: ['programStage'],
+        labelOverrides: {
+            programStage: 'program_stage_to_hide',
+        }
     },
     'ASSIGN': {
         label: 'assign_value',
