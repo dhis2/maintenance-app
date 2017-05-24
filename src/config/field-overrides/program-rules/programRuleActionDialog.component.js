@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DropDown from '../../../forms/form-fields/drop-down';
 import TextField from '../../../forms/form-fields/text-field';
 import programRuleActionTypes from './programRuleActionTypes';
+import ProgramRuleConditionField from './programRuleConditionField.component';
 import snackActions from '../../../Snackbar/snack.actions';
 
 
@@ -149,8 +150,6 @@ class ProgramRuleActionDialog extends React.Component {
         const currentActionType = ruleActionModel.programRuleActionType;
         const fieldMapping = programRuleActionTypes[currentActionType];
 
-        // TODO: Validators
-
         const fieldConfig = [
             {
                 name: 'programRuleActionType',
@@ -159,6 +158,7 @@ class ProgramRuleActionDialog extends React.Component {
                     labelText: `${this.getTranslation('action')} (*)`,
                     fullWidth: true,
                     options: modelDefinition.modelProperties.programRuleActionType.constants
+                        .filter(o => o !== 'CREATEEVENT' || (ruleActionModel.id !== undefined && ruleActionModel.programRuleActionType === 'CREATEEVENT'))
                         .map(o => ({ text: this.getTranslation(programRuleActionTypes[o].label), value: o })),
                     value: ruleActionModel.programRuleActionType,
                     isRequired: true,
@@ -168,7 +168,7 @@ class ProgramRuleActionDialog extends React.Component {
                 name: 'location',
                 component: DropDown,
                 props: {
-                    labelText: this.getTranslation('location'),
+                    labelText: this.getTranslation('display_widget'),
                     value: ruleActionModel.location,
                     options: [
                         { text: this.getTranslation('feedback_widget'), value: 'feedback' },
@@ -223,9 +223,7 @@ class ProgramRuleActionDialog extends React.Component {
                 name: 'content',
                 component: currentActionType === 'ASSIGN' ? DropDown : TextField,
                 props: {
-                    labelText: currentActionType === 'ASSIGN'
-                        ? this.getTranslation('program_rule_variable')
-                        : this.getTranslation('content'),
+                    labelText: this.getTranslation('content'),
                     value: ruleActionModel.content,
                     fullWidth: true,
                     options: currentActionType === 'ASSIGN' ? this.state.programVariables : undefined,
@@ -233,11 +231,13 @@ class ProgramRuleActionDialog extends React.Component {
             },
             {
                 name: 'data',
-                component: TextField,
+                component: ProgramRuleConditionField,
                 props: {
                     labelText: this.getTranslation('data'),
                     value: ruleActionModel.data,
                     fullWidth: true,
+                    hideOperators: true,
+                    quickAddLink: false,
                 },
             },
         ].map(field => {
@@ -255,6 +255,12 @@ class ProgramRuleActionDialog extends React.Component {
                     field.props.style = { display: 'none' };
                 }
             }
+            return field;
+        }).map((field) => {
+            if (fieldMapping && fieldMapping.labelOverrides && fieldMapping.labelOverrides[field.name]) {
+                field.props.labelText = this.getTranslation(fieldMapping.labelOverrides[field.name]);
+            }
+
             return field;
         });
 
