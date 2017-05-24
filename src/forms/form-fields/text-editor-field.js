@@ -17,7 +17,7 @@ const styles = {
         fontFamily: 'monospace',
         border: '1px solid rgba(0,0,0,0.1)',
         borderRadius: 3,
-        margin: '16px 0 8px',
+        marginTop: 3,
         padding: 4,
     },
 
@@ -27,12 +27,30 @@ class ProgramRuleConditionField extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
-
-        this.onChange = (editorState) => {
-            this.props.onChange( { target: { value: editorState.getCurrentContent().getPlainText() } } );
-            this.setState({editorState});
+        this.state = {
+            value: props.value,
         };
+
+        this.onChange = (event) => {
+            const value = event.target.value;
+            this.setState({ value });
+
+            if (this.hackyDebounceTimeout) {
+                clearTimeout(this.hackyDebounceTimeout);
+            }
+
+            this.hackyDebounceTimeout = setTimeout(() => {
+                this.props.onChange({ target: { value }});
+            }, 250);
+        };
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (newProps.value) {
+            this.setState({ value: newProps.value }, () => {
+                this.editor && this.editor.focus();
+            });
+        }
     }
 
     insertText(text) {
@@ -42,13 +60,11 @@ class ProgramRuleConditionField extends React.Component {
             const selectionEnd = this.editor.selectionEnd;
             this.props.onChange({
                 target: {
-                    value: `${value.substr(0, selectionStart)}${text}${value.substr(selectionEnd)}`,
+                    value: `${value.substr(0, selectionStart)}${text}${value.substr(selectionEnd)}`.trim(),
                 }
             });
-            setTimeout(() => {
-                // Take the cursor and shove it like riiiight after the text that was just putted
+            window.setTimeout(() => {
                 this.editor.setSelectionRange(selectionStart + text.length, selectionStart + text.length);
-                this.editor.focus();
             });
         }
     }
@@ -58,8 +74,8 @@ class ProgramRuleConditionField extends React.Component {
             <textarea
                 disabled={this.props.disabled}
                 style={styles.ed17x0r}
-                value={this.props.value}
-                onChange={this.props.onChange}
+                value={this.state.value}
+                onChange={this.onChange}
                 ref={(r) => this.editor = r}
             />
         );
