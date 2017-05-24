@@ -57,7 +57,7 @@ class AddNewSection extends Component {
                 onTouchTap={this.closeDialog}
             />,
             <FlatButton
-                label="Submit"
+                label="Add"
                 primary={true}
                 disabled={!this.state.sectionName}
                 onTouchTap={this.confirmAddNewSection}
