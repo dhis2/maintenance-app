@@ -53,9 +53,15 @@ class ProgramRuleConditionField extends React.Component {
                 marginTop: 32,
                 marginBottom: 32,
                 minHeight: 170,
+                minWidth: 680,
                 color: this.props.disabled ? 'rgba(0,0,0,0.3)' : 'inherit',
                 fontSize: 16,
                 width: '100%',
+            },
+
+            labelStyle: {
+                fontSize: 16,
+                color: 'rgba(0,0,0,0.3)',
             },
 
             leftWrap: {
@@ -86,19 +92,24 @@ class ProgramRuleConditionField extends React.Component {
             operatorButton: {
                 marginRight: 8,
                 marginTop: 8,
+                minWidth: 50,
             },
 
             operatorButtonSeparator: {
+                display: 'inline-block',
                 marginTop: 8,
+                marginLeft: 8,
+                whiteSpace: 'nowrap',
             },
 
             expand: {
                 cursor: 'pointer',
+                fontSize: 14,
             },
 
             innerWrapperButtonWrapper: {
                 float: 'right',
-                margin: '-11px 0 -18px',
+                margin: '-16px 0 -18px',
             },
         };
 
@@ -147,27 +158,29 @@ class ProgramRuleConditionField extends React.Component {
 
         return (
             <div style={Object.assign(styles.outerWrap, this.props.style)}>
-                {this.getTranslation('expression')}
+                <div style={styles.labelStyle}>{this.props.labelText}</div>
                 <div style={styles.rightWrap}>
                     <div onClick={expander('v')} style={styles.expand}>
                         <div style={makeArrowStyle('v')}>&#9656;</div>
                         {this.getTranslation('variables')}
-                        <div style={styles.innerWrapperButtonWrapper}>
-                            <Link
-                                to="/edit/programSection/programRuleVariable/add"
-                                target="_blank"
-                                rel="noopener nofollow">
+                        {this.props.quickAddLink && (
+                            <div style={styles.innerWrapperButtonWrapper}>
+                                <Link
+                                    to="/edit/programSection/programRuleVariable/add"
+                                    target="_blank"
+                                    rel="noopener nofollow">
+                                    <IconButton
+                                        iconClassName="material-icons"
+                                        disabled={this.props.disabled}
+                                    >add_circle_outline</IconButton>
+                                </Link>
                                 <IconButton
                                     iconClassName="material-icons"
+                                    onClick={refreshProgramRuleVariables}
                                     disabled={this.props.disabled}
-                                >add_circle_outline</IconButton>
-                            </Link>
-                            <IconButton
-                                iconClassName="material-icons"
-                                onClick={refreshProgramRuleVariables}
-                                disabled={this.props.disabled}
-                            >refresh</IconButton>
-                        </div>
+                                >refresh</IconButton>
+                            </div>
+                        )}
                     </div>
                     <div style={makeSectionStyle('v')}>
                         {this.state.programRuleVariables.map((v, i) => (
@@ -207,13 +220,16 @@ class ProgramRuleConditionField extends React.Component {
                         ref={(r) => this.editor = r}
                         disabled={this.props.disabled}
                     />
-                    <div>
-                        <div>{this.getTranslation('operators')}:</div>
-                        {op('+')} {op('-')} {op('*')} {op('/')} {op('%')}
-                        <div style={styles.operatorButtonSeparator}/>
-                        {op('>')} {op('>=')} {op('<')} {op('<=')} {op('==')} {op('!=')}
-                        <div style={styles.operatorButtonSeparator}/>
-                        {op('NOT', '!')} {op('AND', '&&')} {op('OR', '||')}
+                    <div style={{ marginLeft: -8 }}>
+                        <div style={styles.operatorButtonSeparator}>
+                            {op(' + ')} {op(' - ')} {op(' * ')} {op(' / ')} {op(' % ')}
+                        </div>
+                        <div style={styles.operatorButtonSeparator}>
+                            {op(' > ')} {op(' >= ')} {op(' < ')} {op(' <= ')} {op(' == ')} {op(' != ')}
+                        </div>
+                        <div style={styles.operatorButtonSeparator}>
+                            {op('NOT', ' ! ')} {op('AND', ' && ')} {op('OR', ' || ')}
+                        </div>
                     </div>
                 </div>
                 <div style={{ clear: 'both' }}/>
@@ -231,10 +247,12 @@ ProgramRuleConditionField.propTypes = {
     value: React.PropTypes.any,
     disabled: React.PropTypes.bool,
     style: React.PropTypes.object,
+    quickAddLink: React.PropTypes.bool,
 };
 
 ProgramRuleConditionField.defaultProps = {
     disabled: false,
+    quickAddLink: true,
 };
 
 export default ProgramRuleConditionField;
