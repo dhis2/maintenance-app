@@ -45,7 +45,7 @@ function EditProgramIndicator({ programIndicator, ...props }) {
         <div style={styles.navigationWrap}>
             <div style={styles.heading}>
                 <FormHeading schema={schema}>{camelCaseToUnderscores(schema)}</FormHeading>
-                <FormSubHeading>{programIndicatorName + ' for '  + programName}</FormSubHeading>
+                <FormSubHeading>{programIndicatorName && programName ? `${programIndicatorName} for ${programName}` : ''}</FormSubHeading>
             </div>
             <ProgramIndicatorStepper />
             <ProgramIndicatorStepperContent
