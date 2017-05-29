@@ -161,11 +161,12 @@ class ProgramRuleConditionField extends React.Component {
 
         const programRuleButtonMapperRenderer = (v, i) => {
             const varSymbol = v.programRuleVariableSourceType === 'TEI_ATTRIBUTE' ? 'A' : '#';
+            const _a = '{', a_ = '}'; // Workaround for IntelliJ parsing error
             const varLabel = (
                 <span>
-                    <span style={styles.varSyntax}>{varSymbol}{'{'}</span>
+                    <span style={styles.varSyntax}>{varSymbol}{_a}</span>
                     {v.displayName}
-                    <span style={styles.varSyntax}>{'}'}</span>
+                    <span style={styles.varSyntax}>{a_}</span>
                 </span>
             );
             const varText = `${varSymbol}{${v.displayName}}`;
