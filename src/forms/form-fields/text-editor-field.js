@@ -46,7 +46,7 @@ class ProgramRuleConditionField extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if (newProps.value) {
+        if (newProps.value && newProps.value !== this.props.value) {
             this.setState({ value: newProps.value }, () => {
                 this.editor && this.editor.focus();
             });
