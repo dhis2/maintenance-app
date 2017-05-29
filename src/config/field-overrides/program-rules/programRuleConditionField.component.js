@@ -113,7 +113,7 @@ class ProgramRuleConditionField extends React.Component {
             },
 
             varSyntax: {
-                opacity: 0.6,
+                opacity: 0.4,
             },
         };
 
@@ -139,7 +139,6 @@ class ProgramRuleConditionField extends React.Component {
             return () => this.setState({ expand: section });
         };
 
-        // Hack me some styles u-huh!
         const makeArrowStyle = (section) => ({
             display: 'inline-block',
             marginRight: 8,
