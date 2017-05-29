@@ -29,10 +29,10 @@ class ProgramRuleConditionField extends React.Component {
         if (program) {
             this.d2.models.programRuleVariables.list({ filter: `program.id:eq:${program.id}`, paging: false })
                 .then(list => {
-                    // If the component has been unmounted while the query was in progress, this.sub will have been deleted
-                    // ISN'T JAVASCRIPT GREAT??
+                    // If the component has been unmounted while the query was in progress,
+                    // this.sub will have been deleted
                     if (this.sub) {
-                        this.setState({ programRuleVariables: list.toArray() })
+                        this.setState({ programRuleVariables: list.toArray() });
                     }
                 });
         } else {
@@ -111,6 +111,10 @@ class ProgramRuleConditionField extends React.Component {
                 float: 'right',
                 margin: '-16px 0 -18px',
             },
+
+            varSyntax: {
+                opacity: 0.6,
+            },
         };
 
         const pushText = (text) => {
@@ -156,6 +160,28 @@ class ProgramRuleConditionField extends React.Component {
             e.stopPropagation();
         };
 
+        const programRuleButtonMapperRenderer = (v, i) => {
+            const varSymbol = v.programRuleVariableSourceType === 'TEI_ATTRIBUTE' ? 'A' : '#';
+            const varLabel = (
+                <span>
+                    <span style={styles.varSyntax}>{varSymbol}{'{'}</span>
+                    {v.displayName}
+                    <span style={styles.varSyntax}>{'}'}</span>
+                </span>
+            );
+            const varText = `${varSymbol}{${v.displayName}}`;
+            return (
+                <RaisedButton
+                    key={i}
+                    label={varLabel}
+                    labelStyle={{ textTransform: 'none' }}
+                    style={styles.insertButton}
+                    disabled={this.props.disabled}
+                    onClick={makeTextPusher(varText)}
+                />
+            );
+        };
+
         return (
             <div style={Object.assign(styles.outerWrap, this.props.style)}>
                 <div style={styles.labelStyle}>{this.props.labelText}</div>
@@ -183,16 +209,7 @@ class ProgramRuleConditionField extends React.Component {
                         )}
                     </div>
                     <div style={makeSectionStyle('v')}>
-                        {this.state.programRuleVariables.map((v, i) => (
-                            <RaisedButton
-                                key={i}
-                                label={`#{${v.displayName}}`}
-                                labelStyle={{ textTransform: 'none' }}
-                                style={styles.insertButton}
-                                disabled={this.props.disabled}
-                                onClick={makeTextPusher(`#{${v.displayName}}`)}
-                            />
-                        ))}
+                        {this.state.programRuleVariables.map(programRuleButtonMapperRenderer)}
                     </div>
                     <div onClick={expander('f')} style={styles.expand}>
                         <div style={makeArrowStyle('f')}>&#9656;</div>
