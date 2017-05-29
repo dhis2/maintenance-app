@@ -238,13 +238,13 @@ const routes = (
                     path="organisationUnit/:modelId"
                     component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                     onEnter={loadOrgUnitObject}
-                    disableSidebar
+                    hideSidebar
                 />
                 <Route
                     path="optionSet/:modelId"
                     component={delayRender(() => System.import('./EditModel/EditOptionSet.component'))}
                     onEnter={loadOptionSetObject}
-                    disableSidebar
+                    hideSidebar
                 >
                     <IndexRoute />
                     <Route path=":activeView"/>
@@ -253,38 +253,38 @@ const routes = (
                     path="program/:modelId"
                     component={delayRender(() => System.import('./EditModel/event-program/EditEventProgram.component'))}
                     onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
-                    disableSidebar
+                    hideSidebar
                 />
                 <Route
                     path="programIndicator/:modelId"
                     component={delayRender(() => System.import('./EditModel/program-indicator/EditProgramIndicator'))}
                     onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator, resetActiveStep)}
-                    disableSidebar
+                    hideSidebar
                 />
                 <Route
                     path=":modelType/:modelId/sections"
                     component={delayRender(() => System.import('./EditModel/EditDataSetSections.component'))}
                     onEnter={loadObject}
-                    disableSidebar
+                    hideSidebar
                 />
                 <Route
                     path=":modelType/:modelId/dataEntryForm"
                     component={delayRender(() => System.import('./EditModel/EditDataEntryForm.component'))}
                     onEnter={loadObject}
-                    disableSidebar
+                    hideSidebar
                 />
                 <Route
                     path=":modelType/:modelId"
                     component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                     onEnter={loadObject}
-                    disableSidebar
+                    hideSidebar
                 />
             </Route>
             <Route
                 path="clone/:groupName/:modelType/:modelId"
                 component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
                 onEnter={cloneObject}
-                disableSidebar
+                hideSidebar
             />
             <Route
                 path="group-editor"
