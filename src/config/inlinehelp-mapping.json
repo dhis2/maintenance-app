@@ -15,6 +15,12 @@
     "/edit/dataSetSection/dataSet": "/en/user/html/manage_data_set.html#create_data_set",
     "/list/dataSetSection/dataSet": "/en/user/html/manage_data_set.html",
 
+    "/edit/indicatorSection/programIndicatorGroup": "/en/user/html/configure_program_indicator.html#create_program_indicator_group",
+    "/list/indicatorSection/programIndicatorGroup": "/en/user/html/configure_program_indicator.html",
+    "/edit/indicatorSection/programIndicator": "/en/user/html/configure_program_indicator.html#create_program_indicator",
+    "/list/indicatorSection/programIndicator": "/en/user/html/configure_program_indicator.html",
+
+    
     "/edit/indicatorSection/indicatorGroupSet": "/en/user/html/manage_indicator.html#create_indicator_group_set",
     "/edit/indicatorSection/indicatorGroup": "/en/user/html/manage_indicator.html#create_indicator_group",
     "/edit/indicatorSection/indicatorType": "/en/user/html/manage_indicator.html#create_indicator_type",
