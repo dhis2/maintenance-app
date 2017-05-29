@@ -269,6 +269,9 @@ class ProgramRuleActionDialog extends React.Component {
                 open={this.props.open}
                 onRequestClose={this.props.onRequestClose}
                 title={this.getTranslation('define_program_rule_action')}
+                autoScrollBodyContent
+                actionsContainerStyle={{ marginTop: 0 }}
+                titleStyle={{ marginBottom: 0 }}
                 actions={[
                     <FlatButton
                         label={this.getTranslation('cancel')}
