@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Action from 'd2-ui/lib/action/Action';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
 import organisationUnitLevelsStore from './organisationUnitLevels.store';
 import TextField from 'material-ui/TextField/TextField';
@@ -144,8 +144,13 @@ actions.initOrgUnitLevels
         });
     });
 
+// FIXME: Weird solution to make an action usable with Observable.combineLatest. Also actions are never unsubscribed.
+const fieldUpdateSubject$ = new ReplaySubject(1);
+actions.fieldUpdate
+    .subscribe((action) => fieldUpdateSubject$.next(action));
+
 Observable.combineLatest(
-    actions.fieldUpdate,
+    fieldUpdateSubject$,
     organisationUnitLevelFormFields$,
     (action, organisationUnitLevelFormFields) => ({ action, organisationUnitLevelFormFields })
 )
@@ -154,7 +159,7 @@ Observable.combineLatest(
         storeState: organisationUnitLevelsStore.getState(),
         organisationUnitLevelFormFields,
     }))
-    .subscribe(({ storeState, fieldName, fieldValue, organisationUnitLevel, organisationUnitLevelFormFields }) => {
+    .subscribe(({ storeState = { organisationUnitLevels: [] }, fieldName, fieldValue, organisationUnitLevel, organisationUnitLevelFormFields }) => {
         const organisationUnitToChangeValueFor = storeState.organisationUnitLevels
             .find(ouLevel => ouLevel === organisationUnitLevel);
 

@@ -60,6 +60,8 @@ function OrganisationUnitLevels(props, context) {
         },
     };
 
+    console.log(props.fieldsForOrganisationUnitLevel);
+
     const fieldRows = props.fieldsForOrganisationUnitLevel.map((fieldsForLevel, index) => {
         let translateButton = null;
         if (fieldsForLevel.organisationUnitLevel.id && canEdit) {
@@ -82,7 +84,13 @@ function OrganisationUnitLevels(props, context) {
                             disabled: !canEdit,
                         },
                     }))}
-                    onUpdateField={(fieldName, fieldValue) => actions.fieldUpdate({ organisationUnitLevel: fieldsForLevel.organisationUnitLevel, fieldName, fieldValue })}
+                    onUpdateField={(fieldName, fieldValue) => {
+                        actions.fieldUpdate({
+                            organisationUnitLevel: fieldsForLevel.organisationUnitLevel,
+                            fieldName,
+                            fieldValue,
+                        });
+                    }}
                     onUpdateFormStatus={(formStatus) => actions.updateFormStatus({ levelIndex: index, formStatus })}
                 />
                 {translateButton}
