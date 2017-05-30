@@ -198,7 +198,6 @@ const fieldOrderByName = new Map([
         'name',
         'shortName',
         'description',
-        'version',
         'categoryCombo',
         'workflow',
         'completeEventsExpiryDays',
