@@ -23,7 +23,6 @@ import {
     editProgramStageSectionName,
 } from './actions';
 
-const helpText = 'Custom forms takes presedence over section forms it both are present. Only section forms are supported by the Android app. If no custom or section form is defined, the basic form will be used.';
 const sectionFormIndex = 1;
 
 const styles = {
@@ -78,11 +77,14 @@ class CreateDataEntryForm extends Component {
     }
 }
 
-const HelpText = () => (
+const HelpText = (_, { d2 }) => (
     <div style={styles.helpText} >
-        { helpText }
+        { d2.i18n.getTranslation('program_forms_help_text') }
     </div>
 );
+HelpText.contextTypes = {
+    d2: PropTypes.object,
+};
 
 CreateDataEntryForm.propTypes = {
     onChangeDefaultOrder: PropTypes.func.isRequired,
