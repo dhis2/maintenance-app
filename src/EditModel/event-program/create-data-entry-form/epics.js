@@ -104,6 +104,9 @@ const addProgramStageSection = (store) => (action$) => {
 
             // Add the section to the programStage, otherwise the section won't be associated with the programStage
             newSection.programStage = programStage;
+            // Add the inverse relationship so the section gets associated correctly
+            // Using the  programStageSection -> programStage relationship is not sufficient and the programStage -> programStageSection is the required relationship.Th
+            programStage.programStageSections.add(newSection);
 
             const updatedProgramStageSections = getOr([], 'programStageSections', state).concat(newSection);
 
