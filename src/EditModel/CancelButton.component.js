@@ -5,7 +5,7 @@ import modelToEditStore from '../EditModel/modelToEditStore';
 
 function CancelButton({ onClick, isPristine, ...props }, context) {
     const onClickWithConfirm = (...params) => {
-        const isDirty = modelToEditStore.getState().dirty;
+        const isDirty = modelToEditStore.getState() && modelToEditStore.getState().dirty;
 
         if (!isDirty) {
             onClick(...params);
@@ -20,7 +20,7 @@ function CancelButton({ onClick, isPristine, ...props }, context) {
         <Button
             {...props}
             onClick={onClickWithConfirm}
-            secondary={modelToEditStore.getState().dirty}
+            secondary={modelToEditStore.getState() && modelToEditStore.getState().dirty}
             label={context.d2.i18n.getTranslation('cancel')}
         />
     );

@@ -7,7 +7,7 @@ import modelToEditStore from '../EditModel/modelToEditStore';
 function BackButton(props, context) {
     const { tooltip, onClick, ...otherProps } = props;
     const onClickWithConfirm = (...params) => {
-        const isDirty = modelToEditStore.getState().dirty;
+        const isDirty = modelToEditStore.getState() && modelToEditStore.getState().dirty;
 
         if (!isDirty) {
             onClick(...params);
