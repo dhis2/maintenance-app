@@ -43,7 +43,8 @@ function loadEventProgramMetadataByProgramId(programId) {
             programStages: [{
                 id: programStageUid,
                 programStageDataElements: [],
-                notificationTemplates: []
+                programStageSections: [],
+                notificationTemplates: [],
             }],
         };
 
