@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import { withState, withProps, compose, onlyUpdateForKeys } from 'recompose';
 import { Row } from 'd2-ui/lib/layout';
+import Translate from 'd2-ui/lib/i18n/Translate.component';
 import ValidationRuleExpressionDialog from './ValidationRuleExpressionDialog';
 
 const styles = {
@@ -21,7 +22,7 @@ function ValidationRuleExpressionField({ value = {}, onButtonClick, open, close,
     return (
         <div style={styles.field}>
             <Row>
-                <RaisedButton style={styles.expressionButton} onClick={onButtonClick}>{buttonLabel}</RaisedButton>
+                <RaisedButton style={styles.expressionButton} onClick={onButtonClick}><Translate>{buttonLabel}</Translate></RaisedButton>
                 <div style={styles.expressionDescription}>{value.description}</div>
             </Row>
             <ValidationRuleExpressionDialog
@@ -36,6 +37,7 @@ function ValidationRuleExpressionField({ value = {}, onButtonClick, open, close,
                     close();
                 }}
                 value={value}
+                buttonLabel={buttonLabel}
             />
         </div>
     );

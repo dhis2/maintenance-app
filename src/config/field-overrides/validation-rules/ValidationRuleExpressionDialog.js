@@ -19,7 +19,8 @@ const styles = {
     },
 };
 
-function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, updateExpressionDetails, expressionStatusStore, onExpressionChanged, onMissingStrategyChanged, onSlidingWindowChanged }, { d2 }) {
+function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, buttonLabel, updateExpressionDetails, expressionStatusStore, onExpressionChanged, onMissingStrategyChanged, onSlidingWindowChanged }, { d2 }) {
+    console.log(buttonLabel);
     return (
         <Dialog
             open={open}
@@ -27,7 +28,7 @@ function ValidationRuleExpressionDialog({ open, close, actions, expressionDetail
             modal
             actions={actions}
             contentStyle={styles.customContentStyle}
-            title={d2.i18n.getTranslation('left_side')}
+            title={d2.i18n.getTranslation(buttonLabel)}
             autoScrollBodyContent
         >
             <MissingValueStrategy
@@ -55,10 +56,11 @@ ValidationRuleExpressionDialog.contextTypes = {
 const enhanceExpressionDialog = compose(
     withState('expressionDetails', 'updateExpressionDetails', ({ value }) => ({...value})),
     withState('expressionStatusStore', 'updateStore', () => Store.create()),
-    withProps(({ close, save, value, store, expressionDetails, expressionStatusStore, updateExpressionDetails }) => {
+    withProps(({ close, save, value, store, expressionDetails, expressionStatusStore, updateExpressionDetails, buttonLabel }) => {
         const isExpressionValid = isUndefined(expressionStatusStore.getState()) || expressionStatusStore.getState().status === 'OK';
 
         return ({
+            buttonLabel,
             actions: [
                 <FlatButton
                     onClick={close}
