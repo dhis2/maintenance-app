@@ -38,7 +38,6 @@ const styles = {
             flexDirection: 'row',
             padding: '2rem',
             border: `1px solid ${getColorForExpressionStatus(status)}`,
-            borderRadius: '1rem',
             lineHeight: '1.5rem',
             margin: '1rem 0 2rem',
             backgroundColor: getBackgroundColorForExpressionStatus(status),
@@ -113,7 +112,7 @@ function ProgramIndicatorExpression({d2, onChange, status, model, value: formula
                     />
                     {status.status == ExpressionStatus.VALID ? <div style={styles.status.container(status.status)}>
                         <ExpressionStatusIcon status={status.status} />
-                        <span style={{ padding: '.25rem' }}>{status.message}</span>
+                        <span style={{ padding: '.25rem', paddingLeft: '1rem' }}>{status.message}</span>
                     </div> : null}
                 </Paper>
                 <div style={styles.programIndicatorExpression.options}>

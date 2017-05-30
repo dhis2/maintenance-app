@@ -1,15 +1,15 @@
 import mapProps from 'recompose/mapProps';
 import branch from 'recompose/branch';
-import MoodBadIcon from 'material-ui/svg-icons/social/mood-bad';
-import MoodIcon from 'material-ui/svg-icons/social/mood';
+import NotInterestedIcon from 'material-ui/svg-icons/av/not-interested';
+import CheckCircleIcon from 'material-ui/svg-icons/action/check-circle';
 import renderComponent from 'recompose/renderComponent';
 import nest from 'recompose/nest';
 import { compose } from 'lodash/fp';
 import { green500, red500, red50, green50, orange50, orange500 } from 'material-ui/styles/colors';
 
-const ExpressionInvalidIcon = nest('span', mapProps(props => ({ color: red500 }))(MoodBadIcon));
-const ExpressionValidIcon = nest('span', mapProps(props => ({ color: green500 }))(MoodIcon));
-const ExpressionPendingIcon = nest('span', mapProps(props => ({ color: orange500 }))(MoodIcon));
+const ExpressionInvalidIcon = nest('span', mapProps(props => ({ color: red500 }))(NotInterestedIcon));
+const ExpressionValidIcon = nest('span', mapProps(props => ({ color: green500 }))(CheckCircleIcon));
+const ExpressionPendingIcon = nest('span', mapProps(props => ({ color: orange500 }))(CheckCircleIcon));
 
 const ExpressionStatusIcon = compose(
     branch(props => props.status === ExpressionStatus.VALID, renderComponent(ExpressionValidIcon)),
