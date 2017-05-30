@@ -10,7 +10,7 @@ import {
 } from './actions';
 import { notifyUser } from '../actions';
 import programIndicatorStore from './programIndicatorStore';
-import { get, compose } from 'lodash/fp';
+import { get, getOr, compose, first, flatten, values, filter, identity } from 'lodash/fp';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import { getInstance } from 'd2/lib/d2';
@@ -49,10 +49,23 @@ export const programIndicatorSave = programIndicatorStore => action$ => action$
         return Observable.fromPromise(programIndicator.save())
             .mapTo(saveProgramIndicatorSuccess())
             .do(() => goToAndScrollUp(`/list/indicatorSection/programIndicator`))
-            .catch(error => Observable.from(saveProgramIndicatorError()));
+            .catch(error => Observable.of(saveProgramIndicatorError(error)));
     });
 
-export const programModelSaveResponses = action$ => Observable
+const extractFirstMessageFromErrorReports = compose(get('message'), first, getOr([], 'errorReports'), get('response'));
+const extractFirstMessageFromMessages = compose(get('message'), first, get('messages'));
+const firstNotUndefinedIn = compose(first, filter(identity));
+
+function extractFirstErrorMessage(response) {
+    const messages = [
+        extractFirstMessageFromErrorReports(response),
+        extractFirstMessageFromMessages(response),
+    ];
+
+    return firstNotUndefinedIn(messages);
+}
+
+export const programIndicatorModelSaveResponses = action$ => Observable
     .merge(
         action$
             .ofType(PROGRAM_INDICATOR_SAVE_SUCCESS)
@@ -60,8 +73,7 @@ export const programModelSaveResponses = action$ => Observable
         action$
             .ofType(PROGRAM_INDICATOR_SAVE_ERROR)
             .map(action => {
-                const getFirstErrorMessageFromAction = compose(get('message'), first, flatten, values, getOr([], 'errors'), first);
-                const firstErrorMessage = getFirstErrorMessageFromAction(action.payload);
+                const firstErrorMessage = extractFirstErrorMessage(action.payload);
 
                 return notifyUser({ message: firstErrorMessage, translate: false });
             })
@@ -72,6 +84,6 @@ export default (function createEpicsForStore(store) {
         programIndicatorLoad(store),
         programIndicatorEdit(store),
         programIndicatorSave(store),
-        programModelSaveResponses,
+        programIndicatorModelSaveResponses,
     );
 }(programIndicatorStore));
