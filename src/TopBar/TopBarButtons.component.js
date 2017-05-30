@@ -8,10 +8,13 @@ function goToGroupEditor() {
     goToRoute('/group-editor');
 }
 
-function TopBarButton({ icon, toolTipText, onClick }, { d2 }) {
+function TopBarButton({ icon, toolTipText, onClick, disabled }, { d2 }) {
     const styles = {
         buttonStyle: {
-            color: '#666',
+            color: 'rgba(0,0,0,0.6)',
+        },
+        disabledButtonStyle: {
+            color: 'rgba(0,0,0,0.2)',
         },
     };
 
@@ -21,7 +24,8 @@ function TopBarButton({ icon, toolTipText, onClick }, { d2 }) {
             tooltip={d2.i18n.getTranslation(toolTipText)}
             tooltipPosition="bottom-left"
             onClick={onClick}
-            iconStyle={styles.buttonStyle}
+            iconStyle={disabled ? styles.disabledButtonStyle : styles.buttonStyle}
+            disabled={disabled}
         >
             {icon}
         </IconButton>
@@ -42,7 +46,7 @@ function TopBarButtons(props, { d2 }) {
 
     return (
         <div>
-            {showGroupEditor() ? <GroupEditorButton /> : renderNothing()}
+            {showGroupEditor() ? <GroupEditorButton disabled={props.disabled} /> : renderNothing()}
         </div>
     );
 }

@@ -37,7 +37,7 @@ function EditEventProgram(props) {
     return (
         <div>
             <div style={styles.heading}>
-                <FormHeading schema={schema}>{camelCaseToUnderscores(schema)}</FormHeading>
+                <FormHeading schema={schema} groupName={groupName}>{camelCaseToUnderscores(schema)}</FormHeading>
                 <FormSubHeading>{props.model.displayName}</FormSubHeading>
             </div>
             <div>

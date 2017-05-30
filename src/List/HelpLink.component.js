@@ -80,7 +80,8 @@ export default function HelpLink({ schema }, { d2 }) {
                 tooltip={d2.i18n.getTranslation('open_user_guide')}
                 tooltipPosition="bottom-center"
                 iconClassName="material-icons"
-                >
+                iconStyle={{ top: -2 }}
+            >
                 help_outline
             </IconButton>
         )
