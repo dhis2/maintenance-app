@@ -43,10 +43,11 @@ const actionTypeFieldMapping = {
     'ASSIGN': {
         label: 'assign_value',
         required: ['data'],
-        optional: ['dataElement', 'content'],
+        optional: ['dataElement', 'trackedEntityAttribute', 'content'],
         labelOverrides: {
             content: 'program_rule_variable_to_assign_to',
             dataElement: 'data_element_to_assign_to',
+            trackedEntityAttribute: 'tracked_entity_attribute_to_assign_to',
             data: 'expression_to_evaluate_and_assign',
         },
     },
