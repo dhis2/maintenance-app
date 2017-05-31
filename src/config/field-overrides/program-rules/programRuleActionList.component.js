@@ -15,7 +15,6 @@ class ProgramRuleActionsList extends React.Component {
         this.d2 = context.d2;
         this.getTranslation = this.d2.i18n.getTranslation.bind(context.d2.i18n);
         this.addProgramRuleAction = this.addProgramRuleAction.bind(this);
-        this.saveProgramRuleAction = this.saveProgramRuleAction.bind(this);
 
         this.state = {
             dialogOpen: false,
