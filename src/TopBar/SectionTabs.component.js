@@ -41,7 +41,14 @@ function SectionTabs(props) {
             flex: 1,
         },
         tabStyle: {
-            color: '#666',
+            color: 'rgba(0,0,0,0.6)',
+        },
+        disabledTabStyle: {
+            color: 'rgba(0,0,0,0.2)',
+        },
+        inkBarStyle: {},
+        disabledInkBarStyle: {
+            opacity: 0.4,
         },
     };
 
@@ -49,7 +56,8 @@ function SectionTabs(props) {
         .map((section, index) => (
             <Tab
                 key={index}
-                style={styles.tabStyle}
+                style={props.disabled ? styles.disabledTabStyle : styles.tabStyle}
+                disabled={props.disabled}
                 label={section.label}
                 value={section.key}
             />
@@ -63,12 +71,13 @@ function SectionTabs(props) {
                     onChange={props.changeSection}
                     style={styles.tabsStyle}
                     tabItemContainerStyle={styles.tabItemContainerStyle}
+                    inkBarStyle={props.disabled ? styles.disabledInkBarStyle : styles.inkBarStyle}
                 >
                     {sections}
                 </Tabs>
             </div>
             <div style={styles.extraButtons}>
-                <TopBarButtons />
+                <TopBarButtons disabled={props.disabled} />
             </div>
         </div>
     );

@@ -64,7 +64,9 @@ class EditOptionSet extends Component {
         return (
             <div>
                 <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '1rem' }}>
-                    <FormHeading schema="optionSet">{camelCaseToUnderscores(params.modelType)}</FormHeading>
+                    <FormHeading schema="optionSet" groupName="otherSection">
+                        {camelCaseToUnderscores(params.modelType)}
+                    </FormHeading>
                 </div>
                 <Paper>
                     <Tabs

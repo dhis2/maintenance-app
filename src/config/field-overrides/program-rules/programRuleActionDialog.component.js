@@ -279,7 +279,7 @@ class ProgramRuleActionDialog extends React.Component {
                         onClick={this.props.onRequestClose}
                     />,
                     <RaisedButton
-                        label={this.getTranslation('save')}
+                        label={this.getTranslation('commit')}
                         primary
                         style={{ marginRight: 16 }}
                         onClick={this.save}
@@ -300,7 +300,6 @@ ProgramRuleActionDialog.propTypes = {
     open: React.PropTypes.bool.isRequired,
     onRequestClose: React.PropTypes.func.isRequired,
     onUpdateRuleActionModel: React.PropTypes.func.isRequired,
-    onSave: React.PropTypes.func.isRequired,
     program: React.PropTypes.object.isRequired,
     ruleActionModel: React.PropTypes.object.isRequired,
 };

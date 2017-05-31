@@ -33,30 +33,6 @@ class ProgramRuleActionsList extends React.Component {
         });
     }
 
-    async saveProgramRuleAction() {
-        const programRuleActionModel = this.state.currentRuleActionModel;
-
-        const programRuleActions = Array.isArray(this.props.model.programRuleActions)
-            ? this.props.model.programRuleActions
-            : this.props.model.programRuleActions.toArray();
-
-        if (!programRuleActionModel.id) {
-            const uid = (await this.d2.Api.getApi().get('/system/id')).codes[0];
-            programRuleActionModel.id = uid;
-            this.props.onChange({ target: { value: this.props.model.programRuleActions.add(programRuleActionModel) }});
-        } else {
-            const newActions = programRuleActions.map(a => {
-                if (a.id === programRuleActionModel.id) {
-                    return programRuleActionModel;
-                }
-
-                return a;
-            });
-            console.warn('New actions:', newActions);
-            this.props.onChange({ target: { value: newActions }});
-        }
-    }
-
     render()
     {
         const programRuleActions = this.props.model[this.props.referenceProperty].toArray();
@@ -170,9 +146,40 @@ class ProgramRuleActionsList extends React.Component {
             });
         };
 
+        const styles = {
+            wrap: Object.assign({
+                marginTop: 16,
+                marginBottom: 16,
+                position: 'relative',
+                width: '100%',
+            }, this.props.style),
+            fab: {
+                position: 'absolute',
+                right: 64,
+                bottom: 0,
+                zIndex: 1000,
+            },
+            note: {
+                whiteSpace: 'nowrap',
+                width: '100%',
+                textOverflow: 'ellipsis',
+                overflowX: 'hidden',
+                fontStyle: 'italic',
+            },
+            b: {
+                marginRight: 4,
+            },
+        };
+
+        // TODO: Instead of hackily setting model.dirty here, this should probably be handled by D2
+        const onChangeMakeDirtyHandler = (...p) => {
+            this.props.onChange(...p);
+            this.props.model.dirty = true;
+        };
+
         return (
-            <div style={Object.assign({ marginTop: 16, marginBottom: 16, position: 'relative', width: '100%' }, this.props.style)}>
-                <div style={{ position: 'absolute', right: 64, bottom: 0, zIndex: 1000 }}>
+            <div style={styles.wrap}>
+                <div style={styles.fab}>
                     <FloatingActionButton onClick={this.addProgramRuleAction} disabled={this.props.disabled}>
                         <FontIcon className="material-icons">add</FontIcon>
                     </FloatingActionButton>
@@ -185,7 +192,6 @@ class ProgramRuleActionsList extends React.Component {
                         delete: deleteAction,
                     }}
                     primaryAction={editAction}
-                    style={{ }}
                 />
                 {this.state.dialogOpen &&
                     <ProgramRuleActionDialog
@@ -194,11 +200,10 @@ class ProgramRuleActionsList extends React.Component {
                         program={this.props.model.program}
                         parentModel={this.props.model}
                         onRequestClose={() => this.setState({ dialogOpen: false })}
-                        onChange={this.props.onChange}
+                        onChange={onChangeMakeDirtyHandler}
                         onUpdateRuleActionModel={(field, value) => this.setState({
                             programRuleAction: Object.assign(this.state.currentRuleActionModel, { [field]: value }),
                         })}
-                        onSave={this.saveProgramRuleAction}
                     />
                 }
             </div>

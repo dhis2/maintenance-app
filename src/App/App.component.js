@@ -82,7 +82,7 @@ class App extends AppWithD2 {
             <Provider store={store}>
                 <div>
                     <HeaderBar />
-                    {true && <SectionTabsWrap />}
+                    <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
                         <TwoPanelLayout>
                             <SideBar activeGroupName={this.props.params.groupName}
