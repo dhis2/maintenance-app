@@ -332,7 +332,6 @@ const fieldOrderByName = new Map([
     ['programRuleVariable', [
         'program',
         'name',
-        'code',
         'useCodeForOptionSet',
         'programRuleVariableSourceType',
         'programStage',

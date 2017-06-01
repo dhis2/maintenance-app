@@ -40,7 +40,7 @@ class ProgramRuleActionDialog extends React.Component {
                 }),
                 this.d2.models.programRuleVariables.list({
                     filter: `program.id:eq:${this.props.program.id}`,
-                    fields: 'id,displayName',
+                    fields: 'id,displayName,programRuleVariableSourceType',
                     paging: false,
                 }),
             ]).then(([ wrappedUpDataElements, wrappedUpTrackedEntityAttributes, programVariables ]) => {
@@ -79,10 +79,13 @@ class ProgramRuleActionDialog extends React.Component {
                     programSections,
                     programDataElements,
                     programTrackedEntityAttributes,
-                    programVariables: programVariables.toArray().map(v => ({
-                        text: `#{${v.displayName}}`,
-                        value: `#{${v.displayName}}`,
-                    })),
+                    programVariables: programVariables.toArray().map(v => {
+                        const sign = v.programRuleVariableSourceType === 'TEI_ATTRIBUTE' ? 'A' : '#';
+                        return {
+                            text: `${sign}{${v.displayName}}`,
+                            value: `${sign}{${v.displayName}}`,
+                        };
+                    }),
                 });
             }).catch(err => {
                 this.props.onRequestClose();
@@ -275,13 +278,12 @@ class ProgramRuleActionDialog extends React.Component {
                 actions={[
                     <FlatButton
                         label={this.getTranslation('cancel')}
-                        style={{ marginRight: 8 }}
+                        style={{ marginRight: 16 }}
                         onClick={this.props.onRequestClose}
                     />,
                     <RaisedButton
                         label={this.getTranslation('commit')}
                         primary
-                        style={{ marginRight: 16 }}
                         onClick={this.save}
                     />
                 ]}
