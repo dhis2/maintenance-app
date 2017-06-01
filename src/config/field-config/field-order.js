@@ -201,6 +201,7 @@ const fieldOrderByName = new Map([
         'categoryCombo',
         'workflow',
         'completeEventsExpiryDays',
+        'expiryPeriodType',
         'expiryDays',
     ]],
     ['trackedEntityAttribute', [
