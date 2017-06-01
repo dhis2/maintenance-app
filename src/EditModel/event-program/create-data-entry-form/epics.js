@@ -93,7 +93,8 @@ const addProgramStageSection = (store) => (action$) => {
             const state = store.getState();
             const newSectionName = get('payload.newSectionName', action);
             const programStageSections = getOr([], 'programStageSections', state);
-            const sortOrder = get('sortOrder', maxBy(section => get('sortOrder', section), programStageSections)) + 1;
+            const sortOrder = getOr(-1, 'sortOrder', maxBy(section => get('sortOrder', section), programStageSections)) + 1;
+
             const programStage = get('programStages[0]', state);
 
             // Create new section model and set the properties we can
@@ -109,8 +110,6 @@ const addProgramStageSection = (store) => (action$) => {
             programStage.programStageSections.add(newSection);
 
             const updatedProgramStageSections = getOr([], 'programStageSections', state).concat(newSection);
-
-            console.warn('updatedProgramStageSections:', updatedProgramStageSections);
 
             store.setState({
                 programStageSections: updatedProgramStageSections,
