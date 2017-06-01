@@ -120,6 +120,9 @@ const typeDetails = {
         filters: ['domainType', 'valueType', 'categoryCombo'],
         columns: ['displayName', 'domainType', 'valueType', 'categoryCombo[displayName]', 'lastUpdated'],
     },
+    'dataElementGroupSet': {
+        columns: ['displayName', 'compulsory', 'publicAccess', 'lastUpdated'],
+    },
     'dataSet': {
         filters: ['formType'],
         columns: ['displayName', 'formType', 'periodType', 'publicAccess', 'lastUpdated'],

@@ -33,6 +33,7 @@ import HelpLink from './HelpLink.component';
 import Dropdown from "../forms/form-fields/drop-down";
 import DropdownAsync from '../forms/form-fields/drop-down-async';
 import { getFilterFieldsForType } from '../config/maintenance-models';
+import './listValueRenderers';
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
