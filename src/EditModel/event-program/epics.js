@@ -36,15 +36,14 @@ function loadEventProgramMetadataByProgramId(programId) {
             programs: [{
                 id: programUid,
                 programStages: [
-                    { id: programStageUid }
+                    {
+                        id: programStageUid,
+                        programStageDataElements: [],
+                        notificationTemplates: [],
+                        programStageSections: [],
+                    }
                 ],
                 organisationUnits: [],
-            }],
-            programStages: [{
-                id: programStageUid,
-                programStageDataElements: [],
-                programStageSections: [],
-                notificationTemplates: [],
             }],
         };
 
@@ -90,12 +89,8 @@ function loadEventProgramMetadataByProgramId(programId) {
         .flatMap(api => Observable.fromPromise(api.get([
             'metadata',
             '?fields=:owner,displayName',
-            `&programs:filter=id:eq:${programId}&programStages=true`,
-            `&programs:fields=${programFields}`,
-            `&programStages:filter=program.id:eq:${programId}`,
-            '&programStages:fields=:owner,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner]',
-            `&programStageSections:filter=programStage.program.id:eq:${programId}`,
-            `&programStageSections:fields=:owner,displayName,dataElements[id,displayName]`,
+            `&programs:filter=id:eq:${programId}`,
+            `&programs:fields=${programFields},programStages[:owner,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
             `&dataElements:fields=id,displayName,valueType,optionSet`,
             `&dataElements:filter=domainType:eq:TRACKER`,
         ].join(''))))
@@ -103,7 +98,8 @@ function loadEventProgramMetadataByProgramId(programId) {
 }
 
 function createEventProgramStoreStateFromMetadataResponse(eventProgramMetadata) {
-    const { programs = [], programStages = [], programStageSections = [], dataElements = [] } = eventProgramMetadata;
+    const { programs = [], dataElements = [] } = eventProgramMetadata;
+    const programStages = getOr([], 'programStages', first(programs));
 
     const storeState = getInstance()
         .then((d2) => {
@@ -140,8 +136,8 @@ function createEventProgramStoreStateFromMetadataResponse(eventProgramMetadata) 
 
             return {
                 program: createProgramModel(programs),
-                programStages: createProgramStageModels(programStages),
-                programStageSections: createProgramStageSectionModels(programStageSections),
+                programStages: createProgramStageModels(getOr([], 'programStages', first(programs))),
+                programStageSections: createProgramStageSectionModels(getOr([], 'programStages[0].programStageSections', first(programs))),
                 programStageNotifications: extractProgramNotifications(programStages),
                 availableDataElements: dataElements,
                 dataEntryFormForProgramStage: extractDataEntryForms(programStages),
