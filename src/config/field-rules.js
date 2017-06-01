@@ -320,6 +320,25 @@ export default new Map([
     ]],
     ['programRuleVariable', [
         {
+            field: 'program',
+            when: [{
+                field: 'dataElement',
+                operator: 'HAS_STRING_VALUE',
+            }, {
+                field: 'trackedEntityAttribute',
+                operator: 'HAS_STRING_VALUE'
+            }, {
+                field: 'programStage',
+                operator: 'HAS_STRING_VALUE'
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+        {
             field: 'dataElement',
             when: [{
                 field: 'programRuleVariableSourceType',
@@ -358,5 +377,18 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }],
         },
+        {
+            field: 'programStage',
+            when: [{
+                field: 'dataElement',
+                operator: 'HAS_STRING_VALUE'
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        }
     ]],
 ]);
