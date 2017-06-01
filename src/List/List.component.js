@@ -484,6 +484,19 @@ const List = React.createClass({
             }, row);
         };
 
+        const primaryAction = model => {
+            if (model.access.write) {
+                availableActions.edit(model);
+            } else {
+                // TODO: The no access message should be replaced with the read-only mode described in DHIS2-1773
+                snackActions.show({
+                    message: 'you_do_not_have_permissions_to_edit_this_object',
+                    translate: true,
+                    action: 'dismiss',
+                });
+            }
+        };
+
         return (
             <div>
                 <div>
@@ -510,7 +523,7 @@ const List = React.createClass({
                                     columns={this.state.tableColumns}
                                     contextMenuActions={availableActions}
                                     contextMenuIcons={contextMenuIcons}
-                                    primaryAction={(model) => availableActions.edit(model)}
+                                    primaryAction={primaryAction}
                                     isContextActionAllowed={this.isContextActionAllowed}
                                 />
                             ) : <div>{this.getTranslation('no_results_found')}</div>}
