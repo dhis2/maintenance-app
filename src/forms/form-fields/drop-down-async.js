@@ -30,9 +30,18 @@ export default React.createClass({
     },
 
     loadOptions() {
-        const fieldsForReferenceType = this.props.referenceType === 'optionSet'
-            ? 'id,displayName,name,valueType'
-            : 'id,displayName,name';
+        let fieldsForReferenceType = 'id,displayName,name';
+
+        // The valueType is required for optionSet so we can set the model valueType to the optionSet.valueType
+        if (this.props.referenceType === 'optionSet') {
+            fieldsForReferenceType = 'id,displayName,name,valueType';
+        }
+
+        // program.programType is required for programIndicators to be able to determine if it is a tracker or event program
+        if (this.props.referenceType === 'program') {
+            fieldsForReferenceType = 'id,displayName,name,programType';
+        }
+
         const filter = this.props.queryParamFilter;
         let d2i = {};
 
