@@ -1671,9 +1671,9 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@27.0:
-  version "27.0.0"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-27.0.0.tgz#ca0dce783931a02ef6c5f5e64e2c248f7ea9b0a4"
+d2-ui@^27.0.1:
+  version "27.0.1"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-27.0.1.tgz#efddcd74c1b25ef85b961f51281773666feac9f4"
 
 d2-utilizr@^0.2.9:
   version "0.2.13"
@@ -1765,7 +1765,7 @@ debug-log@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
 
-debug@2.6.0, debug@^2.1.1, debug@^2.2.0:
+debug@2.6.0, debug@^2.1.1:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.0.tgz#bc596bcabe7617f11d9fa15361eded5608b8499b"
   dependencies:
@@ -1777,7 +1777,7 @@ debug@2.6.7:
   dependencies:
     ms "2.0.0"
 
-debug@2.6.8, debug@^2.6.3, debug@^2.6.8:
+debug@2.6.8, debug@^2.2.0, debug@^2.6.3, debug@^2.6.8:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
   dependencies:
