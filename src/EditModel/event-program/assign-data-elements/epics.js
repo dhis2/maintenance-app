@@ -72,7 +72,6 @@ const editProgramStageDataElement = (store) => (action$) => {
     return action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENT_EDIT)
         .map(action => {
-            console.log('PROGRAM_STAGE_DATA_ELEMENT_EDIT');
             const programStageDataElementId = get('payload.programStageDataElement.id', action);
             const programStage = getProgramStageByIdFromAction(store, action);
             const programStageDataElements = getOr([], 'programStageDataElements', programStage);

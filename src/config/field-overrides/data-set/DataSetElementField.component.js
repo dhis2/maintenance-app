@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
 import { Observable, BehaviorSubject } from 'rxjs';
+import log from 'loglevel';
 import componentFromStream from 'recompose/componentFromStream';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
@@ -163,7 +164,7 @@ class DataSetElementField extends Component {
                     .filter(dataSetElementsThatAreNotInItemsToRemove(items));
             })
             .then(updateGroupEditorStore)
-            .catch(e => console.log(e));
+            .catch(e => log.error(e));
     }
 
     _updateCategoryComboForDataSetElement = (selectedDataSetElement, categoryCombo) => {

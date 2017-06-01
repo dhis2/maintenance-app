@@ -58,7 +58,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
 
                 // Check if value is an attribute
                 if (Object.keys(modelToEdit.attributes || []).indexOf(fieldConfig.name) >= 0) {
-                    console.log(fieldConfig.name, ' is an attribute');
+                    // console.log(fieldConfig.name, ' is an attribute');
                     fieldConfig.value = modelToEdit.attributes[fieldConfig.name];
                     return fieldConfig;
                 }

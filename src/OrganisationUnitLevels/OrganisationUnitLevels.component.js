@@ -60,8 +60,6 @@ function OrganisationUnitLevels(props, context) {
         },
     };
 
-    console.log(props.fieldsForOrganisationUnitLevel);
-
     const fieldRows = props.fieldsForOrganisationUnitLevel.map((fieldsForLevel, index) => {
         let translateButton = null;
         if (fieldsForLevel.organisationUnitLevel.id && canEdit) {

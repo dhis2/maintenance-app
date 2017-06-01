@@ -148,7 +148,6 @@ function createValidator(property) {
         .distinctUntilChanged()
         .debounceTime(300)
         .mergeMap(memoize((expression = '') => {
-            console.log(expression);
             return Observable.fromPromise(
                 getInstance()
                     .then(d2 => {

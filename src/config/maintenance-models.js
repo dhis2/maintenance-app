@@ -217,7 +217,6 @@ export function getTableColumnsForType(modelType, preservePropNames = false) {
 }
 
 export function getDefaultFiltersForType(modelType) {
-    console.log()
     if (typeDetails.hasOwnProperty(modelType) &&
         typeDetails[modelType].hasOwnProperty('defaultFilters') &&
         Array.isArray(typeDetails[modelType].defaultFilters)

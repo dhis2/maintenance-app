@@ -58,7 +58,7 @@ const dataEntryFormRemoveEpic = action$ => action$
                     dataEntryFormsForProgramStages[programStageId] = d2.models.dataEntryForm.create();
                     eventProgramStore.setState({});
                 })
-                .catch(v => console.log(v))
+                .catch(v => log.error(v))
         );
     })
     .mergeMapTo(Observable.never());

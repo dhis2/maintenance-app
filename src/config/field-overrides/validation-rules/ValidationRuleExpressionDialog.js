@@ -20,7 +20,6 @@ const styles = {
 };
 
 function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, buttonLabel, updateExpressionDetails, expressionStatusStore, onExpressionChanged, onMissingStrategyChanged, onSlidingWindowChanged }, { d2 }) {
-    console.log(buttonLabel);
     return (
         <Dialog
             open={open}
