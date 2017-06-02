@@ -49,7 +49,13 @@ class SideBarContainer extends React.Component {
                 const orgUnitSearchHits = appState.getState().sideBar.organisationUnits;
                 const roots = Array.isArray(orgUnitSearchHits)
                     ? orgUnitSearchHits
-                    : this.state.userOrganisationUnits.toArray().map(ou => Object.assign(ou, { displayName: ou.name }));
+                    : this.state.userOrganisationUnits.toArray().map(ou => {
+                        // Use the name as displayName if it has not been loaded
+                        if (!ou.displayName) {
+                            ou.displayName = ou.name;
+                        }
+                        return ou;
+                    });
 
                 const initiallyExpanded = orgUnitSearchHits && orgUnitSearchHits.length
                     ? []
