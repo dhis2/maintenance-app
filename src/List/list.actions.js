@@ -75,7 +75,7 @@ listActions.loadList
 
         listStore.setState(Object.assign(listStore.state || {}, { searchString: '' }));
         return Observable.of({
-            schema: getSchemaWithFilters(d2.models, modelName),
+            schema: d2.models[modelName],
             query: getQueryForSchema(modelName),
             complete,
             error,
@@ -83,7 +83,7 @@ listActions.loadList
         });
     })
     .subscribe(async ({ schema, query, complete, error, d2 }) => {
-        const listResultsCollection = await applyCurrentFilters(d2.models, schema.name)
+        const listResultsCollection = await getSchemaWithFilters(d2.models, schema.name)
             .list(Object.assign(query, getQueryForSchema(schema.name)));
 
         listActions.setListSource(listResultsCollection);
