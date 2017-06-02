@@ -63,6 +63,7 @@ multiSelectActions.removeItemsFromModelCollection
         complete();
     });
 
+// TODO: Refactor to es2015 class
 export default React.createClass({
     propTypes: {
         referenceType: React.PropTypes.string.isRequired,
@@ -100,6 +101,17 @@ export default React.createClass({
             .then(this.loadAvailableItems)
             .then(this.populateItemStore)
             .then(this.populateAssignedStore);
+    },
+
+    componentWillReceiveProps(newProps) {
+        if (this.props.queryParamFilter !== newProps.queryParamFilter) {
+            // Reload the available items since the filter for the objects changed
+            this.reloadAvailableItems();
+
+            // The selected items need to be reset. The filter change likely invalidated the selection
+            this.state.assignedItemStore.setState([]);
+            this.props.model[this.props.referenceProperty].clear();
+        }
     },
 
     renderGroupEditor() {

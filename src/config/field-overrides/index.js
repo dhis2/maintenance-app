@@ -3,6 +3,7 @@ import indicator from './indicator';
 import dataSet from './dataSet';
 import organisationUnit from './organisationUnit';
 import organisationUnitGroup from './organisationUnitGroup';
+import categoryCombo from './categoryCombo';
 import categoryOption from './categoryOption';
 import validationRule from './validationRule';
 import legendSet from './legendSet';
@@ -13,6 +14,7 @@ const overridesByType = {
     dataSet,
     organisationUnit,
     organisationUnitGroup,
+    categoryCombo,
     categoryOption,
     validationRule,
     legendSet,
