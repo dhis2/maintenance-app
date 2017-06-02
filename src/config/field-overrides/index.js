@@ -3,6 +3,7 @@ import indicator from './indicator';
 import dataSet from './dataSet';
 import organisationUnit from './organisationUnit';
 import organisationUnitGroup from './organisationUnitGroup';
+import categoryCombo from './categoryCombo';
 import categoryOption from './categoryOption';
 import legendSet from './legendSet';
 import trackedEntityAttribute from './trackedEntityAttribute';
@@ -18,6 +19,7 @@ const overridesByType = {
     dataSet,
     organisationUnit,
     organisationUnitGroup,
+    categoryCombo,
     categoryOption,
     legendSet,
     trackedEntityAttribute,
