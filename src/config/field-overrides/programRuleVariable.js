@@ -50,11 +50,11 @@ async function getProgramStages(model, d2) {
 async function getProgramTrackedEntityAttributes(model, d2) {
     if (model && model.program && model.program.id) {
         const list = await d2.Api.getApi().get(['programs', model.program.id].join('/'), {
-            fields: 'programTrackedEntityAttributes[id,displayName]'
+            fields: 'programTrackedEntityAttributes[displayName,trackedEntityAttribute[id]]'
         });
 
         return list.programTrackedEntityAttributes
-            .map(tea => ({ text: tea.displayName, value: tea.id }))
+            .map(tea => ({ text: tea.displayName, value: tea.trackedEntityAttribute.id }))
             .sort((a, b) => a.text.localeCompare(b.text));
     }
 
