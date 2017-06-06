@@ -254,7 +254,7 @@ const fieldOrderByName = new Map([
         'shortName',
         'code',
         'description',
-        'importance',
+        'instruction',
         'ruleType',
         'importance',
         'ruleType',
