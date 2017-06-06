@@ -46,18 +46,22 @@ class CreateDataEntryForm extends Component {
         </Tab>
     );
 
+    getTranslation = key => {
+        return this.context.d2.i18n.getTranslation(key);
+    };
+
     render() {
         return (
             <Paper>
                 <Tabs initialSelectedIndex={sectionFormIndex}>
-                    { this.renderTab('Basic',
+                    { this.renderTab(this.getTranslation('basic'),
                         <DefaultForm
                             availableDataElements={this.props.availableDataElements}
                             onChange={this.programDataElementOrderChanged}
                         />
                     )}
 
-                    { this.renderTab('Section',
+                    { this.renderTab(this.getTranslation('section'),
                         <SectionForm
                             availableDataElements={this.props.availableDataElements}
                             programStageSections={this.props.programStageSections}
@@ -68,7 +72,7 @@ class CreateDataEntryForm extends Component {
                         />
                     )}
 
-                    { this.renderTab('Custom',
+                    { this.renderTab(this.getTranslation('custom'),
                         <CustomForm />
                     )}
                 </Tabs>
@@ -77,11 +81,16 @@ class CreateDataEntryForm extends Component {
     }
 }
 
+CreateDataEntryForm.contextTypes = {
+    d2: PropTypes.object,
+};
+
 const HelpText = (_, { d2 }) => (
     <div style={styles.helpText} >
         { d2.i18n.getTranslation('program_forms_help_text') }
     </div>
 );
+
 HelpText.contextTypes = {
     d2: PropTypes.object,
 };
