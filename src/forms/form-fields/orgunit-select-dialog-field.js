@@ -46,7 +46,7 @@ class OrgUnitSelectDialog extends React.Component {
         this.subscriptions.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
-    handleSelectClick(e, orgUnit) {console.warn('click', orgUnit.displayName, orgUnit.path);
+    handleSelectClick(e, orgUnit) {
         this.setState({ value: orgUnit, selected: [orgUnit.path] });
     }
 
