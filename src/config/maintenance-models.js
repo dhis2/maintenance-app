@@ -15,28 +15,30 @@ export function getSideBarConfig() {
             ]
         },
 
-            dataElementSection: {
-                items: [
-                    'dataElement',
-                    'dataElementGroup',
-                    'dataElementGroupSet',
-                ],
-            },
-            dataSetSection: {
-                items: [
-                    'dataSet',
-                ],
-            },
-            indicatorSection: {
-                items: [
-                    'indicator',
-                    'indicatorType',
-                    'indicatorGroup',
-                    'indicatorGroupSet',
-                    'programIndicator',
-                    'programIndicatorGroup',
-                ],
-            },
+        dataElementSection: {
+            items: [
+                'dataElement',
+                'dataElementGroup',
+                'dataElementGroupSet',
+            ],
+        },
+
+        dataSetSection: {
+            items: [
+                'dataSet',
+            ],
+        },
+
+        indicatorSection: {
+            items: [
+                'indicator',
+                'indicatorType',
+                'indicatorGroup',
+                'indicatorGroupSet',
+                'programIndicator',
+                'programIndicatorGroup',
+            ],
+        },
 
         organisationUnitSection: {
             items: [
@@ -47,17 +49,17 @@ export function getSideBarConfig() {
             ],
         },
 
-            programSection: {
-                items: [
-                    'program',
-                    'trackedEntityAttribute',
-                    'trackedEntityAttributeGroup',
-                    'relationshipType',
-                    'trackedEntity',
+        programSection: {
+            items: [
+                'program',
+                'trackedEntityAttribute',
+                'trackedEntityAttributeGroup',
+                'relationshipType',
+                'trackedEntity',
                 'programRule',
                 'programRuleVariable',
-                ],
-            },
+            ],
+        },
 
         validationSection: {
             items: [
@@ -76,6 +78,8 @@ export function getSideBarConfig() {
                 'predictor',
                 'pushAnalysis',
                 'externalMapLayer',
+                'dataApprovalLevel',
+                'dataApprovalWorkflow',
             ],
         },
     };
