@@ -16,7 +16,7 @@ import Action from 'd2-ui/lib/action/Action';
 
 import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';
-import { goBack } from '../router-utils';
+import { goToRoute } from '../router-utils';
 
 import '../../scss/EditModel/EditDataEntryForm.scss';
 
@@ -92,7 +92,7 @@ class EditDataEntryForm extends React.Component {
             context.d2.Api.getApi().get('dataElementOperands', {
                 paging: false,
                 totals: true,
-                fields: 'id,displayName',
+                fields: 'id,dimensionItem,displayName',
                 dataSet: props.params.modelId,
             }),
             context.d2.Api.getApi().get('system/flags'),
@@ -105,16 +105,16 @@ class EditDataEntryForm extends React.Component {
             // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
             // custom forms: "dataElementId-categoryOptionId-val"
             this.operands = ops.dataElementOperands
-                .filter(op => op.id.indexOf('.') !== -1)
+                .filter(op => op.dimensionItem.indexOf('.') !== -1)
                 .reduce((out, op) => {
-                    const id = `${op.id.split('.').join('-')}-val`;
+                    const id = `${op.dimensionItem.split('.').join('-')}-val`;
                     out[id] = op.displayName; // eslint-disable-line
                     return out;
                 }, {});
 
             // Data element totals have only a single ID and thus no dot ('.')
             this.totals = ops.dataElementOperands
-                .filter(op => op.id.indexOf('.') === -1)
+                .filter(op => op.dimensionItem.indexOf('.') === -1)
                 .reduce((out, op) => {
                     out[op.id] = op.displayName; // eslint-disable-line
                     return out;
@@ -225,7 +225,7 @@ class EditDataEntryForm extends React.Component {
             .then(() => {
                 log.info('Form saved successfully');
                 snackActions.show({ message: this.getTranslation('form_saved') });
-                goBack();
+                goToRoute('list/dataSetSection/dataSet');
             })
             .catch(e => {
                 log.warn('Failed to save form:', e);
@@ -237,7 +237,7 @@ class EditDataEntryForm extends React.Component {
     }
 
     handleCancelClick() {
-        goBack();
+        goToRoute('list/dataSetSection/dataSet');
     }
 
     handleDeleteClick() {
@@ -249,7 +249,7 @@ class EditDataEntryForm extends React.Component {
                     .delete(['dataEntryForms', modelToEditStore.state.dataEntryForm.id].join('/'))
                     .then(() => {
                         snackActions.show({ message: this.getTranslation('form_deleted') });
-                        goBack();
+                        goToRoute('list/dataSetSection/dataSet');
                     })
                     .catch(err => {
                         log.error('Failed to delete form:', err);
@@ -333,7 +333,6 @@ class EditDataEntryForm extends React.Component {
             const idMatch = dataElementCategoryOptionIdPattern.exec(inputHtml);
             const dataElementTotalMatch = dataElementPattern.exec(inputHtml);
             const indicatorMatch = indicatorPattern.exec(inputHtml);
-
             if (idMatch) {
                 const id = `${idMatch[1]}-${idMatch[2]}-val`;
                 usedIds.push(id);
