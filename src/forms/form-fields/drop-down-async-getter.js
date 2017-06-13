@@ -39,9 +39,9 @@ class DropDownAsyncGetter extends React.Component {
         if (shouldRender(this.props.model)) {
             const eventIdWrapper = (event) => {
                 if (event.target.value) {
-                    this.props.onChange({ target: { value: { id: event.target.value }} });
+                    this.props.onChange({ target: { value: { id: event.target.value } } });
                 } else {
-                    this.props.onChange({ target: { value: null }});
+                    this.props.onChange({ target: { value: null } });
                 }
             };
 

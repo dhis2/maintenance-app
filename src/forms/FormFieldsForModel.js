@@ -32,7 +32,9 @@ class FormFieldsForModel {
         const onlyPersistedProperties = modelValidation => modelValidation.persisted;
         const toArrayOfFieldConfigurations = fieldName => {
             const modelValidationForField = model.modelDefinition.modelValidations[fieldName];
-            const fieldConfig = Object.create(modelValidationForField);
+            // TODO: This is a horrible horrible hack that has to go... As soon as the API is fixed!
+            const fieldConfig = Object.create(Object.assign(modelValidationForField, fieldName === 'orgUnitLevel' ? { persisted: true, required: true } : {}));
+            //const fieldConfig = Object.create(modelValidationForField);
 
             fieldConfig.name = fieldName;
             fieldConfig.fieldOptions = {
