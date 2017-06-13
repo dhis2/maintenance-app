@@ -55,7 +55,6 @@ class PredictorDialog extends React.Component {
         const href = [this.state.model.modelDefinition.plural, this.state.model.id, 'run'].join('/');
         const targetUrl = `${href}?startDate=${this.state.startDate}&endDate=${this.state.endDate}`;
 
-        snackActions.show({ message: this.getTranslation('predictor_started') });
         this.setState({ running: true });
 
         d2.Api.getApi().post(targetUrl, { startDate: this.state.startDate, endDate: this.state.endDate })
