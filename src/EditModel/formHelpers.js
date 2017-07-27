@@ -5,12 +5,10 @@ import fieldOrderNames from '../config/field-config/field-order';
 import fieldOverrides from '../config/field-overrides/index';
 import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { identity } from 'lodash/fp';
+import { identity, noop, compose } from 'lodash/fp';
 import { Observable } from 'rxjs';
 import React from 'react';
-import compose from 'recompose/compose';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
-import { noop, } from 'lodash/fp';
 
 function getLabelText(labelText, fieldConfig = {}) {
     // Add required indicator when the field is required
@@ -110,12 +108,19 @@ function createAttributeFieldConfigs(d2, schemaName) {
 }
 
 export function isAttribute(model, fieldConfig) {
-    if (model.attributes && new Set(Object.keys(model.attributes)).has(fieldConfig.name)) {
-        return true;
-    }
-    return false;
+    return model.attributes && new Set(Object.keys(model.attributes)).has(fieldConfig.name);
 }
 
+const transformValuesUsingConverters = fieldConfig => {
+    if (fieldConfig.beforePassToFieldConverter) {
+        return {
+            ...fieldConfig,
+            value: fieldConfig.beforePassToFieldConverter(fieldConfig.value),
+        };
+    }
+
+    return fieldConfig;
+};
 
 const addModelToFieldConfigProps = model => fieldConfig => ({
     ...fieldConfig,
@@ -135,8 +140,9 @@ function addValuesToFieldConfigs(fieldConfigs, model) {
             return ({
                 ...fieldConfig,
                 value: model[fieldConfig.name]
-            })
+            });
         })
+        .map(transformValuesUsingConverters)
         .map(addModelToFieldConfigProps(model));
 }
 
@@ -153,6 +159,13 @@ export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = i
     );
 }
 
+const convertValueUsingFieldConverter = (fieldConfigs, onChangeCallback) => (fieldName, value) =>  {
+    const fieldConfig = fieldConfigs.find(fieldConfig => fieldConfig.name === fieldName);
+    const converter = fieldConfig.beforeUpdateConverter || identity;
+
+    return onChangeCallback(fieldName, converter(value));
+};
+
 // TODO: Refactor includeAttributes magic flag to separate method `createFormWithAttributesFor`
 export function createFormFor(source$, schema, properties, includeAttributes) {
     const enhance = compose(
@@ -163,10 +176,12 @@ export function createFormFor(source$, schema, properties, includeAttributes) {
     );
 
     function CreatedFormBuilderForm({ fieldConfigs, editFieldChanged, detailsFormStatusChange = noop }) {
+        const onUpdateField = convertValueUsingFieldConverter(fieldConfigs, editFieldChanged);
+
         return (
             <FormBuilder
                 fields={fieldConfigs}
-                onUpdateField={editFieldChanged}
+                onUpdateField={onUpdateField}
                 onUpdateFormStatus={detailsFormStatusChange}
             />
         );

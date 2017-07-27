@@ -4,10 +4,7 @@ require('babel-register')({
             return false;
         }
 
-        if (/node_modules/.test(path)) {
-            return true;
-        }
-        return false;
+        return /node_modules/.test(path);
     }
 });
 
