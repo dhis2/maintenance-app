@@ -110,10 +110,7 @@ function createAttributeFieldConfigs(d2, schemaName) {
 }
 
 export function isAttribute(model, fieldConfig) {
-    if (model.attributes && new Set(Object.keys(model.attributes)).has(fieldConfig.name)) {
-        return true;
-    }
-    return false;
+    return model.attributes && new Set(Object.keys(model.attributes)).has(fieldConfig.name);
 }
 
 
