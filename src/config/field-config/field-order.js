@@ -339,6 +339,16 @@ const fieldOrderByName = new Map([
         'dataElement',
         'trackedEntityAttribute',
     ]],
+    ['dataApprovalLevel', [
+        'name',
+        'orgUnitLevel',
+        'categoryOptionGroupSet',
+    ]],
+    ['dataApprovalWorkflow', [
+        'name',
+        'periodType',
+        'dataApprovalLevels',
+    ]],
 ]);
 
 export default {
