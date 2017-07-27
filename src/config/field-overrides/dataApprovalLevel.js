@@ -1,6 +1,4 @@
 import { getInstance } from 'd2/lib/d2';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 
 async function getOrgUnitLevels(model, d2) {
@@ -14,21 +12,17 @@ async function getOrgUnitLevels(model, d2) {
     }));
 }
 
+function Fn(props) {
+    return <DropDownAsyncGetter {...props} />;
+}
+
 export default new Map([
-    ['name', {
-        fieldOptions: {
-            disabled: true,
-        },
-    }],
     ['orgUnitLevel', {
         component: DropDownAsyncGetter,
         persisted: true,
         fieldOptions: {
             getter: getOrgUnitLevels,
+            useValueDotId: false,
         },
-        validators: [{
-            validator: (value) => false,
-            message: 'not valid lol',
-        }],
     }],
 ]);

@@ -190,6 +190,9 @@ const typeDetails = {
     'externalMapLayer': {
         columns: ['displayName', 'mapLayerPosition', 'mapService', 'lastUpdated'],
     },
+    'dataApprovalLevel': {
+        columns: ['displayName', 'categoryOptionGroupSet[displayName]', 'publicAccess', 'lastUpdated'],
+    },
 };
 
 export function getFilterFieldsForType(modelType) {
