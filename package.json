@@ -1,6 +1,6 @@
 {
   "name": "maintenance-app",
-  "version": "28.0.1",
+  "version": "28.0.2",
   "description": "DHIS2 Maintenance app",
   "main": "index.js",
   "repository": {
