@@ -9,11 +9,10 @@ import {
     PROGRAM_STAGE_SECTIONS_ORDER_CHANGE,
     PROGRAM_STAGE_SECTIONS_ADD,
     PROGRAM_STAGE_SECTIONS_REMOVE,
+    PROGRAM_STAGE_SECTIONS_ADDREMOVE_COMPLETE,
     PROGRAM_STAGE_SECTION_NAME_EDIT,
     PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE_COMPLETE,
 } from './actions';
-
-const d2$ = Observable.fromPromise(getInstance());
 
 const changeProgramStageDataElementOrder = (store) => (action$) => {
     return action$
@@ -62,7 +61,7 @@ const changeProgramStageSectionName = (store) => (action$) => {
                 programStageSections,
             });
         })
-        .flatMapTo(Observable.never());
+        .mapTo({ type: PROGRAM_STAGE_SECTIONS_ADDREMOVE_COMPLETE });
 };
 
 const setSortOrderToIndex = (models) => models.map((model, index) => {
@@ -82,10 +81,10 @@ const changeProgramStageSectionOrder = (store) => (action$) => {
                 programStageSections,
             });
         })
-        .flatMapTo(Observable.never());
+        .mapTo({ type: PROGRAM_STAGE_SECTIONS_ADDREMOVE_COMPLETE });
 };
 
-const addProgramStageSection = (store) => (action$) => {
+const addProgramStageSection = (store, d2$) => (action$) => {
     return action$
         .ofType(PROGRAM_STAGE_SECTIONS_ADD)
         .combineLatest(d2$, (action, d2) => ([d2, action]))
@@ -115,9 +114,8 @@ const addProgramStageSection = (store) => (action$) => {
                 programStageSections: updatedProgramStageSections,
             });
         })
-        .flatMapTo(Observable.never());
+        .mapTo({ type: PROGRAM_STAGE_SECTIONS_ADDREMOVE_COMPLETE });
 };
-
 
 const removeProgramStageSection = (store) => (action$) => {
     return action$
@@ -138,15 +136,16 @@ const removeProgramStageSection = (store) => (action$) => {
                 programStageSections: updatedProgramStageSections,
             });
         })
-        .flatMapTo(Observable.never());
+        .mapTo({ type: PROGRAM_STAGE_SECTIONS_ADDREMOVE_COMPLETE });
 };
 
 export default function createEpicsForStore(store) {
+    const d2$ = Observable.fromPromise(getInstance());
     return combineEpics(
         changeProgramStageDataElementOrder(store),
         changeProgramStageSectionName(store),
         changeProgramStageSectionOrder(store),
-        addProgramStageSection(store),
+        addProgramStageSection(store, d2$),
         removeProgramStageSection(store),
     );
 };
