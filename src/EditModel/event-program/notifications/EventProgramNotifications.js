@@ -33,7 +33,7 @@ function EventProgramNotifications({ notifications, askForConfirmation, onCancel
                 name={modelToDelete && modelToDelete.name}
             />
         </div>
-    )
+    );
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({ removeStageNotification, setEditModel, setAddModel }, dispatch);
@@ -52,10 +52,10 @@ const enhance = compose(
         askForConfirmation: ({ setOpen, setModelToDelete }) => (model) => {
             setModelToDelete(model);
             setOpen(true);
-        }
+        },
     }),
     mapPropsStream(props$ => props$
-        .combineLatest(notifications$, (props, notifications) => ({ ...props, notifications}))
+        .combineLatest(notifications$, (props, notifications) => ({ ...props, notifications }))
     )
 );
 

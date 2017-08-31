@@ -9,18 +9,16 @@ import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 const indicatorExpressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
 indicatorExpressionStatusActions.requestExpressionStatus
     .debounceTime(500)
-    .map(action => {
+    .map((action) => {
         const encodedFormula = encodeURIComponent(action.data);
         const url = `expressions/description?expression=${encodedFormula}`;
         const request = getD2()
-            .then(d2 => {
-                return d2.Api.getApi().get(url);
-            });
+            .then(d2 => d2.Api.getApi().get(url));
 
         return Observable.fromPromise(request);
     })
     .concatAll()
-    .subscribe(response => {
+    .subscribe((response) => {
         indicatorExpressionStatusStore.setState(response);
     });
 
@@ -72,7 +70,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
                 expressionChanged={this.props.indicatorExpressionChanged}
                 titleText={this.props.titleText}
                 ref="expressionManager"
-                />
+            />
         );
     },
 });

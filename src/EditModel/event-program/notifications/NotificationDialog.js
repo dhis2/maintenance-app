@@ -15,14 +15,14 @@ import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     model: modelToEditSelector(state),
 });
 
-const _mapDispatchToProps = (dispatch) => ({
+const _mapDispatchToProps = dispatch => ({
     onUpdateField(fieldName, value) {
-        dispatch(setStageNotificationValue(fieldName, value))
-    }
+        dispatch(setStageNotificationValue(fieldName, value));
+    },
 });
 
 // TODO: Can not modify the fieldConfigs props as the FormBuilder will fail when it can not find old formConfigs. Therefore we'll need to return the same number of fieldConfigs
@@ -47,7 +47,7 @@ function skipLogicForRecipients(fieldConfigs = []) {
         return [
             notificationRecipient,
             { ...recipientUserGroup, component: renderNothing() },
-            deliveryChannels
+            deliveryChannels,
         ];
     }
 
@@ -105,14 +105,12 @@ const steps = [
                     ['notificationTrigger', 'relativeScheduledDays'],
                     skipLogicForNotificationTrigger
                 ),
-            )(({ fieldConfigs = [], onUpdateField }) => {
-                return (
-                    <FormBuilder
-                        fields={fieldConfigs}
-                        onUpdateField={onUpdateField}
-                    />
-                );
-            })
+            )(({ fieldConfigs = [], onUpdateField }) => (
+                <FormBuilder
+                    fields={fieldConfigs}
+                    onUpdateField={onUpdateField}
+                />
+                )),
     },
     {
         key: 'who',
@@ -125,14 +123,12 @@ const steps = [
                     ['notificationRecipient', 'recipientUserGroup', 'deliveryChannels'],
                     skipLogicForRecipients
                 )
-            )(({ fieldConfigs = [], onUpdateField }) => {
-                return (
-                    <FormBuilder
-                        fields={fieldConfigs}
-                        onUpdateField={onUpdateField}
-                    />
-                );
-            }),
+            )(({ fieldConfigs = [], onUpdateField }) => (
+                <FormBuilder
+                    fields={fieldConfigs}
+                    onUpdateField={onUpdateField}
+                />
+                )),
     },
 ];
 
@@ -180,13 +176,13 @@ function NotificationDialog({ model, onCancel, onConfirm }, { d2 }) {
         >
             <Stepper />
         </Dialog>
-    )
+    );
 }
 NotificationDialog.contextTypes = {
     d2: PropTypes.object,
 };
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
+const mapDispatchToProps = dispatch => bindActionCreators({
     onCancel: setEditModel.bind(null, null),
     onConfirm: saveStageNotification,
 }, dispatch);

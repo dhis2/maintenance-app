@@ -12,7 +12,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
         noHitsLabel: {
             fontStyle: 'italic',
             color: 'rgba(0, 0, 0, 0.4)',
-        }
+        },
     };
 
     return (

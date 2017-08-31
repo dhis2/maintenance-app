@@ -122,8 +122,8 @@ class GreyFieldDialog extends React.Component {
                     'categoryOptions[id,displayName]]',
                 ].join(','),
             })
-            .then(categoryCombos => {
-                categoryCombos.forEach(categoryCombo => {
+            .then((categoryCombos) => {
+                categoryCombos.forEach((categoryCombo) => {
                     // Build a nested map of categories:
                     // { cat1_opt1 : { cat2_opt1: { cat3_opt1: null, cat3_opt2: null }, cat2_opt2: {...}, ... }, ... }
                     //
@@ -134,7 +134,7 @@ class GreyFieldDialog extends React.Component {
                     );
 
                     // Fill in the leaf nodes in the cocMap with the actual coc's
-                    categoryCombo.categoryOptionCombos.toArray().forEach(coc => {
+                    categoryCombo.categoryOptionCombos.toArray().forEach((coc) => {
                         const optionPath = coc.categoryOptions.toArray().map(o => o.id);
                         cocMap = assignCocs(cocMap, optionPath, { id: coc.id, displayName: coc.displayName });
                     });
@@ -162,7 +162,6 @@ class GreyFieldDialog extends React.Component {
                     cocMap,
                     greyedFields,
                 });
-
             });
         }
     }
@@ -173,8 +172,8 @@ class GreyFieldDialog extends React.Component {
 
     handleSaveClick() {
         const greyedFields = [];
-        Object.keys(this.state.greyedFields).forEach(dataElement => {
-            this.state.greyedFields[dataElement].forEach(coc => {
+        Object.keys(this.state.greyedFields).forEach((dataElement) => {
+            this.state.greyedFields[dataElement].forEach((coc) => {
                 greyedFields.push({
                     dataElement: { id: dataElement },
                     categoryOptionCombo: { id: coc },
@@ -186,12 +185,12 @@ class GreyFieldDialog extends React.Component {
 
         section
             .save()
-            .then(res => {
+            .then((res) => {
                 log.info('Section updated', res);
                 snackActions.show({ message: this.getTranslation('section_saved') });
                 this.props.onRequestSave(section);
             })
-            .catch(err => {
+            .catch((err) => {
                 log.error('Failed to save section:', err);
                 snackActions.show({ message: this.getTranslation('failed_to_save_section'), action: 'ok' });
             });
@@ -212,17 +211,15 @@ class GreyFieldDialog extends React.Component {
                         <th style={styles.thDataElements}>{isLastHeader && this.getTranslation('data_element')}</th>
                         {
                             // For each column in the previous row...
-                            Array.apply(null, Array(prevRowColCount)).map((e, rep) => {
+                            Array(...Array(prevRowColCount)).map((e, rep) =>
                                 // ... render the columns for this row
-                                return cat.categoryOptions.toArray().map((opt, optNum) => {
-                                    return (
-                                        <th key={`${optNum}.${rep}`}
-                                            colSpan={colSpan}
-                                            style={styles.th}
-                                        >{opt.displayName === 'default' ? '' : opt.displayName}</th>
-                                    );
-                                });
-                            })
+                                 cat.categoryOptions.toArray().map((opt, optNum) => (
+                                     <th
+                                         key={`${optNum}.${rep}`}
+                                         colSpan={colSpan}
+                                         style={styles.th}
+                                     >{opt.displayName === 'default' ? '' : opt.displayName}</th>
+                                    )))
                         }
                     </tr>
                 );
@@ -249,16 +246,14 @@ class GreyFieldDialog extends React.Component {
             this.state.greyedFields[dataElement.id].indexOf(coc.id) !== -1;
 
         const toggleBoggle = ((dataElementId, categoryOptionComboId, event, disable) => {
-            this.setState(state => {
+            this.setState((state) => {
                 const greyedCocs = (state.greyedFields[dataElementId] || []).slice();
                 if (disable) {
                     if (greyedCocs.includes(categoryOptionComboId)) {
                         greyedCocs.splice(greyedCocs.indexOf(categoryOptionComboId), 1);
                     }
-                } else {
-                    if (!greyedCocs.includes(categoryOptionComboId)) {
-                        greyedCocs.push(categoryOptionComboId);
-                    }
+                } else if (!greyedCocs.includes(categoryOptionComboId)) {
+                    greyedCocs.push(categoryOptionComboId);
                 }
 
                 const greyedFields = Object.keys(state.greyedFields)
@@ -290,14 +285,13 @@ class GreyFieldDialog extends React.Component {
     }
 
     renderDataElements() {
-        const getCocFields = () => {
-            return this.state.categoryCombos.get(this.state.currentCategoryCombo).categories
+        const getCocFields = () => this.state.categoryCombos.get(this.state.currentCategoryCombo).categories
                 .toArray()
                 .reduce((prev, cat) => {
                     if (prev.length > 0) {
                         const out = [];
-                        prev.forEach(p => {
-                            cat.categoryOptions.toArray().forEach(opt => {
+                        prev.forEach((p) => {
+                            cat.categoryOptions.toArray().forEach((opt) => {
                                 const pout = p.slice();
                                 pout.push(opt.id);
                                 out.push(pout);
@@ -306,12 +300,11 @@ class GreyFieldDialog extends React.Component {
                         return out;
                     }
 
-                    cat.categoryOptions.toArray().forEach(opt => {
+                    cat.categoryOptions.toArray().forEach((opt) => {
                         prev.push([opt.id]);
                     });
                     return prev;
                 }, []);
-        };
 
         const currentSectionDataElementIds = this.props.sectionModel.dataElements.toArray().map(de => de.id);
         return this.state.currentCategoryCombo ?
@@ -334,10 +327,12 @@ class GreyFieldDialog extends React.Component {
         const title = this.props.sectionModel.displayName;
         const {
             open,
-            ...extraProps,
+            ...extraProps
         } = this.props;
 
-        let uniqueCatComboIds = [], sectionDataElementIds = [], categoryCombosForSection = [];
+        let uniqueCatComboIds = [],
+            sectionDataElementIds = [],
+            categoryCombosForSection = [];
 
         if (this.props.sectionModel) {
             // Get data element ids for the current section
@@ -381,25 +376,25 @@ class GreyFieldDialog extends React.Component {
                 onRequestClose={this.closeDialog}
             >
                 {this.props.sectionModel && this.props.sectionModel.categoryCombos && this.props.sectionModel.categoryCombos.size > 1 ? (
-                <DropDown
-                    options={categoryCombosForSection.map(cc => ({
+                    <DropDown
+                        options={categoryCombosForSection.map(cc => ({
                             value: cc.id,
-                            text: cc.displayName === 'default' ? this.getTranslation('none') : cc.displayName
+                            text: cc.displayName === 'default' ? this.getTranslation('none') : cc.displayName,
                         }))}
-                    labelText={this.getTranslation('category_combo')}
-                    value={this.state.currentCategoryCombo}
-                    onChange={e => this.setState({
-                        currentCategoryCombo: e.target.value,
-                    })}
-                    style={{ width: '33%' }}
-                    isRequired
-                />
+                        labelText={this.getTranslation('category_combo')}
+                        value={this.state.currentCategoryCombo}
+                        onChange={e => this.setState({
+                            currentCategoryCombo: e.target.value,
+                        })}
+                        style={{ width: '33%' }}
+                        isRequired
+                    />
                 ) : null}
                 <div style={styles.dialogDiv}>
                     <table style={styles.table}>
                         <tbody>
-                        {this.renderTableHeader()}
-                        {this.state.currentCategoryCombo && this.props.sectionModel && this.renderDataElements()}
+                            {this.renderTableHeader()}
+                            {this.state.currentCategoryCombo && this.props.sectionModel && this.renderDataElements()}
                         </tbody>
                     </table>
                 </div>

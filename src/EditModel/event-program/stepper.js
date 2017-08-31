@@ -44,16 +44,16 @@ function isActiveStep(activeStep, step, index) {
  * ```
  */
 export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal') => ({ activeStep, stepperClicked }) => {
-    const getStepChildren  = (step) => {
-          const stepChildren = [];
+    const getStepChildren = (step) => {
+        const stepChildren = [];
 
-          stepChildren.push(<StepButton key="button" onClick={() => stepperClicked(step.key)}><Translate>{step.name}</Translate></StepButton>);
+        stepChildren.push(<StepButton key="button" onClick={() => stepperClicked(step.key)}><Translate>{step.name}</Translate></StepButton>);
 
-          if (step.content) {
-              stepChildren.push(<StepContent key="content"><step.content /></StepContent>)
-          }
+        if (step.content) {
+            stepChildren.push(<StepContent key="content"><step.content /></StepContent>);
+        }
 
-          return stepChildren;
+        return stepChildren;
     };
 
     return (
@@ -78,11 +78,11 @@ export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal
  *
  * @returns {ReactComponent} A React component that will render the `component` property of the currently active step.
  */
-export const createStepperContentFromConfig = (stepperConfig) => ({ activeStep, ...props }) => {
+export const createStepperContentFromConfig = stepperConfig => ({ activeStep, ...props }) => {
     const step = stepperConfig.find(stepConfig => stepConfig.key === activeStep);
 
     if (step && step.component) {
-        return <step.component {...props} />
+        return <step.component {...props} />;
     }
 
     if (activeStep) {
@@ -140,20 +140,18 @@ export function createStepperNavigation(BackwardButton, ForwardButton) {
         },
     };
 
-    const StepperNavigation = ({ children }) => {
-        return (
-            <div style={styles.buttons}>
-                <BackwardButton />
-                {children}
-                <ForwardButton />
-            </div>
+    const StepperNavigation = ({ children }) => (
+        <div style={styles.buttons}>
+            <BackwardButton />
+            {children}
+            <ForwardButton />
+        </div>
         );
-    };
 
     return StepperNavigation;
 }
 
-//////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////
 // Redux specfic helpers, don't move to
 
 const mapDispatchToProps = actionCreators => dispatch => bindActionCreators(actionCreators, dispatch);

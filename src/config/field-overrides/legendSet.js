@@ -17,17 +17,16 @@ class LegendsField extends Component {
 
     loadLegendComponent() {
         return System.import('d2-ui/lib/legend/Legend.component')
-            .then(module => {
+            .then((module) => {
                 this.setState({
                     Legend: module.default,
                     isLoading: false,
                 });
             });
-
     }
 
     componentDidMount() {
-        this.loadLegendComponent()
+        this.loadLegendComponent();
     }
 
     render() {
@@ -42,7 +41,7 @@ class LegendsField extends Component {
                 <this.state.Legend items={legends} onItemsChange={this.updateLegends} />
                 <ErrorMessage message={this.props.errorText} />
             </div>
-        )
+        );
     }
 
     updateLegends = (newLegends) => {
@@ -52,7 +51,7 @@ class LegendsField extends Component {
         this.props.onChange({
             target: {
                 value: model[this.props.referenceProperty],
-            }
+            },
         });
     }
 }
@@ -88,7 +87,7 @@ export default new Map([
                         return Number(legend.endValue) >= Number(nextLegend.startValue);
                     });
                 },
-            }
-        ]
+            },
+        ],
     }],
 ]);

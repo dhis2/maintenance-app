@@ -29,7 +29,7 @@ export async function createFieldConfigForModelTypes(modelType, forcedFieldOrder
     }
 
     return formFieldsManager.getFormFieldsForModel({ modelDefinition: d2.models[modelType] })
-        .map(fieldConfig => {
+        .map((fieldConfig) => {
             // Translate the sync validator messages if there are any validators
             if (fieldConfig.validators) {
                 fieldConfig.validators = fieldConfig.validators
@@ -62,7 +62,7 @@ function createUniqueValidator(fieldConfig, modelDefinition, uid) {
 
         return modelDefinitionWithFilter
             .list()
-            .then(collection => {
+            .then((collection) => {
                 if (collection.size !== 0) {
                     return getInstance()
                         .then(d2 => d2.i18n.getTranslation('value_not_unique'))
@@ -86,7 +86,7 @@ function createAttributeFieldConfigs(d2, schemaName) {
 
     return Object
         .keys(modelDefinition.attributeProperties)
-        .map(attributeName => {
+        .map((attributeName) => {
             const attribute = modelDefinition.attributeProperties[attributeName];
 
             return createFieldConfig({
@@ -96,12 +96,10 @@ function createAttributeFieldConfigs(d2, schemaName) {
                 required: Boolean(attribute.mandatory),
                 fieldOptions: {
                     labelText: attribute.name,
-                    options: attribute.optionSet ? attribute.optionSet.options.map(option => {
-                        return {
-                            name: option.displayName || option.name,
-                            value: option.code,
-                        };
-                    }) : [],
+                    options: attribute.optionSet ? attribute.optionSet.options.map(option => ({
+                        name: option.displayName || option.name,
+                        value: option.code,
+                    })) : [],
                 },
             }, modelDefinition, d2.models);
         });
@@ -111,7 +109,7 @@ export function isAttribute(model, fieldConfig) {
     return model.attributes && new Set(Object.keys(model.attributes)).has(fieldConfig.name);
 }
 
-const transformValuesUsingConverters = fieldConfig => {
+const transformValuesUsingConverters = (fieldConfig) => {
     if (fieldConfig.beforePassToFieldConverter) {
         return {
             ...fieldConfig,
@@ -124,12 +122,12 @@ const transformValuesUsingConverters = fieldConfig => {
 
 const addModelToFieldConfigProps = model => fieldConfig => ({
     ...fieldConfig,
-    props: { ...fieldConfig.props, model, }
+    props: { ...fieldConfig.props, model },
 });
 
 function addValuesToFieldConfigs(fieldConfigs, model) {
     return fieldConfigs
-        .map(fieldConfig => {
+        .map((fieldConfig) => {
             if (isAttribute(model, fieldConfig)) {
                 return ({
                     ...fieldConfig,
@@ -139,7 +137,7 @@ function addValuesToFieldConfigs(fieldConfigs, model) {
 
             return ({
                 ...fieldConfig,
-                value: model[fieldConfig.name]
+                value: model[fieldConfig.name],
             });
         })
         .map(transformValuesUsingConverters)
@@ -159,7 +157,7 @@ export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = i
     );
 }
 
-const convertValueUsingFieldConverter = (fieldConfigs, onChangeCallback) => (fieldName, value) =>  {
+const convertValueUsingFieldConverter = (fieldConfigs, onChangeCallback) => (fieldName, value) => {
     const fieldConfig = fieldConfigs.find(fieldConfig => fieldConfig.name === fieldName);
     const converter = fieldConfig.beforeUpdateConverter || identity;
 
@@ -170,7 +168,7 @@ const convertValueUsingFieldConverter = (fieldConfigs, onChangeCallback) => (fie
 export function createFormFor(source$, schema, properties, includeAttributes) {
     const enhance = compose(
         mapPropsStream(props$ => props$
-            .combineLatest(source$, (props, model) => ({ ...props, model}))
+            .combineLatest(source$, (props, model) => ({ ...props, model }))
         ),
         createFieldConfigsFor(schema, properties, undefined, includeAttributes),
     );

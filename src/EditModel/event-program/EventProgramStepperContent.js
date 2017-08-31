@@ -6,7 +6,7 @@ import eventProgramStore from './eventProgramStore';
 import compose from 'recompose/compose';
 import mapPropsStream from 'recompose/mapPropsStream';
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     activeStep: activeStepSelector(state),
 });
 
@@ -16,7 +16,6 @@ const EventProgramStepperContent =
         mapPropsStream(props$ =>
             props$.combineLatest(eventProgramStore, (props, { program }) => ({ ...props, modelToEdit: program }))
         )
-    )
-    (createStepperContentFromConfig(steps));
+    )(createStepperContentFromConfig(steps));
 
 export default EventProgramStepperContent;

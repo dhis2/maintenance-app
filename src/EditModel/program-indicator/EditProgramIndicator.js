@@ -21,7 +21,7 @@ const withPreLoadedModel = mapPropsStream(props$ => props$
         programIndicatorStore,
         (props, programIndicatorState) => ({
             ...props,
-            programIndicator: programIndicatorState.programIndicator
+            programIndicator: programIndicatorState.programIndicator,
         })
     )
 );
@@ -53,7 +53,7 @@ function EditProgramIndicator({ programIndicator, ...props }) {
                 {...props}
             />
             <StepperNavigation>
-                <ProgramIndicatorActionButtons groupName={groupName} schema={schema}/>
+                <ProgramIndicatorActionButtons groupName={groupName} schema={schema} />
             </StepperNavigation>
         </div>
     );

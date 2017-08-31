@@ -49,7 +49,7 @@ class App extends AppWithD2 {
         const nonAllSectionSelected$ = appState
             // The all section is managed separately so we do not want to process those any further
             .filter(state => state.sideBar.currentSection !== 'all')
-            .map((state) => (
+            .map(state => (
                 // Check if the current section is in the list of mainSections
                 state.mainSections.some(mainSection => mainSection.key === state.sideBar.currentSection)
             ));
@@ -58,15 +58,14 @@ class App extends AppWithD2 {
             .merge(allSectionSelected$, nonAllSectionSelected$)
             // Do not emit the value more often than needed to prevent unnecessary react triggers
             .distinctUntilChanged()
-            .subscribe((hasSection) => this.setState({
+            .subscribe(hasSection => this.setState({
                 ...this.state,
                 hasSection,
             }));
     }
 
     componentWillUnmount() {
-        if (super.componentWillUnmount)
-            super.componentWillUnmount();
+        if (super.componentWillUnmount) { super.componentWillUnmount(); }
 
         if (this.subscription && this.subscription.unsubscribe) {
             this.subscription.unsubscribe();
@@ -85,8 +84,10 @@ class App extends AppWithD2 {
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
                         <TwoPanelLayout>
-                            <SideBar activeGroupName={this.props.params.groupName}
-                                     activeModelType={this.props.params.modelType}/>
+                            <SideBar
+                                activeGroupName={this.props.params.groupName}
+                                activeModelType={this.props.params.modelType}
+                            />
                             <MainContent>{this.props.children}</MainContent>
                         </TwoPanelLayout>
                     ) : (

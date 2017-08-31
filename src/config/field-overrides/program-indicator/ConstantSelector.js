@@ -13,7 +13,7 @@ const withConstantProps = mapPropsStream(props$ => props$
             items: constants
                 .map(constant => ({
                     value: `C{${constant.id}}`,
-                    label: constant.displayName
+                    label: constant.displayName,
                 })),
             onItemClick: onSelect,
         })

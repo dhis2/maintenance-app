@@ -8,7 +8,7 @@ import eventProgramStore from '../eventProgramStore';
 import { get, noop, first, getOr, __ } from 'lodash/fp';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox/Checkbox';
 import Store from 'd2-ui/lib/store/Store';
 import { addDataElementsToStage, removeDataElementsFromStage, editProgramStageDataElement } from './actions';
@@ -28,7 +28,7 @@ const availableTrackerDataElements$ = eventProgramStore
     .map(get('availableDataElements'))
     .take(1);
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
+const mapDispatchToProps = dispatch => bindActionCreators({
     addDataElementsToStage,
     removeDataElementsFromStage,
     editProgramStageDataElement,
@@ -45,15 +45,15 @@ const enhance = compose(
         .combineLatest(
             programStage$,
             availableTrackerDataElements$,
-            (props, programStage, trackerDataElements) => ({ ...props, trackerDataElements, model: programStage, items: programStage.programStageDataElements})
+            (props, programStage, trackerDataElements) => ({ ...props, trackerDataElements, model: programStage, items: programStage.programStageDataElements })
         )
     ),
     withHandlers({
-        onAssignItems: ({ model, addDataElementsToStage }) => dataElements => {
+        onAssignItems: ({ model, addDataElementsToStage }) => (dataElements) => {
             addDataElementsToStage({ programStage: model.id, dataElements });
             return Promise.resolve();
         },
-        onRemoveItems: ({ model, removeDataElementsFromStage }) => dataElements => {
+        onRemoveItems: ({ model, removeDataElementsFromStage }) => (dataElements) => {
             removeDataElementsFromStage({ programStage: model.id, dataElements });
             return Promise.resolve();
         },
@@ -70,7 +70,7 @@ const flipBooleanPropertyOn = (object, key) => ({
     [key]: !object[key],
 });
 
-const ProgramStageDataElement = pure(function ({ programStageDataElement, onEditProgramStageDataElement }) {
+const ProgramStageDataElement = pure(({ programStageDataElement, onEditProgramStageDataElement }) => {
     const isDateValue = programStageDataElement.dataElement.valueType === 'DATE';
     const hasOptionSet = !!programStageDataElement.dataElement.optionSet;
     const onChangeFlipBooleanForProperty = propertyName => () => onEditProgramStageDataElement(
@@ -118,7 +118,7 @@ const ProgramStageDataElement = pure(function ({ programStageDataElement, onEdit
 });
 
 function addDisplayProperties(dataElements) {
-    return ({ dataElement, ...other}) => {
+    return ({ dataElement, ...other }) => {
         const { displayName, valueType, optionSet } = dataElements.find(({ id }) => id === dataElement.id);
 
         return {

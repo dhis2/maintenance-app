@@ -63,12 +63,10 @@ export default React.createClass({
         return (
             <div>
                 {this.state.indicatorGroupSets.map((indicatorGroupSet, key) => {
-                    const optionList = indicatorGroupSet.indicatorGroups.map(ig => {
-                        return {
-                            value: ig.id,
-                            text: ig.displayName,
-                        };
-                    });
+                    const optionList = indicatorGroupSet.indicatorGroups.map(ig => ({
+                        value: ig.id,
+                        text: ig.displayName,
+                    }));
 
                     const value = Object.prototype.hasOwnProperty.call(store.state.indicatorGroupValues, indicatorGroupSet.id) ? store.state.indicatorGroupValues[indicatorGroupSet.id] : findValue(optionList, this.props.source);
 

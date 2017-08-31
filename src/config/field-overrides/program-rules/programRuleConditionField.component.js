@@ -20,7 +20,7 @@ class ProgramRuleConditionField extends React.Component {
     }
 
     componentDidMount() {
-        this.sub = modelToEditStore.subscribe(modelToEdit => {
+        this.sub = modelToEditStore.subscribe((modelToEdit) => {
             this.getProgramRuleVariablesForProgram(modelToEdit.program);
         });
     }
@@ -28,7 +28,7 @@ class ProgramRuleConditionField extends React.Component {
     getProgramRuleVariablesForProgram(program) {
         if (program) {
             this.d2.models.programRuleVariables.list({ filter: `program.id:eq:${program.id}`, paging: false })
-                .then(list => {
+                .then((list) => {
                     // If the component has been unmounted while the query was in progress,
                     // this.sub will have been deleted
                     if (this.sub) {
@@ -123,9 +123,7 @@ class ProgramRuleConditionField extends React.Component {
             }
         };
 
-        const makeTextPusher = (text) => {
-            return () => pushText(text);
-        };
+        const makeTextPusher = text => () => pushText(text);
 
         const op = (label, op) =>
             <RaisedButton
@@ -135,24 +133,20 @@ class ProgramRuleConditionField extends React.Component {
                 disabled={this.props.disabled}
             />;
 
-        const expander = (section) => {
-            return () => this.setState({ expand: section });
-        };
+        const expander = section => () => this.setState({ expand: section });
 
-        const makeArrowStyle = (section) => ({
+        const makeArrowStyle = section => ({
             display: 'inline-block',
             marginRight: 8,
             transition: 'all 175ms ease-out',
             transform: this.state.expand === section ? 'rotateZ(90deg)' : undefined,
         });
 
-        const makeSectionStyle = (section) => {
-            return Object.assign({
-                maxHeight: this.state.expand === section ? 350 : 0,
-                overflowY: this.state.expand === section ? 'auto' : 'auto',
-                padding: this.state.expand === section ? '0 4px 4px 2px' : '0 2px',
-            }, styles.rightScroll);
-        };
+        const makeSectionStyle = section => Object.assign({
+            maxHeight: this.state.expand === section ? 350 : 0,
+            overflowY: this.state.expand === section ? 'auto' : 'auto',
+            padding: this.state.expand === section ? '0 4px 4px 2px' : '0 2px',
+        }, styles.rightScroll);
 
         const refreshProgramRuleVariables = (e) => {
             this.getProgramRuleVariablesForProgram(modelToEditStore.getState().program);
@@ -161,7 +155,8 @@ class ProgramRuleConditionField extends React.Component {
 
         const programRuleButtonMapperRenderer = (v, i) => {
             const varSymbol = v.programRuleVariableSourceType === 'TEI_ATTRIBUTE' ? 'A' : '#';
-            const _a = '{', a_ = '}'; // Workaround for IntelliJ parsing error
+            const _a = '{',
+                a_ = '}'; // Workaround for IntelliJ parsing error
             const varLabel = (
                 <span>
                     <span style={styles.varSyntax}>{varSymbol}{_a}</span>
@@ -194,7 +189,8 @@ class ProgramRuleConditionField extends React.Component {
                                 <Link
                                     to="/edit/programSection/programRuleVariable/add"
                                     target="_blank"
-                                    rel="noopener nofollow">
+                                    rel="noopener nofollow"
+                                >
                                     <IconButton
                                         iconClassName="material-icons"
                                         disabled={this.props.disabled}
@@ -234,7 +230,7 @@ class ProgramRuleConditionField extends React.Component {
                         editorState={this.state.editorState}
                         value={this.props.value}
                         onChange={this.props.onChange}
-                        ref={(r) => this.editor = r}
+                        ref={r => this.editor = r}
                         disabled={this.props.disabled}
                     />
                     <div style={{ marginLeft: -8 }}>
@@ -249,9 +245,9 @@ class ProgramRuleConditionField extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div style={{ clear: 'both' }}/>
+                <div style={{ clear: 'both' }} />
             </div>
-        )
+        );
     }
 }
 

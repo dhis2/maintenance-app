@@ -89,7 +89,7 @@ function OrganisationUnitLevels(props, context) {
                             fieldValue,
                         });
                     }}
-                    onUpdateFormStatus={(formStatus) => actions.updateFormStatus({ levelIndex: index, formStatus })}
+                    onUpdateFormStatus={formStatus => actions.updateFormStatus({ levelIndex: index, formStatus })}
                 />
                 {translateButton}
             </div>
@@ -146,7 +146,6 @@ export default addD2Context(class extends React.Component {
     }
 
     render() {
-
         return (
             <div>
                 <OrganisationUnitLevelsWithState onTranslateClick={this._onTranslateClick} />

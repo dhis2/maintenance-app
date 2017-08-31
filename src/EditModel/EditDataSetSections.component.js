@@ -78,7 +78,7 @@ class EditDataSetSections extends React.Component {
             editSectionModel: Object.assign(newSection, {
                 dataSet: { id: modelToEditStore.state.id },
                 sortOrder: state.sections.reduce((p, s) => Math.max(s.sortOrder, p), 0) + 1,
-            })
+            }),
         }));
     }
 
@@ -87,10 +87,10 @@ class EditDataSetSections extends React.Component {
     }
 
     handleSectionSaved(savedSection) {
-        this.setState(state => {
+        this.setState((state) => {
             let replaced = false;
             const sections = state.sections
-                .map(s => {
+                .map((s) => {
                     if (s.id === savedSection.id) {
                         replaced = true;
                         return savedSection;
@@ -130,11 +130,11 @@ class EditDataSetSections extends React.Component {
                             sections: state.sections.filter(s => s.id !== section.id),
                         }));
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         snackActions.show({ message: this.getTranslation('failed_to_delete_section'), action: 'ok' });
                         log.warn('Failed to delete section', err);
                     });
-            }
+            },
         });
     }
 
@@ -158,7 +158,7 @@ class EditDataSetSections extends React.Component {
     }
 
     swapSections(sectionA, sectionB) {
-        this.setState(state => {
+        this.setState((state) => {
             const swapOrder = sectionA.sortOrder;
             sectionA.sortOrder = sectionB.sortOrder; // eslint-disable-line
             sectionB.sortOrder = swapOrder; // eslint-disable-line
@@ -170,7 +170,7 @@ class EditDataSetSections extends React.Component {
                 .then(() => {
                     snackActions.show({ message: this.getTranslation('section_moved') });
                 })
-                .catch(err => {
+                .catch((err) => {
                     log.warn('Failed to swap sections:', err);
                     snackActions.show({ message: this.getTranslation('failed_to_move_section'), action: 'ok' });
                 });

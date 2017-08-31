@@ -8,7 +8,7 @@ import snackActions from './snack.actions';
 
 const d2$ = Observable.fromPromise(getInstance());
 
-const snackBarEpic = action$ => {
+const snackBarEpic = (action$) => {
     const snackBarShowRequests$ = action$
         .ofType(SNACK_BAR_MESSAGE_SHOW_REQUEST)
         .map(({ payload }) => payload);
@@ -23,7 +23,7 @@ const snackBarEpic = action$ => {
                     message: d2.i18n.getTranslation(payload.message),
                 }))
         )
-        .map((payload) => showSnackBarMessage(payload));
+        .map(payload => showSnackBarMessage(payload));
 };
 
 const showSnackBarMessageEpic = action$ => action$

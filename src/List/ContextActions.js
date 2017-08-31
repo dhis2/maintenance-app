@@ -32,7 +32,7 @@ const contextActions = Action.createActionsFromNames([
     'runNow',
 ]);
 
-const confirm = (message) => new Promise((resolve, reject) => {
+const confirm = message => new Promise((resolve, reject) => {
     if (window.confirm(message)) {
         resolve();
     }
@@ -41,7 +41,7 @@ const confirm = (message) => new Promise((resolve, reject) => {
 
 // TODO: The action assumes that the appState actually has state
 contextActions.edit
-    .subscribe(action => {
+    .subscribe((action) => {
         goToRoute([
             '/edit',
             appStore.state.sideBar.currentSection,
@@ -52,7 +52,7 @@ contextActions.edit
 
 // TODO: The action assumes that the appState actually has state
 contextActions.clone
-    .subscribe(action => {
+    .subscribe((action) => {
         goToRoute([
             '/clone',
             appStore.state.sideBar.currentSection,
@@ -63,7 +63,7 @@ contextActions.clone
 
 contextActions.delete
     .subscribe(({ data: model }) => getD2()
-        .then(d2 => {
+        .then((d2) => {
             snackActions.show({
                 message: [
                     d2.i18n.getTranslation(`confirm_delete_${camelCaseToUnderscores(model.modelDefinition.name)}`),
@@ -93,7 +93,7 @@ contextActions.delete
                                 modelType: model.modelDefinition.name,
                             });
                         })
-                        .catch(response => {
+                        .catch((response) => {
                             log.warn(response);
                             snackActions.show({
                                 message: response.message
@@ -102,8 +102,8 @@ contextActions.delete
                                 action: 'ok',
                             });
                         });
-                }
-            })
+                },
+            });
         })
     );
 
@@ -142,18 +142,18 @@ contextActions.compulsoryDataElements
             fields: [
                 ':all',
                 'id,dataSetElements[id,dataElement[id]]',
-                'compulsoryDataElementOperands[id,dataElement[id],categoryOptionCombo[id]]'
+                'compulsoryDataElementOperands[id,dataElement[id],categoryOptionCombo[id]]',
             ].join(','),
         });
         const getDataElementOperands = () => api
             .get(
                 'dataElementOperands',
-                {
-                    fields: 'dataElement[id],categoryOptionCombo[id],displayName',
-                    totals: false,
-                    paging: false,
-                    dataSet: model.id,
-                }
+            {
+                fields: 'dataElement[id],categoryOptionCombo[id],displayName',
+                totals: false,
+                paging: false,
+                dataSet: model.id,
+            }
             )
             .then(responseData => responseData.dataElementOperands);
 
@@ -181,7 +181,7 @@ contextActions.compulsoryDataElements
     });
 
 contextActions.sectionForm
-    .subscribe(action => {
+    .subscribe((action) => {
         goToRoute([
             '/edit',
             appStore.state.sideBar.currentSection,
@@ -192,7 +192,7 @@ contextActions.sectionForm
     });
 
 contextActions.dataEntryForm
-    .subscribe(action => {
+    .subscribe((action) => {
         goToRoute([
             '/edit',
             appStore.state.sideBar.currentSection,
@@ -203,10 +203,10 @@ contextActions.dataEntryForm
     });
 
 contextActions.pdfDataSetForm
-    .subscribe(({data: model, complete, error}) => {
+    .subscribe(({ data: model, complete, error }) => {
         getD2()
             .then((d2) => {
-                window.open(d2.Api.getApi().baseUrl + `/pdfForm/dataSet/${model.id}`);
+                window.open(`${d2.Api.getApi().baseUrl}/pdfForm/dataSet/${model.id}`);
             })
             .then(complete)
             .catch(error);
@@ -224,7 +224,7 @@ contextActions.runNow
                     snackActions.show({ message: d2.i18n.getTranslation('report_queued_for_delivery') });
                     actionComplete();
                 })
-                .catch(err => {
+                .catch((err) => {
                     snackActions.show({ message: d2.i18n.getTranslation('failed_to_schedule_report'), action: 'ok' });
                     actionFailed(err);
                 });
@@ -234,11 +234,11 @@ contextActions.runNow
 contextActions.preview
     .subscribe(({ data: model, complete: actionComplete, error: actionFailed }) => {
         getD2()
-            .then(d2 => {
+            .then((d2) => {
                 window.open(`${d2.Api.getApi().baseUrl}/${[model.modelDefinition.name, model.id, 'render'].join('/')}`);
             })
             .then(actionComplete)
-            .catch(err => {
+            .catch((err) => {
                 snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview'), action: 'ok' });
                 actionFailed(err);
             });

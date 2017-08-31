@@ -113,11 +113,11 @@ function systemSettingIsFalseOperator(value, settingKey) {
 }
 
 function ruleRunner({ whenFieldName, operatorFn, whenValue }, fieldConfig, model) {
-    return operatorFn(model[whenFieldName], whenValue)
+    return operatorFn(model[whenFieldName], whenValue);
 }
 
 function rulesRunner(rules, rule, modelToEdit, fieldConfigs) {
-    return rules.map(whenRule => {
+    return rules.map((whenRule) => {
         log.debug(`For ${rule.field} run the rule where when ${whenRule.field || rule.field} ${getWhenOperator(whenRule.operator).name} ${whenRule.value || ''} then run`);
         const fieldConfigForRule = fieldConfigs.find(fieldConfig => fieldConfig.name === (whenRule.field || rule.field));
 
@@ -135,7 +135,7 @@ export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
             const rules = isArray(rule.when) ? rule.when : [rule.when];
             const rulePassed = rulesRunner(rules, rule, modelToEdit, fieldConfigs).some(result => result === true);
 
-            log.debug(`And the result is`, rulePassed);
+            log.debug('And the result is', rulePassed);
 
             (rule.operations || [rule.operation])
                 .forEach((operation) => {

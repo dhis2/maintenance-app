@@ -15,7 +15,7 @@ const removeProgramStageNotification = action$ => action$
     .flatMap(({ payload: model }) => Observable.of(model)
         .flatMap(model => eventProgramStore
             .take(1)
-            .map(eventProgramState => {
+            .map((eventProgramState) => {
                 const { programStages, programStageNotifications } = eventProgramState;
                 const programStage = first(programStages);
                 const stageNotifications = getStageNotifications({ programStages, programStageNotifications });
@@ -56,7 +56,7 @@ const saveProgramStageNotification = (action$, store) => action$
             .map(eventProgramState => eventProgramStore.setState(eventProgramState))
             .mapTo(Observable.of(saveStageNotificationSuccess(), setEditModel(null)))
             .mergeAll()
-            .catch((error) => Observable.of(saveStageNotificationError(error)))
+            .catch(error => Observable.of(saveStageNotificationError(error)))
     ));
 
 const setProgramStageNotificationAddModel = (action$, store) => action$

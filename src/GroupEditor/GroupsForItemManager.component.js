@@ -66,7 +66,7 @@ export default React.createClass({
 
         const d2 = this.context.d2;
         const accessibleModels = ['indicator', 'dataElement', 'categoryOption']
-            .filter(schemaName => d2.currentUser.canCreate(d2.models[`${schemaName}Group`]))
+            .filter(schemaName => d2.currentUser.canCreate(d2.models[`${schemaName}Group`]));
 
         return (
             <div style={contentStyle}>
@@ -88,20 +88,16 @@ export default React.createClass({
 
     _assignItems(items) {
         const requests = this.createUrls(items)
-            .map(url => {
-                return d2lib.getInstance()
+            .map(url => d2lib.getInstance()
                     .then(d2 => d2.Api.getApi())
-                    .then(api => api.post(url));
-            });
+                    .then(api => api.post(url)));
 
         return Promise.all(requests)
             .then(() => {
                 const itemDefinition = `${this.state.modelToEdit.modelDefinition.name}Group`;
 
                 return d2lib.getInstance()
-                    .then((d2) => {
-                        return Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]);
-                    })
+                    .then(d2 => Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]))
                     .then(([d2, fullModel]) => {
                         this.state.assignedItemStore.setState(fullModel[d2.models[itemDefinition].plural]);
                         this.setState({
@@ -114,20 +110,16 @@ export default React.createClass({
 
     _removeItems(items) {
         const requests = this.createUrls(items)
-            .map(url => {
-                return d2lib.getInstance()
+            .map(url => d2lib.getInstance()
                     .then(d2 => d2.Api.getApi())
-                    .then(api => api.delete(url));
-            });
+                    .then(api => api.delete(url)));
 
         return Promise.all(requests)
             .then(() => {
                 const itemDefinition = `${this.state.modelToEdit.modelDefinition.name}Group`;
 
                 return d2lib.getInstance()
-                    .then((d2) => {
-                        return Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]);
-                    })
+                    .then(d2 => Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]))
                     .then(([d2, fullModel]) => {
                         this.state.assignedItemStore.setState(fullModel[d2.models[itemDefinition].plural]);
                         this.setState({
@@ -158,7 +150,7 @@ export default React.createClass({
         d2lib.getInstance()
             .then((d2) => {
                 if (!d2.models[itemDefinition]) {
-                    return Promise.reject('This groupType does not have a model named: ' + itemDefinition);
+                    return Promise.reject(`This groupType does not have a model named: ${itemDefinition}`);
                 }
 
                 const availablePromise = d2.models[itemDefinition].list({ paging: false });
@@ -178,14 +170,12 @@ export default React.createClass({
     },
 
     reset() {
-        if (!this.state.modelToEdit) {return;}
+        if (!this.state.modelToEdit) { return; }
 
         const itemDefinition = `${this.state.modelToEdit.modelDefinition.name}Group`;
 
         d2lib.getInstance()
-            .then((d2) => {
-                return Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]);
-            })
+            .then(d2 => Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]))
             .then(([d2, fullModel]) => {
                 this.state.assignedItemStore.setState(fullModel[d2.models[itemDefinition].plural]);
                 this.setState({

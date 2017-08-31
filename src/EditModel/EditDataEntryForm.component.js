@@ -135,16 +135,16 @@ class EditDataEntryForm extends React.Component {
             // Create inserter functions for all insertable elements
             // This avoids having to bind the functions during rendering
             this.insertFn = {};
-            Object.keys(this.operands).forEach(x => {
+            Object.keys(this.operands).forEach((x) => {
                 this.insertFn[x] = this.insertElement.bind(this, x);
             });
-            Object.keys(this.totals).forEach(x => {
+            Object.keys(this.totals).forEach((x) => {
                 this.insertFn[x] = this.insertElement.bind(this, x);
             });
-            Object.keys(this.indicators).forEach(x => {
+            Object.keys(this.indicators).forEach((x) => {
                 this.insertFn[x] = this.insertElement.bind(this, x);
             });
-            Object.keys(this.flags).forEach(flag => {
+            Object.keys(this.flags).forEach((flag) => {
                 this.insertFn[flag] = this.insertFlag.bind(this, flag);
             });
 
@@ -153,7 +153,7 @@ class EditDataEntryForm extends React.Component {
             this.filterAction
                 .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
                 .debounceTime(75)
-                .subscribe(args => {
+                .subscribe((args) => {
                     const filter = args.data
                         .split(' ')
                         .filter(x => x.length);
@@ -227,10 +227,10 @@ class EditDataEntryForm extends React.Component {
                 snackActions.show({ message: this.getTranslation('form_saved') });
                 goToRoute('list/dataSetSection/dataSet');
             })
-            .catch(e => {
+            .catch((e) => {
                 log.warn('Failed to save form:', e);
                 snackActions.show({
-                    message: `${this.getTranslation('failed_to_save_form')}${e.message ? ': ' + e.message : ''}`,
+                    message: `${this.getTranslation('failed_to_save_form')}${e.message ? `: ${e.message}` : ''}`,
                     action: this.context.d2.i18n.getTranslation('ok'),
                 });
             });
@@ -251,7 +251,7 @@ class EditDataEntryForm extends React.Component {
                         snackActions.show({ message: this.getTranslation('form_deleted') });
                         goToRoute('list/dataSetSection/dataSet');
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error('Failed to delete form:', err);
                         snackActions.show({ message: this.getTranslation('failed_to_delete_form'), action: 'ok' });
                     });
@@ -399,7 +399,7 @@ class EditDataEntryForm extends React.Component {
                     {
                         filteredItems
                             .sort((a, b) => keySet[a] ? keySet[a].localeCompare(keySet[b]) : a.localeCompare(b))
-                            .map(key => {
+                            .map((key) => {
                                 // Active items are items that are not already added to the form
                                 const isActive = this.state.usedIds.indexOf(key) === -1;
                                 const className = isActive ? 'item active' : 'item inactive';
@@ -457,7 +457,7 @@ class EditDataEntryForm extends React.Component {
                     {this.state.formTitle} {this.getTranslation('data_entry_form')}
                 </Heading>
                 {this.renderPalette()}
-                <textarea id="designTextarea" name="designTextarea"/>
+                <textarea id="designTextarea" name="designTextarea" />
                 <Paper style={styles.formPaper}>
                     <div style={styles.formSection}>
                         <SelectField
@@ -465,14 +465,14 @@ class EditDataEntryForm extends React.Component {
                             floatingLabelText="Form display style"
                             onChange={this.handleStyleChange}
                         >
-                            <MenuItem value={'NORMAL'} primaryText={this.getTranslation('normal')}/>
-                            <MenuItem value={'COMFORTABLE'} primaryText={this.getTranslation('comfortable')}/>
-                            <MenuItem value={'COMPACT'} primaryText={this.getTranslation('compact')}/>
-                            <MenuItem value={'NONE'} primaryText={this.getTranslation('none')}/>
+                            <MenuItem value={'NORMAL'} primaryText={this.getTranslation('normal')} />
+                            <MenuItem value={'COMFORTABLE'} primaryText={this.getTranslation('comfortable')} />
+                            <MenuItem value={'COMPACT'} primaryText={this.getTranslation('compact')} />
+                            <MenuItem value={'NONE'} primaryText={this.getTranslation('none')} />
                         </SelectField>
                     </div>
                     <div style={styles.formSection}>
-                        <RaisedButton label={this.getTranslation('save')} primary onClick={this.handleSaveClick}/>
+                        <RaisedButton label={this.getTranslation('save')} primary onClick={this.handleSaveClick} />
                         <FlatButton
                             label={this.getTranslation('cancel')}
                             style={styles.cancelButton}

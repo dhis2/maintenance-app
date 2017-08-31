@@ -110,7 +110,7 @@ describe('Stepper utility functions', () => {
             const ContentStepper = createStepperContentFromConfig(stepperConfig);
             renderedStepper = shallow(<ContentStepper activeStep="first" />);
 
-            expect(log.warn).to.be.calledWith(`Could not find a content component for a step with key (first) in`, stepperConfig);
+            expect(log.warn).to.be.calledWith('Could not find a content component for a step with key (first) in', stepperConfig);
         });
 
         it('should render null when no component has been provided', () => {
@@ -135,7 +135,7 @@ describe('Stepper utility functions', () => {
             stepperConfig[0].component = MyContent;
 
             const ContentStepper = createStepperContentFromConfig(stepperConfig);
-            renderedStepper = shallow(<ContentStepper activeStep="first" name="John" coolStyle={true} />);
+            renderedStepper = shallow(<ContentStepper activeStep="first" name="John" coolStyle />);
 
             expect(renderedStepper.props()).to.deep.equal({ name: 'John', coolStyle: true });
         });
@@ -147,7 +147,7 @@ describe('Stepper utility functions', () => {
 
         beforeEach(() => {
             onBackClickSpy = sinon.spy();
-            backButton = shallow(<StepperNavigationBack onBackClick={onBackClickSpy} />)
+            backButton = shallow(<StepperNavigationBack onBackClick={onBackClickSpy} />);
         });
 
         it('should render a IconButton', () => {
@@ -171,7 +171,7 @@ describe('Stepper utility functions', () => {
 
         beforeEach(() => {
             onForwardClickSpy = sinon.spy();
-            forwardButton = shallow(<StepperNavigationForward onForwardClick={onForwardClickSpy} />)
+            forwardButton = shallow(<StepperNavigationForward onForwardClick={onForwardClickSpy} />);
         });
 
         it('should render a IconButton', () => {

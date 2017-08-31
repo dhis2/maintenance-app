@@ -16,7 +16,7 @@ const styles = {
 export default function FormActionButtons({ onSaveAction, onCancelAction }) {
     return (
         <div>
-            <SaveButton onClick={onSaveAction} isValid={true} />
+            <SaveButton onClick={onSaveAction} isValid />
             <CancelButton onClick={onCancelAction} style={styles.cancelButton} />
         </div>
     );

@@ -38,14 +38,14 @@ class EditOptionSet extends Component {
             disabledTabStyle: {
                 color: '#999',
                 background: 'rgba(0,0,0, 0.1)',
-            }
+            },
         };
         const activeTab = props.params.activeView ? props.params.activeView : '';
         const isAddOperation = params.modelId === 'add';
         const onTabChanged = (tabsValue) => {
             // The following check prevents propagated change events to change the tabs. (https://jira.dhis2.org/browse/DHIS2-1059)
             // TODO: This has been fixed in material-ui 0.16. So this can be removed when upgraded. (https://github.com/callemall/material-ui/issues/2189)
-            if (typeof tabsValue !== 'string') { return; };
+            if (typeof tabsValue !== 'string') { return; }
 
             this.setState({
                 tabsValue,
@@ -84,7 +84,7 @@ class EditOptionSet extends Component {
                                 {...params}
                                 onCancel={() => goToRoute(`/list/${params.groupName}/${params.modelType}`)}
                                 onSaveSuccess={successHandler}
-                                onSaveError={(errorMessage) => onSaveError(errorMessage, params)}
+                                onSaveError={errorMessage => onSaveError(errorMessage, params)}
                             />
                         </Tab>
                         <Tab

@@ -94,7 +94,7 @@ actions.saveOption
                 return true;
             })
             .then(complete)
-            .catch(response => {
+            .catch((response) => {
                 if (response.response && response.response.errorReports && response.response.errorReports.length && response.response.errorReports[0].message) {
                     return error({ message: response.response.errorReports[0].message, translate: false });
                 }
@@ -135,12 +135,11 @@ actions.deleteOption.subscribe(async ({ data: [modelToDelete, modelParent], comp
 
     return api.delete(`${modelParent.modelDefinition.apiEndpoint}/${modelParent.id}/options/${modelToDelete.id}`)
         .then(() => modelToDelete.delete())
-        .then(() => snackActions.show({ message: deleteMessage}))
+        .then(() => snackActions.show({ message: deleteMessage }))
         .then(() => actions.getOptionsFor(modelParent))
         .then(() => modelParent.options.delete(modelToDelete.id))
         .then(complete)
         .catch(error);
-
 });
 
 export async function loadOptionsForOptionSet(optionSetId, paging) {

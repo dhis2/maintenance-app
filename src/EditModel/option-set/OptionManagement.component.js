@@ -27,7 +27,7 @@ import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 const optionList$ = Observable.combineLatest(
     optionsForOptionSetStore,
     Observable.of(['name', 'code']),
-    ({options, pager, ...other}, columns) => ({
+    ({ options, pager, ...other }, columns) => ({
         ...other,
         rows: options,
         pager,
@@ -43,7 +43,7 @@ const optionForm$ = Observable.combineLatest(
         const d2 = await getInstance();
 
         return fieldConfigs
-            .map(fieldConfig => {
+            .map((fieldConfig) => {
                 // Adjust the code when dealing with a different
                 if (fieldConfig.name === 'code' && typeToFieldMap.has(modelToEdit.valueType)) {
                     // Get the correct matching Ui component
@@ -52,7 +52,7 @@ const optionForm$ = Observable.combineLatest(
                     fieldConfig.type = typeToFieldMap.get(modelToEdit.valueType);
                     // Generate the validator and pre-translate their messages
                     fieldConfig.validators = getValidatorsFromModelValidation(fieldConfig, d2.models.option)
-                        .map(validator => {
+                        .map((validator) => {
                             validator.message = d2.i18n.getTranslation(validator.message);
 
                             return validator;
@@ -94,10 +94,10 @@ const optionFormData$ = Observable.combineLatest(
             model,
             isAdd,
             title: d2.i18n.getTranslation(isAdd ? 'option_add' : 'option_edit'),
-            ...other
+            ...other,
         });
     })
-    .filter(({fieldConfigs}) => fieldConfigs.length);
+    .filter(({ fieldConfigs }) => fieldConfigs.length);
 
 class AddOptionDialog extends Component {
     constructor(...args) {
@@ -146,7 +146,7 @@ class AddOptionDialog extends Component {
         actions.saveOption(this.props.model, this.props.parentModel)
             .subscribe(
                 () => {
-                    snackActions.show({message: 'option_saved', translate: true});
+                    snackActions.show({ message: 'option_saved', translate: true });
                     this.setState({
                         isSaving: false,
                     });
@@ -156,7 +156,7 @@ class AddOptionDialog extends Component {
                     actions.getOptionsFor(this.props.parentModel);
                 },
                 ({ message, translate }) => {
-                    snackActions.show({message, action: 'ok', translate});
+                    snackActions.show({ message, action: 'ok', translate });
                     this.setState({
                         isSaving: false,
                     });
@@ -168,7 +168,7 @@ AddOptionDialog.defaultProps = {
     fieldConfigs: [],
 };
 
-const OptionDialogForOptions = withStateFrom(optionFormData$, AddOptionDialog)
+const OptionDialogForOptions = withStateFrom(optionFormData$, AddOptionDialog);
 
 class OptionManagement extends Component {
     constructor(props, context) {
@@ -230,12 +230,12 @@ class OptionManagement extends Component {
 
         const contextActions = {
             edit: this._onEditOption,
-            delete: (modelToDelete) => actions.deleteOption(modelToDelete, this.props.model),
+            delete: modelToDelete => actions.deleteOption(modelToDelete, this.props.model),
             translate: (modelToTranslate) => {
                 this.setState({
                     modelToTranslate,
-                })
-            }
+                });
+            },
         };
 
         return (
@@ -265,7 +265,7 @@ class OptionManagement extends Component {
                     open={Boolean(this.state.modelToTranslate)}
                     onTranslationSaved={this._translationSaved}
                     onTranslationError={this._translationErrored}
-                    onRequestClose={() => this.setState({ modelToTranslate: null, })}
+                    onRequestClose={() => this.setState({ modelToTranslate: null })}
                     fieldsToTranslate={['name']}
                 /> : null }
             </div>
@@ -287,11 +287,11 @@ class OptionManagement extends Component {
             hasNextPage: () => Boolean(this.props.pager.hasNextPage) && this.props.pager.hasNextPage(),
             hasPreviousPage: () => Boolean(this.props.pager.hasPreviousPage) && this.props.pager.hasPreviousPage(),
             onNextPageClick: () => {
-                this.setState({isLoading: true});
+                this.setState({ isLoading: true });
                 this.props.getNextPage();
             },
             onPreviousPageClick: () => {
-                this.setState({isLoading: true});
+                this.setState({ isLoading: true });
                 this.props.getPreviousPage();
             },
             total: this.props.pager.total,
@@ -358,11 +358,9 @@ OptionManagement.defaultProps = {
     optionDialogOpen: false,
 };
 
-const stateForOptionManagement$ = Observable.combineLatest(modelToEditStore, optionList$, (modelToEdit, optionList) => {
-    return {
-        ...optionList,
-        model: modelToEdit,
-    }
-});
+const stateForOptionManagement$ = Observable.combineLatest(modelToEditStore, optionList$, (modelToEdit, optionList) => ({
+    ...optionList,
+    model: modelToEdit,
+}));
 
 export default withStateFrom(stateForOptionManagement$, OptionManagement);

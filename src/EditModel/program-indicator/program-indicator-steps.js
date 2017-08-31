@@ -10,7 +10,7 @@ import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
 
 const editDetailsFields = difference(fieldOrder.for('programIndicator'), ['expression', 'filter']);
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({ editFieldChanged }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ editFieldChanged }, dispatch);
 
 const programIndicator$ = programIndicatorStore
     .map(get('programIndicator'));
@@ -37,7 +37,7 @@ const steps = [
     {
         key: STEP_EXPRESSION_EDIT,
         name: STEP_EXPRESSION_EDIT,
-        component: DataExpressionForm
+        component: DataExpressionForm,
     },
     {
         key: STEP_FILTER_EDIT,
