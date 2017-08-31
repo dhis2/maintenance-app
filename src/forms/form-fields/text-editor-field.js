@@ -40,7 +40,7 @@ class ProgramRuleConditionField extends React.Component {
             }
 
             this.hackyDebounceTimeout = setTimeout(() => {
-                this.props.onChange({ target: { value }});
+                this.props.onChange({ target: { value } });
             }, 250);
         };
     }
@@ -61,7 +61,7 @@ class ProgramRuleConditionField extends React.Component {
             this.props.onChange({
                 target: {
                     value: `${value.substr(0, selectionStart)}${text}${value.substr(selectionEnd)}`.trim(),
-                }
+                },
             });
             window.setTimeout(() => {
                 this.editor.setSelectionRange(selectionStart + text.length, selectionStart + text.length);
@@ -76,7 +76,7 @@ class ProgramRuleConditionField extends React.Component {
                 style={styles.ed17x0r}
                 value={this.state.value}
                 onChange={this.onChange}
-                ref={(r) => this.editor = r}
+                ref={r => this.editor = r}
             />
         );
     }

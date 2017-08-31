@@ -35,7 +35,7 @@ multiSelectActions.addItemsToModelCollection
             }
 
             modelsToAdd
-                .forEach(itemToAdd => {
+                .forEach((itemToAdd) => {
                     model[propertyName].add(itemToAdd);
                 });
 
@@ -54,7 +54,7 @@ multiSelectActions.removeItemsFromModelCollection
         }
 
         modelsToRemove
-            .forEach(itemToRemove => {
+            .forEach((itemToRemove) => {
                 model[propertyName].remove(itemToRemove);
             });
 
@@ -71,7 +71,7 @@ export default React.createClass({
         onChange: React.PropTypes.func.isRequired,
         value: React.PropTypes.oneOfType([
             React.PropTypes.shape({ values: React.PropTypes.func.isRequired }),
-            React.PropTypes.arrayOf(React.PropTypes.func)
+            React.PropTypes.arrayOf(React.PropTypes.func),
         ]),
     },
 
@@ -198,7 +198,7 @@ export default React.createClass({
         this.props.model[this.props.referenceProperty].clear();
 
         // Add the items back in the correct order
-        newOrder.forEach(item => {
+        newOrder.forEach((item) => {
             if (itemList.has(item)) {
                 this.props.model[this.props.referenceProperty].add(itemList.get(item));
             }
@@ -332,12 +332,10 @@ export default React.createClass({
 
     populateItemStore(availableItems) {
         if (this.props.referenceProperty === 'aggregationLevels') {
-            this.state.itemStore.setState(Array.from(availableItems.values()).map((model) => {
-                return {
-                    value: model.level,
-                    text: model.displayName || model.name,
-                };
-            }));
+            this.state.itemStore.setState(Array.from(availableItems.values()).map(model => ({
+                value: model.level,
+                text: model.displayName || model.name,
+            })));
             return;
         }
 

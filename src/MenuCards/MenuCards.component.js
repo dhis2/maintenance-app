@@ -96,7 +96,7 @@ export default React.createClass({
         return (
             <div>
                 {this.props.menuItems.map(this.renderCard)}
-                <div style={{ clear: 'both' }}></div>
+                <div style={{ clear: 'both' }} />
             </div>
         );
     },

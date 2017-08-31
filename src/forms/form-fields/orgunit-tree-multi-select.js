@@ -69,7 +69,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
 
         this.subscription = this._searchOrganisationUnits.map(action => action.data)
             .debounceTime(400)
-            .map(searchValue => {
+            .map((searchValue) => {
                 if (!searchValue.trim()) {
                     return Observable.of(this.state.originalRoots);
                 }
@@ -84,7 +84,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 return Observable.fromPromise(organisationUnitRequest);
             })
             .concatAll()
-            .subscribe((models) => this.setState({ rootOrgUnits: models }));
+            .subscribe(models => this.setState({ rootOrgUnits: models }));
     }
 
     componentWillUnmount() {
@@ -116,7 +116,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                             selected={this.state.selectedOrgUnits}
                             onSelectClick={this._handleClick}
                             currentRoot={this.state.currentRoot}
-                            onChangeCurrentRoot={(currentRoot) => this.setState({ currentRoot })}
+                            onChangeCurrentRoot={currentRoot => this.setState({ currentRoot })}
                             initiallyExpanded={[rootOu.path]}
                         />
                     ))
@@ -150,15 +150,15 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             color: 'rgba(0,0,0,0.5)',
         };
         const controlOverlayStyles = this.state.currentRoot ? {} : {
-                position: 'absolute',
-                width: 495,
-                height: 240,
-                marginLeft: -10,
-                marginTop: 4,
-                backgroundColor: 'rgba(230,230,230,0.3)',
-                zIndex: 2,
-                borderRadius: 8,
-            };
+            position: 'absolute',
+            width: 495,
+            height: 240,
+            marginLeft: -10,
+            marginTop: 4,
+            backgroundColor: 'rgba(230,230,230,0.3)',
+            zIndex: 2,
+            borderRadius: 8,
+        };
         const currentRootStyle = {
             border: '1px solid rgba(0,0,0,0.1)',
             borderRadius: 3,
@@ -170,7 +170,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
         return (
             <div style={{ position: 'relative', minWidth: 850 }}>
                 <TextField
-                    onChange={(event) => this._searchOrganisationUnits(event.target.value)}
+                    onChange={event => this._searchOrganisationUnits(event.target.value)}
                     floatingLabelText={this.context.d2.i18n.getTranslation('filter_organisation_units_by_name')}
                     fullWidth
                 />
@@ -187,7 +187,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                                 <span>{this.context.d2.i18n.getTranslation('select_a_parent_organisation_unit')}</span>
                             )
                         }
-                        <div style={controlOverlayStyles}></div>
+                        <div style={controlOverlayStyles} />
                         <OrgUnitSelectByLevel
                             levels={this.state.orgUnitLevels}
                             selected={this.state.selectedOrgUnits}
@@ -232,10 +232,10 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
             // Add the rest
             .map(id => d2.models.organisationUnits.create({ id }));
 
-        additions.forEach(ou => {
+        additions.forEach((ou) => {
             modelOrgUnits.add(ou);
         });
-        deletions.forEach(ou => {
+        deletions.forEach((ou) => {
             modelOrgUnits.remove(ou);
         });
 
@@ -244,7 +244,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
 
     _handleClick(event, orgUnit) {
         if (this.state.selectedOrgUnits.includes(orgUnit.path)) {
-            this.setState(state => {
+            this.setState((state) => {
                 state.selectedOrgUnits.splice(state.selectedOrgUnits.indexOf(orgUnit.path), 1);
 
                 this.props.model.organisationUnits.remove(orgUnit);
@@ -252,7 +252,7 @@ export default class OrganisationUnitTreeMultiSelect extends React.Component {
                 return { selectedOrgUnits: state.selectedOrgUnits };
             });
         } else {
-            this.setState(state => {
+            this.setState((state) => {
                 state.selectedOrgUnits.push(orgUnit.path);
 
                 this.props.model.organisationUnits.add(orgUnit);

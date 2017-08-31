@@ -13,7 +13,7 @@ function MenuCardsForAllSections(props) {
             {props.sections
                 // Only show sections that have items
                 .filter(metaDataSection => metaDataSection.items.length > 0)
-                .map((metaDataSection) => (
+                .map(metaDataSection => (
                     <div key={metaDataSection.key}>
                         <Heading>{metaDataSection.name}</Heading>
                         <MenuCards menuItems={metaDataSection.items} />

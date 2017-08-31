@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import DragHandle from './DragHandle.component';
-import { grey200 } from "material-ui/styles/colors";
+import { grey200 } from 'material-ui/styles/colors';
 
 const styles = {
     dataElement: {
@@ -23,19 +23,17 @@ const styles = {
     },
 };
 
-const SortableDataList = SortableContainer(({ dataElements, isSortingIndex }) => {
-    return <div>
-        { dataElements.map((dataElement, index) => (
-            <SortableDataElement
-                dataElement={dataElement}
-                index={index}
-                isSortingIndex={isSortingIndex}
-                key={`item-${index}`}
-                sortIndex={index}
-            />
+const SortableDataList = SortableContainer(({ dataElements, isSortingIndex }) => <div>
+    { dataElements.map((dataElement, index) => (
+        <SortableDataElement
+            dataElement={dataElement}
+            index={index}
+            isSortingIndex={isSortingIndex}
+            key={`item-${index}`}
+            sortIndex={index}
+        />
         ))}
-    </div>;
-});
+</div>);
 
 const SortableDataElement = SortableElement(({ index, sortIndex, dataElement, isSortingIndex }) => (
     <DataElement index={index} sortOrder={sortIndex} dataElement={dataElement} isSortingIndex={isSortingIndex} />

@@ -20,13 +20,13 @@ const PROGRAM_STAGE_VARIABLES = [
     'current_date',
 ];
 
-const toVariableType = (name) => ['V', name];
-const toAttributeType = (name) => ['A', name]; // Used for program attributes
+const toVariableType = name => ['V', name];
+const toAttributeType = name => ['A', name]; // Used for program attributes
 
 const ProgramStageNotificationSubjectAndMessageTemplateFields = compose(
     connect(undefined, dispatch => bindActionCreators({
-            onUpdate: ({ fieldName, value }) => setStageNotificationValue(fieldName, value)
-        },
+        onUpdate: ({ fieldName, value }) => setStageNotificationValue(fieldName, value),
+    },
         dispatch
     )),
     withProps({
@@ -59,10 +59,10 @@ export default new Map([
                 return null;
             }
 
-            return <DropDownAsync {...props} />
-        }
+            return <DropDownAsync {...props} />;
+        },
     }],
     ['messageTemplate', {
         component: ProgramStageNotificationSubjectAndMessageTemplateFields,
-    }]
+    }],
 ]);

@@ -40,10 +40,10 @@ class AddNewSection extends Component {
     };
 
     onNameChanged = (event, sectionName) => {
-        this.setState({ sectionName })
+        this.setState({ sectionName });
     };
 
-    focusOnSectionName = input => {
+    focusOnSectionName = (input) => {
         if (input) {
             setTimeout(() => { input.focus(); }, 20);
         }
@@ -53,12 +53,12 @@ class AddNewSection extends Component {
         const actions = [
             <FlatButton
                 label="Cancel"
-                primary={true}
+                primary
                 onTouchTap={this.closeDialog}
             />,
             <FlatButton
                 label="Add"
-                primary={true}
+                primary
                 disabled={!this.state.sectionName}
                 onTouchTap={this.confirmAddNewSection}
             />,

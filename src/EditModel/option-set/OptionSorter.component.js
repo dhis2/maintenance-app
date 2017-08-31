@@ -60,13 +60,13 @@ class OptionSorter extends Component {
 
                     return modelToEditStore
                         .take(1)
-                        .map((modelToEdit) => ({
+                        .map(modelToEdit => ({
                             options: options.map(optionData => d2.models.option.create(optionData)),
                             modelToEdit,
                         }));
                 })
                 .concatAll()
-                .map(({options, modelToEdit}) => {
+                .map(({ options, modelToEdit }) => {
                     modelToEdit.options.clear();
                     options.forEach((option) => {
                         modelToEdit.options.add(option);
@@ -89,7 +89,7 @@ class OptionSorter extends Component {
                         this.setState({
                             sortedASC: {
                                 ...this.state.sortedASC,
-                                [propertyName]: !this.state.sortedASC[propertyName]
+                                [propertyName]: !this.state.sortedASC[propertyName],
                             },
                             isSorting: false,
                         });

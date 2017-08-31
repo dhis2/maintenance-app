@@ -9,12 +9,12 @@ function isPoint(poly) {
 function isValidLatitude(value) {
     return isNumber(value) && value <= 90 && value >= -90;
 }
-isValidLatitude.message = "a_latitude_should_be_a_number_between_-90_and_90";
+isValidLatitude.message = 'a_latitude_should_be_a_number_between_-90_and_90';
 
 function isValidLongitude(value) {
     return isNumber(value) && value <= 180 && value >= -180;
 }
-isValidLongitude.message = "a_longitude_should_be_a_number_between_-180_and_180";
+isValidLongitude.message = 'a_longitude_should_be_a_number_between_-180_and_180';
 
 class CoordinateField extends React.Component {
     constructor(props, context) {

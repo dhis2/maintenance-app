@@ -19,7 +19,7 @@ const SearchBox = React.createClass({
     getInitialState() {
         return {
             showSearchField: false,
-            value: ''
+            value: '',
         };
     },
 
@@ -72,7 +72,7 @@ const SearchBox = React.createClass({
             value: event.target.value,
         });
         this.searchBoxCb(event);
-    }
+    },
 });
 
 export default SearchBox;

@@ -46,7 +46,7 @@ describe('Event Program reducer', () => {
 
                 expect(reducer(initialDefaultState, {
                     type: actions.EVENT_PROGRAM_STEP_CHANGE,
-                    payload: steps.STEP_DATA_ELEMENTS
+                    payload: steps.STEP_DATA_ELEMENTS,
                 })).to.deep.equal(expectedDefaultState);
             });
         });

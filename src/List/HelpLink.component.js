@@ -35,11 +35,11 @@ function findHelpLinkForPath(path, schema) {
     ]);
 
     const variablesToReplaceCamel = new Map([
-        ['objectType', camelCaseToUnderscores(schema)]
+        ['objectType', camelCaseToUnderscores(schema)],
     ]);
 
     const firstRouteWithHelpLink = Object.keys(inlineHelpMapping)
-        .find(key => {
+        .find((key) => {
             const pathToMatch = getReplacedPath(key, variablesToReplace);
 
             return (new RegExp(pathToMatch)).test(path);
@@ -55,7 +55,7 @@ function findHelpLinkForPath(path, schema) {
 function getReplacedPath(key, variablesToReplace) {
     const placeholder = /\$\{(.+?)\}/g;
 
-    return key.replace(placeholder, function (match, variable, fullstring) {
+    return key.replace(placeholder, (match, variable, fullstring) => {
         if (variablesToReplace.has(variable) && variablesToReplace.get(variable)) {
             return variablesToReplace.get(variable);
         }
@@ -84,11 +84,11 @@ export default function HelpLink({ schema }, { d2 }) {
             >
                 help_outline
             </IconButton>
-        )
+        );
     }
 
     return null;
 }
 HelpLink.contextTypes = {
     d2: React.PropTypes.object,
-}
+};

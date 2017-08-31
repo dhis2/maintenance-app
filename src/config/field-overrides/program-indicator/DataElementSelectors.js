@@ -8,22 +8,19 @@ import { getInstance } from 'd2/lib/d2';
 import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import CollapsibleLists from './CollapsibleLists';
 
-const getAvailableDataElementsForProgram = memoize(program => {
-    return Observable.fromPromise(getInstance())
+const getAvailableDataElementsForProgram = memoize(program => Observable.fromPromise(getInstance())
         .mergeMap(memoize(d2 => d2.models.programStages
             .filter().on('program.id').equals(program)
             .list({ fields: 'id,displayName,programStageDataElements[id,dataElement[id,displayName]' })
-        ));
-});
+        )));
 
 const DataElementSelectors = componentFromStream(props$ => props$
-    .flatMap(({ program, ...props }) => {
-        return getAvailableDataElementsForProgram(program)
+    .flatMap(({ program, ...props }) => getAvailableDataElementsForProgram(program)
             .map((programStageCollection) => {
                 const programStages = programStageCollection.toArray();
 
                 const availableDataElements = programStages
-                    .map(programStage => {
+                    .map((programStage) => {
                         const programStageDataElements = compose(values, getOr([], 'programStageDataElements'))(programStage);
 
                         return {
@@ -32,7 +29,7 @@ const DataElementSelectors = componentFromStream(props$ => props$
                                 .map(({ dataElement }) => ({
                                     label: dataElement.displayName,
                                     value: `#{${programStage.id}.${dataElement.id}}`,
-                                }))
+                                })),
                         };
                     });
 
@@ -40,9 +37,7 @@ const DataElementSelectors = componentFromStream(props$ => props$
                     ...props,
                     listSources: availableDataElements,
                 });
-            });
-
-    })
+            }))
     .map(props => (<CollapsibleLists {...props} />))
     .startWith(<CircularProgress />)
 );

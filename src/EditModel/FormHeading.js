@@ -3,7 +3,7 @@ import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import HelpLink from '../List/HelpLink.component';
 import BackButton from './BackButton.component';
-import { goToAndScrollUp } from "../router-utils";
+import { goToAndScrollUp } from '../router-utils';
 
 function FormHeading({ level, schema, children, groupName, ...props }, context) {
     return (

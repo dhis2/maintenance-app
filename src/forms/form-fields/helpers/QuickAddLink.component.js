@@ -6,7 +6,7 @@ import { getSectionForType } from '../../../config/maintenance-models';
 import { Link } from 'react-router';
 
 export default function QuickAddLink(props) {
-    const {referenceType, onRefreshClick} = props;
+    const { referenceType, onRefreshClick } = props;
 
     const sectionForReferenceType = getSectionForType(referenceType);
 
@@ -16,11 +16,11 @@ export default function QuickAddLink(props) {
         },
         hidden: {
             display: 'none',
-        }
+        },
     };
 
     if (!sectionForReferenceType) {
-        return <div style={styles.hidden}></div>;
+        return <div style={styles.hidden} />;
     }
 
     return (

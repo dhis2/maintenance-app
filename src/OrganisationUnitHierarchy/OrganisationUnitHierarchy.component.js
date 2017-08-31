@@ -52,9 +52,9 @@ Observable
         .combineLatest(hierarchy$.take(1), (result, hierarchy) => ({ result, hierarchy }))
     )
     // Update the app state with the result
-    .subscribe(({result, hierarchy}) => {
+    .subscribe(({ result, hierarchy }) => {
         setAppState({
-            hierarchy:  {
+            hierarchy: {
                 ...appState.state.hierarchy,
                 [`${result.side}Roots`]: result.organisationUnits,
             },
@@ -79,7 +79,7 @@ Observable
     )
     .subscribe(({ side, state }) => {
         setAppState({
-            hierarchy:  {
+            hierarchy: {
                 ...state.hierarchy,
                 // Reset the roots of the left or right tree to the original root(s)
                 [`${side}Roots`]: state.userOrganisationUnits.toArray(),
@@ -88,18 +88,16 @@ Observable
     });
 
 const organisationUnitHierarchy$ = appState
-    .map(({ hierarchy = {}, userOrganisationUnits }) => {
-        return {
-            roots: userOrganisationUnits.toArray(),
-            leftRoots: hierarchy.leftRoots,
-            rightRoots: hierarchy.rightRoots,
-            initiallyExpanded: userOrganisationUnits.toArray().map(model => model.path),
-            selectedLeft: hierarchy.selectedLeft || [],
-            selectedRight: hierarchy.selectedRight || [],
-            isProcessing: hierarchy.isProcessing,
-            reload: hierarchy.reload,
-        };
-    });
+    .map(({ hierarchy = {}, userOrganisationUnits }) => ({
+        roots: userOrganisationUnits.toArray(),
+        leftRoots: hierarchy.leftRoots,
+        rightRoots: hierarchy.rightRoots,
+        initiallyExpanded: userOrganisationUnits.toArray().map(model => model.path),
+        selectedLeft: hierarchy.selectedLeft || [],
+        selectedRight: hierarchy.selectedRight || [],
+        isProcessing: hierarchy.isProcessing,
+        reload: hierarchy.reload,
+    }));
 
 function onClickLeft(event, model) {
     hierarchy$
@@ -107,7 +105,7 @@ function onClickLeft(event, model) {
         .subscribe(
             (hierarchy) => {
                 let selectedLeft = [];
-                let indexOfModelInSelected = hierarchy.selectedLeft
+                const indexOfModelInSelected = hierarchy.selectedLeft
                     .map(model => model.id)
                     .indexOf(model.id);
 
@@ -120,7 +118,7 @@ function onClickLeft(event, model) {
                 }
 
                 setAppState({
-                    hierarchy:  {
+                    hierarchy: {
                         ...hierarchy,
                         reload: [],
                         selectedLeft,
@@ -146,7 +144,7 @@ function setHierarchyProcessingStatus(hierarchy, status) {
         hierarchy: {
             ...hierarchy,
             isProcessing: status,
-        }
+        },
     });
 }
 
@@ -160,7 +158,7 @@ function changeOrganisationUnitParentAndSave(organisationUnit) {
             const movingStatus = organisationUnit
                 .save()
                 .then(() => d2.i18n.getTranslation('successfully_moved_$$ouName$$', { ouName: organisationUnit.displayName }))
-                .catch((e) => d2.i18n.getTranslation('failed_to_move_$$ouName$$_($$errorMessage$$)', {
+                .catch(e => d2.i18n.getTranslation('failed_to_move_$$ouName$$_($$errorMessage$$)', {
                     ouName: organisationUnit.displayName,
                     errorMessage: e,
                 }));
@@ -172,9 +170,9 @@ function changeOrganisationUnitParentAndSave(organisationUnit) {
 function moveOrganisationUnit() {
     hierarchy$
         .take(1)
-        .do((hierarchy) => setHierarchyProcessingStatus(hierarchy, true))
+        .do(hierarchy => setHierarchyProcessingStatus(hierarchy, true))
         .map(hierarchy => (hierarchy.selectedLeft || []).map(model => model.id))
-        .flatMap((ouIds) => Observable
+        .flatMap(ouIds => Observable
             .fromPromise(getOrganisationUnitByIds(ouIds))
             .flatMap(identity)
         )
@@ -191,7 +189,7 @@ function moveOrganisationUnit() {
                         isProcessing: false,
                         reload: []
                             .concat(hierarchy.selectedRight.map(model => model.id))
-                            .concat(hierarchy.selectedLeft.map(model => {
+                            .concat(hierarchy.selectedLeft.map((model) => {
                                 if (model.parent && model.parent.id) {
                                     return model.parent.id;
                                 }
@@ -199,11 +197,9 @@ function moveOrganisationUnit() {
                                     .concat(appState.state.hierarchy.rightRoots)
                                     .map(value => value.id)
                                     .filter(rootId => new RegExp(rootId).test(model.path))
-                                    .reduce(value => {
-                                        return value;
-                                    });
+                                    .reduce(value => value);
                             })),
-                    }
+                    },
                 });
             },
             (e) => {
@@ -219,7 +215,7 @@ function moveOrganisationUnit() {
                     hierarchy: {
                         ...hierarchy,
                         isProcessing: false,
-                    }
+                    },
                 });
             }
         );
@@ -229,8 +225,8 @@ function onClickRight(event, model) {
     hierarchy$
         .take(1) // Only grab the current state
         .subscribe(
-            (hierarchy) => setAppState({
-                hierarchy:  {
+            hierarchy => setAppState({
+                hierarchy: {
                     ...hierarchy,
                     reload: [],
                     selectedRight: [model],
@@ -276,7 +272,7 @@ SelectedOrganisationUnitList.defaultProps = {
 const SelectedOrganisationUnitListWithContext = addD2Context(SelectedOrganisationUnitList);
 
 function hasEqualElement(left, right, selector) {
-    return left.map(selector).some((item) => right.map(selector).indexOf(item) >= 0);
+    return left.map(selector).some(item => right.map(selector).indexOf(item) >= 0);
 }
 
 function splitOuPath(path = '') {
@@ -298,9 +294,7 @@ function sourceIsInPathOfTarget(source, target) {
 
     const targetModel = target[0];
 
-    return source.some((sourceModel) => {
-        return splitOuPath(targetModel.path).indexOf(sourceModel.id) >= 0;
-    });
+    return source.some(sourceModel => splitOuPath(targetModel.path).indexOf(sourceModel.id) >= 0);
 }
 
 function moveButtonDisabled(props) {
@@ -354,7 +348,7 @@ function OrganisationUnitHierarchy(props, context) {
         },
         errorIcon: {
             color: 'orange',
-        }
+        },
     };
 
     if (!context.d2.currentUser.authorities.has('F_ORGANISATIONUNIT_MOVE')) {

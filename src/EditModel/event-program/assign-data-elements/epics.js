@@ -9,10 +9,9 @@ export const getProgramStageToModify = (programStageIdToModify, programStages) =
 const programStageDataElementExistsInDataElementUidList = uids => compose(includes(__, uids), get('dataElement.id'));
 const keepProgramStageDataElementsNotInUidList = uids => filter(negate(programStageDataElementExistsInDataElementUidList(uids)));
 
-const addDataElementsToStage = (store) => (action$) => {
-    return action$
+const addDataElementsToStage = store => action$ => action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_ADD)
-        .map(action => {
+        .map((action) => {
             const state = store.getState();
             const programStageIdToModify = get('payload.programStage', action);
             const programStages = getOr([], 'programStages', state);
@@ -35,12 +34,10 @@ const addDataElementsToStage = (store) => (action$) => {
             });
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENTS_ADDREMOVE_COMPLETE });
-};
 
-const removeDataElementFromStage = (store) => (action$) => {
-    return action$
+const removeDataElementFromStage = store => action$ => action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_REMOVE)
-        .map(action => {
+        .map((action) => {
             const state = store.getState();
             const programStageIdToModify = get('payload.programStage', action);
             const programStages = getOr([], 'programStages', state);
@@ -59,19 +56,17 @@ const removeDataElementFromStage = (store) => (action$) => {
             });
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENTS_ADDREMOVE_COMPLETE });
-};
 
-const getProgramStageByIdFromAction= (store, action) => {
+const getProgramStageByIdFromAction = (store, action) => {
     const programStageIdToModify = get('payload.programStage', action);
     const programStages = getOr([], 'programStages', store.getState());
     return getProgramStageToModify(programStageIdToModify, programStages);
 };
-const isObjectHasId = (id) => compose(isEqual(id), get('id'));
+const isObjectHasId = id => compose(isEqual(id), get('id'));
 
-const editProgramStageDataElement = (store) => (action$) => {
-    return action$
+const editProgramStageDataElement = store => action$ => action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENT_EDIT)
-        .map(action => {
+        .map((action) => {
             const programStageDataElementId = get('payload.programStageDataElement.id', action);
             const programStage = getProgramStageByIdFromAction(store, action);
             const programStageDataElements = getOr([], 'programStageDataElements', programStage);
@@ -79,7 +74,7 @@ const editProgramStageDataElement = (store) => (action$) => {
                 .find(isObjectHasId(programStageDataElementId));
 
             programStage.programStageDataElements = programStageDataElements
-                .map(value => {
+                .map((value) => {
                     if (programStageDataElement === value) {
                         return action.payload.programStageDataElement;
                     }
@@ -92,7 +87,6 @@ const editProgramStageDataElement = (store) => (action$) => {
             });
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENT_EDIT_COMPLETE });
-};
 
 export default function createEpicsForStore(store) {
     return combineEpics(
@@ -100,4 +94,4 @@ export default function createEpicsForStore(store) {
         removeDataElementFromStage(store),
         editProgramStageDataElement(store)
     );
-};
+}

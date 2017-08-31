@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
-export default function RefreshMask({horizontal}, { d2 }) {
+export default function RefreshMask({ horizontal }, { d2 }) {
     const styles = {
         fieldMask: {
             position: 'absolute',

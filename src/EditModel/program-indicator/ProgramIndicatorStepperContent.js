@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { createStepperContentFromConfig  } from '../event-program/stepper';
+import { createStepperContentFromConfig } from '../event-program/stepper';
 import { activeStepSelector } from './selectors';
 import steps from './program-indicator-steps';
 // import eventProgramStore from './eventProgramStore';
@@ -8,7 +8,7 @@ import mapPropsStream from 'recompose/mapPropsStream';
 
 const programIndicator$ = Observable.of({});
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     activeStep: activeStepSelector(state),
 });
 
@@ -18,7 +18,6 @@ const EventProgramStepperContent =
         mapPropsStream(props$ =>
             props$.combineLatest(programIndicator$, (props, { program }) => ({ ...props, modelToEdit: program }))
         )
-    )
-    (createStepperContentFromConfig(steps));
+    )(createStepperContentFromConfig(steps));
 
 export default EventProgramStepperContent;

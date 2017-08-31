@@ -17,7 +17,7 @@ const SnackBarContainer = React.createClass({
     },
 
     componentWillMount() {
-        const snackStoreDisposable = snackStore.subscribe(snack => {
+        const snackStoreDisposable = snackStore.subscribe((snack) => {
             if (snack) {
                 this.setState({
                     snack,

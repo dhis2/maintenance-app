@@ -1,12 +1,12 @@
 import React from 'react';
-import {Router, Route, IndexRoute, hashHistory, IndexRedirect} from 'react-router';
+import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-router';
 import log from 'loglevel';
 import modelToEditStore from './EditModel/modelToEditStore';
-import {getInstance} from 'd2/lib/d2';
+import { getInstance } from 'd2/lib/d2';
 import objectActions from './EditModel/objectActions';
 import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
-import {initAppState, default as appState} from './App/appStateStore';
+import { initAppState, default as appState } from './App/appStateStore';
 import LinearProgress from 'material-ui/LinearProgress';
 import App from './App/App.component';
 import listStore from './List/list.store';
@@ -17,7 +17,7 @@ import { loadProgramIndicator } from './EditModel/program-indicator/actions';
 
 import onDemand from './on-demand';
 
-function initState({params}) {
+function initState({ params }) {
     initAppState({
         sideBar: {
             currentSection: params.groupName,
@@ -26,7 +26,7 @@ function initState({params}) {
     });
 }
 
-function initStateOrgUnitList({params}) {
+function initStateOrgUnitList({ params }) {
     initAppState({
         sideBar: {
             currentSection: params.groupName,
@@ -35,7 +35,7 @@ function initStateOrgUnitList({params}) {
     }, true);
 }
 
-function initStateOrgUnitLevels({params}) {
+function initStateOrgUnitLevels({ params }) {
     initAppState({
         sideBar: {
             currentSection: params.groupName,
@@ -54,8 +54,8 @@ function initStateOuHierarchy() {
 }
 
 // TODO: We could use an Observable that manages the current modelType to load the correct d2.Model. This would clean up the load function below.
-function loadObject({params}, replace, callback) {
-    initState({params});
+function loadObject({ params }, replace, callback) {
+    initState({ params });
 
     if (params.modelId === 'add') {
         getInstance().then((d2) => {
@@ -93,35 +93,35 @@ function loadObject({params}, replace, callback) {
             return callback();
         });
     } else {
-        objectActions.getObjectOfTypeById({objectType: params.modelType, objectId: params.modelId})
+        objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
             .subscribe(
                 () => callback(),
                 (errorMessage) => {
                     replace(`/list/${params.modelType}`);
-                    snackActions.show({message: errorMessage, action: 'ok'});
+                    snackActions.show({ message: errorMessage, action: 'ok' });
                     callback();
                 }
             );
     }
 }
 
-function loadOrgUnitObject({params}, replace, callback) {
+function loadOrgUnitObject({ params }, replace, callback) {
     loadObject({
         params: {
             modelType: 'organisationUnit',
             groupName: params.groupName,
-            modelId: params.modelId
-        }
+            modelId: params.modelId,
+        },
     }, replace, callback);
 }
 
-function loadOptionSetObject({params}, replace, callback) {
+function loadOptionSetObject({ params }, replace, callback) {
     loadObject({
         params: {
             modelType: 'optionSet',
             groupName: params.groupName,
-            modelId: params.modelId
-        }
+            modelId: params.modelId,
+        },
     }, replace, callback);
 }
 
@@ -132,18 +132,18 @@ function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiv
                 modelType: schema,
                 groupName: params.groupName,
                 modelId: params.modelId,
-            }
+            },
         });
 
         // Fire load action for the event program program to be edited
         store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId }));
-        store.dispatch(resetActiveStep())
+        store.dispatch(resetActiveStep());
 
         callback();
     };
 }
 
-function loadList({params}, replace, callback) {
+function loadList({ params }, replace, callback) {
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the appState
         // Also load the initialState without cache so we refresh the assigned organisation units
@@ -153,7 +153,7 @@ function loadList({params}, replace, callback) {
         return callback();
     }
 
-    initState({params});
+    initState({ params });
     return listActions.loadList(params.modelType)
         .take(1)
         .subscribe(
@@ -178,15 +178,15 @@ function loadList({params}, replace, callback) {
         );
 }
 
-function cloneObject({params}, replace, callback) {
-    initState({params});
+function cloneObject({ params }, replace, callback) {
+    initState({ params });
 
-    objectActions.getObjectOfTypeByIdAndClone({objectType: params.modelType, objectId: params.modelId})
+    objectActions.getObjectOfTypeByIdAndClone({ objectType: params.modelType, objectId: params.modelId })
         .subscribe(
             () => callback(),
             (errorMessage) => {
                 replace(`/list/${params.modelType}`);
-                snackActions.show({message: errorMessage, action: 'ok'});
+                snackActions.show({ message: errorMessage, action: 'ok' });
                 callback();
             }
         );
@@ -194,9 +194,9 @@ function cloneObject({params}, replace, callback) {
 
 function delayRender(importFactory, loadingComponent = <LinearProgress />) {
     return (props) => {
-        const BaseComponent = onDemand.loadDefault(importFactory, {loadingComponent: () => loadingComponent})
+        const BaseComponent = onDemand.loadDefault(importFactory, { loadingComponent: () => loadingComponent });
 
-        return <BaseComponent {...props} />
+        return <BaseComponent {...props} />;
     };
 }
 
@@ -206,7 +206,7 @@ const routes = (
             path="/"
             component={App}
         >
-            <IndexRedirect to="/list/all"/>
+            <IndexRedirect to="/list/all" />
             <Route
                 path="list/all"
                 component={delayRender(() => System.import('./MenuCards/MenuCardsForAllSections.component'))}
@@ -249,7 +249,7 @@ const routes = (
                     disableTabs
                 >
                     <IndexRoute />
-                    <Route path=":activeView"/>
+                    <Route path=":activeView" />
                 </Route>
                 <Route
                     path="program/:modelId"

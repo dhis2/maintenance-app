@@ -32,14 +32,14 @@ class Dropdown extends React.Component {
     }
 
     getOptions(options, required = false) {
-        let opts = options
-            .map((option) => ({
-                    value: option.value,
-                    text: option.text,
-                }));
+        const opts = options
+            .map(option => ({
+                value: option.value,
+                text: option.text,
+            }));
 
         return opts
-            .map(option => {
+            .map((option) => {
                 if (option.text && this.props.translateOptions) {
                     option.text = isString(option.text) ? this.getTranslation(option.text.toLowerCase()) : option.text;
                 }
@@ -51,7 +51,7 @@ class Dropdown extends React.Component {
         this.props.onChange({
             target: {
                 value,
-            }
+            },
         });
     }
 
@@ -72,12 +72,12 @@ class Dropdown extends React.Component {
     renderDialogOption(value, label) {
         return (
             <div
-            style={{ cursor: 'pointer', margin: 8 }}
-            key={value}
-            onClick={() => {
-                this.props.onChange({ target: { value: value } });
-                this.setState({ dialogOpen: false, value: value });
-            }}
+                style={{ cursor: 'pointer', margin: 8 }}
+                key={value}
+                onClick={() => {
+                    this.props.onChange({ target: { value } });
+                    this.setState({ dialogOpen: false, value });
+                }}
             ><a>{label}</a></div>
         );
     }
@@ -110,7 +110,7 @@ class Dropdown extends React.Component {
 
         return this.state.options.length > limit
             ? (
-                <div style={{ width: fullWidth ? '100%' : 'inherit', position: 'relative', top: top ? top : undefined }}>
+                <div style={{ width: fullWidth ? '100%' : 'inherit', position: 'relative', top: top || undefined }}>
                     <Dialog
                         title={labelText}
                         open={this.state.dialogOpen}
@@ -118,11 +118,11 @@ class Dropdown extends React.Component {
                         autoScrollBodyContent
                         autoDetectWindowHeight
                         actions={[
-                            <FlatButton onClick={this.closeDialog} label={this.getTranslation('cancel')} />
+                            <FlatButton onClick={this.closeDialog} label={this.getTranslation('cancel')} />,
                         ]}
                     >
                         <TextField
-                            floatingLabelText='Filter list'
+                            floatingLabelText="Filter list"
                             onChange={(e, value) => { this.setState({ filterText: value }); }}
                             style={{ marginBottom: 16 }}
                         />
@@ -147,7 +147,7 @@ class Dropdown extends React.Component {
                     />
                     <div
                         style={{ position: 'absolute', top: 36, right: 10, color: 'rgba(0,0,0,0.25)', cursor: 'pointer' }}
-                        className='material-icons'
+                        className="material-icons"
                         onClick={this.openDialog}
                     >open_in_new</div>
                 </div>
@@ -185,7 +185,7 @@ class Dropdown extends React.Component {
                     key="no_value"
                     value={null}
                     label=" "
-                />
+                />,
             ]);
         }
 

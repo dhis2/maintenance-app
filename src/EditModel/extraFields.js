@@ -78,11 +78,11 @@ class IndicatorExtraFields extends React.Component {
     }
 
     setNumerator() {
-        this.setState({ type: 'numerator', dialogOpen: true, });
+        this.setState({ type: 'numerator', dialogOpen: true });
     }
 
     setDenominator() {
-        this.setState({ type: 'denominator', dialogOpen: true, });
+        this.setState({ type: 'denominator', dialogOpen: true });
     }
 
     closeDialog() {
@@ -125,19 +125,17 @@ export default {
     dataElement: [
         {
             name: 'dataElementGroupAssignment',
-            component: (props) => {
-                return (
-                    <div style={{ marginTop: '2rem' }}>
-                        <DataElementGroupsAssignment source={props.modelToEdit} />
-                    </div>
-                );
-            },
-        }
+            component: props => (
+                <div style={{ marginTop: '2rem' }}>
+                    <DataElementGroupsAssignment source={props.modelToEdit} />
+                </div>
+                ),
+        },
     ],
     indicator: [
         {
             name: 'indicatorGroupAssignmentAndGroupAssignments',
             component: addD2Context(IndicatorExtraFields),
-        }
-    ]
+        },
+    ],
 };

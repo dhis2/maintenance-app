@@ -32,11 +32,10 @@ class ProgramRuleActionsList extends React.Component {
         });
     }
 
-    render()
-    {
+    render() {
         const programRuleActions = this.props.model[this.props.referenceProperty].toArray();
 
-        const displayActions = programRuleActions.map(action => {
+        const displayActions = programRuleActions.map((action) => {
             let actionDetails = action.programRuleActionType;
             let field;
 
@@ -61,8 +60,8 @@ class ProgramRuleActionsList extends React.Component {
                     if (action.location === 'feedback') field = this.getTranslation('feedback_widget');
                     else if (action.location === 'indicators') field = this.getTranslation('program_indicator_widget');
                 }
-                field = field ? ` ${this.getTranslation('on') } ${field}` : '';
-                const text = action.content ? (action.content.length > 25 ? `${action.content.substr(0,22)}...` : action.content) : '';
+                field = field ? ` ${this.getTranslation('on')} ${field}` : '';
+                const text = action.content ? (action.content.length > 25 ? `${action.content.substr(0, 22)}...` : action.content) : '';
                 actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ` +
                     `"${text}"${field}`;
                 break;
@@ -72,8 +71,8 @@ class ProgramRuleActionsList extends React.Component {
                     action.dataElement && `"${action.dataElement.displayName}"`,
                     action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
                 ].filter(s => s).map(s => s.trim()).join(', ');
-                actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ` +
-                    field;
+                actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                    field}`;
                 break;
 
             case 'HIDESECTION':
@@ -106,8 +105,8 @@ class ProgramRuleActionsList extends React.Component {
                     action.dataElement && `"${action.dataElement.displayName}"`,
                     action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
                 ].filter(s => s).map(s => s.trim()).join(', ');
-                actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ` +
-                    field;
+                actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                    field}`;
                 break;
 
             default:
@@ -139,8 +138,8 @@ class ProgramRuleActionsList extends React.Component {
                 message: this.getTranslation('confirm_delete_program_rule_action'),
                 action: 'confirm',
                 onActionTouchTap: () => {
-                    this.props.onChange({ target: { value: this.props.model.programRuleActions.remove(model), }});
-                    snackActions.show({ message: this.getTranslation('program_rule_action_deleted') })
+                    this.props.onChange({ target: { value: this.props.model.programRuleActions.remove(model) } });
+                    snackActions.show({ message: this.getTranslation('program_rule_action_deleted') });
                 },
             });
         };

@@ -21,8 +21,8 @@ describe('Program indicator epics', () => {
                         id: 'pTo4uMt3xur',
                         name: 'Age at visit - calc from days',
                     })),
-                }
-            }
+                },
+            },
         };
 
         d2.getInstance.returns(Promise.resolve(mockD2));

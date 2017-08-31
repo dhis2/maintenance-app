@@ -13,7 +13,7 @@ export default function IconPickerField(props) {
     const { options, ...otherProps } = props;
 
     const iconPickerOptions = options
-        .map((option) => option.value);
+        .map(option => option.value);
 
     return (
         <IconPicker {...otherProps} options={iconPickerOptions} onChange={transformChange} />

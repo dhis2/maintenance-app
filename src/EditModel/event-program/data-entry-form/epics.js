@@ -17,14 +17,14 @@ const findProgramStageById = programStageId => compose(
 
 const dataEntryFormChangedEpic = action$ => action$
     .ofType(PROGRAM_STAGE_DATA_ENTRY_FORM_FIELD_CHANGED)
-    .map(action => {
+    .map((action) => {
         const fieldName = get('payload.field', action);
         const value = get('payload.value', action);
         const programStageId = get('payload.programStage', action);
 
         const storeState = eventProgramStore.getState();
         const programStage = findProgramStageById(programStageId)(storeState);
-        let dataEntryForm = storeState.dataEntryFormForProgramStage[programStageId];
+        const dataEntryForm = storeState.dataEntryFormForProgramStage[programStageId];
 
         // Set the uid in case we're dealing with a new form
         dataEntryForm.id = getOr(generateUid(), 'id', dataEntryForm);

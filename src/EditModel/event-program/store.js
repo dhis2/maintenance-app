@@ -16,4 +16,4 @@ const epics = combineEpics(
 
 const epicMiddleware = createEpicMiddleware(epics);
 
-export default createStore(eventProgramReducer, applyMiddleware(epicMiddleware))
+export default createStore(eventProgramReducer, applyMiddleware(epicMiddleware));

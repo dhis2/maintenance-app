@@ -57,7 +57,7 @@ export default class CKEditor extends Component {
             this.editor.destroy();
         }
 
-        this.subscriptions.forEach(subscription => subscription.unsubscribe())
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     shouldComponentUpdate() {

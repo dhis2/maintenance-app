@@ -27,21 +27,19 @@ const enhance = compose(
     })
 );
 
-const getOptions = memoize(function (categoryCombos) {
-    return map(({ displayName, id}) => (
-        <MenuItem key={id} primaryText={displayName} value={id} />
-    ), categoryCombos);
-});
+const getOptions = memoize(categoryCombos => map(({ displayName, id }) => (
+    <MenuItem key={id} primaryText={displayName} value={id} />
+    ), categoryCombos));
 
 const enhanceCategoryComboSelectField = withHandlers({
-        onChange: ({ categoryCombos = new Map, onChange }) => (event, index, value) => {
-            onChange(categoryCombos.find(categoryCombo => categoryCombo.id === value));
-        },
-    });
+    onChange: ({ categoryCombos = new Map(), onChange }) => (event, index, value) => {
+        onChange(categoryCombos.find(categoryCombo => categoryCombo.id === value));
+    },
+});
 
 const CategoryComboSelectField = enhanceCategoryComboSelectField(
-    function CategoryComboSelectField({ categoryCombos, value, onChange }) {
-        const options = getOptions(categoryCombos)
+    ({ categoryCombos, value, onChange }) => {
+        const options = getOptions(categoryCombos);
 
         return (
             <SelectField
@@ -56,9 +54,7 @@ const CategoryComboSelectField = enhanceCategoryComboSelectField(
     }
 );
 
-const createGetCategoryCombosForSelect = (d2, categoryCombos) => {
-    return memoize(dataElementCategoryComboId => {
-        return categoryCombos
+const createGetCategoryCombosForSelect = (d2, categoryCombos) => memoize(dataElementCategoryComboId => categoryCombos
         .reduce((acc, categoryCombo) => {
             if (categoryCombo.id === dataElementCategoryComboId) {
                 acc.unshift({
@@ -70,9 +66,7 @@ const createGetCategoryCombosForSelect = (d2, categoryCombos) => {
 
             acc.push(categoryCombo);
             return acc;
-        }, []);
-    });
-};
+        }, []));
 
 
 function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSelected }, { d2 }) {
@@ -110,11 +104,11 @@ function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSe
                         <CategoryComboSelectField
                             categoryCombos={categoryCombosForSelect}
                             value={categoryCombo.id}
-                            onChange={(categoryCombo) => onCategoryComboSelected(dataSetElement, categoryCombo)}
+                            onChange={categoryCombo => onCategoryComboSelected(dataSetElement, categoryCombo)}
                         />
                     </div>
                 </Row>
-            )
+            );
         });
 
     if (dataSetElementsRows.length === 0) {
@@ -134,20 +128,20 @@ function DataSetElementList({ dataSetElements, categoryCombos, onCategoryComboSe
 
 DataSetElementList.contextTypes = {
     d2: PropTypes.object,
-}
+};
 
 export function DataSetElementCategoryComboSelection(props) {
     const {
         categoryCombos,
         dataSetElements,
         onCategoryComboSelected,
-        d2: { i18n }
+        d2: { i18n },
     } = props;
 
     const actions = [
         <FlatButton
             label={i18n.getTranslation('close')}
-            primary={true}
+            primary
             onTouchTap={props.onRequestClose}
         />,
     ];

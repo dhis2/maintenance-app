@@ -12,7 +12,7 @@ export function getSideBarConfig() {
                 'categoryOptionCombo',
                 'categoryOptionGroup',
                 'categoryOptionGroupSet',
-            ]
+            ],
         },
 
         dataElementSection: {
@@ -66,7 +66,7 @@ export function getSideBarConfig() {
                 'validationRule',
                 'validationRuleGroup',
                 'validationNotificationTemplate',
-            ]
+            ],
         },
 
         otherSection: {
@@ -90,11 +90,9 @@ export function getSectionForType(modelType) {
 
     return Object
         .keys(config)
-        .find(section => {
-            return config[section] &&
+        .find(section => config[section] &&
                 config[section].items &&
-                config[section].items.indexOf(modelType) >= 0;
-        });
+                config[section].items.indexOf(modelType) >= 0);
 }
 
 /**
@@ -104,93 +102,93 @@ export function getSectionForType(modelType) {
  * - columns: Override the default columns in the data table
  */
 const typeDetails = {
-    'category': {
+    category: {
         filters: ['dataDimensionType'],
         columns: ['displayName', 'dataDimensionType', 'publicAccess', 'lastUpdated'],
     },
-    'categoryCombo': {
+    categoryCombo: {
         filters: ['dataDimensionType'],
         columns: ['displayName', 'dataDimensionType', 'publicAccess', 'lastUpdated'],
     },
-    'categoryOptionGroup': {
+    categoryOptionGroup: {
         filters: ['dataDimensionType'],
         columns: ['displayName', 'dataDimensionType', 'publicAccess', 'lastUpdated'],
     },
-    'categoryOptionGroupSet': {
+    categoryOptionGroupSet: {
         filters: ['dataDimensionType'],
         columns: ['displayName', 'dataDimensionType', 'publicAccess', 'lastUpdated'],
     },
-    'dataElement': {
+    dataElement: {
         filters: ['domainType', 'valueType', 'categoryCombo'],
         columns: ['displayName', 'domainType', 'valueType', 'categoryCombo[displayName]', 'lastUpdated'],
     },
-    'dataElementGroupSet': {
+    dataElementGroupSet: {
         columns: ['displayName', 'compulsory', 'publicAccess', 'lastUpdated'],
     },
-    'dataSet': {
+    dataSet: {
         filters: ['formType'],
         columns: ['displayName', 'formType', 'periodType', 'publicAccess', 'lastUpdated'],
     },
-    'indicator': {
+    indicator: {
         filters: ['indicatorType'],
         columns: ['displayName', 'indicatorType[displayName]', 'publicAccess', 'lastUpdated'],
     },
-    'indicatorType': {
+    indicatorType: {
         columns: ['displayName', 'factor', 'publicAccess', 'lastUpdated'],
     },
-    'indicatorGroupSet': {
+    indicatorGroupSet: {
         columns: ['displayName', 'compulsory', 'publicAccess', 'lastUpdated'],
     },
-    'organisationUnit': {
+    organisationUnit: {
         columns: ['displayName', 'level', 'lastUpdated'],
     },
-    'organisationUnitGroupSet': {
+    organisationUnitGroupSet: {
         columns: ['displayName', 'compulsory', 'dataDimension', 'publicAccess', 'lastUpdated'],
     },
-    'trackedEntityAttribute': {
+    trackedEntityAttribute: {
         filters: ['valueType', 'aggregationType'],
         columns: ['displayName', 'valueType', 'aggregationType', 'unique', 'confidential', 'lastUpdated'],
     },
-    'program': {
+    program: {
         columns: ['displayName', 'publicAccess', 'lastUpdated'],
         defaultFilters: [
             ['programType', 'WITHOUT_REGISTRATION'],
         ],
     },
-    'programIndicator': {
+    programIndicator: {
         filters: ['program'],
         columns: ['displayName', 'program[displayName]', 'lastUpdated'],
     },
-    'programRule': {
+    programRule: {
         filters: ['program'],
         columns: ['displayName', 'description', 'program[displayName]', 'lastUpdated'],
     },
-    'programRuleVariable': {
+    programRuleVariable: {
         filters: ['program', 'programRuleVariableSourceType'],
         columns: ['displayName', 'program[displayName]', 'programRuleVariableSourceType', 'lastUpdated'],
     },
-    'validationRule': {
+    validationRule: {
         columns: ['displayName', 'importance', 'periodType', 'publicAccess', 'lastUpdated'],
     },
-    'constant': {
+    constant: {
         columns: ['displayName', 'value', 'lastUpdated'],
     },
-    'attribute': {
+    attribute: {
         columns: ['displayName', 'valueType', 'mandatory', 'unique', 'publicAccess', 'lastUpdated'],
     },
-    'optionSet': {
+    optionSet: {
         columns: ['displayName', 'valueType', 'lastUpdated'],
     },
-    'predictor': {
+    predictor: {
         columns: ['displayName', 'output[displayName]', 'periodType', 'lastUpdated'],
     },
-    'pushAnalysis': {
+    pushAnalysis: {
         columns: ['displayName', 'dashboard[displayName]', 'lastUpdated'],
     },
-    'externalMapLayer': {
+    externalMapLayer: {
         columns: ['displayName', 'mapLayerPosition', 'mapService', 'lastUpdated'],
     },
-    'dataApprovalLevel': {
+    dataApprovalLevel: {
         columns: ['displayName', 'categoryOptionGroupSet[displayName]', 'publicAccess', 'lastUpdated'],
     },
 };

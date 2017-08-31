@@ -23,7 +23,7 @@ function createWeekOption(weekDayNr) {
 }
 
 const daysInWeekOptions = map(createWeekOption, range(1, 7));
-const daysInMonthOptions = map((number) => ({ text: number, value: number }), range(1, 32))
+const daysInMonthOptions = map(number => ({ text: number, value: number }), range(1, 32));
 
 const options = new Map([
     ['WEEKLY', daysInWeekOptions],
@@ -37,7 +37,7 @@ function SchedulingDayOfFrequency({ model }, { d2 }) {
                 labelText={d2.i18n.getTranslation('day_on_which_to_run_the_task')}
                 value={model.schedulingDayOfFrequency}
                 options={options.get(model.schedulingFrequency) || []}
-                onChange={compose((value) => actions.update({fieldName: 'schedulingDayOfFrequency', value, }), get('target.value'))}
+                onChange={compose(value => actions.update({ fieldName: 'schedulingDayOfFrequency', value }), get('target.value'))}
                 isRequired
             />
         </SubFieldWrap>
@@ -49,7 +49,7 @@ SchedulingDayOfFrequency.contextTypes = {
 
 export default new Map([
     ['schedulingFrequency', {
-        component: withSkipLogic((props) => ['WEEKLY', 'MONTHLY'].indexOf(props.value) >= 0 , SchedulingDayOfFrequency, DropDown),
+        component: withSkipLogic(props => ['WEEKLY', 'MONTHLY'].indexOf(props.value) >= 0, SchedulingDayOfFrequency, DropDown),
         required: true,
     }],
 ]);

@@ -65,7 +65,7 @@ class DataSetElementField extends Component {
             props.dataElements
                 .map(dataElement => ({
                     text: getDataElementNameForGroupEditor(props.dataSet.dataSetElements, dataElement),
-                    value: dataElement.id
+                    value: dataElement.id,
                 }))
         );
         this.state.assignedItemStore.setState(
@@ -85,7 +85,7 @@ class DataSetElementField extends Component {
             props.dataElements
                 .map(dataElement => ({
                     text: getDataElementNameForGroupEditor(props.dataSet.dataSetElements, dataElement),
-                    value: dataElement.id
+                    value: dataElement.id,
                 }))
         );
 
@@ -101,7 +101,7 @@ class DataSetElementField extends Component {
         // Give all the dataSetElements that do not have a category combo assign the dataElement's category combo.
         // This is required due to the API giving dataSetElements that do not provide a categoryCombo the `default` categoryCombo.
         Array.from(this.props.dataSet.dataSetElements || [])
-            .forEach(dataSetElement => {
+            .forEach((dataSetElement) => {
                 const isDataSetElementDoesNotHaveCategoryCombo = dataSetElement.dataElement && dataSetElement.dataElement.categoryCombo && !dataSetElement.categoryCombo;
 
                 if (isDataSetElementDoesNotHaveCategoryCombo) {
@@ -120,7 +120,7 @@ class DataSetElementField extends Component {
             this.updateCategoryCombosForDataSetElements();
         };
 
-        const generateUids = (numberofUids) => range(0, numberofUids, 1).map(() => generateUid())
+        const generateUids = numberofUids => range(0, numberofUids, 1).map(() => generateUid());
         const codes = generateUids(items.length);
 
         items
@@ -135,7 +135,7 @@ class DataSetElementField extends Component {
                     },
                 };
 
-                this.props.dataSet.dataSetElements = [].concat(this.props.dataSet.dataSetElements || []).concat([ dataSetElement ]);
+                this.props.dataSet.dataSetElements = [].concat(this.props.dataSet.dataSetElements || []).concat([dataSetElement]);
             });
 
         updateGroupEditorState();
@@ -152,7 +152,7 @@ class DataSetElementField extends Component {
             this.state.assignedItemStore.setState(Array.from(uniqueItems));
 
             this.updateForm(Array.from(uniqueItems));
-        }
+        };
 
         return Promise.resolve(true)
             .then(() => {
@@ -181,7 +181,6 @@ class DataSetElementField extends Component {
                 },
             });
         }
-
     }
 
     updateForm = (newAssignedItems) => {
@@ -201,7 +200,7 @@ class DataSetElementField extends Component {
     }
 
     render() {
-        const  {
+        const {
             categoryCombos,
             dataSet,
         } = this.props;
@@ -251,14 +250,14 @@ async function dataSetElementFieldData() {
     });
 
     return {
-        ...metadata
+        ...metadata,
     };
 }
 
 const metadata$ = Store.create();
 const loadMetaDataForDataSetElementField = () => dataSetElementFieldData().then(metadata => metadata$.setState(metadata));
 
-const enhancedDataElementField$ = (props$) => Observable
+const enhancedDataElementField$ = props$ => Observable
     .combineLatest(
         props$,
         metadata$
@@ -268,7 +267,7 @@ const enhancedDataElementField$ = (props$) => Observable
             ...props,
         })
     )
-    .map(({model, dataElements, categoryCombos, ...props}) => (
+    .map(({ model, dataElements, categoryCombos, ...props }) => (
         <DataSetElementField
             {...props}
             dataSet={model}

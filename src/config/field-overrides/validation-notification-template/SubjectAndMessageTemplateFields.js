@@ -1,10 +1,10 @@
-import React, {Component, PropTypes} from "react";
-import TextField from "material-ui/TextField/TextField";
-import {Row, Column} from "d2-ui/lib/layout";
-import {List, ListItem} from "material-ui/List";
-import Divider from "material-ui/Divider";
-import Heading from "d2-ui/lib/headings/Heading.component";
-import {map, compose} from "lodash/fp";
+import React, { Component, PropTypes } from 'react';
+import TextField from 'material-ui/TextField/TextField';
+import { Row, Column } from 'd2-ui/lib/layout';
+import { List, ListItem } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Heading from 'd2-ui/lib/headings/Heading.component';
+import { map, compose } from 'lodash/fp';
 
 function prepareProps(d2, onItemSelected) {
     return function ([type, name]) {
@@ -12,9 +12,9 @@ function prepareProps(d2, onItemSelected) {
             primaryText: d2.i18n.getTranslation(name),
             onClick() {
                 onItemSelected(`${type}{${name}}`);
-            }
-        }
-    }
+            },
+        };
+    };
 }
 
 function renderListItem(props) {
@@ -42,7 +42,7 @@ function VariableList({ onItemSelected, variableTypes }, { d2 }) {
 }
 
 VariableList.contextTypes = {
-    d2: PropTypes.object
+    d2: PropTypes.object,
 };
 
 export default class SubjectAndMessageTemplateFields extends Component {
@@ -92,7 +92,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
             },
             subject: {
                 flex: '0 0 72px',
-            }
+            },
         };
 
         return (
@@ -108,7 +108,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
                                 floatingLabelText={d2.i18n.getTranslation('subject_template')}
                                 onBlur={this.setActiveField('subjectTemplate')}
                                 value={model.subjectTemplate || ''}
-                                onChange={(event, value) => onUpdate({fieldName: 'subjectTemplate', value})}
+                                onChange={(event, value) => onUpdate({ fieldName: 'subjectTemplate', value })}
                                 onKeyUp={this.setActiveField('subjectTemplate')}
                             />
                         </div>
@@ -120,7 +120,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
                                 floatingLabelText={d2.i18n.getTranslation('message_template')}
                                 onBlur={this.setActiveField('messageTemplate')}
                                 value={model.messageTemplate || ''}
-                                onChange={(event, value) => onUpdate({fieldName: 'messageTemplate', value})}
+                                onChange={(event, value) => onUpdate({ fieldName: 'messageTemplate', value })}
                             />
                         </div>
                     </Column>

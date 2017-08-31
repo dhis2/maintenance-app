@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import store,  { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
+import store, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 import ModelDefinition from 'd2/lib/model/ModelDefinition';
 import ModelDefinitions from 'd2/lib/model/ModelDefinitions';
 import programSchema from '../../../test/fixtures/schemas/program';
@@ -39,12 +39,12 @@ describe('Event Program Store', () => {
             program: program.create(),
             programStages: [programStage.create({ id: 'selCNHPqm5g', notificationTemplates: [] })],
             programStageNotifications: {
-                ['selCNHPqm5g']: [
+                selCNHPqm5g: [
                     programStageNotification.create(),
-                ]
+                ],
             },
             dataEntryFormForProgramStage: {
-                ['selCNHPqm5g']: dataEntryForm.create(),
+                selCNHPqm5g: dataEntryForm.create(),
             },
         };
 
@@ -107,7 +107,7 @@ describe('Event Program Store', () => {
             it('should return true when a programStageNotification was changed', () => {
                 expect(isStoreStateDirty(mockState)).to.be.false;
 
-                mockState.programStageNotifications['selCNHPqm5g'][0].name = 'Email on completion';
+                mockState.programStageNotifications.selCNHPqm5g[0].name = 'Email on completion';
 
                 expect(isStoreStateDirty(mockState)).to.be.true;
             });
@@ -115,7 +115,7 @@ describe('Event Program Store', () => {
             it('should return true when a dataEntryForm was changed', () => {
                 expect(isStoreStateDirty(mockState)).to.be.false;
 
-                mockState.dataEntryFormForProgramStage['selCNHPqm5g'].htmlCode = '<input id="id-id-val" />';
+                mockState.dataEntryFormForProgramStage.selCNHPqm5g.htmlCode = '<input id="id-id-val" />';
 
                 expect(isStoreStateDirty(mockState)).to.be.true;
             });
