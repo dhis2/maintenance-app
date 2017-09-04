@@ -1,5 +1,9 @@
 {
     "extends": "dhis2",
+    "env": {
+        "browser": true,
+        "mocha": true
+    },
     "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
