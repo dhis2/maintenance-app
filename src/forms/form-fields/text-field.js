@@ -62,6 +62,14 @@ export default class TextFormField extends Component {
             multiLine,
             ...rest
         } = this.props;
+
+        const omitProps = ['translateOptions', 'model', 'modelDefinition', 'models',
+            'referenceType', 'referenceProperty', 'isInteger', 'isRequired', 'options'];
+
+        const restProps = Object.keys(rest).reduce((acc, key) => { // eslint-disable-line arrow-body-style
+            return omitProps.indexOf(key) === -1 ? { ...acc, [key]: rest[key] } : acc;
+        }, {});
+
         const errorStyle = {
             lineHeight: multiLine ? '48px' : '12px',
             marginTop: multiLine ? -16 : -12,
@@ -72,7 +80,7 @@ export default class TextFormField extends Component {
                 errorStyle={errorStyle}
                 label={label}
                 multiLine={multiLine}
-                {...rest}
+                {...restProps}
                 value={this.state.fieldValue}
                 floatingLabelText={labelText}
                 onChange={this.onValueChanged}
