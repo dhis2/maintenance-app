@@ -15,6 +15,11 @@
     "/edit/dataSetSection/dataSet": "/en/user/html/manage_data_set.html#create_data_set",
     "/list/dataSetSection/dataSet": "/en/user/html/manage_data_set.html",
 
+    "/edit/indicatorSection/programIndicatorGroup": "/en/user/html/configure_program_indicator.html#create_program_indicator_group",
+    "/list/indicatorSection/programIndicatorGroup": "/en/user/html/configure_program_indicator.html",
+    "/edit/indicatorSection/programIndicator": "/en/user/html/configure_program_indicator.html#create_program_indicator",
+    "/list/indicatorSection/programIndicator": "/en/user/html/configure_program_indicator.html",
+    
     "/edit/indicatorSection/indicatorGroupSet": "/en/user/html/manage_indicator.html#create_indicator_group_set",
     "/edit/indicatorSection/indicatorGroup": "/en/user/html/manage_indicator.html#create_indicator_group",
     "/edit/indicatorSection/indicatorType": "/en/user/html/manage_indicator.html#create_indicator_type",
@@ -27,12 +32,14 @@
     "/edit/organisationUnitSection/organisationUnit": "/en/user/html/manage_organisation_unit.html#create_organisation_unit",
     "/list/organisationUnitSection": "/en/user/html/manage_organisation_unit.html",
     
-    "/edit/programSection/trackedEntityAttributeGroup": "/en/user/html/manage_program_metadata.html#create_tracked_entity_attribute_group",
-    "/edit/programSection/trackedEntityAttribute": "/en/user/html/manage_program_metadata.html#create_tracked_entity_attribute",
-    "/edit/programSection/relationshipType": "/en/user/html/manage_program_metadata.html#create_relationship_type",
-    "/edit/programSection/trackedEntity": "/en/user/html/manage_program_metadata.html#create_tracked_entity",
-    "/list/programSection": "/en/user/html/manage_program_metadata.html",
-
+    "/edit/programSection/trackedEntityAttribute": "/en/user/html/configure_tracked_entity.html#create_tracked_entity_attribute",
+    "/edit/programSection/programRuleVariable": "/en/user/html/configure_program_rule.html#create_program_rule_variable",
+    "/edit/programSection/relationshipType": "/en/user/html/configure_relationship_type.html#create_relationship_type",
+    "/edit/programSection/trackedEntity": "/en/user/html/configure_tracked_entity.html#create_tracked_entity",
+    "/edit/programSection/programRule": "/en/user/html/configure_program_rule.html#create_program_rule",
+    "/edit/programSection/program": "/en/user/html/configure_event_program_in_maintenance_app.html#create_event_program",
+    "/list/programSection": "/en/user/html/configure_programs_in_maintenance_app.html",
+    
     "/edit/validationSection/validationNotificationTemplate": "/en/user/html/manage_validation_rule.html#create_validation_notification",
     "/edit/validationSection/validationRuleGroup": "/en/user/html/manage_validation_rule.html#create_validation_rule_group",
     "/edit/validationSection/validationRule": "/en/user/html/manage_validation_rule.html#create_validation_rule",
