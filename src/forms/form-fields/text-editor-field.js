@@ -17,13 +17,16 @@ const styles = {
         fontFamily: 'monospace',
         border: '1px solid rgba(0,0,0,0.1)',
         borderRadius: 3,
-        marginTop: 3,
+        marginTop: 30,
         padding: 4,
+        ':focus': {
+            backgroundColor: 'pink',
+        },
     },
 
 };
 
-class ProgramRuleConditionField extends React.Component {
+class TextEditorField extends React.Component {
     constructor(props) {
         super(props);
 
@@ -82,14 +85,14 @@ class ProgramRuleConditionField extends React.Component {
     }
 }
 
-ProgramRuleConditionField.propTypes = {
-    value: React.PropTypes.string,
+TextEditorField.propTypes = {
+    value: React.PropTypes.any,
     disabled: React.PropTypes.bool,
     onChange: React.PropTypes.func,
 };
 
-ProgramRuleConditionField.contextTypes = {
+TextEditorField.contextTypes = {
     d2: React.PropTypes.any,
 };
 
-export default ProgramRuleConditionField;
+export default TextEditorField;
