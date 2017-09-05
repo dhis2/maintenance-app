@@ -17,11 +17,8 @@ const styles = {
         fontFamily: 'monospace',
         border: '1px solid rgba(0,0,0,0.1)',
         borderRadius: 3,
-        marginTop: 30,
+        marginTop: 3,
         padding: 4,
-        ':focus': {
-            backgroundColor: 'pink',
-        },
     },
 
 };
