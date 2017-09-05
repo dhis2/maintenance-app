@@ -35,7 +35,7 @@ const ObservedEvents = {
 
     componentWillUnmount() {
         // Complete any eventsSubjects
-        Object.keys(this.eventSubjects).forEach(eventSubjectKey => {
+        Object.keys(this.eventSubjects).forEach((eventSubjectKey) => {
             log.debug(`Completing: ${[this.constructor.name, eventSubjectKey].join('.')}`);
             this.eventSubjects[eventSubjectKey].completed();
         });

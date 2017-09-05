@@ -27,7 +27,7 @@ const ItemTypes = {
 function collect(connect, monitor) {
     return {
         connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
+        isDragging: monitor.isDragging(),
     };
 }
 
@@ -37,7 +37,7 @@ const cardSource = {
             id: props.id,
             index: props.index,
         };
-    }
+    },
 };
 
 const cardTarget = {
@@ -79,15 +79,13 @@ const cardTarget = {
         // Time to actually perform the action
         props.moveOption(dragId, hoverId);
         return true;
-    }
+    },
 };
 
 const OptionValueWithDrag = DragSource(ItemTypes.OPTION, cardSource, collect)(OptionValue);
-const OptionValueWithDragAndDrop = DropTarget(ItemTypes.OPTION, cardTarget, (connect) => {
-    return {
-        connectDropTarget: connect.dropTarget(),
-    };
-})(OptionValueWithDrag);
+const OptionValueWithDragAndDrop = DropTarget(ItemTypes.OPTION, cardTarget, connect => ({
+    connectDropTarget: connect.dropTarget(),
+}))(OptionValueWithDrag);
 
 const SortableList = DragDropContext(HTML5Backend)(class extends Component {
     render() {
@@ -166,7 +164,7 @@ class SortDialog extends Component {
                 open={this.props.open}
                 onRequestClose={() => setSortDialogOpenTo(false)}
                 autoScrollBodyContent
-                style={{height: '90%'}}
+                style={{ height: '90%' }}
                 modal
             >
                 <Heading>{this.i18n.getTranslation('sorting')}</Heading>
@@ -201,7 +199,7 @@ class SortDialog extends Component {
 
         if (!this.props.onePage) {
             return (
-                <div style={{padding: '1rem 0'}}>{this.i18n.getTranslation('manual_sorting_is_not_available_for_option_sets_with_more_than_50_options')}</div>
+                <div style={{ padding: '1rem 0' }}>{this.i18n.getTranslation('manual_sorting_is_not_available_for_option_sets_with_more_than_50_options')}</div>
             );
         }
 
@@ -219,13 +217,13 @@ class SortDialog extends Component {
 
         modelToEdit.options.clear();
         this.state.options
-            .forEach(option => {
+            .forEach((option) => {
                 modelToEdit.options.add(option);
             });
 
         sortDialogStore.setState({
             ...sortDialogStore.getState(),
-            isSaving: true
+            isSaving: true,
         });
 
         modelToEditStore.setState(modelToEdit);

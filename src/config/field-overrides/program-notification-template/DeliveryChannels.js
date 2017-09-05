@@ -1,7 +1,7 @@
 import React from 'react';
 import Checkbox from 'material-ui/Checkbox';
 
-const createOnCheckFor = (toCheck) => (values, onChange) => () => {
+const createOnCheckFor = toCheck => (values, onChange) => () => {
     if (values.has(toCheck)) {
         values.delete(toCheck);
     } else {
@@ -34,7 +34,7 @@ function DeliveryChannels({ value = [], onChange }) {
                 onCheck={onChangeEMAIL(valueSet, onChange)}
             />
         </div>
-    )
+    );
 }
 
 export default DeliveryChannels;

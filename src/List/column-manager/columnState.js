@@ -1,14 +1,14 @@
 import appState from '../../App/appStateStore';
 
 const columnConfig = {
-    'dataElement': ['name', 'code', 'categoryOptionCombo'],
-}
+    dataElement: ['name', 'code', 'categoryOptionCombo'],
+};
 
 export default appState
     .filter(appState => appState.sideBar && appState.sideBar.currentSubSection)
     .map(appState => appState.sideBar.currentSubSection)
     .distinctUntilChanged()
-    .map(subSection => {
+    .map((subSection) => {
         if (subSection === 'organisationUnitLevel') {
             return ['name', 'level', 'lastUpdated'];
         }
@@ -19,6 +19,4 @@ export default appState
 
         return ['name', 'publicAccess', 'lastUpdated'];
     })
-    .map((v) => {
-        return v;
-    })
+    .map(v => v);

@@ -66,7 +66,7 @@ function isValidState(state) {
 
     return Object
         .keys(state)
-        .every((key) => some(equals(key), acceptedKeys));
+        .every(key => some(equals(key), acceptedKeys));
 }
 
 /**
@@ -94,7 +94,7 @@ const programIndicatorStore = Store.create();
 
 const storeSetState = programIndicatorStore.setState.bind(programIndicatorStore);
 
-programIndicatorStore.setState = newState => {
+programIndicatorStore.setState = (newState) => {
     if (!isObject(newState)) {
         throw new Error('You are attempting to set a state that is a non object');
     }

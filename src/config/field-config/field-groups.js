@@ -12,9 +12,9 @@ const fieldGroupsForModelType = new Map([
         },
         {
             label: 'define_program_rule_actions',
-            fields:['programRuleActions'],
+            fields: ['programRuleActions'],
         },
-    ]]
+    ]],
 ]);
 
 
@@ -26,7 +26,7 @@ export default {
 
         return [{
             label: 'details',
-            fields: fieldOrder.for(modelType)
+            fields: fieldOrder.for(modelType),
         }];
     },
 
@@ -36,5 +36,5 @@ export default {
                 .map(g => g.fields)
                 .reduce((o, f, s) => { f.forEach(x => o[x] = s); return o; }, {});
         }
-    }
-}
+    },
+};

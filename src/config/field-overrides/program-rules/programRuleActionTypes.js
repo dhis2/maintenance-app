@@ -1,5 +1,5 @@
 const actionTypeFieldMapping = {
-    'DISPLAYTEXT': {
+    DISPLAYTEXT: {
         label: 'display_text',
         required: ['location', 'content'],
         optional: ['data'],
@@ -8,7 +8,7 @@ const actionTypeFieldMapping = {
             data: 'expression_to_evaluate_and_display_after_static_text',
         },
     },
-    'DISPLAYKEYVALUEPAIR': {
+    DISPLAYKEYVALUEPAIR: {
         label: 'display_key_value_pair',
         required: ['location', 'content'],
         optional: ['data'],
@@ -17,7 +17,7 @@ const actionTypeFieldMapping = {
             data: 'expression_to_evaluate_and_display_as_value',
         },
     },
-    'HIDEFIELD': {
+    HIDEFIELD: {
         label: 'hide_field',
         optional: ['dataElement', 'trackedEntityAttribute', 'content'],
         labelOverrides: {
@@ -26,21 +26,21 @@ const actionTypeFieldMapping = {
             trackedEntityAttribute: 'tracked_entity_attribute_to_hide',
         },
     },
-    'HIDESECTION': {
+    HIDESECTION: {
         label: 'hide_section',
         required: ['programStageSection'],
         labelOverrides: {
             programStageSection: 'program_stage_section_to_hide',
-        }
+        },
     },
-    'HIDEPROGRAMSTAGE': {
+    HIDEPROGRAMSTAGE: {
         label: 'hide_program_stage',
         required: ['programStage'],
         labelOverrides: {
             programStage: 'program_stage_to_hide',
-        }
+        },
     },
-    'ASSIGN': {
+    ASSIGN: {
         label: 'assign_value',
         required: ['data'],
         optional: ['dataElement', 'trackedEntityAttribute', 'content'],
@@ -51,7 +51,7 @@ const actionTypeFieldMapping = {
             data: 'expression_to_evaluate_and_assign',
         },
     },
-    'SHOWWARNING': {
+    SHOWWARNING: {
         label: 'show_warning',
         required: ['content'],
         optional: ['dataElement', 'trackedEntityAttribute', 'data'],
@@ -60,9 +60,9 @@ const actionTypeFieldMapping = {
             dataElement: 'data_element_to_display_warning_next_to',
             trackedEntityAttribute: 'tracked_entity_attribute_to_display_warning_next_to',
             data: 'expression_to_evaluate_and_display_after_static_text',
-        }
+        },
     },
-    'SHOWERROR': {
+    SHOWERROR: {
         label: 'show_error',
         required: ['content'],
         optional: ['dataElement', 'trackedEntityAttribute', 'data'],
@@ -71,9 +71,9 @@ const actionTypeFieldMapping = {
             dataElement: 'data_element_to_display_error_next_to',
             trackedEntityAttribute: 'tracked_entity_attribute_to_display_error_next_to',
             data: 'expression_to_evaluate_and_display_after_static_text',
-        }
+        },
     },
-    'WARNINGONCOMPLETE': {
+    WARNINGONCOMPLETE: {
         label: 'warning_on_complete',
         required: ['content'],
         optional: ['dataElement', 'trackedEntityAttribute', 'data'],
@@ -82,9 +82,9 @@ const actionTypeFieldMapping = {
             dataElement: 'data_element_to_display_warning_next_to',
             trackedEntityAttribute: 'tracked_entity_attribute_to_display_warning_next_to',
             data: 'expression_to_evaluate_and_display_after_static_text',
-        }
+        },
     },
-    'ERRORONCOMPLETE': {
+    ERRORONCOMPLETE: {
         label: 'error_on_complete',
         required: ['content'],
         optional: ['dataElement', 'trackedEntityAttribute', 'data'],
@@ -93,20 +93,20 @@ const actionTypeFieldMapping = {
             dataElement: 'data_element_to_display_error_next_to',
             trackedEntityAttribute: 'tracked_entity_attribute_to_display_error_next_to',
             data: 'expression_to_evaluate_and_display_after_static_text',
-        }
+        },
     },
-    'CREATEEVENT': {
+    CREATEEVENT: {
         label: 'create_event',
         required: ['programStage'],
         optional: ['data'],
     },
-    'SETMANDATORYFIELD': {
+    SETMANDATORYFIELD: {
         label: 'set_field_to_be_mandatory',
         optional: ['dataElement', 'trackedEntityAttribute'],
         labelOverrides: {
             dataElement: 'data_element_to_make_mandatory',
             trackedEntityAttribute: 'tracked_entity_attribute_to_make_mandatory',
-        }
+        },
     },
 };
 

@@ -4,6 +4,7 @@ import indicator from './indicator';
 import dataSet from './dataSet';
 import organisationUnit from './organisationUnit';
 import organisationUnitGroup from './organisationUnitGroup';
+import categoryCombo from './categoryCombo';
 import categoryOption from './categoryOption';
 import legendSet from './legendSet';
 import trackedEntityAttribute from './trackedEntityAttribute';
@@ -17,6 +18,8 @@ import programNotificationTemplate from './programNotificationTemplate';
 import program from './program';
 import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
+import dataApprovalLevel from './dataApprovalLevel';
+import dataApprovalWorkflow from './dataApprovalWorkflow';
 
 const overridesByType = {
     attribute,
@@ -25,6 +28,7 @@ const overridesByType = {
     dataSet,
     organisationUnit,
     organisationUnitGroup,
+    categoryCombo,
     categoryOption,
     legendSet,
     trackedEntityAttribute,
@@ -38,6 +42,8 @@ const overridesByType = {
     programRule,
     programRuleVariable,
     validationRule,
+    dataApprovalLevel,
+    dataApprovalWorkflow,
 };
 
 export default {

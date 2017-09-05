@@ -16,5 +16,5 @@ const appReducers = combineReducers({
     snackBar: snackBarReducer,
 });
 
-export default createStore(appReducers, applyMiddleware(epicMiddleware))
+export default createStore(appReducers, applyMiddleware(epicMiddleware));
 

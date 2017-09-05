@@ -35,21 +35,26 @@ class DropDownAsyncGetter extends React.Component {
     }
 
     render() {
-        const { getter, shouldRender, ...props } = this.props;
+        const { getter, shouldRender, useValueDotId, ...props } = this.props;
         if (shouldRender(this.props.model)) {
             const eventIdWrapper = (event) => {
                 if (event.target.value) {
-                    this.props.onChange({ target: { value: { id: event.target.value }} });
+                    if (useValueDotId) {
+                        this.props.onChange({ target: { value: { id: event.target.value } } });
+                    } else {
+                        this.props.onChange({ target: { value: event.target.value } });
+                    }
                 } else {
-                    this.props.onChange({ target: { value: null }});
+                    this.props.onChange({ target: { value: null } });
                 }
             };
 
             return (
-                <DropDown {...props}
-                          value={this.props.value && this.props.value.id}
-                          onChange={eventIdWrapper}
-                          options={this.state.options}
+                <DropDown
+                    {...props}
+                    value={useValueDotId ? this.props.value && this.props.value.id : this.props.value}
+                    onChange={eventIdWrapper}
+                    options={this.state.options}
                 />
             );
         }
@@ -62,10 +67,12 @@ DropDownAsyncGetter.contextTypes = { d2: React.PropTypes.any };
 DropDownAsyncGetter.propTypes = Object.assign({
     getter: React.PropTypes.func.isRequired,
     shouldRender: React.PropTypes.func.isRequired,
+    useValueDotId: React.PropTypes.bool,
 }, DropDown.propTypes);
 
 DropDownAsyncGetter.defaultProps = {
     shouldRender: () => true,
+    useValueDotId: true,
 };
 
 export default DropDownAsyncGetter;

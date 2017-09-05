@@ -27,7 +27,7 @@ const availableTrackerDataElements$ = eventProgramStore
     .take(1);
 
 const dataEntryFormForFirstProgramStage$ = eventProgramStore
-    .map(state => {
+    .map((state) => {
         const firstProgramStage = first(get('programStages', state));
 
         return state.dataEntryFormForProgramStage[firstProgramStage.id];
@@ -108,7 +108,7 @@ function PaletteSection({ keySet, label, filter, expand, expandClick, usedIds, i
                 {
                     filteredItems
                         .sort((a, b) => keySet[a] ? keySet[a].localeCompare(keySet[b]) : a.localeCompare(b))
-                        .map(key => {
+                        .map((key) => {
                             // Active items are items that are not already added to the form
                             const isActive = usedIds.indexOf(key) === -1;
                             const className = isActive ? 'item active' : 'item inactive';
@@ -152,10 +152,10 @@ class EditDataEntryForm extends React.Component {
             firstProgramStage$,
             programStageDataElements$,
             Observable.fromPromise(context.d2.Api.getApi().get('system/flags')),
-            (programStage, ops, flags) => ([ programStage, ops, flags ])
+            (programStage, ops, flags) => ([programStage, ops, flags])
         )
             .take(1)
-            .subscribe(([ programStage, programStageDataElements, flags ]) => {
+            .subscribe(([programStage, programStageDataElements, flags]) => {
                 // Operands with ID's that contain a dot ('.') are combined dataElementId's and categoryOptionId's
                 // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
                 // custom forms: "dataElementId-categoryOptionId-val"
@@ -175,10 +175,10 @@ class EditDataEntryForm extends React.Component {
                 // Create inserter functions for all insertable elements
                 // This avoids having to bind the functions during rendering
                 const insertFn = {};
-                Object.keys(this.operands).forEach(x => {
+                Object.keys(this.operands).forEach((x) => {
                     insertFn[x] = this.insertElement.bind(this, x);
                 });
-                Object.keys(this.flags).forEach(flag => {
+                Object.keys(this.flags).forEach((flag) => {
                     insertFn[flag] = this.insertFlag.bind(this, flag);
                 });
 
@@ -187,7 +187,7 @@ class EditDataEntryForm extends React.Component {
                 this.filterAction
                     .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
                     .debounceTime(75)
-                    .subscribe(args => {
+                    .subscribe((args) => {
                         const filter = args.data
                             .split(' ')
                             .filter(x => x.length);
@@ -199,7 +199,7 @@ class EditDataEntryForm extends React.Component {
                 this.setState({
                     insertFn,
                     formHtml,
-                    dataEntryForm: dataEntryForm,
+                    dataEntryForm,
                     formTitle: programStage.displayName,
                 });
             }));
@@ -277,7 +277,7 @@ class EditDataEntryForm extends React.Component {
         outHtml += inHtml.substr(inPos);
 
         this.setState({
-            usedIds
+            usedIds,
         }, () => {
             // If there is no dataEntryFormyet we'll just ignore.
             if (!this.state.dataEntryForm) {
@@ -317,7 +317,7 @@ class EditDataEntryForm extends React.Component {
 
     renderPalette() {
         return (
-            <div className="paletteContainer" style={{  }}>
+            <div className="paletteContainer" style={{ }}>
                 <div className="palette">
                     <div style={styles.paletteFilter}>
                         <TextField
@@ -333,7 +333,7 @@ class EditDataEntryForm extends React.Component {
                             label="data_elements"
                             filter={this.state.filter}
                             expand={this.state.expand}
-                            expandClick={() => { this.setState({ expand: 'data_elements' }) }}
+                            expandClick={() => { this.setState({ expand: 'data_elements' }); }}
                             usedIds={this.state.usedIds}
                             insertFn={this.state.insertFn}
                         />
@@ -342,7 +342,7 @@ class EditDataEntryForm extends React.Component {
                             label="flags"
                             filter={this.state.filter}
                             expand={this.state.expand}
-                            expandClick={() => { this.setState({ expand: 'flags' }) }}
+                            expandClick={() => { this.setState({ expand: 'flags' }); }}
                             usedIds={this.state.usedIds}
                             insertFn={this.state.insertFn}
                         />
@@ -355,7 +355,7 @@ class EditDataEntryForm extends React.Component {
         const props = this.props;
 
         return this.state.formHtml === undefined ? <LoadingMask /> : (
-            <div style={Object.assign({}, styles.formContainer, {  })}>
+            <div style={Object.assign({}, styles.formContainer, { })}>
                 <div className="programStageEditForm">
                     <div className="left">
                         <CKEditor
@@ -372,10 +372,10 @@ class EditDataEntryForm extends React.Component {
                                     floatingLabelText="Form display style"
                                     onChange={this.handleStyleChange}
                                 >
-                                    <MenuItem value={'NORMAL'} primaryText={this.getTranslation('normal')}/>
-                                    <MenuItem value={'COMFORTABLE'} primaryText={this.getTranslation('comfortable')}/>
-                                    <MenuItem value={'COMPACT'} primaryText={this.getTranslation('compact')}/>
-                                    <MenuItem value={'NONE'} primaryText={this.getTranslation('none')}/>
+                                    <MenuItem value={'NORMAL'} primaryText={this.getTranslation('normal')} />
+                                    <MenuItem value={'COMFORTABLE'} primaryText={this.getTranslation('comfortable')} />
+                                    <MenuItem value={'COMPACT'} primaryText={this.getTranslation('compact')} />
+                                    <MenuItem value={'NONE'} primaryText={this.getTranslation('none')} />
                                 </SelectField>
                             </div>
                             <div style={styles.formSection}>
@@ -430,7 +430,7 @@ const enhance = compose(
             (props, programStage, dataEntryForm) => ({
                 ...props,
                 programStage,
-                dataEntryForm
+                dataEntryForm,
             })
         )
     ),

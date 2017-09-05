@@ -15,8 +15,8 @@ export default new Map([
                 'MAX',
                 'NONE',
                 'AVERAGE_SUM_ORG_UNIT',
-            ]
-        }
+            ],
+        },
     }],
     ['categoryCombo', {
         fieldOptions: {

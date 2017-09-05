@@ -6,7 +6,7 @@ const styles = {
         position: 'fixed',
         width: '50%',
         top: '45%',
-        left: `25%`,
+        left: '25%',
         background: 'rgba(0, 0, 0, .7)',
         zIndex: 1000,
         color: 'white',
@@ -15,7 +15,7 @@ const styles = {
     },
 };
 
-export default function DeletingMessage({ isDeleting, name}, { d2 }) {
+export default function DeletingMessage({ isDeleting, name }, { d2 }) {
     if (!isDeleting) {
         return null;
     }

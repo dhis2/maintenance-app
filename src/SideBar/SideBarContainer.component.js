@@ -9,7 +9,7 @@ import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUni
 class SideBarContainer extends React.Component {
     componentWillMount() {
         this.subscription = sideBarStore
-            .subscribe(sideBarState => {
+            .subscribe((sideBarState) => {
                 this.setState({
                     ...sideBarState,
                     organisationUnitsToReload: this.state && this.state.organisationUnitsToReload ? this.state.organisationUnitsToReload : [],
@@ -18,7 +18,7 @@ class SideBarContainer extends React.Component {
 
         this.organisationUnitSaved = organisationUnitTreeChanged$
             .filter(orgUnits => orgUnits)
-            .subscribe(organisationUnitToReload => {
+            .subscribe((organisationUnitToReload) => {
                 this.setState({ organisationUnitsToReload: [organisationUnitToReload.id] }, () => this.forceUpdate());
             });
     }
@@ -49,7 +49,7 @@ class SideBarContainer extends React.Component {
                 const orgUnitSearchHits = appState.getState().sideBar.organisationUnits;
                 const roots = Array.isArray(orgUnitSearchHits)
                     ? orgUnitSearchHits
-                    : this.state.userOrganisationUnits.toArray().map(ou => {
+                    : this.state.userOrganisationUnits.toArray().map((ou) => {
                         // Use the name as displayName if it has not been loaded
                         if (!ou.displayName) {
                             ou.displayName = ou.name;
@@ -73,8 +73,8 @@ class SideBarContainer extends React.Component {
                             onSelectClick={this._onChangeSelectedOrgUnit.bind(this)}
                             idsThatShouldBeReloaded={orgUnitSearchHits || this.state.organisationUnitsToReload}
                             noHitsLabel={this.context.d2.i18n.getTranslation('no_matching_organisation_units')}
-                            hideMemberCount={true}
-                            hideCheckboxes={true}
+                            hideMemberCount
+                            hideCheckboxes
                         />
                     </div>
                 );
@@ -89,7 +89,7 @@ class SideBarContainer extends React.Component {
 
     _searchOrganisationUnits(searchValue) {
         onOrgUnitSearch(searchValue)
-            .subscribe(() => {}, (e) => console.error(e));
+            .subscribe(() => {}, e => console.error(e));
     }
 
     _onChangeSelectedOrgUnit(event, model) {

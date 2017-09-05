@@ -9,4 +9,4 @@ export default new Map([
     ['expiryPeriodType', {
         component: PeriodTypeDropDown,
     }],
-])
+]);

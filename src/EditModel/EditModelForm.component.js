@@ -29,11 +29,9 @@ const currentSection$ = appState
     .distinctUntilChanged();
 
 const editFormFieldsForCurrentSection$ = currentSection$
-    .flatMap((modelType) => Observable.fromPromise(createFieldConfigForModelTypes(modelType)));
+    .flatMap(modelType => Observable.fromPromise(createFieldConfigForModelTypes(modelType)));
 
-const isAddOperation = (model) => {
-    return model.id === undefined;
-};
+const isAddOperation = model => model.id === undefined;
 
 const d2$ = Observable.fromPromise(getInstance());
 
@@ -49,7 +47,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
         // TODO: When switching to the FormBuilder that manages state this function for all values
         // would need to be executed only for the field that actually changed and/or the values that
         // change because of it.
-            .map(fieldConfig => {
+            .map((fieldConfig) => {
                 fieldConfig.fieldOptions.model = modelToEdit;
 
                 if (!isAddOperation(modelToEdit) && disabledOnEdit.for(modelType).indexOf(fieldConfig.name) !== -1) {
@@ -79,7 +77,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
         const fieldConfigsWithAttributeFields = [].concat(
             fieldConfigsAfterRules,
             // getAttributeFieldConfigs(d2, modelToEdit),
-            (extraFields[modelType] || []).map(config => {
+            (extraFields[modelType] || []).map((config) => {
                 config.props = config.props || {};
                 config.props.modelToEdit = modelToEdit;
                 return config;
@@ -91,7 +89,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
 
         return {
             fieldConfigs: fieldConfigsWithAttributeFieldsAndUniqueValidators,
-            modelToEdit: modelToEdit,
+            modelToEdit,
             isLoading: false,
         };
     });
@@ -201,10 +199,12 @@ export default React.createClass({
                     onUpdateFormStatus={this._onUpdateFormStatus}
                 />
                 <FormButtons>
-                    <SaveButton onClick={this._saveAction}
-                                isValid={this.state.formState.valid && !this.state.formState.validating}
-                                isSaving={this.state.isSaving}/>
-                    <CancelButton onClick={this._closeAction}/>
+                    <SaveButton
+                        onClick={this._saveAction}
+                        isValid={this.state.formState.valid && !this.state.formState.validating}
+                        isSaving={this.state.isSaving}
+                    />
+                    <CancelButton onClick={this._closeAction} />
                 </FormButtons>
             </div>
         );
@@ -223,7 +223,7 @@ export default React.createClass({
         if (stepsByField) {
             this.setState({
                 activeStep: step,
-                fieldConfigs: this.state.fieldConfigs.map(field => {
+                fieldConfigs: this.state.fieldConfigs.map((field) => {
                     if (stepsByField[field.name] === step) {
                         if (field.hiddenComponent) {
                             field.component = field.hiddenComponent;

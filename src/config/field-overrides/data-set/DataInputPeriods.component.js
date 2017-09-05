@@ -49,13 +49,13 @@ class DataInputPeriods extends React.Component {
     openDialog() {
         this.setState({
             dialogOpen: true,
-            dataInputPeriods: (this.props.value || []).sort((a, b) => a.period.id.localeCompare(b.period.id))
+            dataInputPeriods: (this.props.value || []).sort((a, b) => a.period.id.localeCompare(b.period.id)),
         });
     }
 
     closeDialog() {
         this.setState({
-            dialogOpen: false
+            dialogOpen: false,
         });
     }
 
@@ -65,21 +65,22 @@ class DataInputPeriods extends React.Component {
         });
     }
 
-    removePeriod(uid) {
+    removePeriod($k) {
+        this.state.dataInputPeriods.splice($k, 1);
         this.setState({
-            dataInputPeriods: this.state.dataInputPeriods.filter(dip => dip.id !== uid),
+            dataInputPeriods: this.state.dataInputPeriods,
         });
     }
 
-    changePeriodDate(uid, dateField, nothing, value) {
+    changePeriodDate($k, dateField, nothing, value) {
         this.setState({
-            dataInputPeriods: this.state.dataInputPeriods.map(dip => {
-                if (dip.id === uid) {
+            dataInputPeriods: this.state.dataInputPeriods.map((dip, $i) => {
+                if ($i === $k) {
                     dip[dateField] = value;
                 }
 
                 return dip;
-            })
+            }),
         });
     }
 
@@ -97,8 +98,8 @@ class DataInputPeriods extends React.Component {
                     },
                     openingDate: dip.openingDate,
                     closingDate: dip.closingDate,
-                }))
-            }
+                })),
+            },
         });
         this.closeDialog();
     }
@@ -130,23 +131,17 @@ class DataInputPeriods extends React.Component {
     }
 
     renderPeriods() {
-        const removePeriodProxy = (uid) => {
-            return () => this.removePeriod(uid);
-        };
+        const removePeriodProxy = $k => () => this.removePeriod($k);
 
-        const changeDateProxy = (uid, dateField) => {
-            return this.changePeriodDate.bind(this, uid, dateField);
-        };
+        const changeDateProxy = ($k, dateField) => this.changePeriodDate.bind(this, $k, dateField);
 
-        const removeDateProxy = (periodId, dateField) => {
-            return () => this.changePeriodDate(periodId, dateField, null, null);
-        };
+        const removeDateProxy = ($k, dateField) => () => this.changePeriodDate($k, dateField, null, null);
 
-        return (this.state.dataInputPeriods && this.state.dataInputPeriods.map(dataInputPeriod =>
-            <div key={dataInputPeriod.id}>
+        return (this.state.dataInputPeriods && this.state.dataInputPeriods.map((dataInputPeriod, $k) => (
+            <div key={$k}>
                 <div style={styles.periodRow}>
                     <div style={styles.periodColumn}>
-                        <IconButton style={styles.iconButton} onClick={removePeriodProxy(dataInputPeriod.id)}>
+                        <IconButton style={styles.iconButton} onClick={removePeriodProxy($k)}>
                             <FontIcon
                                 className="material-icons"
                                 color="rgba(0,0,0,0.35)"
@@ -157,30 +152,31 @@ class DataInputPeriods extends React.Component {
                         {getPeriod(dataInputPeriod.period.id).name}
                     </div>
                     {this.renderDatePicker(
-                        this.getTranslation('opening_date'),
-                        dataInputPeriod.openingDate && new Date(dataInputPeriod.openingDate),
-                        changeDateProxy(dataInputPeriod.id, 'openingDate'),
-                        removeDateProxy(dataInputPeriod.id, 'openingDate')
-                    )}
+                            this.getTranslation('opening_date'),
+                            dataInputPeriod.openingDate && new Date(dataInputPeriod.openingDate),
+                            changeDateProxy($k, 'openingDate'),
+                            removeDateProxy($k, 'openingDate')
+                        )}
                     {this.renderDatePicker(
-                        this.getTranslation('closing_date'),
-                        dataInputPeriod.closingDate && new Date(dataInputPeriod.closingDate),
-                        changeDateProxy(dataInputPeriod.id, 'closingDate'),
-                        removeDateProxy(dataInputPeriod.id, 'closingDate')
-                    )}
+                            this.getTranslation('closing_date'),
+                            dataInputPeriod.closingDate && new Date(dataInputPeriod.closingDate),
+                            changeDateProxy($k, 'closingDate'),
+                            removeDateProxy($k, 'closingDate')
+                        )}
                 </div>
-                <Divider style={styles.divider}/>
+                <Divider style={styles.divider} />
             </div>
+            )
         ));
     }
 
     render() {
         const actions = [
-            <FlatButton label={this.getTranslation('cancel')} style={{ marginRight: 16 }} onClick={this.handleCancel}/>,
-            <RaisedButton primary label={this.getTranslation('confirm')} onClick={this.handleSave}/>
+            <FlatButton label={this.getTranslation('cancel')} style={{ marginRight: 16 }} onClick={this.handleCancel} />,
+            <RaisedButton primary label={this.getTranslation('confirm')} onClick={this.handleSave} />,
         ];
 
-        return <div>
+        return (<div>
             <RaisedButton
                 label={this.getTranslation('data_input_periods')}
                 style={styles.openDialogButton}
@@ -196,10 +192,10 @@ class DataInputPeriods extends React.Component {
             >
                 {this.renderPeriods()}
                 <div style={styles.periodPicker}>
-                    <PeriodPicker periodType={this.props.model.periodType} onPickPeriod={this.addPeriod}/>
+                    <PeriodPicker periodType={this.props.model.periodType} onPickPeriod={this.addPeriod} />
                 </div>
             </Dialog>
-        </div>;
+        </div>);
     }
 }
 DataInputPeriods.contextTypes = { d2: React.PropTypes.any };

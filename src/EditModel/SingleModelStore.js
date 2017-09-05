@@ -75,13 +75,13 @@ export const requestParams = new Map([
             'dataElement[id,displayName]',
             'trackedEntityAttribute[id,displayName]',
             'programStage[id,displayName]',
-            'programStageSection[id,displayName]]'
+            'programStageSection[id,displayName]]',
         ].join(','),
-    }]
+    }],
 ]);
 
 function loadModelFromD2(objectType, objectId) {
-    return getD2().then(d2 => {
+    return getD2().then((d2) => {
         if (d2.models[objectType]) {
             return d2.models[objectType]
                 .get(objectId, requestParams.get(objectType));
@@ -100,7 +100,7 @@ const singleModelStoreConfig = {
 
     getObjectOfTypeByIdAndClone({ objectType, objectId }) {
         const result = loadModelFromD2(objectType, objectId)
-            .then(model => {
+            .then((model) => {
                 // Clear out the id to create a new model with the same data
                 model.id = undefined;
                 // Some objects also have a uuid property that should be cleared
@@ -114,10 +114,8 @@ const singleModelStoreConfig = {
 
     save() {
         const importResultPromise = this.state.save(true)
-            .then(response => {
-                return response;
-            })
-            .catch(response => {
+            .then(response => response)
+            .catch((response) => {
                 if (isString(response)) {
                     return Promise.reject(response);
                 }
@@ -130,7 +128,7 @@ const singleModelStoreConfig = {
                     return Promise.reject(response.response.errorReports[0].message);
                 }
 
-                if (response  && response.message) {
+                if (response && response.message) {
                     return Promise.reject(response.message);
                 }
 

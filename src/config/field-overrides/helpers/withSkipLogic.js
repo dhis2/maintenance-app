@@ -12,7 +12,7 @@ const styles = {
 export default function withSkipLogic(predicate, ExtraFields, BaseField) {
     const ExtraFieldsWrap = switchOnBoolean(predicate, ExtraFields);
 
-    return (props) => (
+    return props => (
         <div style={styles.uniqueFieldWrap}>
             <BaseField {...props} />
             <ExtraFieldsWrap {...props} />

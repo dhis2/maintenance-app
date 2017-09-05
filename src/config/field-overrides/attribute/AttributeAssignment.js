@@ -8,7 +8,7 @@ import { get } from 'lodash/fp';
 
 const extractValueFromEvent = get('target.value');
 
-const toggleBooleanOnModel = (fieldName) => (event) => actions.update({
+const toggleBooleanOnModel = fieldName => event => actions.update({
     fieldName,
     value: extractValueFromEvent(event),
 });
@@ -35,7 +35,7 @@ const styles = {
 };
 
 const onlyPropertiesEndingOnAttribute = propertyName => /Attribute$/.test(propertyName);
-const extractSchemaNameToSnakeCase = (propertyName) => camelCaseToUnderscores(propertyName.replace(/Attribute$/, ''));
+const extractSchemaNameToSnakeCase = propertyName => camelCaseToUnderscores(propertyName.replace(/Attribute$/, ''));
 
 export default function AttributeAssignment({ model }) {
     const attributeReceiverCheckBoxes = Object

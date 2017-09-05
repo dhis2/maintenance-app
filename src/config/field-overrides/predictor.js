@@ -15,18 +15,16 @@ const expressionStatusStore = Store.create();
 const expressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
 expressionStatusActions.requestExpressionStatus
     .debounceTime(500)
-    .map(action => {
+    .map((action) => {
         const encodedFormula = encodeURIComponent(action.data);
         const url = `expressions/description?expression=${encodedFormula}`;
         const request = getInstance()
-            .then(d2 => {
-                return d2.Api.getApi().get(url);
-            });
+            .then(d2 => d2.Api.getApi().get(url));
 
         return Observable.fromPromise(request);
     })
     .concatAll()
-    .subscribe(response => {
+    .subscribe((response) => {
         expressionStatusStore.setState(response);
     });
 
@@ -39,12 +37,12 @@ function ExpressionDialog({ open, handleClose, handleSaveAndClose, ...props }) {
     const actions = [
         <FlatButton
             label="Cancel"
-            primary={true}
+            primary
             onTouchTap={handleClose}
         />,
         <FlatButton
             label="Submit"
-            primary={true}
+            primary
             onTouchTap={handleSaveAndClose}
         />,
     ];
@@ -54,7 +52,7 @@ function ExpressionDialog({ open, handleClose, handleSaveAndClose, ...props }) {
             open={open}
             actions={actions}
             contentStyle={customContentStyle}
-            style={{padding: '1rem'}}
+            style={{ padding: '1rem' }}
             onRequestClose={handleClose}
         >
             <ExpressionManager
@@ -78,11 +76,11 @@ class ExpressionField extends Component {
     handleOpen = () => {
         // Clear previous expression validation status
         expressionStatusStore.setState({});
-        this.setState({open: true, value: this.props.value});
+        this.setState({ open: true, value: this.props.value });
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     handleSaveAndClose = () => {
@@ -90,14 +88,14 @@ class ExpressionField extends Component {
             this.props.onChange({
                 target: {
                     value: this.state.value,
-                }
+                },
             });
         });
     };
 
     indicatorExpressionChanged = ({ formula, description }) => {
         this.setState({
-            value: Object.assign({}, this.state.value, { expression: formula, description, }),
+            value: Object.assign({}, this.state.value, { expression: formula, description }),
         });
     };
 
@@ -147,27 +145,27 @@ export default new Map([
         component: ExpressionField,
         validators: [
             {
-                validator: (value) => Boolean(value && value.description),
+                validator: value => Boolean(value && value.description),
                 message: 'description_is_required',
             },
             {
-                validator: (value) => Boolean(value && value.expression),
+                validator: value => Boolean(value && value.expression),
                 message: 'expression_is_required',
             },
-        ]
+        ],
     }],
 
     ['sampleSkipTest', {
         component: ExpressionField,
         validators: [
             {
-                validator: (value) => Boolean(value && value.description),
+                validator: value => Boolean(value && value.description),
                 message: 'description_is_required',
             },
             {
-                validator: (value) => Boolean(value && value.expression),
+                validator: value => Boolean(value && value.expression),
                 message: 'expression_is_required',
             },
-        ]
+        ],
     }],
 ]);

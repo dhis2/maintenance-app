@@ -88,7 +88,7 @@ export default new Map([
                     'USERNAME',
                     'FILE_RESOURCE',
                     'COORDINATE',
-                ]
+                ],
             },
             operations: [{
                 field: 'aggregationType',
@@ -102,8 +102,8 @@ export default new Map([
                 setValue: (model, fieldConfig) => {
                     fieldConfig.value = model[fieldConfig.name] = 'NONE';
                 },
-            }]
-        }
+            }],
+        },
     ]],
     ['attribute', [
         {
@@ -122,8 +122,8 @@ export default new Map([
                 setValue: (model, fieldConfig) => {
                     fieldConfig.value = model[fieldConfig.name] = model.optionSet.valueType;
                 },
-            }]
-        }
+            }],
+        },
     ]],
     ['trackedEntityAttribute', [
         {
@@ -169,8 +169,8 @@ export default new Map([
                 setValue: (model, fieldConfig) => {
                     fieldConfig.value = model[fieldConfig.name] = model.optionSet.valueType;
                 },
-            }]
-        }
+            }],
+        },
     ]],
     ['externalMapLayer', [
         {
@@ -178,7 +178,7 @@ export default new Map([
             field: 'legendSetUrl',
             when: [{
                 field: 'legendSet',
-                operator: 'HAS_VALUE'
+                operator: 'HAS_VALUE',
             }],
             operations: [{
                 field: 'legendSetUrl',
@@ -186,7 +186,7 @@ export default new Map([
                 propName: 'disabled',
                 thenValue: true,
                 elseValue: false,
-            }]
+            }],
         },
         {
             // When legendSetUrl has value, clear and disable the legendSet field
@@ -201,8 +201,8 @@ export default new Map([
                 propName: 'disabled',
                 thenValue: true,
                 elseValue: false,
-            }]
-        }
+            }],
+        },
     ]],
     ['organisationUnit', [
         {
@@ -214,7 +214,7 @@ export default new Map([
             operations: [{
                 field: 'dataSets',
                 type: 'HIDE_FIELD',
-            }]
+            }],
         },
         {
             field: 'featureType',
@@ -248,15 +248,15 @@ export default new Map([
                         model.featureType = null;
                     }
                 },
-            }]
-        }
+            }],
+        },
     ]],
     ['programRule', [
         {
             field: 'name',
             when: [{
                 field: 'program',
-                operator: 'HAS_VALUE'
+                operator: 'HAS_VALUE',
             }],
             operations: [{
                 type: 'SET_PROP',
@@ -269,7 +269,7 @@ export default new Map([
             field: 'description',
             when: [{
                 field: 'program',
-                operator: 'HAS_VALUE'
+                operator: 'HAS_VALUE',
             }],
             operations: [{
                 type: 'SET_PROP',
@@ -282,7 +282,7 @@ export default new Map([
             field: 'priority',
             when: [{
                 field: 'program',
-                operator: 'HAS_VALUE'
+                operator: 'HAS_VALUE',
             }],
             operations: [{
                 type: 'SET_PROP',
@@ -295,7 +295,7 @@ export default new Map([
             field: 'condition',
             when: [{
                 field: 'program',
-                operator: 'HAS_VALUE'
+                operator: 'HAS_VALUE',
             }],
             operations: [{
                 type: 'SET_PROP',
@@ -308,7 +308,7 @@ export default new Map([
             field: 'programRuleActions',
             when: [{
                 field: 'program',
-                operator: 'HAS_VALUE'
+                operator: 'HAS_VALUE',
             }],
             operations: [{
                 type: 'SET_PROP',
@@ -326,10 +326,10 @@ export default new Map([
                 operator: 'HAS_STRING_VALUE',
             }, {
                 field: 'trackedEntityAttribute',
-                operator: 'HAS_STRING_VALUE'
+                operator: 'HAS_STRING_VALUE',
             }, {
                 field: 'programStage',
-                operator: 'HAS_STRING_VALUE'
+                operator: 'HAS_STRING_VALUE',
             }],
             operations: [{
                 type: 'SET_PROP',
@@ -381,7 +381,7 @@ export default new Map([
             field: 'programStage',
             when: [{
                 field: 'dataElement',
-                operator: 'HAS_STRING_VALUE'
+                operator: 'HAS_STRING_VALUE',
             }],
             operations: [{
                 type: 'SET_PROP',
@@ -389,6 +389,6 @@ export default new Map([
                 thenValue: true,
                 elseValue: false,
             }],
-        }
+        },
     ]],
 ]);

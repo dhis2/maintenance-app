@@ -13,7 +13,7 @@ import SortableSectionDataList from './SortableSectionDataList.component';
 import AddNewSection from './AddNewSection.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import DataElementPicker from './DataElementPicker.component';
-import { grey300, grey800 } from "material-ui/styles/colors";
+import { grey300, grey800 } from 'material-ui/styles/colors';
 
 const maxNameLength = 230;
 
@@ -124,10 +124,10 @@ const SectionList = ({
                 onToggleEdit={() => { onToggleEditing(section.id); }}
                 onToggleOpen={() => { onToggleSection(section.id); }}
                 onSelect={() => { onSelectSection(section.id); }}
-                onNameChanged={newName => { onSectionNameChanged(section.id, newName); }}
-                onSectionRemoved={() => { onSectionRemoved(section.id) }}
-                onDataElementRemoved={dataElementId => { onDataElementRemoved(dataElementId, section.id); }}
-                sortItems={({oldIndex, newIndex}) => { sortItems(index, oldIndex, newIndex); }}
+                onNameChanged={(newName) => { onSectionNameChanged(section.id, newName); }}
+                onSectionRemoved={() => { onSectionRemoved(section.id); }}
+                onDataElementRemoved={(dataElementId) => { onDataElementRemoved(dataElementId, section.id); }}
+                sortItems={({ oldIndex, newIndex }) => { sortItems(index, oldIndex, newIndex); }}
             />
             ))}
     </div>
@@ -185,7 +185,7 @@ class CollapsibleSection extends Component {
         });
     };
 
-    focusTitleInputField = titleInput => {
+    focusTitleInputField = (titleInput) => {
         if (titleInput) {
             setTimeout(() => { titleInput.focus(); }, 20);
         }
@@ -217,16 +217,14 @@ class CollapsibleSection extends Component {
         this.props.onSectionRemoved();
     };
 
-    getSectionNameStyle = editing => {
-        return {
-            textAlign: 'left',
-            color: editing ? 'gray' : 'black',
-            fontSize: '1.7rem',
-            fontWeight: editing ? '300' : '400',
-            wordWrap: 'break-word',
-            width: '100%',
-        };
-    };
+    getSectionNameStyle = editing => ({
+        textAlign: 'left',
+        color: editing ? 'gray' : 'black',
+        fontSize: '1.7rem',
+        fontWeight: editing ? '300' : '400',
+        wordWrap: 'break-word',
+        width: '100%',
+    });
 
     render() {
         const removalDialogActions = [
@@ -243,25 +241,27 @@ class CollapsibleSection extends Component {
         ];
 
         const sectionContent = (this.props.section.dataElements.length > 0) ?
-            <div style={styles.sectionContent}>
+            (<div style={styles.sectionContent}>
                 <SortableSectionDataList
                     distance={4}
                     onSortEnd={this.onSortEnd}
                     onDataElementRemoved={this.props.onDataElementRemoved}
                     sectionDataElements={this.props.section.dataElements}
                 />
-            </div> :
-            <div style={styles.noDataElementsMessage}>
+            </div>) :
+            (<div style={styles.noDataElementsMessage}>
                 No data elements
-            </div>;
+            </div>);
 
         return (
-            <div style={{
-                ...styles.sectionContainer,
-                borderColor: this.props.selected ? grey800 : grey300
-            }}>
+            <div
+                style={{
+                    ...styles.sectionContainer,
+                    borderColor: this.props.selected ? grey800 : grey300,
+                }}
+            >
                 <div onClick={this.props.onSelect} style={styles.sectionHeader}>
-                    <div style={{...styles.row, width: '100%'}}>
+                    <div style={{ ...styles.row, width: '100%' }}>
                         <DragHandle />
 
                         { this.props.editing
@@ -280,7 +280,8 @@ class CollapsibleSection extends Component {
                                 hintText={this.getTranslation('name')}
                                 defaultValue={this.props.section.displayName}
                                 onChange={this.onNameChanged}
-                                maxLength={maxNameLength} />
+                                maxLength={maxNameLength}
+                            />
 
                             : <div style={this.getSectionNameStyle(false)}>{this.props.section.displayName}</div>
                         }
@@ -328,10 +329,12 @@ CollapsibleSection.contextTypes = {
 };
 
 export const ActionButton = ({ onClick, icon }) => (
-    <IconButton style={{ transition: 'none' }} iconStyle={{ transition: 'none' }} onClick={(e) => {
-        e && e.stopPropagation();
-        onClick()
-    }}>
+    <IconButton
+        style={{ transition: 'none' }} iconStyle={{ transition: 'none' }} onClick={(e) => {
+            e && e.stopPropagation();
+            onClick();
+        }}
+    >
         <FontIcon color="gray" className="material-icons">{icon}</FontIcon>
     </IconButton>
 );
@@ -368,13 +371,13 @@ class SectionForm extends Component {
         return this.context.d2.i18n.getTranslation(key);
     };
 
-    openSection = sectionId => {
+    openSection = (sectionId) => {
         this.setState({
             collapsedSections: pull(sectionId, this.state.collapsedSections),
         });
     };
 
-    closeSection = sectionId => {
+    closeSection = (sectionId) => {
         const collapsedSections = this.state.collapsedSections;
         collapsedSections.push(sectionId);
         this.setState({
@@ -382,13 +385,13 @@ class SectionForm extends Component {
         });
     };
 
-    selectSection = sectionId => {
+    selectSection = (sectionId) => {
         this.setState({
             selectedSectionId: sectionId,
         });
     };
 
-    onToggleEditing = sectionId => {
+    onToggleEditing = (sectionId) => {
         this.setState({
             editingSectionId: isEqual(sectionId, this.state.editingSectionId)
                 ? null
@@ -410,17 +413,17 @@ class SectionForm extends Component {
 
     isSectionCollapsed = sectionId => this.state.collapsedSections.includes(sectionId);
 
-    onToggleSection = sectionId => {
+    onToggleSection = (sectionId) => {
         this.isSectionCollapsed(sectionId)
             ? this.openSection(sectionId)
             : this.closeSection(sectionId);
     };
 
-    openSectionIfClosed = sectionId => {
+    openSectionIfClosed = (sectionId) => {
         this.isSectionCollapsed(sectionId) && this.openSection(sectionId);
     };
 
-    onSelectSection = sectionId => {
+    onSelectSection = (sectionId) => {
         this.openSectionIfClosed(sectionId);
         this.selectSection(sectionId);
     };
@@ -429,11 +432,11 @@ class SectionForm extends Component {
         this.props.onSectionNameChanged(sectionId, newName);
     };
 
-    onSortEnd = ({oldIndex, newIndex}) => {
+    onSortEnd = ({ oldIndex, newIndex }) => {
         this.props.onSectionOrderChanged(arrayMove(this.props.programStageSections, oldIndex, newIndex));
     };
 
-    onDataElementPicked = dataElementId => {
+    onDataElementPicked = (dataElementId) => {
         const dataElementToAdd = find(dataElement =>
             isEqual(dataElement.id, dataElementId), this.props.availableDataElements);
 
@@ -473,7 +476,7 @@ class SectionForm extends Component {
 
     sortItems = (sectionIndex, oldIndex, newIndex) => {
         const dataElements = arrayMove(this.props.programStageSections[sectionIndex].dataElements, oldIndex, newIndex);
-        let sections = this.props.programStageSections;
+        const sections = this.props.programStageSections;
         sections[sectionIndex].dataElements = dataElements;
         this.props.onSectionOrderChanged(sections);
     };

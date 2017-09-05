@@ -16,7 +16,7 @@ import Action from 'd2-ui/lib/action/Action';
 
 import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';
-import { goBack } from '../router-utils';
+import { goToRoute } from '../router-utils';
 
 import '../../scss/EditModel/EditDataEntryForm.scss';
 
@@ -92,7 +92,7 @@ class EditDataEntryForm extends React.Component {
             context.d2.Api.getApi().get('dataElementOperands', {
                 paging: false,
                 totals: true,
-                fields: 'id,displayName',
+                fields: 'id,dimensionItem,displayName',
                 dataSet: props.params.modelId,
             }),
             context.d2.Api.getApi().get('system/flags'),
@@ -105,16 +105,16 @@ class EditDataEntryForm extends React.Component {
             // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
             // custom forms: "dataElementId-categoryOptionId-val"
             this.operands = ops.dataElementOperands
-                .filter(op => op.id.indexOf('.') !== -1)
+                .filter(op => op.dimensionItem.indexOf('.') !== -1)
                 .reduce((out, op) => {
-                    const id = `${op.id.split('.').join('-')}-val`;
+                    const id = `${op.dimensionItem.split('.').join('-')}-val`;
                     out[id] = op.displayName; // eslint-disable-line
                     return out;
                 }, {});
 
             // Data element totals have only a single ID and thus no dot ('.')
             this.totals = ops.dataElementOperands
-                .filter(op => op.id.indexOf('.') === -1)
+                .filter(op => op.dimensionItem.indexOf('.') === -1)
                 .reduce((out, op) => {
                     out[op.id] = op.displayName; // eslint-disable-line
                     return out;
@@ -135,16 +135,16 @@ class EditDataEntryForm extends React.Component {
             // Create inserter functions for all insertable elements
             // This avoids having to bind the functions during rendering
             this.insertFn = {};
-            Object.keys(this.operands).forEach(x => {
+            Object.keys(this.operands).forEach((x) => {
                 this.insertFn[x] = this.insertElement.bind(this, x);
             });
-            Object.keys(this.totals).forEach(x => {
+            Object.keys(this.totals).forEach((x) => {
                 this.insertFn[x] = this.insertElement.bind(this, x);
             });
-            Object.keys(this.indicators).forEach(x => {
+            Object.keys(this.indicators).forEach((x) => {
                 this.insertFn[x] = this.insertElement.bind(this, x);
             });
-            Object.keys(this.flags).forEach(flag => {
+            Object.keys(this.flags).forEach((flag) => {
                 this.insertFn[flag] = this.insertFlag.bind(this, flag);
             });
 
@@ -153,7 +153,7 @@ class EditDataEntryForm extends React.Component {
             this.filterAction
                 .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
                 .debounceTime(75)
-                .subscribe(args => {
+                .subscribe((args) => {
                     const filter = args.data
                         .split(' ')
                         .filter(x => x.length);
@@ -225,19 +225,19 @@ class EditDataEntryForm extends React.Component {
             .then(() => {
                 log.info('Form saved successfully');
                 snackActions.show({ message: this.getTranslation('form_saved') });
-                goBack();
+                goToRoute('list/dataSetSection/dataSet');
             })
-            .catch(e => {
+            .catch((e) => {
                 log.warn('Failed to save form:', e);
                 snackActions.show({
-                    message: `${this.getTranslation('failed_to_save_form')}${e.message ? ': ' + e.message : ''}`,
+                    message: `${this.getTranslation('failed_to_save_form')}${e.message ? `: ${e.message}` : ''}`,
                     action: this.context.d2.i18n.getTranslation('ok'),
                 });
             });
     }
 
     handleCancelClick() {
-        goBack();
+        goToRoute('list/dataSetSection/dataSet');
     }
 
     handleDeleteClick() {
@@ -249,9 +249,9 @@ class EditDataEntryForm extends React.Component {
                     .delete(['dataEntryForms', modelToEditStore.state.dataEntryForm.id].join('/'))
                     .then(() => {
                         snackActions.show({ message: this.getTranslation('form_deleted') });
-                        goBack();
+                        goToRoute('list/dataSetSection/dataSet');
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         log.error('Failed to delete form:', err);
                         snackActions.show({ message: this.getTranslation('failed_to_delete_form'), action: 'ok' });
                     });
@@ -333,7 +333,6 @@ class EditDataEntryForm extends React.Component {
             const idMatch = dataElementCategoryOptionIdPattern.exec(inputHtml);
             const dataElementTotalMatch = dataElementPattern.exec(inputHtml);
             const indicatorMatch = indicatorPattern.exec(inputHtml);
-
             if (idMatch) {
                 const id = `${idMatch[1]}-${idMatch[2]}-val`;
                 usedIds.push(id);
@@ -400,7 +399,7 @@ class EditDataEntryForm extends React.Component {
                     {
                         filteredItems
                             .sort((a, b) => keySet[a] ? keySet[a].localeCompare(keySet[b]) : a.localeCompare(b))
-                            .map(key => {
+                            .map((key) => {
                                 // Active items are items that are not already added to the form
                                 const isActive = this.state.usedIds.indexOf(key) === -1;
                                 const className = isActive ? 'item active' : 'item inactive';
@@ -458,7 +457,7 @@ class EditDataEntryForm extends React.Component {
                     {this.state.formTitle} {this.getTranslation('data_entry_form')}
                 </Heading>
                 {this.renderPalette()}
-                <textarea id="designTextarea" name="designTextarea"/>
+                <textarea id="designTextarea" name="designTextarea" />
                 <Paper style={styles.formPaper}>
                     <div style={styles.formSection}>
                         <SelectField
@@ -466,14 +465,14 @@ class EditDataEntryForm extends React.Component {
                             floatingLabelText="Form display style"
                             onChange={this.handleStyleChange}
                         >
-                            <MenuItem value={'NORMAL'} primaryText={this.getTranslation('normal')}/>
-                            <MenuItem value={'COMFORTABLE'} primaryText={this.getTranslation('comfortable')}/>
-                            <MenuItem value={'COMPACT'} primaryText={this.getTranslation('compact')}/>
-                            <MenuItem value={'NONE'} primaryText={this.getTranslation('none')}/>
+                            <MenuItem value={'NORMAL'} primaryText={this.getTranslation('normal')} />
+                            <MenuItem value={'COMFORTABLE'} primaryText={this.getTranslation('comfortable')} />
+                            <MenuItem value={'COMPACT'} primaryText={this.getTranslation('compact')} />
+                            <MenuItem value={'NONE'} primaryText={this.getTranslation('none')} />
                         </SelectField>
                     </div>
                     <div style={styles.formSection}>
-                        <RaisedButton label={this.getTranslation('save')} primary onClick={this.handleSaveClick}/>
+                        <RaisedButton label={this.getTranslation('save')} primary onClick={this.handleSaveClick} />
                         <FlatButton
                             label={this.getTranslation('cancel')}
                             style={styles.cancelButton}

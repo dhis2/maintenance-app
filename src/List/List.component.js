@@ -30,7 +30,7 @@ import fieldOrder from '../config/field-config/field-order';
 import { Observable } from 'rxjs';
 import { calculatePageValue } from './helpers/pagination';
 import HelpLink from './HelpLink.component';
-import Dropdown from "../forms/form-fields/drop-down";
+import Dropdown from '../forms/form-fields/drop-down';
 import DropdownAsync from '../forms/form-fields/drop-down-async';
 import { getFilterFieldsForType } from '../config/maintenance-models';
 import './listValueRenderers';
@@ -143,7 +143,7 @@ const List = React.createClass({
 
     componentWillMount() {
         const sourceStoreDisposable = listStore
-            .subscribe(listStoreValue => {
+            .subscribe((listStoreValue) => {
                 if (!isIterable(listStoreValue.list)) {
                     return; // Received value is not iterable, keep waiting
                 }
@@ -157,14 +157,14 @@ const List = React.createClass({
                 });
             });
 
-        const detailsStoreDisposable = detailsStore.subscribe(detailsObject => {
+        const detailsStoreDisposable = detailsStore.subscribe((detailsObject) => {
             this.setState({ detailsObject });
         });
 
-        const sharingStoreDisposable = sharingStore.subscribe(sharingState => {
+        const sharingStoreDisposable = sharingStore.subscribe((sharingState) => {
             this.setState(state => ({
                 sharing: sharingState,
-                dataRows: state.dataRows.map(row => {
+                dataRows: state.dataRows.map((row) => {
                     if (row.id === sharingState.model.id) {
                         return Object.assign(row, { publicAccess: sharingState.model.publicAccess });
                     }
@@ -173,19 +173,19 @@ const List = React.createClass({
             }));
         });
 
-        const translationStoreDisposable = translationStore.subscribe(translationState => {
+        const translationStoreDisposable = translationStore.subscribe((translationState) => {
             this.setState({
                 translation: translationState,
             });
         });
 
-        const dataElementOperandStoreDisposable = dataElementOperandStore.subscribe(state => {
+        const dataElementOperandStoreDisposable = dataElementOperandStore.subscribe((state) => {
             this.setState({
                 dataElementOperand: state,
             });
         });
 
-        const predictorDialogStoreDisposable = predictorDialogStore.subscribe(state => {
+        const predictorDialogStoreDisposable = predictorDialogStore.subscribe((state) => {
             this.setState({ predictorDialog: state });
         });
 
@@ -248,7 +248,7 @@ const List = React.createClass({
         case 'edit':
             return model.access.write;
         case 'clone':
-            return model.modelDefinition.name !== 'dataSet' && model.access.write;
+            return model.modelDefinition.name !== 'dataSet' && model.modelDefinition.name !== 'program' && model.access.write;
         case 'translate':
             return model.access.read && model.modelDefinition.identifiableObject;
         case 'details':
@@ -280,22 +280,20 @@ const List = React.createClass({
                 });
 
                 listActions.searchByName({ modelType: this.props.params.modelType, searchString: value })
-                    .subscribe(() => {}, (error) => log.error(error));
+                    .subscribe(() => {}, error => log.error(error));
             });
 
         this.registerDisposable(searchListByNameDisposable);
     },
 
     renderFilters() {
-        const makeFilterSetter = (filterField) => {
-            return (e) => {
-                this.setState({ isLoading: true });
-                listActions.setFilterValue({
-                    filterField,
-                    filterValue: e.target.value,
-                    modelType: this.props.params.modelType,
-                });
-            };
+        const makeFilterSetter = filterField => (e) => {
+            this.setState({ isLoading: true });
+            listActions.setFilterValue({
+                filterField,
+                filterValue: e.target.value,
+                modelType: this.props.params.modelType,
+            });
         };
 
         const styles = {
@@ -313,7 +311,7 @@ const List = React.createClass({
         };
         return (
             <div style={styles.inset}>
-                <SearchBox searchObserverHandler={this.searchListByName}/>
+                <SearchBox searchObserverHandler={this.searchListByName} />
                 {getFilterFieldsForType(this.props.params.modelType).map((filterField, i) => {
                     const modelDefinition = this.context.d2.models[this.props.params.modelType];
                     const isConstantField =
@@ -434,7 +432,7 @@ const List = React.createClass({
                     const objectName = col.substr(0, col.indexOf('___'));
                     const objectProp = col.substr(col.indexOf('___') + 3);
                     Object.assign(o, {
-                        [col]: row && row[objectName] && row[objectName][objectProp] || ''
+                        [col]: row && row[objectName] && row[objectName][objectProp] || '',
                     });
                 }
                 return o;
@@ -484,7 +482,7 @@ const List = React.createClass({
             }, row);
         };
 
-        const primaryAction = model => {
+        const primaryAction = (model) => {
             if (model.access.write) {
                 availableActions.edit(model);
             } else {
@@ -502,9 +500,9 @@ const List = React.createClass({
                 <div>
                     <Heading>
                         {this.getTranslation(`${camelCaseToUnderscores(this.props.params.modelType)}_management`)}
-                        <HelpLink schema={this.props.params.modelType}/>
+                        <HelpLink schema={this.props.params.modelType} />
                     </Heading>
-                    <ListActionBar modelType={this.props.params.modelType} groupName={this.props.params.groupName}/>
+                    <ListActionBar modelType={this.props.params.modelType} groupName={this.props.params.groupName} />
                 </div>
                 <div style={styles.filterWrap}>
                     <div style={{ float: 'right' }}><Pagination {...paginationProps} /></div>

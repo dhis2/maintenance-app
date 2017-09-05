@@ -64,12 +64,10 @@ class SectionDialog extends React.Component {
             const sectionArray = Array.isArray(sections) ? sections : sections.toArray();
             const otherSections = sectionArray.filter(s => s.id !== currentSectionId);
             const filterDataElementIds = otherSections
-                .reduce((elements, section) => {
-                return elements.concat((Array.isArray(section.dataElements)
+                .reduce((elements, section) => elements.concat((Array.isArray(section.dataElements)
                         ? section.dataElements
                         : section.dataElements.toArray()
-                ).map(de => de.id));
-            }, []);
+                ).map(de => de.id)), []);
 
             // Default category combo filter = no filter
             const categoryComboId = false;
@@ -115,7 +113,7 @@ class SectionDialog extends React.Component {
         if (modelToEditStore.state.dataSetElements) {
             dataElementStore.setState(
                 modelToEditStore.state.dataSetElements
-                    .filter(dse => {
+                    .filter((dse) => {
                         if (categoryComboId) {
                             return dse.categoryCombo
                                 ? dse.categoryCombo.id === categoryComboId
@@ -231,11 +229,11 @@ class SectionDialog extends React.Component {
                         'greyedFields[categoryOptionCombo,dataElement]',
                     ].join(','),
                 })
-                    .then(section => {
+                    .then((section) => {
                         this.props.onSaveSection(section);
                     });
             })
-            .catch(err => {
+            .catch((err) => {
                 log.warn('Failed to save section:', err);
                 snackActions.show({
                     message: this.getTranslation('failed_to_save_section'),
@@ -318,9 +316,9 @@ class SectionDialog extends React.Component {
         if (this.props.sectionModel.id) {
             title = this.getTranslation('edit_section');
             sectionIdDiv = (
-                <div style={{float: 'left', padding: 8, color: 'rgba(0,0,0,0.5)'}}>
+                <div style={{ float: 'left', padding: 8, color: 'rgba(0,0,0,0.5)' }}>
                     {this.getTranslation('section_id')}:
-                    <span style={{fontFamily: 'monospace'}}>{this.props.sectionModel.id}</span>
+                    <span style={{ fontFamily: 'monospace' }}>{this.props.sectionModel.id}</span>
                 </div>
             );
         }

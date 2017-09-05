@@ -6,20 +6,19 @@ import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter'
 async function getProgramDataElements(model, d2) {
     if (model && model.program && model.program.id) {
         const list = await d2.Api.getApi().get(['programs', model.program.id].join('/'), {
-            fields: 'programStages[id,programStageDataElements[dataElement[id,displayName]]]'
+            fields: 'programStages[id,programStageDataElements[dataElement[id,displayName]]]',
         });
 
         return Object.values(list.programStages
-            .filter(stage => {
+            .filter((stage) => {
                 // If a program stage is selected, AND the program rule type uses the program stage, only show
                 // variables from the selected stage - otherwise show variables from all stages
                 if (model.programStage &&
                     model.programStage.id &&
                     model.programRuleVariableSourceType === 'DATAELEMENT_NEWEST_EVENT_PROGRAM_STAGE') {
                     return stage.id === model.programStage.id;
-                } else {
-                    return true;
                 }
+                return true;
             })
             .map(stage => stage.programStageDataElements.map(psde => psde.dataElement))
             .reduce((a, stage) => a.concat(stage), [])
@@ -35,7 +34,7 @@ async function getProgramDataElements(model, d2) {
 async function getProgramStages(model, d2) {
     if (model && model.program && model.program.id) {
         const list = await d2.Api.getApi().get(['programs', model.program.id].join('/'), {
-            fields: 'programStages[id,displayName]'
+            fields: 'programStages[id,displayName]',
         });
 
         return list.programStages
@@ -50,11 +49,11 @@ async function getProgramStages(model, d2) {
 async function getProgramTrackedEntityAttributes(model, d2) {
     if (model && model.program && model.program.id) {
         const list = await d2.Api.getApi().get(['programs', model.program.id].join('/'), {
-            fields: 'programTrackedEntityAttributes[id,displayName]'
+            fields: 'programTrackedEntityAttributes[displayName,trackedEntityAttribute[id]]',
         });
 
         return list.programTrackedEntityAttributes
-            .map(tea => ({ text: tea.displayName, value: tea.id }))
+            .map(tea => ({ text: tea.displayName, value: tea.trackedEntityAttribute.id }))
             .sort((a, b) => a.text.localeCompare(b.text));
     }
 
@@ -94,7 +93,7 @@ export default new Map([
         fieldOptions: {
             getter: getProgramTrackedEntityAttributes,
             shouldRender: hasProgram,
-        }
+        },
     }],
     ['programStage', {
         component: DropDownAsyncGetter,

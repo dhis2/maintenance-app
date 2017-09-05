@@ -22,7 +22,7 @@ class OrgUnitSelectDialog extends React.Component {
         };
 
         if (props.value) {
-            context.d2.models.organisationUnits.get(props.value.id, { fields: 'id,displayName,path', }).then(orgUnit => {
+            context.d2.models.organisationUnits.get(props.value.id, { fields: 'id,displayName,path' }).then((orgUnit) => {
                 this.setState({
                     selected: [orgUnit.path],
                     parentName: orgUnit.displayName,
@@ -46,7 +46,7 @@ class OrgUnitSelectDialog extends React.Component {
         this.subscriptions.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
-    handleSelectClick(e, orgUnit) {console.warn('click', orgUnit.displayName, orgUnit.path);
+    handleSelectClick(e, orgUnit) {
         this.setState({ value: orgUnit, selected: [orgUnit.path] });
     }
 
@@ -89,9 +89,9 @@ class OrgUnitSelectDialog extends React.Component {
             <div style={styles.wrapper}>
                 <TextField
                     floatingLabelText={this.props.labelText}
-                    style={{width: '100%'}}
+                    style={{ width: '100%' }}
                     value={this.state.parentName || ''}
-                    onClick={(e) => this.setState({ value: this.props.value, dialogOpen: true })}
+                    onClick={e => this.setState({ value: this.props.value, dialogOpen: true })}
                 />
                 <Dialog
                     open={this.state.dialogOpen}

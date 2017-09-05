@@ -7,7 +7,7 @@ import {
     loadEventProgramSuccess,
     notifyUser,
     saveEventProgramError,
-    saveEventProgramSuccess
+    saveEventProgramSuccess,
 } from './actions';
 import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 import { Observable } from 'rxjs';
@@ -41,7 +41,7 @@ function loadEventProgramMetadataByProgramId(programId) {
                         programStageDataElements: [],
                         notificationTemplates: [],
                         programStageSections: [],
-                    }
+                    },
                 ],
                 organisationUnits: [],
             }],
@@ -67,7 +67,7 @@ function loadEventProgramMetadataByProgramId(programId) {
                 })
             )
             .flatMap(createEventProgramStoreStateFromMetadataResponse)
-            .map(state => {
+            .map((state) => {
                 // Set some eventProgram defaults
                 state.program.programType = 'WITHOUT_REGISTRATION';
 
@@ -91,10 +91,10 @@ function loadEventProgramMetadataByProgramId(programId) {
             '?fields=:owner,displayName',
             `&programs:filter=id:eq:${programId}`,
             `&programs:fields=${programFields},programStages[:owner,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
-            `&dataElements:fields=id,displayName,valueType,optionSet`,
-            `&dataElements:filter=domainType:eq:TRACKER`,
+            '&dataElements:fields=id,displayName,valueType,optionSet',
+            '&dataElements:filter=domainType:eq:TRACKER',
         ].join(''))))
-        .flatMap(createEventProgramStoreStateFromMetadataResponse)
+        .flatMap(createEventProgramStoreStateFromMetadataResponse);
 }
 
 function createEventProgramStoreStateFromMetadataResponse(eventProgramMetadata) {
@@ -163,15 +163,15 @@ const saveEventProgram = eventProgramStore
     .flatMap(metaDataPayload => api$
         .flatMap(api => Observable.fromPromise(api.post('metadata', metaDataPayload)))
         .map(getImportStatus)
-        .map(importStatus => {
+        .map((importStatus) => {
             if (importStatus.isOk()) {
                 // TODO: Not the most elegant place to do this maybe
-                goToAndScrollUp(`/list/programSection/program`);
+                goToAndScrollUp('/list/programSection/program');
                 return saveEventProgramSuccess();
             }
             return saveEventProgramError(importStatus.errorsPerObject);
         })
-        .catch((err) => Observable.of(saveEventProgramError(err)))
+        .catch(err => Observable.of(saveEventProgramError(err)))
     );
 
 export const programModelSave = action$ => action$
@@ -184,7 +184,7 @@ export const programModelSave = action$ => action$
 
         return Observable
             .of(notifyUser('no_changes_to_be_saved'))
-            .do(() => goToAndScrollUp(`/list/programSection/program`));
+            .do(() => goToAndScrollUp('/list/programSection/program'));
     });
 
 export const programModelSaveResponses = action$ => Observable
@@ -194,7 +194,7 @@ export const programModelSaveResponses = action$ => Observable
             .mapTo(notifyUser('success')),
         action$
             .ofType(EVENT_PROGRAM_SAVE_ERROR)
-            .map(action => {
+            .map((action) => {
                 const getFirstErrorMessageFromAction = compose(get('message'), first, flatten, values, getOr([], 'errors'), first);
                 const firstErrorMessage = getFirstErrorMessageFromAction(action.payload);
 

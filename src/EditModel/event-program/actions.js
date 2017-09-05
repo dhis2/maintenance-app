@@ -1,24 +1,24 @@
 import { createActionCreator } from '../actions';
 export { NOTIFY_USER, notifyUser } from '../actions';
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Stepper
 export const EVENT_PROGRAM_STEP_CHANGE = 'EVENT_PROGRAM_STEP_CHANGE';
 export const EVENT_PROGRAM_STEP_NEXT = 'EVENT_PROGRAM_STEP_NEXT';
 export const EVENT_PROGRAM_STEP_PREVIOUS = 'EVENT_PROGRAM_STEP_PREVIOUS';
 
-export const changeStep = (stepKey) => ({ type: EVENT_PROGRAM_STEP_CHANGE, payload: stepKey });
+export const changeStep = stepKey => ({ type: EVENT_PROGRAM_STEP_CHANGE, payload: stepKey });
 export const nextStep = () => ({ type: EVENT_PROGRAM_STEP_NEXT });
 export const previousStep = () => ({ type: EVENT_PROGRAM_STEP_PREVIOUS });
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Model
 export const MODEL_TO_EDIT_LOADED = 'MODEL_TO_EDIT_LOADED';
 export const MODEL_TO_EDIT_FIELD_CHANGED = 'MODEL_TO_EDIT_FIELD_CHANGED';
 
 export const editFieldChanged = (field, value) => ({ type: MODEL_TO_EDIT_FIELD_CHANGED, payload: { field, value } });
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Event program
 export const EVENT_PROGRAM_LOAD = 'EVENT_PROGRAM_LOAD';
 export const EVENT_PROGRAM_LOAD_SUCCESS = 'EVENT_PROGRAM_LOAD_SUCCESS';

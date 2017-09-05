@@ -35,7 +35,7 @@ multiSelectActions.addItemsToModelCollection
             }
 
             modelsToAdd
-                .forEach(itemToAdd => {
+                .forEach((itemToAdd) => {
                     model[propertyName].add(itemToAdd);
                 });
 
@@ -54,13 +54,14 @@ multiSelectActions.removeItemsFromModelCollection
         }
 
         modelsToRemove
-            .forEach(itemToRemove => {
+            .forEach((itemToRemove) => {
                 model[propertyName].remove(itemToRemove);
             });
 
         complete();
     });
 
+// TODO: Refactor to es2015 class
 export default React.createClass({
     propTypes: {
         referenceType: React.PropTypes.string.isRequired,
@@ -70,7 +71,7 @@ export default React.createClass({
         onChange: React.PropTypes.func.isRequired,
         value: React.PropTypes.oneOfType([
             React.PropTypes.shape({ values: React.PropTypes.func.isRequired }),
-            React.PropTypes.arrayOf(React.PropTypes.func)
+            React.PropTypes.arrayOf(React.PropTypes.func),
         ]),
     },
 
@@ -102,6 +103,17 @@ export default React.createClass({
             .then(this.loadAvailableItems)
             .then(this.populateItemStore)
             .then(this.populateAssignedStore);
+    },
+
+    componentWillReceiveProps(newProps) {
+        if (this.props.queryParamFilter !== newProps.queryParamFilter) {
+            // Reload the available items since the filter for the objects changed
+            this.reloadAvailableItems();
+
+            // The selected items need to be reset. The filter change likely invalidated the selection
+            this.state.assignedItemStore.setState([]);
+            this.props.model[this.props.referenceProperty].clear();
+        }
     },
 
     renderGroupEditor() {
@@ -186,7 +198,7 @@ export default React.createClass({
         this.props.model[this.props.referenceProperty].clear();
 
         // Add the items back in the correct order
-        newOrder.forEach(item => {
+        newOrder.forEach((item) => {
             if (itemList.has(item)) {
                 this.props.model[this.props.referenceProperty].add(itemList.get(item));
             }
@@ -320,12 +332,10 @@ export default React.createClass({
 
     populateItemStore(availableItems) {
         if (this.props.referenceProperty === 'aggregationLevels') {
-            this.state.itemStore.setState(Array.from(availableItems.values()).map((model) => {
-                return {
-                    value: model.level,
-                    text: model.displayName || model.name,
-                };
-            }));
+            this.state.itemStore.setState(Array.from(availableItems.values()).map(model => ({
+                value: model.level,
+                text: model.displayName || model.name,
+            })));
             return;
         }
 

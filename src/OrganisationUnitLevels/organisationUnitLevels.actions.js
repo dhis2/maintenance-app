@@ -68,7 +68,7 @@ async function getOrganisationUnitLevelFormFields() {
     const d2 = await getInstance();
 
     return fieldForOrganisationUnitLevels
-        .map(fieldName => {
+        .map((fieldName) => {
             const fieldOption = fieldOptions.get(fieldName) || {};
 
             return {
@@ -89,7 +89,7 @@ const organisationUnitLevelFormFields$ = Observable.fromPromise(getOrganisationU
 
 function getFieldConfigsForAllFields(organisationUnitLevels, organisationUnitLevelFormFields) {
     return organisationUnitLevels
-        .map(ouLevel => {
+        .map((ouLevel) => {
             const result = organisationUnitLevelFormFields
                 .map(fieldConfig => Object.assign({}, fieldConfig, { value: ouLevel[fieldConfig.name] }));
 
@@ -147,7 +147,7 @@ actions.initOrgUnitLevels
 // FIXME: Weird solution to make an action usable with Observable.combineLatest. Also actions are never unsubscribed.
 const fieldUpdateSubject$ = new ReplaySubject(1);
 actions.fieldUpdate
-    .subscribe((action) => fieldUpdateSubject$.next(action));
+    .subscribe(action => fieldUpdateSubject$.next(action));
 
 Observable.combineLatest(
     fieldUpdateSubject$,
@@ -188,7 +188,7 @@ function saveOrganisationUnitLevels(action) {
 }
 
 actions.saveOrganisationUnitLevels
-    .map((action) => ({
+    .map(action => ({
         organisationUnitLevels: organisationUnitLevelsStore
             .getState()
             .organisationUnitLevels

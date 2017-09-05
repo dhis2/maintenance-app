@@ -1,4 +1,4 @@
-const createActionCreator = (type) => (payload) => ({ type, payload });
+const createActionCreator = type => payload => ({ type, payload });
 
 export const SNACK_BAR_MESSAGE_SHOW_REQUEST = 'SNACK_BAR_MESSAGE_SHOW_REQUEST';
 export const SNACK_BAR_MESSAGE_SHOW = 'SNACK_BAR_MESSAGE_SHOW';

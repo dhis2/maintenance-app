@@ -43,27 +43,23 @@ const withVariablePropsForProgramType = mapPropsStream(props$ => props$
         const variables = getProgramVariablesForProgramType(programType);
 
         return d2$
-            .map(d2 => {
-                return {
-                    ...props,
-                    variables: variables
+            .map(d2 => ({
+                ...props,
+                variables: variables
                         .map(variable => ({
                             label: d2.i18n.getTranslation(variable),
                             value: variable,
                         })),
-                };
-            });
+            }));
     })
-    .map(({ variables, onSelect = noop, ...props }) => {
-        return ({
-            ...props,
-            items: variables.map(({ label, value }) => ({
-                value: `V{${value}}`,
-                label,
-            })),
-            onItemClick: onSelect,
-        });
-    })
+    .map(({ variables, onSelect = noop, ...props }) => ({
+        ...props,
+        items: variables.map(({ label, value }) => ({
+            value: `V{${value}}`,
+            label,
+        })),
+        onItemClick: onSelect,
+    }))
 );
 
 const VariableSelector = withVariablePropsForProgramType(CollapsibleList);

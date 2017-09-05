@@ -53,15 +53,13 @@ export default React.createClass({
             return this.state.models
                 .mapThroughDefinitions(v => v)
                 .filter(hasNameInArray(this.props.nameListFilter))
-                .map((value) => ({
+                .map(value => ({
                     text: this.getTranslation(camelCaseToUnderscores(value.plural)),
                     payload: value,
                 }))
-                .map((option, index) => {
-                    return (
-                        <MenuItem key={index} primaryText={option.text} value={option.payload} />
-                    );
-                });
+                .map((option, index) => (
+                    <MenuItem key={index} primaryText={option.text} value={option.payload} />
+                    ));
         }
         return [];
     },

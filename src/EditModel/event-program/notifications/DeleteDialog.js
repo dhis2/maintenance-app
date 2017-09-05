@@ -27,7 +27,7 @@ export default function DeleteDialog({ onCancel, onConfirm, question, open, t })
         >
             {question}
         </Dialog>
-    )
+    );
 }
 
 DeleteDialog.propTypes = {

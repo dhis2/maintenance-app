@@ -48,7 +48,7 @@ const enhance = compose(
     withState('open', 'toggleOpen', false),
     withProps(({ toggleOpen }) => ({
         onButtonClick: () => toggleOpen(true),
-        close: () => toggleOpen(false)
+        close: () => toggleOpen(false),
     }))
 );
 

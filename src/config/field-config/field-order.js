@@ -270,6 +270,7 @@ const fieldOrderByName = new Map([
         'leftSide',
         'operator',
         'rightSide',
+        'skipFormValidation'
     ]],
     ['validationRuleGroup', [
         'name',
@@ -338,6 +339,16 @@ const fieldOrderByName = new Map([
         'programStage',
         'dataElement',
         'trackedEntityAttribute',
+    ]],
+    ['dataApprovalLevel', [
+        'name',
+        'orgUnitLevel',
+        'categoryOptionGroupSet',
+    ]],
+    ['dataApprovalWorkflow', [
+        'name',
+        'periodType',
+        'dataApprovalLevels',
     ]],
 ]);
 

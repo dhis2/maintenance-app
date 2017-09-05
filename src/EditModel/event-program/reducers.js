@@ -8,39 +8,39 @@ import { findNextStepKey, findPreviousStepKey } from './stepper';
 
 function eventProgramStepperReducer(state = { activeStep: STEP_DETAILS }, action) {
     switch (action.type) {
-        case EVENT_PROGRAM_STEP_CHANGE:
-            return {
-                activeStep: action.payload,
-            };
+    case EVENT_PROGRAM_STEP_CHANGE:
+        return {
+            activeStep: action.payload,
+        };
 
-        case EVENT_PROGRAM_STEP_NEXT:
-            return {
-                activeStep: findNextStepKey(steps, state.activeStep),
-            };
+    case EVENT_PROGRAM_STEP_NEXT:
+        return {
+            activeStep: findNextStepKey(steps, state.activeStep),
+        };
 
-        case EVENT_PROGRAM_STEP_PREVIOUS:
-            return {
-                activeStep: findPreviousStepKey(steps, state.activeStep),
-            };
+    case EVENT_PROGRAM_STEP_PREVIOUS:
+        return {
+            activeStep: findPreviousStepKey(steps, state.activeStep),
+        };
 
-        case STEPPER_RESET_ACTIVE_STEP:
-            return {
-                activeStep: STEP_DETAILS,
-            };
+    case STEPPER_RESET_ACTIVE_STEP:
+        return {
+            activeStep: STEP_DETAILS,
+        };
     }
 
     return state;
 }
 
 function eventProgramReducer(state = {}, action) {
-    switch(action.type) {
-        case EVENT_PROGRAM_SAVE_SUCCESS:
-            log.info('Success', action.payload);
-            break;
-        case EVENT_PROGRAM_SAVE_ERROR: {
-            log.error('Error', action.payload);
-            break;
-        }
+    switch (action.type) {
+    case EVENT_PROGRAM_SAVE_SUCCESS:
+        log.info('Success', action.payload);
+        break;
+    case EVENT_PROGRAM_SAVE_ERROR: {
+        log.error('Error', action.payload);
+        break;
+    }
     }
 
     return state;

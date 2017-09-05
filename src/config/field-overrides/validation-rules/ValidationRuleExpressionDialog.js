@@ -53,7 +53,7 @@ ValidationRuleExpressionDialog.contextTypes = {
 };
 
 const enhanceExpressionDialog = compose(
-    withState('expressionDetails', 'updateExpressionDetails', ({ value }) => ({...value})),
+    withState('expressionDetails', 'updateExpressionDetails', ({ value }) => ({ ...value })),
     withState('expressionStatusStore', 'updateStore', () => Store.create()),
     withProps(({ close, save, value, store, expressionDetails, expressionStatusStore, updateExpressionDetails, buttonLabel }) => {
         const isExpressionValid = isUndefined(expressionStatusStore.getState()) || expressionStatusStore.getState().status === 'OK';
@@ -70,22 +70,22 @@ const enhanceExpressionDialog = compose(
                     disabled={!isExpressionValid}
                     style={styles.saveButton}
                     label={<Translate>done</Translate>}
-                />
+                />,
             ],
             onExpressionChanged: ({ description, formula }) => updateExpressionDetails({
                 ...expressionDetails,
                 description,
                 expression: formula,
             }),
-            onMissingStrategyChanged: (missingValueStrategy) => updateExpressionDetails({
+            onMissingStrategyChanged: missingValueStrategy => updateExpressionDetails({
                 ...expressionDetails,
                 missingValueStrategy,
             }),
-            onSlidingWindowChanged: (slidingWindow) => updateExpressionDetails({
+            onSlidingWindowChanged: slidingWindow => updateExpressionDetails({
                 ...expressionDetails,
                 slidingWindow,
             }),
-        })
+        });
     })
 );
 

@@ -72,7 +72,7 @@ export default React.createClass({
 
         return (
             <div>
-                {this.state.dataElementGroupSets.map(dataElementGroupSet => {
+                {this.state.dataElementGroupSets.map((dataElementGroupSet) => {
                     const optionList = dataElementGroupSet.dataElementGroups.map(ig => ({
                         value: ig.id,
                         text: ig.displayName,

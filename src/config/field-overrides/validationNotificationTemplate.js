@@ -20,22 +20,21 @@ const VALIDATION_RULE_VARIABLES = [
     'current_date',
 ];
 
-const toVariableType = (name) => ['V', name];
-const toAttributeType = (name) => ['A', name];
+const toVariableType = name => ['V', name];
+const toAttributeType = name => ['A', name];
 
 const ValidationNotificationSubjectAndMessageTemplateFields = compose(
         withProps({
-            variableTypes: map(toVariableType, VALIDATION_RULE_VARIABLES)
+            variableTypes: map(toVariableType, VALIDATION_RULE_VARIABLES),
         }),
-        mapProps((props) => ({
+        mapProps(props => ({
             ...props,
             onUpdate: actions.update,
         }))
-    )
-    (SubjectAndMessageTemplateFields);
+    )(SubjectAndMessageTemplateFields);
 
 export default new Map([
     ['messageTemplate', {
         component: ValidationNotificationSubjectAndMessageTemplateFields,
-    }]
+    }],
 ]);

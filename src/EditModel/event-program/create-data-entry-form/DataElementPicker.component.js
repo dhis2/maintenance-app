@@ -35,7 +35,7 @@ const DataElementPicker = ({ availableDataElements, activeDataElements, onElemen
     <div style={styles.dataElementPicker}>
         <div style={styles.header}>{`${d2.i18n.getTranslation('available_data_elements')}:`}</div>
         <div style={styles.dataElementList}>
-            { availableDataElements.map(element => {
+            { availableDataElements.map((element) => {
                 const elementIsActive = find(active =>
                     isEqual(get('id', active), get('id', element)), activeDataElements);
 

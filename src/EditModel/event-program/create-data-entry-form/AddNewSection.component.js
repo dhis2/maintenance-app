@@ -44,10 +44,10 @@ class AddNewSection extends Component {
     };
 
     onNameChanged = (event, sectionName) => {
-        this.setState({ sectionName })
+        this.setState({ sectionName });
     };
 
-    focusOnSectionName = input => {
+    focusOnSectionName = (input) => {
         if (input) {
             setTimeout(() => { input.focus(); }, 20);
         }

@@ -18,12 +18,12 @@ class FormFieldsManager {
 
     getHeaderFieldsForModel(model) {
         return this.getFormFieldsForModel(model)
-            .filter((fieldConfig) => this.headerFields.indexOf(fieldConfig.key) !== -1);
+            .filter(fieldConfig => this.headerFields.indexOf(fieldConfig.key) !== -1);
     }
 
     getNonHeaderFieldsForModel(model) {
         return this.getFormFieldsForModel(model)
-            .filter((fieldConfig) => this.headerFields.indexOf(fieldConfig.key) === -1);
+            .filter(fieldConfig => this.headerFields.indexOf(fieldConfig.key) === -1);
     }
 
     setHeaderFields(fieldNames) {

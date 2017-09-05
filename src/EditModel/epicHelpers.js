@@ -6,7 +6,7 @@ const EMPTY_ACTION = '@@dhis2/EMPTY_ACTION';
 const emptyAction$ = Observable.of({ type: EMPTY_ACTION });
 
 function isAttributeValue(model, fieldName) {
-    return model.attributes && Object.keys(model.attributes).indexOf(fieldName) >= 0
+    return model.attributes && Object.keys(model.attributes).indexOf(fieldName) >= 0;
 }
 
 function updateAttributeValue(model, fieldName, value) {
@@ -48,7 +48,7 @@ export function createModelToEditEpic(actionType, store, storeProp) {
         .flatMap(({ field, value }) => store
                 .take(1)
                 .map(storePropGetter)
-                .map(model => {
+                .map((model) => {
                     // Apply the new value to the model
                     if (isAttributeValue(model, field)) {
                         updateAttributeValue(model, field, value);

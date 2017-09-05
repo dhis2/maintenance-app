@@ -17,7 +17,7 @@ const styles = {
     formButtons: {
         display: 'flex',
         justifyContent: 'flex-end',
-    }
+    },
 };
 
 const itemsAvailableStore = Store.create();
@@ -118,7 +118,7 @@ class CompulsoryDataElementOperandDialog extends Component {
         const dialogActions = [
             <FlatButton
                 disabled={this.state.isSaving}
-                style={{marginRight: '1rem'}}
+                style={{ marginRight: '1rem' }}
                 onClick={this.props.onRequestClose}
                 label={this.i18n.getTranslation('close')}
             />,
@@ -128,15 +128,15 @@ class CompulsoryDataElementOperandDialog extends Component {
                 primary
                 onClick={this._saveCollection}
                 label={saveButtonText}
-            />
+            />,
         ];
 
         return (
             <Dialog
                 open={this.props.open}
                 onRequestClose={this.props.onRequestClose}
-                autoScrollBodyContent={true}
-                modal={true}
+                autoScrollBodyContent
+                modal
                 actions={dialogActions}
                 contentStyle={{ maxWidth: 'none', width: '95%' }}
             >
@@ -185,16 +185,14 @@ class CompulsoryDataElementOperandDialog extends Component {
         const collectionToSave = itemsSelectedStore.getState()
             .map(combinationId => combinationId.split('.'))
             .filter(ids => ids.length === 2)
-            .map(([dataElementId, categoryOptionComboId]) => {
-                return {
-                    dataElement: {
-                        id: dataElementId,
-                    },
-                    categoryOptionCombo: {
-                        id: categoryOptionComboId,
-                    }
-                };
-            });
+            .map(([dataElementId, categoryOptionComboId]) => ({
+                dataElement: {
+                    id: dataElementId,
+                },
+                categoryOptionCombo: {
+                    id: categoryOptionComboId,
+                },
+            }));
 
         this.setState({
             isSaving: true,
@@ -220,10 +218,9 @@ class CompulsoryDataElementOperandDialog extends Component {
                 });
             })
             .then(() => {
-                this.setState({ isSaving: false});
+                this.setState({ isSaving: false });
                 this.props.onRequestClose();
             });
-
     };
 }
 

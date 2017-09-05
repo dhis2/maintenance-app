@@ -15,12 +15,10 @@ export default function FormButtons(props) {
 
     return (
         <div style={Object.assign(defaultStyle, props.style)}>
-            {buttonsToRender.map((child, index) => {
-                return React.cloneElement(child, {
-                    style: buttonStyle,
-                    key: index,
-                });
-            })}
+            {buttonsToRender.map((child, index) => React.cloneElement(child, {
+                style: buttonStyle,
+                key: index,
+            }))}
         </div>
     );
 }
