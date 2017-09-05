@@ -9,6 +9,9 @@ export default class TextFormField extends Component {
             fieldValue: props.value || props.value === 0 ? props.value : '',
         };
 
+        this.omitProps = ['translateOptions', 'model', 'modelDefinition', 'models',
+            'referenceType', 'referenceProperty', 'isInteger', 'isRequired', 'options'];
+
         this.updateOnChange = Action.create(`updateOnKeyUp - ${props.name}`);
         this.onValueChanged = this.onValueChanged.bind(this);
     }
@@ -55,6 +58,12 @@ export default class TextFormField extends Component {
         this.updateOnChange(event.currentTarget.value);
     }
 
+    getWantedProperties(props) {
+        return Object.keys(props).reduce((acc, key) => { // eslint-disable-line arrow-body-style
+            return this.omitProps.indexOf(key) === -1 ? { ...acc, [key]: props[key] } : acc;
+        }, {});
+    }
+
     render() {
         const {
             label,
@@ -63,12 +72,7 @@ export default class TextFormField extends Component {
             ...rest
         } = this.props;
 
-        const omitProps = ['translateOptions', 'model', 'modelDefinition', 'models',
-            'referenceType', 'referenceProperty', 'isInteger', 'isRequired', 'options'];
-
-        const restProps = Object.keys(rest).reduce((acc, key) => { // eslint-disable-line arrow-body-style
-            return omitProps.indexOf(key) === -1 ? { ...acc, [key]: rest[key] } : acc;
-        }, {});
+        const restProps = this.getWantedProperties(rest);
 
         const errorStyle = {
             lineHeight: multiLine ? '48px' : '12px',
