@@ -162,13 +162,17 @@ const SortableSection = SortableElement(({
 );
 
 class CollapsibleSection extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
         this.state = {
             showRemovalDialog: false,
             newName: '',
         };
     }
+
+    getTranslation = key => {
+        return this.context.d2.i18n.getTranslation(key);
+    };
 
     onSortEnd = (oldIndex, newIndex) => {
         this.props.sortItems(oldIndex, newIndex);
@@ -225,13 +229,13 @@ class CollapsibleSection extends Component {
     render() {
         const removalDialogActions = [
             <FlatButton
-                label="Cancel"
-                primary
+                label={this.getTranslation('cancel')}
+                primary={true}
                 onTouchTap={this.closeRemovalDialog}
             />,
             <FlatButton
-                label="Confirm"
-                primary
+                label={this.getTranslation('delete')}
+                primary={true}
                 onTouchTap={this.confirmSectionRemoval}
             />,
         ];
@@ -272,8 +276,8 @@ class CollapsibleSection extends Component {
                                 textareaStyle={{ flex: 1 }}
                                 style={this.getSectionNameStyle(true)}
                                 underlineShow={false}
-                                onClick={e => e.stopPropagation()}
-                                hintText={'Write a new section name ...'}
+                                onClick={(e) => e.stopPropagation()}
+                                hintText={this.getTranslation('name')}
                                 defaultValue={this.props.section.displayName}
                                 onChange={this.onNameChanged}
                                 maxLength={maxNameLength}
@@ -294,7 +298,7 @@ class CollapsibleSection extends Component {
                 { !this.props.collapsed && sectionContent }
 
                 <Dialog
-                    title="Are you sure you want to remove the following section?"
+                    title={this.getTranslation('delete_section_message')}
                     actions={removalDialogActions}
                     open={this.state.showRemovalDialog}
                     onRequestClose={this.closeRemovalDialog}
@@ -320,6 +324,10 @@ CollapsibleSection.propTypes = {
     sortItems: PropTypes.func.isRequired,
 };
 
+CollapsibleSection.contextTypes = {
+    d2: PropTypes.object,
+};
+
 export const ActionButton = ({ onClick, icon }) => (
     <IconButton
         style={{ transition: 'none' }} iconStyle={{ transition: 'none' }} onClick={(e) => {
@@ -335,8 +343,8 @@ const getActiveDataElements = programStageSections =>
     flatten(programStageSections.map(section => section.dataElements));
 
 class SectionForm extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
         this.state = {
             collapsedSections: [],
             activeDataElements: getActiveDataElements(this.props.programStageSections),
@@ -358,6 +366,10 @@ class SectionForm extends Component {
             }
         }
     }
+
+    getTranslation = key => {
+        return this.context.d2.i18n.getTranslation(key);
+    };
 
     openSection = (sectionId) => {
         this.setState({
@@ -501,7 +513,7 @@ class SectionForm extends Component {
             </div>
             <Snackbar
                 open={this.state.showNoSelectionSectionMessage}
-                message="Select a section before adding data elements"
+                message={this.getTranslation('no_section_selected_error')}
                 autoHideDuration={3000}
                 onRequestClose={this.closeNoSelectionSectionMessage}
             />
@@ -524,6 +536,10 @@ SectionForm.PropTypes = {
             displayName: PropTypes.string.isRequired,
         })).isRequired,
     })).isRequired,
+};
+
+SectionForm.contextTypes = {
+    d2: PropTypes.object,
 };
 
 export default SectionForm;
