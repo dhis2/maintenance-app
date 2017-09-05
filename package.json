@@ -21,7 +21,8 @@
     "validate": "npm ls --depth 0 || yarn list",
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "deploy": "npm run build && mvn clean deploy",
-    "lint": "./bin/lintchangedfiles.sh",
+    "lintchanged": "./bin/lintchangedfiles.sh",
+    "lint": "eslint ./src",
     "profile": "yarn start -- --profile"
   },
   "devDependencies": {
@@ -95,7 +96,6 @@
     "sinon-chai": "^2.9.0"
   },
   "pre-commit": [
-    "lint",
     "validate",
     "test"
   ],
