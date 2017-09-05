@@ -76,11 +76,17 @@ class ProgramRuleConditionField extends React.Component {
                 style={styles.ed17x0r}
                 value={this.state.value}
                 onChange={this.onChange}
-                ref={r => this.editor = r}
+                ref={r => (this.editor = r)}
             />
         );
     }
 }
+
+ProgramRuleConditionField.propTypes = {
+    value: React.PropTypes.string,
+    disabled: React.PropTypes.bool,
+    onChange: React.PropTypes.func,
+};
 
 ProgramRuleConditionField.contextTypes = {
     d2: React.PropTypes.any,
