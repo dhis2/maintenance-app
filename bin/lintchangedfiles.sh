@@ -15,4 +15,11 @@ do
     fi
 done
 
-./node_modules/.bin/eslint $CHANGED_JS_FILES$UNTRACKED_JS_FILES
+ALL_LINT_FILES="$CHANGED_JS_FILES $UNTRACKED_JS_FILES"
+TRIMMED_LINT_FILES=${ALL_LINT_FILES%% }
+
+if [ "$TRIMMED_LINT_FILES" ];then
+    ./node_modules/.bin/eslint $TRIMMED_LINT_FILES
+else
+    echo "Nothing to lint"
+fi
