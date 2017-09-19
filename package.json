@@ -21,7 +21,6 @@
     "validate": "npm ls --depth 0 || yarn list",
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "deploy": "npm run build && mvn clean deploy",
-    "lint-changed": "./bin/lintchangedfiles.sh",
     "lint-all": "eslint ./src",
     "profile": "yarn start -- --profile"
   },
