@@ -213,7 +213,6 @@ export default React.createClass({
     },
 
     _assignItems(items) {
-        debugger;
         if (isOrganisationUnitLevelReference(this.props.referenceProperty, this.props.model.modelDefinition)) {
             console.log(this.props.model)
             const newList = Array.from((new Set((this.props.model[this.props.referenceProperty] || []).concat(items.map(Number)))).values());
