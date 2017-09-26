@@ -9,9 +9,9 @@ import {
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
 import { stageNotificationsReducer } from './notifications/reducers';
-import steps from './event-program-steps';
+import { nextStep, previousStep, firstStep } from './event-program-steps';
 
-function eventProgramStepperReducer(state = { activeStep: steps.first() }, action) {
+function eventProgramStepperReducer(state = { activeStep: firstStep() }, action) {
     switch (action.type) {
     case EVENT_PROGRAM_STEP_CHANGE:
         return {
@@ -20,17 +20,17 @@ function eventProgramStepperReducer(state = { activeStep: steps.first() }, actio
 
     case EVENT_PROGRAM_STEP_NEXT:
         return {
-            activeStep: steps.next(state.activeStep),
+            activeStep: nextStep(state.activeStep),
         };
 
     case EVENT_PROGRAM_STEP_PREVIOUS:
         return {
-            activeStep: steps.previous(state.activeStep),
+            activeStep: previousStep(state.activeStep),
         };
 
     case STEPPER_RESET_ACTIVE_STEP:
         return {
-            activeStep: steps.first(),
+            activeStep: firstStep(),
         };
     }
 

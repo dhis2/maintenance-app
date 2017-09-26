@@ -5,7 +5,7 @@ import mapPropsStream from 'recompose/mapPropsStream';
 import { get } from 'lodash/fp';
 import { createStepperContentFromConfig } from '../steps/stepper';
 import { activeStepSelector } from './selectors';
-import steps from './event-program-steps';
+import { steps } from './event-program-steps';
 import eventProgramStore from './eventProgramStore';
 import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
 import EventProgramNotifications from './notifications/EventProgramNotifications';
@@ -35,7 +35,7 @@ const stepComponents = {
     EventProgramNotifications,
 };
 
-const stepsWithComponents = steps.list.map((step) => {
+const stepsWithComponents = steps.map((step) => {
     step.component = stepComponents[step.componentName]; // eslint-disable-line no-param-reassign
 
     return step;

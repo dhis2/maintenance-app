@@ -1,6 +1,6 @@
 import { next, previous, first } from '../steps/stepIterator';
 
-const stepDefinitions = [
+export const steps = [
     {
         key: 'details',
         name: 'add_program_details',
@@ -28,11 +28,7 @@ const stepDefinitions = [
     },
 ];
 
-const steps = {
-    list: stepDefinitions,
-    next: activeStepKey => next(stepDefinitions, activeStepKey),
-    previous: activeStepKey => previous(stepDefinitions, activeStepKey),
-    first: () => first(stepDefinitions),
-};
+export const nextStep = activeStepKey => next(steps, activeStepKey);
+export const previousStep = activeStepKey => previous(steps, activeStepKey);
+export const firstStep = () => first(steps);
 
-export default steps;
