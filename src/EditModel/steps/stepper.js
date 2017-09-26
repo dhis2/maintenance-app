@@ -79,6 +79,8 @@ export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal
  * @returns {ReactComponent} A React component that will render the `component` property of the currently active step.
  */
 export const createStepperContentFromConfig = stepperConfig => ({ activeStep, ...props }) => {
+    console.log('createStepperContentFromConfig stepperConfig', stepperConfig);
+
     const step = stepperConfig.find(stepConfig => stepConfig.key === activeStep);
 
     if (step && step.component) {
@@ -108,26 +110,6 @@ export function StepperNavigationForward({ onForwardClick }) {
             <ForwardIcon />
         </IconButton>
     );
-}
-
-export function findNextStepKey(steps, activeStep) {
-    const currentStepIndex = steps.findIndex(step => step.key === activeStep);
-
-    if (steps[currentStepIndex + 1]) {
-        return steps[currentStepIndex + 1].key;
-    }
-
-    return activeStep;
-}
-
-export function findPreviousStepKey(steps, activeStep) {
-    const currentStepIndex = steps.findIndex(step => step.key === activeStep);
-
-    if (steps[currentStepIndex - 1]) {
-        return steps[currentStepIndex - 1].key;
-    }
-
-    return activeStep;
 }
 
 export function createStepperNavigation(BackwardButton, ForwardButton) {

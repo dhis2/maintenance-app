@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStepperFromConfig, createStepperContentFromConfig, StepperNavigationBack, StepperNavigationForward } from './stepper';
+import { createStepperFromConfig, createStepperContentFromConfig, StepperNavigationBack, StepperNavigationForward } from '../stepper';
 import { shallow } from 'enzyme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Stepper from 'material-ui/Stepper/Stepper';

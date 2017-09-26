@@ -1,10 +1,9 @@
 import { combineReducers } from 'redux';
 import { PROGRAM_INDICATOR_STEP_CHANGE, PROGRAM_INDICATOR_STEP_NEXT, PROGRAM_INDICATOR_STEP_PREVIOUS } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
-import { findNextStepKey, findPreviousStepKey } from '../event-program/stepper';
-import steps, { STEP_DETAILS } from './program-indicator-steps';
+import steps from './program-indicator-steps';
 
-export function programIndicatorStepperReducer(state = { activeStep: STEP_DETAILS }, action) {
+export function programIndicatorStepperReducer(state = { activeStep: steps.first() }, action) {
     switch (action.type) {
     case PROGRAM_INDICATOR_STEP_CHANGE:
         return {
@@ -13,18 +12,20 @@ export function programIndicatorStepperReducer(state = { activeStep: STEP_DETAIL
 
     case PROGRAM_INDICATOR_STEP_NEXT:
         return {
-            activeStep: findNextStepKey(steps, state.activeStep),
+            activeStep: steps.next(state.activeStep),
         };
 
     case PROGRAM_INDICATOR_STEP_PREVIOUS:
         return {
-            activeStep: findPreviousStepKey(steps, state.activeStep),
+            activeStep: steps.previous(state.activeStep),
         };
 
     case STEPPER_RESET_ACTIVE_STEP:
         return {
-            activeStep: STEP_DETAILS,
+            activeStep: steps.first(),
         };
+    default:
+        break;
     }
 
     return state;

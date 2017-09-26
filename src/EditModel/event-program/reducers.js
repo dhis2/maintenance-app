@@ -1,12 +1,17 @@
 import { combineReducers } from 'redux';
 import log from 'loglevel';
-import { EVENT_PROGRAM_STEP_CHANGE, EVENT_PROGRAM_STEP_NEXT, EVENT_PROGRAM_STEP_PREVIOUS, EVENT_PROGRAM_SAVE_ERROR, EVENT_PROGRAM_SAVE_SUCCESS } from './actions';
+import {
+    EVENT_PROGRAM_STEP_CHANGE,
+    EVENT_PROGRAM_STEP_NEXT,
+    EVENT_PROGRAM_STEP_PREVIOUS,
+    EVENT_PROGRAM_SAVE_ERROR,
+    EVENT_PROGRAM_SAVE_SUCCESS,
+} from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
-import steps, { STEP_DETAILS } from './event-program-steps';
 import { stageNotificationsReducer } from './notifications/reducers';
-import { findNextStepKey, findPreviousStepKey } from './stepper';
+import steps from './event-program-steps';
 
-function eventProgramStepperReducer(state = { activeStep: STEP_DETAILS }, action) {
+function eventProgramStepperReducer(state = { activeStep: steps.first() }, action) {
     switch (action.type) {
     case EVENT_PROGRAM_STEP_CHANGE:
         return {
@@ -15,17 +20,17 @@ function eventProgramStepperReducer(state = { activeStep: STEP_DETAILS }, action
 
     case EVENT_PROGRAM_STEP_NEXT:
         return {
-            activeStep: findNextStepKey(steps, state.activeStep),
+            activeStep: steps.next(state.activeStep),
         };
 
     case EVENT_PROGRAM_STEP_PREVIOUS:
         return {
-            activeStep: findPreviousStepKey(steps, state.activeStep),
+            activeStep: steps.previous(state.activeStep),
         };
 
     case STEPPER_RESET_ACTIVE_STEP:
         return {
-            activeStep: STEP_DETAILS,
+            activeStep: steps.first(),
         };
     }
 
