@@ -1,27 +1,17 @@
 import Action from 'd2-ui/lib/action/Action';
-import snackStore from './snack.store';
-import { config, getInstance as getD2 } from 'd2/lib/d2';
+import store from '../store';
+import { hideSnackBarMessage, requestShowSnackBarMessage } from './actions';
 
 const snackActions = Action.createActionsFromNames(['show', 'hide']);
 
 snackActions.show.subscribe((actionConfig) => {
     const { message, action, autoHideDuration, onActionTouchTap, translate } = actionConfig.data;
 
-    getD2()
-        .then((d2) => {
-            snackStore.setState({
-                message: translate ? d2.i18n.getTranslation(message) : message,
-                action,
-                autoHideDuration,
-                onActionTouchTap: onActionTouchTap || (() => {
-                    snackActions.hide();
-                }),
-            });
-        });
+    store.dispatch(requestShowSnackBarMessage({ message, action, autoHideDuration, onActionTouchTap, translate }));
 });
 
 snackActions.hide.subscribe(() => {
-    snackStore.setState(null);
+    store.dispatch(hideSnackBarMessage());
 });
 
 export default snackActions;
