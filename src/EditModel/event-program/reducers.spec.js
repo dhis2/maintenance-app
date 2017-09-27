@@ -1,92 +1,134 @@
-import ModelCollectionProperty from 'd2/lib/model/ModelCollectionProperty'; // FIXME: Removing this line breaks commonjs require order
+/* global sinon, expect */
+
 import reducer from './reducers';
 import * as actions from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
-// import * as steps from './event-program-steps';
 import * as iterator from '../steps/stepIterator';
 
-describe('Event Program reducer', () => {
-    it('should return the default state', () => {
-        const expectedDefaultState = {
-            eventProgram: {},
-            step: {
-                activeStep: 'details',
-            },
-            stageNotifications: {
-                isDeleting: false,
-            },
-        };
+describe('Event Program', () => {
+    let sandbox;
+    let nextStub;
+    let previousStub;
+    let firstStub;
 
-        expect(reducer(undefined, {})).to.deep.equal(expectedDefaultState);
+    before(() => {
+        sandbox = sinon.sandbox.create();
+        nextStub = sandbox.stub(iterator, 'next');
+        previousStub = sandbox.stub(iterator, 'previous');
+        firstStub = sandbox.stub(iterator, 'first');
     });
 
-    describe('when receiving actions', () => {
-        const nextStub = sinon.stub(iterator, 'next');
-        const previousStub = sinon.stub(iterator, 'previous');
+    beforeEach(() => {
+        nextStub.reset();
+        previousStub.reset();
+        firstStub.reset();
+    });
 
-        beforeEach(() => {
-            nextStub.reset();
-            previousStub.reset();
-        });
+    after(() => {
+        sandbox.restore();
+    });
 
-        it('should change the activeStep when receiving a EVENT_PROGRAM_STEP_CHANGE action', () => {
-            const expectedStepName = 'step-data-elements';
+    describe('combined reducer', () => {
+        it('should return the event program state', () => {
+            const stepKey = 'shuffle';
+            firstStub.returns(stepKey);
 
-            const initialDefaultState = {
-                step: {
-                    activeStep: 'details',
-                },
-                stageNotifications: {
-                    isDeleting: false,
-                },
-            };
+            const actualState = reducer(undefined, {});
 
             const expectedState = {
-                eventProgram: {},
                 step: {
-                    activeStep: expectedStepName,
+                    activeStep: stepKey,
                 },
                 stageNotifications: {
                     isDeleting: false,
                 },
             };
 
-            expect(reducer(initialDefaultState, {
-                type: actions.EVENT_PROGRAM_STEP_CHANGE,
-                payload: expectedStepName,
-            })).to.deep.equal(expectedState);
+            expect(actualState).to.deep.equal(expectedState);
+        });
+    });
+
+    describe('stepper reducer', () => {
+        it('should return the default state', () => {
+            const stepKey = 'sprint';
+            firstStub.returns(stepKey);
+
+            const expectedStepState = {
+                activeStep: stepKey,
+            };
+
+            const actualState = reducer(undefined, {});
+
+            expect(actualState.step).to.deep.equal(expectedStepState);
         });
 
-        it('should request the next step when receiving a EVENT_PROGRAM_STEP_NEXT action', () => {
-            reducer({}, { type: actions.EVENT_PROGRAM_STEP_NEXT });
-
-            expect(nextStub).to.have.been.called;
-            expect(previousStub).not.to.have.been.called;
-        });
-
-        it('should request the previous step when receiving a EVENT_PROGRAM_STEP_PREVIOUS action', () => {
-            reducer({}, { type: actions.EVENT_PROGRAM_STEP_PREVIOUS });
-
-            expect(nextStub).not.to.have.been.called;
-            expect(previousStub).to.have.been.called;
-        });
-
-        it('shoud request the first step when receiving a STEPPER_RESET_ACTIVE_STEP action', () => {
-            const expectedStepKey = 'the-first-step-key';
-            const firstStub = sinon.stub(steps, 'firstStep');
-            firstStub.returns(expectedStepKey);
-
+        describe('when receiving actions', () => {
             const initialState = {
                 step: {
-                    activeStep: 'limp',
+                    activeStep: 'slow-walk',
                 },
             };
 
-            const actualState = reducer(initialState, { type: STEPPER_RESET_ACTIVE_STEP });
+            it('should change the activeStep when receiving an EVENT_PROGRAM_STEP_CHANGE action', () => {
+                const expectedStepKey = 'hop';
 
-            expect(nextStub).not.to.have.been.called;
-            expect(previousStub).not.to.have.been.called;
-            expect(actualState.step.activeStep).to.equal(expectedStepKey);
+                const expectedState = {
+                    activeStep: expectedStepKey,
+                };
+
+                const actualState = reducer(initialState, {
+                    type: actions.EVENT_PROGRAM_STEP_CHANGE,
+                    payload: expectedStepKey,
+                });
+
+                expect(actualState.step).to.deep.equal(expectedState);
+            });
+
+            it('should request the next step when receiving an EVENT_PROGRAM_STEP_NEXT action', () => {
+                const expectedStepKey = 'march';
+                nextStub.returns(expectedStepKey);
+
+                const expectedState = {
+                    activeStep: expectedStepKey,
+                };
+
+                const actualState = reducer(initialState, { type: actions.EVENT_PROGRAM_STEP_NEXT });
+
+                expect(nextStub).to.have.been.called;
+                expect(previousStub).not.to.have.been.called;
+                expect(actualState.step).to.deep.equal(expectedState);
+            });
+
+            it('should request the previous step when receiving an EVENT_PROGRAM_STEP_PREVIOUS action', () => {
+                const expectedStepKey = 'jog';
+                previousStub.returns(expectedStepKey);
+
+                const expectedState = {
+                    activeStep: expectedStepKey,
+                };
+
+                const actualState = reducer(initialState, { type: actions.EVENT_PROGRAM_STEP_PREVIOUS });
+
+                expect(nextStub).not.to.have.been.called;
+                expect(previousStub).to.have.been.called;
+                expect(actualState.step).to.deep.equal(expectedState);
+            });
+
+            it('shoud request the first step when receiving an STEPPER_RESET_ACTIVE_STEP action', () => {
+                const expectedStepKey = 'sprint';
+                firstStub.returns(expectedStepKey);
+
+                const expectedState = {
+                    activeStep: expectedStepKey,
+                };
+
+                const actualState = reducer(initialState, { type: STEPPER_RESET_ACTIVE_STEP });
+
+                expect(nextStub).not.to.have.been.called;
+                expect(previousStub).not.to.have.been.called;
+                expect(actualState.step).to.deep.equal(expectedState);
+            });
         });
     });
+
 });

@@ -78,17 +78,11 @@ export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal
  *
  * @returns {ReactComponent} A React component that will render the `component` property of the currently active step.
  */
-export const createStepperContentFromConfig = (stepperConfig, stepComponents) => ({ activeStep, ...props }) => {
-    console.log('createStepperContentFromConfig stepperConfig', stepperConfig);
-
+export const createStepperContentFromConfig = (stepperConfig) => ({ activeStep, ...props }) => {
     const step = stepperConfig.find(stepConfig => stepConfig.key === activeStep);
 
-    // if (step && step.component) {
-    if (step && stepComponents[step.componentName]) {
-        const stepComponent = stepComponents[step.componentName];
-        console.log('stepComponent', stepComponent);
-
-        return <stepComponent {...props} />;
+    if (step && step.component) {
+        return <step.component {...props} />;
     }
 
     if (activeStep) {

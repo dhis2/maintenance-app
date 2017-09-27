@@ -14,29 +14,32 @@ import { bindActionCreators } from 'redux';
 import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
 import EditDataEntryForm from './create-data-entry-form/CreateDataEntryForm.component';
 
-const stepComponents = () => {
+const stepperConfig = () => {
     const program$ = eventProgramStore
         .map(get('program'));
 
     const mapDispatchToProps = dispatch => bindActionCreators({ editFieldChanged }, dispatch);
 
-    const connectExpressionField = compose(
+    const connectEditForm = compose(
         flattenRouterProps,
         connect(null, mapDispatchToProps)
     );
 
-    const EditProgramDetailsForm = connectExpressionField(wrapInPaper(createFormFor(program$, 'program')));
+    const EditProgramDetailsForm = connectEditForm(wrapInPaper(createFormFor(program$, 'program')));
 
-    return {
+    const stepComponents = {
         EditProgramDetailsForm,
         AssignDataElements,
         EditDataEntryForm,
         AssignOrganisationUnits,
         EventProgramNotifications,
     };
-};
 
-const components = stepComponents();
+    return steps.map((step) => {
+        step.component = stepComponents[step.componentName]; // eslint-disable-line no-param-reassign
+        return step;
+    });
+};
 
 const mapStateToProps = state => ({
     activeStep: activeStepSelector(state),
@@ -48,6 +51,6 @@ const EventProgramStepperContent =
         mapPropsStream(props$ =>
             props$.combineLatest(eventProgramStore, (props, { program }) => ({ ...props, modelToEdit: program }))
         )
-    )(createStepperContentFromConfig(steps, components));
+    )(createStepperContentFromConfig(stepperConfig()));
 
 export default EventProgramStepperContent;
