@@ -2,7 +2,8 @@ import ModelCollectionProperty from 'd2/lib/model/ModelCollectionProperty'; // F
 import reducer from './reducers';
 import * as actions from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
-import * as steps from './event-program-steps';
+// import * as steps from './event-program-steps';
+import * as iterator from '../steps/stepIterator';
 
 describe('Event Program reducer', () => {
     it('should return the default state', () => {
@@ -20,8 +21,8 @@ describe('Event Program reducer', () => {
     });
 
     describe('when receiving actions', () => {
-        const nextStub = sinon.stub(steps, 'nextStep');
-        const previousStub = sinon.stub(steps, 'previousStep');
+        const nextStub = sinon.stub(iterator, 'next');
+        const previousStub = sinon.stub(iterator, 'previous');
 
         beforeEach(() => {
             nextStub.reset();

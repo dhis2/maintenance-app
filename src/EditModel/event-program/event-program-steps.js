@@ -1,6 +1,4 @@
-import { next, previous, first } from '../steps/stepIterator';
-
-export const steps = [
+const steps = [
     {
         key: 'details',
         name: 'add_program_details',
@@ -28,7 +26,4 @@ export const steps = [
     },
 ];
 
-export const nextStep = activeStepKey => next(steps, activeStepKey);
-export const previousStep = activeStepKey => previous(steps, activeStepKey);
-export const firstStep = () => first(steps);
-
+export default steps;
