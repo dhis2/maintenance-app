@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import log from 'loglevel';
 import {
     EVENT_PROGRAM_STEP_CHANGE,
     EVENT_PROGRAM_STEP_NEXT,
@@ -31,6 +30,8 @@ function eventProgramStepperReducer(state = { activeStep: first(steps) }, action
         return {
             activeStep: first(steps),
         };
+    default:
+        break;
     }
 
     return state;

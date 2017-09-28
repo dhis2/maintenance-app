@@ -1,3 +1,5 @@
+/* global sinon, expect */
+
 import React from 'react';
 import { createStepperFromConfig, createStepperContentFromConfig, StepperNavigationBack, StepperNavigationForward } from '../stepper';
 import { shallow } from 'enzyme';

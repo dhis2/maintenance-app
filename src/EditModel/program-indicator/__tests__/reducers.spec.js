@@ -1,4 +1,5 @@
 /* global sinon, expect */
+/* eslint-disable no-unused-expressions */
 
 import reducer from '../reducers';
 import * as actions from '../actions';
@@ -127,5 +128,4 @@ describe('Program Indicator', () => {
             });
         });
     });
-
 });

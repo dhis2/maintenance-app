@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import {
     PROGRAM_INDICATOR_STEP_CHANGE,
     PROGRAM_INDICATOR_STEP_NEXT,
-    PROGRAM_INDICATOR_STEP_PREVIOUS
+    PROGRAM_INDICATOR_STEP_PREVIOUS,
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
 import steps from './program-indicator-steps';

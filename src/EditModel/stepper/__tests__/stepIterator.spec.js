@@ -1,3 +1,5 @@
+/* global expect */
+
 import { first, next, previous } from '../stepIterator';
 
 const GET_INGREDIENTS = 'get ingredients';
