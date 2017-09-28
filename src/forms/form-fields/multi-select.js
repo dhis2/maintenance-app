@@ -76,6 +76,7 @@ export default React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.shape({ values: React.PropTypes.func.isRequired }),
             React.PropTypes.arrayOf(React.PropTypes.func),
+            React.PropTypes.array,
         ]),
     },
 
@@ -214,7 +215,6 @@ export default React.createClass({
 
     _assignItems(items) {
         if (isOrganisationUnitLevelReference(this.props.referenceProperty, this.props.model.modelDefinition)) {
-            console.log(this.props.model)
             const newList = Array.from((new Set((this.props.model[this.props.referenceProperty] || []).concat(items.map(Number)))).values());
 
             this.props.onChange({
