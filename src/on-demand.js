@@ -10,7 +10,7 @@ class LoadOnDemand extends Component {
 
     componentDidMount() {
         this.subscription = Observable.fromPromise(this.props.loadComponent())
-            .subscribe(component => {
+            .subscribe((component) => {
                 if (!React.isValidElement(component) && typeof component !== 'function') {
                     throw new Error('LoadOnDemand expects a valid React component');
                 }
@@ -39,7 +39,7 @@ class LoadOnDemand extends Component {
                     <LoadingComponent />
                 );
             }
-            return <div>{loadingMessage}</div>
+            return <div>{loadingMessage}</div>;
         }
 
         return (
@@ -61,7 +61,7 @@ LoadOnDemand.propTypes = {
 
 export function loadOnDemand(loadComponentFactory, loadingOptions = {}) {
     return function OnDemandLoader(props) {
-        return <LoadOnDemand {...props} loadComponent={loadComponentFactory} loadingOptions={loadingOptions} />
+        return <LoadOnDemand {...props} loadComponent={loadComponentFactory} loadingOptions={loadingOptions} />;
     };
 }
 
@@ -69,7 +69,7 @@ export function loadDefaultOnDemand(loadComponentFactory, loadingOptions) {
     const loadDefaultFromFactory = () => Promise
         .resolve(loadComponentFactory())
         .then(module => module.default)
-        .catch(error => {
+        .catch((error) => {
             log.error('Failed to load component.', error);
             return Promise.reject(error);
         });
@@ -81,4 +81,4 @@ export default {
     loadDefault: loadDefaultOnDemand,
     load: loadOnDemand,
     LoadOnDemand,
-}
+};

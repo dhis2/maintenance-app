@@ -3,7 +3,7 @@ import { getInstance } from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import isObject from 'd2-utilizr/lib/isObject';
 import snackActions from '../Snackbar/snack.actions';
-import { curry, map, contains, __, compose, get, filter,  uniq, keys } from 'lodash/fp';
+import { curry, map, contains, __, compose, get, filter, uniq, keys } from 'lodash/fp';
 import maintenanceModels from '../config/maintenance-models';
 import systemSettingsStore from './systemSettingsStore';
 
@@ -14,7 +14,7 @@ const requireAddToView = curry((d2, systemSettings, schemaName) => {
         return d2.currentUser.canUpdate(d2.models[schemaName]) || d2.currentUser.canCreate(d2.models[schemaName]);
     }
 
-    return  true;
+    return true;
 });
 
 function getItemsForCategory(d2, items) {
@@ -23,7 +23,7 @@ function getItemsForCategory(d2, items) {
 
     const onlyModelsThatExist = contains(__, modelDefinitionNames);
     const onlyAccessibleModels = requireAddToView(d2, systemSettings);
-    const onlyExistingAndAccessibleModels = (value) => onlyModelsThatExist(value) && onlyAccessibleModels(value);
+    const onlyExistingAndAccessibleModels = value => onlyModelsThatExist(value) && onlyAccessibleModels(value);
 
     return items
         .filter(onlyExistingAndAccessibleModels)
@@ -37,9 +37,9 @@ async function mapSideBarConfigToSideBarItems(sideBarConfig) {
     const d2 = await getInstance();
 
     return map(sideBarCategory => ({
-            name: sideBarCategory,
-            items: getItemsForCategory(d2, sideBarConfig[sideBarCategory].items),
-        }), Object.keys(sideBarConfig));
+        name: sideBarCategory,
+        items: getItemsForCategory(d2, sideBarConfig[sideBarCategory].items),
+    }), Object.keys(sideBarConfig));
 }
 
 async function loadSideBarState() {
@@ -53,7 +53,7 @@ async function loadSideBarState() {
                 acc[sideBarCategory.name] = sideBarCategory.items; // eslint-disable-line no-param-reassign
                 acc.mainSections = acc.mainSections.concat([{
                     key: sideBarCategory.name,
-                    label: d2.i18n.getTranslation(camelCaseToUnderscores(sideBarCategory.name))
+                    label: d2.i18n.getTranslation(camelCaseToUnderscores(sideBarCategory.name)),
                 }]);
             }
             return acc;

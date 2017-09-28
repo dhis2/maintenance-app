@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import DragHandle from './DragHandle.component';
-import { grey100 } from "material-ui/styles/colors";
+import { grey100 } from 'material-ui/styles/colors';
 import { ActionButton } from './SectionForm.component';
 
 const styles = {
@@ -12,7 +12,7 @@ const styles = {
         backgroundColor: grey100,
         borderRadius: '6px',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     row: {
@@ -27,29 +27,29 @@ const styles = {
     },
 };
 
-const SortableSectionDataList = SortableContainer(({ sectionDataElements, onDataElementRemoved }) => {
-    return <div>
-        { sectionDataElements.map((dataElement, index) => (
-            <SortableSectionDataElement
-                dataElement={dataElement}
-                onRemove={() => { onDataElementRemoved(dataElement.id); }}
-                index={index}
-                key={`item-${index}`}
-                sortIndex={index}
-            />
+const SortableSectionDataList = SortableContainer(({ sectionDataElements, onDataElementRemoved }) => <div>
+    { sectionDataElements.map((dataElement, index) => (
+        <SortableSectionDataElement
+            dataElement={dataElement}
+            onRemove={() => { onDataElementRemoved(dataElement.id); }}
+            index={index}
+            key={`item-${index}`}
+            sortIndex={index}
+        />
         ))}
-    </div>;
-});
+</div>);
 
 const SortableSectionDataElement = SortableElement(({ index, sortIndex, dataElement, onRemove }) => (
     <SectionDataElement first={sortIndex === 0} index={index} sortOrder={sortIndex} dataElement={dataElement} onRemove={onRemove} />
 ));
 
 const SectionDataElement = ({ first, sortOrder, dataElement, onRemove }) => (
-    <div style={{
-        ...styles.dataElement,
-        marginTop: first ? '0px' : '4px',
-    }}>
+    <div
+        style={{
+            ...styles.dataElement,
+            marginTop: first ? '0px' : '4px',
+        }}
+    >
         <div style={styles.row}>
             <DragHandle />
             <div style={styles.horizontalSpace} />

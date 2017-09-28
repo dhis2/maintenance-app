@@ -15,7 +15,7 @@ const styles = {
     },
 };
 
-export default function SubFieldWrap({ children, style={} }) {
+export default function SubFieldWrap({ children, style = {} }) {
     const subfieldWrapStyle = {
         ...styles.formFieldSubFields,
         ...style,

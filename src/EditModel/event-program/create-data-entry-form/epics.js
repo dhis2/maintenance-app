@@ -15,10 +15,9 @@ import {
 
 const d2$ = Observable.fromPromise(getInstance());
 
-const changeProgramStageDataElementOrder = (store) => (action$) => {
-    return action$
+const changeProgramStageDataElementOrder = store => action$ => action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE)
-        .map(action => {
+        .map((action) => {
             const state = store.getState();
             const programStages = getOr([], 'programStages', state);
             const programStage = getProgramStageToModify(get('payload.programStage', action), programStages);
@@ -37,18 +36,16 @@ const changeProgramStageDataElementOrder = (store) => (action$) => {
             });
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE_COMPLETE });
-};
 
-const changeProgramStageSectionName = (store) => (action$) => {
-    return action$
+const changeProgramStageSectionName = store => action$ => action$
         .ofType(PROGRAM_STAGE_SECTION_NAME_EDIT)
-        .map(action => {
+        .map((action) => {
             const state = store.getState();
             const programStageSectionId = get('payload.programStageSectionId', action);
             const newProgramStageSectionName = get('payload.newProgramStageSectionName', action);
 
             const programStageSections = getOr([], 'programStageSections', state)
-                .map(section => {
+                .map((section) => {
                     // Modify the original Model instance
                     if (isEqual(section.id, programStageSectionId)) {
                         section.name = newProgramStageSectionName;
@@ -63,18 +60,16 @@ const changeProgramStageSectionName = (store) => (action$) => {
             });
         })
         .flatMapTo(Observable.never());
-};
 
-const setSortOrderToIndex = (models) => models.map((model, index) => {
+const setSortOrderToIndex = models => models.map((model, index) => {
     model.sortOrder = index;
 
     return model;
 });
 
-const changeProgramStageSectionOrder = (store) => (action$) => {
-    return action$
+const changeProgramStageSectionOrder = store => action$ => action$
         .ofType(PROGRAM_STAGE_SECTIONS_ORDER_CHANGE)
-        .map(action => {
+        .map((action) => {
             const newSections = get('payload.programStageSections', action);
             const programStageSections = compose(sortBy('sortOrder'), setSortOrderToIndex)(newSections);
 
@@ -83,10 +78,8 @@ const changeProgramStageSectionOrder = (store) => (action$) => {
             });
         })
         .flatMapTo(Observable.never());
-};
 
-const addProgramStageSection = (store) => (action$) => {
-    return action$
+const addProgramStageSection = store => action$ => action$
         .ofType(PROGRAM_STAGE_SECTIONS_ADD)
         .combineLatest(d2$, (action, d2) => ([d2, action]))
         .map(([d2, action]) => {
@@ -116,13 +109,11 @@ const addProgramStageSection = (store) => (action$) => {
             });
         })
         .flatMapTo(Observable.never());
-};
 
 
-const removeProgramStageSection = (store) => (action$) => {
-    return action$
+const removeProgramStageSection = store => action$ => action$
         .ofType(PROGRAM_STAGE_SECTIONS_REMOVE)
-        .map(action => {
+        .map((action) => {
             // TODO: Update sortOrder? map(section => ({ ...section, sortOrder: section.sortOrder - 1 }), filter(section => section.sortOrder > sortOrderOfDeletedSection, sections));
             const state = store.getState();
             const sectionToDelete = get('payload.programStageSectionId', action);
@@ -139,7 +130,6 @@ const removeProgramStageSection = (store) => (action$) => {
             });
         })
         .flatMapTo(Observable.never());
-};
 
 export default function createEpicsForStore(store) {
     return combineEpics(
@@ -149,4 +139,4 @@ export default function createEpicsForStore(store) {
         addProgramStageSection(store),
         removeProgramStageSection(store),
     );
-};
+}

@@ -12,7 +12,7 @@ function createOnClick({ onChange, value }) {
                 value: !isTrueOrTheStringTrue(value),
             },
         });
-    }
+    };
 }
 
 const CheckboxWrap = (props) => {
@@ -33,7 +33,7 @@ const CheckboxWrap = (props) => {
         isRequired,
         options,
         model,
-        ...otherProps,
+        ...otherProps
     } = props;
 
     return (

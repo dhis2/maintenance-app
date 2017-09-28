@@ -2,46 +2,46 @@ import Store from 'd2-ui/lib/store/Store';
 import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, findIndex, isObject, values } from 'lodash/fp';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 
-//___ programSelector :: StoreState -> Model<Program>
+// ___ programSelector :: StoreState -> Model<Program>
 const programSelector = get('program');
 
-//___ programStagesSelector :: StoreState -> Array<Model<ProgramStage>>
+// ___ programStagesSelector :: StoreState -> Array<Model<ProgramStage>>
 const programStagesSelector = get('programStages');
 
-//___ programStageSectionsSelector :: StoreState -> Array<Model<ProgramStageSection>>
+// ___ programStageSectionsSelector :: StoreState -> Array<Model<ProgramStageSection>>
 const programStageSectionsSelector = get('programStageSections');
 
-//___ programStageNotificationsSelector :: StoreState -> Object<programStageId, programStageNotifications>
+// ___ programStageNotificationsSelector :: StoreState -> Object<programStageId, programStageNotifications>
 const programStageNotificationsSelector = get('programStageNotifications');
 
-//___ dataEntryFormsSelector :: StoreState -> Object<programStageId, DataEntryForm>
+// ___ dataEntryFormsSelector :: StoreState -> Object<programStageId, DataEntryForm>
 const dataEntryFormsSelector = get('dataEntryFormForProgramStage');
 
-//___ checkIfDirty :: Model -> Boolean
+// ___ checkIfDirty :: Model -> Boolean
 const checkIfDirty = model => model && model.isDirty();
 
-//___ modelToJson :: Model -> Object
+// ___ modelToJson :: Model -> Object
 const modelToJson = getOwnedPropertyJSON;
 
-//___ isProgramStageDirty :: Object<StoreState> -> Object<{programStages}> -> Boolean
+// ___ isProgramStageDirty :: Object<StoreState> -> Object<{programStages}> -> Boolean
 const isProgramStageDirty = compose(checkIfDirty, first, programStagesSelector);
 
-//___ getIdForFirstProgramStage : Object<StoreState> -> Object<{programStages}> -> String
+// ___ getIdForFirstProgramStage : Object<StoreState> -> Object<{programStages}> -> String
 const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelector);
 
-//___ hasDirtyProgramStageSections :: Object<StoreState> -> Boolean
+// ___ hasDirtyProgramStageSections :: Object<StoreState> -> Boolean
 const hasDirtyProgramStageSections = compose(some(checkIfDirty), programStageSectionsSelector);
 
-//___ hasDirtyNotificationTemplate :: Object<{programStageNotifications, programStages}> -> Boolean
+// ___ hasDirtyNotificationTemplate :: Object<{programStageNotifications, programStages}> -> Boolean
 const hasDirtyNotificationTemplate = state => some(checkIfDirty, get(getIdForFirstProgramStage(state), programStageNotificationsSelector(state)));
 
-//___ hasDirtyDataEntryForms :: Object<StoreState> -> Object<{programStageId: Model.DataEntryForm}> -> Boolean
+// ___ hasDirtyDataEntryForms :: Object<StoreState> -> Object<{programStageId: Model.DataEntryForm}> -> Boolean
 const hasDirtyDataEntryForms = compose(some(checkIfDirty), values, dataEntryFormsSelector);
 
-//__ isProgramDirty :: Object<{program}> -> Boolean
+// __ isProgramDirty :: Object<{program}> -> Boolean
 const isProgramDirty = compose(checkIfDirty, programSelector);
 
-//__ isStoreStateDirty :: StoreState -> Boolean
+// __ isStoreStateDirty :: StoreState -> Boolean
 export const isStoreStateDirty = compose(
     some(identity),
     map(
@@ -58,7 +58,7 @@ export const isStoreStateDirty = compose(
 );
 
 // getMetaDataToSend :: StoreState -> SaveState
-export const getMetaDataToSend = state => {
+export const getMetaDataToSend = (state) => {
     const payload = {};
 
     if (isProgramDirty(state)) {
@@ -120,9 +120,7 @@ function isValidState(state) {
 
     return Object
         .keys(state)
-        .every((key) => {
-            return some(equals(key), acceptedKeys);
-        });
+        .every(key => some(equals(key), acceptedKeys));
 }
 
 /**
@@ -163,7 +161,7 @@ const eventProgramStore = Store.create();
 
 const storeSetState = eventProgramStore.setState.bind(eventProgramStore);
 
-eventProgramStore.setState = newState => {
+eventProgramStore.setState = (newState) => {
     if (!isObject(newState)) {
         throw new Error('You are attempting to set a state that is a non object');
     }

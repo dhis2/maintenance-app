@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import appState from '../App/appStateStore';
 import { isUndefined } from 'lodash/fp';
 import log from 'loglevel';
-import { getTableColumnsForType, getFilterFieldsForType, getDefaultFiltersForType,  } from '../config/maintenance-models';
+import { getTableColumnsForType, getFilterFieldsForType, getDefaultFiltersForType } from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = 'displayName,shortName,id,lastUpdated,created,displayDescription,code,publicAccess,access,href,level';
 const listActions = Action.createActionsFromNames(['loadList', 'setListSource', 'searchByName', 'setFilterValue', 'getNextPage', 'getPreviousPage', 'hideDetailsBox']);
@@ -60,9 +60,9 @@ listActions.setListSource.subscribe((action) => {
     listStore.listSourceSubject.next(Observable.of(action.data));
 });
 
-//~
-//~ Load object list except for Organisation Units (see OrganisationUnitList.component.js)
-//~
+// ~
+// ~ Load object list except for Organisation Units (see OrganisationUnitList.component.js)
+// ~
 listActions.loadList
     .filter(({ data }) => data !== 'organisationUnit')
     .combineLatest(Observable.fromPromise(getInstance()), (action, d2) => ({ ...action, d2 }))
@@ -92,9 +92,9 @@ listActions.loadList
     }, log.error.bind(log));
 
 
-//~
-//~ Filter current OrganisationUnit list by name
-//~
+// ~
+// ~ Filter current OrganisationUnit list by name
+// ~
 listActions.searchByName
     .filter(({ data }) => data.modelType === 'organisationUnit')
     .subscribe(async ({ data, complete, error }) => {
@@ -120,9 +120,9 @@ listActions.searchByName
 const nonDefaultSearchSchemas = new Set(['organisationUnit']);
 
 
-//~
-//~ Filter current list by name (except OrganisationUnit - see above)
-//~
+// ~
+// ~ Filter current list by name (except OrganisationUnit - see above)
+// ~
 listActions.searchByName
     .filter(({ data }) => !nonDefaultSearchSchemas.has(data.modelType))
     .subscribe(async ({ data, complete, error }) => {
@@ -147,9 +147,9 @@ listActions.searchByName
     }, log.error.bind(log));
 
 
-//~
-//~ Filter current list by property
-//~
+// ~
+// ~ Filter current list by property
+// ~
 listActions.setFilterValue
     .subscribe(async ({ data, complete, error }) => {
         const d2 = await getInstance();

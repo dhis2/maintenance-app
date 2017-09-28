@@ -43,7 +43,7 @@ export default class OrganisationUnitList extends React.Component {
 
                     listActions.setListSource(organisationUnitList);
                 },
-                (error) => log.error(error)
+                error => log.error(error)
             );
     }
 

@@ -33,7 +33,7 @@ const styles = {
         },
     },
     status: {
-        container: (status) => ({
+        container: status => ({
             display: 'flex',
             flexDirection: 'row',
             padding: '2rem',
@@ -42,7 +42,7 @@ const styles = {
             margin: '1rem 0 2rem',
             backgroundColor: getBackgroundColorForExpressionStatus(status),
         }),
-    }
+    },
 };
 
 function HelpText({ schema, property }, { d2 }) {
@@ -68,7 +68,7 @@ function HelpText({ schema, property }, { d2 }) {
             <span style={styles.iconWrap}><InfoIcon color={blue200} /></span>
             <span style={styles.text}>{d2.i18n.getTranslation(`${schema}__${property}__help_text`)}</span>
         </div>
-    )
+    );
 }
 HelpText.contextTypes = {
     d2: PropTypes.object,
@@ -82,7 +82,7 @@ function ExpressionFormulaWithErrorMessage({ formula, onFormulaChange, errorStat
     const formulaWrapStyle = {
         border: `2px solid ${isExpressionInvalid(errorStatus) ? color : 'transparent'}`,
     };
-    const formulaDescriptionField = isExpressionInvalid(errorStatus) ? <span style={{ color: color, marginTop: '.25rem' }}>{errorStatus.message}</span> : null;
+    const formulaDescriptionField = isExpressionInvalid(errorStatus) ? <span style={{ color, marginTop: '.25rem' }}>{errorStatus.message}</span> : null;
 
     return (
         <div>
@@ -97,7 +97,7 @@ function ExpressionFormulaWithErrorMessage({ formula, onFormulaChange, errorStat
     );
 }
 
-function ProgramIndicatorExpression({d2, onChange, status, model, value: formula = '', referenceProperty}) {
+function ProgramIndicatorExpression({ d2, onChange, status, model, value: formula = '', referenceProperty }) {
     const programType = getOr('WITHOUT_REGISTRATION', 'program.programType', model);
 
     return (
@@ -107,7 +107,7 @@ function ProgramIndicatorExpression({d2, onChange, status, model, value: formula
                     <HelpText schema={model.modelDefinition.name} property={referenceProperty} />
                     <ExpressionFormulaWithErrorMessage
                         formula={formula}
-                        onFormulaChange={(value) => onChange({ target:{ value }})}
+                        onFormulaChange={value => onChange({ target: { value } })}
                         errorStatus={status}
                     />
                     {status.status == ExpressionStatus.VALID ? <div style={styles.status.container(status.status)}>
@@ -118,22 +118,22 @@ function ProgramIndicatorExpression({d2, onChange, status, model, value: formula
                 <div style={styles.programIndicatorExpression.options}>
                     <DataElementSelectors
                         program={get('program.id', model)}
-                        onSelect={(value) => onChange({ target:{ value: formula + value }})}
+                        onSelect={value => onChange({ target: { value: formula + value } })}
                     />
                     <AttributeSelector
                         label={d2.i18n.getTranslation('attributes')}
                         program={model.program}
                         programType={programType}
-                        onSelect={(value) => onChange({ target:{ value: formula + value }})}
+                        onSelect={value => onChange({ target: { value: formula + value } })}
                     />
                     <VariableSelector
                         label={d2.i18n.getTranslation('variables')}
                         programType={programType}
-                        onSelect={(value) => onChange({ target:{ value: formula + value }})}
+                        onSelect={value => onChange({ target: { value: formula + value } })}
                     />
                     <ConstantSelector
                         label={d2.i18n.getTranslation('constants')}
-                        onSelect={(value) => onChange({ target:{ value: formula + value }})}
+                        onSelect={value => onChange({ target: { value: formula + value } })}
                     />
                 </div>
             </div>
@@ -147,10 +147,9 @@ function createValidator(property) {
     const status$ = validation$
         .distinctUntilChanged()
         .debounceTime(300)
-        .mergeMap(memoize((expression = '') => {
-            return Observable.fromPromise(
+        .mergeMap(memoize((expression = '') => Observable.fromPromise(
                 getInstance()
-                    .then(d2 => {
+                    .then((d2) => {
                         if (isEmpty(expression)) {
                             return Observable.of({
                                 status: ExpressionStatus.PENDING,
@@ -165,12 +164,12 @@ function createValidator(property) {
                             },
                         };
 
-                        const validation$ = api.post(`programIndicators/${property}/description`, `${expression}` , requestOptions)
+                        const validation$ = api.post(`programIndicators/${property}/description`, `${expression}`, requestOptions)
                             .then(({ status, description, message }) => ({
                                 status: status === 'OK' ? ExpressionStatus.VALID : ExpressionStatus.INVALID,
-                                message: status === 'OK' ? description : message
+                                message: status === 'OK' ? description : message,
                             }))
-                            .catch(error => {
+                            .catch((error) => {
                                 // If error contains a message and an error status we consider it to be a valid response
                                 if (error.message && error.status === 'ERROR') {
                                     return {
@@ -190,16 +189,15 @@ function createValidator(property) {
                             Observable.fromPromise(validation$),
                         );
                     })
-            );
-        }))
+            )))
         .concatAll();
 
     return {
         status$,
         validate(value) {
             validation$.next(value);
-        }
-    }
+        },
+    };
 }
 
 const enhance = compose(
@@ -229,7 +227,7 @@ const enhance = compose(
 
         componentWillUnmount() {
             this.validatorStatusSubscription.unsubscribe();
-        }
+        },
     })
 );
 

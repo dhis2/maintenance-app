@@ -54,7 +54,7 @@ function getSystemSettings(d2) {
     return Promise.all([
         d2.system.settings.all(),
         d2.Api.getApi().get('periodTypes'),
-    ]).then(([ settings, periodTypeDefs ]) => {
+    ]).then(([settings, periodTypeDefs]) => {
         systemSettingsStore.setState(settings);
         periodTypeStore.setState(periodTypeDefs.periodTypes.map(p => ({
             text: d2.i18n.getTranslation(p.name.toLocaleLowerCase()),
@@ -82,7 +82,7 @@ render(
 );
 
 getManifest('./manifest.webapp')
-    .then(manifest => {
+    .then((manifest) => {
         const baseUrl = process.env.NODE_ENV === 'production' ? manifest.getBaseUrl() : dhisDevConfig.baseUrl;
         config.baseUrl = `${baseUrl}/api/27`;
         log.info(`Loading: ${manifest.name} v${manifest.version}`);

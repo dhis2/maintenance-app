@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import SortableDataList from './SortableDataList.component';
 
 const DefaultForm = ({ availableDataElements, onChange }) => (
-        <SortableDataList
-            darkItems
-            dataElements={availableDataElements}
-            onSortEnd={onChange}
-        />
+    <SortableDataList
+        darkItems
+        dataElements={availableDataElements}
+        onSortEnd={onChange}
+    />
 );
 
 DefaultForm.propTypes = {

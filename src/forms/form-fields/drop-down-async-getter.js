@@ -50,10 +50,11 @@ class DropDownAsyncGetter extends React.Component {
             };
 
             return (
-                <DropDown {...props}
-                          value={useValueDotId ? this.props.value && this.props.value.id : this.props.value}
-                          onChange={eventIdWrapper}
-                          options={this.state.options}
+                <DropDown
+                    {...props}
+                    value={useValueDotId ? this.props.value && this.props.value.id : this.props.value}
+                    onChange={eventIdWrapper}
+                    options={this.state.options}
                 />
             );
         }

@@ -20,7 +20,7 @@ export const STEP_NOTIFICATIONS = 'notifications';
 const program$ = eventProgramStore
     .map(get('program'));
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({ editFieldChanged }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ editFieldChanged }, dispatch);
 
 const connectExpressionField = compose(
     flattenRouterProps,

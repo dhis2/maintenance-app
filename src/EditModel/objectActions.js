@@ -33,14 +33,14 @@ const afterSaveHacks = {
             .map(save => `dataElementGroups/${save}/dataElements/${lastImportedId}`);
 
         const removePromises = getInstance()
-            .then(d2 => {
+            .then((d2) => {
                 const api = d2.Api.getApi();
 
                 return Promise.all(uniqueRemoveUrls.map(url => api.delete(url)));
             });
 
         const savePromises = getInstance()
-            .then(d2 => {
+            .then((d2) => {
                 const api = d2.Api.getApi();
 
                 return Promise.all(saveUrls.map(url => api.post(url)));
@@ -59,14 +59,14 @@ const afterSaveHacks = {
             .map(save => `indicatorGroups/${save}/indicators/${lastImportedId}`);
 
         const removePromises = getInstance()
-            .then(d2 => {
+            .then((d2) => {
                 const api = d2.Api.getApi();
 
                 return Promise.all(uniqueRemoveUrls.map(url => api.delete(url)));
             });
 
         const savePromises = getInstance()
-            .then(d2 => {
+            .then((d2) => {
                 const api = d2.Api.getApi();
 
                 return Promise.all(saveUrls.map(url => api.post(url)));
@@ -109,7 +109,7 @@ objectActions.getObjectOfTypeByIdAndClone
 const specialSaveHandlers = ['legendSet', 'dataSet', 'organisationUnit', 'programRule', 'programRuleVariable'];
 objectActions.saveObject
     .filter(({ data }) => !specialSaveHandlers.includes(data.modelType))
-    .subscribe(action => {
+    .subscribe((action) => {
         const errorHandler = (message) => {
             if (message === 'Response was not a WebMessage with the expected format') {
                 action.error('Failed to save: Failed to provide proper error message: Everything is broken');
@@ -159,7 +159,7 @@ objectActions.saveObject
         } else {
             // The orgunit has to be saved before it can be linked to datasets so these operations are done sequentially
             organisationUnit.save()
-                .then(() => organisationUnit.dataSets.save(), error => {
+                .then(() => organisationUnit.dataSets.save(), (error) => {
                     log.error(error);
                     snackActions.show({
                         message: Array.isArray(error.messages)
@@ -201,7 +201,7 @@ objectActions.saveObject
             error(d2.i18n.getTranslation('could_not_save_legend_set'));
             log.error(e);
         }
-    }, (e) => log.error(e));
+    }, e => log.error(e));
 
 // Data set save handler - fetches a UID from the API and saves dataSetElements as well
 objectActions.saveObject
@@ -220,15 +220,13 @@ objectActions.saveObject
 
         const dataSetElements = Array
             .from(dataSetModel.dataSetElements ? dataSetModel.dataSetElements.values() : [])
-            .map(({ dataSet, dataElement, ...other }) => {
-                return {
-                    dataSet: { ...dataSet, id: dataSet.id || dataSetPayload.id },
-                    ...other,
-                    dataElement: {
-                        id: dataElement.id,
-                    }
-                }
-            });
+            .map(({ dataSet, dataElement, ...other }) => ({
+                dataSet: { ...dataSet, id: dataSet.id || dataSetPayload.id },
+                ...other,
+                dataElement: {
+                    id: dataElement.id,
+                },
+            }));
 
         dataSetPayload.dataSetElements = dataSetElements;
 
@@ -315,12 +313,12 @@ objectActions.saveObject
 
         model.save()
             .then(() => complete('save_success'))
-            .catch(err => {
+            .catch((err) => {
                 error(err.messages ? err.messages[0].message : err);
             });
     });
 
-objectActions.update.subscribe(action => {
+objectActions.update.subscribe((action) => {
     const { fieldName, value } = action.data;
     const modelToEdit = modelToEditStore.getState();
 
@@ -352,7 +350,7 @@ objectActions.update.subscribe(action => {
     }
 });
 
-objectActions.updateAttribute.subscribe(action => {
+objectActions.updateAttribute.subscribe((action) => {
     const { attributeName, value } = action.data;
     const modelToEdit = modelToEditStore.getState();
 

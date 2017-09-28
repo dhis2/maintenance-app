@@ -42,12 +42,12 @@ class PredictorDialog extends React.Component {
 
     setStartDate(e, value) {
         const d = new Date(value);
-        this.setState({ startDate: `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}` });
+        this.setState({ startDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
     }
 
     setEndDate(e, value) {
         const d = new Date(value);
-        this.setState({ endDate: `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}` });
+        this.setState({ endDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
     }
 
     async executeAction() {
@@ -58,11 +58,11 @@ class PredictorDialog extends React.Component {
         this.setState({ running: true });
 
         d2.Api.getApi().post(targetUrl, { startDate: this.state.startDate, endDate: this.state.endDate })
-            .then(res => {
+            .then((res) => {
                 snackActions.show({ message: res.message, action: 'ok' });
                 this.setState({ open: false, running: false });
             })
-            .catch(err => {
+            .catch((err) => {
                 snackActions.show({ message: `${this.getTranslation('failed_to_start_predictor')}: ${err.message}`, action: 'ok' });
                 this.setState({ open: false, running: false });
                 console.error(err);
@@ -82,7 +82,7 @@ class PredictorDialog extends React.Component {
                 primary
                 onClick={this.executeAction}
                 disabled={!this.state.startDate || !this.state.endDate || this.state.running}
-            />
+            />,
         ];
 
         return (
@@ -99,7 +99,7 @@ class PredictorDialog extends React.Component {
                             {this.getTranslation('running_predictor')}
                         </div>
                         <div style={{ marginTop: 32, marginRight: 64, textAlign: 'center' }}>
-                            <CircularProgress/>
+                            <CircularProgress />
                         </div>
                     </div>
                 ) : (

@@ -33,14 +33,12 @@ const SharingNotification = React.createClass({
                     <FontIcon className="material-icons">lock_open</FontIcon><span style={notificationTextStyle}>{this.getTranslation('object_will_created_public')}</span>
                 </Paper>
             );
-        } else {
-            if (createPrivate) {
-                toRender = (
-                    <Paper style={notificationStyle} zDepth={0}>
-                        <FontIcon className="material-icons">lock</FontIcon><span style={notificationTextStyle}>{this.getTranslation('object_will_created_private')}</span>
-                    </Paper>
+        } else if (createPrivate) {
+            toRender = (
+                <Paper style={notificationStyle} zDepth={0}>
+                    <FontIcon className="material-icons">lock</FontIcon><span style={notificationTextStyle}>{this.getTranslation('object_will_created_private')}</span>
+                </Paper>
                 );
-            }
         }
 
         return toRender;

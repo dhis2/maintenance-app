@@ -17,7 +17,7 @@ DefaultSideBarIcon.defaultProps = {
     children: 'folder_open',
 };
 
-function getAdditionalSideBarFields(currentSection, {i18n, currentUser}) {
+function getAdditionalSideBarFields(currentSection, { i18n, currentUser }) {
     if (currentSection === 'organisationUnitSection' && currentUser.authorities.has('F_ORGANISATIONUNIT_MOVE')) {
         return [
             {
@@ -41,9 +41,7 @@ const sideBarState = appStateStore
 
         return {
             sections: (appState.sideBar[currentSection] || appState.sideBar.mainSections)
-                .map((v) => {
-                    return v;
-                })
+                .map(v => v)
                 .map(section => Object.assign({ icon: <DefaultSideBarIcon /> }, section))
                 .concat(getAdditionalSideBarFields(currentSection, d2)),
             currentSection,
@@ -60,7 +58,7 @@ export default sideBarState;
 const organisationUnitAdded$ = objectActions.saveObject
     .map(() => modelToEditStore.state)
     .filter(modelToEdit => modelToEdit.modelDefinition.name === 'organisationUnit')
-    .map((modelToEdit) => modelToEdit.parent || modelToEdit);
+    .map(modelToEdit => modelToEdit.parent || modelToEdit);
 
 const afterOrganisationUnitDeleted$ = afterDeleteHook$
     .filter(data => data.modelType && data.modelType === 'organisationUnit')

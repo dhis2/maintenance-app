@@ -42,7 +42,7 @@ export default React.createClass({
 
         return this.props.fields
             .filter(fieldName => this.props.source[fieldName])
-            .map(fieldName => {
+            .map((fieldName) => {
                 const valueToRender = this.getValueToRender(fieldName, this.props.source[fieldName]);
 
                 return (
@@ -55,7 +55,7 @@ export default React.createClass({
     },
 
     getValueToRender(fieldName, value) {
-        const getDateString = dateValue => {
+        const getDateString = (dateValue) => {
             const stringifiedDate = new Date(dateValue).toString();
 
             return stringifiedDate === 'Invalid Date' ? dateValue : stringifiedDate;

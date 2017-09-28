@@ -6,12 +6,12 @@ class PeriodTypeDropDown extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            options: []
+            options: [],
         };
     }
 
     componentWillMount() {
-        this.sub = periodTypeStore.subscribe(periodTypes => {
+        this.sub = periodTypeStore.subscribe((periodTypes) => {
             this.setState({ options: periodTypes });
         });
     }
@@ -21,7 +21,7 @@ class PeriodTypeDropDown extends React.Component {
     }
 
     render() {
-        return <DropDown {...this.props} options={this.state.options} />
+        return <DropDown {...this.props} options={this.state.options} />;
     }
 }
 

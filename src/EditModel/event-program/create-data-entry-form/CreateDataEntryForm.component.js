@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper/Paper';
 import { bindActionCreators } from 'redux';
-import { arrayMove } from "react-sortable-hoc";
+import { arrayMove } from 'react-sortable-hoc';
 
 import DefaultForm from './DefaultForm.component';
 import SectionForm from './SectionForm.component';
@@ -46,18 +46,22 @@ class CreateDataEntryForm extends Component {
         </Tab>
     );
 
+    getTranslation = key => {
+        return this.context.d2.i18n.getTranslation(key);
+    };
+
     render() {
         return (
             <Paper>
                 <Tabs initialSelectedIndex={sectionFormIndex}>
-                    { this.renderTab('Basic',
+                    { this.renderTab(this.getTranslation('basic'),
                         <DefaultForm
                             availableDataElements={this.props.availableDataElements}
                             onChange={this.programDataElementOrderChanged}
                         />
                     )}
 
-                    { this.renderTab('Section',
+                    { this.renderTab(this.getTranslation('section'),
                         <SectionForm
                             availableDataElements={this.props.availableDataElements}
                             programStageSections={this.props.programStageSections}
@@ -68,7 +72,7 @@ class CreateDataEntryForm extends Component {
                         />
                     )}
 
-                    { this.renderTab('Custom',
+                    { this.renderTab(this.getTranslation('custom'),
                         <CustomForm />
                     )}
                 </Tabs>
@@ -77,11 +81,16 @@ class CreateDataEntryForm extends Component {
     }
 }
 
+CreateDataEntryForm.contextTypes = {
+    d2: PropTypes.object,
+};
+
 const HelpText = (_, { d2 }) => (
     <div style={styles.helpText} >
         { d2.i18n.getTranslation('program_forms_help_text') }
     </div>
 );
+
 HelpText.contextTypes = {
     d2: PropTypes.object,
 };
@@ -108,7 +117,7 @@ CreateDataEntryForm.propTypes = {
     })).isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
+const mapDispatchToProps = dispatch => bindActionCreators({
     changeProgramStageDataElementOrder,
     changeProgramStageSectionOrder,
     addProgramStageSection,
@@ -146,14 +155,12 @@ const enhance = compose(
         )
     ),
     mapProps(({ trackerDataElements, ...props }) => {
-        const getDisplayNameForDataElement = (dataElement) => {
-            return dataElement.displayName ||
-                get('displayName', find(trackerDataElement => dataElement.id === trackerDataElement.id, trackerDataElements))
-        };
+        const getDisplayNameForDataElement = dataElement => dataElement.displayName ||
+                get('displayName', find(trackerDataElement => dataElement.id === trackerDataElement.id, trackerDataElements));
 
         return {
             ...props,
-            programStageSections: sortBy(['sortOrder'], props.programStageSections.map(section => {
+            programStageSections: sortBy(['sortOrder'], props.programStageSections.map((section) => {
                 section.dataElements = Array.from(section.dataElements.values()).map(dataElement => ({
                     id: dataElement.id,
                     displayName: getDisplayNameForDataElement(dataElement),
@@ -169,7 +176,7 @@ const enhance = compose(
         };
     }),
     withHandlers({
-        onChangeDefaultOrder: ({ programStage, changeProgramStageDataElementOrder }) => newDataElementOrder => {
+        onChangeDefaultOrder: ({ programStage, changeProgramStageDataElementOrder }) => (newDataElementOrder) => {
             changeProgramStageDataElementOrder({ programStage: programStage.id, newDataElementOrder });
         },
         onSectionNameChanged: ({ programStage, editProgramStageSectionName }) => (sectionId, newName) => {
@@ -179,15 +186,15 @@ const enhance = compose(
                 newProgramStageSectionName: newName,
             });
         },
-        onSectionOrderChanged: ({ changeProgramStageSectionOrder }) => programStageSections => {
+        onSectionOrderChanged: ({ changeProgramStageSectionOrder }) => (programStageSections) => {
             changeProgramStageSectionOrder({ programStageSections });
         },
-        onSectionAdded: ({ addProgramStageSection }) => newSectionName => {
+        onSectionAdded: ({ addProgramStageSection }) => (newSectionName) => {
             addProgramStageSection({ newSectionName });
         },
-        onSectionRemoved: ({ removeProgramStageSection }) => programStageSectionId => {
+        onSectionRemoved: ({ removeProgramStageSection }) => (programStageSectionId) => {
             removeProgramStageSection({ programStageSectionId });
-        }
+        },
     }),
 );
 

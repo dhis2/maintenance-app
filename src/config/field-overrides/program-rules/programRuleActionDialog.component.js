@@ -16,7 +16,7 @@ class ProgramRuleActionDialog extends React.Component {
         super(props, context);
 
         this.state = {
-            programRuleAction: this.props.ruleActionModel
+            programRuleAction: this.props.ruleActionModel,
         };
 
         this.d2 = context.d2;
@@ -32,7 +32,7 @@ class ProgramRuleActionDialog extends React.Component {
                     fields: [
                         'programStages[id,displayName',
                         'programStageSections[id,displayName]',
-                        'programStageDataElements[id,dataElement[id,displayName]]]'
+                        'programStageDataElements[id,dataElement[id,displayName]]]',
                     ].join(','),
                 }),
                 this.d2.models.programs.get(this.props.program.id, {
@@ -43,12 +43,11 @@ class ProgramRuleActionDialog extends React.Component {
                     fields: 'id,displayName,programRuleVariableSourceType',
                     paging: false,
                 }),
-            ]).then(([ wrappedUpDataElements, wrappedUpTrackedEntityAttributes, programVariables ]) => {
-
+            ]).then(([wrappedUpDataElements, wrappedUpTrackedEntityAttributes, programVariables]) => {
                 const programDataElements =
                     Object.values(wrappedUpDataElements.programStages.toArray()
                         .map(stage => stage.programStageDataElements.map(psde => psde.dataElement))
-                        .reduce((a, s) => { return a.concat(s); }, [])
+                        .reduce((a, s) => a.concat(s), [])
                         .reduce((o, de) => { o[de.id] = de; return o; }, {})
                     )
                     .map(de => ({ text: de.displayName, value: de.id, model: de }))
@@ -79,7 +78,7 @@ class ProgramRuleActionDialog extends React.Component {
                     programSections,
                     programDataElements,
                     programTrackedEntityAttributes,
-                    programVariables: programVariables.toArray().map(v => {
+                    programVariables: programVariables.toArray().map((v) => {
                         const sign = v.programRuleVariableSourceType === 'TEI_ATTRIBUTE' ? 'A' : '#';
                         return {
                             text: `${sign}{${v.displayName}}`,
@@ -87,7 +86,7 @@ class ProgramRuleActionDialog extends React.Component {
                         };
                     }),
                 });
-            }).catch(err => {
+            }).catch((err) => {
                 this.props.onRequestClose();
                 snackActions.show({ message: `Error: ${err}`, action: 'ok' });
             });
@@ -97,7 +96,7 @@ class ProgramRuleActionDialog extends React.Component {
     componentWillReceiveProps(newProps) {
         if (newProps.programRuleAction) {
             this.setState({
-                programRuleAction: newProps.ruleActionModel
+                programRuleAction: newProps.ruleActionModel,
             });
         }
     }
@@ -107,14 +106,14 @@ class ProgramRuleActionDialog extends React.Component {
 
         // Fancily translate from DropDown format to DataTable format - consistency is for sheeple
         const fieldRefs = {
-            'dataElement': this.state.programDataElements,
-            'trackedEntityAttribute': this.state.programTrackedEntityAttributes,
-            'programStage': this.state.programStages,
-            'programStageSection': this.state.programSections,
+            dataElement: this.state.programDataElements,
+            trackedEntityAttribute: this.state.programTrackedEntityAttributes,
+            programStage: this.state.programStages,
+            programStageSection: this.state.programSections,
         };
 
-        Object.keys(fieldRefs).forEach(field => {
-            if(programRuleAction[field]) {
+        Object.keys(fieldRefs).forEach((field) => {
+            if (programRuleAction[field]) {
                 const ref = fieldRefs[field].filter(v => v.value === programRuleAction[field])[0];
                 programRuleAction[field] = { id: ref.value, displayName: ref.text };
             } else {
@@ -129,12 +128,12 @@ class ProgramRuleActionDialog extends React.Component {
             this.props.parentModel.programRuleActions.dirty = true;
             // </hack>
 
-            this.props.onChange({ target: { value: this.props.parentModel.programRuleActions }});
+            this.props.onChange({ target: { value: this.props.parentModel.programRuleActions } });
             this.props.onRequestClose();
         } else {
             const newUid = await this.d2.Api.getApi().get('/system/id');
             this.props.parentModel.programRuleActions.add(Object.assign(programRuleAction, { id: newUid.codes[0] }));
-            this.props.onChange({ target: { value: this.props.parentModel.programRuleActions }});
+            this.props.onChange({ target: { value: this.props.parentModel.programRuleActions } });
             this.props.onRequestClose();
         }
     }
@@ -243,7 +242,7 @@ class ProgramRuleActionDialog extends React.Component {
                     quickAddLink: false,
                 },
             },
-        ].map(field => {
+        ].map((field) => {
             if (field.name !== 'programRuleActionType') {
                 const isRequired = fieldMapping && fieldMapping.required && fieldMapping.required.includes(field.name);
                 const isOptional = fieldMapping && fieldMapping.optional && fieldMapping.optional.includes(field.name);
@@ -285,11 +284,11 @@ class ProgramRuleActionDialog extends React.Component {
                         label={this.getTranslation('commit')}
                         primary
                         onClick={this.save}
-                    />
+                    />,
                 ]}
             >
                 {this.state.programDataElements ? (
-                    <FormBuilder fields={fieldConfig} onUpdateField={this.update}/>
+                    <FormBuilder fields={fieldConfig} onUpdateField={this.update} />
                 ) : <div>Loading...</div>}
             </Dialog>
         );

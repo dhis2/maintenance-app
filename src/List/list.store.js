@@ -8,7 +8,7 @@ export default Store.create({
     initialise() {
         this.listSourceSubject
             .concatAll()
-            .subscribe(modelCollection => {
+            .subscribe((modelCollection) => {
                 this.setState({
                     tableColumns: getTableColumnsForType(modelCollection.modelDefinition.name),
                     pager: modelCollection.pager,

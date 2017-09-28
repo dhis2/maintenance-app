@@ -8,11 +8,10 @@ async function createCardsFromMetaDataSections(metaDataSections) {
     const d2 = await getInstance();
 
     return metaDataSections
-        .map(metaDataSection => {
-            return {
-                key: metaDataSection.name,
-                name: d2.i18n.getTranslation(camelCaseToUnderscores(metaDataSection.name)),
-                items: metaDataSection.items
+        .map(metaDataSection => ({
+            key: metaDataSection.name,
+            name: d2.i18n.getTranslation(camelCaseToUnderscores(metaDataSection.name)),
+            items: metaDataSection.items
                     .map(({ key, label }) => ({
                         name: label,
                         description: d2.i18n.getTranslation(`intro_${camelCaseToUnderscores(key)}`),
@@ -20,20 +19,17 @@ async function createCardsFromMetaDataSections(metaDataSections) {
                         add: () => goToRoute(`/edit/${metaDataSection.name}/${key}/add`),
                         list: () => goToRoute(`/list/${metaDataSection.name}/${key}`),
                     })),
-            };
-        });
+        }));
 }
 
 export default appStateStore
-    .map(appState => {
+    .map((appState) => {
         const cardState = appState.sideBar.mainSections
             .map(v => v.key)
-            .reduce((cardState, mainSectionName) => {
-                return cardState.concat([{
-                    name: mainSectionName,
-                    items: appState.sideBar[mainSectionName] || [],
-                }]);
-            }, []);
+            .reduce((cardState, mainSectionName) => cardState.concat([{
+                name: mainSectionName,
+                items: appState.sideBar[mainSectionName] || [],
+            }]), []);
 
         return cardState;
     })

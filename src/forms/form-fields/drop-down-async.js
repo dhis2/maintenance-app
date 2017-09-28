@@ -46,7 +46,7 @@ export default React.createClass({
         let d2i = {};
 
         return getInstance()
-            .then(d2 => {
+            .then((d2) => {
                 d2i = d2;
                 if (d2.models.hasOwnProperty(this.props.referenceType)) {
                     return d2.models[this.props.referenceType].list(Object.assign({
@@ -55,7 +55,7 @@ export default React.createClass({
                         filter,
                     }, filter && filter.length > 1 ? {
                         rootJunction: 'OR',
-                    } : {}))
+                    } : {}));
                 } else if (this.props.referenceType.indexOf('.') !== -1) {
                     const modelName = this.props.referenceType.substr(0, this.props.referenceType.indexOf('.'));
                     const modelProp = this.props.referenceType.substr(modelName.length + 1);
@@ -68,14 +68,12 @@ export default React.createClass({
                     ? modelCollection.toArray()
                     : modelCollection)
                 : [])
-            .then(values => values.map(model => {
-                return {
-                    text: model.displayName,
-                    value: model.id,
-                    model: model,
-                };
-            }))
-            .then(options => {
+            .then(values => values.map(model => ({
+                text: model.displayName,
+                value: model.id,
+                model,
+            })))
+            .then((options) => {
                 // Behold the mother of all hacks
                 if (!this.omgLikeJustStop) {
                     this.setState({
@@ -102,9 +100,7 @@ export default React.createClass({
     // This should probably be done in the objectActions, however there we currently do not have any knowledge of the
     // options.. It might be worth loading the categoryOption with name `default` just for this.
     componentWillReceiveProps(newProps) {
-        const defaultOption = this.state.options.find(option => {
-            return option.model.name === 'default';
-        });
+        const defaultOption = this.state.options.find(option => option.model.name === 'default');
 
         if (newProps.value && defaultOption && defaultOption.model.id !== newProps.value.id &&
             this.props.model && this.props.model.domainType === 'TRACKER') {
@@ -138,7 +134,7 @@ export default React.createClass({
             quickAddLink,
             preventAutoDefault,
             styles,
-            ...other,
+            ...other
         } = this.props;
         const wrapStyles = Object.assign({
             display: 'flex',
@@ -147,7 +143,7 @@ export default React.createClass({
 
         return (
             <div style={wrapStyles}>
-                {this.state.isRefreshing ? <RefreshMask horizontal={true} /> : null}
+                {this.state.isRefreshing ? <RefreshMask horizontal /> : null}
                 <DropDown
                     {...other}
                     options={this.state.options}
@@ -217,7 +213,7 @@ export default React.createClass({
             return;
         }
 
-        const option = this.state.options.find((opt) => opt.model.id === event.target.value);
+        const option = this.state.options.find(opt => opt.model.id === event.target.value);
         if (option && option.model) {
             this.props.onChange({
                 target: {

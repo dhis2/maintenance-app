@@ -6,7 +6,7 @@ import {
     PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED,
     loadProgramIndicatorSuccess,
     saveProgramIndicatorSuccess,
-    saveProgramIndicatorError
+    saveProgramIndicatorError,
 } from './actions';
 import { notifyUser } from '../actions';
 import programIndicatorStore from './programIndicatorStore';
@@ -22,11 +22,11 @@ import { goToAndScrollUp } from '../../router-utils';
 function loadProgramIndicator(programIndicatorId) {
     return Observable.fromPromise(
         getInstance()
-            .then(d2 => {
+            .then((d2) => {
                 if (programIndicatorId === 'add') {
                     return d2.models.programIndicator.create();
                 }
-                return d2.models.programIndicator.get(programIndicatorId, requestParams.get('programIndicator'))
+                return d2.models.programIndicator.get(programIndicatorId, requestParams.get('programIndicator'));
             })
             .then(programIndicator => ({ programIndicator }))
     );
@@ -45,12 +45,10 @@ export const programIndicatorSave = programIndicatorStore => action$ => action$
     .ofType(PROGRAM_INDICATOR_SAVE)
     .mapTo(programIndicatorStore)
     .map(programIndicatorFromStoreSelector)
-    .mergeMap(programIndicator => {
-        return Observable.fromPromise(programIndicator.save())
+    .mergeMap(programIndicator => Observable.fromPromise(programIndicator.save())
             .mapTo(saveProgramIndicatorSuccess())
-            .do(() => goToAndScrollUp(`/list/indicatorSection/programIndicator`))
-            .catch(error => Observable.of(saveProgramIndicatorError(error)));
-    });
+            .do(() => goToAndScrollUp('/list/indicatorSection/programIndicator'))
+            .catch(error => Observable.of(saveProgramIndicatorError(error))));
 
 const extractFirstMessageFromErrorReports = compose(get('message'), first, getOr([], 'errorReports'), get('response'));
 const extractFirstMessageFromMessages = compose(get('message'), first, get('messages'));
@@ -72,7 +70,7 @@ export const programIndicatorModelSaveResponses = action$ => Observable
             .mapTo(notifyUser('success')),
         action$
             .ofType(PROGRAM_INDICATOR_SAVE_ERROR)
-            .map(action => {
+            .map((action) => {
                 const firstErrorMessage = extractFirstErrorMessage(action.payload);
 
                 return notifyUser({ message: firstErrorMessage, translate: false });

@@ -30,11 +30,11 @@ class FormFieldsForModel {
         const onlyUsableFieldTypes = modelValidation => typeToFieldMap.get(modelValidation.type);
         const onlyWritableProperties = modelValidation => modelValidation.writable;
         const onlyPersistedProperties = modelValidation => modelValidation.persisted;
-        const toArrayOfFieldConfigurations = fieldName => {
+        const toArrayOfFieldConfigurations = (fieldName) => {
             const modelValidationForField = model.modelDefinition.modelValidations[fieldName];
             // TODO: This is a horrible horrible hack that has to go... As soon as the API is fixed!
             const fieldConfig = Object.create(Object.assign(modelValidationForField, fieldName === 'orgUnitLevel' ? { persisted: true, required: true } : {}));
-            //const fieldConfig = Object.create(modelValidationForField);
+            // const fieldConfig = Object.create(modelValidationForField);
 
             fieldConfig.name = fieldName;
             fieldConfig.fieldOptions = {
@@ -72,7 +72,7 @@ class FormFieldsForModel {
                 }
 
                 Object.keys(overrideConfig)
-                    .forEach(key => {
+                    .forEach((key) => {
                         if (key === 'fieldOptions') {
                             modelValidation[key] = Object.assign({}, modelValidation[key], overrideConfig[key]);
                         } else {

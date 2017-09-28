@@ -9,10 +9,10 @@ export default new Map([
     ['importance', {
         required: true,
     }],
-    ["leftSide", {
+    ['leftSide', {
         component: LeftSideExpressionField,
     }],
-    ["rightSide", {
+    ['rightSide', {
         component: RightSideExpressionField,
     }],
     ["organisationUnitLevels", {

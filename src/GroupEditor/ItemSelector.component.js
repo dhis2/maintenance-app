@@ -17,17 +17,13 @@ export default React.createClass({
 
     componentWillMount() {
         this.subscription = this.props.itemListStore
-            .map(modelList => {
-                return modelList
-                    .map(model => {
-                        return {
-                            text: model.displayName,
-                            payload: model.id,
-                            model,
-                        };
-                    });
-            })
-            .subscribe(items => {
+            .map(modelList => modelList
+                    .map(model => ({
+                        text: model.displayName,
+                        payload: model.id,
+                        model,
+                    })))
+            .subscribe((items) => {
                 if (items.length) {
                     this.props.onItemSelected(items[0].model);
                 }
@@ -44,9 +40,7 @@ export default React.createClass({
 
     renderOptions() {
         return this.state.items
-            .map((option, index) => {
-                return <MenuItem key={index} primaryText={option.text} value={option.payload} />
-            });
+            .map((option, index) => <MenuItem key={index} primaryText={option.text} value={option.payload} />);
     },
 
     render() {

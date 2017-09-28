@@ -18,7 +18,7 @@ const StepperNavigation = createStepperNavigation(EventProgramStepperNavigationB
 const withPreLoadedModel = mapPropsStream(props$ => props$
     .combineLatest(
         eventProgramStore$,
-        (props, eventProgramState) => ({ ...props, model: eventProgramState.program})
+        (props, eventProgramState) => ({ ...props, model: eventProgramState.program })
     )
 );
 
@@ -32,7 +32,7 @@ const styles = {
 
 function EditEventProgram(props) {
     const schema = props.params.modelType || 'program';
-    const {groupName} = props.params;
+    const { groupName } = props.params;
 
     return (
         <div>

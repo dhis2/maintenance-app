@@ -154,8 +154,8 @@ export function createFieldConfig(fieldConfig, modelDefinition, models) {
         component: fieldConfig.component || getFieldUIComponent(fieldConfig.type),
         props: Object.assign(fieldConfig.fieldOptions || {}, {
             labelText: fieldConfig.fieldOptions.labelText,
-            modelDefinition: modelDefinition,
-            models: models,
+            modelDefinition,
+            models,
             referenceType: fieldConfig.referenceType,
             referenceProperty: fieldConfig.name,
             isInteger: fieldConfig.type === INTEGER,

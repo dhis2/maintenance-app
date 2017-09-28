@@ -9,10 +9,8 @@ function CancelButton({ onClick, isPristine, ...props }, context) {
 
         if (!isDirty) {
             onClick(...params);
-        } else {
-            if (confirm(context.d2.i18n.getTranslation('abandon_unsaved_changes'))) {
-                onClick(...params);
-            }
+        } else if (confirm(context.d2.i18n.getTranslation('abandon_unsaved_changes'))) {
+            onClick(...params);
         }
     };
 
