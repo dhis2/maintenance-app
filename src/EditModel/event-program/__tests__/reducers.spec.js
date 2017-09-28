@@ -3,7 +3,7 @@ import * as actions from '../actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
 import * as iterator from '../../stepper/stepIterator';
 
-describe('Program Indicator', () => {
+describe('Event Program', () => {
     beforeAll(() => {
         iterator.next = jest.fn();
         iterator.previous = jest.fn();
@@ -15,11 +15,11 @@ describe('Program Indicator', () => {
     });
 
     afterAll(() => {
-        jest.restoreAllMocks();
+        jest.clearAllMocks();
     });
 
     describe('combined reducer', () => {
-        test('should return the program indicator state', () => {
+        test('should return the event program state', () => {
             const stepKey = 'shuffle';
             iterator.first.mockReturnValue(stepKey);
 
@@ -28,6 +28,9 @@ describe('Program Indicator', () => {
             const expectedState = {
                 step: {
                     activeStep: stepKey,
+                },
+                stageNotifications: {
+                    isDeleting: false,
                 },
             };
 
@@ -56,7 +59,7 @@ describe('Program Indicator', () => {
                 },
             };
 
-            test('should change the activeStep when receiving an PROGRAM_INDICATOR_STEP_CHANGE action', () => {
+            test('should change the activeStep when receiving an EVENT_PROGRAM_STEP_CHANGE action', () => {
                 const expectedStepKey = 'hop';
 
                 const expectedState = {
@@ -64,14 +67,14 @@ describe('Program Indicator', () => {
                 };
 
                 const actualState = reducer(initialState, {
-                    type: actions.PROGRAM_INDICATOR_STEP_CHANGE,
+                    type: actions.EVENT_PROGRAM_STEP_CHANGE,
                     payload: expectedStepKey,
                 });
 
                 expect(actualState.step).toEqual(expectedState);
             });
 
-            test('should request the next step when receiving an PROGRAM_INDICATOR_STEP_NEXT action', () => {
+            test('should request the next step when receiving an EVENT_PROGRAM_STEP_NEXT action', () => {
                 const expectedStepKey = 'march';
                 iterator.next.mockReturnValue(expectedStepKey);
 
@@ -79,14 +82,14 @@ describe('Program Indicator', () => {
                     activeStep: expectedStepKey,
                 };
 
-                const actualState = reducer(initialState, { type: actions.PROGRAM_INDICATOR_STEP_NEXT });
+                const actualState = reducer(initialState, { type: actions.EVENT_PROGRAM_STEP_NEXT });
 
                 expect(iterator.next).toHaveBeenCalledTimes(1);
                 expect(iterator.previous).toHaveBeenCalledTimes(0);
                 expect(actualState.step).toEqual(expectedState);
             });
 
-            test('should request the previous step when receiving an PROGRAM_INDICATOR_STEP_PREVIOUS action', () => {
+            test('should request the previous step when receiving an EVENT_PROGRAM_STEP_PREVIOUS action', () => {
                 const expectedStepKey = 'jog';
                 iterator.previous.mockReturnValue(expectedStepKey);
 
@@ -94,7 +97,7 @@ describe('Program Indicator', () => {
                     activeStep: expectedStepKey,
                 };
 
-                const actualState = reducer(initialState, { type: actions.PROGRAM_INDICATOR_STEP_PREVIOUS });
+                const actualState = reducer(initialState, { type: actions.EVENT_PROGRAM_STEP_PREVIOUS });
 
                 expect(iterator.next).toHaveBeenCalledTimes(0);
                 expect(iterator.previous).toHaveBeenCalledTimes(1);

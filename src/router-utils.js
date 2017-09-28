@@ -1,4 +1,9 @@
-import { hashHistory } from 'react-router';
+// import { hashHistory } from 'react-router';
+
+const hashHistory = {
+    push() {},
+    goBack() {},
+};
 
 export function goToRoute(url) {
     hashHistory.push(url);
