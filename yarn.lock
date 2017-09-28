@@ -1667,9 +1667,9 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@^27.0.1:
-  version "27.0.1"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-27.0.1.tgz#efddcd74c1b25ef85b961f51281773666feac9f4"
+d2-ui@^28.0.2:
+  version "28.0.2"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-28.0.2.tgz#c554bbd937d6fdff7a8d6c38029cdcc1320ac96e"
 
 d2-utilizr@^0.2.9:
   version "0.2.13"
@@ -1683,9 +1683,9 @@ d2-utilizr@^0.2.9:
     lodash.isset "^4.3.0"
     lodash.isstring "^4.0.1"
 
-d2@^27.0.0-8:
-  version "27.0.0-8"
-  resolved "https://registry.yarnpkg.com/d2/-/d2-27.0.0-8.tgz#9cbad9d0f37d149c03412ace358e30f18e561eb0"
+d2@^28.2.0:
+  version "28.2.0"
+  resolved "https://registry.yarnpkg.com/d2/-/d2-28.2.0.tgz#3eda63bc8611ff220add58202139e8593653d1be"
   dependencies:
     whatwg-fetch "^2.0.3"
 
