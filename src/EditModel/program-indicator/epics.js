@@ -17,7 +17,7 @@ import { getInstance } from 'd2/lib/d2';
 import { requestParams } from '../SingleModelStore';
 import { createModelToEditEpic } from '../epicHelpers';
 import { programIndicatorFromStoreSelector } from './selectors';
-import { goToAndScrollUp } from '../../router-utils';
+// import { goToAndScrollUp } from '../../router-utils';
 
 function loadProgramIndicator(programIndicatorId) {
     return Observable.fromPromise(
@@ -47,7 +47,7 @@ export const programIndicatorSave = programIndicatorStore => action$ => action$
     .map(programIndicatorFromStoreSelector)
     .mergeMap(programIndicator => Observable.fromPromise(programIndicator.save())
             .mapTo(saveProgramIndicatorSuccess())
-            .do(() => goToAndScrollUp('/list/indicatorSection/programIndicator'))
+            // .do(() => goToAndScrollUp('/list/indicatorSection/programIndicator'))
             .catch(error => Observable.of(saveProgramIndicatorError(error))));
 
 const extractFirstMessageFromErrorReports = compose(get('message'), first, getOr([], 'errorReports'), get('response'));

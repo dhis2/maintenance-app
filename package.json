@@ -98,7 +98,9 @@
     "sinon-chai": "^2.9.0"
   },
   "jest": {
-    "rootDir": "src"
+    "transformIgnorePatterns": [
+      "/node_modules/(?!d2-ui).+\\.js$"
+    ]
   },
   "pre-commit": [
     "validate",

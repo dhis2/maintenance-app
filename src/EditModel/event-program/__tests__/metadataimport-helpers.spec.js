@@ -1,4 +1,4 @@
-import { getImportStatus } from './metadataimport-helpers';
+import { getImportStatus } from '../metadataimport-helpers';
 
 describe('MetaDataImport helpers', () => {
     let successfullImportResponse;
@@ -131,68 +131,68 @@ describe('MetaDataImport helpers', () => {
         };
     });
 
-    it('should return an object', () => {
-        expect(getImportStatus(successfullImportResponse)).to.be.a('object');
+    test('should return an object', () => {
+        expect(typeof getImportStatus(successfullImportResponse)).toBe('object');
     });
 
-    it('should retain the original properties on success', () => {
-        expect(getImportStatus(successfullImportResponse).typeReports).to.deep.equal(successfullImportResponse.typeReports);
-        expect(getImportStatus(successfullImportResponse).stats).to.deep.equal(successfullImportResponse.stats);
-        expect(getImportStatus(successfullImportResponse).importParams).to.deep.equal(successfullImportResponse.importParams);
-        expect(getImportStatus(successfullImportResponse).status).to.deep.equal(successfullImportResponse.status);
+    test('should retain the original properties on success', () => {
+        expect(getImportStatus(successfullImportResponse).typeReports).toEqual(successfullImportResponse.typeReports);
+        expect(getImportStatus(successfullImportResponse).stats).toEqual(successfullImportResponse.stats);
+        expect(getImportStatus(successfullImportResponse).importParams).toEqual(successfullImportResponse.importParams);
+        expect(getImportStatus(successfullImportResponse).status).toEqual(successfullImportResponse.status);
     });
 
-    it('should retain the original properties on failure', () => {
-        expect(getImportStatus(unsuccessfullImportResponse).typeReports).to.deep.equal(unsuccessfullImportResponse.typeReports);
-        expect(getImportStatus(unsuccessfullImportResponse).stats).to.deep.equal(unsuccessfullImportResponse.stats);
-        expect(getImportStatus(unsuccessfullImportResponse).importParams).to.deep.equal(unsuccessfullImportResponse.importParams);
-        expect(getImportStatus(unsuccessfullImportResponse).status).to.deep.equal(unsuccessfullImportResponse.status);
+    test('should retain the original properties on failure', () => {
+        expect(getImportStatus(unsuccessfullImportResponse).typeReports).toEqual(unsuccessfullImportResponse.typeReports);
+        expect(getImportStatus(unsuccessfullImportResponse).stats).toEqual(unsuccessfullImportResponse.stats);
+        expect(getImportStatus(unsuccessfullImportResponse).importParams).toEqual(unsuccessfullImportResponse.importParams);
+        expect(getImportStatus(unsuccessfullImportResponse).status).toEqual(unsuccessfullImportResponse.status);
     });
 
     describe('isOk', () => {
-        it('should be a function', () => {
-            expect(getImportStatus(successfullImportResponse).isOk).to.be.a('function');
+        test('should be a function', () => {
+            expect(typeof getImportStatus(successfullImportResponse).isOk).toBe('function');
         });
 
-        it('should return true when the import is successful', () => {
-            expect(getImportStatus(successfullImportResponse).isOk()).to.be.true;
+        test('should return true when the import is successful', () => {
+            expect(getImportStatus(successfullImportResponse).isOk()).toBe(true);
         });
 
-        it('should return false when the import errored', () => {
-            expect(getImportStatus(unsuccessfullImportResponse).isOk()).to.be.false;
+        test('should return false when the import errored', () => {
+            expect(getImportStatus(unsuccessfullImportResponse).isOk()).toBe(false);
         });
     });
 
     describe('typeReports', () => {
-        it('should have a type report for each object on success', () => {
-            expect(getImportStatus(successfullImportResponse).typeReports).to.have.length(1);
+        test('should have a type report for each object on success', () => {
+            expect(getImportStatus(successfullImportResponse).typeReports).toHaveLength(1);
         });
 
-        it('should have a type report for each object on failure', () => {
-            expect(getImportStatus(unsuccessfullImportResponse).typeReports).to.have.length(2);
+        test('should have a type report for each object on failure', () => {
+            expect(getImportStatus(unsuccessfullImportResponse).typeReports).toHaveLength(2);
         });
     });
 
     describe('errorsPerObject', () => {
-        it('should be an empty array on successful import', () => {
-            expect(getImportStatus(successfullImportResponse).errorsPerObject).to.deep.equal([]);
+        test('should be an empty array on successful import', () => {
+            expect(getImportStatus(successfullImportResponse).errorsPerObject).toEqual([]);
         });
 
-        it('should contain an object for each object that has errors', () => {
-            expect(getImportStatus(unsuccessfullImportResponse).errorsPerObject).to.have.length(2);
+        test('should contain an object for each object that has errors', () => {
+            expect(getImportStatus(unsuccessfullImportResponse).errorsPerObject).toHaveLength(2);
         });
 
-        it('should have the id for the program object', () => {
-            expect(getImportStatus(unsuccessfullImportResponse).errorsPerObject[0].id).to.equal('MslrqljzDcW');
+        test('should have the id for the program object', () => {
+            expect(getImportStatus(unsuccessfullImportResponse).errorsPerObject[0].id).toBe('MslrqljzDcW');
         });
 
         // TODO: The id a categoryOption can not be retrieved in a reliable way
         xit('should have the id for the categoryOption object', () => {
-            expect(getImportStatus(unsuccessfullImportResponse).errorsPerObject[1].id).to.equal('Jg6u9usyKgl');
+            expect(getImportStatus(unsuccessfullImportResponse).errorsPerObject[1].id).toBe('Jg6u9usyKgl');
         });
 
-        it('should have the errors group by property', () => {
-            expect(getImportStatus(unsuccessfullImportResponse).errorsPerObject[1].errors).to.deep.equal({
+        test('should have the errors group by property', () => {
+            expect(getImportStatus(unsuccessfullImportResponse).errorsPerObject[1].errors).toEqual({
                 code: [{
                     message: 'Property `code` with value `2222332` on object 234234 [Jg6u9usyKgl] (DataElementCategoryOption) already exists on object ucZp3aEMfR5.',
                     mainKlass: 'org.hisp.dhis.dataelement.DataElementCategoryOption',
