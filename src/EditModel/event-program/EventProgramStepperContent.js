@@ -1,18 +1,18 @@
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import mapPropsStream from 'recompose/mapPropsStream';
+import { get, compose } from 'lodash/fp';
 import { createStepperContentFromConfig } from '../steps/stepper';
 import { activeStepSelector } from './selectors';
 import eventProgramStore from './eventProgramStore';
 import steps from './event-program-steps';
+import AssignDataElements from './assign-data-elements/AssignDataElements';
+import EditDataEntryForm from './create-data-entry-form/CreateDataEntryForm.component';
 import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
 import EventProgramNotifications from './notifications/EventProgramNotifications';
-import AssignDataElements from './assign-data-elements/AssignDataElements';
 import { createFormFor } from '../formHelpers';
-import { get, compose } from 'lodash/fp';
 import { editFieldChanged } from './actions';
-import { bindActionCreators } from 'redux';
 import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
-import EditDataEntryForm from './create-data-entry-form/CreateDataEntryForm.component';
 
 const stepperConfig = () => {
     const program$ = eventProgramStore
@@ -25,10 +25,8 @@ const stepperConfig = () => {
         connect(null, mapDispatchToProps)
     );
 
-    const EditProgramDetailsForm = connectEditForm(wrapInPaper(createFormFor(program$, 'program')));
-
     const stepComponents = {
-        EditProgramDetailsForm,
+        EditProgramDetailsForm: connectEditForm(wrapInPaper(createFormFor(program$, 'program'))),
         AssignDataElements,
         EditDataEntryForm,
         AssignOrganisationUnits,

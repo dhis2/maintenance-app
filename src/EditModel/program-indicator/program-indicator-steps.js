@@ -1,10 +1,8 @@
-import { next, previous, first } from '../steps/stepIterator';
-
 const STEP_DETAILS = 'program_indicator__details';
 const STEP_EXPRESSION_EDIT = 'program_indicator__edit_expression';
 const STEP_FILTER_EDIT = 'program_indicator__edit_filter';
 
-const stepDefinitions = [
+const steps = [
     {
         key: STEP_DETAILS,
         name: STEP_DETAILS,
@@ -21,12 +19,5 @@ const stepDefinitions = [
         componentName: 'FilterExpressionForm',
     },
 ];
-
-const steps = {
-    list: stepDefinitions,
-    next: activeStepKey => next(stepDefinitions, activeStepKey),
-    previous: activeStepKey => previous(stepDefinitions, activeStepKey),
-    first: () => first(stepDefinitions),
-};
 
 export default steps;
