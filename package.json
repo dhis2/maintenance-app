@@ -13,7 +13,7 @@
     "start": "webpack-dev-server",
     "coverage": "NODE_ENV=test nyc --include src --exclude 'src/**/*.spec.js' --require babel-register --require babel-polyfill --require ignore-styles mocha --reporter dot --require config/setup.js --recursive 'src/**/*.spec.js'",
     "postcoverage": " nyc report --reporter=lcov",
-    "test": "NODE_ENV=test mocha --require babel-register --require babel-polyfill --require ignore-styles --reporter spec  --require config/setup.js --recursive './src/**/*.spec.js'",
+    "test": "jest",
     "test:watch": "yarn test -- --watch",
     "prebuild": "yarn test",
     "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest",
@@ -85,6 +85,7 @@
     "chai": "^3.5.0",
     "chai-enzyme": "^0.6.1",
     "enzyme": "^2.8.0",
+    "jest": "^21.2.1",
     "mocha": "^3.2.0",
     "nyc": "10.1.2",
     "prop-types": "^15.6.0",
@@ -95,6 +96,9 @@
     "rxjs": "^5.2.0",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0"
+  },
+  "jest": {
+    "rootDir": "src"
   },
   "pre-commit": [
     "validate",
