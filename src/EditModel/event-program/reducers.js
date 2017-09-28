@@ -8,7 +8,7 @@ import {
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
 import { stageNotificationsReducer } from './notifications/reducers';
 import steps from './event-program-steps';
-import { next, previous, first } from '../steps/stepIterator';
+import { next, previous, first } from '../stepper/stepIterator';
 
 function eventProgramStepperReducer(state = { activeStep: first(steps) }, action) {
     switch (action.type) {

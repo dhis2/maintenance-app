@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { get, difference } from 'lodash/fp';
 import compose from 'recompose/compose';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { createStepperContentFromConfig } from '../steps/stepper';
+import { createStepperContentFromConfig } from '../stepper/stepper';
 import { activeStepSelector } from './selectors';
 import steps from './program-indicator-steps';
 import programIndicatorStore from './programIndicatorStore';

@@ -6,7 +6,7 @@ import {
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
 import steps from './program-indicator-steps';
-import { next, previous, first } from '../steps/stepIterator';
+import { next, previous, first } from '../stepper/stepIterator';
 
 export function programIndicatorStepperReducer(state = { activeStep: first(steps) }, action) {
     switch (action.type) {

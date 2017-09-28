@@ -3,7 +3,7 @@
 import reducer from '../reducers';
 import * as actions from '../actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
-import * as iterator from '../../steps/stepIterator';
+import * as iterator from '../../stepper/stepIterator';
 
 describe('Program Indicator', () => {
     let sandbox;
