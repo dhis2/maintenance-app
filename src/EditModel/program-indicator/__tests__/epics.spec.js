@@ -89,7 +89,7 @@ describe('Program indicator epics', () => {
                     done);
         });
 
-        test.skip(
+        test(
             'should set a new instance of programIndicator onto the store without calling the api',
             (done) => {
                 const action = {
@@ -106,8 +106,8 @@ describe('Program indicator epics', () => {
                                 programIndicator: {},
                             });
 
-                            expect(mockD2.models.programIndicator.get).not.to.be.called;
-                            expect(mockD2.models.programIndicator.create).to.be.called;
+                            expect(mockD2.models.programIndicator.get).not.toHaveBeenCalled();
+                            expect(mockD2.models.programIndicator.create).toHaveBeenCalled();
 
                             done();
                         },
