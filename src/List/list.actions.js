@@ -63,10 +63,22 @@ function getSchemaWithFilters(modelDefinitions, modelName) {
     return applyCurrentFilters(modelDefinitions, modelName);
 }
 
+function getOrderingForSchema(modelName) {
+    const customOrdering = {
+        dataApprovalLevel: 'level:ASC,displayName:ASC',
+    };
+
+    if (Object.keys(customOrdering).includes(modelName)) {
+        return customOrdering[modelName];
+    }
+
+    return 'displayName:ASC';
+}
+
 function getQueryForSchema(modelName) {
     return {
         fields: `${fieldFilteringForQuery},${getTableColumnsForType(modelName, true)}`,
-        order: 'displayName:ASC',
+        order: getOrderingForSchema(modelName),
     };
 }
 
