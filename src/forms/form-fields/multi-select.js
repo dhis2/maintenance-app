@@ -158,13 +158,15 @@ export default React.createClass({
                 display: 'block',
                 width: 'calc(100% - 60px)',
                 lineHeight: '24px',
-                color: 'rgba(0,0,0,0.3)',
+                color: 'rgba(0,0,0,0.5)',
                 marginTop: '1rem',
                 fontSize: 16,
             },
 
             labelWrap: {
                 display: 'flex',
+                marginTop: 24,
+                height: 36
             },
             fieldWrap: {
                 position: 'relative',
