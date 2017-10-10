@@ -66,6 +66,7 @@ class IndicatorExtraFields extends React.Component {
                         actions={dialogActions}
                         contentStyle={styles.customContentStyle}
                         autoScrollBodyContent
+                        repositionOnUpdate={false}
                     >
                         {this.state ? this.renderExpressionManager() : null}
                     </Dialog>
