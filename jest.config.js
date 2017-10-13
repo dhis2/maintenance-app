@@ -1,5 +1,6 @@
 module.exports = {
     setupTestFrameworkScriptFile: '<rootDir>/config/setup.js',
+    collectCoverageFrom: ['src/**/*.js'],
     testPathIgnorePatterns: [
         '/node_modules/',
         '<rootDir>/lib/',
