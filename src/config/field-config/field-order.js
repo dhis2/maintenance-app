@@ -174,7 +174,9 @@ const fieldOrderByName = new Map([
     ]],
     ['attribute', [
         'name',
+        'shortName',
         'code',
+        'description',
         'valueType',
         'optionSet',
         'sortOrder',
@@ -269,6 +271,7 @@ const fieldOrderByName = new Map([
         'leftSide',
         'operator',
         'rightSide',
+        'organisationUnitLevels',
         'skipFormValidation'
     ]],
     ['validationRuleGroup', [

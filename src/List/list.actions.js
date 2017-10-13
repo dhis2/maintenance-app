@@ -1,15 +1,29 @@
 import Action from 'd2-ui/lib/action/Action';
-import listStore from './list.store';
-import detailsStore from './details.store';
-import { getInstance } from 'd2/lib/d2';
 import { Observable } from 'rxjs';
-import appState from '../App/appStateStore';
 import { isUndefined } from 'lodash/fp';
 import log from 'loglevel';
-import { getTableColumnsForType, getFilterFieldsForType, getDefaultFiltersForType } from '../config/maintenance-models';
 
-export const fieldFilteringForQuery = 'displayName,shortName,id,lastUpdated,created,displayDescription,code,publicAccess,access,href,level';
-const listActions = Action.createActionsFromNames(['loadList', 'setListSource', 'searchByName', 'setFilterValue', 'getNextPage', 'getPreviousPage', 'hideDetailsBox']);
+import { getInstance } from 'd2/lib/d2';
+
+import listStore from './list.store';
+import detailsStore from './details.store';
+import appState from '../App/appStateStore';
+
+import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForType } from '../config/maintenance-models';
+
+export const fieldFilteringForQuery = [
+    'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
+    'code', 'publicAccess', 'access', 'href', 'level',
+].join(',');
+const listActions = Action.createActionsFromNames([
+    'loadList',
+    'setListSource',
+    'searchByName',
+    'setFilterValue',
+    'getNextPage',
+    'getPreviousPage',
+    'hideDetailsBox',
+]);
 
 // Apply current property and name filters
 function applyCurrentFilters(modelDefinitions, modelName) {
@@ -49,10 +63,22 @@ function getSchemaWithFilters(modelDefinitions, modelName) {
     return applyCurrentFilters(modelDefinitions, modelName);
 }
 
+function getOrderingForSchema(modelName) {
+    const customOrdering = {
+        dataApprovalLevel: 'level:ASC,displayName:ASC',
+    };
+
+    if (Object.keys(customOrdering).includes(modelName)) {
+        return customOrdering[modelName];
+    }
+
+    return 'displayName:ASC';
+}
+
 function getQueryForSchema(modelName) {
     return {
         fields: `${fieldFilteringForQuery},${getTableColumnsForType(modelName, true)}`,
-        order: 'displayName:ASC',
+        order: getOrderingForSchema(modelName),
     };
 }
 
