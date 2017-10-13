@@ -65,7 +65,8 @@ export const requestParams = new Map([
         fields: [
             ':all',
             'attributeValues[:all,attribute[id,name,displayName]]',
-            'program[id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]]]',
+            'program[id,displayName,programType',
+            'programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]]]',
         ].join(','),
     }],
     ['programRule', {
