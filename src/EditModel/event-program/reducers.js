@@ -1,12 +1,15 @@
 import { combineReducers } from 'redux';
-import log from 'loglevel';
-import { EVENT_PROGRAM_STEP_CHANGE, EVENT_PROGRAM_STEP_NEXT, EVENT_PROGRAM_STEP_PREVIOUS, EVENT_PROGRAM_SAVE_ERROR, EVENT_PROGRAM_SAVE_SUCCESS } from './actions';
+import {
+    EVENT_PROGRAM_STEP_CHANGE,
+    EVENT_PROGRAM_STEP_NEXT,
+    EVENT_PROGRAM_STEP_PREVIOUS,
+} from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
-import steps, { STEP_DETAILS } from './event-program-steps';
 import { stageNotificationsReducer } from './notifications/reducers';
-import { findNextStepKey, findPreviousStepKey } from './stepper';
+import steps from './event-program-steps';
+import { next, previous, first } from '../stepper/stepIterator';
 
-function eventProgramStepperReducer(state = { activeStep: STEP_DETAILS }, action) {
+function eventProgramStepperReducer(state = { activeStep: first(steps) }, action) {
     switch (action.type) {
     case EVENT_PROGRAM_STEP_CHANGE:
         return {
@@ -15,39 +18,26 @@ function eventProgramStepperReducer(state = { activeStep: STEP_DETAILS }, action
 
     case EVENT_PROGRAM_STEP_NEXT:
         return {
-            activeStep: findNextStepKey(steps, state.activeStep),
+            activeStep: next(steps, state.activeStep),
         };
 
     case EVENT_PROGRAM_STEP_PREVIOUS:
         return {
-            activeStep: findPreviousStepKey(steps, state.activeStep),
+            activeStep: previous(steps, state.activeStep),
         };
 
     case STEPPER_RESET_ACTIVE_STEP:
         return {
-            activeStep: STEP_DETAILS,
+            activeStep: first(steps),
         };
-    }
-
-    return state;
-}
-
-function eventProgramReducer(state = {}, action) {
-    switch (action.type) {
-    case EVENT_PROGRAM_SAVE_SUCCESS:
-        log.info('Success', action.payload);
+    default:
         break;
-    case EVENT_PROGRAM_SAVE_ERROR: {
-        log.error('Error', action.payload);
-        break;
-    }
     }
 
     return state;
 }
 
 export default combineReducers({
-    eventProgram: eventProgramReducer,
     step: eventProgramStepperReducer,
     stageNotifications: stageNotificationsReducer,
 });

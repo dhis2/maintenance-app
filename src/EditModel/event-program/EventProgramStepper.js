@@ -1,4 +1,4 @@
-import { createStepperFromConfig } from './stepper';
+import { createStepperFromConfig } from '../stepper/stepper';
 import { activeStepSelector } from './selectors';
 import { connect } from 'react-redux';
 import steps from './event-program-steps';

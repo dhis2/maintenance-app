@@ -22,7 +22,7 @@
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "deploy": "npm run build && mvn clean deploy",
     "lint-changed": "./bin/lintchangedfiles.sh",
-    "lint-all": "eslint ./src",
+    "lint": "eslint ./src",
     "profile": "yarn start -- --profile"
   },
   "devDependencies": {
@@ -87,6 +87,7 @@
     "enzyme": "^2.8.0",
     "mocha": "^3.2.0",
     "nyc": "10.1.2",
+    "prop-types": "^15.6.0",
     "react-redux": "^5.0.3",
     "react-sortable-hoc": "^0.6.1",
     "redux": "^3.6.0",

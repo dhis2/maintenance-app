@@ -7,7 +7,7 @@ import EventProgramStepper from './EventProgramStepper';
 import EventProgramStepperContent from './EventProgramStepperContent';
 import eventProgramStore$ from './eventProgramStore';
 import EventActionButtons from './EventActionButtons';
-import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from './stepper';
+import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from '../stepper/stepper';
 import { previousStep, nextStep } from './actions';
 
 const EventProgramStepperNavigationForward = createConnectedForwardButton(nextStep);
