@@ -1,59 +1,28 @@
-import React from 'react';
-import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
-import EventProgramNotifications from './notifications/EventProgramNotifications';
-import AssignDataElements from './assign-data-elements/AssignDataElements';
-import { createFormFor } from '../formHelpers';
-import { get, compose, first } from 'lodash/fp';
-import { connect } from 'react-redux';
-import eventProgramStore from './eventProgramStore';
-import { editFieldChanged } from './actions';
-import { bindActionCreators } from 'redux';
-import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
-import EditDataEntryForm from './create-data-entry-form/CreateDataEntryForm.component';
-
-export const STEP_DETAILS = 'details';
-export const STEP_DATA_ELEMENTS = 'data_elements';
-export const STEP_DATA_ENTRY_FORMS = 'data_entry_forms';
-export const STEP_ASSIGN_ORGANISATION_UNITS = 'assign_organisation_units';
-export const STEP_NOTIFICATIONS = 'notifications';
-
-const program$ = eventProgramStore
-    .map(get('program'));
-
-const mapDispatchToProps = dispatch => bindActionCreators({ editFieldChanged }, dispatch);
-
-const connectExpressionField = compose(
-    flattenRouterProps,
-    connect(null, mapDispatchToProps)
-);
-
-const EditProgramDetailsForm = connectExpressionField(wrapInPaper(createFormFor(program$, 'program')));
-
 const steps = [
     {
-        key: STEP_DETAILS,
+        key: 'details',
         name: 'add_program_details',
-        component: EditProgramDetailsForm,
+        componentName: 'EditProgramDetailsForm',
     },
     {
-        key: STEP_DATA_ELEMENTS,
+        key: 'data_elements',
         name: 'assign_data_elements',
-        component: AssignDataElements,
+        componentName: 'AssignDataElements',
     },
     {
-        key: STEP_DATA_ENTRY_FORMS,
+        key: 'data_entry_forms',
         name: 'create_data_entry_form',
-        component: EditDataEntryForm,
+        componentName: 'EditDataEntryForm',
     },
     {
-        key: STEP_ASSIGN_ORGANISATION_UNITS,
+        key: 'assign_organisation_units',
         name: 'assign_organisation_units',
-        component: AssignOrganisationUnits,
+        componentName: 'AssignOrganisationUnits',
     },
     {
-        key: STEP_NOTIFICATIONS,
+        key: 'notifications',
         name: 'create_notifications',
-        component: EventProgramNotifications,
+        componentName: 'EventProgramNotifications',
     },
 ];
 

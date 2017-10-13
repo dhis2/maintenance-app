@@ -1,63 +1,47 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar/Snackbar';
-import snackStore from './snack.store';
-import ObserverRegistry from '../utils/ObserverRegistry.mixin';
-import log from 'loglevel';
+import { get } from 'lodash/fp';
+import { hideSnackBarMessage } from './actions';
 
-const SnackBarContainer = React.createClass({
-    mixins: [ObserverRegistry],
+const snackBarMessageSelector = get('snackBar.message');
+const snackBarActionHandlerSelector = get('snackBar.onActionTouchTap');
+const snackBarActionTextSelector = get('snackBar.action');
+const snackBarActionAutoHideSelector = get('snackBar.autoHideDuration');
 
-    getInitialState() {
-        return {
-            show: false,
-            snack: {
-                message: '',
-            },
-        };
-    },
+const SnackBar = props => (
+    <Snackbar
+        style={{ maxWidth: 'auto', zIndex: 5 }}
+        bodyStyle={{ maxWidth: 'auto' }}
+        message={props.message}
+        action={props.action}
+        autoHideDuration={props.autoHideDuration}
+        open={!!props.message}
+        onActionTouchTap={props.actionHandler}
+        onRequestClose={props.onRequestClose}
+    />
+);
 
-    componentWillMount() {
-        const snackStoreDisposable = snackStore.subscribe((snack) => {
-            if (snack) {
-                this.setState({
-                    snack,
-                    show: true,
-                });
-            } else {
-                this.setState({
-                    show: false,
-                });
-            }
-        }, log.debug.bind(log));
+const mapStateToProps = state => (
+    {
+        message: snackBarMessageSelector(state) || '',
+        action: snackBarActionTextSelector(state) || '',
+        autoHideDuration: snackBarActionAutoHideSelector(state) || 0,
+        actionHandler: snackBarActionHandlerSelector(state) || null,
+    }
+);
 
-        this.registerDisposable(snackStoreDisposable);
-    },
-
-    _closeSnackbar() {
-        this.setState({
-            show: false,
-        });
-    },
-
-    render() {
-        if (!this.state.snack) {
-            return null;
-        }
-
-        return (
-            <Snackbar
-                style={{ maxWidth: 'auto', zIndex: 5 }}
-                bodyStyle={{ maxWidth: 'auto' }}
-                ref="snackbar"
-                message={this.state.snack.message}
-                action={this.state.snack.action}
-                autoHideDuration={0}
-                open={this.state.show}
-                onActionTouchTap={this.state.snack.onActionTouchTap}
-                onRequestClose={this._closeSnackbar}
-            />
-        );
-    },
+const mapDispatchToProps = dispatch => ({
+    onRequestClose: (...args) => dispatch(hideSnackBarMessage(...args)),
 });
 
-export default SnackBarContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(SnackBar);
+
+SnackBar.propTypes = {
+    message: PropTypes.string.isRequired,
+    action: PropTypes.string,
+    actionHandler: PropTypes.func,
+    autoHideDuration: PropTypes.number,
+    onRequestClose: PropTypes.func,
+};

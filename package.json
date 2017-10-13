@@ -1,6 +1,6 @@
 {
   "name": "maintenance-app",
-  "version": "28.0.2",
+  "version": "28.0.4",
   "description": "DHIS2 Maintenance app",
   "main": "index.js",
   "repository": {
@@ -21,7 +21,8 @@
     "validate": "npm ls --depth 0 || yarn list",
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "deploy": "npm run build && mvn clean deploy",
-    "lint-all": "eslint ./src",
+    "lint-changed": "./bin/lintchangedfiles.sh",
+    "lint": "eslint ./src",
     "profile": "yarn start -- --profile"
   },
   "devDependencies": {
@@ -35,9 +36,9 @@
     "babel-preset-stage-0": "^6.5.0",
     "classnames": "^2.2.3",
     "css-loader": "^0.28.1",
-    "d2": "^27.0.0-8",
+    "d2": "^28.2.0",
     "d2-manifest": "^1.0.0-2",
-    "d2-ui": "^27.0.1",
+    "d2-ui": "^28.0.2",
     "d2-utilizr": "^0.2.9",
     "d3-color": "^1.0.2",
     "d3-format": "^1.0.2",
@@ -86,6 +87,7 @@
     "enzyme": "^2.8.0",
     "mocha": "^3.2.0",
     "nyc": "10.1.2",
+    "prop-types": "^15.6.0",
     "react-redux": "^5.0.3",
     "react-sortable-hoc": "^0.6.1",
     "redux": "^3.6.0",

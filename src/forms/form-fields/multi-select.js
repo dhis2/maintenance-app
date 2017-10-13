@@ -61,6 +61,10 @@ multiSelectActions.removeItemsFromModelCollection
         complete();
     });
 
+function isOrganisationUnitLevelReference(referenceProperty, modelDefinition) {
+   return ['dataElement.aggregationLevels', 'validationRule.organisationUnitLevels'].indexOf(`${modelDefinition.name}.${referenceProperty}`) > -1;
+}
+
 // TODO: Refactor to es2015 class
 export default React.createClass({
     propTypes: {
@@ -72,6 +76,7 @@ export default React.createClass({
         value: React.PropTypes.oneOfType([
             React.PropTypes.shape({ values: React.PropTypes.func.isRequired }),
             React.PropTypes.arrayOf(React.PropTypes.func),
+            React.PropTypes.array,
         ]),
     },
 
@@ -119,7 +124,7 @@ export default React.createClass({
     renderGroupEditor() {
         if (this.props.model.modelDefinition.modelValidations[this.props.referenceProperty] &&
             this.props.model.modelDefinition.modelValidations[this.props.referenceProperty].ordered &&
-            this.props.referenceProperty !== 'aggregationLevels' /* TODO: The aggregation levels should either not be "ordered" or should be returned from the API properly */) {
+            !isOrganisationUnitLevelReference(this.props.referenceProperty, this.props.model.modelDefinition)) {/* TODO: The aggregation levels should either not be "ordered" or should be returned from the API properly */
             return (
                 <GroupEditorWithOrdering
                     itemStore={this.state.itemStore}
@@ -153,13 +158,15 @@ export default React.createClass({
                 display: 'block',
                 width: 'calc(100% - 60px)',
                 lineHeight: '24px',
-                color: 'rgba(0,0,0,0.3)',
+                color: 'rgba(0,0,0,0.5)',
                 marginTop: '1rem',
                 fontSize: 16,
             },
 
             labelWrap: {
                 display: 'flex',
+                marginTop: 24,
+                height: 36
             },
             fieldWrap: {
                 position: 'relative',
@@ -209,7 +216,7 @@ export default React.createClass({
     },
 
     _assignItems(items) {
-        if (this.props.referenceProperty === 'aggregationLevels') {
+        if (isOrganisationUnitLevelReference(this.props.referenceProperty, this.props.model.modelDefinition)) {
             const newList = Array.from((new Set((this.props.model[this.props.referenceProperty] || []).concat(items.map(Number)))).values());
 
             this.props.onChange({
@@ -245,7 +252,7 @@ export default React.createClass({
     },
 
     _removeItems(items) {
-        if (this.props.referenceProperty === 'aggregationLevels') {
+        if (isOrganisationUnitLevelReference(this.props.referenceProperty, this.props.model.modelDefinition)) {
             const newList = Array.from((new Set((this.props.model[this.props.referenceProperty] || []).filter(v => items.map(Number).indexOf(v) === -1))).values());
 
             this.props.onChange({
@@ -331,7 +338,7 @@ export default React.createClass({
     },
 
     populateItemStore(availableItems) {
-        if (this.props.referenceProperty === 'aggregationLevels') {
+        if (isOrganisationUnitLevelReference(this.props.referenceProperty, this.props.model.modelDefinition)) {
             this.state.itemStore.setState(Array.from(availableItems.values()).map(model => ({
                 value: model.level,
                 text: model.displayName || model.name,

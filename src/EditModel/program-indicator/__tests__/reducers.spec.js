@@ -1,12 +1,12 @@
 /* global sinon, expect */
 /* eslint-disable no-unused-expressions */
 
-import reducer from './reducers';
-import * as actions from './actions';
-import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
-import * as iterator from '../stepper/stepIterator';
+import reducer from '../reducers';
+import * as actions from '../actions';
+import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
+import * as iterator from '../../stepper/stepIterator';
 
-describe('Event Program', () => {
+describe('Program Indicator', () => {
     let sandbox;
     let nextStub;
     let previousStub;
@@ -30,7 +30,7 @@ describe('Event Program', () => {
     });
 
     describe('combined reducer', () => {
-        it('should return the event program state', () => {
+        it('should return the program indicator state', () => {
             const stepKey = 'shuffle';
             firstStub.returns(stepKey);
 
@@ -39,9 +39,6 @@ describe('Event Program', () => {
             const expectedState = {
                 step: {
                     activeStep: stepKey,
-                },
-                stageNotifications: {
-                    isDeleting: false,
                 },
             };
 
@@ -70,7 +67,7 @@ describe('Event Program', () => {
                 },
             };
 
-            it('should change the activeStep when receiving an EVENT_PROGRAM_STEP_CHANGE action', () => {
+            it('should change the activeStep when receiving an PROGRAM_INDICATOR_STEP_CHANGE action', () => {
                 const expectedStepKey = 'hop';
 
                 const expectedState = {
@@ -78,14 +75,14 @@ describe('Event Program', () => {
                 };
 
                 const actualState = reducer(initialState, {
-                    type: actions.EVENT_PROGRAM_STEP_CHANGE,
+                    type: actions.PROGRAM_INDICATOR_STEP_CHANGE,
                     payload: expectedStepKey,
                 });
 
                 expect(actualState.step).to.deep.equal(expectedState);
             });
 
-            it('should request the next step when receiving an EVENT_PROGRAM_STEP_NEXT action', () => {
+            it('should request the next step when receiving an PROGRAM_INDICATOR_STEP_NEXT action', () => {
                 const expectedStepKey = 'march';
                 nextStub.returns(expectedStepKey);
 
@@ -93,14 +90,14 @@ describe('Event Program', () => {
                     activeStep: expectedStepKey,
                 };
 
-                const actualState = reducer(initialState, { type: actions.EVENT_PROGRAM_STEP_NEXT });
+                const actualState = reducer(initialState, { type: actions.PROGRAM_INDICATOR_STEP_NEXT });
 
                 expect(nextStub).to.have.been.called;
                 expect(previousStub).not.to.have.been.called;
                 expect(actualState.step).to.deep.equal(expectedState);
             });
 
-            it('should request the previous step when receiving an EVENT_PROGRAM_STEP_PREVIOUS action', () => {
+            it('should request the previous step when receiving an PROGRAM_INDICATOR_STEP_PREVIOUS action', () => {
                 const expectedStepKey = 'jog';
                 previousStub.returns(expectedStepKey);
 
@@ -108,7 +105,7 @@ describe('Event Program', () => {
                     activeStep: expectedStepKey,
                 };
 
-                const actualState = reducer(initialState, { type: actions.EVENT_PROGRAM_STEP_PREVIOUS });
+                const actualState = reducer(initialState, { type: actions.PROGRAM_INDICATOR_STEP_PREVIOUS });
 
                 expect(nextStub).not.to.have.been.called;
                 expect(previousStub).to.have.been.called;
