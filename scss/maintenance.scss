@@ -39,12 +39,19 @@ html {
   cursor: pointer;
 }
 
+.data-table__rows__row__column {
+  white-space: nowrap;
+}
+
 .data-table__rows__row__column:not(:first-child) {
-  width: 15%;
-  min-width: 150px;
+  width: 10%;
 }
 
 .data-table__rows__row__column:last-child {
-  width: 1%;
+  max-width: 90px;
   min-width: initial;
+}
+
+.data-table__headers__header {
+  white-space: nowrap;
 }

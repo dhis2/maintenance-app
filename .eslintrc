@@ -2,7 +2,7 @@
     "extends": "dhis2",
     "env": {
         "browser": true,
-        "mocha": true
+        "jest": true
     },
     "parser": "babel-eslint",
     "parserOptions": {

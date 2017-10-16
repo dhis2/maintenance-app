@@ -13,13 +13,17 @@ const styles = {
 };
 
 class AddNewSection extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
         this.state = {
             dialogOpen: false,
             sectionName: '',
         };
     }
+
+    getTranslation = key => {
+        return this.context.d2.i18n.getTranslation(key);
+    };
 
     openDialog = () => {
         this.setState({ dialogOpen: true });
@@ -52,13 +56,13 @@ class AddNewSection extends Component {
     render = () => {
         const actions = [
             <FlatButton
-                label="Cancel"
-                primary
+                label={this.getTranslation('cancel')}
+                primary={true}
                 onTouchTap={this.closeDialog}
             />,
             <FlatButton
-                label="Add"
-                primary
+                label={this.getTranslation('add')}
+                primary={true}
                 disabled={!this.state.sectionName}
                 onTouchTap={this.confirmAddNewSection}
             />,
@@ -70,14 +74,14 @@ class AddNewSection extends Component {
                     <ContentAdd />
                 </FloatingActionButton>
                 <Dialog
-                    title="Add new program stage section"
+                    title={this.getTranslation('add_new_program_stage_section')}
                     actions={actions}
                     open={this.state.dialogOpen}
                     onRequestClose={this.closeDialog}
                 >
                     <TextField
                         ref={this.focusOnSectionName}
-                        hintText={'Name'}
+                        hintText={this.getTranslation('name')}
                         onChange={this.onNameChanged}
                     />
                 </Dialog>
@@ -88,6 +92,10 @@ class AddNewSection extends Component {
 
 AddNewSection.propTypes = {
     onSectionAdded: PropTypes.func.isRequired,
+};
+
+AddNewSection.contextTypes = {
+    d2: PropTypes.object,
 };
 
 export default AddNewSection;

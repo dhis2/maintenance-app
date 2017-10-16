@@ -7,7 +7,7 @@ import ProgramIndicatorStepper from './ProgramIndicatorStepper';
 import ProgramIndicatorStepperContent from './ProgramIndicatorStepperContent';
 import programIndicatorStore from './programIndicatorStore';
 import { get } from 'lodash/fp';
-import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from '../event-program/stepper';
+import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from '../stepper/stepper';
 import { previousStep, nextStep } from './actions';
 import ProgramIndicatorActionButtons from './ProgramIndicatorActionButtons';
 
