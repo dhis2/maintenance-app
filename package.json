@@ -11,8 +11,7 @@
   "scripts": {
     "prestart": "d2-manifest package.json manifest.webapp",
     "start": "webpack-dev-server",
-    "coverage": "NODE_ENV=test nyc --include src --exclude 'src/**/*.spec.js' --require babel-register --require babel-polyfill --require ignore-styles mocha --reporter dot --require config/setup.js --recursive 'src/**/*.spec.js'",
-    "postcoverage": " nyc report --reporter=lcov",
+    "coverage": "npm test -- --coverage",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
     "prebuild": "yarn test",
