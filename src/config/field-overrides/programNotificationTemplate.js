@@ -22,6 +22,7 @@ const PROGRAM_STAGE_VARIABLES = [
 
 const toVariableType = name => ['V', name];
 const toAttributeType = name => ['A', name]; // Used for program attributes
+const toDataElementType = name => ['#', name];
 
 const ProgramStageNotificationSubjectAndMessageTemplateFields = compose(
     connect(undefined, dispatch => bindActionCreators({
@@ -29,9 +30,9 @@ const ProgramStageNotificationSubjectAndMessageTemplateFields = compose(
     },
         dispatch
     )),
-    withProps({
-        variableTypes: map(toVariableType, PROGRAM_STAGE_VARIABLES),
-    }))(SubjectAndMessageTemplateFields);
+    withProps(({ dataElements }) => ({
+        variableTypes: map(toVariableType, PROGRAM_STAGE_VARIABLES).concat(map(toDataElementType, dataElements)),
+    })))(SubjectAndMessageTemplateFields);
 
 export default new Map([
     ['deliveryChannels', {

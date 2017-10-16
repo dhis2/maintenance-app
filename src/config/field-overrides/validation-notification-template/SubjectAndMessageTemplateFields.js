@@ -8,10 +8,12 @@ import { map, compose } from 'lodash/fp';
 
 function prepareProps(d2, onItemSelected) {
     return function ([type, name]) {
+        const label = name.displayName ? name.displayName : d2.i18n.getTranslation(name);
+        const varName = name.id ? name.id : name;
         return {
-            primaryText: d2.i18n.getTranslation(name),
+            primaryText: label,
             onClick() {
-                onItemSelected(`${type}{${name}}`);
+                onItemSelected(`${type}{${varName}}`);
             },
         };
     };
