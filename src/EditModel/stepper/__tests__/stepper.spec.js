@@ -1,9 +1,5 @@
-/* global sinon, expect */
-
 import React from 'react';
-import { createStepperFromConfig, createStepperContentFromConfig, StepperNavigationBack, StepperNavigationForward } from '../stepper';
 import { shallow } from 'enzyme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Stepper from 'material-ui/Stepper/Stepper';
 import Step from 'material-ui/Stepper/Step';
 import StepContent from 'material-ui/Stepper/StepContent';
@@ -12,6 +8,12 @@ import IconButton from 'material-ui/IconButton';
 import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import log from 'loglevel';
+import {
+    createStepperFromConfig,
+    createStepperContentFromConfig,
+    StepperNavigationBack,
+    StepperNavigationForward,
+} from '../stepper';
 
 describe('Stepper utility functions', () => {
     const renderStepper = (stepperConfig, props = {}) => {
@@ -21,126 +23,136 @@ describe('Stepper utility functions', () => {
     };
 
     let stepperConfig;
-    let renderedStepper;
 
     beforeEach(() => {
         stepperConfig = [
             { key: 'first', name: 'First step!' },
             { key: 'last', name: 'My last step!' },
         ];
-
-        renderedStepper = renderStepper(stepperConfig);
     });
 
     describe('createStepperFromConfig', () => {
-        it('should render a Stepper component', () => {
-            expect(renderedStepper).to.be.type(Stepper);
+        test('should render a Stepper component', () => {
+            const renderedStepper = renderStepper(stepperConfig);
+            expect(renderedStepper.type()).toEqual(Stepper);
         });
 
-        it('should render 2 steps', () => {
-            expect(renderedStepper).to.have.exactly(2).descendants(Step);
+        test('should render 2 steps', () => {
+            const renderedStepper = renderStepper(stepperConfig);
+            expect(renderedStepper.children()).toHaveLength(2);
+            expect(renderedStepper.children(Step)).toHaveLength(2);
         });
 
-        it('should render in default horizontal position', () => {
-            expect(renderedStepper).to.have.prop('orientation', 'horizontal');
+        test('should render in default horizontal position', () => {
+            const renderedStepper = renderStepper(stepperConfig);
+
+            expect(renderedStepper.prop('orientation')).toBe('horizontal');
         });
 
-        it('should render in vertical position', () => {
+        test('should render in vertical position', () => {
             const VerticalStepper = createStepperFromConfig(stepperConfig, 'vertical');
-            renderedStepper = shallow(<VerticalStepper />);
+            const renderedStepper = shallow(<VerticalStepper />);
 
-            expect(renderedStepper).to.have.prop('orientation', 'vertical');
+            expect(renderedStepper.prop('orientation')).toBe('vertical');
         });
 
-        it('should render both steps as not active', () => {
-            expect(renderedStepper.find(Step).at(0)).to.have.prop('active', false);
-            expect(renderedStepper.find(Step).at(1)).to.have.prop('active', false);
+        test('should render both steps as not active', () => {
+            const renderedStepper = renderStepper(stepperConfig);
+
+            expect(renderedStepper.find(Step).at(0).prop('active')).toBe(false);
+            expect(renderedStepper.find(Step).at(1).prop('active')).toBe(false);
         });
 
-        it('should render the 2nd step as active', () => {
-            renderedStepper = renderStepper(stepperConfig, {
+        test('should render the 2nd step as active', () => {
+            const renderedStepper = renderStepper(stepperConfig, {
                 activeStep: 'last',
             });
 
-            expect(renderedStepper.children().at(0)).to.have.prop('active', false);
-            expect(renderedStepper.children().at(1)).to.have.prop('active', true);
+            expect(renderedStepper.children().at(0).prop('active')).toBe(false);
+            expect(renderedStepper.children().at(1).prop('active')).toBe(true);
         });
 
-        it('should render the 2nd step as active by index', () => {
-            renderedStepper = renderStepper(stepperConfig, {
+        test('should render the 2nd step as active by index', () => {
+            const renderedStepper = renderStepper(stepperConfig, {
                 activeStep: 1,
             });
 
-            expect(renderedStepper.children().at(0)).to.have.prop('active', false);
-            expect(renderedStepper.children().at(1)).to.have.prop('active', true);
+            expect(renderedStepper.childAt(0).prop('active')).toBe(false);
+            expect(renderedStepper.childAt(1).prop('active')).toBe(true);
         });
 
-        it('should render a StepContent component when a step has content', () => {
+        test('should render a StepContent component when a step has content', () => {
             stepperConfig[0].content = () => <div>Content!</div>;
-            renderedStepper = renderStepper(stepperConfig);
+            const renderedStepper = renderStepper(stepperConfig);
 
-            expect(renderedStepper.find(Step).at(0)).to.have.exactly(1).descendants(StepContent);
+            expect(renderedStepper.find(Step).at(0).children(StepContent)).toHaveLength(1);
         });
 
-        it('should render call the stepperClicked callback', () => {
-            const stepperClicked = sinon.spy();
-            renderedStepper = renderStepper(stepperConfig, { stepperClicked });
+        test('should render call the stepperClicked callback', () => {
+            const stepperClicked = jest.fn();
+            const renderedStepper = renderStepper(stepperConfig, { stepperClicked });
 
             renderedStepper.find(StepButton).at(0).simulate('click');
 
-            expect(stepperClicked).to.have.been.calledWith('first');
+            expect(stepperClicked).toHaveBeenCalledWith('first');
         });
     });
 
     describe('createStepperContentFromConfig', () => {
         beforeEach(() => {
-            sinon.stub(log, 'warn');
+            jest.spyOn(log, 'warn');
         });
 
         afterEach(() => {
-            log.warn.restore();
+            jest.resetAllMocks();
         });
 
-        it('should log a warning when no active step has been passed', () => {
+        test('should log a warning when no active step has been passed', () => {
             const ContentStepper = createStepperContentFromConfig(stepperConfig);
-            renderedStepper = shallow(<ContentStepper />);
+            const renderedStepper = shallow(<ContentStepper />);
 
-            expect(log.warn).to.be.calledWith('The `activeStep` prop is undefined, therefore the component created by `createStepperContentFromConfig` will render null');
+            expect(log.warn).toBeCalledWith('The `activeStep` prop is undefined, therefore the component created by `createStepperContentFromConfig` will render null');
         });
 
-        it('should log a warning when the step does not have a component', () => {
+        test('should log a warning when the step does not have a component', () => {
             const ContentStepper = createStepperContentFromConfig(stepperConfig);
-            renderedStepper = shallow(<ContentStepper activeStep="first" />);
+            const renderedStepper = shallow(<ContentStepper activeStep="first" />);
 
-            expect(log.warn).to.be.calledWith('Could not find a content component for a step with key (first) in', stepperConfig);
+            expect(log.warn).toBeCalledWith('Could not find a content component for a step with key (first) in', stepperConfig);
         });
 
-        it('should render null when no component has been provided', () => {
+        test('should render null when no component has been provided', () => {
             const ContentStepper = createStepperContentFromConfig(stepperConfig);
-            renderedStepper = shallow(<ContentStepper activeStep="first" />);
+            const renderedStepper = shallow(<ContentStepper activeStep="first" />);
 
-            expect(renderedStepper).to.be.blank();
+            expect(renderedStepper.html()).toBeNull();
         });
 
-        it('should render the component that is provided with the step when that step is active', () => {
-            const MyContent = () => (<div>My content</div>);
-            stepperConfig[0].component = MyContent;
+        test(
+            'should render the component that is provided with the step when that step is active',
+            () => {
+                const MyContent = () => (<div>My content</div>);
+                stepperConfig[0].component = MyContent;
 
-            const ContentStepper = createStepperContentFromConfig(stepperConfig);
-            renderedStepper = shallow(<ContentStepper activeStep="first" />);
+                const ContentStepper = createStepperContentFromConfig(stepperConfig);
+                const renderedStepper = shallow(<ContentStepper activeStep="first" />);
 
-            expect(renderedStepper).to.have.type(MyContent);
-        });
+                expect(renderedStepper.type()).toEqual(MyContent);
+            }
+        );
 
-        it('should pass the props (besides `activeStep`) through to the step component', () => {
-            const MyContent = () => (<div>My content</div>);
-            stepperConfig[0].component = MyContent;
+        test(
+            'should pass the props (besides `activeStep`) through to the step component',
+            () => {
+                const MyContent = () => (<div>My content</div>);
+                stepperConfig[0].component = MyContent;
 
-            const ContentStepper = createStepperContentFromConfig(stepperConfig);
-            renderedStepper = shallow(<ContentStepper activeStep="first" name="John" coolStyle />);
+                const ContentStepper = createStepperContentFromConfig(stepperConfig);
+                const renderedStepper = shallow(<ContentStepper activeStep="first" name="John" coolStyle />);
 
-            expect(renderedStepper.props()).to.deep.equal({ name: 'John', coolStyle: true });
-        });
+                expect(renderedStepper.props()).toEqual({ name: 'John', coolStyle: true });
+            }
+        );
     });
 
     describe('StepperNavigationBack', () => {
@@ -148,22 +160,26 @@ describe('Stepper utility functions', () => {
         let onBackClickSpy;
 
         beforeEach(() => {
-            onBackClickSpy = sinon.spy();
+            onBackClickSpy = jest.fn();
             backButton = shallow(<StepperNavigationBack onBackClick={onBackClickSpy} />);
         });
 
-        it('should render a IconButton', () => {
-            expect(backButton).to.have.type(IconButton);
+        afterEach(() => {
+            jest.clearAllMocks();
         });
 
-        it('should render a BackwardIcon', () => {
-            expect(backButton).to.have.exactly(1).descendants(BackwardIcon);
+        test('should render a IconButton', () => {
+            expect(backButton.type()).toEqual(IconButton);
         });
 
-        it('should call the onBackClick callback when the button is clicked', () => {
+        test('should render a BackwardIcon', () => {
+            expect(backButton.children(BackwardIcon)).toHaveLength(1);
+        });
+
+        test('should call the onBackClick callback when the button is clicked', () => {
             backButton.simulate('click');
 
-            expect(onBackClickSpy).to.be.called;
+            expect(onBackClickSpy).toHaveBeenCalled();
         });
     });
 
@@ -172,22 +188,22 @@ describe('Stepper utility functions', () => {
         let onForwardClickSpy;
 
         beforeEach(() => {
-            onForwardClickSpy = sinon.spy();
+            onForwardClickSpy = jest.fn();
             forwardButton = shallow(<StepperNavigationForward onForwardClick={onForwardClickSpy} />);
         });
 
-        it('should render a IconButton', () => {
-            expect(forwardButton).to.have.type(IconButton);
+        test('should render a IconButton', () => {
+            expect(forwardButton.type()).toEqual(IconButton);
         });
 
-        it('should render a ForwardIcon', () => {
-            expect(forwardButton).to.have.exactly(1).descendants(ForwardIcon);
+        test('should render a ForwardIcon', () => {
+            expect(forwardButton.children(ForwardIcon)).toHaveLength(1);
         });
 
-        it('should call the onForwardClick callback when the button is clicked', () => {
+        test('should call the onForwardClick callback when the button is clicked', () => {
             forwardButton.simulate('click');
 
-            expect(onForwardClickSpy).to.be.called;
+            expect(onForwardClickSpy).toHaveBeenCalled();
         });
     });
 });

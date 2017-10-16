@@ -1,8 +1,12 @@
 import { ActionsObservable } from 'redux-observable';
 import Store from 'd2-ui/lib/store/Store';
-import { PROGRAM_STAGE_DATA_ELEMENTS_ADD, PROGRAM_STAGE_DATA_ELEMENTS_REMOVE, PROGRAM_STAGE_DATA_ELEMENT_EDIT } from './actions';
-import createEpicsForStore from './epics';
 import { isValidUid } from 'd2/lib/uid';
+import {
+    PROGRAM_STAGE_DATA_ELEMENTS_ADD,
+    PROGRAM_STAGE_DATA_ELEMENTS_REMOVE,
+    PROGRAM_STAGE_DATA_ELEMENT_EDIT,
+} from '../actions';
+import createEpicsForStore from '../epics';
 
 describe('Assign data elements epics', () => {
     const createActionStreamFor = action => ActionsObservable.of(action);
@@ -61,7 +65,7 @@ describe('Assign data elements epics', () => {
     });
 
     describe('adding new data elements to the program stage', () => {
-        it('should add a single programStageDataElement', (done) => {
+        test('should add a single programStageDataElement', (done) => {
             const action = {
                 type: PROGRAM_STAGE_DATA_ELEMENTS_ADD,
                 payload: {
@@ -73,11 +77,11 @@ describe('Assign data elements epics', () => {
             epic(createActionStreamFor(action))
                 .subscribe(
                     () => {
-                        expect(store.getState().programStages[0].programStageDataElements).to.have.length(3);
+                        expect(store.getState().programStages[0].programStageDataElements).toHaveLength(3);
                         const newlyAddedDataElement = store.getState().programStages[0].programStageDataElements[2];
 
-                        expect(isValidUid(newlyAddedDataElement.id)).to.be.true;
-                        expect(newlyAddedDataElement.dataElement).to.deep.equal({
+                        expect(isValidUid(newlyAddedDataElement.id)).toBe(true);
+                        expect(newlyAddedDataElement.dataElement).toEqual({
                             id: 'eMyVanycQSC',
                         });
                         done();
@@ -85,7 +89,7 @@ describe('Assign data elements epics', () => {
                     done);
         });
 
-        it('should add multiple programStageDataElement', (done) => {
+        test('should add multiple programStageDataElement', (done) => {
             const action = {
                 type: PROGRAM_STAGE_DATA_ELEMENTS_ADD,
                 payload: {
@@ -97,17 +101,17 @@ describe('Assign data elements epics', () => {
             epic(createActionStreamFor(action))
                 .subscribe(
                     () => {
-                        expect(store.getState().programStages[0].programStageDataElements).to.have.length(4);
+                        expect(store.getState().programStages[0].programStageDataElements).toHaveLength(4);
                         const newlyAddedDataElementOne = store.getState().programStages[0].programStageDataElements[2];
                         const newlyAddedDataElementTwo = store.getState().programStages[0].programStageDataElements[3];
 
-                        expect(isValidUid(newlyAddedDataElementOne.id)).to.be.true;
-                        expect(isValidUid(newlyAddedDataElementTwo.id)).to.be.true;
+                        expect(isValidUid(newlyAddedDataElementOne.id)).toBe(true);
+                        expect(isValidUid(newlyAddedDataElementTwo.id)).toBe(true);
 
-                        expect(newlyAddedDataElementOne.dataElement).to.deep.equal({
+                        expect(newlyAddedDataElementOne.dataElement).toEqual({
                             id: 'eMyVanycQSC',
                         });
-                        expect(newlyAddedDataElementTwo.dataElement).to.deep.equal({
+                        expect(newlyAddedDataElementTwo.dataElement).toEqual({
                             id: 'd68jOejl9FI',
                         });
                         done();
@@ -116,7 +120,7 @@ describe('Assign data elements epics', () => {
                 );
         });
 
-        it('should emit the state from the store', (done) => {
+        test('should emit the state from the store', (done) => {
             const action = {
                 type: PROGRAM_STAGE_DATA_ELEMENTS_ADD,
                 payload: {
@@ -125,13 +129,13 @@ describe('Assign data elements epics', () => {
                 },
             };
 
-            const storeSubscriptionSpy = sinon.spy();
+            const storeSubscriptionSpy = jest.fn();
             store.subscribe(storeSubscriptionSpy);
 
             epic(createActionStreamFor(action))
                 .subscribe(
                     () => {
-                        expect(storeSubscriptionSpy).to.be.calledTwice;
+                        expect(storeSubscriptionSpy).toHaveBeenCalledTimes(2);
                         done();
                     },
                     done
@@ -140,7 +144,7 @@ describe('Assign data elements epics', () => {
     });
 
     describe('removing data elements from the program stage', () => {
-        it('should remove the provided data element', (done) => {
+        test('should remove the provided data element', (done) => {
             const action = {
                 type: PROGRAM_STAGE_DATA_ELEMENTS_REMOVE,
                 payload: {
@@ -152,11 +156,11 @@ describe('Assign data elements epics', () => {
             epic(createActionStreamFor(action))
                 .subscribe(
                     () => {
-                        expect(store.getState().programStages[0].programStageDataElements).to.have.length(1);
+                        expect(store.getState().programStages[0].programStageDataElements).toHaveLength(1);
                         const remainingDataElement = store.getState().programStages[0].programStageDataElements[0];
 
-                        expect(isValidUid(remainingDataElement.id)).to.be.true;
-                        expect(remainingDataElement).to.deep.equal({
+                        expect(isValidUid(remainingDataElement.id)).toBe(true);
+                        expect(remainingDataElement).toEqual({
                             lastUpdated: '2017-05-03T13:32:17.729',
                             id: 'FKHaErzkvEF',
                             created: '2016-04-01T15:07:12.723',
@@ -181,7 +185,7 @@ describe('Assign data elements epics', () => {
                 );
         });
 
-        it('should remove all the provided dataElements', (done) => {
+        test('should remove all the provided dataElements', (done) => {
             const action = {
                 type: PROGRAM_STAGE_DATA_ELEMENTS_REMOVE,
                 payload: {
@@ -193,14 +197,14 @@ describe('Assign data elements epics', () => {
             epic(createActionStreamFor(action))
                 .subscribe(
                     () => {
-                        expect(store.getState().programStages[0].programStageDataElements).to.have.length(0);
+                        expect(store.getState().programStages[0].programStageDataElements).toHaveLength(0);
                         done();
                     },
                     done
                 );
         });
 
-        it('should emit the state from the store', (done) => {
+        test('should emit the state from the store', (done) => {
             const action = {
                 type: PROGRAM_STAGE_DATA_ELEMENTS_REMOVE,
                 payload: {
@@ -209,13 +213,13 @@ describe('Assign data elements epics', () => {
                 },
             };
 
-            const storeSubscriptionSpy = sinon.spy();
+            const storeSubscriptionSpy = jest.fn();
             store.subscribe(storeSubscriptionSpy);
 
             epic(createActionStreamFor(action))
                 .subscribe(
                     () => {
-                        expect(storeSubscriptionSpy).to.be.calledTwice;
+                        expect(storeSubscriptionSpy).toHaveBeenCalledTimes(2);
                         done();
                     },
                     done
@@ -224,39 +228,14 @@ describe('Assign data elements epics', () => {
     });
 
     describe('editing programStageDataElement', () => {
-        it('should update the programStageDataElement with the new values', (done) => {
-            const action = {
-                type: PROGRAM_STAGE_DATA_ELEMENT_EDIT,
-                payload: {
-                    programStage: 'pTo4uMt3xur',
-                    programStageDataElement: {
-                        lastUpdated: '2017-05-03T13:32:17.730',
-                        id: 'd9wIqlzSMgE',
-                        created: '2016-04-01T15:07:12.695',
-                        displayInReports: false,
-                        externalAccess: false,
-                        renderOptionsAsRadio: false,
-                        allowFutureDate: false,
-                        compulsory: false,
-                        allowProvidedElsewhere: true,
-                        sortOrder: 0,
-                        lastUpdatedBy: { id: 'xE7jOejl9FI' },
-                        programStage: { id: 'pTo4uMt3xur' },
-                        dataElement: { id: 'qrur9Dvnyt5' },
-                        translations: [],
-                        userGroupAccesses: [],
-                        attributeValues: [],
-                        userAccesses: [],
-                    },
-                },
-            };
-
-            epic(createActionStreamFor(action))
-                .subscribe(
-                    () => {
-                        const editedDataElement = store.getState().programStages[0].programStageDataElements[0];
-
-                        expect(editedDataElement).to.deep.equal({
+        test(
+            'should update the programStageDataElement with the new values',
+            (done) => {
+                const action = {
+                    type: PROGRAM_STAGE_DATA_ELEMENT_EDIT,
+                    payload: {
+                        programStage: 'pTo4uMt3xur',
+                        programStageDataElement: {
                             lastUpdated: '2017-05-03T13:32:17.730',
                             id: 'd9wIqlzSMgE',
                             created: '2016-04-01T15:07:12.695',
@@ -274,14 +253,42 @@ describe('Assign data elements epics', () => {
                             userGroupAccesses: [],
                             attributeValues: [],
                             userAccesses: [],
-                        });
-                        done();
+                        },
                     },
-                    done
-                );
-        });
+                };
 
-        it('should not modify the other dataElements', (done) => {
+                epic(createActionStreamFor(action))
+                    .subscribe(
+                        () => {
+                            const editedDataElement = store.getState().programStages[0].programStageDataElements[0];
+
+                            expect(editedDataElement).toEqual({
+                                lastUpdated: '2017-05-03T13:32:17.730',
+                                id: 'd9wIqlzSMgE',
+                                created: '2016-04-01T15:07:12.695',
+                                displayInReports: false,
+                                externalAccess: false,
+                                renderOptionsAsRadio: false,
+                                allowFutureDate: false,
+                                compulsory: false,
+                                allowProvidedElsewhere: true,
+                                sortOrder: 0,
+                                lastUpdatedBy: { id: 'xE7jOejl9FI' },
+                                programStage: { id: 'pTo4uMt3xur' },
+                                dataElement: { id: 'qrur9Dvnyt5' },
+                                translations: [],
+                                userGroupAccesses: [],
+                                attributeValues: [],
+                                userAccesses: [],
+                            });
+                            done();
+                        },
+                        done
+                    );
+            }
+        );
+
+        test('should not modify the other dataElements', (done) => {
             const action = {
                 type: PROGRAM_STAGE_DATA_ELEMENT_EDIT,
                 payload: {
@@ -313,7 +320,7 @@ describe('Assign data elements epics', () => {
                     () => {
                         const editedDataElement = store.getState().programStages[0].programStageDataElements[1];
 
-                        expect(editedDataElement).to.deep.equal({
+                        expect(editedDataElement).toEqual({
                             lastUpdated: '2017-05-03T13:32:17.729',
                             id: 'FKHaErzkvEF',
                             created: '2016-04-01T15:07:12.723',
@@ -338,7 +345,7 @@ describe('Assign data elements epics', () => {
                 );
         });
 
-        it('should emit the state from the store', (done) => {
+        test('should emit the state from the store', (done) => {
             const action = {
                 type: PROGRAM_STAGE_DATA_ELEMENT_EDIT,
                 payload: {
@@ -365,13 +372,13 @@ describe('Assign data elements epics', () => {
                 },
             };
 
-            const storeSubscriptionSpy = sinon.spy();
+            const storeSubscriptionSpy = jest.fn();
             store.subscribe(storeSubscriptionSpy);
 
             epic(createActionStreamFor(action))
                 .subscribe(
                     () => {
-                        expect(storeSubscriptionSpy).to.be.calledTwice;
+                        expect(storeSubscriptionSpy).toHaveBeenCalledTimes(2);
                         done();
                     },
                     done
