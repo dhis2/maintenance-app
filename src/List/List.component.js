@@ -106,7 +106,7 @@ class DetailsBoxWithScroll extends Component {
 
 
 DetailsBoxWithScroll.propTypes = {
-    style: PropTypes.string.isRequired,
+    style: PropTypes.object.isRequired,
     detailsObject: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
 };
@@ -451,17 +451,16 @@ const List = React.createClass({
 
         // Because "default" really means "None" and that's something everybody knows duh
         const defaultReallyMeansNone = (row) => {
-            const displayNameProp = {};
             if (row.categoryCombo &&
                 row.categoryCombo.displayName &&
                 row.categoryCombo.displayName === 'default' &&
                 row.categoryCombo___displayName === row.categoryCombo.displayName) {
-                displayNameProp.categoryCombo___displayName = this.getTranslation('none');
-                displayNameProp.categoryCombo = {
-                    displayName: displayNameProp.categoryCombo___displayName,
-                };
+                const noneStr = this.getTranslation('none');
+                row.categoryCombo.displayName = noneStr; // eslint-disable-line no-param-reassign
+                row.categoryCombo___displayName = noneStr; // eslint-disable-line no-param-reassign
             }
-            return Object.assign({}, row, displayNameProp);
+
+            return row;
         };
 
         // Get translations for row values that are constants

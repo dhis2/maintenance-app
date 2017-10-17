@@ -231,16 +231,16 @@ contextActions.runNow
     });
 
 contextActions.preview
-    .subscribe(({ data: model, complete: actionComplete, error: actionFailed }) => {
-        getD2()
-            .then((d2) => {
-                window.open(`${d2.Api.getApi().baseUrl}/${[model.modelDefinition.name, model.id, 'render'].join('/')}`);
-            })
-            .then(actionComplete)
-            .catch((err) => {
-                snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview'), action: 'ok' });
-                actionFailed(err);
-            });
+    .subscribe(async ({ data: model, complete: actionComplete, error: actionFailed }) => {
+        const d2 = await getD2();
+
+        try {
+            await window.open(`${d2.Api.getApi().baseUrl}/${[model.modelDefinition.name, model.id, 'render'].join('/')}`);
+            await actionComplete();
+        } catch (err) {
+            snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview'), action: 'ok' });
+            actionFailed(err);
+        }
     });
 
 export default contextActions;
