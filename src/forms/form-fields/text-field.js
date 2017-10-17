@@ -106,6 +106,6 @@ TextFormField.defaultProps = {
     name: '',
     value: null,
     label: '',
-    onChange: null,
+    onChange: () => {},
     multiLine: false,
 };
