@@ -83,7 +83,8 @@ const steps = [
             ),
         )(class extends Component {
             componentDidMount() {
-                // Hack to reposition the dialog when the first step is clicked (Material-UI bug)
+                // Hack to reposition the dialog when the first step is clicked
+                // Material-UI issue: https://github.com/callemall/material-ui/issues/5793
                 setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
                 // Dispatch a resize event immediately to avoid the jerking around with the dialog
                 requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
