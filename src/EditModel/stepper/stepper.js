@@ -43,7 +43,7 @@ function isActiveStep(activeStep, step, index) {
  * // <MyStepperComponent activeStep={activeStep.key} />
  * ```
  */
-export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal') => ({ activeStep, stepperClicked,...props }) => {
+export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal') => ({ activeStep, stepperClicked, ...props }) => {
     const getStepChildren = (step) => {
         const stepChildren = [];
 
