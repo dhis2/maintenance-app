@@ -94,7 +94,7 @@ export default class TextFormField extends Component {
 }
 
 TextFormField.propTypes = {
-    name: React.PropTypes.any,
+    name: React.PropTypes.string,
     value: React.PropTypes.any,
     label: React.PropTypes.string,
     labelText: React.PropTypes.string.isRequired,
