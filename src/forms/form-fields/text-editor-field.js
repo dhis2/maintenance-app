@@ -48,7 +48,9 @@ class TextEditorField extends React.Component {
     componentWillReceiveProps(newProps) {
         if (newProps.value && newProps.value !== this.props.value) {
             this.setState({ value: newProps.value }, () => {
-                this.editor && this.editor.focus();
+                if (this.editor) {
+                    this.editor.focus();
+                }
             });
         }
     }
@@ -91,5 +93,12 @@ TextEditorField.propTypes = {
 TextEditorField.contextTypes = {
     d2: React.PropTypes.any,
 };
+
+TextEditorField.defaultProps = {
+    value: null,
+    disabled: false,
+    onChange: null,
+};
+
 
 export default TextEditorField;

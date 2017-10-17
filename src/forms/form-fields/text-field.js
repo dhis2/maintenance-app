@@ -3,14 +3,20 @@ import TextField from 'material-ui/TextField/TextField';
 import Action from 'd2-ui/lib/action/Action';
 
 export default class TextFormField extends Component {
+    static getWantedProperties(props) {
+        const omitProps = ['translateOptions', 'model', 'modelDefinition', 'models',
+            'referenceType', 'referenceProperty', 'isInteger', 'isRequired', 'options'];
+
+        return Object.keys(props).reduce((acc, key) => { // eslint-disable-line arrow-body-style
+            return omitProps.indexOf(key) === -1 ? { ...acc, [key]: props[key] } : acc;
+        }, {});
+    }
+
     constructor(props, ...args) {
         super(props, ...args);
         this.state = {
             fieldValue: props.value || props.value === 0 ? props.value : '',
         };
-
-        this.omitProps = ['translateOptions', 'model', 'modelDefinition', 'models',
-            'referenceType', 'referenceProperty', 'isInteger', 'isRequired', 'options'];
 
         this.updateOnChange = Action.create(`updateOnKeyUp - ${props.name}`);
         this.onValueChanged = this.onValueChanged.bind(this);
@@ -58,12 +64,6 @@ export default class TextFormField extends Component {
         this.updateOnChange(event.currentTarget.value);
     }
 
-    getWantedProperties(props) {
-        return Object.keys(props).reduce((acc, key) => { // eslint-disable-line arrow-body-style
-            return this.omitProps.indexOf(key) === -1 ? { ...acc, [key]: props[key] } : acc;
-        }, {});
-    }
-
     render() {
         const {
             label,
@@ -72,7 +72,7 @@ export default class TextFormField extends Component {
             ...rest
         } = this.props;
 
-        const restProps = this.getWantedProperties(rest);
+        const restProps = TextFormField.getWantedProperties(rest);
 
         const errorStyle = {
             lineHeight: multiLine ? '48px' : '12px',
@@ -91,8 +91,8 @@ export default class TextFormField extends Component {
             />
         );
     }
-
 }
+
 TextFormField.propTypes = {
     name: React.PropTypes.any,
     value: React.PropTypes.any,
@@ -100,4 +100,12 @@ TextFormField.propTypes = {
     labelText: React.PropTypes.string.isRequired,
     onChange: React.PropTypes.func,
     multiLine: React.PropTypes.bool,
+};
+
+TextFormField.defaultProps = {
+    name: '',
+    value: null,
+    label: '',
+    onChange: null,
+    multiLine: false,
 };
