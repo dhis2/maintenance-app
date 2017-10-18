@@ -1,25 +1,30 @@
 import React, { PropTypes, Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { get } from 'lodash/fp';
+
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-import { createStepperFromConfig } from '../../stepper/stepper';
+
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withProps from 'recompose/withProps';
-import { modelToEditSelector } from './selectors';
-import { setEditModel, setStageNotificationValue, saveStageNotification } from './actions';
-import { bindActionCreators } from 'redux';
-import { get } from 'lodash/fp';
-import { createFieldConfigsFor } from '../../formHelpers';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';
 
-const mapStateToProps = state => ({
+import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+
+import { createStepperFromConfig } from '../../stepper/stepper';
+import { modelToEditSelector } from './selectors';
+import { setEditModel, setStageNotificationValue, saveStageNotification } from './actions';
+import { createFieldConfigsFor } from '../../formHelpers';
+
+const mapStateToProps = (state, { dataElements }) => ({
     model: modelToEditSelector(state),
+    dataElements,
 });
 
-const _mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = dispatch => ({
     onUpdateField(fieldName, value) {
         dispatch(setStageNotificationValue(fieldName, value));
     },
@@ -71,23 +76,34 @@ const steps = [
         key: 'what',
         name: 'what_to_send',
         content: compose(
-            connect(mapStateToProps, _mapDispatchToProps, undefined, { pure: false }),
+            connect(mapStateToProps, mapDispatchToProps, undefined, { pure: false }),
             createFieldConfigsFor(
                 'programNotificationTemplate',
                 ['name', 'messageTemplate'],
             ),
         )(class extends Component {
             componentDidMount() {
-                // FIXME: Hack to reposition the dialog when the first step is clicked (https://github.com/callemall/material-ui/issues/5793)
-                setTimeout(() => window.dispatchEvent(new Event('resize')), 600);
+                // Hack to reposition the dialog when the first step is clicked
+                // Material-UI issue: https://github.com/callemall/material-ui/issues/5793
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+                // Dispatch a resize event immediately to avoid the jerking around with the dialog
+                requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
             }
 
             render() {
-                const { fieldConfigs = [], onUpdateField } = this.props;
+                // eslint-disable-next-line react/prop-types
+                const { fieldConfigs = [], onUpdateField, dataElements } = this.props;
+                const addDataElementsToMessageTemplateField = fieldConfig => (
+                    fieldConfig.name === 'messageTemplate'
+                        ? Object.assign({}, fieldConfig, {
+                            props: Object.assign({}, fieldConfig.props, { dataElements }),
+                        })
+                        : fieldConfig
+                );
 
                 return (
                     <FormBuilder
-                        fields={fieldConfigs}
+                        fields={fieldConfigs.map(addDataElementsToMessageTemplateField)}
                         onUpdateField={onUpdateField}
                     />
                 );
@@ -99,7 +115,7 @@ const steps = [
         name: 'when_to_send_it',
         content:
             compose(
-                connect(mapStateToProps, _mapDispatchToProps, undefined, { pure: false }),
+                connect(mapStateToProps, mapDispatchToProps, undefined, { pure: false }),
                 createFieldConfigsFor(
                     'programNotificationTemplate',
                     ['notificationTrigger', 'relativeScheduledDays'],
@@ -117,7 +133,7 @@ const steps = [
         name: 'who_to_send_it_to',
         content:
             compose(
-                connect(mapStateToProps, _mapDispatchToProps, undefined, { pure: false }),
+                connect(mapStateToProps, mapDispatchToProps, undefined, { pure: false }),
                 createFieldConfigsFor(
                     'programNotificationTemplate',
                     ['notificationRecipient', 'recipientUserGroup', 'deliveryChannels'],
@@ -134,10 +150,11 @@ const steps = [
 
 const Stepper = compose(
     withState('activeStep', 'setActiveStep', 0),
-    withProps(({ setActiveStep }) => ({
+    withProps(({ setActiveStep, dataElements }) => ({
         stepperClicked(stepKey) {
             setActiveStep(steps.findIndex(step => step.key === stepKey));
         },
+        dataElements,
     })),
 )(createStepperFromConfig(steps, 'vertical'));
 
@@ -149,7 +166,7 @@ const notificationDialogStyle = {
     },
 };
 
-function NotificationDialog({ model, onCancel, onConfirm }, { d2 }) {
+function NotificationDialog({ model, onCancel, onConfirm, dataElements }, { d2 }) {
     const t = d2.i18n.getTranslation.bind(d2.i18n);
     const actions = [
         <FlatButton
@@ -174,20 +191,26 @@ function NotificationDialog({ model, onCancel, onConfirm }, { d2 }) {
             autoScrollBodyContent
             contentStyle={notificationDialogStyle.content}
         >
-            <Stepper />
+            <Stepper dataElements={dataElements} />
         </Dialog>
     );
 }
 NotificationDialog.contextTypes = {
     d2: PropTypes.object,
 };
+NotificationDialog.propTypes = {
+    model: PropTypes.object.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onConfirm: PropTypes.func.isRequired,
+    dataElements: PropTypes.array.isRequired,
+};
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToPropsForDialog = dispatch => bindActionCreators({
     onCancel: setEditModel.bind(null, null),
     onConfirm: saveStageNotification,
 }, dispatch);
 
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    branch(({ model }) => !model, renderNothing)
+    connect(mapStateToProps, mapDispatchToPropsForDialog),
+    branch(({ model }) => !model, renderNothing),
 )(NotificationDialog);

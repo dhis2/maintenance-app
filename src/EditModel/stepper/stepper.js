@@ -43,14 +43,14 @@ function isActiveStep(activeStep, step, index) {
  * // <MyStepperComponent activeStep={activeStep.key} />
  * ```
  */
-export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal') => ({ activeStep, stepperClicked }) => {
+export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal') => ({ activeStep, stepperClicked, ...props }) => {
     const getStepChildren = (step) => {
         const stepChildren = [];
 
         stepChildren.push(<StepButton key="button" onClick={() => stepperClicked(step.key)}><Translate>{step.name}</Translate></StepButton>);
 
         if (step.content) {
-            stepChildren.push(<StepContent key="content"><step.content /></StepContent>);
+            stepChildren.push(<StepContent key="content"><step.content {...props} /></StepContent>);
         }
 
         return stepChildren;
