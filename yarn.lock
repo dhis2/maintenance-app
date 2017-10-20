@@ -1906,8 +1906,8 @@ d2-manifest@^1.0.0-2:
     readline-sync "^1.4.1"
 
 d2-ui@^28.0.2:
-  version "28.0.2"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-28.0.2.tgz#c554bbd937d6fdff7a8d6c38029cdcc1320ac96e"
+  version "28.0.3"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-28.0.3.tgz#19db647610a4d95403c0b90257f14e6ea91b57bf"
 
 d2-utilizr@^0.2.9:
   version "0.2.15"
@@ -2311,14 +2311,15 @@ envify@^3.0.0:
     through "~2.3.4"
 
 enzyme-adapter-react-15@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/enzyme-adapter-react-15/-/enzyme-adapter-react-15-1.0.1.tgz#c1a3e5966bf1c7221c40aa0f877850175035406f"
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/enzyme-adapter-react-15/-/enzyme-adapter-react-15-1.0.2.tgz#350393ba85670936b8f9179257b1a6510f6aae3c"
   dependencies:
     enzyme-adapter-utils "^1.0.0"
     lodash "^4.17.4"
     object.assign "^4.0.4"
     object.values "^1.0.4"
     prop-types "^15.5.10"
+    react-test-renderer "^15.5.0"
 
 enzyme-adapter-utils@^1.0.0:
   version "1.0.1"
@@ -5754,7 +5755,7 @@ react-tap-event-plugin@^2.0.1:
   dependencies:
     fbjs "^0.8.6"
 
-react-test-renderer@15:
+react-test-renderer@15, react-test-renderer@^15.5.0:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-15.6.2.tgz#d0333434fc2c438092696ca770da5ed48037efa8"
   dependencies:
