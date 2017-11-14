@@ -150,10 +150,8 @@ const typeDetails = {
         columns: ['displayName', 'valueType', 'aggregationType', 'unique', 'confidential', 'lastUpdated'],
     },
     program: {
-        columns: ['displayName', 'publicAccess', 'lastUpdated'],
-        defaultFilters: [
-            ['programType', 'WITHOUT_REGISTRATION'],
-        ],
+        columns: ['displayName', 'programType', 'publicAccess', 'lastUpdated'],
+        filters: ['programType'],
     },
     programIndicator: {
         filters: ['program'],

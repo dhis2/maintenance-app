@@ -253,7 +253,7 @@ const routes = (
                 </Route>
                 <Route
                     path="program/:modelId"
-                    component={delayRender(() => System.import('./EditModel/event-program/EditEventProgram.component'))}
+                    component={delayRender(() => System.import('./EditModel/event-program/EditProgram.component'))}
                     onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
                     hideSidebar
                     disableTabs

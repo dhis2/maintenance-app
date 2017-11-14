@@ -195,7 +195,7 @@ const fieldOrderByName = new Map([
         'code',
         'legends',
     ]],
-    ['program', [ // TODO: Should be event program
+    ['eventProgram', [
         'name',
         'shortName',
         'description',
@@ -204,6 +204,29 @@ const fieldOrderByName = new Map([
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
+    ]],
+    ['trackerProgram', [
+        'name',
+        'shortName',
+        'description',
+        'categoryCombo',
+        'workflow',
+        'displayFrontPageList',
+        'useFirstStageDuringRegistration',
+        'completeEventsExpiryDays',
+        'expiryPeriodType',
+        'expiryDays',
+        'relationshipType',
+        'programAttributes'
+    ]],
+    ['enrollment', [
+        'selectEnrollmentDatesInFuture',
+        'selectIncidentDatesInFuture',
+        'onlyEnrollOnce',
+        'displayIncidentDate',
+        'incidentDateLabel',
+        'enrollmentDateLabel',
+        'captureCoordinates'
     ]],
     ['trackedEntityAttribute', [
         'name',

@@ -1,14 +1,14 @@
 import React from 'react';
 import { camelCaseToUnderscores } from 'd2-utilizr';
 import mapPropsStream from 'recompose/mapPropsStream';
-import FormHeading from '../FormHeading';
-import FormSubHeading from '../FormSubHeading';
-import EventProgramStepper from './EventProgramStepper';
-import EventProgramStepperContent from './EventProgramStepperContent';
-import eventProgramStore$ from './eventProgramStore';
-import EventActionButtons from './EventActionButtons';
-import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from '../stepper/stepper';
-import { previousStep, nextStep } from './actions';
+import FormHeading from '../../FormHeading';
+import FormSubHeading from '../../FormSubHeading';
+import EventProgramStepper from './TrackerProgramStepper';
+import EventProgramStepperContent from './TrackerProgramStepperContent';
+import eventProgramStore$ from './trackerProgramStore';
+import EventActionButtons from '../EventActionButtons';
+import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from '../../stepper/stepper';
+import { previousStep, nextStep } from '../actions';
 
 const EventProgramStepperNavigationForward = createConnectedForwardButton(nextStep);
 const EventProgramStepperNavigationBackward = createConnectedBackwardButton(previousStep);
@@ -30,14 +30,14 @@ const styles = {
     },
 };
 
-function EditEventProgram(props) {
+function EditTrackerProgram(props) {
     const schema = props.params.modelType || 'program';
     const { groupName } = props.params;
 
     return (
         <div>
             <div style={styles.heading}>
-                <FormHeading schema={schema} groupName={groupName}>{camelCaseToUnderscores(schema)}</FormHeading>
+                <FormHeading schema={schema} groupName={groupName}>{camelCaseToUnderscores(schema) + "_with_registration"}</FormHeading>
                 <FormSubHeading>{props.model.displayName}</FormSubHeading>
             </div>
             <div>
@@ -54,4 +54,4 @@ function EditEventProgram(props) {
     );
 }
 
-export default EditEventProgram;
+export default EditTrackerProgram;
