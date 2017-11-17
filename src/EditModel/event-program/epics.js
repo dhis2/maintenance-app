@@ -19,6 +19,7 @@ import { getImportStatus } from './metadataimport-helpers';
 import { goToAndScrollUp } from '../../router-utils';
 import notificationEpics from './notifications/epics';
 import createAssignDataElementEpics from './assign-data-elements/epics';
+import createAssignAttributeEpics from './tracker-program/assign-tracked-entity-attributes/epics';
 import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
 import dataEntryFormEpics from './data-entry-form/epics';
 import { createModelToEditEpic } from '../epicHelpers';
@@ -26,7 +27,8 @@ import { createModelToEditEpic } from '../epicHelpers';
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
 
-function loadEventProgramMetadataByProgramId(programId) {
+function loadEventProgramMetadataByProgramId(programPayload) {
+    const programId = programPayload.id;
     if (programId === 'add') {
         const programUid = generateUid();
         const programStageUid = generateUid();
@@ -47,29 +49,36 @@ function loadEventProgramMetadataByProgramId(programId) {
             }],
         };
 
-        const availableDataElements$ = d2$.flatMap(d2 => Observable
-            .fromPromise(
+        const availableData$ = d2$.flatMap(d2 =>Observable
+            .combineLatest(Observable.fromPromise(
                 d2.models.dataElements
                     .filter().on('domainType').equals('TRACKER')
                     .list({ paging: false })
-                    .then(dataElements => dataElements.toArray())
-            )
-        );
+                    .then(dataElements => dataElements.toArray())),
+                Observable.fromPromise(
+                    d2.models.trackedEntityAttributes.list({paging: false})
+                        .then(attributes => attributes.toArray())),
+                (elements, attributes) => ({
+                        elements,
+                        attributes
+                    })));
 
         return Observable
             .combineLatest(
                 Observable.of(newProgramMetadata),
-                // Load the available dataElements from the api
-                availableDataElements$,
-                (metadata, dataElements) => ({
+                // Load the available dataElements and attributes from the api
+                availableData$,
+                (metadata, available) => ({
                     ...metadata,
-                    dataElements,
+                    dataElements: available.elements,
+                    trackedEntityAttributes: available.attributes
                 })
             )
             .flatMap(createEventProgramStoreStateFromMetadataResponse)
             .map((state) => {
                 // Set some eventProgram defaults
-                state.program.programType = 'WITHOUT_REGISTRATION';
+                console.log(state)
+                state.program.programType = programPayload.query.type;
 
                 const programStage = first(state.programStages);
                 programStage.name = state.program.id;
@@ -83,6 +92,7 @@ function loadEventProgramMetadataByProgramId(programId) {
         'organisationUnits[id,path]',
         'dataEntryForm[:owner]',
         'notificationTemplates[:owner]',
+        'programTrackedEntityAttributes'
     ].join(',');
 
     return api$
@@ -93,12 +103,14 @@ function loadEventProgramMetadataByProgramId(programId) {
             `&programs:fields=${programFields},programStages[:owner,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
             '&dataElements:fields=id,displayName,valueType,optionSet',
             '&dataElements:filter=domainType:eq:TRACKER',
+            '&trackedEntityAttributes:fields=id,displayName,valueType'
         ].join(''))))
         .flatMap(createEventProgramStoreStateFromMetadataResponse);
 }
 
 function createEventProgramStoreStateFromMetadataResponse(eventProgramMetadata) {
-    const { programs = [], dataElements = [] } = eventProgramMetadata;
+    const { programs = [], dataElements = [], trackedEntityAttributes = [] } = eventProgramMetadata;
+    console.log(eventProgramMetadata)
     const programStages = getOr([], 'programStages', first(programs));
 
     const storeState = getInstance()
@@ -140,16 +152,16 @@ function createEventProgramStoreStateFromMetadataResponse(eventProgramMetadata) 
                 programStageSections: createProgramStageSectionModels(getOr([], 'programStages[0].programStageSections', first(programs))),
                 programStageNotifications: extractProgramNotifications(programStages),
                 availableDataElements: dataElements,
+                availableAttributes: trackedEntityAttributes,
                 dataEntryFormForProgramStage: extractDataEntryForms(programStages),
             };
         });
-
     return Observable.fromPromise(storeState);
 }
 
 export const programModel = action$ => action$
     .ofType(EVENT_PROGRAM_LOAD)
-    .map(get('payload.id'))
+    .map(get('payload'))
     .flatMap(loadEventProgramMetadataByProgramId)
     .do(storeState => eventProgramStore.setState(storeState))
     .mapTo(loadEventProgramSuccess());
@@ -209,6 +221,7 @@ export default combineEpics(
     programModelSaveResponses,
     notificationEpics,
     createAssignDataElementEpics(eventProgramStore),
+    createAssignAttributeEpics(eventProgramStore),
     createCreateDataEntryFormEpics(eventProgramStore),
     dataEntryFormEpics
 );

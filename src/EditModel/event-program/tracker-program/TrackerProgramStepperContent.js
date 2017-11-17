@@ -14,6 +14,7 @@ import { createFormFor } from '../../formHelpers';
 import { editFieldChanged } from '../actions';
 import { flattenRouterProps, wrapInPaper } from '../../componentHelpers';
 import fieldOrder from "../../../config/field-config/field-order";
+import AssignAttributes from './assign-tracked-entity-attributes/AssignAttributes';
 
 const stepperConfig = () => {
     const program$ = eventProgramStore
@@ -25,12 +26,14 @@ const stepperConfig = () => {
         flattenRouterProps,
         connect(null, mapDispatchToProps)
     );
-    const trackerDetailsFields = fieldOrder.for('trackerProgram')
-    const enrollmentFields = fieldOrder.for('enrollment')
+    const trackerDetailsFields = fieldOrder.for('trackerProgram');
+    const enrollmentFields = fieldOrder.for('enrollment');
+
     const stepComponents = {
         EditProgramDetailsForm: connectEditForm(wrapInPaper(createFormFor(program$, 'program', trackerDetailsFields))),
         Enrollment: connectEditForm(wrapInPaper(createFormFor(program$, 'program', enrollmentFields))),
         AssignDataElements,
+        AssignAttributes,
         EditDataEntryForm,
         AssignOrganisationUnits,
         EventProgramNotifications,

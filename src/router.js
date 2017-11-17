@@ -126,7 +126,9 @@ function loadOptionSetObject({ params }, replace, callback) {
 }
 
 function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiveStep) {
-    return ({ params }, replace, callback) => {
+    return (nextState, replace, callback) => {
+        const params = nextState.params;
+        const query = nextState.location.query;
         initState({
             params: {
                 modelType: schema,
@@ -136,7 +138,8 @@ function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiv
         });
 
         // Fire load action for the event program program to be edited
-        store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId }));
+        const action = {schema, id: params.modelId, query}
+        store.dispatch(actionCreatorForLoadingObject(action));
         store.dispatch(resetActiveStep());
 
         callback();

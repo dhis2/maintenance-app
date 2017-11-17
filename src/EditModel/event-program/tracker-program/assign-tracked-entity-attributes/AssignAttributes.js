@@ -4,14 +4,14 @@ import compose from 'recompose/compose';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Paper from 'material-ui/Paper/Paper';
 import mapPropsStream from 'recompose/mapPropsStream';
-import eventProgramStore from '../eventProgramStore';
+import eventProgramStore from '../../eventProgramStore';
 import { get, noop, first, getOr, __ } from 'lodash/fp';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox/Checkbox';
 import Store from 'd2-ui/lib/store/Store';
-import { addDataElementsToStage, removeDataElementsFromStage, editProgramStageDataElement } from './actions';
+import { addAttributesToStage, removeAttributesFromStage, editProgramStageAttributes } from './actions';
 import withHandlers from 'recompose/withHandlers';
 import Visibility from 'material-ui/svg-icons/action/visibility';
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
@@ -21,17 +21,17 @@ import withState from 'recompose/withState';
 
 const getFirstProgramStage = compose(first, get('programStages'));
 
-const programStage$ = eventProgramStore
-    .map(getFirstProgramStage);
+const program$ = eventProgramStore
+    .map(get('program'))
 
-const availableTrackerDataElements$ = eventProgramStore
-    .map(get('availableDataElements'))
+const availableAttributes$ = eventProgramStore
+    .map(get('availableAttributes'))
     .take(1);
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    addDataElementsToStage,
-    removeDataElementsFromStage,
-    editProgramStageDataElement,
+    addAttributesToStage,
+    removeAttributesFromStage,
+    editProgramStageAttributes,
 }, dispatch);
 
 const enhance = compose(
@@ -43,28 +43,25 @@ const enhance = compose(
     connect(null, mapDispatchToProps),
     mapPropsStream(props$ => props$
         .combineLatest(
-            programStage$,
-            availableTrackerDataElements$,
-            (props, programStage, trackerDataElements) => ({ ...props, trackerDataElements, model: programStage, items: programStage.programStageDataElements })
+            program$,
+            availableAttributes$,
+            (props, program$, attributes) => ({ ...props, attributes, model: program$, items: program$.programTrackedEntityAttributes || [] })
         )
     ),
     withHandlers({
-        onAssignItems: (props) => (dataElements) => {
-            console.log(props)
-            const { model, addDataElementsToStage } = props;
-            addDataElementsToStage({ programStage: model.id, dataElements });
+        onAssignItems: ({ addAttributesToStage}) => (attributes) => {
+            addAttributesToStage({ attributes: attributes });
             return Promise.resolve();
         },
-        onRemoveItems: ({ model, removeDataElementsFromStage }) => (dataElements) => {
-            removeDataElementsFromStage({ programStage: model.id, dataElements });
+        onRemoveItems: ({ model, removeAttributesFromStage }) => (attributes) => {
+            removeAttributesFromStage({ attributes: attributes });
             return Promise.resolve();
         },
-        onEditProgramStageDataElement: ({ model, editProgramStageDataElement }) => programStageDataElement => editProgramStageDataElement({
-            programStage: model.id,
-            programStageDataElement,
+        onEditProgramStageDataElement: ({ model, editProgramStageAttributes }) => attribute => editProgramStageAttributes({
+            attribute,
         }),
     }),
-    withState('dataElementFilter', 'setDataElementFilter', ''),
+    withState('attributeFilter', 'setDataElementFilter', ''),
 );
 
 const flipBooleanPropertyOn = (object, key) => ({
@@ -120,61 +117,65 @@ const ProgramStageDataElement = pure(({ programStageDataElement, onEditProgramSt
 });
 
 function addDisplayProperties(dataElements) {
-    return ({ dataElement, ...other }) => {
-        const { displayName, valueType, optionSet } = dataElements.find(({ id }) => id === dataElement.id);
+    console.log(dataElements)
+    return ({ trackedEntityAttribute, ...other }) => {
+        console.log(trackedEntityAttribute)
+        const { displayName, valueType } = dataElements.find(({ id }) => id === trackedEntityAttribute.id);
 
         return {
             ...other,
             dataElement: {
-                ...dataElement,
+                ...trackedEntityAttribute,
                 displayName,
                 valueType,
-                optionSet,
             },
         };
     };
 }
 
-function AssignDataElements(props, { d2 }) {
+function AssignAttributes(props, { d2 }) {
     const itemStore = Store.create();
     const assignedItemStore = Store.create();
     console.log(props)
     itemStore.setState(
-        props.trackerDataElements.map(dataElement => ({
-            id: dataElement.id,
-            text: dataElement.displayName,
-            value: dataElement.id,
+        props.attributes.map(attribute => ({
+            id: attribute.id,
+            text: attribute.displayName,
+            value: attribute.id,
         }))
     );
 
+
     assignedItemStore.setState(
-        props.model.programStageDataElements.map(v => v.dataElement.id)
+        props.model.programTrackedEntityAttributes.map(a => a.trackedEntityAttribute.id)
     );
 
-    const tableRows = props.model.programStageDataElements
-        .map(addDisplayProperties(props.trackerDataElements))
-        .map((programStageDataElement, index) => {
-            return (<ProgramStageDataElement
+    //map staged items
+    const tableRows = props.items
+        //add
+        .map(addDisplayProperties(props.attributes))
+        .map((programStageDataElement, index) => (
+            <ProgramStageDataElement
                 key={programStageDataElement.id}
                 programStageDataElement={programStageDataElement}
                 onEditProgramStageDataElement={props.onEditProgramStageDataElement}
-            />)
-        });
+            />
+        ));
 
     return (
         <Paper>
             <div style={{ padding: '2rem 3rem 4rem' }}>
                 <TextField
                     hintText={d2.i18n.getTranslation('search_available_selected_items')}
-                    onChange={compose(props.setDataElementFilter, getOr('', 'target.value'))}
-                    value={props.dataElementFilter}
+                    onChange={compose(props.attributeFilter, getOr('', 'target.value'))}
+                    value={props.attributeFilter}
                     fullWidth
                 />
                 <GroupEditor
                     itemStore={itemStore}
                     assignedItemStore={assignedItemStore}
                     height={250}
-                    filterText={props.dataElementFilter}
+                    filterText={props.attributeFilter}
                     onAssignItems={props.onAssignItems}
                     onRemoveItems={props.onRemoveItems}
                 />
@@ -183,9 +184,9 @@ function AssignDataElements(props, { d2 }) {
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn>Name</TableHeaderColumn>
-                        <TableHeaderColumn>Compulsory</TableHeaderColumn>
-                        <TableHeaderColumn>Allow provided elsewhere</TableHeaderColumn>
-                        <TableHeaderColumn>Display in reports</TableHeaderColumn>
+                        <TableHeaderColumn>Display in list</TableHeaderColumn>
+                        <TableHeaderColumn>Mandatory</TableHeaderColumn>
+                        <TableHeaderColumn>Date in future</TableHeaderColumn>
                         <TableHeaderColumn>Date in future</TableHeaderColumn>
                         <TableHeaderColumn>Render options as radio</TableHeaderColumn>
                     </TableRow>
@@ -198,8 +199,8 @@ function AssignDataElements(props, { d2 }) {
     );
 }
 
-AssignDataElements.contextTypes = {
+AssignAttributes.contextTypes = {
     d2: PropTypes.object,
 };
 
-export default enhance(AssignDataElements);
+export default enhance(AssignAttributes);

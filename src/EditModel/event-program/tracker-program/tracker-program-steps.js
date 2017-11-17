@@ -11,7 +11,8 @@ const steps = [
     },
     {
         key: 'tracked_attributes',
-        name: 'tracked_attributes',
+        name: 'assign_attributes',
+        componentName: 'AssignAttributes'
     },
     {
         key: 'data_elements',

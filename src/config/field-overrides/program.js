@@ -1,5 +1,5 @@
 import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
-
+//import AttributeSelector from '../../'
 export default new Map([
     ['categoryCombo', {
         fieldOptions: {
@@ -9,4 +9,7 @@ export default new Map([
     ['expiryPeriodType', {
         component: PeriodTypeDropDown,
     }],
+  /*  ['programAttributes', {
+        component:
+    }] */
 ]);

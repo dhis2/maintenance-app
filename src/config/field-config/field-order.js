@@ -216,7 +216,6 @@ const fieldOrderByName = new Map([
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
-        'relationshipType',
         'programAttributes'
     ]],
     ['enrollment', [
@@ -226,7 +225,14 @@ const fieldOrderByName = new Map([
         'displayIncidentDate',
         'incidentDateLabel',
         'enrollmentDateLabel',
-        'captureCoordinates'
+        'ignoreOverdueEvents',
+        'captureCoordinates',
+        'relationshipType',
+        'relationshipText',
+        'relationshipFromA',
+        'relatedProgram'
+
+
     ]],
     ['trackedEntityAttribute', [
         'name',
