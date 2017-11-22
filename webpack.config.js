@@ -17,7 +17,7 @@ var dhisConfig;
 
 try {
     dhisConfig = require(dhisConfigPath);
-//    console.log('\nLoaded DHIS config:');
+    console.log(dhisConfig);
 } catch (e) {
     // Failed to load config file - use default config
     console.warn(`\nWARNING! Failed to load DHIS config:`, e.message);
