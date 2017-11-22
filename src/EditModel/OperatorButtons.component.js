@@ -17,7 +17,7 @@ const styles = {
 };
 
 class OperatorButtons extends Component {
-    op(label, value) {
+    operatorButton(label, value) {
         return (
             <RaisedButton
                 label={label}
@@ -30,24 +30,24 @@ class OperatorButtons extends Component {
         return (
             <div style={{ marginLeft: -6 }}>
                 <div style={styles.operatorButtonSeparator}>
-                    {this.op(' + ')}
-                    {this.op(' - ')}
-                    {this.op(' * ')}
-                    {this.op(' / ')}
-                    {this.op(' % ')}
+                    {this.operatorButton(' + ')}
+                    {this.operatorButton(' - ')}
+                    {this.operatorButton(' * ')}
+                    {this.operatorButton(' / ')}
+                    {this.operatorButton(' % ')}
                 </div>
                 <div style={styles.operatorButtonSeparator}>
-                    {this.op(' > ')}
-                    {this.op(' >= ')}
-                    {this.op(' < ')}
-                    {this.op(' <= ')}
-                    {this.op(' == ')}
-                    {this.op(' != ')}
+                    {this.operatorButton(' > ')}
+                    {this.operatorButton(' >= ')}
+                    {this.operatorButton(' < ')}
+                    {this.operatorButton(' <= ')}
+                    {this.operatorButton(' == ')}
+                    {this.operatorButton(' != ')}
                 </div>
                 <div style={styles.operatorButtonSeparator}>
-                    {this.op('NOT', ' ! ')}
-                    {this.op('AND', ' && ')}
-                    {this.op('OR', ' || ')}
+                    {this.operatorButton('NOT', ' ! ')}
+                    {this.operatorButton('AND', ' && ')}
+                    {this.operatorButton('OR', ' || ')}
                 </div>
             </div>);
     }
