@@ -45,6 +45,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                         programStageSections: [],
                     },
                 ],
+                programTrackedEntityAttributes: [],
                 organisationUnits: [],
             }],
         };
@@ -103,7 +104,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             `&programs:fields=${programFields},programStages[:owner,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
             '&dataElements:fields=id,displayName,valueType,optionSet',
             '&dataElements:filter=domainType:eq:TRACKER',
-            '&trackedEntityAttributes:fields=id,displayName,valueType'
+            '&trackedEntityAttributes:fields=id,displayName,valueType,optionSet'
         ].join(''))))
         .flatMap(createEventProgramStoreStateFromMetadataResponse);
 }
