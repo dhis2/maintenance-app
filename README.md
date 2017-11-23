@@ -5,11 +5,15 @@
 
 ## App config
 
+The maintenance app is largely driven by the app config and the schemas from the API. The schemas are read directly
+from the API (by D2). The following documents the app config: 
+
 - within `src/config/` ...
     - `maintenance-models.js` defines the model types that are shown in the app
     - `field-config/` contains configuration for each model type
         - `field-order.js` defines the order of fields within the form for each model type
-        - `field-groups.js` defines field grouping for the form for each model. Not all models are listed here.
+        - `field-groups.js` defines field grouping for the form for each model. This is currently only used for
+           programRules, but it might be a good idea to expand it to other model types as well.
     - `field-overrides/` contains extra configuration for fields that require non-standard behavior. Most commonly this
       means fields that require special components.
         - `index.js` lists all models that have one or more field overrides
@@ -22,6 +26,10 @@
     - `disabled-on-edit/` contains files that list fields that will always be displayed as read-only when an object is
       being edited.
         - `index.js` imports lists of field names from files named after each relevant model
+
+For the record, "schemas" and "model types" are essentially the same thing and these terms are used interchangeably
+both in the maintenance app and elsewhere. Schemas are exposed by the API, but not every model type is listed in the
+schemas. To add to the confusion "models" are also some times referred to as "objects".
 
 
 ## Adding a new model type
@@ -42,9 +50,12 @@ Adding a new model to the maintenance typically involves the following steps:
 5. Inside the new field override file (`src/config/field-overrides/newType.js`), start adding customizations for the
    fields that require it. This typically involves creating new components and/or overriding certain field properties.
    Look at the existing field overrides for examples.
+6. Strings that show up as '** string **' in the UI lack translations. These will need to be added to the translations
+   files located in `src/i18n/`. Note that the translation workflow should at some point change to using
+   [i18next](https://www.i18next.com/) in favor of the homegrown `d2.i18n`.
 
 
-#### But, but... My model is super special!?
+#### Extra special cases
 
 Certain models require customization beyond what's possible using the config and field overrides. In those cases it may
 be necessary to create a new top level component and associate that component with a special route in `src/router.js`
