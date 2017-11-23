@@ -32,6 +32,22 @@ both in the maintenance app and elsewhere. Schemas are exposed by the API, but n
 schemas. To add to the confusion "models" are also some times referred to as "objects".
 
 
+## Sections, model types and fields
+
+In order for a model type to show up in the maintenance app, the following conditions need to be met:
+
+- The model type is listed under a section in `src/config/maintenance-models.js`
+- The model type exists in the schemas endpoint in the API
+
+Once these conditions are met, the model type will show up in the maintenance app under the section specified in
+`maintenance-models.js`. When creating or editing models of the new type, the form will by default only contain a
+handful of predefined fields. In order for additional fields to be shown in the form, the following conditions need to
+be met:
+
+- The field is listed under the model type in `src/config/field-config/field-order.js`
+- The field exists in the schemas endpoint for the specific model type in the API. 
+
+
 ## Adding a new model type
 
 Adding a new model to the maintenance typically involves the following steps:
@@ -50,9 +66,10 @@ Adding a new model to the maintenance typically involves the following steps:
 5. Inside the new field override file (`src/config/field-overrides/newType.js`), start adding customizations for the
    fields that require it. This typically involves creating new components and/or overriding certain field properties.
    Look at the existing field overrides for examples.
-6. Strings that show up as '** string **' in the UI lack translations. These will need to be added to the translations
-   files located in `src/i18n/`. Note that the translation workflow should at some point change to using
-   [i18next](https://www.i18next.com/) in favor of the homegrown `d2.i18n`.
+6. Strings that show up as `** string **` in the UI lack translations. These will need to be added to the translations
+   files located in `src/i18n/`. Some strings are generated dynamically and may only show up in certain situations, for
+   example when trying to delete a model. _Note:_ the translation workflow should at some point change to using
+   [i18next](https://www.i18next.com/) in favor of `d2.i18n`.
 
 
 #### Extra special cases
