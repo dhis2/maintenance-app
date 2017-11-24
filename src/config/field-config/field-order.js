@@ -234,6 +234,9 @@ const fieldOrderByName = new Map([
 
 
     ]],
+    ['programStage', [
+
+    ]],
     ['trackedEntityAttribute', [
         'name',
         'shortName',

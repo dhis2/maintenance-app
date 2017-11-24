@@ -15,14 +15,9 @@ const steps = [
         componentName: 'AssignAttributes'
     },
     {
-        key: 'data_elements',
-        name: 'assign_data_elements',
-        componentName: 'AssignDataElements',
-    },
-    {
         key: 'stages',
         name: 'program_stages',
-        componentName: 'EditDataEntryForm',
+        componentName: 'ProgramStage',
     },
     {
         key: 'assign_organisation_units',

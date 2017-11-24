@@ -165,6 +165,9 @@ const typeDetails = {
         filters: ['program', 'programRuleVariableSourceType'],
         columns: ['displayName', 'program[displayName]', 'programRuleVariableSourceType', 'lastUpdated'],
     },
+    programStage: {
+        columns: ['displayName', 'lastUpdated'],
+    },
     validationRule: {
         columns: ['displayName', 'importance', 'periodType', 'publicAccess', 'lastUpdated'],
     },

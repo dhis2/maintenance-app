@@ -78,7 +78,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             .flatMap(createEventProgramStoreStateFromMetadataResponse)
             .map((state) => {
                 // Set some eventProgram defaults
-                console.log(state)
+                //Set programType to router-query type
                 state.program.programType = programPayload.query.type;
 
                 const programStage = first(state.programStages);
@@ -101,7 +101,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             'metadata',
             '?fields=:owner,displayName',
             `&programs:filter=id:eq:${programId}`,
-            `&programs:fields=${programFields},programStages[:owner,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
+            `&programs:fields=${programFields},programStages[:owner,displayName,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
             '&dataElements:fields=id,displayName,valueType,optionSet',
             '&dataElements:filter=domainType:eq:TRACKER',
             '&trackedEntityAttributes:fields=id,displayName,valueType,optionSet'
