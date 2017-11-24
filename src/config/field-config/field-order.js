@@ -127,6 +127,15 @@ const fieldOrderByName = new Map([
         'indicators',
         'organisationUnits',
     ]],
+    ['dataSetNotificationTemplate', [
+        'name',
+        'code',
+        'dataSets',
+        'notificationTrigger',
+        'sendStrategy',
+        'notificationRecipients',
+        'messageTemplate',
+    ]],
     ['organisationUnit', [
         'name',
         'shortName',
@@ -272,7 +281,7 @@ const fieldOrderByName = new Map([
         'operator',
         'rightSide',
         'organisationUnitLevels',
-        'skipFormValidation'
+        'skipFormValidation',
     ]],
     ['validationRuleGroup', [
         'name',

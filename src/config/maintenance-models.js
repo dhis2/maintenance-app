@@ -26,6 +26,7 @@ export function getSideBarConfig() {
         dataSetSection: {
             items: [
                 'dataSet',
+                'dataSetNotificationTemplate',
             ],
         },
 

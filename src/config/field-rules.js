@@ -105,6 +105,19 @@ export default new Map([
             }],
         },
     ]],
+    ['dataSetNotificationTemplate', [
+        {
+            field: 'notificationTrigger',
+            when: {
+                operator: 'NOT_EQUALS',
+                value: 'SCHEDULED_DAYS_DUE_DATE',
+            },
+            operations: [{
+                field: 'sendStrategy',
+                type: 'HIDE_FIELD',
+            }],
+        },
+    ]],
     ['attribute', [
         {
             field: 'valueType',

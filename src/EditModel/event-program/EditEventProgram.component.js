@@ -18,8 +18,8 @@ const StepperNavigation = createStepperNavigation(EventProgramStepperNavigationB
 const withPreLoadedModel = mapPropsStream(props$ => props$
     .combineLatest(
         eventProgramStore$,
-        (props, eventProgramState) => ({ ...props, model: eventProgramState.program })
-    )
+        (props, eventProgramState) => ({ ...props, model: eventProgramState.program }),
+    ),
 );
 
 const styles = {

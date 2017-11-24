@@ -1,13 +1,15 @@
 import React from 'react';
 import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-router';
-import log from 'loglevel';
-import modelToEditStore from './EditModel/modelToEditStore';
+
 import { getInstance } from 'd2/lib/d2';
+import log from 'loglevel';
+import LinearProgress from 'material-ui/LinearProgress';
+
+import modelToEditStore from './EditModel/modelToEditStore';
 import objectActions from './EditModel/objectActions';
 import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
 import { initAppState, default as appState } from './App/appStateStore';
-import LinearProgress from 'material-ui/LinearProgress';
 import App from './App/App.component';
 import listStore from './List/list.store';
 import store from './store';
@@ -81,13 +83,13 @@ function loadObject({ params }, replace, callback) {
 
             // Use current list filters as default values for relevant fields
             const listFilters = listStore.getState() && Object.keys(listStore.getState().filters)
-                    .filter(fieldName => modelToEdit.hasOwnProperty(fieldName))
-                    .filter(fieldName => listStore.getState().filters[fieldName] !== null)
-                    .filter(fieldName => modelToEdit.modelDefinition.modelValidations[fieldName].writable)
-                    .reduce((out, modelType) => {
-                        out[modelType] = listStore.getState().filters[modelType];
-                        return out;
-                    }, {});
+                .filter(fieldName => modelToEdit.hasOwnProperty(fieldName))
+                .filter(fieldName => listStore.getState().filters[fieldName] !== null)
+                .filter(fieldName => modelToEdit.modelDefinition.modelValidations[fieldName].writable)
+                .reduce((out, modelType) => {
+                    out[modelType] = listStore.getState().filters[modelType];
+                    return out;
+                }, {});
 
             modelToEditStore.setState(Object.assign(modelToEdit, listFilters));
             return callback();
@@ -100,7 +102,7 @@ function loadObject({ params }, replace, callback) {
                     replace(`/list/${params.modelType}`);
                     snackActions.show({ message: errorMessage, action: 'ok' });
                     callback();
-                }
+                },
             );
     }
 }
@@ -188,7 +190,7 @@ function cloneObject({ params }, replace, callback) {
                 replace(`/list/${params.modelType}`);
                 snackActions.show({ message: errorMessage, action: 'ok' });
                 callback();
-            }
+            },
         );
 }
 

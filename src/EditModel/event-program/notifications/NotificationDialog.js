@@ -119,14 +119,14 @@ const steps = [
                 createFieldConfigsFor(
                     'programNotificationTemplate',
                     ['notificationTrigger', 'relativeScheduledDays'],
-                    skipLogicForNotificationTrigger
+                    skipLogicForNotificationTrigger,
                 ),
             )(({ fieldConfigs = [], onUpdateField }) => (
                 <FormBuilder
                     fields={fieldConfigs}
                     onUpdateField={onUpdateField}
                 />
-                )),
+            )),
     },
     {
         key: 'who',
@@ -137,14 +137,14 @@ const steps = [
                 createFieldConfigsFor(
                     'programNotificationTemplate',
                     ['notificationRecipient', 'recipientUserGroup', 'deliveryChannels'],
-                    skipLogicForRecipients
-                )
+                    skipLogicForRecipients,
+                ),
             )(({ fieldConfigs = [], onUpdateField }) => (
                 <FormBuilder
                     fields={fieldConfigs}
                     onUpdateField={onUpdateField}
                 />
-                )),
+            )),
     },
 ];
 
