@@ -9,7 +9,6 @@ script:
 - npm rebuild node-sass
 - npm run build
 after_success:
-<<<<<<< HEAD
 - if ( [ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG" == "dhis2/maintenance-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ];then 
     mvn clean deploy --settings deploy/settings.xml && exit 0; 
   fi
