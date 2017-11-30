@@ -1,11 +1,14 @@
 import React from 'react';
-import TextEditor from '../../../forms/form-fields/text-editor-field';
-import modelToEditStore from '../../../EditModel/modelToEditStore';
-import programRuleFunctions from './programRuleFunctions';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import { Link } from 'react-router';
+
+import TextEditor from '../../../forms/form-fields/text-editor-field';
+import modelToEditStore from '../../../EditModel/modelToEditStore';
+import programRuleFunctions from './programRuleFunctions';
+
+import OperatorButtons from '../../../EditModel/OperatorButtons.component';
 
 class ProgramRuleConditionField extends React.Component {
     constructor(props, context) {
@@ -25,6 +28,13 @@ class ProgramRuleConditionField extends React.Component {
         });
     }
 
+    componentWillUnmount() {
+        if (this.sub) {
+            this.sub.unsubscribe();
+            delete this.sub;
+        }
+    }
+
     getProgramRuleVariablesForProgram(program) {
         if (program) {
             this.d2.models.programRuleVariables.list({ filter: `program.id:eq:${program.id}`, paging: false })
@@ -37,13 +47,6 @@ class ProgramRuleConditionField extends React.Component {
                 });
         } else {
             this.setState({ programRuleVariables: [] });
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.sub) {
-            this.sub.unsubscribe();
-            delete this.sub;
         }
     }
 
@@ -125,14 +128,6 @@ class ProgramRuleConditionField extends React.Component {
 
         const makeTextPusher = text => () => pushText(text);
 
-        const op = (label, op) =>
-            <RaisedButton
-                label={label}
-                onClick={makeTextPusher(`${op || label}`)}
-                style={styles.operatorButton}
-                disabled={this.props.disabled}
-            />;
-
         const expander = section => () => this.setState({ expand: section });
 
         const makeArrowStyle = section => ({
@@ -155,8 +150,8 @@ class ProgramRuleConditionField extends React.Component {
 
         const programRuleButtonMapperRenderer = (v, i) => {
             const varSymbol = v.programRuleVariableSourceType === 'TEI_ATTRIBUTE' ? 'A' : '#';
-            const _a = '{',
-                a_ = '}'; // Workaround for IntelliJ parsing error
+            const _a = '{';
+            const a_ = '}'; // Workaround for IntelliJ parsing error
             const varLabel = (
                 <span>
                     <span style={styles.varSyntax}>{varSymbol}{_a}</span>
@@ -233,17 +228,7 @@ class ProgramRuleConditionField extends React.Component {
                         ref={r => this.editor = r}
                         disabled={this.props.disabled}
                     />
-                    <div style={{ marginLeft: -8 }}>
-                        <div style={styles.operatorButtonSeparator}>
-                            {op(' + ')} {op(' - ')} {op(' * ')} {op(' / ')} {op(' % ')}
-                        </div>
-                        <div style={styles.operatorButtonSeparator}>
-                            {op(' > ')} {op(' >= ')} {op(' < ')} {op(' <= ')} {op(' == ')} {op(' != ')}
-                        </div>
-                        <div style={styles.operatorButtonSeparator}>
-                            {op('NOT', ' ! ')} {op('AND', ' && ')} {op('OR', ' || ')}
-                        </div>
-                    </div>
+                    <OperatorButtons onClick={pushText} />
                 </div>
                 <div style={{ clear: 'both' }} />
             </div>
