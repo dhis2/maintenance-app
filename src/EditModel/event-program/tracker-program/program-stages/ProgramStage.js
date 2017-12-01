@@ -4,13 +4,7 @@ import programStore$ from '../../eventProgramStore';
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { get, noop, first, getOr, __ } from 'lodash/fp';
-import {
-    getTableColumnsForType,
-    getFilterFieldsForType,
-    getFiltersForType
-} from '../../../../config/maintenance-models';
-import withState from 'recompose/withState';
+import { isEqual, get, noop, first, getOr, __, find } from 'lodash/fp';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { addQuery } from '../../../../router-utils';
@@ -20,28 +14,11 @@ import EditProgramStage from './EditProgramStage';
 const program$ = programStore$.map(get('program'));
 const programStages$ = programStore$.map(get('programStages'));
 
-
-
-const enhance = compose(
-    mapPropsStream(props$ =>
-        props$.combineLatest(
-            program$,
-            programStages$,
-            (props, program, programStages) => ({
-                ...props,
-                program,
-                programStages
-            })
-        )
-    ),
-    withState('tableColumns', 'setTableColumns', getTableColumnsForType('programStage'))
-);
-
 const handleNewProgramStage = () => {
-    addQuery({stage: 'new'})
-}
+    addQuery({ stage: 'new' });
+};
 
-const FAB = (props) => {
+const FAB = props => {
     const cssStyles = {
         textAlign: 'right',
         marginTop: '1rem',
@@ -57,20 +34,48 @@ const FAB = (props) => {
                 <FontIcon className="material-icons">add</FontIcon>
             </FloatingActionButton>
         </div>
-    )
-}
+    );
+};
 
 const shouldRenderStageEdit = location => {
     return location && location.query && location.query.stage;
-}
-
-
-
-const ProgramStage = (props) => {
-
-    return (<div>
-        { shouldRenderStageEdit(props.location) ? <EditProgramStage/> : <ProgramStageList/> }
-    </div>);
 };
 
-export default ProgramStage;
+//const getProgramStageByQuery = (stageId, programStages) => find(compose(isEqual(stageId), get('id')), programStages);
+
+const getProgramStageByQuery = stageId =>
+    programStages$
+        .flatMap(x => x)
+        .filter(stage => stage.id && stage.id === stageId);
+
+const enhance = compose(
+    mapPropsStream(props$ =>
+        props$.combineLatest(
+            program$,
+            programStages$,
+            (props, program, programStages) => ({
+                ...props,
+                program,
+                programStages
+            })
+        )
+    )
+);
+
+const ProgramStage = props => {
+
+    return (
+        <div>
+            {shouldRenderStageEdit(props.location)
+                ? <EditProgramStage
+                      program={props.program}
+                      programStages={props.programStages}
+                      programStage$={getProgramStageByQuery(props.location.query.stage)}
+                  />
+                : <ProgramStageList
+                      program={props.program}
+                      programStages={props.programStages}
+                  />}
+        </div>);
+};
+export default enhance(ProgramStage);

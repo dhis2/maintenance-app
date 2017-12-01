@@ -14,6 +14,7 @@ import { createFormFor } from '../formHelpers';
 import { editFieldChanged } from './actions';
 import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
 import fieldOrder from '../../config/field-config/field-order';
+
 const stepperConfig = () => {
     const program$ = eventProgramStore
         .map(get('program'));

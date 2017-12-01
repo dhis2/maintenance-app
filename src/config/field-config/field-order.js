@@ -218,6 +218,7 @@ const fieldOrderByName = new Map([
         'expiryDays',
         'programAttributes'
     ]],
+    //Tracker-program
     ['enrollment', [
         'selectEnrollmentDatesInFuture',
         'selectIncidentDatesInFuture',
@@ -235,7 +236,9 @@ const fieldOrderByName = new Map([
 
     ]],
     ['programStage', [
-
+        'name',
+        'description',
+        'executionDateLabel'
     ]],
     ['trackedEntityAttribute', [
         'name',

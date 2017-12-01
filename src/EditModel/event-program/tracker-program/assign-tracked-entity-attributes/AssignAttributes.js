@@ -66,7 +66,6 @@ const flipBooleanPropertyOn = (object, key) => ({
 });
 
 const ProgramAttribute = pure(({ programAttribute, onEditProgramAttribute}) => {
-    console.log(programAttribute)
     const isDateValue = programAttribute.trackedEntityAttribute.valueType === 'DATE';
     const hasOptionSet = !!programAttribute.trackedEntityAttribute.optionSet;
     const onChangeFlipBooleanForProperty = propertyName => () => onEditProgramAttribute(
@@ -105,9 +104,7 @@ const ProgramAttribute = pure(({ programAttribute, onEditProgramAttribute}) => {
 })
 
 function addDisplayProperties(attributes) {
-    console.log(attributes)
     return ({ trackedEntityAttribute, ...other }) => {
-        console.log(trackedEntityAttribute)
         const { displayName, valueType, optionSet } = attributes.find(({ id }) => id === trackedEntityAttribute.id);
 
         return {

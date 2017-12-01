@@ -18,30 +18,21 @@ import { addQuery } from '../../../../router-utils';
 const program$ = programStore$.map(get('program'));
 const programStages$ = programStore$.map(get('programStages'));
 
-const enhance = compose(
-    mapPropsStream(props$ =>
-        props$.combineLatest(
-            program$,
-            programStages$,
-            (props, program, programStages) => ({
-                ...props,
-                program,
-                programStages
-            })
-        )
-    ),
-    withState('tableColumns', 'setTableColumns', getTableColumnsForType('programStage'))
+const enhance = withState(
+    'tableColumns',
+    'setTableColumns',
+    getTableColumnsForType('programStage')
 );
 
 const handleNewProgramStage = () => {
-    addQuery({stage: 'new'})
-}
+    addQuery({ stage: 'new' });
+};
 
-const handleEditProgramStage = (model) => {
-    addQuery({stage: model.id})
-}
+const handleEditProgramStage = model => {
+    addQuery({ stage: model.id });
+};
 
-const FAB = (props) => {
+const FAB = props => {
     const cssStyles = {
         textAlign: 'right',
         marginTop: '1rem',
@@ -57,22 +48,22 @@ const FAB = (props) => {
                 <FontIcon className="material-icons">add</FontIcon>
             </FloatingActionButton>
         </div>
-    )
-}
+    );
+};
 
-const ProgramStageList = (props) => {
+const ProgramStageList = props => {
     console.log(props);
-    console.log(props.programStages)
-    return (<div>
-        <DataTable
-            rows={props.programStages}
-            columns={props.tableColumns}
-            primaryAction={handleEditProgramStage}
-        >
-
-        </DataTable>
-        <FAB router={props.router}/>
-    </div>);
+    console.log(props.programStages);
+    return (
+        <div>
+            <DataTable
+                rows={props.programStages}
+                columns={props.tableColumns}
+                primaryAction={handleEditProgramStage}
+            />
+            <FAB router={props.router} />
+        </div>
+    );
 };
 
 export default enhance(ProgramStageList);

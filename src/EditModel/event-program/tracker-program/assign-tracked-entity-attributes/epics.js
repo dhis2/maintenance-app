@@ -9,7 +9,6 @@ const keepProgramAttributesNotInUidList = uids => filter(negate(programAttribute
 const addAttributeToProgram = store => action$ => action$
         .ofType(PROGRAM_ATTRIBUTES_ADD)
         .map((action) => {
-            console.log("TO STAGE")
             const state = store.getState();
 
             const program = getOr([], 'program', state);

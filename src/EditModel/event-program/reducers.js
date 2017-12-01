@@ -8,6 +8,7 @@ import {
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
 import { stageNotificationsReducer } from './notifications/reducers';
+import { programStageStepperReducer} from "./tracker-program/program-stages/reducer";
 import steps from './event-program-steps';
 import { next, previous, first } from '../stepper/stepIterator';
 
@@ -55,5 +56,6 @@ function eventProgramStepperReducer(
 
 export default combineReducers({
     step: eventProgramStepperReducer,
-    stageNotifications: stageNotificationsReducer
+    stageNotifications: stageNotificationsReducer,
+    programStageStepper: programStageStepperReducer
 });

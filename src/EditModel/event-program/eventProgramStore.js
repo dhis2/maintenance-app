@@ -170,7 +170,6 @@ eventProgramStore.setState = (newState) => {
     if (!isValidState(newState)) {
         throw new Error('You are attempting to set an invalid state onto the eventProgramStore');
     }
-    console.dir(newState)
     storeSetState({
         ...eventProgramStore.getState(),
         ...newState,
