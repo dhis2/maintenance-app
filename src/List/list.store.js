@@ -4,7 +4,6 @@ import { getTableColumnsForType, getFilterFieldsForType, getFiltersForType } fro
 
 export default Store.create({
     listSourceSubject: new Subject(),
-
     initialise() {
         this.listSourceSubject
             .concatAll()
@@ -21,7 +20,7 @@ export default Store.create({
                                 return f;
                             }, {}))
                         : getFiltersForType(modelCollection.modelDefinition.name),
-                    searchString: this.state && this.state.searchString || '',
+                    searchString: this.state ? this.state.searchString : '',
                 });
             });
         return this;
