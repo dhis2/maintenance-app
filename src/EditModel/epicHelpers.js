@@ -64,3 +64,32 @@ export function createModelToEditEpic(actionType, store, storeProp) {
         )
         .flatMapTo(emptyAction$);
 }
+
+export function createModelToEditProgramStageEpic(actionType, store, storeProp) {
+    const storePropGetter = get(storeProp);
+
+    return action$ => action$
+        .ofType(actionType)
+        .map(action => action.payload)
+        .flatMap(({ stageId, field, value }) => store
+            .take(1)
+            .map(storePropGetter)
+            .map((programStages) => {
+                const index = programStages.findIndex(stage => stage.id == stageId);
+                console.log(index)
+                const model = programStages[index];
+                const storePropSetter = set(`${storeProp}[${index}]`);
+                // Apply the new value to the model
+                if (isAttributeValue(model, field)) {
+                    updateAttributeValue(model, field, value);
+                } else {
+                    updateRegularValue(model, field, value);
+                }
+                // Write back the state to the store
+                store.setState(
+                    storePropSetter(model, { ...store.getState() })
+                );
+            })
+        )
+        .flatMapTo(emptyAction$);
+}

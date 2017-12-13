@@ -41,8 +41,6 @@ const shouldRenderStageEdit = location => {
     return location && location.query && location.query.stage;
 };
 
-//const getProgramStageByQuery = (stageId, programStages) => find(compose(isEqual(stageId), get('id')), programStages);
-
 const getProgramStageByQuery = stageId =>
     programStages$
         .flatMap(x => x)

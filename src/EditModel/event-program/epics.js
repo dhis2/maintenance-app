@@ -9,6 +9,8 @@ import {
     saveEventProgramError,
     saveEventProgramSuccess,
 } from './actions';
+
+import { PROGRAM_STAGE_EDIT } from "./tracker-program/program-stages/actions";
 import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
@@ -22,7 +24,7 @@ import createAssignDataElementEpics from './assign-data-elements/epics';
 import createAssignAttributeEpics from './tracker-program/assign-tracked-entity-attributes/epics';
 import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
 import dataEntryFormEpics from './data-entry-form/epics';
-import { createModelToEditEpic } from '../epicHelpers';
+import { createModelToEditEpic, createModelToEditProgramStageEpic } from '../epicHelpers';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
@@ -169,6 +171,8 @@ export const programModel = action$ => action$
 
 export const programModelEdit = createModelToEditEpic(MODEL_TO_EDIT_FIELD_CHANGED, eventProgramStore, 'program');
 
+export const programStageModelEdit = createModelToEditProgramStageEpic(PROGRAM_STAGE_EDIT, eventProgramStore, 'programStages');
+
 const saveEventProgram = eventProgramStore
     .take(1)
     .filter(isStoreStateDirty)
@@ -218,6 +222,7 @@ export const programModelSaveResponses = action$ => Observable
 export default combineEpics(
     programModel,
     programModelEdit,
+    programStageModelEdit,
     programModelSave,
     programModelSaveResponses,
     notificationEpics,

@@ -209,6 +209,7 @@ const fieldOrderByName = new Map([
         'name',
         'shortName',
         'description',
+        'trackedEntityType',
         'categoryCombo',
         'workflow',
         'displayFrontPageList',
@@ -238,7 +239,8 @@ const fieldOrderByName = new Map([
     ['programStage', [
         'name',
         'description',
-        'executionDateLabel'
+        'executionDateLabel',
+        'repeatable'
     ]],
     ['trackedEntityAttribute', [
         'name',

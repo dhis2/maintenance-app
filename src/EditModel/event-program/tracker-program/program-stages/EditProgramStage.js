@@ -1,47 +1,55 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { removeQuery } from '../../../../router-utils';
 import fieldOrder from '../../../../config/field-config/field-order';
-import { createFormFor } from "../../../formHelpers";
-import { flattenRouterProps, wrapInPaper} from "../../../componentHelpers";
+import { createFormFor } from '../../../formHelpers';
+import { flattenRouterProps, wrapInPaper } from '../../../componentHelpers';
 import eventProgramStore$ from '../../eventProgramStore';
 import { get, isEqual } from 'lodash/fp';
-import {changeStep, editFieldChanged} from "../../actions";
+import { changeStep } from '../../actions';
+import { editProgramStageField } from './actions';
 import mapPropsStream from 'recompose/mapPropsStream';
 import compose from 'recompose/compose';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import steps from './programStageSteps';
-import { createStepperFromConfig } from "../../../stepper/stepper";
-import {activeStepSelector} from "../../selectors";
+import { createStepperFromConfig } from '../../../stepper/stepper';
+import { activeStepSelector } from '../../selectors';
 
+const programStage$ = eventProgramStore$.map(get('programStages'));
 
-const programStage$ = eventProgramStore$
-    .map(get('programStages'));
-
-const filteredProgram$ = programStage$.filter(stage => stage.id === 'A03MvHHogjR');
+const filteredProgram$ = programStage$.filter(
+    stage => stage.id === 'A03MvHHogjR'
+);
 const program$ = eventProgramStore$.map(get('program'));
-const mapDispatchToProps = dispatch => bindActionCreators({ editFieldChanged }, dispatch);
-const connectEditForm =
-    connect(null, mapDispatchToProps)
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+    console.log(ownProps);
+    return bindActionCreators(
+        {
+            editFieldChanged: (field, value) =>
+                editProgramStageField(ownProps.programStage$, field, value)
+        },
+        dispatch
+    );
+};
+//const connectEditForm = connect(null, mapDispatchToProps)
 
 const programStageFields = fieldOrder.for('programStage');
-const programStageById = id =>  programStage$.flatMap(x => x).filter(v => v.id==id)
+const programStageById = id =>
+    programStage$.flatMap(x => x).filter(v => v.id == id);
 
-
-const enhance = mapPropsStream(props$ => props$.combineLatest(
-    program$,
-    programStage$,
-    (props, program, programStages, filtered) => {
-        return {
-        ...props,
-            program,
-            programStages
-
+const enhance = mapPropsStream(props$ =>
+    props$.combineLatest(
+        props$.flatMap(x => x.programStage$),
+        (props, programStage) => {
+            return {
+                ...props,
+                programStage
+            };
         }
-    }
-));
+    )
+);
 
 /*
 const mapStateToProps = state => ({
@@ -58,29 +66,47 @@ const ProgramStageStepper = createStepperFromConfig(steps, 'vertical'); */
 class ProgramStageStepper extends Component {
     constructor(props) {
         super();
+        const connectEditForm = connect(null, dispatch =>
+            bindActionCreators(
+                {
+                    editFieldChanged: (field, value) =>
+                        editProgramStageField(props.programStage.id, field, value)
+                },
+                dispatch
+            )
+        );
 
         this.state = {
-            formToRender: connectEditForm(wrapInPaper(createFormFor(props.programStage$, 'programStage', programStageFields)))
-        }
+            formToRender: connectEditForm(
+                wrapInPaper(
+                    createFormFor(
+                        props.programStage$,
+                        'programStage',
+                        programStageFields
+                    )
+                )
+            )
+        };
     }
 
     render() {
         const Component = this.state.formToRender;
-        return (
-            <Component />
-        );
+        return <Component />;
     }
 }
+const ProgramStageStepperEnhanced = enhance(ProgramStageStepper);
 
 const EditProgramStage = props => {
-
     return (
         <div>
             EDIT PROGRAM STAGE HERE
-            <ProgramStageStepper programStage$={props.programStage$} />
+            <ProgramStageStepper
+                programStage$={props.programStage$}
+                programStage={props.programStage}
+            />
             <button onClick={() => removeQuery('stage')}>Create stage</button>
         </div>
     );
 };
 
-export default EditProgramStage;
+export default enhance(EditProgramStage);

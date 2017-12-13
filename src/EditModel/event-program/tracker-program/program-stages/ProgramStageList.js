@@ -52,8 +52,6 @@ const FAB = props => {
 };
 
 const ProgramStageList = props => {
-    console.log(props);
-    console.log(props.programStages);
     return (
         <div>
             <DataTable

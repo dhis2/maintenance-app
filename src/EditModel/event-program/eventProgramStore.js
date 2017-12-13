@@ -24,7 +24,7 @@ const checkIfDirty = model => model && model.isDirty();
 const modelToJson = getOwnedPropertyJSON;
 
 // ___ isProgramStageDirty :: Object<StoreState> -> Object<{programStages}> -> Boolean
-const isProgramStageDirty = compose(checkIfDirty, first, programStagesSelector);
+const isProgramStageDirty = compose(some(checkIfDirty), programStagesSelector);
 
 // ___ getIdForFirstProgramStage : Object<StoreState> -> Object<{programStages}> -> String
 const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelector);
@@ -175,5 +175,7 @@ eventProgramStore.setState = (newState) => {
         ...newState,
     });
 };
+
+eventProgramStore.subscribe(val => console.log(val))
 
 export default eventProgramStore;
