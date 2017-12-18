@@ -4,7 +4,7 @@ import mapPropsStream from 'recompose/mapPropsStream';
 import FormHeading from '../../FormHeading';
 import FormSubHeading from '../../FormSubHeading';
 import EventProgramStepper from './TrackerProgramStepper';
-import EventProgramStepperContent from './TrackerProgramStepperContent';
+import TrackerProgramStepperContent from './TrackerProgramStepperContent';
 import eventProgramStore$ from './trackerProgramStore';
 import EventActionButtons from '../EventActionButtons';
 import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from '../../stepper/stepper';
@@ -43,7 +43,7 @@ function EditTrackerProgram(props) {
             <div>
                 <EventProgramStepper />
             </div>
-            <EventProgramStepperContent
+            <TrackerProgramStepperContent
                 schema={schema}
                 {...props}
             />

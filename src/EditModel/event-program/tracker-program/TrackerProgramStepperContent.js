@@ -4,7 +4,7 @@ import mapPropsStream from 'recompose/mapPropsStream';
 import { get, compose } from 'lodash/fp';
 import { createStepperContentFromConfig } from '../../stepper/stepper';
 import { activeStepSelector } from '../selectors';
-import eventProgramStore from '../eventProgramStore';
+import programStore from '../eventProgramStore';
 import steps from './tracker-program-steps';
 import AssignDataElements from '../assign-data-elements/AssignDataElements';
 import EditDataEntryForm from '../create-data-entry-form/CreateDataEntryForm.component';
@@ -18,7 +18,7 @@ import AssignAttributes from './assign-tracked-entity-attributes/AssignAttribute
 import ProgramStage from './program-stages/ProgramStage';
 
 const stepperConfig = () => {
-    const program$ = eventProgramStore
+    const program$ = programStore
         .map(get('program'));
 
     const mapDispatchToProps = dispatch => bindActionCreators({ editFieldChanged }, dispatch);
@@ -50,12 +50,12 @@ const mapStateToProps = state => ({
     activeStep: activeStepSelector(state),
 });
 
-const EventProgramStepperContent =
+const TrackerProgramStepperContent =
     compose(
         connect(mapStateToProps),
         mapPropsStream(props$ =>
-            props$.combineLatest(eventProgramStore, (props, { program }) => ({ ...props, modelToEdit: program }))
+            props$.combineLatest(programStore, (props, { program }) => ({ ...props, modelToEdit: program }))
         )
     )(createStepperContentFromConfig(stepperConfig()));
 
-export default EventProgramStepperContent;
+export default TrackerProgramStepperContent;

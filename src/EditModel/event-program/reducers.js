@@ -4,7 +4,8 @@ import {
     EVENT_PROGRAM_STEP_NEXT,
     EVENT_PROGRAM_STEP_PREVIOUS,
     EVENT_PROGRAM_LOAD_SUCCESS,
-    EVENT_PROGRAM_LOAD_ERROR
+    EVENT_PROGRAM_LOAD_ERROR,
+    PROGRAM_STEPPER_SET_DISABLE,
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
 import { stageNotificationsReducer } from './notifications/reducers';
@@ -13,11 +14,12 @@ import steps from './event-program-steps';
 import { next, previous, first } from '../stepper/stepIterator';
 
 function eventProgramStepperReducer(
-    state = { activeStep: first(steps), isLoading: true },
+    state = { activeStep: first(steps), disabled: false, isLoading: true },
     action
 ) {
     switch (action.type) {
         case EVENT_PROGRAM_STEP_CHANGE:
+          //  const disabled = action.payload == ""
             return {
                 ...state,
                 activeStep: action.payload
@@ -45,6 +47,11 @@ function eventProgramStepperReducer(
             return {
                 ...state,
                 isLoading: false
+            };
+        case PROGRAM_STEPPER_SET_DISABLE:
+            return {
+                ...state,
+                disabled: action.payload.disabled
             };
 
         default:

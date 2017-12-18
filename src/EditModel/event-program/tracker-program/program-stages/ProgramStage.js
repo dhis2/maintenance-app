@@ -10,6 +10,7 @@ import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { addQuery } from '../../../../router-utils';
 import ProgramStageList from './ProgramStageList';
 import EditProgramStage from './EditProgramStage';
+import { withProgramAndStages } from "./utils";
 
 const program$ = programStore$.map(get('program'));
 const programStages$ = programStore$.map(get('programStages'));
@@ -76,4 +77,4 @@ const ProgramStage = props => {
                   />}
         </div>);
 };
-export default enhance(ProgramStage);
+export default withProgramAndStages(ProgramStage);

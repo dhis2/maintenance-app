@@ -1,12 +1,13 @@
 import { createStepperFromConfig } from '../../stepper/stepper';
-import { activeStepSelector } from '../selectors';
+import { activeStepSelector, disabledSelector } from '../selectors';
 import { connect } from 'react-redux';
 import steps from './tracker-program-steps';
-import { changeStep } from '../actions';
+import { changeStep, changeStepperDisabledState } from '../actions';
 import { bindActionCreators } from 'redux';
 
 const mapStateToProps = state => ({
     activeStep: activeStepSelector(state),
+    disabled: disabledSelector(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ stepperClicked: changeStep }, dispatch);
