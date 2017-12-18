@@ -232,7 +232,7 @@ const fieldOrderByName = new Map([
         'aIsToB',
         'bIsToA',
     ]],
-    ['trackedEntity', [
+    ['trackedEntityType', [
         'name',
         'description',
     ]],
