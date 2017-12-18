@@ -55,7 +55,7 @@ export function getSideBarConfig() {
                 'trackedEntityAttribute',
                 'trackedEntityAttributeGroup',
                 'relationshipType',
-                'trackedEntity',
+                'trackedEntityType',
                 'programRule',
                 'programRuleVariable',
             ],
