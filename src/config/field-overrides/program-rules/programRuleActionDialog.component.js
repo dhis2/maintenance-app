@@ -38,7 +38,7 @@ class ProgramRuleActionDialog extends React.Component {
             Promise.all([
                 this.d2.models.programs.get(this.props.program.id, {
                     fields: [
-                        'programStages[id,displayName,',
+                        'programStages[id,displayName',
                         'programStageSections[id,displayName]',
                         'notificationTemplates[id,displayName]',
                         'programStageDataElements[id,dataElement[id,displayName]]]',
