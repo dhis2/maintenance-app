@@ -11,6 +11,14 @@ import ProgramRuleConditionField from './programRuleConditionField.component';
 import snackActions from '../../../Snackbar/snack.actions';
 
 
+function toDisplay (element) {
+    return {
+        value: element.id,
+        text: element.displayName,
+        model: element
+    }
+}
+
 class ProgramRuleActionDialog extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -32,7 +40,9 @@ class ProgramRuleActionDialog extends React.Component {
                     fields: [
                         'programStages[id,displayName',
                         'programStageSections[id,displayName]',
+                        'notificationTemplates[id,displayName]',
                         'programStageDataElements[id,dataElement[id,displayName]]]',
+                        'notificationTemplates[displayName,id]'
                     ].join(','),
                 }),
                 this.d2.models.programs.get(this.props.program.id, {
@@ -50,18 +60,18 @@ class ProgramRuleActionDialog extends React.Component {
                         .reduce((a, s) => a.concat(s), [])
                         .reduce((o, de) => { o[de.id] = de; return o; }, {})
                     )
-                    .map(de => ({ text: de.displayName, value: de.id, model: de }))
+                    .map(toDisplay)
                     .sort((a, b) => a.text.localeCompare(b.text));
 
                 const programSections =
                     wrappedUpDataElements.programStages.toArray()
                         .reduce((a, s) => a.concat(s.programStageSections.toArray()), [])
-                        .map(s => ({ text: s.displayName, value: s.id, model: s }))
+                        .map(toDisplay)
                         .sort((a, b) => a.text.localeCompare(b.text));
 
                 const programStages =
                     wrappedUpDataElements.programStages.toArray()
-                        .map(s => ({ text: s.displayName, value: s.id, model: s }))
+                        .map(toDisplay)
                         .sort((a, b) => a.text.localeCompare(b.text));
 
                 const programTrackedEntityAttributes =
@@ -72,6 +82,25 @@ class ProgramRuleActionDialog extends React.Component {
                             model: ptea.trackedEntityAttribute,
                         }))
                         .sort((a, b) => a.text.localeCompare(b.text));
+
+                const programNotificationTemplates = wrappedUpDataElements
+                    .notificationTemplates.toArray()
+                    .map(toDisplay);
+
+                const programStagesNotificationTemplates = wrappedUpDataElements
+                    .programStages.toArray()
+                    .reduce((a, b) => a.concat(b.notificationTemplates.toArray()), [])
+                    .map(toDisplay);
+
+                let notificationTemplates = programStagesNotificationTemplates
+                    .concat(programNotificationTemplates)
+                    .sort((a, b) => a.text.localeCompare(b.text));
+
+                const dedupe = function dedupe(arr) {
+                    return [...new Set([].concat(...arr))];
+                };
+
+                notificationTemplates = dedupe(notificationTemplates);
 
                 this.setState({
                     programStages,
@@ -85,6 +114,7 @@ class ProgramRuleActionDialog extends React.Component {
                             value: `${sign}{${v.displayName}}`,
                         };
                     }),
+                    notificationTemplates,
                 });
             }).catch((err) => {
                 this.props.onRequestClose();
@@ -110,6 +140,7 @@ class ProgramRuleActionDialog extends React.Component {
             trackedEntityAttribute: this.state.programTrackedEntityAttributes,
             programStage: this.state.programStages,
             programStageSection: this.state.programSections,
+            programNotificationTemplate: this.state.notificationTemplates
         };
 
         Object.keys(fieldRefs).forEach((field) => {
@@ -223,12 +254,14 @@ class ProgramRuleActionDialog extends React.Component {
             },
             {
                 name: 'content',
-                component: currentActionType === 'ASSIGN' ? DropDown : TextField,
+                component: currentActionType === 'ASSIGN' ?
+                    DropDown : TextField,
                 props: {
                     labelText: this.getTranslation('content'),
                     value: ruleActionModel.content,
                     fullWidth: true,
-                    options: currentActionType === 'ASSIGN' ? this.state.programVariables : undefined,
+                    options: currentActionType === 'ASSIGN' ?
+                        this.state.programVariables : undefined,
                 },
             },
             {
@@ -242,10 +275,24 @@ class ProgramRuleActionDialog extends React.Component {
                     quickAddLink: false,
                 },
             },
+            {
+                name: 'programNotificationTemplate',
+                component: DropDown,
+                props: {
+                    labelText: this.getTranslation('program_notification_template'),
+                    options: this.state && this.state.notificationTemplates || [],
+                    value: ruleActionModel.programNotificationTemplate,
+                    disabled: !this.state.notificationTemplates || this.state.notificationTemplates === 0,
+                    fullWidth: true,
+                }
+            },
         ].map((field) => {
             if (field.name !== 'programRuleActionType') {
-                const isRequired = fieldMapping && fieldMapping.required && fieldMapping.required.includes(field.name);
-                const isOptional = fieldMapping && fieldMapping.optional && fieldMapping.optional.includes(field.name);
+                const isRequired = fieldMapping && fieldMapping.required &&
+                    fieldMapping.required.includes(field.name);
+
+                const isOptional = fieldMapping && fieldMapping.optional &&
+                    fieldMapping.optional.includes(field.name);
 
                 if (isOptional || isRequired) {
                     field.props.style = { display: 'inline-block' };
