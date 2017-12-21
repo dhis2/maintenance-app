@@ -10,7 +10,7 @@ import {
     saveEventProgramSuccess,
 } from './actions';
 
-import { PROGRAM_STAGE_EDIT } from "./tracker-program/program-stages/actions";
+import { PROGRAM_STAGE_FIELD_EDIT, editProgramStageReset } from "./tracker-program/program-stages/actions";
 import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
@@ -171,7 +171,7 @@ export const programModel = action$ => action$
 
 export const programModelEdit = createModelToEditEpic(MODEL_TO_EDIT_FIELD_CHANGED, eventProgramStore, 'program');
 
-export const programStageModelEdit = createModelToEditProgramStageEpic(PROGRAM_STAGE_EDIT, eventProgramStore, 'programStages');
+export const programStageModelEdit = createModelToEditProgramStageEpic(PROGRAM_STAGE_FIELD_EDIT, eventProgramStore, 'programStages');
 
 const saveEventProgram = eventProgramStore
     .take(1)
@@ -185,6 +185,7 @@ const saveEventProgram = eventProgramStore
                 // TODO: Not the most elegant place to do this maybe
                 goToAndScrollUp('/list/programSection/program');
                 return saveEventProgramSuccess();
+
             }
             return saveEventProgramError(importStatus.errorsPerObject);
         })

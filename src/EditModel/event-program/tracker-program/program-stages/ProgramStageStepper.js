@@ -17,15 +17,9 @@ import { createStepperFromConfig } from '../../../stepper/stepper';
 import EditProgramStageDetails from './EditProgramStageDetails';
 import AssignProgramStageDataElements from './AssignProgramStageDataElements';
 import CreateDataEntryForm from './CreateDataEntryForm';
-
+import { getCurrentProgramStage, getActiveProgramStageStep } from "./selectors";
 import compose from 'recompose/compose';
 
-const ProgramStageStepperNavigation = connect(
-    state => ({
-        activeStep: state.eventProgram.programStageStepper.activeStep
-    }),
-    dispatch => bindActionCreators({ stepperClicked: changeStep }, dispatch)
-)(createStepperFromConfig(steps, 'vertical'));
 
 //const ProgramStageForm = connectEditForm(wrapInPaper(createFormFor(props.programStage$, 'programStage', programStageFields)));
 
@@ -45,22 +39,19 @@ const stepperConfig = () => {
     });
 };
 
-const ProgramStageStepperContent = compose(
-    connect(state => ({
-        activeStep: state.eventProgram.programStageStepper.activeStep
-    })),
-    mapPropsStream(props$ =>
-        props$.combineLatest(eventProgramStore, (props, { program }) => ({
-            ...props,
-            modelToEdit: program
-        }))
-    ))(createStepperContentFromConfig(stepperConfig()));
+const ProgramStageVerticalStepper = connect(
+    state => ({
+        activeStep: getActiveProgramStageStep(state)
+    }),
+    dispatch => bindActionCreators({ stepperClicked: changeStep }, dispatch)
+)(createStepperFromConfig(stepperConfig(), 'vertical'));
+
 
 export const ProgramStageStepper = props => {
     console.log(props);
     return (
         <div>
-            <ProgramStageStepperNavigation programStage$={props.programStage$} programStage={props.programStage} />
+            <ProgramStageVerticalStepper programStage$={props.programStage$} programStage={props.programStage} />
 
         </div>
     );

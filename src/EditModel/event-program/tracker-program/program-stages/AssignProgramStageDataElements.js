@@ -1,6 +1,6 @@
 import React from 'react';
-
+import AssignDataElements from '../../assign-data-elements/AssignDataElements';
 
 export default (props) => (
-    <span>Assign Data elements</span>
+    <AssignDataElements {...props} programStage$={props.programStage$} />
 )

@@ -19,32 +19,36 @@ import { withProgramStageFromProgramStage$ } from "./utils";
 import ProgramStageStepper from './ProgramStageStepper';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import { changeStepperDisabledState } from "../../actions";
+import { editProgramStageReset } from "./actions";
 
 const programStage$ = eventProgramStore$.map(get('programStages'));
 
 const EditProgramStage = props => {
+    console.log(props)
     return (
         <div>
             <ProgramStageStepper
                 programStage$={props.programStage$}
                 programStage={props.programStage}
             />
-            <RaisedButton primary onClick={() => removeQuery('stage')} label={"Save stage"} />
+            <RaisedButton primary onClick={props.editProgramStageReset} label={"Save stage"} />
         </div>
     );
 };
 
 export default compose(
     connect(null, (dispatch) => bindActionCreators({
-        changeStepperDisabledState
+        changeStepperDisabledState,
+        editProgramStageReset
     }, dispatch)),
     lifecycle({
         componentWillMount() {
-            console.log("will mount!")
             this.props.changeStepperDisabledState(true)
+
         },
         componentWillUnmount() {
             this.props.changeStepperDisabledState(false)
+            this.props.editProgramStageReset()
         }
     }),
     withProgramStageFromProgramStage$)(EditProgramStage)

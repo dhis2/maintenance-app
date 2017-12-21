@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Paper from 'material-ui/Paper/Paper';
 import mapPropsStream from 'recompose/mapPropsStream';
-import eventProgramStore from '../eventProgramStore';
+import programStore from '../eventProgramStore';
 import { get, noop, first, getOr, __ } from 'lodash/fp';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -18,13 +18,18 @@ import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
 import TextField from 'material-ui/TextField/TextField';
 import pure from 'recompose/pure';
 import withState from 'recompose/withState';
+import { withProgramStageFromProgramStage$ } from "../tracker-program/program-stages/utils";
+import { withRouter } from 'react-router';
+import { getProgramStage$ById } from "../tracker-program/program-stages/utils";
 
 const getFirstProgramStage = compose(first, get('programStages'));
 
-const programStage$ = eventProgramStore
-    .map(getFirstProgramStage);
+const firstProgramStage$ = programStore.map(getFirstProgramStage);
 
-const availableTrackerDataElements$ = eventProgramStore
+//Use programStage$ prop if present, else use first programStage
+const programStage$ = props$ => props$.take(1).flatMap(props => props.programStage$ ? props.programStage$ : programStore.map(getFirstProgramStage));
+
+const availableTrackerDataElements$ = programStore
     .map(get('availableDataElements'))
     .take(1);
 
@@ -35,19 +40,23 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 const enhance = compose(
+    withRouter,
     mapProps(props => ({
+        ...props,
         groupName: props.params.groupName,
         modelType: props.schema,
         modelId: props.params.modelId })
     ),
     connect(null, mapDispatchToProps),
+
     mapPropsStream(props$ => props$
         .combineLatest(
-            programStage$,
+            programStage$(props$),
             availableTrackerDataElements$,
             (props, programStage, trackerDataElements) => ({ ...props, trackerDataElements, model: programStage, items: programStage.programStageDataElements })
         )
     ),
+
     withHandlers({
         onAssignItems: (props) => (dataElements) => {
             console.log(props)
@@ -65,6 +74,7 @@ const enhance = compose(
         }),
     }),
     withState('dataElementFilter', 'setDataElementFilter', ''),
+   // withProgramStageFromProgramStage$,
 );
 
 const flipBooleanPropertyOn = (object, key) => ({

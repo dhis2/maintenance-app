@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { get, compose } from 'lodash/fp';
+import { first, get, compose } from 'lodash/fp';
 import { createStepperContentFromConfig } from '../stepper/stepper';
 import { activeStepSelector } from './selectors';
 import eventProgramStore from './eventProgramStore';

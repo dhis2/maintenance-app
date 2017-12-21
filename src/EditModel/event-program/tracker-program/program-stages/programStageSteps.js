@@ -14,6 +14,11 @@ const steps = [
         name: 'create_data_entry_form',
         componentName: 'CreateDataEntryForm',
     },
+    {
+        key: 'program_stage_notifications',
+        name: 'program_stage_notifications',
+        componentName: 'ProgramStageNotification'
+    }
 
 ];
 

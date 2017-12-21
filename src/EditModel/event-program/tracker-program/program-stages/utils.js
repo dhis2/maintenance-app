@@ -10,7 +10,7 @@ const programStages$ = programStore$.map(get('programStages'));
 /**
  * Maps the programStage$ observable to a normal object to read the values in the component.
  */
-export const withProgramStageFromProgramStage$ = compose(mapPropsStream(props$ =>
+export const withProgramStageFromProgramStage$ = mapPropsStream(props$ =>
     props$.combineLatest(
         props$.flatMap(x => x.programStage$),
         (props, programStage) => {
@@ -20,7 +20,7 @@ export const withProgramStageFromProgramStage$ = compose(mapPropsStream(props$ =
             };
         }
     )
-));
+);
 
 /**
  * Adds program and programStages as props to the enhanced compontents.
@@ -39,8 +39,6 @@ export const withProgramAndStages = compose(
         )
     )
 );
-
-//export const withProgram = compose()
 
 export const getProgramStage$ById = stageId =>
     programStages$

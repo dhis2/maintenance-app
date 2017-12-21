@@ -70,6 +70,7 @@ const editProgramStageDataElement = store => action$ => action$
         .map((action) => {
             const programStageDataElementId = get('payload.programStageDataElement.id', action);
             const programStage = getProgramStageByIdFromAction(store, action);
+            const programStages = getOr([], 'programStages', store.getState());
             const programStageDataElements = getOr([], 'programStageDataElements', programStage);
             const programStageDataElement = programStageDataElements
                 .find(isObjectHasId(programStageDataElementId));
@@ -84,7 +85,7 @@ const editProgramStageDataElement = store => action$ => action$
 
             store.setState({
                 ...store.getState(),
-                programStages: [programStage],
+                programStages
             });
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENT_EDIT_COMPLETE });

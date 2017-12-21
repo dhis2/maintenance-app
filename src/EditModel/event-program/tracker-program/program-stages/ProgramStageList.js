@@ -14,23 +14,29 @@ import withState from 'recompose/withState';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { addQuery } from '../../../../router-utils';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { editProgramStage } from './actions';
 
 const program$ = programStore$.map(get('program'));
 const programStages$ = programStore$.map(get('programStages'));
 
-const enhance = withState(
-    'tableColumns',
-    'setTableColumns',
-    getTableColumnsForType('programStage')
+const enhance = compose(
+    connect(null, dispatch =>
+        bindActionCreators(
+            {
+                handleEditProgramStage: model => editProgramStage(model.id),
+                handleNewProgramStage: () =>  editProgramStage("add")
+            },
+            dispatch
+        )
+    ),
+    withState(
+        'tableColumns',
+        'setTableColumns',
+        getTableColumnsForType('programStage')
+    )
 );
-
-const handleNewProgramStage = () => {
-    addQuery({ stage: 'new' });
-};
-
-const handleEditProgramStage = model => {
-    addQuery({ stage: model.id });
-};
 
 const FAB = props => {
     const cssStyles = {
@@ -44,7 +50,7 @@ const FAB = props => {
 
     return (
         <div style={cssStyles}>
-            <FloatingActionButton onClick={handleNewProgramStage}>
+            <FloatingActionButton onClick={props.handleNewProgramStage}>
                 <FontIcon className="material-icons">add</FontIcon>
             </FloatingActionButton>
         </div>
@@ -52,14 +58,15 @@ const FAB = props => {
 };
 
 const ProgramStageList = props => {
+    console.log(props)
     return (
         <div>
             <DataTable
                 rows={props.programStages}
                 columns={props.tableColumns}
-                primaryAction={handleEditProgramStage}
+                primaryAction={props.handleEditProgramStage}
             />
-            <FAB router={props.router} />
+            <FAB router={props} {...props} />
         </div>
     );
 };

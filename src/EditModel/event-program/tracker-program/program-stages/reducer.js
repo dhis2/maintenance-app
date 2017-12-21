@@ -2,14 +2,16 @@ import { combineReducers } from 'redux';
 import {
     PROGRAM_STAGE_STEP_CHANGE,
     PROGRAM_STAGE_STEP_NEXT,
-    PROGRAM_STAGE_STEP_PREVIOUS
+    PROGRAM_STAGE_STEP_PREVIOUS,
+    PROGRAM_STAGE_EDIT,
+    PROGRAM_STAGE_EDIT_RESET
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../../../actions';
 import steps from './programStageSteps';
 import { next, previous, first } from '../../../stepper/stepIterator';
 
 export function programStageStepperReducer(
-    state = { activeStep: first(steps) },
+    state = { activeStep: first(steps), stageId: null },
     action
 ) {
     switch (action.type) {
@@ -37,6 +39,18 @@ export function programStageStepperReducer(
                 activeStep: first(steps)
             };
 
+
+        case PROGRAM_STAGE_EDIT:
+            return {
+                ...state,
+                stageId: action.payload.stageId
+            }
+
+        case PROGRAM_STAGE_EDIT_RESET:
+            return {
+                ...state,
+                stageId: null
+            }
         default:
             break;
     }

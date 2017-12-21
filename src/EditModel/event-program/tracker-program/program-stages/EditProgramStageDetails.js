@@ -11,7 +11,6 @@ import { bindActionCreators } from 'redux';
 const programStageFields = fieldOrder.for('programStage');
 
 export const EditProgramStageDetails = props => {
-    console.log(props)
     const connectedEditForm = connect(null, dispatch =>
         bindActionCreators(
             {
@@ -21,7 +20,7 @@ export const EditProgramStageDetails = props => {
             dispatch
         )
     );
-    const FormThing = connectedEditForm(
+    const ProgramStageDetailsForm = connectedEditForm(
         wrapInPaper(
             createFormFor(
                 props.programStage$,
@@ -30,8 +29,7 @@ export const EditProgramStageDetails = props => {
             )
         )
     );
-    return <FormThing {...props} />;
-    return <span>ProgramDetails</span>
+    return <ProgramStageDetailsForm {...props} />;
 };
 
 export default EditProgramStageDetails;
