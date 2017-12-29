@@ -28,6 +28,7 @@ function DropDownFieldForOfflineLevels(props) {
         </SelectField>
     );
 }
+
 DropDownFieldForOfflineLevels.propTypes = {
     options: PropTypes.array,
 };
