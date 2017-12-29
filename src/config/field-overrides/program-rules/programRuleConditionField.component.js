@@ -164,10 +164,11 @@ class ProgramRuleConditionField extends React.Component {
                 <RaisedButton
                     key={i}
                     label={varLabel}
-                    labelStyle={{ textTransform: 'none' }}
+                    labelStyle={{ textTransform: 'none', whiteSpace: 'nowrap' }}
                     style={styles.insertButton}
                     disabled={this.props.disabled}
                     onClick={makeTextPusher(varText)}
+                    title={varText}
                 />
             );
         };
@@ -211,10 +212,11 @@ class ProgramRuleConditionField extends React.Component {
                             <RaisedButton
                                 key={i}
                                 label={f}
-                                labelStyle={{ textTransform: 'none' }}
+                                labelStyle={{ textTransform: 'none', whiteSpace: 'nowrap' }}
                                 style={styles.insertButton}
                                 disabled={this.props.disabled}
                                 onClick={makeTextPusher(f)}
+                                title={f}
                             />
                         ))}
                     </div>
