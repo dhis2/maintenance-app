@@ -12,9 +12,11 @@ import { previousStep, nextStep } from './actions';
 import EditEventProgram from './EditEventProgram.component';
 import EditTrackerProgram from './tracker-program/EditTrackerProgram';
 import LoadingMask from '../../loading-mask/LoadingMask.component';
+import { isProgramStageStepperActive } from "./tracker-program/program-stages/selectors";
 
 const mapStateToProps = state => ({
-    isLoading: state.eventProgram.step.isLoading
+    isLoading: state.eventProgram.step.isLoading,
+    isProgramStageStepperActive: isProgramStageStepperActive(state)
 });
 
 const spinnerWhileLoading = isLoading =>

@@ -16,7 +16,7 @@ import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { addQuery } from '../../../../router-utils';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { editProgramStage } from './actions';
+import { editProgramStage, addProgramStage } from './actions';
 
 const program$ = programStore$.map(get('program'));
 const programStages$ = programStore$.map(get('programStages'));
@@ -26,7 +26,7 @@ const enhance = compose(
         bindActionCreators(
             {
                 handleEditProgramStage: model => editProgramStage(model.id),
-                handleNewProgramStage: () =>  editProgramStage("add")
+                handleNewProgramStage: () =>  addProgramStage()
             },
             dispatch
         )

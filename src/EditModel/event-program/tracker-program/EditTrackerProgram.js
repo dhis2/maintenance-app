@@ -47,9 +47,10 @@ function EditTrackerProgram(props) {
                 schema={schema}
                 {...props}
             />
+            {!props.isProgramStageStepperActive && (
             <StepperNavigation>
                 <EventActionButtons groupName={groupName} schema={schema} />
-            </StepperNavigation>
+            </StepperNavigation>)}
         </div>
     );
 }

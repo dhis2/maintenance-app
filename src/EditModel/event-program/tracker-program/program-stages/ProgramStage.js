@@ -73,7 +73,7 @@ class ProgramStage extends Component {
         const props = this.props;
         console.log(props.programStages)
 
-        const programStage$ = props.currentProgramStageId == "add" ? this.createNewProgramStage() : getProgramStageById(props.currentProgramStageId);
+        const programStage$ = props.currentProgramStageId !== "add" && getProgramStageById(props.currentProgramStageId);
 
       //  console.log(shouldRenderStageEdit())
         return (

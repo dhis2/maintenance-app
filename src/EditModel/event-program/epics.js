@@ -10,7 +10,7 @@ import {
     saveEventProgramSuccess,
 } from './actions';
 
-import { PROGRAM_STAGE_FIELD_EDIT, editProgramStageReset } from "./tracker-program/program-stages/actions";
+import { PROGRAM_STAGE_FIELD_EDIT, editProgramStageReset, PROGRAM_STAGE_ADD, editProgramStage } from "./tracker-program/program-stages/actions";
 import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
@@ -19,6 +19,7 @@ import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
 import { getImportStatus } from './metadataimport-helpers';
 import { goToAndScrollUp } from '../../router-utils';
+import { hashHistory } from 'react-router';
 import notificationEpics from './notifications/epics';
 import createAssignDataElementEpics from './assign-data-elements/epics';
 import createAssignAttributeEpics from './tracker-program/assign-tracked-entity-attributes/epics';
@@ -36,17 +37,26 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         const programStageUid = generateUid();
 
         // A api format payload that contains a program and a programStage
+        const programStages = programPayload.query.type == 'WITH_REGISTRATION' ? [] : [
+            {
+                id: programStageUid,
+                programStageDataElements: [],
+                notificationTemplates: [],
+                programStageSections: [],
+            },
+        ]
         const newProgramMetadata = {
             programs: [{
                 id: programUid,
-                programStages: [
+               /* programStages: [
                     {
                         id: programStageUid,
                         programStageDataElements: [],
                         notificationTemplates: [],
                         programStageSections: [],
                     },
-                ],
+                ],*/
+                programStages,
                 programTrackedEntityAttributes: [],
                 organisationUnits: [],
             }],
@@ -81,10 +91,13 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             .map((state) => {
                 // Set some eventProgram defaults
                 //Set programType to router-query type
-                state.program.programType = programPayload.query.type;
+                const programType = programPayload.query.type;
 
-                const programStage = first(state.programStages);
-                programStage.name = state.program.id;
+                state.program.programType = programPayload.query.type;
+                if(state.programStages.length > 0) {
+                    const programStage = first(state.programStages);
+                    programStage.name = state.program.id;
+                }
 
                 return state;
             });
@@ -220,6 +233,35 @@ export const programModelSaveResponses = action$ => Observable
             })
     );
 
+export const newTrackerProgramStage = action$ => action$
+    .ofType(PROGRAM_STAGE_ADD)
+    .flatMap(action => {
+        console.log(action)
+        return d2$.flatMap(d2 =>
+            eventProgramStore
+                .take(1)
+                .map(store => {
+                    const programStages = store.programStages;
+                    const program = store.program;
+                    const programStageUid = generateUid();
+                    const newProgramStage = programStages.push(
+                        d2.models.programStages.create(
+                            {
+                                id: programStageUid,
+                                programStageDataElements: [],
+                                notificationTemplates: [],
+                                programStageSections: [],
+                                program: {
+                                    id: program.id
+                                }
+                            }))
+                    const newState = {...eventProgramStore.getState()}
+                    eventProgramStore.setState(set('programStages')(programStages, newState),
+                        set('program.programStages')(programStages, newState))
+                    return editProgramStage(programStageUid);
+                }));
+    });
+
 export default combineEpics(
     programModel,
     programModelEdit,
@@ -230,5 +272,6 @@ export default combineEpics(
     createAssignDataElementEpics(eventProgramStore),
     createAssignAttributeEpics(eventProgramStore),
     createCreateDataEntryFormEpics(eventProgramStore),
-    dataEntryFormEpics
+    dataEntryFormEpics,
+    newTrackerProgramStage
 );
