@@ -65,8 +65,9 @@ const flipBooleanPropertyOn = (object, key) => ({
     [key]: !object[key],
 });
 
-const ProgramAttribute = pure(({ programAttribute, onEditProgramAttribute}) => {
+const ProgramAttribute = ({ programAttribute, onEditProgramAttribute}, { d2 }) => {
     const isDateValue = programAttribute.trackedEntityAttribute.valueType === 'DATE';
+    const isUnique = programAttribute.trackedEntityAttribute.unique;
     const hasOptionSet = !!programAttribute.trackedEntityAttribute.optionSet;
     const onChangeFlipBooleanForProperty = propertyName => () => onEditProgramAttribute(
         flipBooleanPropertyOn(programAttribute, propertyName)
@@ -100,12 +101,25 @@ const ProgramAttribute = pure(({ programAttribute, onEditProgramAttribute}) => {
                 onClick={onChangeFlipBooleanForProperty('renderOptionsAsRadio')}
             /> : null}
         </TableRowColumn>
+        <TableRowColumn>
+            <Checkbox
+                checked={isUnique || isCheckedForProp('searchable')}
+                disabled={isUnique}
+                onClick={onChangeFlipBooleanForProperty('searchable')}
+                title={d2.i18n.getTranslation("unique_attributes_always_searchable")}
+            />
+        </TableRowColumn>
     </TableRow>)
-})
+};
+
+ProgramAttribute.contextTypes = {
+    d2: PropTypes.object,
+};
+const PureProgramAttribute = pure(ProgramAttribute);
 
 function addDisplayProperties(attributes) {
     return ({ trackedEntityAttribute, ...other }) => {
-        const { displayName, valueType, optionSet } = attributes.find(({ id }) => id === trackedEntityAttribute.id);
+        const { displayName, valueType, optionSet, unique } = attributes.find(({ id }) => id === trackedEntityAttribute.id);
 
         return {
             ...other,
@@ -113,7 +127,8 @@ function addDisplayProperties(attributes) {
                 ...trackedEntityAttribute,
                 displayName,
                 valueType,
-                optionSet
+                optionSet,
+                unique
             },
         };
     };
@@ -139,7 +154,7 @@ function AssignAttributes(props, { d2 }) {
     const tableRows = props.items
         .map(addDisplayProperties(props.availableAttributes))
         .map((programAttribute, index) => (
-            <ProgramAttribute
+            <PureProgramAttribute
                 key={programAttribute.id}
                 programAttribute={programAttribute}
                 onEditProgramAttribute={props.onEditProgramAttribute}
@@ -172,6 +187,7 @@ function AssignAttributes(props, { d2 }) {
                         <TableHeaderColumn>Mandatory</TableHeaderColumn>
                         <TableHeaderColumn>Date in future</TableHeaderColumn>
                         <TableHeaderColumn>Render options as radio</TableHeaderColumn>
+                        <TableHeaderColumn>Searchable</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
