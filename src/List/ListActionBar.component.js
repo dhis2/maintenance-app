@@ -3,7 +3,6 @@ import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActio
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { goToRoute } from '../router-utils';
 import { withAuth } from "../utils/Auth";
-import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 
 const ListActionBar = React.createClass({
     propTypes: {
