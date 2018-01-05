@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import { withState, withProps, compose, onlyUpdateForKeys } from 'recompose';
-import { Row } from 'd2-ui/lib/layout';
+import Row from 'd2-ui/lib/layout/Row.component';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
 import ValidationRuleExpressionDialog from './ValidationRuleExpressionDialog';
 

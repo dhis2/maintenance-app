@@ -1,9 +1,9 @@
 import React from 'react';
-import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import { config } from 'd2/lib/d2';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import Paper from 'material-ui/Paper/Paper';
+import { withAuth } from "../utils/Auth";
 
 const SharingNotification = React.createClass({
     propTypes: {
@@ -14,8 +14,8 @@ const SharingNotification = React.createClass({
     mixins: [Auth, Translate],
 
     render() {
-        const createPublic = this.getCurrentUser().canCreatePublic(this.getModelDefinitionByName(this.props.modelType));
-        const createPrivate = this.getCurrentUser().canCreatePrivate(this.getModelDefinitionByName(this.props.modelType));
+        const createPublic = this.props.getCurrentUser().canCreatePublic(this.props.getModelDefinitionByName(this.props.modelType));
+        const createPrivate = this.props.getCurrentUser().canCreatePrivate(this.props.getModelDefinitionByName(this.props.modelType));
         const notificationStyle = Object.assign({}, this.props.style, {
             background: 'none',
             margin: '14px 0 0 -4px',
@@ -45,4 +45,4 @@ const SharingNotification = React.createClass({
     },
 });
 
-export default SharingNotification;
+export default withAuth(SharingNotification);
