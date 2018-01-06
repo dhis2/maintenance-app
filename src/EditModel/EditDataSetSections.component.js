@@ -1,6 +1,7 @@
 import React from 'react';
 import log from 'loglevel';
 
+import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
@@ -13,7 +14,6 @@ import GreyFieldDialog from './GreyFieldDialog.component';
 import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';
 
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 const styles = {
     heading: {

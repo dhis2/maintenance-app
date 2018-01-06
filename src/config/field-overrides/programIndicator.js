@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { decimals } from './sharedFields';
+
 import ExpressionFormula from 'd2-ui/lib/expression-manager/ExpressionFormula';
 import Paper from 'material-ui/Paper/Paper';
 import { Observable, ReplaySubject } from 'rxjs';
@@ -10,11 +10,17 @@ import { getInstance } from 'd2/lib/d2';
 import lifecycle from 'recompose/lifecycle';
 import InfoIcon from 'material-ui/svg-icons/action/info';
 import { blue50, blue200 } from 'material-ui/styles/colors';
+import { decimals } from './sharedFields';
+
 import AttributeSelector from './program-indicator/AttributeSelector';
 import VariableSelector from './program-indicator/VariableSelector';
 import ConstantSelector from './program-indicator/ConstantSelector';
 import DataElementSelectors from './program-indicator/DataElementSelectors';
-import ExpressionStatusIcon, { ExpressionStatus, getColorForExpressionStatus, getBackgroundColorForExpressionStatus } from './program-indicator/ExpressionStatusIcon';
+import ExpressionStatusIcon, {
+    ExpressionStatus,
+    getColorForExpressionStatus,
+    getBackgroundColorForExpressionStatus } from './program-indicator/ExpressionStatusIcon';
+import OperatorButtons from '../../EditModel/OperatorButtons.component';
 
 const styles = {
     programIndicatorExpression: {
@@ -42,6 +48,17 @@ const styles = {
             margin: '1rem 0 2rem',
             backgroundColor: getBackgroundColorForExpressionStatus(status),
         }),
+    },
+    operatorButton: {
+        marginRight: 8,
+        marginTop: 8,
+        minWidth: 50,
+    },
+    operatorButtonSeparator: {
+        display: 'inline-block',
+        marginTop: 8,
+        marginLeft: 8,
+        whiteSpace: 'nowrap',
     },
 };
 
@@ -82,7 +99,9 @@ function ExpressionFormulaWithErrorMessage({ formula, onFormulaChange, errorStat
     const formulaWrapStyle = {
         border: `2px solid ${isExpressionInvalid(errorStatus) ? color : 'transparent'}`,
     };
-    const formulaDescriptionField = isExpressionInvalid(errorStatus) ? <span style={{ color, marginTop: '.25rem' }}>{errorStatus.message}</span> : null;
+    const formulaDescriptionField = isExpressionInvalid(errorStatus)
+        ? <span style={{ color, marginTop: '.25rem' }}>{errorStatus.message}</span>
+        : null;
 
     return (
         <div>
@@ -103,6 +122,7 @@ function ProgramIndicatorExpression({ d2, onChange, status, model, value: formul
     return (
         <div>
             <div style={styles.programIndicatorExpression.container}>
+
                 <Paper style={styles.programIndicatorExpression.formula}>
                     <HelpText schema={model.modelDefinition.name} property={referenceProperty} />
                     <ExpressionFormulaWithErrorMessage
@@ -110,11 +130,21 @@ function ProgramIndicatorExpression({ d2, onChange, status, model, value: formul
                         onFormulaChange={value => onChange({ target: { value } })}
                         errorStatus={status}
                     />
-                    {status.status == ExpressionStatus.VALID ? <div style={styles.status.container(status.status)}>
-                        <ExpressionStatusIcon status={status.status} />
-                        <span style={{ padding: '.25rem', paddingLeft: '1rem' }}>{status.message}</span>
-                    </div> : null}
+                    <OperatorButtons
+                        onClick={value => {
+                            console.log(value)
+                            onChange({ target: { value: formula + value } })
+                        }
+                        }
+                    />
+                    {status.status === ExpressionStatus.VALID
+                        ? <div style={styles.status.container(status.status)}>
+                            <ExpressionStatusIcon status={status.status} />
+                            <span style={{ padding: '.25rem', paddingLeft: '1rem' }}>{status.message}</span>
+                        </div>
+                        : null}
                 </Paper>
+
                 <div style={styles.programIndicatorExpression.options}>
                     <DataElementSelectors
                         program={get('program.id', model)}
@@ -136,6 +166,7 @@ function ProgramIndicatorExpression({ d2, onChange, status, model, value: formul
                         onSelect={value => onChange({ target: { value: formula + value } })}
                     />
                 </div>
+
             </div>
         </div>
     );
@@ -148,48 +179,48 @@ function createValidator(property) {
         .distinctUntilChanged()
         .debounceTime(300)
         .mergeMap(memoize((expression = '') => Observable.fromPromise(
-                getInstance()
-                    .then((d2) => {
-                        if (isEmpty(expression)) {
-                            return Observable.of({
-                                status: ExpressionStatus.PENDING,
-                                message: d2.i18n.getTranslation('expression_is_empty'),
-                            });
-                        }
+            getInstance()
+                .then((d2) => {
+                    if (isEmpty(expression)) {
+                        return Observable.of({
+                            status: ExpressionStatus.PENDING,
+                            message: d2.i18n.getTranslation('expression_is_empty'),
+                        });
+                    }
 
-                        const api = d2.Api.getApi();
-                        const requestOptions = {
-                            headers: {
-                                'Content-Type': 'text/plain',
-                            },
-                        };
+                    const api = d2.Api.getApi();
+                    const requestOptions = {
+                        headers: {
+                            'Content-Type': 'text/plain',
+                        },
+                    };
 
-                        const validation$ = api.post(`programIndicators/${property}/description`, `${expression}`, requestOptions)
-                            .then(({ status, description, message }) => ({
-                                status: status === 'OK' ? ExpressionStatus.VALID : ExpressionStatus.INVALID,
-                                message: status === 'OK' ? description : message,
-                            }))
-                            .catch((error) => {
-                                // If error contains a message and an error status we consider it to be a valid response
-                                if (error.message && error.status === 'ERROR') {
-                                    return {
-                                        status: ExpressionStatus.INVALID,
-                                        message: error.message,
-                                    };
-                                }
-                                // Rethrow if not a valid error
-                                throw error;
-                            });
+                    const validation$ = api.post(`programIndicators/${property}/description`, `${expression}`, requestOptions)
+                        .then(({ status, description, message }) => ({
+                            status: status === 'OK' ? ExpressionStatus.VALID : ExpressionStatus.INVALID,
+                            message: status === 'OK' ? description : message,
+                        }))
+                        .catch((error) => {
+                            // If error contains a message and an error status we consider it to be a valid response
+                            if (error.message && error.status === 'ERROR') {
+                                return {
+                                    status: ExpressionStatus.INVALID,
+                                    message: error.message,
+                                };
+                            }
+                            // Rethrow if not a valid error
+                            throw error;
+                        });
 
-                        return Observable.merge(
-                            Observable.of({
-                                status: ExpressionStatus.PENDING,
-                                message: d2.i18n.getTranslation('checking_expression_status'),
-                            }),
-                            Observable.fromPromise(validation$),
-                        );
-                    })
-            )))
+                    return Observable.merge(
+                        Observable.of({
+                            status: ExpressionStatus.PENDING,
+                            message: d2.i18n.getTranslation('checking_expression_status'),
+                        }),
+                        Observable.fromPromise(validation$),
+                    );
+                }),
+        )))
         .concatAll();
 
     return {
@@ -228,7 +259,7 @@ const enhance = compose(
         componentWillUnmount() {
             this.validatorStatusSubscription.unsubscribe();
         },
-    })
+    }),
 );
 
 export default new Map([

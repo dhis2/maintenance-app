@@ -102,21 +102,6 @@ export default new Map([
     ['unique', {
         component: withSkipLogic(props => props.value === true, UniqueSubFields, Checkbox),
     }],
-    ['aggregationType', {
-        fieldOptions: {
-            options: [
-                'SUM',
-                'AVERAGE',
-                'COUNT',
-                'STDDEV',
-                'VARIANCE',
-                'MIN',
-                'MAX',
-                'NONE',
-                'AVERAGE_SUM_ORG_UNIT',
-            ],
-        },
-    }],
     ['confidential', {
         component: ConfidentialField,
     }],

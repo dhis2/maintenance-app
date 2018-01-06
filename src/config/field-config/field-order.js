@@ -269,7 +269,7 @@ const fieldOrderByName = new Map([
         'aIsToB',
         'bIsToA',
     ]],
-    ['trackedEntity', [
+    ['trackedEntityType', [
         'name',
         'description',
     ]],
@@ -309,7 +309,7 @@ const fieldOrderByName = new Map([
         'operator',
         'rightSide',
         'organisationUnitLevels',
-        'skipFormValidation'
+        'skipFormValidation',
     ]],
     ['validationRuleGroup', [
         'name',
