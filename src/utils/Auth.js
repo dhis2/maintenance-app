@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { getInstance } from 'd2/lib/d2';
 import getDisplayName from './getDisplayName';
 
 export const withAuth = (WrappedComponent) => {
