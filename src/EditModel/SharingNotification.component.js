@@ -11,7 +11,7 @@ const SharingNotification = React.createClass({
         style: React.PropTypes.object,
     },
 
-    mixins: [Auth, Translate],
+    mixins: [Translate],
 
     render() {
         const createPublic = this.props.getCurrentUser().canCreatePublic(this.props.getModelDefinitionByName(this.props.modelType));

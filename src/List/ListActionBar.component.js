@@ -34,9 +34,9 @@ const ListActionBar = React.createClass({
 
         return (
             <div style={cssStyles}>
-                {this.props.modelType === 'program' ? <ProgramSpeedDial {...this.props} /> : (<FloatingActionButton onClick={this._addClick}>
+               <FloatingActionButton onClick={this._addClick}>
                     <FontIcon className="material-icons">add</FontIcon>
-                </FloatingActionButton>)}
+                </FloatingActionButton>
             </div>
         );
     },
