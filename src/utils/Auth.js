@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getInstance } from 'd2/lib/d2';
+import getDisplayName from './getDisplayName';
 
+export const withAuth = (WrappedComponent) => {
 
-export const withAuth = (Component) => {
-
-    const Auth = (props, { d2 }) => {
+    const WithAuth = (props, { d2 }) => {
         const extraProps = {
             getCurrentUser: () => d2.currentUser,
             getModelDefinitionByName: (modelType) => d2.models[modelType]
 
         }
-        return <Component {...props} {...extraProps} />
+        return <WrappedComponent {...props} {...extraProps} />
     }
-    Auth.contextTypes = {
+    WithAuth.displayName = `WithAuth(${getDisplayName(WrappedComponent)})`;
+    WithAuth.contextTypes = {
         d2: PropTypes.object
     }
-    return Auth;
+    return WithAuth;
 }
 
 export default withAuth;
