@@ -235,6 +235,9 @@ const fieldOrderByName = new Map([
     ['trackedEntityType', [
         'name',
         'description',
+        'minAttributesRequiredToSearch',
+        'maxTeiCountToReturn'
+
     ]],
     ['programIndicator', [
         'program',
