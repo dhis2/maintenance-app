@@ -18,7 +18,7 @@ export function programStageStepperReducer(
         case PROGRAM_STAGE_STEP_CHANGE:
             return {
                 ...state,
-                activeStep: action.payload
+                activeStep: action.payload.stepKey
             };
 
         case PROGRAM_STAGE_STEP_NEXT:

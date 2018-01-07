@@ -217,7 +217,10 @@ const fieldOrderByName = new Map([
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
-        'programAttributes'
+        'programAttributes',
+        'minAttributesRequiredToSearch',
+        'maxTeiCountToReturn'
+
     ]],
     //Tracker-program
     ['enrollment', [
