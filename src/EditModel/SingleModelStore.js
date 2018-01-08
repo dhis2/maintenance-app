@@ -76,6 +76,7 @@ export const requestParams = new Map([
             'dataElement[id,displayName]',
             'trackedEntityAttribute[id,displayName]',
             'programStage[id,displayName]',
+            'programNotificationTemplate[id,displayName]',
             'programStageSection[id,displayName]]',
         ].join(','),
     }],

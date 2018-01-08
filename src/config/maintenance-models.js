@@ -55,7 +55,7 @@ export function getSideBarConfig() {
                 'trackedEntityAttribute',
                 'trackedEntityAttributeGroup',
                 'relationshipType',
-                'trackedEntity',
+                'trackedEntityType',
                 'programRule',
                 'programRuleVariable',
             ],
@@ -232,9 +232,8 @@ export function getFiltersForType(modelType) {
 export function getTableColumnsForType(modelType, preservePropNames = false) {
     if (typeDetails.hasOwnProperty(modelType) && typeDetails[modelType].hasOwnProperty('columns')) {
         return typeDetails[modelType].columns
-            .map(col => preservePropNames ? col : col.replace(/(\w*)\[(\w*)]/, '$1___$2'));
+            .map(col => (preservePropNames ? col : col.replace(/(\w*)\[(\w*)]/, '$1___$2')));
     }
-
     // Default columns:
     return ['displayName', 'publicAccess', 'lastUpdated'];
 }

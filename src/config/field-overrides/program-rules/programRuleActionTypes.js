@@ -108,6 +108,10 @@ const actionTypeFieldMapping = {
             trackedEntityAttribute: 'tracked_entity_attribute_to_make_mandatory',
         },
     },
+    SENDMESSAGE: {
+        label: 'send_message',
+        optional: ['programNotificationTemplate']
+    }
 };
 
 export default actionTypeFieldMapping;
