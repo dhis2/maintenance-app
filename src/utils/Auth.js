@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import getDisplayName from './getDisplayName';
+import getDisplayName from 'recompose/getDisplayName';
 
 export const withAuth = (WrappedComponent) => {
 

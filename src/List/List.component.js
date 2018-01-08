@@ -37,7 +37,8 @@ import { withAuth } from "../utils/Auth";
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
-    if ((action !== 'edit' && action !== 'clone') || this.props.getCurrentUser().canUpdate(this.props.getModelDefinitionByName(this.props.params.modelType))) {
+    const modelDef = this.props.getModelDefinitionByName(this.props.params.modelType);
+    if ((action !== 'edit' && action !== 'clone') || this.props.getCurrentUser().canUpdate(modelDef)) {
         return true;
     }
     return false;
@@ -45,7 +46,8 @@ function actionsThatRequireCreate(action) {
 
 // Filters out the `delete` when the user can not delete this modelType
 function actionsThatRequireDelete(action) {
-    if (action !== 'delete' || this.props.getCurrentUser().canDelete(this.props.getModelDefinitionByName(this.props.params.modelType))) {
+    const modelDef = this.props.getModelDefinitionByName(this.props.params.modelType);
+    if (action !== 'delete' || this.props.getCurrentUser().canDelete(modelDef)) {
         return true;
     }
     return false;

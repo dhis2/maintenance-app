@@ -14,8 +14,9 @@ const SharingNotification = React.createClass({
     mixins: [Translate],
 
     render() {
-        const createPublic = this.props.getCurrentUser().canCreatePublic(this.props.getModelDefinitionByName(this.props.modelType));
-        const createPrivate = this.props.getCurrentUser().canCreatePrivate(this.props.getModelDefinitionByName(this.props.modelType));
+        const modelDef = this.props.getModelDefinitionByName(this.props.modelType);
+        const createPublic = this.props.getCurrentUser().canCreatePublic(modelDef);
+        const createPrivate = this.props.getCurrentUser().canCreatePrivate(modelDef);
         const notificationStyle = Object.assign({}, this.props.style, {
             background: 'none',
             margin: '14px 0 0 -4px',
