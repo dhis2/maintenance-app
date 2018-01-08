@@ -43,10 +43,10 @@ function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDay
             <span>{t('send_notification')}</span>
             <TextField
                 hintText={t('number_of_days')}
-                value={Math.abs(value)}
+                value={Math.abs(value || 0)}
                 onChange={onChangeDays}
             />
-            <span>{t('days')}</span>
+            <span>{ t('days') }</span>
             <SelectField value={beforeOrAfter} onChange={onChangeBeforeAfter}>
                 <MenuItem value="before" primaryText={t('before')} />
                 <MenuItem value="after" primaryText={t('after')} />

@@ -28,7 +28,7 @@ const ProgramStageNotificationSubjectAndMessageTemplateFields = compose(
     connect(undefined, dispatch => bindActionCreators({
         onUpdate: ({ fieldName, value }) => setStageNotificationValue(fieldName, value),
     },
-        dispatch
+    dispatch,
     )),
     withProps(({ dataElements }) => ({
         variableTypes: map(toVariableType, PROGRAM_STAGE_VARIABLES).concat(map(toDataElementType, dataElements)),
@@ -56,6 +56,7 @@ export default new Map([
     }],
     ['recipientUserGroup', {
         component: (props) => {
+            console.log(props);
             if (!props.model || props.model.notificationRecipient !== 'USER_GROUP') {
                 return null;
             }

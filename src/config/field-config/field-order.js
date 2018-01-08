@@ -128,13 +128,12 @@ const fieldOrderByName = new Map([
         'organisationUnits',
     ]],
     ['dataSetNotificationTemplate', [
-        'name',
-        'code',
-        'dataSets',
-        'notificationTrigger',
-        'sendStrategy',
-        'notificationRecipients',
-        'messageTemplate',
+        // Step 1
+        'name', 'code', 'dataSets', 'messageTemplate',
+        // Step 2
+        'dataSetNotificationTrigger', 'relativeScheduledDays', 'sendStrategy',
+        // Step 3
+        'notificationRecipient', 'recipientUserGroup',
     ]],
     ['organisationUnit', [
         'name',

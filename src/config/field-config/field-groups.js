@@ -15,6 +15,20 @@ const fieldGroupsForModelType = new Map([
             fields: ['programRuleActions'],
         },
     ]],
+    ['dataSetNotificationTemplate', [
+        {
+            label: 'what_to_send',
+            fields: ['name', 'code', 'dataSets', 'messageTemplate'],
+        },
+        {
+            label: 'when_to_send_it',
+            fields: ['dataSetNotificationTrigger', 'relativeScheduledDays', 'sendStrategy'],
+        },
+        {
+            label: 'who_to_send_it_to',
+            fields: ['notificationRecipient', 'recipientUserGroup'],
+        },
+    ]],
 ]);
 
 
