@@ -23,7 +23,7 @@ const styles = {
 
 };
 
-class ProgramRuleConditionField extends React.Component {
+class TextEditorField extends React.Component {
     constructor(props) {
         super(props);
 
@@ -48,7 +48,9 @@ class ProgramRuleConditionField extends React.Component {
     componentWillReceiveProps(newProps) {
         if (newProps.value && newProps.value !== this.props.value) {
             this.setState({ value: newProps.value }, () => {
-                this.editor && this.editor.focus();
+                if (this.editor) {
+                    this.editor.focus();
+                }
             });
         }
     }
@@ -76,14 +78,27 @@ class ProgramRuleConditionField extends React.Component {
                 style={styles.ed17x0r}
                 value={this.state.value}
                 onChange={this.onChange}
-                ref={r => this.editor = r}
+                ref={r => (this.editor = r)}
             />
         );
     }
 }
 
-ProgramRuleConditionField.contextTypes = {
+TextEditorField.propTypes = {
+    value: React.PropTypes.any,
+    disabled: React.PropTypes.bool,
+    onChange: React.PropTypes.func,
+};
+
+TextEditorField.contextTypes = {
     d2: React.PropTypes.any,
 };
 
-export default ProgramRuleConditionField;
+TextEditorField.defaultProps = {
+    value: null,
+    disabled: false,
+    onChange: null,
+};
+
+
+export default TextEditorField;
