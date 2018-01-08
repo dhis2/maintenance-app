@@ -83,13 +83,16 @@ export function createModelToEditProgramStageEpic(actionType, store, storeProp) 
                     updateAttributeValue(model, field, value);
                 } else {
                     updateRegularValue(model, field, value);
+                    if(field == "name") {
+                        // Hack to update the displayName as well, to update name in list-view
+                        // This do not get sent to the server when it is saved
+                        updateRegularValue(model, "displayName", value);
+                    }
                 }
                 // Write back the state to the store
                 store.setState(
-                    storePropSetter(model, { ...store.getState() })
+                    storePropSetter(model, store.getState() )
                 );
-                console.log(store);
-                console.log(programStages);
             })
         )
         .flatMapTo(emptyAction$);

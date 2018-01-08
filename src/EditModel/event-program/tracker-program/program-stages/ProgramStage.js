@@ -44,11 +44,8 @@ const FAB = props => {
 const getProgramStageById = stageId =>
     programStages$
         .flatMap(x => x)
-        .do(val => console.log(val))
         .filter(stage => stage.id && stage.id === stageId)
-        .do(val => console.log(val))
         .defaultIfEmpty(firstProgramStage$)
-        .do(val => console.log(val));
 
 class ProgramStage extends Component {
     constructor(props) {
@@ -60,6 +57,13 @@ class ProgramStage extends Component {
     componentDidMount() {
 
 
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+
+        if(nextProps.programStage !== this.props.programStage)
+            return false;
+        return true;
     }
 
 
@@ -80,9 +84,6 @@ class ProgramStage extends Component {
             <div>
                 {this.shouldRenderStageEdit()
                     ? <EditProgramStage
-                          {...props}
-                          program={props.program}
-                          programStages={props.programStages}
                           programStage$={programStage$}
                       />
                     : <ProgramStageList

@@ -10,7 +10,7 @@ import { get, isEqual } from 'lodash/fp';
 import { changeStep } from './actions';
 import { editProgramStageField } from './actions';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { compose, lifecycle } from 'recompose';
+import { compose, lifecycle, pure } from 'recompose';
 import { Observable } from 'rxjs';
 import steps from './programStageSteps';
 import { createStepperFromConfig } from '../../../stepper/stepper';
@@ -34,7 +34,7 @@ const EditProgramStage = props => {
                 programStage={props.programStage}
             />
             <SaveButton isValid onClick={props.editProgramStageReset} />
-            <CancelButton onClick={() => props.cancelProgramStageEdit(props.programStage)} />
+            <CancelButton onClick={() => props.cancelProgramStageEdit(props.programStage.id)} />
         </div>
     );
 };
@@ -53,6 +53,21 @@ export default compose(
         componentWillUnmount() {
             this.props.changeStepperDisabledState(false)
             this.props.editProgramStageReset()
+        },
+      shouldComponentUpdate(nextProps) {
+            /* Do not update if programStage updates, this will make the form loose focus - as
+            the component will re-render for every change when the observable changes(due getting a new object
+            through withProgramStageFromProgramStage$ HoC. */
+        //    return false;
+            if(nextProps.programStage !== this.props.programStage || !this.props.programStage && !nextProps.programStage) {
+                return false;
+            }
+
+            if(nextProps !== this.props) {
+                return true
+            }
+
+            return false;
         }
     }),
     withProgramStageFromProgramStage$)(EditProgramStage)

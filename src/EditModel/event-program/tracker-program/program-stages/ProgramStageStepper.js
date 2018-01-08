@@ -19,6 +19,7 @@ import AssignProgramStageDataElements from './AssignProgramStageDataElements';
 import CreateDataEntryForm from './CreateDataEntryForm';
 import { getCurrentProgramStage, getActiveProgramStageStep } from "./selectors";
 import compose from 'recompose/compose';
+import pure from 'recompose/pure';
 
 
 //const ProgramStageForm = connectEditForm(wrapInPaper(createFormFor(props.programStage$, 'programStage', programStageFields)));
@@ -47,7 +48,7 @@ const ProgramStageVerticalStepper = connect(
 )(createStepperFromConfig(stepperConfig(), 'vertical'));
 
 
-export const ProgramStageStepper = props => {
+export const ProgramStageStepper = pure(props => {
     console.log(props);
     return (
         <div>
@@ -55,7 +56,7 @@ export const ProgramStageStepper = props => {
 
         </div>
     );
-};
+});
 
 ProgramStageStepper.propTypes = {
     /**
