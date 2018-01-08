@@ -1,33 +1,34 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import log from 'loglevel';
 import isIterable from 'd2-utilizr/lib/isIterable';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
+import Paper from 'material-ui/Paper/Paper';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
+import Auth from 'd2-ui/lib/auth/Auth.mixin';
+import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Observable } from 'rxjs';
 import DetailsBox from './DetailsBox.component';
 import contextActions from './ContextActions';
 import detailsStore from './details.store';
 import listStore from './list.store';
 import listActions from './list.actions';
 import ObserverRegistry from '../utils/ObserverRegistry.mixin';
-import Paper from 'material-ui/Paper/Paper';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';
 import LoadingStatus from './LoadingStatus.component';
-import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import Auth from 'd2-ui/lib/auth/Auth.mixin';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import sharingStore from './sharing.store';
 import translationStore from './translation-dialog/translationStore';
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import dataElementOperandStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
 import CompulsoryDataElementOperandDialog from './compulsory-data-elements-dialog/CompulsoryDataElementOperandDialog.component';
 import predictorDialogStore from './predictor-dialog/predictorDialogStore';
 import PredictorDialog from './predictor-dialog/PredictorDialog.component';
 import snackActions from '../Snackbar/snack.actions';
-import Heading from 'd2-ui/lib/headings/Heading.component';
 import fieldOrder from '../config/field-config/field-order';
-import { Observable } from 'rxjs';
 import { calculatePageValue } from './helpers/pagination';
 import HelpLink from './HelpLink.component';
 import Dropdown from '../forms/form-fields/drop-down';
@@ -72,7 +73,6 @@ function getTranslatablePropertiesForModelType(modelType) {
 }
 
 class DetailsBoxWithScroll extends Component {
-
     componentDidMount() {
         this.subscription = Observable
             .fromEvent(global, 'scroll')
@@ -82,7 +82,9 @@ class DetailsBoxWithScroll extends Component {
     }
 
     componentWillUnmount() {
-        this.subscription && this.subscription.unsubscribe();
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 
     render() {
@@ -101,6 +103,13 @@ class DetailsBoxWithScroll extends Component {
         );
     }
 }
+
+
+DetailsBoxWithScroll.propTypes = {
+    style: PropTypes.object.isRequired,
+    detailsObject: PropTypes.object.isRequired,
+    onClose: PropTypes.func.isRequired,
+};
 
 const List = React.createClass({
     propTypes: {
@@ -206,11 +215,11 @@ const List = React.createClass({
         }
     },
 
-    _translationSaved() {
+    translationSaved() {
         snackActions.show({ message: 'translation_saved', translate: true });
     },
 
-    _translationError(errorMessage) {
+    translationError(errorMessage) {
         log.error(errorMessage);
         snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
     },
@@ -312,7 +321,7 @@ const List = React.createClass({
         return (
             <div style={styles.inset}>
                 <SearchBox searchObserverHandler={this.searchListByName} />
-                {getFilterFieldsForType(this.props.params.modelType).map((filterField, i) => {
+                {getFilterFieldsForType(this.props.params.modelType).map((filterField) => {
                     const modelDefinition = this.context.d2.models[this.props.params.modelType];
                     const isConstantField =
                         modelDefinition.modelProperties.hasOwnProperty(filterField) &&
@@ -432,7 +441,7 @@ const List = React.createClass({
                     const objectName = col.substr(0, col.indexOf('___'));
                     const objectProp = col.substr(col.indexOf('___') + 3);
                     Object.assign(o, {
-                        [col]: row && row[objectName] && row[objectName][objectProp] || '',
+                        [col]: (row && row[objectName] && row[objectName][objectProp]) || '',
                     });
                 }
                 return o;
@@ -446,8 +455,11 @@ const List = React.createClass({
                 row.categoryCombo.displayName &&
                 row.categoryCombo.displayName === 'default' &&
                 row.categoryCombo___displayName === row.categoryCombo.displayName) {
-                row.categoryCombo.displayName = row.categoryCombo___displayName = this.getTranslation('none');
+                const noneStr = this.getTranslation('none');
+                row.categoryCombo.displayName = noneStr; // eslint-disable-line no-param-reassign
+                row.categoryCombo___displayName = noneStr; // eslint-disable-line no-param-reassign
             }
+
             return row;
         };
 
@@ -473,9 +485,9 @@ const List = React.createClass({
                     row.modelDefinition.modelProperties[columnName].constants
                 ) {
                     // Hack it to fix another hack - sweeet
-                    row.noMoreGottaTranslateCauseIsDone = true;
+                    row.noMoreGottaTranslateCauseIsDone = true; // eslint-disable-line no-param-reassign
                     if (row[columnName]) {
-                        prow[columnName] = this.getTranslation(row[columnName].toLowerCase());
+                        prow[columnName] = this.getTranslation(row[columnName].toLowerCase()); // eslint-disable-line no-param-reassign
                     }
                 }
                 return prow;
@@ -545,36 +557,36 @@ const List = React.createClass({
                     id={this.state.sharing.model.id}
                     type={this.props.params.modelType}
                     open={this.state.sharing.model && this.state.sharing.open}
-                    onRequestClose={this._closeSharingDialog}
+                    onRequestClose={this.closeSharingDialog}
                     bodyStyle={{ minHeight: '400px' }}
                 /> : null }
                 {this.state.translation.model ? <TranslationDialog
                     objectToTranslate={this.state.translation.model}
                     objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
                     open={this.state.translation.open}
-                    onTranslationSaved={this._translationSaved}
-                    onTranslationError={this._translationError}
-                    onRequestClose={this._closeTranslationDialog}
+                    onTranslationSaved={this.translationSaved}
+                    onTranslationError={this.translationError}
+                    onRequestClose={this.closeTranslationDialog}
                     fieldsToTranslate={getTranslatablePropertiesForModelType(this.props.params.modelType)}
                 /> : null }
                 <CompulsoryDataElementOperandDialog
                     model={this.state.dataElementOperand.model}
                     dataElementOperands={this.state.dataElementOperand.dataElementOperands}
                     open={this.state.dataElementOperand.open}
-                    onRequestClose={this._closeDataElementOperandDialog}
+                    onRequestClose={this.closeDataElementOperandDialog}
                 />
                 {this.state.predictorDialog && <PredictorDialog />}
             </div>
         );
     },
 
-    _closeTranslationDialog() {
+    closeTranslationDialog() {
         translationStore.setState(Object.assign({}, translationStore.state, {
             open: false,
         }));
     },
 
-    _closeSharingDialog(sharingState) {
+    closeSharingDialog(sharingState) {
         const model = sharingState
             ? Object.assign(sharingStore.state.model, { publicAccess: sharingState.publicAccess })
             : sharingStore.state.model;
@@ -584,7 +596,7 @@ const List = React.createClass({
         }));
     },
 
-    _closeDataElementOperandDialog() {
+    closeDataElementOperandDialog() {
         dataElementOperandStore.setState(Object.assign({}, dataElementOperandStore.state, {
             open: false,
         }));

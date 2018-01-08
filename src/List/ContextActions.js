@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import log from 'loglevel';
 
-import { config, getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2/lib/d2';
 import Action from 'd2-ui/lib/action/Action';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
@@ -31,13 +31,6 @@ const contextActions = Action.createActionsFromNames([
     'preview',
     'runNow',
 ]);
-
-const confirm = message => new Promise((resolve, reject) => {
-    if (window.confirm(message)) {
-        resolve();
-    }
-    reject();
-});
 
 // TODO: The action assumes that the appState actually has state
 contextActions.edit
@@ -104,7 +97,7 @@ contextActions.delete
                         });
                 },
             });
-        })
+        }),
     );
 
 contextActions.details
@@ -113,7 +106,7 @@ contextActions.details
     });
 
 contextActions.share
-    .subscribe(async({ data: model }) => {
+    .subscribe(async ({ data: model }) => {
         const d2 = await getD2();
         const modelToShare = await d2.models[model.modelDefinition.name].get(model.id);
 
@@ -124,7 +117,7 @@ contextActions.share
     });
 
 contextActions.translate
-    .subscribe(async({ data: model }) => {
+    .subscribe(async ({ data: model }) => {
         const d2 = await getD2();
         const modelToTranslate = await d2.models[model.modelDefinition.name].get(model.id);
 
@@ -148,12 +141,12 @@ contextActions.compulsoryDataElements
         const getDataElementOperands = () => api
             .get(
                 'dataElementOperands',
-            {
-                fields: 'dataElement[id],categoryOptionCombo[id],displayName',
-                totals: false,
-                paging: false,
-                dataSet: model.id,
-            }
+                {
+                    fields: 'dataElement[id],categoryOptionCombo[id],displayName',
+                    totals: false,
+                    paging: false,
+                    dataSet: model.id,
+                },
             )
             .then(responseData => responseData.dataElementOperands);
 
@@ -170,7 +163,13 @@ contextActions.compulsoryDataElements
             .map(dataSetElement => dataSetElement.dataElement.id);
 
         const dataElementOperandsForDataSet = dataElementOperands
-            .map(dataElementOperand => Object.assign(dataElementOperand, { dataElementId: dataElementOperand.dataElement.id, optionComboId: dataElementOperand.categoryOptionCombo.id }))
+            .map(dataElementOperand => Object.assign(
+                dataElementOperand,
+                {
+                    dataElementId: dataElementOperand.dataElement.id,
+                    optionComboId: dataElementOperand.categoryOptionCombo.id,
+                },
+            ))
             .filter(dataElementOperand => dataSetDataElementIds.indexOf(dataElementOperand.dataElementId) >= 0);
 
         compulsoryDataElementStore.setState({
@@ -232,16 +231,16 @@ contextActions.runNow
     });
 
 contextActions.preview
-    .subscribe(({ data: model, complete: actionComplete, error: actionFailed }) => {
-        getD2()
-            .then((d2) => {
-                window.open(`${d2.Api.getApi().baseUrl}/${[model.modelDefinition.name, model.id, 'render'].join('/')}`);
-            })
-            .then(actionComplete)
-            .catch((err) => {
-                snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview'), action: 'ok' });
-                actionFailed(err);
-            });
+    .subscribe(async ({ data: model, complete: actionComplete, error: actionFailed }) => {
+        const d2 = await getD2();
+
+        try {
+            await window.open(`${d2.Api.getApi().baseUrl}/${[model.modelDefinition.name, model.id, 'render'].join('/')}`);
+            await actionComplete();
+        } catch (err) {
+            snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview'), action: 'ok' });
+            actionFailed(err);
+        }
     });
 
 export default contextActions;

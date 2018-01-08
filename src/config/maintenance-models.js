@@ -220,10 +220,10 @@ export function getFiltersForType(modelType) {
     if (typeDetails.hasOwnProperty(modelType) && typeDetails[modelType].hasOwnProperty('filters')) {
         return typeDetails[modelType]
             .filters
-            .reduce((f, filters) => {
-                f[filters] = null;
-                return f;
-            }, {});
+            .reduce((f, filterName) => ({
+                ...f,
+                [filterName]: null,
+            }), {});
     }
 
     return [];
