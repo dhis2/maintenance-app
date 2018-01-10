@@ -14,10 +14,9 @@ import store from './store';
 import { resetActiveStep } from './EditModel/actions';
 import { loadEventProgram } from './EditModel/event-program/actions';
 import { loadProgramIndicator } from './EditModel/program-indicator/actions';
+import { noop } from 'lodash/fp';
 
 import onDemand from './on-demand';
-
-function noop () {}
 
 function initState({ params }) {
     initAppState({
