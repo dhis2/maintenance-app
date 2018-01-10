@@ -75,7 +75,10 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
         const rootLevelOrgUnits = await d2.models.organisationUnits.list({
             level: 1,
             paging: false,
-            fields: 'id,displayName,path,publicAccess,lastUpdated,children[id,displayName,path,children::isNotEmpty]',
+            fields: [
+                'id,displayName,path,publicAccess,access,lastUpdated',
+                'children[id,displayName,path,children::isNotEmpty]',
+            ].join(','),
         });
 
         getCurrentUserOrganisationUnits.currentUserOrganisationUnits = rootLevelOrgUnits;

@@ -2,8 +2,8 @@ import React from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import Avatar from 'material-ui/Avatar';
-import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import { goToRoute } from '../router-utils';
+import { withAuth } from "../utils/Auth";
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 
 class ProgramSpeedDial extends React.Component {
@@ -49,10 +49,7 @@ const ListActionBar = React.createClass({
         groupName: React.PropTypes.string.isRequired
     },
 
-    mixins: [Auth],
-
     _addClick() {
-
         goToRoute(`/edit/${this.props.groupName}/${this.props.modelType}/add`);
     },
 
@@ -63,14 +60,14 @@ const ListActionBar = React.createClass({
             bottom: '1.5rem',
             right: '1.5rem',
             position: 'fixed',
-            zIndex: 10
+            zIndex: 10,
         };
 
-        const modelDefinition = this.getModelDefinitionByName(
+        const modelDefinition = this.props.getModelDefinitionByName(
             this.props.modelType
         );
 
-        if (!this.getCurrentUser().canCreate(modelDefinition)) {
+        if (!this.props.getCurrentUser().canCreate(modelDefinition)) {
             return null;
         }
 
@@ -84,4 +81,4 @@ const ListActionBar = React.createClass({
     }
 });
 
-export default ListActionBar;
+export default withAuth(ListActionBar);
