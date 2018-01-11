@@ -408,9 +408,6 @@ export const saveTrackerProgramStage = action$ =>
                     }),
                     { programStageToEdit: null }
                 );
-                console.log(store);
-                console.log(eventProgramStore);
-             //   return store.programStages;
             })
         )
         .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
@@ -420,12 +417,14 @@ export const cancelProgramStageEdit = action$ =>
         .ofType(PROGRAM_STAGE_EDIT_CANCEL)
         .flatMap(() =>
             eventProgramStore.take(1).map(store => {
+                console.log("asf")
                 eventProgramStore.setState(
-                    set('programStageToEdit')(
+                    set('programStageToEdit',
                         null,
                         eventProgramStore.getState()
                     )
                 );
+                console.log("end")
             })
         )
         .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
