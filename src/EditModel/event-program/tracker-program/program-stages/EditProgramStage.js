@@ -19,7 +19,7 @@ import { withProgramStageFromProgramStage$ } from "./utils";
 import ProgramStageStepper from './ProgramStageStepper';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import { changeStepperDisabledState } from "../../actions";
-import { editProgramStageReset, cancelProgramStageEdit } from "./actions";
+import { saveProgramStageEdit, cancelProgramStageEdit } from "./actions";
 import SaveButton from '../../../SaveButton.component';
 import CancelButton from '../../../CancelButton.component';
 
@@ -33,8 +33,8 @@ const EditProgramStage = props => {
                 programStage$={props.programStage$}
                 programStage={props.programStage}
             />
-            <SaveButton isValid onClick={props.editProgramStageReset} />
-            <CancelButton onClick={() => props.cancelProgramStageEdit(props.programStage.id)} />
+            <SaveButton isValid onClick={props.saveProgramStageEdit} />
+            <CancelButton onClick={props.cancelProgramStageEdit} />
         </div>
     );
 };
@@ -42,7 +42,7 @@ const EditProgramStage = props => {
 export default compose(
     connect(null, (dispatch) => bindActionCreators({
         changeStepperDisabledState,
-        editProgramStageReset,
+        saveProgramStageEdit,
         cancelProgramStageEdit
     }, dispatch)),
     lifecycle({
@@ -52,7 +52,7 @@ export default compose(
         },
         componentWillUnmount() {
             this.props.changeStepperDisabledState(false)
-            this.props.editProgramStageReset()
+       //     this.props.saveProgramStage()
         },
       shouldComponentUpdate(nextProps) {
             /* Do not update if programStage updates, this will make the form loose focus - as

@@ -112,6 +112,7 @@ function isValidState(state) {
     const acceptedKeys = [
         'program',
         'programStages',
+        'programStageToEdit',
         'programStageSections',
         'programStageNotifications',
         'availableDataElements',
@@ -163,6 +164,7 @@ const eventProgramStore = Store.create();
 const storeSetState = eventProgramStore.setState.bind(eventProgramStore);
 
 eventProgramStore.setState = (newState) => {
+    console.log("asf")
     if (!isObject(newState)) {
         throw new Error('You are attempting to set a state that is a non object');
     }
@@ -170,10 +172,12 @@ eventProgramStore.setState = (newState) => {
     if (!isValidState(newState)) {
         throw new Error('You are attempting to set an invalid state onto the eventProgramStore');
     }
+    console.log("SETSTATE")
     storeSetState({
         ...eventProgramStore.getState(),
         ...newState,
     });
+    console.log("SET STATE")
 };
 
 eventProgramStore.subscribe(val => console.log(val))

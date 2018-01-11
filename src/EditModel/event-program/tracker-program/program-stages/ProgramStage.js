@@ -18,6 +18,9 @@ const program$ = programStore$.map(get('program'));
 const programStages$ = programStore$.map(get('programStages'));
 const getFirstProgramStage = compose(first, get('programStages'));
 const firstProgramStage$ = programStore$.map(getFirstProgramStage);
+
+const currentProgramStage$ = programStore$.map(get('programStageToEdit'));
+
 const handleNewProgramStage = () => {
     addQuery({ stage: 'add' });
 };
@@ -52,13 +55,6 @@ class ProgramStage extends Component {
         super(props);
     }
 
-    componentWillMount() {}
-
-    componentDidMount() {
-
-
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
 
         if(nextProps.programStage !== this.props.programStage)
@@ -66,23 +62,16 @@ class ProgramStage extends Component {
         return true;
     }
 
-
-    shouldRenderStageEdit = () => (!!this.props.currentProgramStageId)
-
-    createNewProgramStage = () => {
-
-    }
-
     render() {
         const props = this.props;
         console.log(props.programStages)
 
-        const programStage$ = props.currentProgramStageId !== "add" && getProgramStageById(props.currentProgramStageId);
+        const programStage$ = currentProgramStage$;// props.currentProgramStageId !== "add" && getProgramStageById(props.currentProgramStageId);
 
       //  console.log(shouldRenderStageEdit())
         return (
             <div>
-                {this.shouldRenderStageEdit()
+                {!!this.props.currentProgramStageId
                     ? <EditProgramStage
                           programStage$={programStage$}
                       />

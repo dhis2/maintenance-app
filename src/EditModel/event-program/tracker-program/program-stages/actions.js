@@ -11,6 +11,7 @@ export const PROGRAM_STAGE_ADD = 'PROGRAM_STAGE_ADD';
 export const PROGRAM_STAGE_EDIT = 'PROGRAM_STAGE_EDIT';
 export const PROGRAM_STAGE_EDIT_RESET = 'PROGRAM_STAGE_EDIT_RESET';
 export const PROGRAM_STAGE_EDIT_CANCEL = 'PROGRAM_STAGE_EDIT_CANCEL';
+export const PROGRAM_STAGE_EDIT_SAVE = 'PROGRAM_STAGE_EDIT_SAVE';
 
 export const changeStep = stepKey => ({
     type: PROGRAM_STAGE_STEP_CHANGE,
@@ -37,13 +38,11 @@ export const editProgramStageField = (stageId, field, value) => ({
     payload: { stageId, field, value }
 });
 
+export const saveProgramStageEdit = () => ({type: PROGRAM_STAGE_EDIT_SAVE});
 
-export const cancelProgramStageEdit = (stageId) => {
+export const cancelProgramStageEdit = () => {
     return {
-        type: PROGRAM_STAGE_EDIT_CANCEL,
-        payload: {
-            stageId
-        }
+        type: PROGRAM_STAGE_EDIT_CANCEL
     }
 }
 

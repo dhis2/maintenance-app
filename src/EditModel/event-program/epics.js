@@ -14,8 +14,10 @@ import {
     PROGRAM_STAGE_FIELD_EDIT,
     PROGRAM_STAGE_EDIT_RESET,
     PROGRAM_STAGE_EDIT_CANCEL,
+    PROGRAM_STAGE_EDIT_SAVE,
     editProgramStageReset,
     PROGRAM_STAGE_ADD,
+    PROGRAM_STAGE_EDIT,
     editProgramStage
 } from './tracker-program/program-stages/actions';
 import eventProgramStore, {
@@ -270,10 +272,10 @@ export const programModelEdit = createModelToEditEpic(
     'program'
 );
 
-export const programStageModelEdit = createModelToEditProgramStageEpic(
+export const programStageModelEdit = createModelToEditEpic(
     PROGRAM_STAGE_FIELD_EDIT,
     eventProgramStore,
-    'programStages'
+    'programStageToEdit'
 );
 
 const saveEventProgram = eventProgramStore
@@ -355,32 +357,78 @@ export const newTrackerProgramStage = action$ =>
                     set('programStages')(programStages, newState),
                     set('program.programStages')(programStages, newState)
                 );
+                console.log('new stage');
                 return editProgramStage(programStageUid);
             })
         );
     });
 
-export const cancelProgramStageEdit = action$ =>
+export const editTrackerProgramStage = action$ =>
     action$
-        .ofType(PROGRAM_STAGE_EDIT_CANCEL)
+        .ofType(PROGRAM_STAGE_EDIT)
         .map(action => action.payload)
         .flatMap(({ stageId }) =>
             eventProgramStore
                 .take(1)
                 .map(get('programStages'))
                 .map(programStages => {
-                    console.log(programStages)
+                    console.log(programStages);
                     const index = programStages.findIndex(
                         stage => stage.id == stageId
                     );
-                    const model = programStages[index];
-                    model.resetDirtyState();
-                    console.log(model);
-                    eventProgramStore.setState(set(`programStages[${index}]`, model, {...store.getState()}));
-                    console.log("asf")
+                    const model = programStages[index].clone();
+                    const setter = { programStageToEdit: model };
+
+                    eventProgramStore.setState(setter);
                 })
         )
-        .flatMapTo(Observable.of({type: PROGRAM_STAGE_EDIT_RESET}))
+        .flatMapTo(Observable.of({ type: 'EMPTY' }));
+
+const programStageToEdit = get('programStageToEdit', eventProgramStore);
+
+export const saveTrackerProgramStage = action$ =>
+    action$
+        .ofType(PROGRAM_STAGE_EDIT_SAVE)
+        .flatMap(action =>
+            eventProgramStore.take(1).map(store => {
+                const stageId = store.programStageToEdit.id;
+                console.log(store);
+                const index = store.programStages.findIndex(
+                    stage => stage.id == stageId
+                );
+                if (index < 0) {
+                    console.warn(
+                        `ProgramStage with id ${stageId} does not exist`
+                    );
+                }
+                const model = store.programStageToEdit;
+                eventProgramStore.setState(
+                    set(`programStages[${index}]`)(model, {
+                        ...eventProgramStore.getState()
+                    }),
+                    { programStageToEdit: null }
+                );
+                console.log(store);
+                console.log(eventProgramStore);
+             //   return store.programStages;
+            })
+        )
+        .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
+
+export const cancelProgramStageEdit = action$ =>
+    action$
+        .ofType(PROGRAM_STAGE_EDIT_CANCEL)
+        .flatMap(() =>
+            eventProgramStore.take(1).map(store => {
+                eventProgramStore.setState(
+                    set('programStageToEdit')(
+                        null,
+                        eventProgramStore.getState()
+                    )
+                );
+            })
+        )
+        .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
 
 export default combineEpics(
     programModel,
@@ -394,5 +442,7 @@ export default combineEpics(
     createCreateDataEntryFormEpics(eventProgramStore),
     dataEntryFormEpics,
     newTrackerProgramStage,
-    cancelProgramStageEdit
+    editTrackerProgramStage,
+    cancelProgramStageEdit,
+    saveTrackerProgramStage
 );
