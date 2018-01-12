@@ -2,15 +2,25 @@ import DropDown from '../../../forms/form-fields/drop-down';
 import TextField from '../../../forms/form-fields/text-field';
 import PeriodTypeDropDown from '../../../forms/form-fields/period-type-drop-down';
 
-const periods = [
-    {text: 'years', value: 'Yearly'},
-    {text: 'days', value: 'Daily'},
-    {text: 'months', value: 'Monthly'}
-];
-
+// definitions mapped to java enum
+// https://github.com/dhis2/dhis2-core/blob/markus-program-indicators-cohorts/dhis-2/dhis-api/src/main/java/org/hisp/dhis/program/AnalyticsPeriodBoundaryType.java#L37-L40
 const periodBoundaryTypes = [
-    {text: 'Before end of reporting period', value: 'BEFORE_END_OF_REPORTING_PERIOD'},
-    {text: 'After start of reporting period', value: 'AFTER_START_OF_REPORTING_PERIOD'}
+    {
+        text: 'Before start of reporting period',
+        value: 'BEFORE_START_OF_REPORTING_PERIOD'
+    },
+    {
+        text: 'Before end of reporting period',
+        value: 'BEFORE_END_OF_REPORTING_PERIOD'
+    },
+    {
+        text: 'After start of reporting period',
+        value: 'AFTER_END_OF_REPORTING_PERIOD'
+    },
+    {
+        text: 'After end of reporting period',
+        value: 'AFTER_END_OF_REPORTING_PERIOD'
+    }
 ];
 
 const boundaryTarget = [
