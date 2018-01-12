@@ -23,23 +23,7 @@ const styles = {
     },
 };
 
-const SortableDataList = SortableContainer(({ dataElements, isSortingIndex }) => <div>
-    { dataElements.map((dataElement, index) => (
-        <SortableDataElement
-            dataElement={dataElement}
-            index={index}
-            isSortingIndex={isSortingIndex}
-            key={`item-${index}`}
-            sortIndex={index}
-        />
-        ))}
-</div>);
-
-const SortableDataElement = SortableElement(({ index, sortIndex, dataElement, isSortingIndex }) => (
-    <DataElement index={index} sortOrder={sortIndex} dataElement={dataElement} isSortingIndex={isSortingIndex} />
-));
-
-const DataElement = ({ sortOrder, dataElement }) => (
+const DataElement = ({ dataElement }) => (
     <div style={styles.dataElement}>
         <div style={styles.row}>
             <DragHandle />
@@ -54,7 +38,19 @@ DataElement.propTypes = {
         id: PropTypes.string.isRequired,
         displayName: PropTypes.string.isRequired,
     }),
-    sortOrder: PropTypes.number.isRequired,
 };
+
+const SortableDataElement = SortableElement(DataElement);
+const SortableDataList = SortableContainer(({ dataElements, isSortingIndex }) => <div>
+    { dataElements.map((dataElement, index) => (
+        <SortableDataElement
+            dataElement={dataElement}
+            index={index}
+            isSortingIndex={isSortingIndex}
+            key={`item-${index}`}
+            sortIndex={index}
+        />
+        ))}
+</div>);
 
 export default SortableDataList;
