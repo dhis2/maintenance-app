@@ -1,5 +1,6 @@
 import DropDown from '../../../forms/form-fields/drop-down';
 import TextField from '../../../forms/form-fields/text-field';
+import PeriodTypeDropDown from '../../../forms/form-fields/period-type-drop-down';
 
 const periods = [
     {text: 'years', value: 'Yearly'},
@@ -7,14 +8,15 @@ const periods = [
     {text: 'months', value: 'Monthly'}
 ];
 
-const boundaries = [
+const periodBoundaryTypes = [
     {text: 'Before end of reporting period', value: 'BEFORE_END_OF_REPORTING_PERIOD'},
     {text: 'After start of reporting period', value: 'AFTER_START_OF_REPORTING_PERIOD'}
 ];
 
-const reports = [
+const boundaryTarget = [
     {text: 'Incident date', value: 'INCIDENT_DATE'},
-    {text: 'Event data', value: 'EVENT_EXECUTION_DATE'}
+    {text: 'Event date', value: 'EVENT_DATE'},
+    {text: 'Enrollment date', value: 'ENROLLMENT_DATE'}
 ];
 
 function onChange (e) {
@@ -26,27 +28,30 @@ function AnalyticsPeriodBoundary (props) {
     return (
         <div>
             <DropDown
-                labelText="report"
-                options={reports}
+                labelText="Boundary target"
+                options={boundaryTarget}
                 onChange={onChange}
-                value={props.boundaryTarget} />
+                value={props.boundaryTarget}
+            />
 
             <DropDown
-                labelText="boundary"
-                options={boundaries}
+                labelText="Analytics period boundary type"
+                options={periodBoundaryTypes}
                 onChange={onChange}
-                value={props.analyticsPeriodBoundaryType} />
+                value={props.analyticsPeriodBoundaryType}
+            />
 
             <TextField type="number"
                 labelText="offset"
                 value={props.offsetNumberOfPeriods}
-                onChange={onChange} />
-
-            <DropDown
-                labelText="period"
-                options={periods}
                 onChange={onChange}
-                value={props.offsetPeriodType}/>
+            />
+
+            <PeriodTypeDropDown
+                labelText="period"
+                onChange={onChange}
+                value={props.offsetPeriodType}
+            />
 
             <button>Delete</button>
         </div>
