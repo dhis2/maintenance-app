@@ -23,20 +23,6 @@ function updateRegularValue(model, fieldName, value) {
     return model;
 }
 
-/* Some models does not always get refreshed from the server before showing the name,
-    and we therefore copy the name to displayName to show in lists etc. This does not get sent
-    to the server, and upon reloading the model - the server-defined displayName will be shown.
- */
-
-function shouldUpdateDisplayName(model, fieldName) {
-    const modelType = model.modelDefinition.name;
-    if (fieldName !== 'name') {
-        return false;
-    }
-    return modelType === 'programStage';
-}
-
-
 /**
  * Convenience method to create an epic that handles modifying a d2.Model instance in a custom rxjs store.
  * This action that will reply to can be provided and will be passed to the `.ofType(actionType)` of the Epic.
@@ -68,9 +54,6 @@ export function createModelToEditEpic(actionType, store, storeProp) {
                         updateAttributeValue(model, field, value);
                     } else {
                         updateRegularValue(model, field, value);
-                        if(shouldUpdateDisplayName(model, field)) {
-                            updateRegularValue(model, 'displayName', value);
-                        }
                     }
 
                     // Write back the state to the store
@@ -78,6 +61,41 @@ export function createModelToEditEpic(actionType, store, storeProp) {
                         storePropSetter(model, { ...store.getState() })
                     );
                 })
+        )
+        .flatMapTo(emptyAction$);
+}
+
+export function createModelToEditProgramStageEpic(actionType, store, storeProp) {
+    const storePropGetter = get(storeProp);
+
+    return action$ => action$
+        .ofType(actionType)
+        .map(action => action.payload)
+        .flatMap(({ stageId, field, value }) => store
+            .take(1)
+            .map(storePropGetter)
+            .map((programStages) => {
+                const index = programStages.findIndex(stage => stage.id == stageId);
+                const model = programStages[index];
+                const storePropSetter = set(`${storeProp}[${index}]`);
+                // Apply the new value to the model
+                if (isAttributeValue(model, field)) {
+                    updateAttributeValue(model, field, value);
+                } else {
+                    updateRegularValue(model, field, value);
+                    /* ProgramStages does not get refreshed from the server after editing a stage,
+                    and we therefore copy the name to displayName to show in lists etc. This does not get sent
+                    to the server, and upon reloading the model, the server-defined displayName will be shown */
+
+                    if(field === 'name') {
+                        updateRegularValue(model, 'displayName', value);
+                    }
+                }
+                // Write back the state to the store
+                store.setState(
+                    storePropSetter(model, store.getState() )
+                );
+            })
         )
         .flatMapTo(emptyAction$);
 }

@@ -112,7 +112,7 @@ function isValidState(state) {
     const acceptedKeys = [
         'program',
         'programStages',
-        'programStageToEdit',
+        'programStageToEditCopy',
         'programStageSections',
         'programStageNotifications',
         'availableDataElements',

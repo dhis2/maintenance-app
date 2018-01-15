@@ -9,10 +9,10 @@ import { addQuery } from '../../../../router-utils';
 import ProgramStageList from './ProgramStageList';
 import EditProgramStage from './EditProgramStage';
 import { withProgramAndStages } from './utils';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
-import { getCurrentProgramStage } from "./selectors";
-import { editProgramStage } from "./actions";
+import { getCurrentProgramStage } from './selectors';
+import { editProgramStage } from './actions';
 
 const program$ = programStore$.map(get('program'));
 const programStages$ = programStore$.map(get('programStages'));
@@ -48,7 +48,7 @@ const getProgramStageById = stageId =>
     programStages$
         .flatMap(x => x)
         .filter(stage => stage.id && stage.id === stageId)
-        .defaultIfEmpty(firstProgramStage$)
+        .defaultIfEmpty(firstProgramStage$);
 
 class ProgramStage extends Component {
     constructor(props) {
@@ -56,25 +56,23 @@ class ProgramStage extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-
-        if(nextProps.programStage !== this.props.programStage)
-            return false;
-        return true;
+        return nextProps.programStage === this.props.programStage
+        //return true;
     }
 
     render() {
         const props = this.props;
-        console.log(props.programStages)
+        console.log(props.programStages);
 
-        const programStage$ = currentProgramStage$;// props.currentProgramStageId !== "add" && getProgramStageById(props.currentProgramStageId);
+        const programStage$ =
+            props.currentProgramStageId !== 'add' &&
+            getProgramStageById(props.currentProgramStageId);
 
-      //  console.log(shouldRenderStageEdit())
+        //  console.log(shouldRenderStageEdit())
         return (
             <div>
                 {!!this.props.currentProgramStageId
-                    ? <EditProgramStage
-                          programStage$={programStage$}
-                      />
+                    ? <EditProgramStage programStage$={programStage$} />
                     : <ProgramStageList
                           program={props.program}
                           programStages={props.programStages}
@@ -86,14 +84,15 @@ class ProgramStage extends Component {
 
 const mapStateToProps = state => ({
     currentProgramStageId: getCurrentProgramStage(state)
-})
+});
 
 const mapDispatchToProps = dispatch => ({
     editProgramStage(id) {
-        dispatch(editProgramStage(id))
+        dispatch(editProgramStage(id));
     }
 });
 
 export default compose(
-    connect(mapStateToProps,mapDispatchToProps),
-    withProgramAndStages)(ProgramStage);
+    connect(mapStateToProps, mapDispatchToProps),
+    withProgramAndStages
+)(ProgramStage);

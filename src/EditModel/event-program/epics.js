@@ -272,10 +272,10 @@ export const programModelEdit = createModelToEditEpic(
     'program'
 );
 
-export const programStageModelEdit = createModelToEditEpic(
+export const programStageModelEdit = createModelToEditProgramStageEpic(
     PROGRAM_STAGE_FIELD_EDIT,
     eventProgramStore,
-    'programStageToEdit'
+    'programStages'
 );
 
 const saveEventProgram = eventProgramStore
@@ -363,6 +363,8 @@ export const newTrackerProgramStage = action$ =>
         );
     });
 
+/* Gets called when user edits a TrackerProgramStage.
+*   Copies the original model, to be used if cancelled */
 export const editTrackerProgramStage = action$ =>
     action$
         .ofType(PROGRAM_STAGE_EDIT)
@@ -377,37 +379,38 @@ export const editTrackerProgramStage = action$ =>
                         stage => stage.id == stageId
                     );
                     const model = programStages[index].clone();
-                    const setter = { programStageToEdit: model };
+                    const setter = { programStageToEditCopy: model };
 
                     eventProgramStore.setState(setter);
                 })
         )
         .flatMapTo(Observable.of({ type: 'EMPTY' }));
 
-const programStageToEdit = get('programStageToEdit', eventProgramStore);
+//const programStageToEdit = get('programStageToEdit', eventProgramStore);
 
 export const saveTrackerProgramStage = action$ =>
     action$
         .ofType(PROGRAM_STAGE_EDIT_SAVE)
         .flatMap(action =>
             eventProgramStore.take(1).map(store => {
-                const stageId = store.programStageToEdit.id;
-                console.log(store);
-                const index = store.programStages.findIndex(
-                    stage => stage.id == stageId
-                );
-                if (index < 0) {
-                    console.warn(
-                        `ProgramStage with id ${stageId} does not exist`
+
+                    const stageId = store.programStageToEditCopy.id;
+                    const index = store.programStages.findIndex(
+                        stage => stage.id == stageId
                     );
+                    if (index < 0) {
+                        console.warn(
+                            `ProgramStage with id ${stageId} does not exist`
+                        );
+                    }
+                    try {
+                    eventProgramStore.setState(
+                        { programStageToEditCopy: null }
+                    );
+                } catch(e) {
+                    console.log(e)
                 }
-                const model = store.programStageToEdit;
-                eventProgramStore.setState(
-                    set(`programStages[${index}]`)(model, {
-                        ...eventProgramStore.getState()
-                    }),
-                    { programStageToEdit: null }
-                );
+
             })
         )
         .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
@@ -417,14 +420,31 @@ export const cancelProgramStageEdit = action$ =>
         .ofType(PROGRAM_STAGE_EDIT_CANCEL)
         .flatMap(() =>
             eventProgramStore.take(1).map(store => {
-                console.log("asf")
-                eventProgramStore.setState(
-                    set('programStageToEdit',
-                        null,
-                        eventProgramStore.getState()
-                    )
+                const stageId = store.programStageToEditCopy.id;
+                console.log(store);
+                const index = store.programStages.findIndex(
+                    stage => stage.id == stageId
                 );
-                console.log("end")
+                if (index < 0) {
+                    console.warn(
+                        `ProgramStage with id ${stageId} does not exist`
+                    );
+                }
+                const model = store.programStageToEditCopy;
+                try {
+                    eventProgramStore.setState(
+                        set(`programStages[${index}]`)(model, {
+                            ...eventProgramStore.getState()
+                        }),
+                        set('programStageToEditCopy',
+                            null,
+                            eventProgramStore.getState()
+                        )
+                    );
+                } catch(e) {
+                    console.log(e);
+                }
+
             })
         )
         .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));

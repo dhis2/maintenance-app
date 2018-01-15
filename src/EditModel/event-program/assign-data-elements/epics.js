@@ -10,15 +10,17 @@ export const getProgramStageToModify =  (programStageIdToModify, programStages) 
 const programStageDataElementExistsInDataElementUidList = uids => compose(includes(__, uids), get('dataElement.id'));
 const keepProgramStageDataElementsNotInUidList = uids => filter(negate(programStageDataElementExistsInDataElementUidList(uids)));
 
-const getProgramStageToEdit = (store) => get('programStageToEdit', store);
-
-const programStageToEditSetter = set('programStageToEdit');
+const getProgramStageByIdFromAction = (store, action) => {
+    const programStageIdToModify = get('payload.programStage', action);
+    const programStages = getOr([], 'programStages', store.getState());
+    return getProgramStageToModify(programStageIdToModify, programStages);
+};
 
 const addDataElementsToStage = store => action$ => action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_ADD)
         .map((action) => {
             const state = store.getState();
-            const programStageToEdit = getProgramStageToEdit(state);
+            const programStageToEdit = getProgramStageByIdFromAction(store, action);
 
             const programStageDataElements = getOr([], 'programStageDataElements', programStageToEdit);
             const dataElementIdsToAdd = getOr([], 'payload.dataElements', action);
@@ -30,10 +32,10 @@ const addDataElementsToStage = store => action$ => action$
             }), dataElementIdsToAdd);
 
             programStageToEdit.programStageDataElements = programStageDataElements.concat(programStageDataElementsToAdd);
-
+            const programStages = getOr([], 'programStages', store.getState());
             store.setState({
                 ...store.getState(),
-                programStageToEdit
+                programStages
             });
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENTS_ADDREMOVE_COMPLETE });
@@ -42,7 +44,7 @@ const removeDataElementFromStage = store => action$ => action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_REMOVE)
         .map((action) => {
             const state = store.getState();
-            const programStageToEdit = getProgramStageToEdit(state);
+            const programStageToEdit = getProgramStageByIdFromAction(store, action);
 
             const programStageDataElements = getOr([], 'programStageDataElements', programStageToEdit);
             const dataElementIdsToRemove = getOr([], 'payload.dataElements', action);
@@ -50,26 +52,22 @@ const removeDataElementFromStage = store => action$ => action$
             const removeDataElements = keepProgramStageDataElementsNotInUidList(dataElementIdsToRemove);
 
             programStageToEdit.programStageDataElements = removeDataElements(programStageDataElements);
-
+            const programStages = getOr([], 'programStages', store.getState());
             store.setState({
                 ...store.getState(),
-                programStageToEdit,
+                programStages,
             });
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENTS_ADDREMOVE_COMPLETE });
 
-const getProgramStageByIdFromAction = (store, action) => {
-    const programStageIdToModify = get('payload.programStage', action);
-    const programStages = getOr([], 'programStages', store.getState());
-    return getProgramStageToModify(programStageIdToModify, programStages);
-};
+
 const isObjectHasId = id => compose(isEqual(id), get('id'));
 
 const editProgramStageDataElement = store => action$ => action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENT_EDIT)
         .map((action) => {
             const programStageDataElementId = get('payload.programStageDataElement.id', action);
-            const programStageToEdit = getProgramStageToEdit(store.getState());//getProgramStageByIdFromAction(store, action);
+            const programStageToEdit = getProgramStageByIdFromAction(store, action);//getProgramStageByIdFromAction(store, action);
 
             const programStageDataElements = getOr([], 'programStageDataElements', programStageToEdit);
             const programStageDataElement = programStageDataElements
@@ -82,10 +80,10 @@ const editProgramStageDataElement = store => action$ => action$
                     }
                     return value;
                 });
-
+            const programStages = getOr([], 'programStages', store.getState());
             store.setState({
                 ...store.getState(),
-                programStageToEdit
+                programStages
             });
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENT_EDIT_COMPLETE });
