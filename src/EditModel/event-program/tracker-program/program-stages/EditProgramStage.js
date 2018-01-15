@@ -58,16 +58,11 @@ export default compose(
             /* Do not update if programStage updates, this will make the form loose focus - as
             the component will re-render for every change when the observable changes(due getting a new object
             through withProgramStageFromProgramStage$ HoC. */
-        //    return false;
             if(nextProps.programStage !== this.props.programStage || !this.props.programStage && !nextProps.programStage) {
                 return false;
             }
 
-            if(nextProps !== this.props) {
-                return true
-            }
-
-            return false;
+            return nextProps !== this.props;
         }
     }),
     withProgramStageFromProgramStage$)(EditProgramStage)

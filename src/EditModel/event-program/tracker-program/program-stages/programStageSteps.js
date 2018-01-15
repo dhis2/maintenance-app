@@ -1,7 +1,7 @@
 const steps = [
     {
         key: 'details',
-        name: 'add_stage_details',
+        name: 'stage_details',
         componentName: 'EditProgramStageDetails',
     },
     {

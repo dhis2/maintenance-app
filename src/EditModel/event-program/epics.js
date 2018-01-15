@@ -7,7 +7,7 @@ import {
     loadEventProgramSuccess,
     notifyUser,
     saveEventProgramError,
-    saveEventProgramSuccess
+    saveEventProgramSuccess,
 } from './actions';
 
 import {
@@ -18,11 +18,11 @@ import {
     editProgramStageReset,
     PROGRAM_STAGE_ADD,
     PROGRAM_STAGE_EDIT,
-    editProgramStage
+    editProgramStage,
 } from './tracker-program/program-stages/actions';
 import eventProgramStore, {
     isStoreStateDirty,
-    getMetaDataToSend
+    getMetaDataToSend,
 } from './eventProgramStore';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
@@ -38,7 +38,7 @@ import {
     find,
     memoize,
     values,
-    flatten
+    flatten,
 } from 'lodash/fp';
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
@@ -52,7 +52,7 @@ import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
 import dataEntryFormEpics from './data-entry-form/epics';
 import {
     createModelToEditEpic,
-    createModelToEditProgramStageEpic
+    createModelToEditProgramStageEpic,
 } from '../epicHelpers';
 
 const d2$ = Observable.fromPromise(getInstance());
@@ -73,8 +73,8 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                           id: programStageUid,
                           programStageDataElements: [],
                           notificationTemplates: [],
-                          programStageSections: []
-                      }
+                          programStageSections: [],
+                      },
                   ];
         const newProgramMetadata = {
             programs: [
@@ -90,9 +90,9 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 ],*/
                     programStages,
                     programTrackedEntityAttributes: [],
-                    organisationUnits: []
-                }
-            ]
+                    organisationUnits: [],
+                },
+            ],
         };
 
         const availableData$ = d2$.flatMap(d2 =>
@@ -112,7 +112,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 ),
                 (elements, attributes) => ({
                     elements,
-                    attributes
+                    attributes,
                 })
             )
         );
@@ -124,7 +124,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             (metadata, available) => ({
                 ...metadata,
                 dataElements: available.elements,
-                trackedEntityAttributes: available.attributes
+                trackedEntityAttributes: available.attributes,
             })
         )
             .flatMap(createEventProgramStoreStateFromMetadataResponse)
@@ -148,7 +148,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         'organisationUnits[id,path]',
         'dataEntryForm[:owner]',
         'notificationTemplates[:owner]',
-        'programTrackedEntityAttributes'
+        'programTrackedEntityAttributes',
     ].join(',');
 
     return api$
@@ -162,7 +162,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                         `&programs:fields=${programFields},programStages[:owner,displayName,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
                         '&dataElements:fields=id,displayName,valueType,optionSet',
                         '&dataElements:filter=domainType:eq:TRACKER',
-                        '&trackedEntityAttributes:fields=id,displayName,valueType,optionSet,unique'
+                        '&trackedEntityAttributes:fields=id,displayName,valueType,optionSet,unique',
                     ].join('')
                 )
             )
@@ -176,9 +176,8 @@ function createEventProgramStoreStateFromMetadataResponse(
     const {
         programs = [],
         dataElements = [],
-        trackedEntityAttributes = []
+        trackedEntityAttributes = [],
     } = eventProgramMetadata;
-    console.log(eventProgramMetadata);
     const programStages = getOr([], 'programStages', first(programs));
 
     const storeState = getInstance().then(d2 => {
@@ -213,7 +212,7 @@ function createEventProgramStoreStateFromMetadataResponse(
                     ...acc,
                     [programStage.id]: createNotificationTemplateModels(
                         getOr([], 'notificationTemplates', programStage)
-                    )
+                    ),
                 }),
                 {}
             );
@@ -230,7 +229,7 @@ function createEventProgramStoreStateFromMetadataResponse(
                     ...acc,
                     [programStage.id]: createDataEntryFormModel(
                         getOr({}, 'dataEntryForm', programStage)
-                    )
+                    ),
                 }),
                 {}
             );
@@ -252,7 +251,7 @@ function createEventProgramStoreStateFromMetadataResponse(
             ),
             availableDataElements: dataElements,
             availableAttributes: trackedEntityAttributes,
-            dataEntryFormForProgramStage: extractDataEntryForms(programStages)
+            dataEntryFormForProgramStage: extractDataEntryForms(programStages),
         };
     });
     return Observable.fromPromise(storeState);
@@ -335,7 +334,6 @@ export const programModelSaveResponses = action$ =>
 
 export const newTrackerProgramStage = action$ =>
     action$.ofType(PROGRAM_STAGE_ADD).flatMap(action => {
-        console.log(action);
         return d2$.flatMap(d2 =>
             eventProgramStore.take(1).map(store => {
                 const programStages = store.programStages;
@@ -348,8 +346,8 @@ export const newTrackerProgramStage = action$ =>
                         notificationTemplates: [],
                         programStageSections: [],
                         program: {
-                            id: program.id
-                        }
+                            id: program.id,
+                        },
                     })
                 );
                 const newState = { ...eventProgramStore.getState() };
@@ -357,14 +355,13 @@ export const newTrackerProgramStage = action$ =>
                     set('programStages')(programStages, newState),
                     set('program.programStages')(programStages, newState)
                 );
-                console.log('new stage');
                 return editProgramStage(programStageUid);
             })
         );
     });
 
-/* Gets called when user edits a TrackerProgramStage.
-*   Copies the original model, to be used if cancelled */
+/* Gets called when user starts to edit a TrackerProgramStage.
+*  Copies the original model, that is used if the user cancels editing of the model */
 export const editTrackerProgramStage = action$ =>
     action$
         .ofType(PROGRAM_STAGE_EDIT)
@@ -374,7 +371,6 @@ export const editTrackerProgramStage = action$ =>
                 .take(1)
                 .map(get('programStages'))
                 .map(programStages => {
-                    console.log(programStages);
                     const index = programStages.findIndex(
                         stage => stage.id == stageId
                     );
@@ -386,31 +382,27 @@ export const editTrackerProgramStage = action$ =>
         )
         .flatMapTo(Observable.of({ type: 'EMPTY' }));
 
-//const programStageToEdit = get('programStageToEdit', eventProgramStore);
-
 export const saveTrackerProgramStage = action$ =>
     action$
         .ofType(PROGRAM_STAGE_EDIT_SAVE)
         .flatMap(action =>
             eventProgramStore.take(1).map(store => {
-
-                    const stageId = store.programStageToEditCopy.id;
-                    const index = store.programStages.findIndex(
-                        stage => stage.id == stageId
+                const stageId = store.programStageToEditCopy.id;
+                const index = store.programStages.findIndex(
+                    stage => stage.id == stageId
+                );
+                if (index < 0) {
+                    console.warn(
+                        `ProgramStage with id ${stageId} does not exist`
                     );
-                    if (index < 0) {
-                        console.warn(
-                            `ProgramStage with id ${stageId} does not exist`
-                        );
-                    }
-                    try {
-                    eventProgramStore.setState(
-                        { programStageToEditCopy: null }
-                    );
-                } catch(e) {
-                    console.log(e)
                 }
-
+                try {
+                    eventProgramStore.setState({
+                        programStageToEditCopy: null,
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
             })
         )
         .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
@@ -421,7 +413,6 @@ export const cancelProgramStageEdit = action$ =>
         .flatMap(() =>
             eventProgramStore.take(1).map(store => {
                 const stageId = store.programStageToEditCopy.id;
-                console.log(store);
                 const index = store.programStages.findIndex(
                     stage => stage.id == stageId
                 );
@@ -434,17 +425,17 @@ export const cancelProgramStageEdit = action$ =>
                 try {
                     eventProgramStore.setState(
                         set(`programStages[${index}]`)(model, {
-                            ...eventProgramStore.getState()
+                            ...eventProgramStore.getState(),
                         }),
-                        set('programStageToEditCopy',
+                        set(
+                            'programStageToEditCopy',
                             null,
                             eventProgramStore.getState()
                         )
                     );
-                } catch(e) {
+                } catch (e) {
                     console.log(e);
                 }
-
             })
         )
         .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
