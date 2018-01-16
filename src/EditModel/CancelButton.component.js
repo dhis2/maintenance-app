@@ -29,7 +29,7 @@ function CancelButton(
         <Button
             {...props}
             onClick={onClickWithConfirm}
-            secondary={shouldConfirm} //{store.getState() && store.getState().dirty}
+            secondary={shouldConfirm}
             label={context.d2.i18n.getTranslation('cancel')}
         />
     );
@@ -37,8 +37,10 @@ function CancelButton(
 
 CancelButton.propTypes = {
     onClick: React.PropTypes.func.isRequired,
-    //An d2-ui-store that is used to check for valid state
-    store: React.PropTypes.object,
+    /* A handler that should return an object with "dirty"-key,
+    describing if the current edited model is dirty
+     */
+    isDirtyHandler: React.PropTypes.func,
 };
 
 export default addD2Context(CancelButton);
