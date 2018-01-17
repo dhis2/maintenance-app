@@ -9,6 +9,7 @@ import DefaultForm from './DefaultForm.component';
 import SectionForm from './SectionForm.component';
 import CustomForm from './CustomForm.component';
 
+import { getCurrentProgramStage } from './selectors';
 import mapPropsStream from 'recompose/mapPropsStream';
 import mapProps from 'recompose/mapProps';
 import { sortBy, get, getOr, compose, find } from 'lodash/fp';
@@ -117,6 +118,10 @@ CreateDataEntryForm.propTypes = {
     })).isRequired,
 };
 
+const mapStateToProps = state => ({
+    currentProgramStageId: getCurrentProgramStage(state),
+});
+
 const mapDispatchToProps = dispatch => bindActionCreators({
     changeProgramStageDataElementOrder,
     changeProgramStageSectionOrder,
@@ -125,38 +130,41 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     editProgramStageSectionName,
 }, dispatch);
 
-const programStage$ = eventProgramStore
-    .map(get('programStages[0]'));
+const programStages$ = eventProgramStore
+    .map(getOr([], 'programStages'));
+
+const getProgramStageById = stageId =>
+    programStages$
+        .flatMap(x => x)
+        .filter(stage => stage.id && stage.id === stageId);
 
 const programStageSections$ = eventProgramStore
     .map(getOr([], 'programStageSections'));
-
-const availableProgramStageDataElements$ = eventProgramStore
-    .map(getOr([], 'programStages[0].programStageDataElements'));
 
 const trackerDataElements$ = eventProgramStore
     .map(getOr([], 'availableDataElements'));
 
 const enhance = compose(
-    connect(null, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps),
     mapPropsStream(props$ => props$
         .combineLatest(
-            programStage$,
+            getProgramStageById(props$.take(1).currentProgramStageId),
             programStageSections$,
-            availableProgramStageDataElements$,
             trackerDataElements$,
-            (props, programStage, programStageSections, availableProgramStageDataElements, trackerDataElements) => ({
+            (props, programStage, programStageSections, trackerDataElements) => ({
                 ...props,
                 programStage,
-                trackerDataElements,
                 programStageSections,
-                availableDataElements: availableProgramStageDataElements,
-            })
+                trackerDataElements,
+            }),
         )
     ),
     mapProps(({ trackerDataElements, ...props }) => {
         const getDisplayNameForDataElement = dataElement => dataElement.displayName ||
                 get('displayName', find(trackerDataElement => dataElement.id === trackerDataElement.id, trackerDataElements));
+
+        console.warn('All props:', props);
+        const availableDataElements = props.programStage.programStageDataElements;
 
         return {
             ...props,
