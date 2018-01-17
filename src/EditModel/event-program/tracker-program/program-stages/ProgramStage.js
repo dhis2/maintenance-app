@@ -10,42 +10,9 @@ import ProgramStageList from './ProgramStageList';
 import EditProgramStage from './EditProgramStage';
 import { withProgramAndStages } from './utils';
 import { connect } from 'react-redux';
-
+import { getProgramStageById$, firstProgramStage$ } from './utils';
 import { getCurrentProgramStage } from './selectors';
 import { editProgramStage } from './actions';
-
-const programStages$ = programStore$.map(get('programStages'));
-const getFirstProgramStage = compose(first, get('programStages'));
-export const firstProgramStage$ = programStore$.map(getFirstProgramStage);
-
-const handleNewProgramStage = () => {
-    addQuery({ stage: 'add' });
-};
-
-const FAB = props => {
-    const cssStyles = {
-        textAlign: 'right',
-        marginTop: '1rem',
-        bottom: '1.5rem',
-        right: '1.5rem',
-        position: 'fixed',
-        zIndex: 10,
-    };
-
-    return (
-        <div style={cssStyles}>
-            <FloatingActionButton onClick={handleNewProgramStage}>
-                <FontIcon className="material-icons">add</FontIcon>
-            </FloatingActionButton>
-        </div>
-    );
-};
-
-const getProgramStageById = stageId =>
-    programStages$
-        .flatMap(x => x)
-        .filter(stage => stage.id && stage.id === stageId)
-        .defaultIfEmpty(firstProgramStage$);
 
 class ProgramStage extends Component {
     constructor(props) {
@@ -54,7 +21,6 @@ class ProgramStage extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.programStage === this.props.programStage;
-        //return true;
     }
 
     render() {
@@ -63,9 +29,10 @@ class ProgramStage extends Component {
 
         const programStage$ =
             props.currentProgramStageId !== 'add' &&
-            getProgramStageById(props.currentProgramStageId);
+            getProgramStageById$(props.currentProgramStageId).defaultIfEmpty(
+                firstProgramStage$
+            );
 
-        //  console.log(shouldRenderStageEdit())
         return (
             <div>
                 {!!this.props.currentProgramStageId

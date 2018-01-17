@@ -1,5 +1,5 @@
-import eventProgramStore from "../../eventProgramStore";
-import {generateUid} from "d2/lib/uid";
+import eventProgramStore from '../../eventProgramStore';
+import { generateUid } from 'd2/lib/uid';
 
 export const PROGRAM_STAGE_STEP_CHANGE = 'PROGRAM_STAGE_STEP_CHANGE';
 export const PROGRAM_STAGE_STEP_NEXT = 'PROGRAM_STAGE_STEP_NEXT';
@@ -16,55 +16,32 @@ export const PROGRAM_STAGE_EDIT_SAVE = 'PROGRAM_STAGE_EDIT_SAVE';
 export const changeStep = stepKey => ({
     type: PROGRAM_STAGE_STEP_CHANGE,
     payload: {
-        stepKey
-    }
+        stepKey,
+    },
 });
 export const nextStep = () => ({ type: PROGRAM_STAGE_STEP_NEXT });
 export const previousStep = () => ({ type: PROGRAM_STAGE_STEP_PREVIOUS });
 
 export const editProgramStage = stageId => ({
     type: PROGRAM_STAGE_EDIT,
-    payload: { stageId }
+    payload: { stageId },
 });
 
 export const addProgramStage = () => ({
-    type: PROGRAM_STAGE_ADD
+    type: PROGRAM_STAGE_ADD,
 });
 
 export const editProgramStageReset = () => ({ type: PROGRAM_STAGE_EDIT_RESET });
 
 export const editProgramStageField = (stageId, field, value) => ({
     type: PROGRAM_STAGE_FIELD_EDIT,
-    payload: { stageId, field, value }
+    payload: { stageId, field, value },
 });
 
-export const saveProgramStageEdit = () => ({type: PROGRAM_STAGE_EDIT_SAVE});
+export const saveProgramStageEdit = () => ({ type: PROGRAM_STAGE_EDIT_SAVE });
 
 export const cancelProgramStageEdit = () => {
     return {
-        type: PROGRAM_STAGE_EDIT_CANCEL
-    }
-}
-
-/*
-export const newTrackerProgramStage = () => action$
-    .ofType(PROGRAM_STAGE_EDIT)
-    .flatMap(action => {
-        const stageId = action.payload.stageId;
-        eventProgramStore
-            .take(1)
-            .map(get('programStages'))
-            .map(programStages => {
-                const programStageUid = generateUid();
-                const newProgramStage =programStages.push(
-                    {
-                        id: programStageUid,
-                        programStageDataElements: [],
-                        notificationTemplates: [],
-                        programStageSections: [],
-                    })
-
-                eventProgramStore.setState(set('programStages')(newProgramStage, {...eventProgramStore.getState()} ));
-
-            });
-    }); */
+        type: PROGRAM_STAGE_EDIT_CANCEL,
+    };
+};

@@ -15,54 +15,60 @@ import { Observable } from 'rxjs';
 import steps from './programStageSteps';
 import { createStepperFromConfig } from '../../../stepper/stepper';
 import { activeStepSelector } from '../../selectors';
-import { withProgramStageFromProgramStage$ } from "./utils";
+import { withProgramStageFromProgramStage$ } from './utils';
 import ProgramStageStepper from './ProgramStageStepper';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import { changeStepperDisabledState } from "../../actions";
-import { saveProgramStageEdit, cancelProgramStageEdit } from "./actions";
+import { changeStepperDisabledState } from '../../actions';
+import { saveProgramStageEdit, cancelProgramStageEdit } from './actions';
 import SaveButton from '../../../SaveButton.component';
 import CancelButton from '../../../CancelButton.component';
 
-const programStage$ = eventProgramStore$.map(get('programStages'));
-
 const EditProgramStage = props => {
-    console.log(props)
+    console.log(props);
     return (
         <div>
             <ProgramStageStepper
                 programStage$={props.programStage$}
                 programStage={props.programStage}
             />
-            <SaveButton isValid onClick={props.saveProgramStageEdit} />
+            <SaveButton isValid onClick={props.saveProgramStageEdit} />
             <CancelButton onClick={props.cancelProgramStageEdit} />
         </div>
     );
 };
 
 export default compose(
-    connect(null, (dispatch) => bindActionCreators({
-        changeStepperDisabledState,
-        saveProgramStageEdit,
-        cancelProgramStageEdit
-    }, dispatch)),
+    connect(null, dispatch =>
+        bindActionCreators(
+            {
+                changeStepperDisabledState,
+                saveProgramStageEdit,
+                cancelProgramStageEdit,
+            },
+            dispatch
+        )
+    ),
     lifecycle({
         componentWillMount() {
-            this.props.changeStepperDisabledState(true)
-
+            this.props.changeStepperDisabledState(true);
         },
         componentWillUnmount() {
-            this.props.changeStepperDisabledState(false)
-       //     this.props.saveProgramStage()
+            this.props.changeStepperDisabledState(false);
+            //     this.props.saveProgramStage()
         },
-      shouldComponentUpdate(nextProps) {
+        shouldComponentUpdate(nextProps) {
             /* Do not update if programStage updates, this will make the form loose focus - as
             the component will re-render for every change when the observable changes(due getting a new object
             through withProgramStageFromProgramStage$ HoC. */
-            if(nextProps.programStage !== this.props.programStage || !this.props.programStage && !nextProps.programStage) {
+            if (
+                nextProps.programStage !== this.props.programStage ||
+                (!this.props.programStage && !nextProps.programStage)
+            ) {
                 return false;
             }
 
             return nextProps !== this.props;
-        }
+        },
     }),
-    withProgramStageFromProgramStage$)(EditProgramStage)
+    withProgramStageFromProgramStage$
+)(EditProgramStage);

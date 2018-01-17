@@ -4,7 +4,7 @@ import {
     PROGRAM_STAGE_STEP_NEXT,
     PROGRAM_STAGE_STEP_PREVIOUS,
     PROGRAM_STAGE_EDIT,
-    PROGRAM_STAGE_EDIT_RESET
+    PROGRAM_STAGE_EDIT_RESET,
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../../../actions';
 import steps from './programStageSteps';
@@ -18,39 +18,39 @@ export function programStageStepperReducer(
         case PROGRAM_STAGE_STEP_CHANGE:
             return {
                 ...state,
-                activeStep: action.payload.stepKey
+                activeStep: action.payload.stepKey,
             };
 
         case PROGRAM_STAGE_STEP_NEXT:
             return {
                 ...state,
-                activeStep: next(steps, state.activeStep)
+                activeStep: next(steps, state.activeStep),
             };
 
         case PROGRAM_STAGE_STEP_PREVIOUS:
             return {
                 ...state,
-                activeStep: previous(steps, state.activeStep)
+                activeStep: previous(steps, state.activeStep),
             };
 
         case STEPPER_RESET_ACTIVE_STEP:
             return {
                 ...state,
-                activeStep: first(steps)
+                activeStep: first(steps),
             };
-
 
         case PROGRAM_STAGE_EDIT:
             return {
                 ...state,
-                stageId: action.payload.stageId
-            }
+                stageId: action.payload.stageId,
+            };
 
         case PROGRAM_STAGE_EDIT_RESET:
             return {
                 ...state,
-                stageId: null
-            }
+                activeStep: first(steps),
+                stageId: null,
+            };
         default:
             break;
     }

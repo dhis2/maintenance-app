@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import programStore$ from '../../eventProgramStore';
 import mapProps from 'recompose/mapProps';
@@ -16,10 +17,7 @@ import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { addQuery } from '../../../../router-utils';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { editProgramStage, addProgramStage } from './actions';
-
-const program$ = programStore$.map(get('program'));
-const programStages$ = programStore$.map(get('programStages'));
+import { editProgramStage, addProgramStage } from './actions'
 
 const enhance = compose(
     connect(null, dispatch =>
@@ -71,4 +69,7 @@ const ProgramStageList = props => {
     );
 };
 
+ProgramStageList.propTypes = {
+    programStages: PropTypes.array
+}
 export default enhance(ProgramStageList);

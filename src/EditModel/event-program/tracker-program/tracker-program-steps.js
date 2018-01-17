@@ -7,12 +7,12 @@ const steps = [
     {
         key: 'enrollment',
         name: 'enrollment',
-        componentName: 'Enrollment'
+        componentName: 'Enrollment',
     },
     {
         key: 'tracked_attributes',
         name: 'assign_attributes',
-        componentName: 'AssignAttributes'
+        componentName: 'AssignAttributes',
     },
     {
         key: 'stages',

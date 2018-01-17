@@ -13,15 +13,15 @@ import EventProgramNotifications from '../notifications/EventProgramNotification
 import { createFormFor } from '../../formHelpers';
 import { editFieldChanged } from '../actions';
 import { flattenRouterProps, wrapInPaper } from '../../componentHelpers';
-import fieldOrder from "../../../config/field-config/field-order";
+import fieldOrder from '../../../config/field-config/field-order';
 import AssignAttributes from './assign-tracked-entity-attributes/AssignAttributes';
 import ProgramStage from './program-stages/ProgramStage';
 
 const stepperConfig = () => {
-    const program$ = programStore
-        .map(get('program'));
+    const program$ = programStore.map(get('program'));
 
-    const mapDispatchToProps = dispatch => bindActionCreators({ editFieldChanged }, dispatch);
+    const mapDispatchToProps = dispatch =>
+        bindActionCreators({ editFieldChanged }, dispatch);
 
     const connectEditForm = compose(
         flattenRouterProps,
@@ -31,8 +31,14 @@ const stepperConfig = () => {
     const enrollmentFields = fieldOrder.for('enrollment');
 
     const stepComponents = {
-        EditProgramDetailsForm: connectEditForm(wrapInPaper(createFormFor(program$, 'program', trackerDetailsFields))),
-        Enrollment: connectEditForm(wrapInPaper(createFormFor(program$, 'program', enrollmentFields))),
+        EditProgramDetailsForm: connectEditForm(
+            wrapInPaper(
+                createFormFor(program$, 'program', trackerDetailsFields)
+            )
+        ),
+        Enrollment: connectEditForm(
+            wrapInPaper(createFormFor(program$, 'program', enrollmentFields))
+        ),
         AssignAttributes,
         ProgramStage,
         EditDataEntryForm,
@@ -40,7 +46,7 @@ const stepperConfig = () => {
         EventProgramNotifications,
     };
 
-    return steps.map((step) => {
+    return steps.map(step => {
         step.component = stepComponents[step.componentName]; // eslint-disable-line no-param-reassign
         return step;
     });
@@ -50,12 +56,14 @@ const mapStateToProps = state => ({
     activeStep: activeStepSelector(state),
 });
 
-const TrackerProgramStepperContent =
-    compose(
-        connect(mapStateToProps),
-        mapPropsStream(props$ =>
-            props$.combineLatest(programStore, (props, { program }) => ({ ...props, modelToEdit: program }))
-        )
-    )(createStepperContentFromConfig(stepperConfig()));
+const TrackerProgramStepperContent = compose(
+    connect(mapStateToProps),
+    mapPropsStream(props$ =>
+        props$.combineLatest(programStore, (props, { program }) => ({
+            ...props,
+            modelToEdit: program,
+        }))
+    )
+)(createStepperContentFromConfig(stepperConfig()));
 
 export default TrackerProgramStepperContent;

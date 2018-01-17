@@ -42,7 +42,7 @@ export const withProgramAndStages = compose(
     )
 );
 
-export const getProgramStage$ById = stageId =>
+export const getProgramStageById$ = stageId =>
     programStages$
         .flatMap(x => x)
         .filter(stage => stage.id && stage.id === stageId);
