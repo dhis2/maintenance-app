@@ -1,11 +1,13 @@
-import mapPropsStream from "recompose/mapPropsStream";
-import programStore$ from "../../eventProgramStore";
-import { get, compose } from 'lodash/fp';
+import mapPropsStream from 'recompose/mapPropsStream';
+import programStore$ from '../../eventProgramStore';
+import { get, first, compose } from 'lodash/fp';
 
 const program$ = programStore$.map(get('program'));
 
 const programStages$ = programStore$.map(get('programStages'));
 
+const getFirstProgramStage = compose(first, get('programStages'));
+export const firstProgramStage$ = programStore$.map(getFirstProgramStage);
 
 /**
  * Maps the programStage$ observable to a normal object to read the values in the component.
@@ -16,7 +18,7 @@ export const withProgramStageFromProgramStage$ = mapPropsStream(props$ =>
         (props, programStage) => {
             return {
                 ...props,
-                programStage
+                programStage,
             };
         }
     )
@@ -34,7 +36,7 @@ export const withProgramAndStages = compose(
             (props, program, programStages) => ({
                 ...props,
                 program,
-                programStages
+                programStages,
             })
         )
     )
@@ -44,3 +46,14 @@ export const getProgramStage$ById = stageId =>
     programStages$
         .flatMap(x => x)
         .filter(stage => stage.id && stage.id === stageId);
+
+//Use programStage$ prop if present, else use first programStage
+export const getProgramStageOrFirstFromProps$ = props$ =>
+    props$
+        .take(1)
+        .flatMap(
+            props =>
+                props.programStage$
+                    ? props.programStage$
+                    : programStore$.map(getFirstProgramStage)
+        );

@@ -14,12 +14,9 @@ import { connect } from 'react-redux';
 import { getCurrentProgramStage } from './selectors';
 import { editProgramStage } from './actions';
 
-const program$ = programStore$.map(get('program'));
 const programStages$ = programStore$.map(get('programStages'));
 const getFirstProgramStage = compose(first, get('programStages'));
-const firstProgramStage$ = programStore$.map(getFirstProgramStage);
-
-const currentProgramStage$ = programStore$.map(get('programStageToEdit'));
+export const firstProgramStage$ = programStore$.map(getFirstProgramStage);
 
 const handleNewProgramStage = () => {
     addQuery({ stage: 'add' });
@@ -32,7 +29,7 @@ const FAB = props => {
         bottom: '1.5rem',
         right: '1.5rem',
         position: 'fixed',
-        zIndex: 10
+        zIndex: 10,
     };
 
     return (
@@ -56,7 +53,7 @@ class ProgramStage extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.programStage === this.props.programStage
+        return nextProps.programStage === this.props.programStage;
         //return true;
     }
 
@@ -83,13 +80,13 @@ class ProgramStage extends Component {
 }
 
 const mapStateToProps = state => ({
-    currentProgramStageId: getCurrentProgramStage(state)
+    currentProgramStageId: getCurrentProgramStage(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     editProgramStage(id) {
         dispatch(editProgramStage(id));
-    }
+    },
 });
 
 export default compose(
