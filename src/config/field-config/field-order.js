@@ -123,6 +123,7 @@ const fieldOrderByName = new Map([
         'dataElementDecoration',
         'renderAsTabs',
         'renderHorizontally',
+        'compulsoryFieldsCompleteOnly',
         'dataSetElements',
         'indicators',
         'organisationUnits',
