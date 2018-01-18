@@ -19,7 +19,6 @@ function eventProgramStepperReducer(
 ) {
     switch (action.type) {
         case EVENT_PROGRAM_STEP_CHANGE:
-          //  const disabled = action.payload == ""
             return {
                 ...state,
                 activeStep: action.payload

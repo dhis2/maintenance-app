@@ -15,6 +15,7 @@ import {
     PROGRAM_STAGE_EDIT_RESET,
     PROGRAM_STAGE_EDIT_CANCEL,
     PROGRAM_STAGE_EDIT_SAVE,
+    PROGRAM_STAGE_DELETE,
     editProgramStageReset,
     PROGRAM_STAGE_ADD,
     PROGRAM_STAGE_EDIT,
@@ -54,6 +55,7 @@ import {
     createModelToEditEpic,
     createModelToEditProgramStageEpic,
 } from '../epicHelpers';
+import trackerProgramEpics from './tracker-program/epics';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
@@ -332,115 +334,6 @@ export const programModelSaveResponses = action$ =>
         })
     );
 
-export const newTrackerProgramStage = action$ =>
-    action$.ofType(PROGRAM_STAGE_ADD).flatMap(action => {
-        return d2$.flatMap(d2 =>
-            eventProgramStore.take(1).map(store => {
-                const programStages = store.programStages;
-                const program = store.program;
-                const programStageUid = generateUid();
-                const newProgramStage = programStages.push(
-                    d2.models.programStages.create({
-                        id: programStageUid,
-                        programStageDataElements: [],
-                        notificationTemplates: [],
-                        programStageSections: [],
-                        program: {
-                            id: program.id,
-                        },
-                        lastUpdated: new Date().toISOString()
-                    })
-                );
-                const newState = { ...eventProgramStore.getState() };
-                eventProgramStore.setState(
-                    set('programStages')(programStages, newState),
-                    set('program.programStages')(programStages, newState)
-                );
-                return editProgramStage(programStageUid);
-            })
-        );
-    });
-
-/* Gets called when user starts to edit a TrackerProgramStage.
-*  Copies the original model, that is used if the user cancels editing of the model */
-export const editTrackerProgramStage = action$ =>
-    action$
-        .ofType(PROGRAM_STAGE_EDIT)
-        .map(action => action.payload)
-        .flatMap(({ stageId }) =>
-            eventProgramStore
-                .take(1)
-                .map(get('programStages'))
-                .map(programStages => {
-                    const index = programStages.findIndex(
-                        stage => stage.id == stageId
-                    );
-                    const model = programStages[index].clone();
-                    const setter = { programStageToEditCopy: model };
-
-                    eventProgramStore.setState(setter);
-                })
-        )
-        .flatMapTo(Observable.of({ type: 'EMPTY' }));
-
-export const saveTrackerProgramStage = action$ =>
-    action$
-        .ofType(PROGRAM_STAGE_EDIT_SAVE)
-        .flatMap(action =>
-            eventProgramStore.take(1).map(store => {
-                const stageId = store.programStageToEditCopy.id;
-                const index = store.programStages.findIndex(
-                    stage => stage.id == stageId
-                );
-                if (index < 0) {
-                    console.warn(
-                        `ProgramStage with id ${stageId} does not exist`
-                    );
-                }
-                try {
-                    eventProgramStore.setState({
-                        programStageToEditCopy: null,
-                    });
-                } catch (e) {
-                    console.log(e);
-                }
-            })
-        )
-        .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
-
-export const cancelProgramStageEdit = action$ =>
-    action$
-        .ofType(PROGRAM_STAGE_EDIT_CANCEL)
-        .flatMap(() =>
-            eventProgramStore.take(1).map(store => {
-                const stageId = store.programStageToEditCopy.id;
-                const index = store.programStages.findIndex(
-                    stage => stage.id == stageId
-                );
-                if (index < 0) {
-                    console.warn(
-                        `ProgramStage with id ${stageId} does not exist`
-                    );
-                }
-                const model = store.programStageToEditCopy;
-                try {
-                    eventProgramStore.setState(
-                        set(`programStages[${index}]`)(model, {
-                            ...eventProgramStore.getState(),
-                        }),
-                        set(
-                            'programStageToEditCopy',
-                            null,
-                            eventProgramStore.getState()
-                        )
-                    );
-                } catch (e) {
-                    console.log(e);
-                }
-            })
-        )
-        .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
-
 export default combineEpics(
     programModel,
     programModelEdit,
@@ -452,8 +345,5 @@ export default combineEpics(
     createAssignAttributeEpics(eventProgramStore),
     createCreateDataEntryFormEpics(eventProgramStore),
     dataEntryFormEpics,
-    newTrackerProgramStage,
-    editTrackerProgramStage,
-    cancelProgramStageEdit,
-    saveTrackerProgramStage
+    trackerProgramEpics
 );
