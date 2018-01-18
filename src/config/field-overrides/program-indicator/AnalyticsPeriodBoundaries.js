@@ -2,13 +2,16 @@ import React, { PropTypes } from 'react';
 import { equals, compose } from 'lodash/fp';
 import withState from 'recompose/withState';
 import getContext from 'recompose/getContext';
-import { getInstance } from 'd2/lib/d2';
 import lifecycle from 'recompose/lifecycle';
+
+import { getInstance } from 'd2/lib/d2';
+
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
 
 import DropDown from '../../../forms/form-fields/drop-down';
 import TextField from '../../../forms/form-fields/text-field';
 import PeriodTypeDropDown from '../../../forms/form-fields/period-type-drop-down';
-
 
 // definitions mapped to java enum
 // https://github.com/dhis2/dhis2-core/blob/markus-program-indicators-cohorts/dhis-2/dhis-api/src/main/java/org/hisp/dhis/program/AnalyticsPeriodBoundaryType.java#L37-L40
@@ -32,43 +35,76 @@ const periodBoundaryTypes = [
 ];
 
 const boundaryTargets = [
-    {text: 'Incident date', value: 'INCIDENT_DATE'},
-    {text: 'Event date', value: 'EVENT_DATE'},
-    {text: 'Enrollment date', value: 'ENROLLMENT_DATE'}
+    {
+        text: 'Incident date',
+        value: 'INCIDENT_DATE'
+    },
+    {
+        text: 'Event date',
+        value: 'EVENT_DATE'
+    },
+    {
+        text: 'Enrollment date',
+        value: 'ENROLLMENT_DATE'
+    }
 ];
 
 
+// just wrap the component in a span with some margins as they are
+// inline in this form
+const withStyle = function withStyle(BaseField, styles) {
+    return props => (
+        <span style={styles}>
+            <BaseField {...props}/>
+        </span>
+    );
+};
+
 function AnalyticsPeriodBoundary (props) {
-    console.dir(props)
+    const style = {
+        marginRight: '14px'
+    }
+
+    const DD = withStyle(DropDown, style);
+    const TF = withStyle(TextField, style);
+    const PTDD = withStyle(PeriodTypeDropDown, style);
+
     return (
         <div>
-            <DropDown
+            <DD
+                style={ {marginRight: '14px'} }
                 labelText="Boundary target"
                 options={boundaryTargets}
                 onChange={e => props.onChange(e, "boundaryTarget")}
                 value={props.boundaryTarget}
             />
 
-            <DropDown
+            <DD
                 labelText="Analytics period boundary type"
+                style={ {position: 'relative', marginRight: '14px'} }
                 options={periodBoundaryTypes}
                 onChange={e => props.onChange(e, "analyticsPeriodBoundaryType")}
                 value={props.analyticsPeriodBoundaryType}
             />
 
-            <TextField type="number"
+            <TF type="number"
+                style={ { top: '-14px', width: '128px' } }
                 labelText="offset"
                 value={props.offsetNumberOfPeriods}
                 onChange={e => props.onChange(e, "offsetNumberOfPeriods")}
             />
 
-            <PeriodTypeDropDown
+            <PTDD
                 labelText="period"
                 onChange={e => props.onChange(e, "offsetPeriodType")}
+                style={ { marginRight: '14px' } }
                 value={props.offsetPeriodType}
             />
 
-            <button onClick={e => props.onClick(e)}>Delete</button>
+            <RaisedButton
+                style={ { top: '-24px', position: 'relative' } }
+                label="Remove"
+                onClick={e => props.onClick(e)}/>
         </div>
     );
 }
@@ -107,7 +143,11 @@ function addSubField(model, onChange) {
 }
 
 function AnalyticsPeriodBoundaryList ({ d2, model, onChange }) {
-    let boundaries = model.analyticsPeriodBoundaries.map((props, i) => (
+    const cssStyles = {
+        marginLeft: '14px'
+    };
+
+    const boundaries = model.analyticsPeriodBoundaries.map((props, i) => (
         <AnalyticsPeriodBoundary
             key={i}
             onChange={updateSubField.bind(this, props, model, onChange, i)}
@@ -117,11 +157,16 @@ function AnalyticsPeriodBoundaryList ({ d2, model, onChange }) {
     ));
 
     return (<div>
-                <div>{boundaries}</div>
-                <div>
-                    <button onClick={addSubField.bind(this, model, onChange)}>
-                        Add new boundary
-                    </button>
+                <h3 style={ {color: 'rgba(0,0,0,0.5)', fontWeight: 'normal', fontSize: '16px'} }>Analytics period boundaries</h3>
+                <div style={cssStyles}>
+                    <div>{boundaries}</div>
+                    <div>
+                        <RaisedButton
+                            secondary
+                            onClick={addSubField.bind(this, model, onChange)}
+                            label="Add new boundary"
+                            />
+                    </div>
                 </div>
             </div>);
 }
