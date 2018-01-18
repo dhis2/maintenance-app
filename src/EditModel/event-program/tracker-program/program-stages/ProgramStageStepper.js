@@ -17,7 +17,7 @@ import { createStepperFromConfig } from '../../../stepper/stepper';
 import EditProgramStageDetails from './EditProgramStageDetails';
 import AssignProgramStageDataElements from './AssignProgramStageDataElements';
 import CreateDataEntryForm from '../../create-data-entry-form/CreateDataEntryForm.component';
-import { getCurrentProgramStage, getActiveProgramStageStep } from "./selectors";
+import { getCurrentProgramStageId, getActiveProgramStageStep } from "./selectors";
 import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 

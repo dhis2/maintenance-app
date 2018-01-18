@@ -348,6 +348,7 @@ export const newTrackerProgramStage = action$ =>
                         program: {
                             id: program.id,
                         },
+                        lastUpdated: new Date().toISOString()
                     })
                 );
                 const newState = { ...eventProgramStore.getState() };

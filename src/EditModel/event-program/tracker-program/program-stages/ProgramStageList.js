@@ -5,11 +5,11 @@ import programStore$ from '../../eventProgramStore';
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { get, noop, first, getOr, __ } from 'lodash/fp';
+import { get, noop, first, getOr, __, sortBy } from 'lodash/fp';
 import {
     getTableColumnsForType,
     getFilterFieldsForType,
-    getFiltersForType
+    getFiltersForType,
 } from '../../../../config/maintenance-models';
 import withState from 'recompose/withState';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
@@ -17,14 +17,14 @@ import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { addQuery } from '../../../../router-utils';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { editProgramStage, addProgramStage } from './actions'
+import { editProgramStage, addProgramStage } from './actions';
 
 const enhance = compose(
     connect(null, dispatch =>
         bindActionCreators(
             {
                 handleEditProgramStage: model => editProgramStage(model.id),
-                handleNewProgramStage: () =>  addProgramStage()
+                handleNewProgramStage: () => addProgramStage(),
             },
             dispatch
         )
@@ -43,7 +43,7 @@ const FAB = props => {
         bottom: '1.5rem',
         right: '1.5rem',
         position: 'fixed',
-        zIndex: 10
+        zIndex: 10,
     };
 
     return (
@@ -55,14 +55,32 @@ const FAB = props => {
     );
 };
 
+function isContextActionAllowed(model, action) {
+   return true;
+}
+
 const ProgramStageList = props => {
-    console.log(props)
+    const contextActions = {
+        edit: props.handleEditProgramStage,
+        delete: () => {},
+        translate: () => {},
+    };
+
+    const contextMenuIcons = {
+        edit: 'edit',
+        move_up: 'arrow_upward',
+        move_down: 'arrow_downward',
+    };
+
     return (
         <div>
             <DataTable
                 rows={props.programStages}
                 columns={props.tableColumns}
                 primaryAction={props.handleEditProgramStage}
+                contextMenuActions={contextActions}
+                contextMenuIcons={contextMenuIcons}
+                isContextActionAllowed={isContextActionAllowed}
             />
             <FAB router={props} {...props} />
         </div>
@@ -70,6 +88,6 @@ const ProgramStageList = props => {
 };
 
 ProgramStageList.propTypes = {
-    programStages: PropTypes.array
-}
+    programStages: PropTypes.array,
+};
 export default enhance(ProgramStageList);

@@ -11,7 +11,7 @@ import EditProgramStage from './EditProgramStage';
 import { withProgramAndStages } from './utils';
 import { connect } from 'react-redux';
 import { getProgramStageById$, firstProgramStage$ } from './utils';
-import { getCurrentProgramStage } from './selectors';
+import { getCurrentProgramStageId } from './selectors';
 import { editProgramStage } from './actions';
 
 class ProgramStage extends Component {
@@ -47,7 +47,7 @@ class ProgramStage extends Component {
 }
 
 const mapStateToProps = state => ({
-    currentProgramStageId: getCurrentProgramStage(state),
+    currentProgramStageId: getCurrentProgramStageId(state),
 });
 
 const mapDispatchToProps = dispatch => ({

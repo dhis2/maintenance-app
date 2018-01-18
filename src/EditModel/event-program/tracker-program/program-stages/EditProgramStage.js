@@ -22,17 +22,26 @@ import { changeStepperDisabledState } from '../../actions';
 import { saveProgramStageEdit, cancelProgramStageEdit } from './actions';
 import SaveButton from '../../../SaveButton.component';
 import CancelButton from '../../../CancelButton.component';
+import FormActionButtons from '../../../FormActionButtons';
 
 const EditProgramStage = props => {
-    console.log(props);
+    const styles = {
+        buttons: {
+            padding: '2rem 1rem 1rem',
+            marginLeft: '10px'
+        },
+    };
     return (
         <div>
             <ProgramStageStepper
                 programStage$={props.programStage$}
                 programStage={props.programStage}
             />
-            <SaveButton isValid onClick={props.saveProgramStageEdit} />
-            <CancelButton onClick={props.cancelProgramStageEdit} />
+            <div style={styles.buttons}>
+                <FormActionButtons onSaveAction={props.saveProgramStageEdit} onCancelAction={props.cancelProgramStageEdit}/>
+            </div>
+
+
         </div>
     );
 };
