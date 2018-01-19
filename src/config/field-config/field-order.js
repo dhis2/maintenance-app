@@ -198,6 +198,7 @@ const fieldOrderByName = new Map([
     ['eventProgram', [
         'name',
         'shortName',
+        'code',
         'description',
         'categoryCombo',
         'workflow',
@@ -208,6 +209,7 @@ const fieldOrderByName = new Map([
     ['trackerProgram', [
         'name',
         'shortName',
+        'code',
         'description',
         'trackedEntityType',
         'categoryCombo',
