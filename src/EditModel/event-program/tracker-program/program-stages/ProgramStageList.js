@@ -17,7 +17,7 @@ import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { addQuery } from '../../../../router-utils';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { editProgramStage, addProgramStage } from './actions';
+import { editProgramStage, addProgramStage, deleteProgramStage } from './actions';
 
 const enhance = compose(
     connect(null, dispatch =>
@@ -25,6 +25,7 @@ const enhance = compose(
             {
                 handleEditProgramStage: model => editProgramStage(model.id),
                 handleNewProgramStage: () => addProgramStage(),
+                handleDeleteProgramStage: model => deleteProgramStage(model.id)
             },
             dispatch
         )
@@ -62,7 +63,7 @@ function isContextActionAllowed(model, action) {
 const ProgramStageList = props => {
     const contextActions = {
         edit: props.handleEditProgramStage,
-        delete: () => {},
+        delete: props.handleDeleteProgramStage,
         translate: () => {},
     };
 
