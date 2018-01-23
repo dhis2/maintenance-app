@@ -39,8 +39,7 @@ const enhance = compose(
 function EditProgram(props) {
     const schema = props.params.modelType || 'program';
     const { groupName } = props.params;
-    console.log(props.model);
-    console.log(props.model.programType);
+
     return props.model.programType === 'WITH_REGISTRATION'
         ? <EditTrackerProgram {...props} />
         : <EditEventProgram {...props} />;

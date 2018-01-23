@@ -169,7 +169,6 @@ export function createFormFor(source$, schema, properties, includeAttributes) {
     const enhance = compose(
         mapPropsStream(props$ => props$
             .combineLatest(source$, (props, model) => {
-                console.log(model)
                 return { ...props, model }})
         ),
         createFieldConfigsFor(schema, properties, undefined, includeAttributes),

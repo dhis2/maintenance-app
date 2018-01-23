@@ -6,27 +6,28 @@ import {
     PROGRAM_STAGE_EDIT_CANCEL,
     PROGRAM_STAGE_EDIT_RESET,
     PROGRAM_STAGE_EDIT_SAVE,
+    deleteProgramStageSuccess,
+    deleteProgramStageError,
 } from './program-stages/actions';
 import { get, set } from 'lodash/fp';
 import programStore from '../eventProgramStore';
 import { combineEpics } from 'redux-observable';
 import { generateUid } from 'd2/lib/uid';
 import { Observable } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
-import { deleteProgramStageWithSnackbar } from "./program-stages/contextActions";
+import { getInstance } from 'd2/lib/d2';
+import { deleteProgramStageWithSnackbar } from './program-stages/contextActions';
 
 const d2$ = Observable.fromPromise(getInstance());
 
-
-const getProgramStageById = stageId => (store) => store.programStages.find(stage => stage.id == stageId);
-const getProgramStageIndexById = stageId => (store) => store.programStages.findIndex(stage => stage.id == stageId);
-
+const getProgramStageById = stageId => store =>
+    store.programStages.find(stage => stage.id == stageId);
+const getProgramStageIndexById = stageId => store =>
+    store.programStages.findIndex(stage => stage.id == stageId);
 
 export const newTrackerProgramStage = action$ =>
     action$.ofType(PROGRAM_STAGE_ADD).flatMap(action => {
         return d2$.flatMap(d2 =>
             programStore.take(1).map(store => {
-                console.log("NEW STAGE")
                 const programStages = store.programStages;
                 const program = store.program;
                 const programStageUid = generateUid();
@@ -134,23 +135,25 @@ const deleteProgramStage = action$ =>
     action$
         .ofType(PROGRAM_STAGE_DELETE)
         .map(action => action.payload)
-        .flatMap(action => programStore.take(1).map(store => {
-            try {
-                console.log("delete")
-                const ind = store.programStages.findIndex(stage => stage.id == action.stageId);
-                console.log(ind)
+        .flatMap(action =>
+            programStore.take(1).map(store => {
+                try {
+                    const ind = store.programStages.findIndex(
+                        stage => stage.id == action.stageId
+                    );
 
-                const index = getProgramStageIndexById(action.stageId)(store);
-                const model = store.programStages[index];
-                console.log(model);
-                console.log(index);
-                deleteProgramStageWithSnackbar(model, index);
-                console.log("deleted?")
-            } catch(e) {
-                console.log(e);
-            }
+                    const index = getProgramStageIndexById(action.stageId)(
+                        store
+                    );
+                    const model = store.programStages[index];
 
-        })).flatMapTo(Observable.of({type: 'TEST_DELETED'}))
+                    deleteProgramStageWithSnackbar(model, index);
+                    return deleteProgramStageSuccess();
+                } catch (e) {
+                    return deleteProgramStageError();
+                }
+            })
+        );
 
 export default combineEpics(
     newTrackerProgramStage,

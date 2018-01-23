@@ -123,6 +123,7 @@ const fieldOrderByName = new Map([
         'dataElementDecoration',
         'renderAsTabs',
         'renderHorizontally',
+        'compulsoryFieldsCompleteOnly',
         'dataSetElements',
         'indicators',
         'organisationUnits',
@@ -277,6 +278,8 @@ const fieldOrderByName = new Map([
     ['trackedEntityType', [
         'name',
         'description',
+        'minAttributesRequiredToSearch',
+        'maxTeiCountToReturn'
     ]],
     ['programIndicator', [
         'program',
