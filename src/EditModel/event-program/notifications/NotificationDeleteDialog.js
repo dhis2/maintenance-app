@@ -1,10 +1,13 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import compose from 'recompose/compose';
+import getContext from 'recompose/getContext';
+import mapProps from 'recompose/mapProps';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
-
-// TODO: Move to d2-ui
-export default function DeleteDialog({ onCancel, onConfirm, question, open, t }) {
+// Move to d2-ui
+const DeleteDialog = ({ onCancel, onConfirm, question, open, t }) => {
     const actions = [
         <FlatButton
             label={t('cancel')}
@@ -36,3 +39,14 @@ DeleteDialog.propTypes = {
     question: PropTypes.string,
     t: PropTypes.func,
 };
+
+const enhance = compose(
+    getContext({ d2: PropTypes.object }),
+    mapProps(({ d2, name, ...props }) => ({
+        t: d2.i18n.getTranslation.bind(d2.i18n),
+        question: `${d2.i18n.getTranslation('delete')} ${name}?`,
+        ...props,
+    }))
+);
+
+export default enhance(DeleteDialog);

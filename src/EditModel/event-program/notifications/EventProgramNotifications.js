@@ -9,7 +9,7 @@ import mapPropsStream from 'recompose/mapPropsStream';
 
 import NotificationList from './NotificationList';
 import { getStageNotifications, getProgramStageDataElements } from './selectors';
-import EventProgramStageNotificationDeleteDialog from './EventProgramStageNotificationDeleteDialog';
+import NotificationDeleteDialog from './NotificationDeleteDialog';
 import { removeStageNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
 import eventProgramStore from '../eventProgramStore';
@@ -28,7 +28,7 @@ function EventProgramNotifications({ notifications, askForConfirmation, onCancel
                 onAddNotification={setAddModel}
             />
             <NotificationDialog dataElements={dataElements} />
-            <EventProgramStageNotificationDeleteDialog
+            <NotificationDeleteDialog
                 setOpen={setOpen}
                 open={open}
                 onCancel={onCancel}
