@@ -36,7 +36,11 @@ const hideIfNotAuthorizedToCreate = compose(
 
 const AddButtonWithAuthCheck = hideIfNotAuthorizedToCreate(AddButton);
 
-export default function NotificationList({ notifications, onRemoveNotification, onEditNotification, onAddNotification }) {
+export default function NotificationList({ notifications, onRemoveNotification, onEditNotification, onAddNotification, showProgramStage }) {
+    const columns = showProgramStage
+        ? ['name', 'programStage', 'lastUpdated']
+        : ['name', 'lastUpdated'];
+
     return (
         <div>
             <AddButtonWithAuthCheck
@@ -45,7 +49,7 @@ export default function NotificationList({ notifications, onRemoveNotification, 
             />
             <DataTable
                 rows={notifications}
-                columns={['name', 'lastUpdated']}
+                columns={columns}
                 contextMenuActions={{ // TODO: Check for permissions
                     edit: onEditNotification,
                     delete: onRemoveNotification,

@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { __, first, get, toArray } from 'lodash/fp';
+import { __, first, get } from 'lodash/fp';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';
 import mapPropsStream from 'recompose/mapPropsStream';
 
 import NotificationList from './NotificationList';
-import { getStageNotifications, getProgramNotifications, getProgramStageDataElements } from './selectors';
+import { getProgramStages, getStageNotifications, getProgramNotifications, getProgramStageDataElements } from './selectors';
 import NotificationDeleteDialog from './NotificationDeleteDialog';
 import { removeStageNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
@@ -18,25 +18,40 @@ import eventProgramStore from '../eventProgramStore';
 
 const programStageTabIndex = 0;
 
+const programStages$ = eventProgramStore.map(getProgramStages);
 const stageNotifications$ = eventProgramStore.map(getStageNotifications);
 const programNotifications$ = eventProgramStore.map(getProgramNotifications).map(n => n.toArray());
 const programStageDataElements$ = eventProgramStore.map(getProgramStageDataElements);
 
-const TrackerProgramNotifications = ({ stageNotifications, programNotifications, askForConfirmation, onCancel, onDelete, open, setOpen,
-                                       modelToDelete, setEditModel, setAddModel, dataElements }, { d2 }) => {
+const TrackerProgramNotifications = ({ programStages, stageNotifications, programNotifications, askForConfirmation, onCancel,
+                                       onDelete, open, setOpen, modelToDelete, setEditModel, setAddModel, dataElements }, { d2 }) => {
+
+    const stageNotificationsWithStageNames = stageNotifications.map(notification => {
+        const programStage = get('displayName', programStages.find(
+            stage => {
+                const notifications = stage.notificationTemplates.toArray();
+                return !!notifications.find(not => not.id === notification.id);
+            }
+        ));
+
+        return {
+            ...notification,
+            programStage,
+        }
+    });
+
     return (
         <div>
             <Tabs initialSelectedIndex={programStageTabIndex}>
                 <Tab label={d2.i18n.getTranslation('program_stage_notifications')}>
                     <NotificationList
-                        notifications={stageNotifications}
+                        showProgramStage
+                        notifications={stageNotificationsWithStageNames}
                         onRemoveNotification={askForConfirmation}
                         onEditNotification={setEditModel}
                         onAddNotification={setAddModel}
                     />
-                    <NotificationDialog dataElements={dataElements} />
                 </Tab>
-
                 <Tab label={d2.i18n.getTranslation('program_notifications')}>
                     <NotificationList
                         notifications={programNotifications}
@@ -44,9 +59,9 @@ const TrackerProgramNotifications = ({ stageNotifications, programNotifications,
                         onEditNotification={setEditModel}
                         onAddNotification={setAddModel}
                     />
-                    <NotificationDialog dataElements={dataElements} />
                 </Tab>
             </Tabs>
+            <NotificationDialog dataElements={dataElements} />
             <NotificationDeleteDialog
                 setOpen={setOpen}
                 open={open}
@@ -96,11 +111,12 @@ const enhance = compose(
     }),
     mapPropsStream(props$ => props$
         .combineLatest(
+            programStages$,
             stageNotifications$,
             programNotifications$,
             programStageDataElements$,
-            (props, stageNotifications, programNotifications, dataElements) =>
-                ({ ...props, stageNotifications, programNotifications, dataElements })
+            (props, programStages, stageNotifications, programNotifications, dataElements) =>
+                ({ ...props, programStages, stageNotifications, programNotifications, dataElements })
         ),
     ),
 );

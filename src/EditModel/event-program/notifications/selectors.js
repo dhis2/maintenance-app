@@ -1,5 +1,7 @@
 import { get, compose, first, __ } from 'lodash/fp';
 
+export const getProgramStages = ({ programStages }) => programStages;
+
 export const getStageNotifications = ({ programStages, programStageNotifications }) =>
     compose(get(__, programStageNotifications), get('id'), first)(programStages);
 
