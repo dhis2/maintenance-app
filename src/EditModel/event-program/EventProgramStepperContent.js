@@ -16,25 +16,27 @@ import { flattenRouterProps, wrapInPaper } from '../componentHelpers';
 import fieldOrder from '../../config/field-config/field-order';
 
 const stepperConfig = () => {
-    const program$ = eventProgramStore
-        .map(get('program'));
+    const program$ = eventProgramStore.map(get('program'));
 
-    const mapDispatchToProps = dispatch => bindActionCreators({ editFieldChanged }, dispatch);
+    const mapDispatchToProps = dispatch =>
+        bindActionCreators({ editFieldChanged }, dispatch);
 
     const connectEditForm = compose(
         flattenRouterProps,
         connect(null, mapDispatchToProps)
     );
-    const eventProgramFields = fieldOrder.for('eventProgram')
+    const eventProgramFields = fieldOrder.for('eventProgram');
     const stepComponents = {
-        EditProgramDetailsForm: connectEditForm(wrapInPaper(createFormFor(program$, 'program', eventProgramFields))),
+        EditProgramDetailsForm: connectEditForm(
+            wrapInPaper(createFormFor(program$, 'program', eventProgramFields))
+        ),
         AssignDataElements,
         EditDataEntryForm,
         AssignOrganisationUnits,
         EventProgramNotifications,
     };
 
-    return steps.map((step) => {
+    return steps.map(step => {
         step.component = stepComponents[step.componentName]; // eslint-disable-line no-param-reassign
         return step;
     });
@@ -44,12 +46,14 @@ const mapStateToProps = state => ({
     activeStep: activeStepSelector(state),
 });
 
-const EventProgramStepperContent =
-    compose(
-        connect(mapStateToProps),
-        mapPropsStream(props$ =>
-            props$.combineLatest(eventProgramStore, (props, { program }) => ({ ...props, modelToEdit: program }))
-        )
-    )(createStepperContentFromConfig(stepperConfig()));
+const EventProgramStepperContent = compose(
+    connect(mapStateToProps),
+    mapPropsStream(props$ =>
+        props$.combineLatest(eventProgramStore, (props, { program }) => ({
+            ...props,
+            modelToEdit: program,
+        }))
+    )
+)(createStepperContentFromConfig(stepperConfig()));
 
 export default EventProgramStepperContent;

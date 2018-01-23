@@ -45,7 +45,7 @@ const removeAttributeFromProgram = store => action$ => action$
         })
         .mapTo({ type: PROGRAM_ATTRIBUTES_ADDREMOVE_COMPLETE });
 
-const isObjectHasId = id => compose(isEqual(id), get('id'));
+const isObjectWithId = id => compose(isEqual(id), get('id'));
 
 const editAttribute = store => action$ => action$
         .ofType(PROGRAM_ATTRIBUTES_EDIT)
@@ -56,7 +56,7 @@ const editAttribute = store => action$ => action$
             const programAttributeId = get('payload.attribute.id', action);
 
             const programAttribute = programAttributes
-                .find(isObjectHasId(programAttributeId));
+                .find(isObjectWithId(programAttributeId));
 
             program.programTrackedEntityAttributes = programAttributes
                 .map((attr) => {

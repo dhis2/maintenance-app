@@ -96,22 +96,24 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 },
             ],
         };
+        const dataElements$ = Observable.fromPromise(
+            d2.models.dataElements
+                .filter()
+                .on('domainType')
+                .equals('TRACKER')
+                .list({ paging: false })
+                .then(dataElements => dataElements.toArray())
+        );
+        const trackedentityAttributes$ = Observable.fromPromise(
+            d2.models.trackedEntityAttributes
+                .list({ paging: false })
+                .then(attributes => attributes.toArray())
+        );
 
         const availableData$ = d2$.flatMap(d2 =>
             Observable.combineLatest(
-                Observable.fromPromise(
-                    d2.models.dataElements
-                        .filter()
-                        .on('domainType')
-                        .equals('TRACKER')
-                        .list({ paging: false })
-                        .then(dataElements => dataElements.toArray())
-                ),
-                Observable.fromPromise(
-                    d2.models.trackedEntityAttributes
-                        .list({ paging: false })
-                        .then(attributes => attributes.toArray())
-                ),
+                dataElements$,
+                trackedentityAttributes$,
                 (elements, attributes) => ({
                     elements,
                     attributes,
