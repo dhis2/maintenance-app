@@ -53,7 +53,7 @@ function actionsThatRequireDelete(action) {
     return false;
 }
 
-function getTranslatablePropertiesForModelType(modelType) {
+export function getTranslatablePropertiesForModelType(modelType) {
     const fieldsForModel = fieldOrder.for(modelType);
     const defaultTranslatableProperties = ['name', 'shortName'];
 

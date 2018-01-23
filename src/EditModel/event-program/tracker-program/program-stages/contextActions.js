@@ -73,3 +73,13 @@ export async function deleteProgramStageWithSnackbar(model, index) {
         },
     });
 }
+
+
+export function translationSaved() {
+    snackActions.show({ message: 'translation_saved', translate: true });
+};
+
+export function translationError(errorMessage) {
+    log.error(errorMessage);
+    snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
+};

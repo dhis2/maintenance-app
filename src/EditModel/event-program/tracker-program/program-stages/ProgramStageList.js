@@ -26,6 +26,9 @@ import {
     deleteProgramStage,
 } from './actions';
 import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import { getTranslatablePropertiesForModelType } from '../../../../List/List.component';
+import { translationSaved, translationError } from './contextActions';
 
 const FAB = props => {
     const cssStyles = {
@@ -53,14 +56,16 @@ function isContextActionAllowed(model, action) {
 class ProgramStageList extends Component {
     constructor(props) {
         super(props);
-
+        const modelType = 'programStage';
         this.state = {
+            modelType: modelType,
             sharing: {
-                modelType: 'programStage',
                 id: null,
             },
-            translate: {},
-            tableColumns: getTableColumnsForType('programStage'),
+            translate: {
+                model: null,
+            },
+            tableColumns: getTableColumnsForType(modelType),
         };
     }
 
@@ -69,9 +74,9 @@ class ProgramStageList extends Component {
             ...this.state,
             sharing: {
                 ...this.state.sharing,
-                id: model.id
-            }
-        })
+                id: model.id,
+            },
+        });
     };
 
     closeSharing = () => {
@@ -88,10 +93,42 @@ class ProgramStageList extends Component {
         return this.state.sharing.id
             ? <SharingDialog
                   id={this.state.sharing.id}
-                  type={this.state.sharing.modelType}
+                  type={this.state.modelType}
                   open={!!this.state.sharing.id}
                   onRequestClose={this.closeSharing}
                   bodyStyle={{ minHeight: '400px' }}
+              />
+            : null;
+    };
+
+    openTranslate = model => {
+        this.setState({
+            ...this.state,
+            translate: {
+                ...this.state.translate,
+                model: model,
+            },
+        });
+    };
+
+    renderTranslate = () => {
+        return this.state.translate.model
+            ? <TranslationDialog
+                  objectToTranslate={this.state.translate.model}
+                  objectTypeToTranslate={
+                      this.state.translate.model.modelDefinition
+                  }
+                  open={!!this.state.translate.model}
+                  onTranslationSaved={translationSaved}
+                  onTranslationError={translationError}
+                  onRequestClose={() =>
+                      this.setState({
+                          ...this.state,
+                          translate: { ...this.state.translate, model: null },
+                      })}
+                  fieldsToTranslate={getTranslatablePropertiesForModelType(
+                      this.state.modelType
+                  )}
               />
             : null;
     };
@@ -101,7 +138,7 @@ class ProgramStageList extends Component {
             edit: this.props.handleEditProgramStage,
             share: this.openSharing,
             delete: this.props.handleDeleteProgramStage,
-            translate: () => {},
+            translate: this.openTranslate,
         };
 
         const contextMenuIcons = {
@@ -123,6 +160,7 @@ class ProgramStageList extends Component {
                 />
                 <FAB {...this.props} />
                 {this.renderSharing()}
+                {this.renderTranslate()}
             </div>
         );
     }
@@ -131,6 +169,7 @@ class ProgramStageList extends Component {
 ProgramStageList.propTypes = {
     programStages: PropTypes.array,
 };
+
 export default connect(null, dispatch =>
     bindActionCreators(
         {
