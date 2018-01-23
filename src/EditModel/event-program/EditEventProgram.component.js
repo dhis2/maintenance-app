@@ -13,6 +13,7 @@ import {
     createStepperNavigation,
 } from '../stepper/stepper';
 import { previousStep, nextStep } from './actions';
+import PropTypes from 'prop-types';
 
 const EventProgramStepperNavigationForward = createConnectedForwardButton(
     nextStep
@@ -50,7 +51,7 @@ function EditEventProgram(props) {
                     groupName={groupName}
                     isDirtyHandler={isModelDirty}
                 >
-                    {camelCaseToUnderscores(schema)}
+                    {`event_${camelCaseToUnderscores(schema)}`}
                 </FormHeading>
                 <FormSubHeading>
                     {props.model.displayName}
