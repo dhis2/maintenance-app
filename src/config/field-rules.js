@@ -391,4 +391,18 @@ export default new Map([
             }],
         },
     ]],
+    ['programStage', [
+        {
+            field: 'reportDateToUse',
+            when: [{
+                field: 'openAfterEnrollment',
+                operator: 'NOT_EQUALS',
+                value: true
+            }],
+            operations: [{
+                field: 'reportDateToUse',
+                type: 'HIDE_FIELD'
+            }]
+        },
+    ]]
 ]);

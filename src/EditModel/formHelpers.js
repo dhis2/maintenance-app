@@ -9,6 +9,7 @@ import { identity, noop, compose } from 'lodash/fp';
 import { Observable } from 'rxjs';
 import React from 'react';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import {applyRulesToFieldConfigs, getRulesForModelType} from "./form-rules";
 
 function getLabelText(labelText, fieldConfig = {}) {
     // Add required indicator when the field is required
@@ -174,12 +175,13 @@ export function createFormFor(source$, schema, properties, includeAttributes) {
         createFieldConfigsFor(schema, properties, undefined, includeAttributes),
     );
 
-    function CreatedFormBuilderForm({ fieldConfigs, editFieldChanged, detailsFormStatusChange = noop }) {
+    function CreatedFormBuilderForm({ fieldConfigs, model, editFieldChanged, detailsFormStatusChange = noop }) {
         const onUpdateField = convertValueUsingFieldConverter(fieldConfigs, editFieldChanged);
+        const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(schema), fieldConfigs, model);
 
         return (
             <FormBuilder
-                fields={fieldConfigs}
+                fields={fieldConfigsAfterRules}
                 onUpdateField={onUpdateField}
                 onUpdateFormStatus={detailsFormStatusChange}
             />
