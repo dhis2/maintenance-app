@@ -1,6 +1,4 @@
 import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
-//import AttributeSelector from '../../'
-import { SELECT } from '../../forms/fields';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 
 async function getRelationshipTypes(model, d2) {
