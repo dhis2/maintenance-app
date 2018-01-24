@@ -166,7 +166,7 @@ const convertValueUsingFieldConverter = (fieldConfigs, onChangeCallback) => (fie
 };
 
 // TODO: Refactor includeAttributes magic flag to separate method `createFormWithAttributesFor`
-export function createFormFor(source$, schema, properties, includeAttributes) {
+export function createFormFor(source$, schema, properties, includeAttributes, customFieldOrderName) {
     const enhance = compose(
         mapPropsStream(props$ => props$
             .combineLatest(source$, (props, model) => {
@@ -177,8 +177,7 @@ export function createFormFor(source$, schema, properties, includeAttributes) {
 
     function CreatedFormBuilderForm({ fieldConfigs, model, editFieldChanged, detailsFormStatusChange = noop }) {
         const onUpdateField = convertValueUsingFieldConverter(fieldConfigs, editFieldChanged);
-        const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(schema), fieldConfigs, model);
-
+        const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(customFieldOrderName || schema), fieldConfigs, model);
         return (
             <FormBuilder
                 fields={fieldConfigsAfterRules}

@@ -403,6 +403,28 @@ export default new Map([
                 field: 'reportDateToUse',
                 type: 'HIDE_FIELD'
             }]
-        },
+        }
+    ]],
+    ['enrollment', [
+        {
+            field: 'relationshipType',
+            when: [{
+                field: 'relationshipType',
+                operator: 'HAS_NO_VALUE',
+            }],
+            operations: [{
+                field: 'relationshipFromA',
+                type: 'HIDE_FIELD'
+            },
+                {
+                    field: 'relationshipText',
+                    type: 'HIDE_FIELD'
+                },
+                {
+                    field: 'relatedProgram',
+                    type: 'HIDE_FIELD'
+                }
+            ]
+        }
     ]]
 ]);

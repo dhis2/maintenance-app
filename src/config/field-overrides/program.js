@@ -4,6 +4,9 @@ import { SELECT } from '../../forms/fields';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 
 async function getRelationshipTypes(model, d2) {
+    if(!model.relationshipType) {
+        return [];
+    }
     const relationship = await d2.models.relationshipTypes.get(
         model.relationshipType.id
     );

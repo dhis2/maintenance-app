@@ -260,6 +260,7 @@ const fieldOrderByName = new Map([
         'hideDueDate',
         'captureCoordinates',
         'validCompleteOnly',
+        'preGenerateUID',
         'executionDateLabel',
         'dueDateLabel',
     ]],

@@ -28,7 +28,7 @@ const stepperConfig = () => {
     const eventProgramFields = fieldOrder.for('eventProgram');
     const stepComponents = {
         EditProgramDetailsForm: connectEditForm(
-            wrapInPaper(createFormFor(program$, 'program', eventProgramFields))
+            wrapInPaper(createFormFor(program$, 'program', eventProgramFields, true, 'eventProgram'))
         ),
         AssignDataElements,
         EditDataEntryForm,
