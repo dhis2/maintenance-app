@@ -393,6 +393,21 @@ export default new Map([
     ]],
     ['programStage', [
         {
+            field: 'autoGenerateEvent',
+            when: [{
+                field: 'autoGenerateEvent',
+                operator: 'NOT_EQUALS',
+                value: true
+            }],
+            operations: [{
+                field: 'openAfterEnrollment',
+                type: 'HIDE_FIELD'
+            }, {
+                field: 'reportDateToUse',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
             field: 'reportDateToUse',
             when: [{
                 field: 'openAfterEnrollment',
@@ -400,8 +415,10 @@ export default new Map([
                 value: true
             }],
             operations: [{
-                field: 'reportDateToUse',
-                type: 'HIDE_FIELD'
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false
             }]
         }
     ]],
