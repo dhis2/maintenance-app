@@ -44,8 +44,9 @@ function setProp(fieldConfig, operationParams, ruleResult) {
     return fieldConfig.props[operationParams.propName] = operationParams.elseValue;
 }
 
-function hideField(fieldConfig, operationParams, ruleResult, x) {
+function hideField(fieldConfig, operationParams, ruleResult) {
     if (ruleResult) {
+        fieldConfig.hasHiddenRule = true;
         fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
         fieldConfig.component = () => null;
     } else if (fieldConfig.hiddenComponent) {

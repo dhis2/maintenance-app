@@ -225,7 +225,7 @@ export default React.createClass({
                 activeStep: step,
                 fieldConfigs: this.state.fieldConfigs.map((field) => {
                     if (stepsByField[field.name] === step) {
-                        if (field.hiddenComponent) {
+                        if (field.hiddenComponent && !field.hasHiddenRule) {
                             field.component = field.hiddenComponent;
                             field.hiddenComponent = undefined;
                         }
