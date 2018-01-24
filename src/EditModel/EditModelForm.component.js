@@ -1,26 +1,29 @@
 import React from 'react';
+
+import log from 'loglevel';
+import { Observable } from 'rxjs';
+
+import { Step, Stepper, StepButton } from 'material-ui/Stepper';
+import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { isString } from 'd2-utilizr';
+import { getInstance } from 'd2/lib/d2';
+
 import fieldGroups from '../config/field-config/field-groups';
 import disabledOnEdit from '../config/disabled-on-edit';
-import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
-import { isString } from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
-import log from 'loglevel';
 import extraFields from './extraFields';
-import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import appState from '../App/appStateStore';
-import { Observable } from 'rxjs';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttributeFieldConfigs } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
 
-import { Step, Stepper, StepButton } from 'material-ui/Stepper';
 
 const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
@@ -81,7 +84,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
                 config.props = config.props || {};
                 config.props.modelToEdit = modelToEdit;
                 return config;
-            })
+            }),
         );
 
         const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
@@ -218,6 +221,25 @@ export default React.createClass({
         return this.renderForm();
     },
 
+    /*
+        Will render the fields that are relevant for the current "step"
+        This is done by setting the fields "component" to an empty function
+        if it is not relevant. The component is saved in the variable "hiddenComponent".
+        When the stepper is set to a step in which the field is supposed to be rendered
+        the hiddenComponent will be set back to the component variable.
+
+        **HACK**
+        Since the field rules in EditModel/form-rules/index.js uses the same way to hide and show
+        fields with the HIDE_FIELD and SHOW_FIELD rule, this causes the rule not work using 
+        the stepper. Setting the style to 'display: none' will would work for the stepper and 
+        still allowing the rules to use "hiddenComponent" as a way to show and hide fields, 
+        but since not all component does not spread and merge style, it will not always work.
+        Whe all components uses spread style this hack can be removed.
+        
+        As a temporary workaround hack the "field.hasHiddenRule" added in index.js is checked as
+        a second predicate in the if statement below to avoid setting the component back from 
+        hiddeComponent and rendering the field. 
+    */
     setActiveStep(step) {
         const stepsByField = fieldGroups.groupsByField(this.props.modelType);
         if (stepsByField) {
@@ -294,7 +316,7 @@ export default React.createClass({
                     }
 
                     this.props.onSaveError(errorMessage);
-                }
+                },
             );
     },
 
