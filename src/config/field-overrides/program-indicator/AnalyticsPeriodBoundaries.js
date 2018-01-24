@@ -102,7 +102,6 @@ function AnalyticsPeriodBoundary (props) {
             />
 
             <RaisedButton
-                style={ { top: '-24px', position: 'relative' } }
                 label="Remove"
                 onClick={e => props.onClick(e)}/>
         </div>
@@ -160,7 +159,7 @@ function AnalyticsPeriodBoundaryList ({ d2, model, onChange }) {
                 <h3 style={ {color: 'rgba(0,0,0,0.5)', fontWeight: 'normal', fontSize: '16px'} }>Analytics period boundaries</h3>
                 <div style={cssStyles}>
                     <div>{boundaries}</div>
-                    <div>
+                    <div style={ { marginTop: '14px' } }>
                         <RaisedButton
                             secondary
                             onClick={addSubField.bind(this, model, onChange)}
