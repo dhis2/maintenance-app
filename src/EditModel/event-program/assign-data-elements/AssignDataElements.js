@@ -233,7 +233,7 @@ function AssignDataElements(props, { d2 }) {
 
     return (
         <Paper>
-            <div style={{ padding: '2rem 3rem 4rem' }}>
+            <div style={{ padding: '2rem 3rem 4rem', ...(props.outerDivStyle)}}>
                 <TextField
                     hintText={d2.i18n.getTranslation(
                         'search_available_selected_items'
@@ -281,6 +281,7 @@ function AssignDataElements(props, { d2 }) {
 
 AssignDataElements.contextTypes = {
     d2: PropTypes.object,
+    outerDivStyle: PropTypes.object
 };
 
 export default enhance(AssignDataElements);

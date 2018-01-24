@@ -415,16 +415,13 @@ export default new Map([
             operations: [{
                 field: 'relationshipFromA',
                 type: 'HIDE_FIELD'
-            },
-                {
-                    field: 'relationshipText',
-                    type: 'HIDE_FIELD'
-                },
-                {
-                    field: 'relatedProgram',
-                    type: 'HIDE_FIELD'
-                }
-            ]
+            }, {
+                field: 'relationshipText',
+                type: 'HIDE_FIELD'
+            }, {
+                field: 'relatedProgram',
+                type: 'HIDE_FIELD'
+            }]
         }
     ]]
 ]);

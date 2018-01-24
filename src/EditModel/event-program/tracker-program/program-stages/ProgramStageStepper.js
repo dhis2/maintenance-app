@@ -16,21 +16,23 @@ import { createFormFor } from '../../../formHelpers';
 import { createStepperFromConfig } from '../../../stepper/stepper';
 import EditProgramStageDetails from './EditProgramStageDetails';
 import AssignProgramStageDataElements from './AssignProgramStageDataElements';
-import CreateDataEntryForm from '../../create-data-entry-form/CreateDataEntryForm.component';
-import { getCurrentProgramStageId, getActiveProgramStageStep } from "./selectors";
-import compose from 'recompose/compose';
+import CreateDataEntryFormWithoutMargin from '../../create-data-entry-form/CreateDataEntryForm.component';
+import {
+    getCurrentProgramStageId,
+    getActiveProgramStageStep,
+} from './selectors';
 import pure from 'recompose/pure';
 
-
-//const ProgramStageForm = connectEditForm(wrapInPaper(createFormFor(props.programStage$, 'programStage', programStageFields)));
+const CreateDataEntryForm = props =>
+    <div style={{ marginTop: '15px' }}>
+        <CreateDataEntryFormWithoutMargin {...props} />
+    </div>;
 
 const stepperConfig = () => {
-    //   const program$ = eventProgramStore.map(get('program'));
-
     const stepComponents = {
         EditProgramStageDetails,
         AssignProgramStageDataElements,
-        CreateDataEntryForm
+        CreateDataEntryForm,
     };
 
     return steps.map(step => {
@@ -42,18 +44,19 @@ const stepperConfig = () => {
 
 const ProgramStageVerticalStepper = connect(
     state => ({
-        activeStep: getActiveProgramStageStep(state)
+        activeStep: getActiveProgramStageStep(state),
     }),
     dispatch => bindActionCreators({ stepperClicked: changeStep }, dispatch)
 )(createStepperFromConfig(stepperConfig(), 'vertical'));
-
 
 export const ProgramStageStepper = pure(props => {
     console.log(props);
     return (
         <div>
-            <ProgramStageVerticalStepper programStage$={props.programStage$} programStage={props.programStage} />
-
+            <ProgramStageVerticalStepper
+                programStage$={props.programStage$}
+                programStage={props.programStage}
+            />
         </div>
     );
 });
@@ -66,7 +69,7 @@ ProgramStageStepper.propTypes = {
     /**
      * Programstage-model object
      */
-    programStage: PropTypes.object
+    programStage: PropTypes.object,
 };
 
 export default ProgramStageStepper;

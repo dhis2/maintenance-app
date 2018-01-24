@@ -4,7 +4,7 @@ import React from 'react';
 import { editProgramStageField } from './actions';
 import { connect } from 'react-redux';
 import fieldOrder from '../../../../config/field-config/field-order';
-import { wrapInPaper } from '../../../componentHelpers';
+import { wrapVerticalStepInPaper } from '../../../componentHelpers';
 import { createFormFor } from '../../../formHelpers';
 import { bindActionCreators } from 'redux';
 import pure from 'recompose/pure';
@@ -21,7 +21,7 @@ export const EditProgramStageDetails = props => {
         )
     );
     const ProgramStageDetailsForm = pure(connectedEditForm(
-        wrapInPaper(
+        wrapVerticalStepInPaper(
             createFormFor(
                 props.programStage$,
                 'programStage',
