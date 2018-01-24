@@ -81,7 +81,7 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
                 config.props = config.props || {};
                 config.props.modelToEdit = modelToEdit;
                 return config;
-            })
+            }),
         );
 
         const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
@@ -294,7 +294,7 @@ export default React.createClass({
                     }
 
                     this.props.onSaveError(errorMessage);
-                }
+                },
             );
     },
 

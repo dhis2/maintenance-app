@@ -1,6 +1,6 @@
 {
   "name": "maintenance-app",
-  "version": "28.0.5",
+  "version": "29.0.0",
   "description": "DHIS2 Maintenance app",
   "main": "index.js",
   "repository": {
@@ -36,7 +36,6 @@
     "css-loader": "^0.28.1",
     "d2": "^28.2.0",
     "d2-manifest": "^1.0.0-2",
-    "d2-ui": "^28.0.2",
     "d2-utilizr": "^0.2.9",
     "d3-color": "^1.0.2",
     "d3-format": "^1.0.2",
@@ -79,6 +78,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.13.0",
+    "d2-ui": "^28.0.14",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-15": "^1.0.0",
     "jest": "^21.2.1",

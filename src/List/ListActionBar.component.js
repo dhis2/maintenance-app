@@ -1,16 +1,14 @@
 import React from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
-import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import { goToRoute } from '../router-utils';
+import { withAuth } from "../utils/Auth";
 
 const ListActionBar = React.createClass({
     propTypes: {
         modelType: React.PropTypes.string.isRequired,
         groupName: React.PropTypes.string.isRequired,
     },
-
-    mixins: [Auth],
 
     _addClick() {
         goToRoute(`/edit/${this.props.groupName}/${this.props.modelType}/add`);
@@ -26,15 +24,17 @@ const ListActionBar = React.createClass({
             zIndex: 10,
         };
 
-        const modelDefinition = this.getModelDefinitionByName(this.props.modelType);
+        const modelDefinition = this.props.getModelDefinitionByName(
+            this.props.modelType
+        );
 
-        if (!this.getCurrentUser().canCreate(modelDefinition)) {
+        if (!this.props.getCurrentUser().canCreate(modelDefinition)) {
             return null;
         }
 
         return (
             <div style={cssStyles}>
-                <FloatingActionButton onClick={this._addClick}>
+               <FloatingActionButton onClick={this._addClick}>
                     <FontIcon className="material-icons">add</FontIcon>
                 </FloatingActionButton>
             </div>
@@ -42,4 +42,4 @@ const ListActionBar = React.createClass({
     },
 });
 
-export default ListActionBar;
+export default withAuth(ListActionBar);

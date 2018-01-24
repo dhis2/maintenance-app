@@ -109,6 +109,17 @@ class ProgramRuleActionsList extends React.Component {
                     field}`;
                 break;
 
+            case 'SENDMESSAGE':
+                const displayName = action.programNotificationTemplate
+                        ? action.programNotificationTemplate.displayName
+                        : this.getTranslation('no_notification_template_specified');
+
+                actionDetails = `${this.getTranslation(
+                    programRuleActionTypes[action.programRuleActionType].label)
+                }: ${displayName}`;
+
+                break;
+
             default:
                 actionDetails = action.programRuleActionType;
             }
@@ -129,6 +140,7 @@ class ProgramRuleActionsList extends React.Component {
                     trackedEntityAttribute: model.trackedEntityAttribute && model.trackedEntityAttribute.id || undefined,
                     programStage: model.programStage && model.programStage.id || undefined,
                     programStageSection: model.programStageSection && model.programStageSection.id || undefined,
+                    programNotificationTemplate: model.programNotificationTemplate && model.programNotificationTemplate.id || undefined,
                 }),
             });
         };

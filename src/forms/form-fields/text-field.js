@@ -3,6 +3,15 @@ import TextField from 'material-ui/TextField/TextField';
 import Action from 'd2-ui/lib/action/Action';
 
 export default class TextFormField extends Component {
+    static getWantedProperties(props) {
+        const omitProps = ['translateOptions', 'model', 'modelDefinition', 'models',
+            'referenceType', 'referenceProperty', 'isInteger', 'isRequired', 'options'];
+
+        return Object.keys(props).reduce((acc, key) => { // eslint-disable-line arrow-body-style
+            return omitProps.indexOf(key) === -1 ? { ...acc, [key]: props[key] } : acc;
+        }, {});
+    }
+
     constructor(props, ...args) {
         super(props, ...args);
         this.state = {
@@ -10,7 +19,7 @@ export default class TextFormField extends Component {
         };
 
         this.updateOnChange = Action.create(`updateOnKeyUp - ${props.name}`);
-        this._onValueChanged = this._onValueChanged.bind(this);
+        this.onValueChanged = this.onValueChanged.bind(this);
     }
 
     componentDidMount() {
@@ -28,12 +37,6 @@ export default class TextFormField extends Component {
             });
     }
 
-    componentWillUnmount() {
-        if (this.subscription && this.subscription.unsubscribe) {
-            this.subscription.unsubscribe();
-        }
-    }
-
     componentWillReceiveProps(newProps) {
         // Keep local state in sync with the passed in value
         if (newProps.value !== this.props.value) {
@@ -43,41 +46,13 @@ export default class TextFormField extends Component {
         }
     }
 
-    render() {
-        const {
-            label,
-            labelText,
-            multiLine,
-            model,
-            modelDefinition,
-            models,
-            referenceType,
-            referenceProperty,
-            isInteger,
-            translateOptions,
-            isRequired,
-            options,
-            ...rest
-        } = this.props;
-        const errorStyle = {
-            lineHeight: multiLine ? '48px' : '12px',
-            marginTop: multiLine ? -16 : -12,
-        };
-
-        return (
-            <TextField
-                errorStyle={errorStyle}
-                label={label}
-                multiLine={multiLine}
-                {...rest}
-                value={this.state.fieldValue}
-                floatingLabelText={labelText}
-                onChange={this._onValueChanged}
-            />
-        );
+    componentWillUnmount() {
+        if (this.subscription && this.subscription.unsubscribe) {
+            this.subscription.unsubscribe();
+        }
     }
 
-    _onValueChanged(event) {
+    onValueChanged(event) {
         event.preventDefault();
         event.stopPropagation();
         // Keep local state to keep the field responsiveness
@@ -88,8 +63,49 @@ export default class TextFormField extends Component {
         // Fire the update handler
         this.updateOnChange(event.currentTarget.value);
     }
+
+    render() {
+        const {
+            label,
+            labelText,
+            multiLine,
+            ...rest
+        } = this.props;
+
+        const restProps = TextFormField.getWantedProperties(rest);
+
+        const errorStyle = {
+            lineHeight: multiLine ? '48px' : '12px',
+            marginTop: multiLine ? -16 : -12,
+        };
+
+        return (
+            <TextField
+                errorStyle={errorStyle}
+                label={label}
+                multiLine={multiLine}
+                {...restProps}
+                value={this.state.fieldValue}
+                floatingLabelText={labelText}
+                onChange={this.onValueChanged}
+            />
+        );
+    }
 }
+
 TextFormField.propTypes = {
+    name: React.PropTypes.string,
+    value: React.PropTypes.any,
+    label: React.PropTypes.string,
     labelText: React.PropTypes.string.isRequired,
+    onChange: React.PropTypes.func,
     multiLine: React.PropTypes.bool,
+};
+
+TextFormField.defaultProps = {
+    name: '',
+    value: null,
+    label: '',
+    onChange: () => {},
+    multiLine: false,
 };

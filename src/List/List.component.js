@@ -15,7 +15,6 @@ import ListActionBar from './ListActionBar.component';
 import SearchBox from './SearchBox.component';
 import LoadingStatus from './LoadingStatus.component';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import Auth from 'd2-ui/lib/auth/Auth.mixin';
 import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import sharingStore from './sharing.store';
 import translationStore from './translation-dialog/translationStore';
@@ -34,10 +33,12 @@ import Dropdown from '../forms/form-fields/drop-down';
 import DropdownAsync from '../forms/form-fields/drop-down-async';
 import { getFilterFieldsForType } from '../config/maintenance-models';
 import './listValueRenderers';
+import { withAuth } from "../utils/Auth";
 
 // Filters out any actions `edit`, `clone` when the user can not update/edit this modelType
 function actionsThatRequireCreate(action) {
-    if ((action !== 'edit' && action !== 'clone') || this.getCurrentUser().canUpdate(this.getModelDefinitionByName(this.props.params.modelType))) {
+    const modelDef = this.props.getModelDefinitionByName(this.props.params.modelType);
+    if ((action !== 'edit' && action !== 'clone') || this.props.getCurrentUser().canUpdate(modelDef)) {
         return true;
     }
     return false;
@@ -45,7 +46,8 @@ function actionsThatRequireCreate(action) {
 
 // Filters out the `delete` when the user can not delete this modelType
 function actionsThatRequireDelete(action) {
-    if (action !== 'delete' || this.getCurrentUser().canDelete(this.getModelDefinitionByName(this.props.params.modelType))) {
+    const modelDef = this.props.getModelDefinitionByName(this.props.params.modelType);
+    if (action !== 'delete' || this.props.getCurrentUser().canDelete(modelDef)) {
         return true;
     }
     return false;
@@ -109,7 +111,7 @@ const List = React.createClass({
         }),
     },
 
-    mixins: [ObserverRegistry, Translate, Auth],
+    mixins: [ObserverRegistry, Translate],
 
     getInitialState() {
         return {
@@ -591,4 +593,4 @@ const List = React.createClass({
     },
 });
 
-export default List;
+export default withAuth(List);

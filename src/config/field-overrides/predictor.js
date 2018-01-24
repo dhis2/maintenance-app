@@ -154,7 +154,6 @@ export default new Map([
             },
         ],
     }],
-
     ['sampleSkipTest', {
         component: ExpressionField,
         validators: [
