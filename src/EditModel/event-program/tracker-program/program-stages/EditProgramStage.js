@@ -1,34 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { removeQuery } from '../../../../router-utils';
-import fieldOrder from '../../../../config/field-config/field-order';
-import { createFormFor } from '../../../formHelpers';
-import { flattenRouterProps, wrapInPaper } from '../../../componentHelpers';
-import eventProgramStore$ from '../../eventProgramStore';
 import { get, isEqual } from 'lodash/fp';
-import { changeStep } from './actions';
-import { editProgramStageField } from './actions';
-import mapPropsStream from 'recompose/mapPropsStream';
 import { compose, lifecycle, pure } from 'recompose';
-import { Observable } from 'rxjs';
-import steps from './programStageSteps';
-import { createStepperFromConfig } from '../../../stepper/stepper';
-import { activeStepSelector } from '../../selectors';
 import { withProgramStageFromProgramStage$ } from './utils';
 import ProgramStageStepper from './ProgramStageStepper';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import { changeStepperDisabledState } from '../../actions';
-import { saveProgramStageEdit, cancelProgramStageEdit } from './actions';
-import SaveButton from '../../../SaveButton.component';
-import CancelButton from '../../../CancelButton.component';
+import { saveProgramStageEdit, cancelProgramStageEdit, editProgramStageReset } from './actions';
 import FormActionButtons from '../../../FormActionButtons';
 
 const EditProgramStage = props => {
     const styles = {
         buttons: {
             padding: '2rem 1rem 1rem',
-            marginLeft: '10px'
+            marginLeft: '10px',
         },
     };
     return (
@@ -38,10 +23,11 @@ const EditProgramStage = props => {
                 programStage={props.programStage}
             />
             <div style={styles.buttons}>
-                <FormActionButtons onSaveAction={props.saveProgramStageEdit} onCancelAction={props.cancelProgramStageEdit}/>
+                <FormActionButtons
+                    onSaveAction={props.saveProgramStageEdit}
+                    onCancelAction={props.cancelProgramStageEdit}
+                />
             </div>
-
-
         </div>
     );
 };
@@ -53,6 +39,7 @@ export default compose(
                 changeStepperDisabledState,
                 saveProgramStageEdit,
                 cancelProgramStageEdit,
+                editProgramStageReset
             },
             dispatch
         )
@@ -63,7 +50,7 @@ export default compose(
         },
         componentWillUnmount() {
             this.props.changeStepperDisabledState(false);
-            //     this.props.saveProgramStage()
+            this.props.editProgramStageReset();
         },
         shouldComponentUpdate(nextProps) {
             /* Do not update if programStage updates, this will make the form loose focus - as

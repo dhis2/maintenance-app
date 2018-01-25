@@ -31,23 +31,41 @@ export const newTrackerProgramStage = action$ =>
                 const programStages = store.programStages;
                 const program = store.program;
                 const programStageUid = generateUid();
-                const newProgramStage = programStages.push(
-                    d2.models.programStages.create({
-                        id: programStageUid,
-                        programStageDataElements: [],
-                        notificationTemplates: [],
-                        programStageSections: [],
-                        program: {
-                            id: program.id,
-                        },
-                        lastUpdated: new Date().toISOString(),
-                    })
-                );
-                const newState = { ...programStore.getState() };
-                programStore.setState(
-                    set('programStages')(programStages, newState),
-                    set('program.programStages')(programStages, newState)
-                );
+                const programStageModel = d2.models.programStages.create({
+                    id: programStageUid,
+                    programStageDataElements: [],
+                    notificationTemplates: [],
+                    programStageSections: [],
+                    program: {
+                        id: program.id,
+                    },
+                    lastUpdated: new Date().toISOString(),
+                    displayGenerateEventBox: true,
+                    autoGenerateEvent: true,
+                });
+                try {
+                    const newProgramStage = programStages.push(
+                        programStageModel
+                    );
+
+                    const newProgramStageCollection = store.program.programStages.add(
+                        programStageModel
+                    );
+                    program.programStages = newProgramStageCollection;
+                    programStore.setState(
+                        set('program', program)(
+                            set(
+                                'programStages',
+                                programStages,
+                                programStore.getState()
+                            )
+                        )
+                    );
+                    console.log(programStore.getState().program);
+                } catch (e) {
+                    console.log(e);
+                    throw new Error(e);
+                }
                 return editProgramStage(programStageUid);
             })
         );
@@ -67,8 +85,17 @@ export const editTrackerProgramStage = action$ =>
                     const index = programStages.findIndex(
                         stage => stage.id == stageId
                     );
-                    const model = programStages[index].clone();
-                    const setter = { programStageToEditCopy: model };
+                    const programStage = programStages[index];
+
+                    const model =
+                        programStage.name === undefined
+                            ? { id: programStage.id }
+                            : programStages[index].clone();
+                    const setter = set(
+                        'programStageToEditCopy',
+                        model,
+                        programStore.getState()
+                    );
 
                     programStore.setState(setter);
                 })
@@ -105,24 +132,36 @@ export const cancelProgramStageEdit = action$ =>
         .ofType(PROGRAM_STAGE_EDIT_CANCEL)
         .flatMap(() =>
             programStore.take(1).map(store => {
+                const program = store.program;
                 const stageId = store.programStageToEditCopy.id;
-                const index = getProgramStageIndexById(stageId);
+                const index = getProgramStageIndexById(stageId)(store);
+
                 if (index < 0) {
                     console.warn(
                         `ProgramStage with id ${stageId} does not exist`
                     );
                 }
-                const model = store.programStageToEditCopy;
+                let model = store.programStageToEditCopy;
+                let programStageSetter = set(
+                    `programStages[${index}]`,
+                    model,
+                    store
+                );
+                // If the programstage is new, remove it when cancelling
+                if (store.programStageToEditCopy.name === undefined) {
+                    const removedFromProgramStages = store.programStages.filter(
+                        (p, i) => i !== index
+                    );
+                    program.programStages.remove(stageId);
+                    programStageSetter = set(
+                        'programStages',
+                        removedFromProgramStages,
+                        store
+                    );
+                }
                 try {
                     programStore.setState(
-                        set(`programStages[${index}]`)(model, {
-                            ...programStore.getState(),
-                        }),
-                        set(
-                            'programStageToEditCopy',
-                            null,
-                            programStore.getState()
-                        )
+                        set('programStageToEditCopy', null, programStageSetter)
                     );
                 } catch (e) {
                     console.log(e);

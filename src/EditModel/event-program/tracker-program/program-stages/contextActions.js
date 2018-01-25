@@ -29,11 +29,7 @@ export async function deleteProgramStageWithSnackbar(model, index) {
                     );
                     const newState = { ...programStore.getState() };
                     programStore.setState(
-                        set(`programStages`)(removedProgramStages, newState),
-                        set('program.programStages')(
-                            removedProgramStages,
-                            newState
-                        )
+                        set(`programStages`)(removedProgramStages, newState)
                     );
                     snackActions.show({
                         message: `${model.displayName} ${d2.i18n.getTranslation(
@@ -48,19 +44,6 @@ export async function deleteProgramStageWithSnackbar(model, index) {
                     });
                 })
                 .catch(response => {
-                    const store = programStore.getState();
-                    const removedProgramStages = store.programStages.filter(
-                        (p, i) => i !== index
-                    );
-                    const newState = { ...programStore.getState() };
-                    programStore.setState(
-                        set(`programStages`)(removedProgramStages, newState),
-                        set('program.programStages')(
-                            removedProgramStages,
-                            newState
-                        )
-                    );
-                    log.warn(response);
                     snackActions.show({
                         message: response.message
                             ? response.message
