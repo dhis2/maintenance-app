@@ -56,7 +56,6 @@ export default new Map([
     }],
     ['recipientUserGroup', {
         component: (props) => {
-            console.log(props);
             if (!props.model || props.model.notificationRecipient !== 'USER_GROUP') {
                 return null;
             }
