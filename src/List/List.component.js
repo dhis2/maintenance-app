@@ -53,7 +53,7 @@ function actionsThatRequireDelete(action) {
     return false;
 }
 
-function getTranslatablePropertiesForModelType(modelType) {
+export function getTranslatablePropertiesForModelType(modelType) {
     const fieldsForModel = fieldOrder.for(modelType);
     const defaultTranslatableProperties = ['name', 'shortName'];
 
@@ -71,6 +71,21 @@ function getTranslatablePropertiesForModelType(modelType) {
     }
 
     return defaultTranslatableProperties;
+}
+
+const modelsThatMapToOtherDisplayName = {
+    'program': {
+        'programType': {
+                'WITH_REGISTRATION': 'TRACKER_PROGRAM',
+                'WITHOUT_REGISTRATION': 'EVENT_PROGRAM'
+            }
+        }
+}
+
+
+function getConstantDisplayNameOrOld(modelType, fieldName, oldVal) {
+    return modelsThatMapToOtherDisplayName[modelType] && modelsThatMapToOtherDisplayName[modelType][fieldName] &&
+        modelsThatMapToOtherDisplayName[modelType][fieldName][oldVal] || oldVal;
 }
 
 class DetailsBoxWithScroll extends Component {
@@ -320,7 +335,7 @@ const List = React.createClass({
                         modelDefinition.modelProperties.hasOwnProperty(filterField) &&
                         modelDefinition.modelProperties[filterField].hasOwnProperty('constants');
                     const constants = isConstantField &&
-                        modelDefinition.modelProperties[filterField].constants.map(c => ({ text: c, value: c }));
+                        modelDefinition.modelProperties[filterField].constants.map(c => ({ text: getConstantDisplayNameOrOld(this.props.params.modelType,filterField,c), value: c }));
                     const referenceType = this.context.d2.models.hasOwnProperty(filterField)
                         ? filterField
                         : `${this.props.params.modelType}.${filterField}`;
@@ -477,7 +492,7 @@ const List = React.createClass({
                     // Hack it to fix another hack - sweeet
                     row.noMoreGottaTranslateCauseIsDone = true;
                     if (row[columnName]) {
-                        prow[columnName] = this.getTranslation(row[columnName].toLowerCase());
+                        prow[columnName] = this.getTranslation(getConstantDisplayNameOrOld(this.props.params.modelType, columnName, row[columnName]).toLowerCase());
                     }
                 }
                 return prow;

@@ -7,6 +7,11 @@ export const EVENT_PROGRAM_STEP_CHANGE = 'EVENT_PROGRAM_STEP_CHANGE';
 export const EVENT_PROGRAM_STEP_NEXT = 'EVENT_PROGRAM_STEP_NEXT';
 export const EVENT_PROGRAM_STEP_PREVIOUS = 'EVENT_PROGRAM_STEP_PREVIOUS';
 
+export const PROGRAM_STEPPER_SET_DISABLE = 'PROGRAM_STEPPER_SET_DISABLE';
+
+
+export const changeStepperDisabledState = (disabled) => ({type: PROGRAM_STEPPER_SET_DISABLE, payload: { disabled} })
+
 export const changeStep = stepKey => ({ type: EVENT_PROGRAM_STEP_CHANGE, payload: stepKey });
 export const nextStep = () => ({ type: EVENT_PROGRAM_STEP_NEXT });
 export const previousStep = () => ({ type: EVENT_PROGRAM_STEP_PREVIOUS });

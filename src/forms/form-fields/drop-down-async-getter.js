@@ -1,6 +1,6 @@
 import React from 'react';
 import DropDown from './drop-down';
-
+import { isNil } from 'lodash/fp';
 class DropDownAsyncGetter extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -19,6 +19,7 @@ class DropDownAsyncGetter extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
+
         this.getOptions(newProps.model);
     }
 
@@ -38,7 +39,7 @@ class DropDownAsyncGetter extends React.Component {
         const { getter, shouldRender, useValueDotId, ...props } = this.props;
         if (shouldRender(this.props.model)) {
             const eventIdWrapper = (event) => {
-                if (event.target.value) {
+                if (!isNil(event.target.value)) {
                     if (useValueDotId) {
                         this.props.onChange({ target: { value: { id: event.target.value } } });
                     } else {

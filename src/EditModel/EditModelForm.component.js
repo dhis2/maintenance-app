@@ -83,7 +83,6 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
                 return config;
             })
         );
-
         const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
             .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
 

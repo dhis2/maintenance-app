@@ -3,11 +3,13 @@ import log from 'loglevel';
 import fieldRules from '../../config/field-rules';
 import isArray from 'd2-utilizr/lib/isArray';
 import systemSettingsStore from '../../App/systemSettingsStore';
+import { negate } from 'lodash/fp';
 
 const whenOperatorMap = new Map([
     ['EQUALS', equalsOperator],
     ['NOT_EQUALS', notEqualsOperator],
     ['HAS_VALUE', hasValueOperator],
+    ['HAS_NO_VALUE', negate(hasValueOperator)],
     ['HAS_STRING_VALUE', hasStringValueOperator],
     ['ONEOF', oneOfOperator],
     ['SYSTEM_SETTING_IS_TRUE', systemSettingIsTrueOperator],

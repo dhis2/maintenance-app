@@ -55,6 +55,9 @@ const webpackConfig = {
                 test: /\.jsx?$/,
                 include: path.resolve(__dirname, 'src/'),
                 loader: 'babel-loader',
+                options: {
+                    cacheDirectory: true,
+                },
             },
             {
                 test: /\.css$/,

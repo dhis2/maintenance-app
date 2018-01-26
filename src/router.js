@@ -128,7 +128,7 @@ function loadOptionSetObject({ params }, replace) {
 }
 
 function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiveStep) {
-    return ({ params }, replace) => {
+    return ({ location: { query }, params }, replace) => {
         initState({
             params: {
                 modelType: schema,
@@ -136,9 +136,8 @@ function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiv
                 modelId: params.modelId,
             },
         });
-
         // Fire load action for the event program program to be edited
-        store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId }));
+        store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId, query }));
         store.dispatch(resetActiveStep());
     };
 }
@@ -247,7 +246,7 @@ const routes = (
                 </Route>
                 <Route
                     path="program/:modelId"
-                    component={delayRender(() => System.import('./EditModel/event-program/EditEventProgram.component'))}
+                    component={delayRender(() => System.import('./EditModel/event-program/EditProgram.component'))}
                     onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
                     hideSidebar
                     disableTabs

@@ -493,7 +493,7 @@ class EditDataEntryForm extends React.Component {
     }
 }
 EditDataEntryForm.propTypes = {
-    params: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object,
 };
 EditDataEntryForm.contextTypes = {
     d2: React.PropTypes.any,

@@ -56,13 +56,13 @@ class AddNewSection extends Component {
     render = () => {
         const actions = [
             <FlatButton
+                primary
                 label={this.getTranslation('cancel')}
-                primary={true}
                 onTouchTap={this.closeDialog}
             />,
             <FlatButton
+                primary
                 label={this.getTranslation('add')}
-                primary={true}
                 disabled={!this.state.sectionName}
                 onTouchTap={this.confirmAddNewSection}
             />,

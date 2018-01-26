@@ -64,3 +64,38 @@ export function createModelToEditEpic(actionType, store, storeProp) {
         )
         .flatMapTo(emptyAction$);
 }
+
+export function createModelToEditProgramStageEpic(actionType, store, storeProp) {
+    const storePropGetter = get(storeProp);
+
+    return action$ => action$
+        .ofType(actionType)
+        .map(action => action.payload)
+        .flatMap(({ stageId, field, value }) => store
+            .take(1)
+            .map(storePropGetter)
+            .map((programStages) => {
+                const index = programStages.findIndex(stage => stage.id == stageId);
+                const model = programStages[index];
+                const storePropSetter = set(`${storeProp}[${index}]`);
+                // Apply the new value to the model
+                if (isAttributeValue(model, field)) {
+                    updateAttributeValue(model, field, value);
+                } else {
+                    updateRegularValue(model, field, value);
+                    /* ProgramStages does not get refreshed from the server after editing a stage,
+                    and we therefore copy the name to displayName to show in lists etc. This does not get sent
+                    to the server, and upon reloading the model, the server-defined displayName will be shown */
+
+                    if(field === 'name') {
+                        updateRegularValue(model, 'displayName', value);
+                    }
+                }
+                // Write back the state to the store
+                store.setState(
+                    storePropSetter(model, store.getState() )
+                );
+            })
+        )
+        .flatMapTo(emptyAction$);
+}
