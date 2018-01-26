@@ -16,6 +16,7 @@ import { generateUid } from 'd2/lib/uid';
 import { Observable } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
 import { deleteProgramStageWithSnackbar } from './program-stages/contextActions';
+import log from 'loglevel';
 
 const d2$ = Observable.fromPromise(getInstance());
 
@@ -90,7 +91,7 @@ export const newTrackerProgramStage = action$ =>
                         )
                     );
                 } catch (e) {
-                    console.log(e);
+                    log.error(e);
                     throw new Error(e);
                 }
                 return editProgramStage(programStageUid);
@@ -137,16 +138,14 @@ export const saveTrackerProgramStage = action$ =>
                 );
 
                 if (index < 0) {
-                    console.warn(
-                        `ProgramStage with id ${stageId} does not exist`
-                    );
+                    log.warn(`ProgramStage with id ${stageId} does not exist`);
                 }
                 try {
                     programStore.setState({
                         programStageToEditCopy: null,
                     });
                 } catch (e) {
-                    console.log(e);
+                    log.error(e);
                 }
             })
         )
@@ -162,7 +161,7 @@ export const cancelProgramStageEdit = action$ =>
                     const index = getProgramStageIndexById(stageId)(store);
 
                     if (index < 0) {
-                        console.warn(
+                        log.warn(
                             `ProgramStage with id ${stageId} does not exist`
                         );
                     }
@@ -186,7 +185,7 @@ export const cancelProgramStageEdit = action$ =>
                         set('programStageToEditCopy', null, programStageSetter)
                     );
                 } catch (e) {
-                    console.log(e);
+                    log.error(e);
                 }
             })
         )
