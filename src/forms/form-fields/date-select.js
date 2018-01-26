@@ -26,15 +26,18 @@ export default React.createClass({
             modelDefinition,
             ...other
         } = this.props;
+
         return (
-            <DatePicker
-                {...other}
-                value={this.props.value && new Date(this.props.value)}
-                mode="portrait"
-                autoOk
-                floatingLabelText={labelText}
-                onChange={this._onDateSelect}
-            />
+            <div style={{ ...this.props.style }}>
+                <DatePicker
+                    {...other}
+                    value={this.props.value && new Date(this.props.value)}
+                    mode="portrait"
+                    autoOk
+                    floatingLabelText={labelText}
+                    onChange={this._onDateSelect}
+                />
+            </div>
         );
     },
 

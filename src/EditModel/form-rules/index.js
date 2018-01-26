@@ -44,14 +44,8 @@ function setProp(fieldConfig, operationParams, ruleResult) {
     return fieldConfig.props[operationParams.propName] = operationParams.elseValue;
 }
 
-/*
-    Needed to add an extra variable for "hasHiddenRule" since EditModelForm.component->setActiveStep() uses 
-    the field.hiddenComponent variable to hide and unhide fields that are not relevant for the 
-    same step using the stepper. 
-*/
 function hideField(fieldConfig, operationParams, ruleResult) {
     if (ruleResult) {
-        fieldConfig.hasHiddenRule = true;
         fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
         fieldConfig.component = () => null;
     } else if (fieldConfig.hiddenComponent) {

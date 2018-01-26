@@ -6,7 +6,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 
-
 class Dropdown extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -26,7 +25,6 @@ class Dropdown extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            // value: this.state.value || ((newProps.defaultValue !== undefined && newProps.defaultValue !== null) ? newProps.defaultValue : ''),
             options: this.getOptions(newProps.options, newProps.isRequired),
         });
     }
@@ -82,88 +80,6 @@ class Dropdown extends React.Component {
         );
     }
 
-    render() {
-        const {
-            onFocus,
-            onBlur,
-            labelText,
-            modelDefinition,
-            models,
-            referenceType,
-            referenceProperty,
-            isInteger,
-            translateOptions,
-            isRequired,
-            options,
-            model,
-            limit,
-            fullWidth,
-            top,
-            translateLabel,
-            style,
-            ...other
-        } = this.props;
-
-        if (style && style.display && style.display === 'none') {
-            return null;
-        }
-
-        return this.state.options.length > limit
-            ? (
-                <div style={{ width: fullWidth ? '100%' : 'inherit', position: 'relative', top: top || undefined }}>
-                    <Dialog
-                        title={labelText}
-                        open={this.state.dialogOpen}
-                        onRequestClose={this.closeDialog}
-                        autoScrollBodyContent
-                        autoDetectWindowHeight
-                        actions={[
-                            <FlatButton onClick={this.closeDialog} label={this.getTranslation('cancel')} />,
-                        ]}
-                    >
-                        <TextField
-                            floatingLabelText="Filter list"
-                            onChange={(e, value) => { this.setState({ filterText: value }); }}
-                            style={{ marginBottom: 16 }}
-                        />
-                        {!this.props.isRequired && this.renderDialogOption(null, this.getTranslation('no_value'))}
-                        {this.state.options
-                            .filter(o => !this.state.filterText || this.state.filterText
-                                .trim().toLocaleLowerCase().split(' ').every(
-                                    f => o.text.toLocaleLowerCase().includes(f.toLocaleLowerCase())
-                                )
-                            )
-                            .map(o => this.renderDialogOption(o.value, o.text))
-                        }
-                    </Dialog>
-                    <TextField
-                        {...other}
-                        fullWidth={fullWidth}
-                        value={this.getOptionText(this.state.value)}
-                        onClick={this.openDialog}
-                        onChange={this.openDialog}
-                        floatingLabelText={labelText}
-                        inputStyle={{ cursor: 'pointer' }}
-                    />
-                    <div
-                        style={{ position: 'absolute', top: 36, right: 10, color: 'rgba(0,0,0,0.25)', cursor: 'pointer' }}
-                        className="material-icons"
-                        onClick={this.openDialog}
-                    >open_in_new</div>
-                </div>
-            ) : (
-                <SelectField
-                    value={this.state.value}
-                    fullWidth={fullWidth}
-                    {...other}
-                    onChange={this._onChange}
-                    floatingLabelText={labelText}
-                >
-                    {this.renderOptions()}
-                </SelectField>
-            );
-    }
-
     renderOptions() {
         const options = this.state.options
             .map((option, index) => (
@@ -191,24 +107,129 @@ class Dropdown extends React.Component {
 
         return options;
     }
+
+    renderSelectField(other) {
+        return (
+            <SelectField
+                value={this.state.value}
+                fullWidth={this.props.fullWidth}
+                {...other}
+                onChange={this._onChange}
+                floatingLabelText={this.props.labelText}
+            >
+                {this.renderOptions()}
+            </SelectField>
+        );
+    }
+
+    renderDialogDropDown(other) {
+        const styles = {
+            fieldStyle: {
+                width: this.props.fullWidth ? '100%' : 'inherit',
+                position: 'relative',
+                top,
+            },
+            textField: {
+                marginBottom: 16,
+            },
+            openInNew: {
+                position: 'absolute',
+                top: 36,
+                right: 10,
+                color: 'rgba(0,0,0,0.25)',
+                cursor: 'pointer',
+            },
+        };
+
+        return (
+            <div style={styles.fieldStyle}>
+                <Dialog
+                    title={this.props.labelText}
+                    open={this.state.dialogOpen}
+                    onRequestClose={this.closeDialog}
+                    autoScrollBodyContent
+                    autoDetectWindowHeight
+                    actions={[
+                        <FlatButton onClick={this.closeDialog} label={this.getTranslation('cancel')} />,
+                    ]}
+                >
+                    <TextField
+                        floatingLabelText="Filter list"
+                        onChange={(e, value) => { this.setState({ filterText: value }); }}
+                        style={styles.textField}
+                    />
+                    {!this.props.isRequired && this.renderDialogOption(null, this.getTranslation('no_value'))}
+                    {this.state.options
+                        .filter(o => !this.state.filterText || this.state.filterText
+                            .trim().toLocaleLowerCase().split(' ').every(
+                                f => o.text.toLocaleLowerCase().includes(f.toLocaleLowerCase()),
+                            ),
+                        )
+                        .map(o => this.renderDialogOption(o.value, o.text))
+                    }
+                </Dialog>
+                <TextField
+                    {...other}
+                    fullWidth={this.props.fullWidth}
+                    value={this.getOptionText(this.state.value)}
+                    onClick={this.openDialog}
+                    onChange={this.openDialog}
+                    floatingLabelText={this.props.labelText}
+                    inputStyle={{ cursor: 'pointer' }}
+                />
+                <div style={styles.openInNew} className="material-icons" onClick={this.openDialog}>open_in_new</div>
+            </div>
+        );
+    }
+
+    render() {
+        const {
+            onFocus,
+            onBlur,
+            labelText,
+            modelDefinition,
+            models,
+            referenceType,
+            referenceProperty,
+            isInteger,
+            translateOptions,
+            isRequired,
+            options,
+            model,
+            limit,
+            fullWidth,
+            top,
+            translateLabel,
+            style,
+            ...other
+        } = this.props;
+
+        return (
+            this.state.options.length > limit
+                ? this.renderDialogDropDown(other)
+                : this.renderSelectField(other)
+        );
+    }
 }
 
 Dropdown.propTypes = {
-    defaultValue: React.PropTypes.oneOfType([
-        React.PropTypes.string,
-        React.PropTypes.number,
-        React.PropTypes.bool,
-    ]),
     onFocus: React.PropTypes.func,
     onBlur: React.PropTypes.func,
+    onChange: React.PropTypes.func,
     options: React.PropTypes.array.isRequired,
-    isRequired: React.PropTypes.bool,
-    labelText: React.PropTypes.string.isRequired,
+    fullWidth: React.PropTypes.bool,
     translateOptions: React.PropTypes.bool,
+    isRequired: React.PropTypes.bool,
     limit: React.PropTypes.number,
+    labelText: React.PropTypes.string.isRequired,
+    top: React.PropTypes.any,
 };
 Dropdown.defaultProps = {
     limit: 50,
+    translateOptions: false,
+    isRequired: false,
+    fullWidth: false,
+    top: undefined,
 };
 Dropdown.contextTypes = {
     d2: React.PropTypes.any,
