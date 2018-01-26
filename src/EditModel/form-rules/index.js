@@ -44,6 +44,12 @@ function setProp(fieldConfig, operationParams, ruleResult) {
     return fieldConfig.props[operationParams.propName] = operationParams.elseValue;
 }
 
+
+/*
+    Uses the swapping variable "hiddenComponent" when temporary hiding a field.
+    When the field should be shown again, the content of "hiddenComponent" is
+    put back to the "component" variable.
+*/
 function hideField(fieldConfig, operationParams, ruleResult) {
     if (ruleResult) {
         fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
@@ -140,9 +146,15 @@ export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
             (rule.operations || [rule.operation])
                 .forEach((operation) => {
                     const fieldConfigForOperation = fieldConfigs.find(fieldConfig => fieldConfig.name === (operation.field || rule.field));
-                    const { field, type, ...operationParams } = operation;
+                    const {
+                        field,
+                        type,
+                        ...operationParams
+                    } = operation;
 
-                    log.debug(`---- For field ${field || rule.field} execute ${getOperation(type).name} with`, operationParams);
+                    log.debug(`---- For field ${field || rule.field} 
+                            execute ${getOperation(type).name} 
+                            with`, operationParams);
 
                     getOperation(type)(fieldConfigForOperation, operationParams, rulePassed, modelToEdit);
                 });

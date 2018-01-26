@@ -223,6 +223,7 @@ Dropdown.propTypes = {
     limit: React.PropTypes.number,
     labelText: React.PropTypes.string.isRequired,
     top: React.PropTypes.any,
+    style: React.PropTypes.any,
 };
 Dropdown.defaultProps = {
     limit: 50,
@@ -230,6 +231,7 @@ Dropdown.defaultProps = {
     isRequired: false,
     fullWidth: false,
     top: undefined,
+    style: undefined,
 };
 Dropdown.contextTypes = {
     d2: React.PropTypes.any,

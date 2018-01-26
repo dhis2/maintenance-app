@@ -216,6 +216,11 @@ export default React.createClass({
         return this.renderForm();
     },
 
+    /*
+        Sets the style of the fields that are not part of the active steps to 'none'
+        so that they are "hidden". For this to work, the components needs to have
+        an outer div that receives the props.style. 
+    */
     setActiveStep(step) {
         const stepsByField = fieldGroups.groupsByField(this.props.modelType);
         if (stepsByField) {

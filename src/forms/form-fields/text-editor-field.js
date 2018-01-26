@@ -93,9 +93,9 @@ TextEditorField.propTypes = {
 TextEditorField.contextTypes = {
     d2: React.PropTypes.any,
 };
-// value should be empty string
+
 TextEditorField.defaultProps = {
-    value: null,
+    value: '',
     disabled: false,
     onChange: null,
 };
