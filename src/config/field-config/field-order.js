@@ -198,6 +198,7 @@ const fieldOrderByName = new Map([
     ['program', [ // TODO: Should be event program
         'name',
         'shortName',
+        'code',
         'description',
         'categoryCombo',
         'workflow',
