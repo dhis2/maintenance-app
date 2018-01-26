@@ -9,7 +9,7 @@ import {
     deleteProgramStageSuccess,
     deleteProgramStageError,
 } from './program-stages/actions';
-import { get, set } from 'lodash/fp';
+import { get, set, curry } from 'lodash/fp';
 import programStore from '../eventProgramStore';
 import { combineEpics } from 'redux-observable';
 import { generateUid } from 'd2/lib/uid';
@@ -19,10 +19,38 @@ import { deleteProgramStageWithSnackbar } from './program-stages/contextActions'
 
 const d2$ = Observable.fromPromise(getInstance());
 
-const getProgramStageById = stageId => store =>
-    store.programStages.find(stage => stage.id == stageId);
-const getProgramStageIndexById = stageId => store =>
-    store.programStages.findIndex(stage => stage.id == stageId);
+const getProgramStageById = curry((stageId, store) =>
+    store.programStages.find(stage => stage.id == stageId)
+);
+
+const getProgramStageIndexById = curry((stageId, store) =>
+    store.programStages.findIndex(stage => stage.id == stageId)
+);
+
+/**
+ * Deletes a programStage from state by id.
+ * @param stageId to delete
+ * @param setState flag to indicate if the function should set the state.
+ * If not, the function can be used to get the "setter"-object to use with setState
+ * . And is useful if you are setting the state manually later. Default true
+ * @returns {*} the state that should be modified, to use as a setter for store.setState().
+ */
+export const deleteProgramStageFromState = (stageId, setState = true) => {
+    const state = programStore.getState();
+    const programStage = getProgramStageById(stageId, state);
+    const index = getProgramStageIndexById(stageId, state);
+    const program = state.program;
+    const removedFromProgramStages = state.programStages.filter(
+        (p, i) => i !== index
+    );
+
+    program.programStages.remove(programStage);
+    const setters = set('program', program)(
+        set('programStages', removedFromProgramStages, state)
+    );
+    setState && programStore.setState(setters);
+    return setters;
+};
 
 export const newTrackerProgramStage = action$ =>
     action$.ofType(PROGRAM_STAGE_ADD).flatMap(action => {
@@ -61,7 +89,6 @@ export const newTrackerProgramStage = action$ =>
                             )
                         )
                     );
-                    console.log(programStore.getState().program);
                 } catch (e) {
                     console.log(e);
                     throw new Error(e);
@@ -87,10 +114,7 @@ export const editTrackerProgramStage = action$ =>
                     );
                     const programStage = programStages[index];
 
-                    const model =
-                        programStage.name === undefined
-                            ? { id: programStage.id }
-                            : programStages[index].clone();
+                    const model = programStages[index].clone();
                     const setter = set(
                         'programStageToEditCopy',
                         model,
@@ -111,6 +135,7 @@ export const saveTrackerProgramStage = action$ =>
                 const index = store.programStages.findIndex(
                     stage => stage.id == stageId
                 );
+
                 if (index < 0) {
                     console.warn(
                         `ProgramStage with id ${stageId} does not exist`
@@ -132,34 +157,31 @@ export const cancelProgramStageEdit = action$ =>
         .ofType(PROGRAM_STAGE_EDIT_CANCEL)
         .flatMap(() =>
             programStore.take(1).map(store => {
-                const program = store.program;
-                const stageId = store.programStageToEditCopy.id;
-                const index = getProgramStageIndexById(stageId)(store);
+                try {
+                    const stageId = store.programStageToEditCopy.id;
+                    const index = getProgramStageIndexById(stageId)(store);
 
-                if (index < 0) {
-                    console.warn(
-                        `ProgramStage with id ${stageId} does not exist`
-                    );
-                }
-                let model = store.programStageToEditCopy;
-                let programStageSetter = set(
-                    `programStages[${index}]`,
-                    model,
-                    store
-                );
-                // If the programstage is new, remove it when cancelling
-                if (store.programStageToEditCopy.name === undefined) {
-                    const removedFromProgramStages = store.programStages.filter(
-                        (p, i) => i !== index
-                    );
-                    program.programStages.remove(stageId);
-                    programStageSetter = set(
-                        'programStages',
-                        removedFromProgramStages,
+                    if (index < 0) {
+                        console.warn(
+                            `ProgramStage with id ${stageId} does not exist`
+                        );
+                    }
+                    let model = store.programStageToEditCopy;
+                    let programStageSetter = set(
+                        `programStages[${index}]`,
+                        model,
                         store
                     );
-                }
-                try {
+                    // If the programstage is new, remove it when cancelling
+                    if (model.name === undefined) {
+                        const removedFromProgramStages = store.programStages.filter(
+                            (p, i) => i !== index
+                        );
+                        programStageSetter = deleteProgramStageFromState(
+                            stageId,
+                            false
+                        );
+                    }
                     programStore.setState(
                         set('programStageToEditCopy', null, programStageSetter)
                     );
@@ -186,7 +208,7 @@ const deleteProgramStage = action$ =>
                     );
                     const model = store.programStages[index];
 
-                    deleteProgramStageWithSnackbar(model, index);
+                    deleteProgramStageWithSnackbar(model);
                     return deleteProgramStageSuccess();
                 } catch (e) {
                     return deleteProgramStageError();
