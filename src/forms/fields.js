@@ -1,8 +1,6 @@
 import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from 'd2-ui/lib/forms/Validators';
 import isString from 'd2-utilizr/lib/isString';
 import isNumber from 'lodash.isnumber';
-import log from 'loglevel';
-import { config, getInstance } from 'd2/lib/d2';
 import TextField from './form-fields/text-field';
 import MultiSelect from './form-fields/multi-select';
 import CheckBox from './form-fields/check-box';

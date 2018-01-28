@@ -2,12 +2,12 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
+import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+
 import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerContainer.component';
-import { Observable } from 'rxjs';
 import modelToEditStore from './modelToEditStore';
 import DataIndicatorGroupsAssignment from './DataIndicatorGroupsAssignment.component';
 import DataElementGroupsAssignment from './data-element/DataElementGroupsAssignment.component';
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 
 const styles = {
     saveButton: {
@@ -32,6 +32,44 @@ class IndicatorExtraFields extends React.Component {
         this.closeDialog = this.closeDialog.bind(this);
         this.saveToModelAndCloseDialog = this.saveToModelAndCloseDialog.bind(this);
         this.indicatorExpressionChanged = this.indicatorExpressionChanged.bind(this);
+    }
+
+    setNumerator() {
+        this.setState({ type: 'numerator', dialogOpen: true });
+    }
+
+    setDenominator() {
+        this.setState({ type: 'denominator', dialogOpen: true });
+    }
+
+    closeDialog() {
+        this.setState({ dialogOpen: false });
+    }
+
+    saveToModelAndCloseDialog() {
+        if (this.state.expressionStatus.isValid) {
+            this.props.modelToEdit[this.state.type] = this.state.expressionFormula;
+            this.props.modelToEdit[`${this.state.type}Description`] = this.state.expressionDescription;
+
+            modelToEditStore.setState(this.props.modelToEdit);
+        }
+
+        this.setState({ dialogOpen: false });
+    }
+
+    indicatorExpressionChanged(data) {
+        const expressionValues = {};
+
+        if (data.expressionStatus.isValid) {
+            expressionValues.expressionStatus = data.expressionStatus;
+            expressionValues.expressionDescription = data.description;
+            expressionValues.expressionFormula = data.formula;
+        }
+
+        this.setState({
+            dialogValid: data.expressionStatus.isValid && Boolean(data.description.trim()),
+            ...expressionValues,
+        });
     }
 
     renderExpressionManager() {
@@ -77,49 +115,10 @@ class IndicatorExtraFields extends React.Component {
             </div>
         );
     }
-
-    setNumerator() {
-        this.setState({ type: 'numerator', dialogOpen: true });
-    }
-
-    setDenominator() {
-        this.setState({ type: 'denominator', dialogOpen: true });
-    }
-
-    closeDialog() {
-        this.setState({ dialogOpen: false });
-    }
-
-    saveToModelAndCloseDialog() {
-        if (this.state.expressionStatus.isValid) {
-            this.props.modelToEdit[this.state.type] = this.state.expressionFormula;
-            this.props.modelToEdit[`${this.state.type}Description`] = this.state.expressionDescription;
-
-            modelToEditStore.setState(this.props.modelToEdit);
-        }
-
-        this.setState({ dialogOpen: false });
-    }
-
-    indicatorExpressionChanged(data) {
-        const expressionValues = {};
-
-        if (data.expressionStatus.isValid) {
-            expressionValues.expressionStatus = data.expressionStatus;
-            expressionValues.expressionDescription = data.description;
-            expressionValues.expressionFormula = data.formula;
-        }
-
-        this.setState({
-            dialogValid: data.expressionStatus.isValid && Boolean(data.description.trim()),
-            ...expressionValues,
-        });
-    }
 }
+
 IndicatorExtraFields.propTypes = {
     modelToEdit: React.PropTypes.object.isRequired,
-    description: React.PropTypes.string.isRequired,
-    formula: React.PropTypes.string.isRequired,
 };
 
 export default {
@@ -130,7 +129,7 @@ export default {
                 <div style={{ marginTop: '2rem' }}>
                     <DataElementGroupsAssignment source={props.modelToEdit} />
                 </div>
-                ),
+            ),
         },
     ],
     indicator: [

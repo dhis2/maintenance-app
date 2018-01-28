@@ -295,7 +295,7 @@ const fieldOrderByName = new Map([
         'name',
         'description',
         'minAttributesRequiredToSearch',
-        'maxTeiCountToReturn'
+        'maxTeiCountToReturn',
     ]],
     ['programIndicator', [
         'program',
