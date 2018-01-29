@@ -20,3 +20,4 @@ target/*
 npm-debug.log
 yarn-error.log
 stats.json
+package-lock.json

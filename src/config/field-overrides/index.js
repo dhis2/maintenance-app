@@ -21,6 +21,7 @@ import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
 import dataApprovalWorkflow from './dataApprovalWorkflow';
+import programStage from './programStage';
 
 const overridesByType = {
     attribute,
@@ -46,6 +47,7 @@ const overridesByType = {
     validationRule,
     dataApprovalLevel,
     dataApprovalWorkflow,
+    programStage,
 };
 
 export default {

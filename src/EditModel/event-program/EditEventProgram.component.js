@@ -5,21 +5,26 @@ import FormHeading from '../FormHeading';
 import FormSubHeading from '../FormSubHeading';
 import EventProgramStepper from './EventProgramStepper';
 import EventProgramStepperContent from './EventProgramStepperContent';
-import eventProgramStore$ from './eventProgramStore';
+import eventProgramStore$, { isStoreStateDirty } from './eventProgramStore';
 import EventActionButtons from './EventActionButtons';
-import { createConnectedForwardButton, createConnectedBackwardButton, createStepperNavigation } from '../stepper/stepper';
+import {
+    createConnectedForwardButton,
+    createConnectedBackwardButton,
+    createStepperNavigation,
+} from '../stepper/stepper';
 import { previousStep, nextStep } from './actions';
+import PropTypes from 'prop-types';
 
-const EventProgramStepperNavigationForward = createConnectedForwardButton(nextStep);
-const EventProgramStepperNavigationBackward = createConnectedBackwardButton(previousStep);
+const EventProgramStepperNavigationForward = createConnectedForwardButton(
+    nextStep
+);
+const EventProgramStepperNavigationBackward = createConnectedBackwardButton(
+    previousStep
+);
 
-const StepperNavigation = createStepperNavigation(EventProgramStepperNavigationBackward, EventProgramStepperNavigationForward);
-
-const withPreLoadedModel = mapPropsStream(props$ => props$
-    .combineLatest(
-        eventProgramStore$,
-        (props, eventProgramState) => ({ ...props, model: eventProgramState.program }),
-    ),
+const StepperNavigation = createStepperNavigation(
+    EventProgramStepperNavigationBackward,
+    EventProgramStepperNavigationForward
 );
 
 const styles = {
@@ -30,6 +35,10 @@ const styles = {
     },
 };
 
+const isModelDirty = () => ({
+    dirty: isStoreStateDirty(eventProgramStore$.getState()),
+});
+
 function EditEventProgram(props) {
     const schema = props.params.modelType || 'program';
     const { groupName } = props.params;
@@ -37,21 +46,30 @@ function EditEventProgram(props) {
     return (
         <div>
             <div style={styles.heading}>
-                <FormHeading schema={schema} groupName={groupName}>{camelCaseToUnderscores(schema)}</FormHeading>
-                <FormSubHeading>{props.model.displayName}</FormSubHeading>
+                <FormHeading
+                    schema={schema}
+                    groupName={groupName}
+                    isDirtyHandler={isModelDirty}
+                >
+                    {`event_${camelCaseToUnderscores(schema)}`}
+                </FormHeading>
+                <FormSubHeading>
+                    {props.model.displayName}
+                </FormSubHeading>
             </div>
             <div>
                 <EventProgramStepper />
             </div>
-            <EventProgramStepperContent
-                schema={schema}
-                {...props}
-            />
+            <EventProgramStepperContent schema={schema} {...props} />
             <StepperNavigation>
-                <EventActionButtons groupName={groupName} schema={schema} />
+                <EventActionButtons
+                    groupName={groupName}
+                    schema={schema}
+                    isDirtyHandler={isModelDirty}
+                />
             </StepperNavigation>
         </div>
     );
 }
 
-export default withPreLoadedModel(EditEventProgram);
+export default EditEventProgram;

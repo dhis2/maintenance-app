@@ -24,7 +24,7 @@ const checkIfDirty = model => model && model.isDirty();
 const modelToJson = getOwnedPropertyJSON;
 
 // ___ isProgramStageDirty :: Object<StoreState> -> Object<{programStages}> -> Boolean
-const isProgramStageDirty = compose(checkIfDirty, first, programStagesSelector);
+const isProgramStageDirty = compose(some(checkIfDirty), programStagesSelector);
 
 // ___ getIdForFirstProgramStage : Object<StoreState> -> Object<{programStages}> -> String
 const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelector);
@@ -112,9 +112,11 @@ function isValidState(state) {
     const acceptedKeys = [
         'program',
         'programStages',
+        'programStageToEditCopy',
         'programStageSections',
         'programStageNotifications',
         'availableDataElements',
+        'availableAttributes',
         'dataEntryFormForProgramStage',
     ];
 
@@ -169,11 +171,12 @@ eventProgramStore.setState = (newState) => {
     if (!isValidState(newState)) {
         throw new Error('You are attempting to set an invalid state onto the eventProgramStore');
     }
-
     storeSetState({
         ...eventProgramStore.getState(),
         ...newState,
     });
 };
+
+eventProgramStore.subscribe(val => console.log(val))
 
 export default eventProgramStore;

@@ -1,6 +1,7 @@
 import reducer from '../reducers';
 import * as actions from '../actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
+import { PROGRAM_STEPPER_SET_DISABLE } from "../actions";
 import * as iterator from '../../stepper/stepIterator';
 
 describe('Event Program', () => {
@@ -28,10 +29,16 @@ describe('Event Program', () => {
             const expectedState = {
                 step: {
                     activeStep: stepKey,
+                    disabled: false,
+                    isLoading: true
                 },
                 stageNotifications: {
                     isDeleting: false,
                 },
+                programStageStepper: {
+                    activeStep: stepKey,
+                    stageId: null
+                }
             };
 
             expect(actualState).toEqual(expectedState);
@@ -45,6 +52,8 @@ describe('Event Program', () => {
 
             const expectedStepState = {
                 activeStep: stepKey,
+                disabled: false,
+                isLoading: true
             };
 
             const actualState = reducer(undefined, {});
@@ -104,12 +113,13 @@ describe('Event Program', () => {
                 expect(actualState.step).toEqual(expectedState);
             });
 
-            test('shoud request the first step when receiving an STEPPER_RESET_ACTIVE_STEP action', () => {
+            test('should request the first step when receiving an STEPPER_RESET_ACTIVE_STEP action', () => {
                 const expectedStepKey = 'sprint';
                 iterator.first.mockReturnValue(expectedStepKey);
 
                 const expectedState = {
                     activeStep: expectedStepKey,
+                    isLoading: true
                 };
 
                 const actualState = reducer(initialState, { type: STEPPER_RESET_ACTIVE_STEP });
@@ -118,6 +128,31 @@ describe('Event Program', () => {
                 expect(iterator.previous).toHaveBeenCalledTimes(0);
                 expect(actualState.step).toEqual(expectedState);
             });
+
+            test('should handle PROGRAM_STEPPER_SET_DISABLE action', () => {
+
+                const expectedState = {
+                    activeStep: initialState.step.activeStep,
+                    disabled: true
+                }
+                const actualStateTrue = reducer(initialState, {
+                    type: PROGRAM_STEPPER_SET_DISABLE,
+                    payload: {
+                        disabled: true
+                    }
+                });
+                expect(actualStateTrue.step).toEqual(expectedState);
+
+                const actualStateFalse = reducer(initialState, {
+                    type: PROGRAM_STEPPER_SET_DISABLE,
+                    payload: {
+                        disabled: false
+                    }
+                });
+                expect(actualStateFalse.step).toEqual({...expectedState, disabled: false})
+            })
+
+
         });
     });
 });

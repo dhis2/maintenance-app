@@ -14,7 +14,7 @@ const styles = {
     dragHandleHoverColor: orange200,
 };
 
-const DragHandle = SortableHandle(() =>
+const DragHandle = () => (
     <FontIcon
         color={styles.dragHandleColor}
         hoverColor={styles.dragHandleHoverColor}
@@ -23,4 +23,4 @@ const DragHandle = SortableHandle(() =>
     >reorder</FontIcon>
 );
 
-export default DragHandle;
+export default SortableHandle(DragHandle);

@@ -70,6 +70,9 @@ const setSortOrderToIndex = models => models.map((model, index) => {
 const changeProgramStageSectionOrder = store => action$ => action$
         .ofType(PROGRAM_STAGE_SECTIONS_ORDER_CHANGE)
         .map((action) => {
+            const state = store.getState();
+            console.warn('STATE IS:', state);
+
             const newSections = get('payload.programStageSections', action);
             const programStageSections = compose(sortBy('sortOrder'), setSortOrderToIndex)(newSections);
 
