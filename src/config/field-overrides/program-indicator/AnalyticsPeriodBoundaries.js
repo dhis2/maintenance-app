@@ -132,8 +132,7 @@ function addSubField(model, onChange) {
         analyticsPeriodBoundaryType: '',
         boundaryTarget: '',
         offsetNumberOfPeriods: 0,
-        offsetPeriodType: '',
-        programIndicator: model.id
+        offsetPeriodType: ''
     };
 
     return onChange({ target: {
