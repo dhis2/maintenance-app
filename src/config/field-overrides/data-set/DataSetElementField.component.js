@@ -1,16 +1,21 @@
 import React, { Component, PropTypes } from 'react';
+
+import { uniq, includes, curry, get, isUndefined, range } from 'lodash/fp';
+
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
-import { Observable, BehaviorSubject } from 'rxjs';
-import log from 'loglevel';
-import componentFromStream from 'recompose/componentFromStream';
-import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Store from 'd2-ui/lib/store/Store';
 import Row from 'd2-ui/lib/layout/Row.component';
-import DataSetElementCategoryComboSelectionDialog from './DataSetElementCategoryComboSelectionDialog.component';
-import { uniq, includes, curry, get, isUndefined, range } from 'lodash/fp';
+
 import TextField from 'material-ui/TextField/TextField';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
+
+import { Observable, BehaviorSubject } from 'rxjs';
+import log from 'loglevel';
+import componentFromStream from 'recompose/componentFromStream';
+
+import DataSetElementCategoryComboSelectionDialog from './DataSetElementCategoryComboSelectionDialog.component';
 
 function getCategoryComboNameForDataElement(dses, de) {
     const dataSetElementForDataElement = Array
@@ -72,7 +77,7 @@ class DataSetElementField extends Component {
             Array.from(props.dataSet.dataSetElements || [])
                 .filter(dse => dse.dataElement)
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
-                .map(dse => dse.dataElement.id)
+                .map(dse => dse.dataElement.id),
         );
     }
 
@@ -95,6 +100,12 @@ class DataSetElementField extends Component {
                 .sort((left, right) => ((left.dataElement && left.dataElement.displayName || '').localeCompare(right.dataElement && right.dataElement.displayName)))
                 .map(dse => dse.dataElement.id)
         );
+    }
+
+    setFilterText = (event, value) => {
+        this.setState({
+            filterText: value,
+        });
     }
 
     updateCategoryCombosForDataSetElements() {
@@ -190,12 +201,6 @@ class DataSetElementField extends Component {
             target: {
                 value: this.props.dataSet.dataSetElements,
             },
-        });
-    }
-
-    setFilterText = (event, value) => {
-        this.setState({
-            filterText: value,
         });
     }
 
