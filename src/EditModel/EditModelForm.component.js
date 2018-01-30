@@ -1,26 +1,31 @@
 import React from 'react';
+
+import log from 'loglevel';
+import { Observable } from 'rxjs';
+
+import { Step, Stepper, StepButton } from 'material-ui/Stepper';
+
+import { getInstance } from 'd2/lib/d2';
+import { isString } from 'd2-utilizr';
+import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
+import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+
 import fieldGroups from '../config/field-config/field-groups';
 import disabledOnEdit from '../config/disabled-on-edit';
-import { getInstance } from 'd2/lib/d2';
 import modelToEditStore from './modelToEditStore';
 import objectActions from './objectActions';
 import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
-import { isString } from 'd2-utilizr';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
-import log from 'loglevel';
 import extraFields from './extraFields';
-import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+
 import appState from '../App/appStateStore';
-import { Observable } from 'rxjs';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttributeFieldConfigs } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
 
-import { Step, Stepper, StepButton } from 'material-ui/Stepper';
 
 const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
@@ -56,7 +61,6 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
 
                 // Check if value is an attribute
                 if (Object.keys(modelToEdit.attributes || []).indexOf(fieldConfig.name) >= 0) {
-                    // console.log(fieldConfig.name, ' is an attribute');
                     fieldConfig.value = modelToEdit.attributes[fieldConfig.name];
                     return fieldConfig;
                 }
@@ -81,9 +85,8 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
                 config.props = config.props || {};
                 config.props.modelToEdit = modelToEdit;
                 return config;
-            })
+            }),
         );
-
         const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
             .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
 
@@ -183,12 +186,6 @@ export default React.createClass({
             );
         }
 
-        const backButtonStyle = {
-            position: 'absolute',
-            left: 5,
-            top: 5,
-        };
-
         return (
             <div style={formPaperStyle}>
                 {this.renderStepper()}
@@ -218,6 +215,11 @@ export default React.createClass({
         return this.renderForm();
     },
 
+    /*
+        Sets the style of the fields that are not part of the active steps to 'none'
+        so that they are "hidden". For this to work, the components needs to have
+        an outer div that receives the props.style. 
+    */
     setActiveStep(step) {
         const stepsByField = fieldGroups.groupsByField(this.props.modelType);
         if (stepsByField) {
@@ -225,19 +227,10 @@ export default React.createClass({
                 activeStep: step,
                 fieldConfigs: this.state.fieldConfigs.map((field) => {
                     if (stepsByField[field.name] === step) {
-                        if (field.hiddenComponent) {
-                            field.component = field.hiddenComponent;
-                            field.hiddenComponent = undefined;
-                        }
-                        field.props.style = { display: 'inline-block' };
+                        field.props.style = { display: 'block' };
                     } else {
-                        if (!field.hiddenComponent) {
-                            field.hiddenComponent = field.component;
-                            field.component = PlaceholderComponent;
-                        }
                         field.props.style = { display: 'none' };
                     }
-
                     return field;
                 }),
             });
@@ -294,7 +287,7 @@ export default React.createClass({
                     }
 
                     this.props.onSaveError(errorMessage);
-                }
+                },
             );
     },
 

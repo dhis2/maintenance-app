@@ -123,9 +123,18 @@ const fieldOrderByName = new Map([
         'dataElementDecoration',
         'renderAsTabs',
         'renderHorizontally',
+        'compulsoryFieldsCompleteOnly',
         'dataSetElements',
         'indicators',
         'organisationUnits',
+    ]],
+    ['dataSetNotificationTemplate', [
+        // Step 1
+        'name', 'code', 'dataSets', 'messageTemplate',
+        // Step 2
+        'dataSetNotificationTrigger', 'relativeScheduledDays', 'sendStrategy',
+        // Step 3
+        'notificationRecipient', 'recipientUserGroup',
     ]],
     ['organisationUnit', [
         'name',
@@ -244,8 +253,24 @@ const fieldOrderByName = new Map([
     ['programStage', [
         'name',
         'description',
+        'minDaysFromStart',
+        'repeatable',
+        'periodType',
+        'displayGenerateEventBox',
+        'standardInterval',
+        'autoGenerateEvent',
+        'openAfterEnrollment',
+        'reportDateToUse',
+        'blockEntryForm',
+        'remindCompleted',
+        'allowGenerateNextVisit',
+        'generatedByEnrollmentDate',
+        'hideDueDate',
+        'captureCoordinates',
+        'validCompleteOnly',
+        'preGenerateUID',
         'executionDateLabel',
-        'repeatable'
+        'dueDateLabel',
     ]],
     ['trackedEntityAttribute', [
         'name',
@@ -277,6 +302,8 @@ const fieldOrderByName = new Map([
     ['trackedEntityType', [
         'name',
         'description',
+        'minAttributesRequiredToSearch',
+        'maxTeiCountToReturn',
     ]],
     ['programIndicator', [
         'program',

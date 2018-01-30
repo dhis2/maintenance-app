@@ -6,47 +6,94 @@ import {
     PROGRAM_STAGE_EDIT_CANCEL,
     PROGRAM_STAGE_EDIT_RESET,
     PROGRAM_STAGE_EDIT_SAVE,
+    deleteProgramStageSuccess,
+    deleteProgramStageError,
 } from './program-stages/actions';
-import { get, set } from 'lodash/fp';
+import { get, set, curry } from 'lodash/fp';
 import programStore from '../eventProgramStore';
 import { combineEpics } from 'redux-observable';
 import { generateUid } from 'd2/lib/uid';
 import { Observable } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
-import { deleteProgramStageWithSnackbar } from "./program-stages/contextActions";
+import { getInstance } from 'd2/lib/d2';
+import { deleteProgramStageWithSnackbar } from './program-stages/contextActions';
+import log from 'loglevel';
 
 const d2$ = Observable.fromPromise(getInstance());
 
+const getProgramStageById = curry((stageId, store) =>
+    store.programStages.find(stage => stage.id == stageId)
+);
 
-const getProgramStageById = stageId => (store) => store.programStages.find(stage => stage.id == stageId);
-const getProgramStageIndexById = stageId => (store) => store.programStages.findIndex(stage => stage.id == stageId);
+const getProgramStageIndexById = curry((stageId, store) =>
+    store.programStages.findIndex(stage => stage.id == stageId)
+);
 
+/**
+ * Deletes a programStage from state by id.
+ * @param stageId to delete
+ * @param setState flag to indicate if the function should set the state.
+ * If not, the function can be used to get the "setter"-object to use with setState
+ * . And is useful if you are setting the state manually later. Default true
+ * @returns {*} the state that should be modified, to use as a setter for store.setState().
+ */
+export const deleteProgramStageFromState = (stageId, setState = true) => {
+    const state = programStore.getState();
+    const programStage = getProgramStageById(stageId, state);
+    const index = getProgramStageIndexById(stageId, state);
+    const program = state.program;
+    const removedFromProgramStages = state.programStages.filter(
+        (p, i) => i !== index
+    );
+
+    program.programStages.remove(programStage);
+    const setters = set('program', program)(
+        set('programStages', removedFromProgramStages, state)
+    );
+    setState && programStore.setState(setters);
+    return setters;
+};
 
 export const newTrackerProgramStage = action$ =>
     action$.ofType(PROGRAM_STAGE_ADD).flatMap(action => {
         return d2$.flatMap(d2 =>
             programStore.take(1).map(store => {
-                console.log("NEW STAGE")
                 const programStages = store.programStages;
                 const program = store.program;
                 const programStageUid = generateUid();
-                const newProgramStage = programStages.push(
-                    d2.models.programStages.create({
-                        id: programStageUid,
-                        programStageDataElements: [],
-                        notificationTemplates: [],
-                        programStageSections: [],
-                        program: {
-                            id: program.id,
-                        },
-                        lastUpdated: new Date().toISOString(),
-                    })
-                );
-                const newState = { ...programStore.getState() };
-                programStore.setState(
-                    set('programStages')(programStages, newState),
-                    set('program.programStages')(programStages, newState)
-                );
+                const programStageModel = d2.models.programStages.create({
+                    id: programStageUid,
+                    programStageDataElements: [],
+                    notificationTemplates: [],
+                    programStageSections: [],
+                    program: {
+                        id: program.id,
+                    },
+                    lastUpdated: new Date().toISOString(),
+                    displayGenerateEventBox: true,
+                    autoGenerateEvent: true,
+                });
+                try {
+                    const newProgramStage = programStages.push(
+                        programStageModel
+                    );
+
+                    const newProgramStageCollection = store.program.programStages.add(
+                        programStageModel
+                    );
+                    program.programStages = newProgramStageCollection;
+                    programStore.setState(
+                        set('program', program)(
+                            set(
+                                'programStages',
+                                programStages,
+                                programStore.getState()
+                            )
+                        )
+                    );
+                } catch (e) {
+                    log.error(e);
+                    throw new Error(e);
+                }
                 return editProgramStage(programStageUid);
             })
         );
@@ -66,8 +113,14 @@ export const editTrackerProgramStage = action$ =>
                     const index = programStages.findIndex(
                         stage => stage.id == stageId
                     );
+                    const programStage = programStages[index];
+
                     const model = programStages[index].clone();
-                    const setter = { programStageToEditCopy: model };
+                    const setter = set(
+                        'programStageToEditCopy',
+                        model,
+                        programStore.getState()
+                    );
 
                     programStore.setState(setter);
                 })
@@ -83,17 +136,16 @@ export const saveTrackerProgramStage = action$ =>
                 const index = store.programStages.findIndex(
                     stage => stage.id == stageId
                 );
+
                 if (index < 0) {
-                    console.warn(
-                        `ProgramStage with id ${stageId} does not exist`
-                    );
+                    log.warn(`ProgramStage with id ${stageId} does not exist`);
                 }
                 try {
                     programStore.setState({
                         programStageToEditCopy: null,
                     });
                 } catch (e) {
-                    console.log(e);
+                    log.error(e);
                 }
             })
         )
@@ -104,27 +156,36 @@ export const cancelProgramStageEdit = action$ =>
         .ofType(PROGRAM_STAGE_EDIT_CANCEL)
         .flatMap(() =>
             programStore.take(1).map(store => {
-                const stageId = store.programStageToEditCopy.id;
-                const index = getProgramStageIndexById(stageId);
-                if (index < 0) {
-                    console.warn(
-                        `ProgramStage with id ${stageId} does not exist`
-                    );
-                }
-                const model = store.programStageToEditCopy;
                 try {
+                    const stageId = store.programStageToEditCopy.id;
+                    const index = getProgramStageIndexById(stageId)(store);
+
+                    if (index < 0) {
+                        log.warn(
+                            `ProgramStage with id ${stageId} does not exist`
+                        );
+                    }
+                    let model = store.programStageToEditCopy;
+                    let programStageSetter = set(
+                        `programStages[${index}]`,
+                        model,
+                        store
+                    );
+                    // If the programstage is new, remove it when cancelling
+                    if (model.name === undefined) {
+                        const removedFromProgramStages = store.programStages.filter(
+                            (p, i) => i !== index
+                        );
+                        programStageSetter = deleteProgramStageFromState(
+                            stageId,
+                            false
+                        );
+                    }
                     programStore.setState(
-                        set(`programStages[${index}]`)(model, {
-                            ...programStore.getState(),
-                        }),
-                        set(
-                            'programStageToEditCopy',
-                            null,
-                            programStore.getState()
-                        )
+                        set('programStageToEditCopy', null, programStageSetter)
                     );
                 } catch (e) {
-                    console.log(e);
+                    log.error(e);
                 }
             })
         )
@@ -134,23 +195,25 @@ const deleteProgramStage = action$ =>
     action$
         .ofType(PROGRAM_STAGE_DELETE)
         .map(action => action.payload)
-        .flatMap(action => programStore.take(1).map(store => {
-            try {
-                console.log("delete")
-                const ind = store.programStages.findIndex(stage => stage.id == action.stageId);
-                console.log(ind)
+        .flatMap(action =>
+            programStore.take(1).map(store => {
+                try {
+                    const ind = store.programStages.findIndex(
+                        stage => stage.id == action.stageId
+                    );
 
-                const index = getProgramStageIndexById(action.stageId)(store);
-                const model = store.programStages[index];
-                console.log(model);
-                console.log(index);
-                deleteProgramStageWithSnackbar(model, index);
-                console.log("deleted?")
-            } catch(e) {
-                console.log(e);
-            }
+                    const index = getProgramStageIndexById(action.stageId)(
+                        store
+                    );
+                    const model = store.programStages[index];
 
-        })).flatMapTo(Observable.of({type: 'TEST_DELETED'}))
+                    deleteProgramStageWithSnackbar(model);
+                    return deleteProgramStageSuccess();
+                } catch (e) {
+                    return deleteProgramStageError();
+                }
+            })
+        );
 
 export default combineEpics(
     newTrackerProgramStage,

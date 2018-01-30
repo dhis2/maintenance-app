@@ -5,9 +5,10 @@ import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import { getInstance } from 'd2/lib/d2';
 import log from 'loglevel';
 import { set } from 'lodash/fp';
+import { deleteProgramStageFromState } from "../epics";
 import { Observable } from 'rxjs';
 
-export async function deleteProgramStageWithSnackbar(model, index) {
+export async function deleteProgramStageWithSnackbar(model) {
     const d2 = await getInstance();
     snackActions.show({
         message: [
@@ -19,22 +20,13 @@ export async function deleteProgramStageWithSnackbar(model, index) {
             model.name,
         ].join(' '),
         action: 'confirm',
+        //TODO we cant delete from the API if the item is not already saved to the server!
+        // e.g. when creating a new stage then deleting
         onActionTouchTap: () => {
             model
                 .delete()
                 .then(() => {
-                    const store = programStore.getState();
-                    const removedProgramStages = store.programStages.filter(
-                        (p, i) => i !== index
-                    );
-                    const newState = { ...programStore.getState() };
-                    programStore.setState(
-                        set(`programStages`)(removedProgramStages, newState),
-                        set('program.programStages')(
-                            removedProgramStages,
-                            newState
-                        )
-                    );
+                    deleteProgramStageFromState(model.id);
                     snackActions.show({
                         message: `${model.displayName} ${d2.i18n.getTranslation(
                             'was_deleted'
@@ -48,19 +40,6 @@ export async function deleteProgramStageWithSnackbar(model, index) {
                     });
                 })
                 .catch(response => {
-                    const store = programStore.getState();
-                    const removedProgramStages = store.programStages.filter(
-                        (p, i) => i !== index
-                    );
-                    const newState = { ...programStore.getState() };
-                    programStore.setState(
-                        set(`programStages`)(removedProgramStages, newState),
-                        set('program.programStages')(
-                            removedProgramStages,
-                            newState
-                        )
-                    );
-                    log.warn(response);
                     snackActions.show({
                         message: response.message
                             ? response.message
@@ -73,3 +52,13 @@ export async function deleteProgramStageWithSnackbar(model, index) {
         },
     });
 }
+
+
+export function translationSaved() {
+    snackActions.show({ message: 'translation_saved', translate: true });
+};
+
+export function translationError(errorMessage) {
+    log.error(errorMessage);
+    snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
+};

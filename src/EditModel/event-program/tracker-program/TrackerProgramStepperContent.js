@@ -33,11 +33,11 @@ const stepperConfig = () => {
     const stepComponents = {
         EditProgramDetailsForm: connectEditForm(
             wrapInPaper(
-                createFormFor(program$, 'program', trackerDetailsFields)
+                createFormFor(program$, 'program', trackerDetailsFields, true, 'trackerProgram')
             )
         ),
         Enrollment: connectEditForm(
-            wrapInPaper(createFormFor(program$, 'program', enrollmentFields))
+            wrapInPaper(createFormFor(program$, 'program', enrollmentFields, true, 'enrollment'))
         ),
         AssignAttributes,
         ProgramStage,

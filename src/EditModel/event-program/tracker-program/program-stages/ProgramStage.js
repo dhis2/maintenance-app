@@ -25,7 +25,6 @@ class ProgramStage extends Component {
 
     render() {
         const props = this.props;
-        console.log(props.programStages);
 
         const programStage$ =
             props.currentProgramStageId !== 'add' &&

@@ -5,21 +5,21 @@ import Avatar from 'material-ui/Avatar';
 import { goToRoute } from '../router-utils';
 import { withAuth } from "../utils/Auth";
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
+import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 
 class ProgramSpeedDial extends React.Component {
-    constructor(props) {
-        super(props);
-
+    constructor(props, context) {
+        super(props, context);
         this.state = {
             items: [
                 {
                     id: 'WITHOUT_REGISTRATION',
-                    primaryText: 'Event Program',
+                    primaryText: context.d2.i18n.getTranslation('event_program'),
                     rightAvatar: (<Avatar className="material-icons" icon={<FontIcon>event</FontIcon>} />)
                 },
                 {
                     id: 'WITH_REGISTRATION',
-                    primaryText: 'Tracker Program',
+                    primaryText: context.d2.i18n.getTranslation('tracker_program'),
                     rightAvatar: (<Avatar className="material-icons" icon={<FontIcon>assignment</FontIcon>} />)
                 }
             ]
@@ -42,6 +42,8 @@ class ProgramSpeedDial extends React.Component {
         );
     }
 }
+
+ProgramSpeedDial = addD2Context(ProgramSpeedDial);
 
 const ListActionBar = React.createClass({
     propTypes: {

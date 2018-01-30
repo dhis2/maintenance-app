@@ -2,6 +2,7 @@ import attribute from './attribute';
 import dataElement from './dataElement';
 import indicator from './indicator';
 import dataSet from './dataSet';
+import dataSetNotificationTemplate from './dataSetNotificationTemplate';
 import organisationUnit from './organisationUnit';
 import organisationUnitGroup from './organisationUnitGroup';
 import categoryCombo from './categoryCombo';
@@ -20,12 +21,14 @@ import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
 import dataApprovalWorkflow from './dataApprovalWorkflow';
+import programStage from './programStage';
 
 const overridesByType = {
     attribute,
     dataElement,
     indicator,
     dataSet,
+    dataSetNotificationTemplate,
     organisationUnit,
     organisationUnitGroup,
     categoryCombo,
@@ -44,6 +47,7 @@ const overridesByType = {
     validationRule,
     dataApprovalLevel,
     dataApprovalWorkflow,
+    programStage,
 };
 
 export default {

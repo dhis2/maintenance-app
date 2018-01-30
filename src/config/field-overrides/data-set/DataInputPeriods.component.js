@@ -152,21 +152,21 @@ class DataInputPeriods extends React.Component {
                         {getPeriod(dataInputPeriod.period.id).name}
                     </div>
                     {this.renderDatePicker(
-                            this.getTranslation('opening_date'),
-                            dataInputPeriod.openingDate && new Date(dataInputPeriod.openingDate),
-                            changeDateProxy($k, 'openingDate'),
-                            removeDateProxy($k, 'openingDate')
-                        )}
+                        this.getTranslation('opening_date'),
+                        dataInputPeriod.openingDate && new Date(dataInputPeriod.openingDate),
+                        changeDateProxy($k, 'openingDate'),
+                        removeDateProxy($k, 'openingDate'),
+                    )}
                     {this.renderDatePicker(
-                            this.getTranslation('closing_date'),
-                            dataInputPeriod.closingDate && new Date(dataInputPeriod.closingDate),
-                            changeDateProxy($k, 'closingDate'),
-                            removeDateProxy($k, 'closingDate')
-                        )}
+                        this.getTranslation('closing_date'),
+                        dataInputPeriod.closingDate && new Date(dataInputPeriod.closingDate),
+                        changeDateProxy($k, 'closingDate'),
+                        removeDateProxy($k, 'closingDate'),
+                    )}
                 </div>
                 <Divider style={styles.divider} />
             </div>
-            )
+        ),
         ));
     }
 

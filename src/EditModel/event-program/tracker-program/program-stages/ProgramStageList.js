@@ -2,40 +2,33 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import programStore$ from '../../eventProgramStore';
-import mapProps from 'recompose/mapProps';
-import compose from 'recompose/compose';
-import mapPropsStream from 'recompose/mapPropsStream';
+import {
+    compose,
+    lifecycle,
+    withHandlers,
+    withState,
+    withStateHandlers,
+} from 'recompose';
 import { get, noop, first, getOr, __, sortBy } from 'lodash/fp';
 import {
     getTableColumnsForType,
     getFilterFieldsForType,
     getFiltersForType,
 } from '../../../../config/maintenance-models';
-import withState from 'recompose/withState';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { addQuery } from '../../../../router-utils';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { editProgramStage, addProgramStage, deleteProgramStage } from './actions';
-
-const enhance = compose(
-    connect(null, dispatch =>
-        bindActionCreators(
-            {
-                handleEditProgramStage: model => editProgramStage(model.id),
-                handleNewProgramStage: () => addProgramStage(),
-                handleDeleteProgramStage: model => deleteProgramStage(model.id)
-            },
-            dispatch
-        )
-    ),
-    withState(
-        'tableColumns',
-        'setTableColumns',
-        getTableColumnsForType('programStage')
-    )
-);
+import {
+    editProgramStage,
+    addProgramStage,
+    deleteProgramStage,
+} from './actions';
+import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import { getTranslatablePropertiesForModelType } from '../../../../List/List.component';
+import { translationSaved, translationError } from './contextActions';
 
 const FAB = props => {
     const cssStyles = {
@@ -57,38 +50,133 @@ const FAB = props => {
 };
 
 function isContextActionAllowed(model, action) {
-   return true;
+    return true;
 }
 
-const ProgramStageList = props => {
-    const contextActions = {
-        edit: props.handleEditProgramStage,
-        delete: props.handleDeleteProgramStage,
-        translate: () => {},
+class ProgramStageList extends Component {
+    constructor(props) {
+        super(props);
+        const modelType = 'programStage';
+        this.state = {
+            modelType: modelType,
+            sharing: {
+                id: null,
+            },
+            translate: {
+                model: null,
+            },
+            tableColumns: getTableColumnsForType(modelType),
+        };
+    }
+
+    openSharing = model => {
+        this.setState({
+            ...this.state,
+            sharing: {
+                ...this.state.sharing,
+                id: model.id,
+            },
+        });
     };
 
-    const contextMenuIcons = {
-        edit: 'edit',
-        move_up: 'arrow_upward',
-        move_down: 'arrow_downward',
+    closeSharing = () => {
+        this.setState({
+            ...this.state,
+            sharing: {
+                ...this.state.sharing,
+                id: null,
+            },
+        });
     };
 
-    return (
-        <div>
-            <DataTable
-                rows={props.programStages}
-                columns={props.tableColumns}
-                primaryAction={props.handleEditProgramStage}
-                contextMenuActions={contextActions}
-                contextMenuIcons={contextMenuIcons}
-                isContextActionAllowed={isContextActionAllowed}
-            />
-            <FAB router={props} {...props} />
-        </div>
-    );
-};
+    renderSharing = () => {
+        return this.state.sharing.id
+            ? <SharingDialog
+                  id={this.state.sharing.id}
+                  type={this.state.modelType}
+                  open={!!this.state.sharing.id}
+                  onRequestClose={this.closeSharing}
+                  bodyStyle={{ minHeight: '400px' }}
+              />
+            : null;
+    };
+
+    openTranslate = model => {
+        this.setState({
+            ...this.state,
+            translate: {
+                ...this.state.translate,
+                model: model,
+            },
+        });
+    };
+
+    renderTranslate = () => {
+        return this.state.translate.model
+            ? <TranslationDialog
+                  objectToTranslate={this.state.translate.model}
+                  objectTypeToTranslate={
+                      this.state.translate.model.modelDefinition
+                  }
+                  open={!!this.state.translate.model}
+                  onTranslationSaved={translationSaved}
+                  onTranslationError={translationError}
+                  onRequestClose={() =>
+                      this.setState({
+                          ...this.state,
+                          translate: { ...this.state.translate, model: null },
+                      })}
+                  fieldsToTranslate={getTranslatablePropertiesForModelType(
+                      this.state.modelType
+                  )}
+              />
+            : null;
+    };
+
+    render() {
+        const contextActions = {
+            edit: this.props.handleEditProgramStage,
+            share: this.openSharing,
+            delete: this.props.handleDeleteProgramStage,
+            translate: this.openTranslate,
+        };
+
+        const contextMenuIcons = {
+            edit: 'edit',
+            share: 'share',
+            move_up: 'arrow_upward',
+            move_down: 'arrow_downward',
+        };
+
+        return (
+            <div>
+                <DataTable
+                    rows={this.props.programStages}
+                    columns={this.props.tableColumns}
+                    primaryAction={this.props.handleEditProgramStage}
+                    contextMenuActions={contextActions}
+                    contextMenuIcons={contextMenuIcons}
+                    isContextActionAllowed={isContextActionAllowed}
+                />
+                <FAB {...this.props} />
+                {this.renderSharing()}
+                {this.renderTranslate()}
+            </div>
+        );
+    }
+}
 
 ProgramStageList.propTypes = {
     programStages: PropTypes.array,
 };
-export default enhance(ProgramStageList);
+
+export default connect(null, dispatch =>
+    bindActionCreators(
+        {
+            handleEditProgramStage: model => editProgramStage(model.id),
+            handleNewProgramStage: () => addProgramStage(),
+            handleDeleteProgramStage: model => deleteProgramStage(model.id),
+        },
+        dispatch
+    )
+)(ProgramStageList);

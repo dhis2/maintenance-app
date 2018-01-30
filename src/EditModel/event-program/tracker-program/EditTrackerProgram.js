@@ -50,7 +50,7 @@ function EditTrackerProgram(props) {
                     groupName={groupName}
                     isDirtyHandler={isModelDirty}
                 >
-                    {camelCaseToUnderscores(schema) + '_with_registration'}
+                    {`tracker_${camelCaseToUnderscores(schema)}`}
                 </FormHeading>
                 <FormSubHeading>
                     {props.model.displayName}

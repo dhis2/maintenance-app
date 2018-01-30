@@ -3,11 +3,13 @@ import log from 'loglevel';
 import fieldRules from '../../config/field-rules';
 import isArray from 'd2-utilizr/lib/isArray';
 import systemSettingsStore from '../../App/systemSettingsStore';
+import { negate } from 'lodash/fp';
 
 const whenOperatorMap = new Map([
     ['EQUALS', equalsOperator],
     ['NOT_EQUALS', notEqualsOperator],
     ['HAS_VALUE', hasValueOperator],
+    ['HAS_NO_VALUE', negate(hasValueOperator)],
     ['HAS_STRING_VALUE', hasStringValueOperator],
     ['ONEOF', oneOfOperator],
     ['SYSTEM_SETTING_IS_TRUE', systemSettingIsTrueOperator],
@@ -44,7 +46,13 @@ function setProp(fieldConfig, operationParams, ruleResult) {
     return fieldConfig.props[operationParams.propName] = operationParams.elseValue;
 }
 
-function hideField(fieldConfig, operationParams, ruleResult, x) {
+
+/*
+    Uses the swapping variable "hiddenComponent" when temporary hiding a field.
+    When the field should be shown again, the content of "hiddenComponent" is
+    put back to the "component" variable.
+*/
+function hideField(fieldConfig, operationParams, ruleResult) {
     if (ruleResult) {
         fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
         fieldConfig.component = () => null;
@@ -140,9 +148,15 @@ export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
             (rule.operations || [rule.operation])
                 .forEach((operation) => {
                     const fieldConfigForOperation = fieldConfigs.find(fieldConfig => fieldConfig.name === (operation.field || rule.field));
-                    const { field, type, ...operationParams } = operation;
+                    const {
+                        field,
+                        type,
+                        ...operationParams
+                    } = operation;
 
-                    log.debug(`---- For field ${field || rule.field} execute ${getOperation(type).name} with`, operationParams);
+                    log.debug(`---- For field ${field || rule.field} 
+                            execute ${getOperation(type).name} 
+                            with`, operationParams);
 
                     getOperation(type)(fieldConfigForOperation, operationParams, rulePassed, modelToEdit);
                 });

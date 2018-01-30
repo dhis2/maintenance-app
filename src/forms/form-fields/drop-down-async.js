@@ -69,11 +69,10 @@ export default React.createClass({
                         .map(v => ({ displayName: d2.i18n.getTranslation(v.toLowerCase()), id: v }));
                 }
             })
-            .then(modelCollection => modelCollection
-                ? (modelCollection.toArray
-                    ? modelCollection.toArray()
-                    : modelCollection)
-                : [])
+            .then(modelCollection => (
+                modelCollection
+                    ? (modelCollection.toArray ? modelCollection.toArray() : modelCollection)
+                    : []))
             .then(values => values.map(model => ({
                 text: model.displayName,
                 value: model.id,
@@ -91,7 +90,7 @@ export default React.createClass({
                             option.model.modelDefinition.name === 'categoryCombo' &&
                             option.text === 'default'
                                 ? { text: d2i.i18n.getTranslation('none') }
-                                : {}
+                                : {},
                         )),
                     });
                 }
@@ -139,34 +138,43 @@ export default React.createClass({
             queryParamFilter,
             quickAddLink,
             preventAutoDefault,
-            styles,
+            style,
             ...other
         } = this.props;
-        const wrapStyles = Object.assign({
-            display: 'flex',
-            alignItems: 'flex-end',
-        }, styles);
+
+        const styles = {
+            fieldStyle: {
+                display: 'flex',
+                alignItems: 'flex-end',
+            },
+            fieldWrap: {
+                position: 'relative',
+            },
+        };
 
         return (
-            <div style={wrapStyles}>
-                {this.state.isRefreshing ? <RefreshMask horizontal /> : null}
-                <DropDown
-                    {...other}
-                    options={this.state.options}
-                    value={this.props.value ? this.props.value.id : undefined}
-                    onChange={this._onChange}
-                    fullWidth
-                />
-                {quickAddLink ?
-                    <QuickAddLink
-                        referenceType={this.props.referenceType}
-                        onRefreshClick={this._onRefreshClick}
+            <div style={{ ...styles.fieldWrap, ...style }}>
+                <div style={styles.fieldStyle}>
+                    {this.state.isRefreshing ? <RefreshMask horizontal /> : null}
+                    <DropDown
+                        {...other}
+                        options={this.state.options}
+                        value={this.props.value ? this.props.value.id : undefined}
+                        onChange={this._onChange}
+                        fullWidth
                     />
-                : null}
+                    {quickAddLink ?
+                        <QuickAddLink
+                            referenceType={this.props.referenceType}
+                            onRefreshClick={this._onRefreshClick}
+                        />
+                        : null}
+                </div>
             </div>
         );
     },
 
+    // Doesnt seem to be in use. Can be removed
     renderQuickAddLink() {
         const sectionForReferenceType = getSectionForType(this.props.referenceType);
 
