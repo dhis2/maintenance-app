@@ -95,7 +95,7 @@ TextEditorField.contextTypes = {
 };
 
 TextEditorField.defaultProps = {
-    value: null,
+    value: '',
     disabled: false,
     onChange: null,
 };

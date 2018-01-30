@@ -69,26 +69,34 @@ export default class TextFormField extends Component {
             label,
             labelText,
             multiLine,
+            style,
             ...rest
         } = this.props;
 
         const restProps = TextFormField.getWantedProperties(rest);
 
-        const errorStyle = {
-            lineHeight: multiLine ? '48px' : '12px',
-            marginTop: multiLine ? -16 : -12,
+        const styles = {
+            errorStyle: {
+                lineHeight: multiLine ? '48px' : '12px',
+                marginTop: multiLine ? -16 : -12,
+            },
+            fieldWrap: {
+                position: 'relative',
+            },
         };
 
         return (
-            <TextField
-                errorStyle={errorStyle}
-                label={label}
-                multiLine={multiLine}
-                {...restProps}
-                value={this.state.fieldValue}
-                floatingLabelText={labelText}
-                onChange={this.onValueChanged}
-            />
+            <div style={{ ...styles.fieldWrap, ...style }}>
+                <TextField
+                    errorStyle={styles.errorStyle}
+                    label={label}
+                    multiLine={multiLine}
+                    {...restProps}
+                    value={this.state.fieldValue}
+                    floatingLabelText={labelText}
+                    onChange={this.onValueChanged}
+                />
+            </div>
         );
     }
 }
@@ -100,10 +108,12 @@ TextFormField.propTypes = {
     labelText: React.PropTypes.string.isRequired,
     onChange: React.PropTypes.func,
     multiLine: React.PropTypes.bool,
+    style: React.PropTypes.any,
 };
 
 TextFormField.defaultProps = {
     name: '',
+    style: undefined,
     value: null,
     label: '',
     onChange: () => {},

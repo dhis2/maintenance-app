@@ -358,7 +358,7 @@ const List = React.createClass({
                                     value={this.state.filters ? this.state.filters[filterField] : null}
                                     quickAddLink={false}
                                     preventAutoDefault
-                                    styles={{ display: 'relative' }}
+                                    style={{ display: 'relative' }}
                                     limit={1}
                                     top={-15}
                                 />

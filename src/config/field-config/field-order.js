@@ -128,6 +128,14 @@ const fieldOrderByName = new Map([
         'indicators',
         'organisationUnits',
     ]],
+    ['dataSetNotificationTemplate', [
+        // Step 1
+        'name', 'code', 'dataSets', 'messageTemplate',
+        // Step 2
+        'dataSetNotificationTrigger', 'relativeScheduledDays', 'sendStrategy',
+        // Step 3
+        'notificationRecipient', 'recipientUserGroup',
+    ]],
     ['organisationUnit', [
         'name',
         'shortName',
@@ -295,7 +303,7 @@ const fieldOrderByName = new Map([
         'name',
         'description',
         'minAttributesRequiredToSearch',
-        'maxTeiCountToReturn'
+        'maxTeiCountToReturn',
     ]],
     ['programIndicator', [
         'program',

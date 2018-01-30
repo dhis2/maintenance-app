@@ -27,7 +27,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
         indicatorExpressionChanged: React.PropTypes.func.isRequired,
         description: React.PropTypes.string.isRequired,
         formula: React.PropTypes.string.isRequired,
-        titleText: React.PropTypes.string.isRequired,
+        titleText: React.PropTypes.string,
     },
 
     mixins: [Translate],

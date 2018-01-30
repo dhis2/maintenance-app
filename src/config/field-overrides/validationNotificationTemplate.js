@@ -24,14 +24,14 @@ const toVariableType = name => ['V', name];
 const toAttributeType = name => ['A', name];
 
 const ValidationNotificationSubjectAndMessageTemplateFields = compose(
-        withProps({
-            variableTypes: map(toVariableType, VALIDATION_RULE_VARIABLES),
-        }),
-        mapProps(props => ({
-            ...props,
-            onUpdate: actions.update,
-        }))
-    )(SubjectAndMessageTemplateFields);
+    withProps({
+        variableTypes: map(toVariableType, VALIDATION_RULE_VARIABLES),
+    }),
+    mapProps(props => ({
+        ...props,
+        onUpdate: actions.update,
+    })),
+)(SubjectAndMessageTemplateFields);
 
 export default new Map([
     ['messageTemplate', {

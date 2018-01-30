@@ -21,7 +21,11 @@ class PeriodTypeDropDown extends React.Component {
     }
 
     render() {
-        return <DropDown {...this.props} options={this.state.options} />;
+        return (
+            <div style={this.props.style}>
+                <DropDown {...this.props} options={this.state.options} />
+            </div>
+        );
     }
 }
 

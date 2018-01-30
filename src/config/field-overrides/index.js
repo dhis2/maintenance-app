@@ -2,6 +2,7 @@ import attribute from './attribute';
 import dataElement from './dataElement';
 import indicator from './indicator';
 import dataSet from './dataSet';
+import dataSetNotificationTemplate from './dataSetNotificationTemplate';
 import organisationUnit from './organisationUnit';
 import organisationUnitGroup from './organisationUnitGroup';
 import categoryCombo from './categoryCombo';
@@ -27,6 +28,7 @@ const overridesByType = {
     dataElement,
     indicator,
     dataSet,
+    dataSetNotificationTemplate,
     organisationUnit,
     organisationUnitGroup,
     categoryCombo,

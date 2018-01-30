@@ -62,7 +62,8 @@ multiSelectActions.removeItemsFromModelCollection
     });
 
 function isOrganisationUnitLevelReference(referenceProperty, modelDefinition) {
-   return ['dataElement.aggregationLevels', 'validationRule.organisationUnitLevels'].indexOf(`${modelDefinition.name}.${referenceProperty}`) > -1;
+    return ['dataElement.aggregationLevels', 'validationRule.organisationUnitLevels']
+        .indexOf(`${modelDefinition.name}.${referenceProperty}`) > -1;
 }
 
 // TODO: Refactor to es2015 class
@@ -166,7 +167,7 @@ export default React.createClass({
             labelWrap: {
                 display: 'flex',
                 marginTop: 24,
-                height: 36
+                height: 36,
             },
             fieldWrap: {
                 position: 'relative',
@@ -174,7 +175,7 @@ export default React.createClass({
         };
 
         return (
-            <div style={styles.fieldWrap}>
+            <div style={{ ...styles.fieldWrap, ...this.props.style }}>
                 {this.state.isRefreshing ? <RefreshMask /> : null }
                 <div style={styles.labelWrap}>
                     <label style={styles.labelStyle}>{this.props.labelText || ''}</label>
