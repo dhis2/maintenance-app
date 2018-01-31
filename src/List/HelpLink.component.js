@@ -1,6 +1,11 @@
+
+import React from 'react';
+import PropTypes from 'prop-types';
+
 import IconButton from 'material-ui/IconButton';
-import inlineHelpMapping from '../config/inlinehelp-mapping';
 import { camelCaseToUnderscores } from 'd2-utilizr';
+
+import inlineHelpMapping from '../config/inlinehelp-mapping.json';
 
 /**
  * Returns the "version" of the documentation that corresponds with the current dhis2 version.
@@ -18,8 +23,25 @@ function getDocsVersion({ major, minor, snapshot }) {
     return `${major}.${minor}`;
 }
 
+/** 
+ * @param {string} key The mapping it currently is checking with 
+ * @param {string} variablesToReplace The variables that are to be replaced with a help link 
+ *
+ * @returns {string} The partial path that is to be matched`
+ */
+function getReplacedPath(key, variablesToReplace) {
+    const placeholder = /\$\{(.+?)\}/g;
+    return key.replace(placeholder, (match, variable) => {
+        if (variablesToReplace.has(variable) && variablesToReplace.get(variable)) {
+            return variablesToReplace.get(variable);
+        }
+        return '.+?';
+    });
+}
+
 /**
- * Attempts to find a help link as defined in the inlinehelp-mapping.js It will always pick the first match that it finds.
+ * Attempts to find a help link as defined in the inlinehelp-mapping.js It will always pick the first match that it finds. Help links should therefore be
+ * sorted with the longer links first.
  * The search is done using a regular expression that matches the path from the start. This means that paths that are longer/dynamic can still show help links.
  *
  * For example a help link key that is defined as  `/edit/dataElementSection/dataElement` would show up on both `/edit/dataElementSection/dataElement/add` and `/edit/dataElementSection/dataElement/wap68IYzTXr`.
@@ -37,11 +59,9 @@ function findHelpLinkForPath(path, schema) {
     const variablesToReplaceCamel = new Map([
         ['objectType', camelCaseToUnderscores(schema)],
     ]);
-
     const firstRouteWithHelpLink = Object.keys(inlineHelpMapping)
         .find((key) => {
             const pathToMatch = getReplacedPath(key, variablesToReplace);
-
             return (new RegExp(pathToMatch)).test(path);
         });
 
@@ -52,22 +72,10 @@ function findHelpLinkForPath(path, schema) {
     return '';
 }
 
-function getReplacedPath(key, variablesToReplace) {
-    const placeholder = /\$\{(.+?)\}/g;
-
-    return key.replace(placeholder, (match, variable, fullstring) => {
-        if (variablesToReplace.has(variable) && variablesToReplace.get(variable)) {
-            return variablesToReplace.get(variable);
-        }
-        return '.+?';
-    });
-}
-
 export default function HelpLink({ schema }, { d2 }) {
     const path = window.location.hash
         .replace(/^#/, '') // Remove leading hash
         .replace(/\?.+?$/, ''); // Remove query param/cache breaker
-
     const docsLink = `https://ci.dhis2.org/docs/${getDocsVersion(d2.system.version)}`;
     const helpLink = findHelpLinkForPath(path, schema);
 
@@ -89,6 +97,11 @@ export default function HelpLink({ schema }, { d2 }) {
 
     return null;
 }
+
+HelpLink.propTypes = {
+    schema: PropTypes.string.isRequired,
+};
+
 HelpLink.contextTypes = {
-    d2: React.PropTypes.object,
+    d2: PropTypes.object,
 };
