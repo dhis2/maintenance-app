@@ -15,8 +15,7 @@ function FormHeading({ level, schema, children, groupName, isDirtyHandler, ...pr
                 iconStyle={{ top: 3 }}
                 isDirtyHandler={isDirtyHandler}
             />
-            {React.Children.map(children, child =>
-                context.d2.i18n.getTranslation(child))}
+            {context.d2.i18n.getTranslation(children)}
             {schema && (<HelpLink schema={schema} />)}
         </Heading>
     );
