@@ -24,7 +24,7 @@ function loadProgramIndicator(programIndicatorId) {
         getInstance()
             .then((d2) => {
                 if (programIndicatorId === 'add') {
-                    return d2.models.programIndicator.create();
+                    return d2.models.programIndicator.create({ analyticsPeriodBoundaries: [] });
                 }
                 return d2.models.programIndicator.get(programIndicatorId, requestParams.get('programIndicator'));
             })

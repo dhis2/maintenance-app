@@ -5802,9 +5802,9 @@ react-sortable-hoc@^0.6.1:
     lodash "^4.12.0"
     prop-types "^15.5.7"
 
-react-speed-dial@^0.4.6:
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/react-speed-dial/-/react-speed-dial-0.4.6.tgz#ecded28a737b62a689f799f6b9d1709d7d4f758e"
+react-speed-dial@^0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/react-speed-dial/-/react-speed-dial-0.4.7.tgz#7d26bfa8973c0fa7db2a6e29cd46e8c61a36497e"
 
 react-tap-event-plugin@^2.0.1:
   version "2.0.1"
