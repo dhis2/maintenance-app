@@ -214,6 +214,8 @@ const fieldOrderByName = new Map([
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
+        'minAttributesRequiredToSearch',
+        'maxTeiCountToReturn'
     ]],
     ['trackerProgram', [
         'name',
