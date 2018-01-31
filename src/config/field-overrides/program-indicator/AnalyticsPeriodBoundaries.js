@@ -23,6 +23,40 @@ const withStyle = function withStyle(BaseField, styles) {
     );
 };
 
+const boundaryTargets = [
+    {
+        text: 'boundary_target_incident_date',
+        value: 'INCIDENT_DATE'
+    },
+    {
+        text: 'boundary_target_event_date',
+        value: 'EVENT_DATE'
+    },
+    {
+        text: 'boundary_target_enrollment_date',
+        value: 'ENROLLMENT_DATE'
+    }
+];
+
+const boundaryTypes =[
+    {
+        text: 'report_period_before_start',
+        value: 'BEFORE_START_OF_REPORTING_PERIOD'
+    },
+    {
+        text: 'report_period_before_end',
+        value: 'BEFORE_END_OF_REPORTING_PERIOD'
+    },
+    {
+        text: 'report_period_after_start',
+        value: 'AFTER_START_OF_REPORTING_PERIOD'
+    },
+    {
+        text: 'report_period_after_end',
+        value: 'AFTER_END_OF_REPORTING_PERIOD'
+    }
+];
+
 // boundary type definitions mapped to java enum
 // dhis2-core/dhis-2/dhis-api/src/main/java/org/hisp/dhis/program/AnalyticsPeriodBoundaryType.java#L37-L40
 // as they are not exposed over the API
@@ -47,20 +81,8 @@ function AnalyticsPeriodBoundary (props) {
             <DD
                 style={ {marginRight: '14px'} }
                 labelText={getTranslation('analytics_boundary_target')}
-                options={[
-                    {
-                        text: getTranslation('boundary_target_incident_date'),
-                        value: 'INCIDENT_DATE'
-                    },
-                    {
-                        text: getTranslation('boundary_target_event_date'),
-                        value: 'EVENT_DATE'
-                    },
-                    {
-                        text: getTranslation('boundary_target_enrollment_date'),
-                        value: 'ENROLLMENT_DATE'
-                    }
-                ]}
+                translateOptions={true}
+                options={boundaryTargets}
                 onChange={e => props.onChange(e, "boundaryTarget")}
                 value={props.boundaryTarget}
             />
@@ -68,24 +90,8 @@ function AnalyticsPeriodBoundary (props) {
             <DD
                 labelText={getTranslation('analytics_period_boundary_type')}
                 style={ {position: 'relative', marginRight: '14px'} }
-                options={[
-                    {
-                        text: getTranslation('report_period_before_start'),
-                        value: 'BEFORE_START_OF_REPORTING_PERIOD'
-                    },
-                    {
-                        text: getTranslation('report_period_before_end'),
-                        value: 'BEFORE_END_OF_REPORTING_PERIOD'
-                    },
-                    {
-                        text: getTranslation('report_period_after_start'),
-                        value: 'AFTER_START_OF_REPORTING_PERIOD'
-                    },
-                    {
-                        text: getTranslation('report_period_after_end'),
-                        value: 'AFTER_END_OF_REPORTING_PERIOD'
-                    }
-                ]}
+                translateOptions={true}
+                options={boundaryTypes}
                 onChange={e => props.onChange(e, "analyticsPeriodBoundaryType")}
                 value={props.analyticsPeriodBoundaryType}
             />
