@@ -23,6 +23,14 @@ const withStyle = function withStyle(BaseField, styles) {
     );
 };
 
+const style = {
+    marginRight: '14px'
+};
+
+const StyledDropDown = withStyle(DropDown, style);
+const StyledTextField = withStyle(TextField, style);
+const StyledPeriodTypeDropDown = withStyle(PeriodTypeDropDown, style);
+
 const boundaryTargets = [
     {
         text: 'boundary_target_incident_date',
@@ -61,16 +69,7 @@ const boundaryTypes =[
 // dhis2-core/dhis-2/dhis-api/src/main/java/org/hisp/dhis/program/AnalyticsPeriodBoundaryType.java#L37-L40
 // as they are not exposed over the API
 function AnalyticsPeriodBoundary (props) {
-    const style = {
-        marginRight: '14px'
-    }
-
     const getTranslation = props.d2.i18n.getTranslation.bind(props.d2.i18n);
-
-    const DD = withStyle(DropDown, style);
-    const TF = withStyle(TextField, style);
-    const PTDD = withStyle(PeriodTypeDropDown, style);
-
     return (
         <div style={{
                 display: 'flex',
@@ -78,7 +77,7 @@ function AnalyticsPeriodBoundary (props) {
                 justifyContent: '',
                 alignItems: 'center'
         }}>
-            <DD
+            <StyledDropDown
                 style={ {marginRight: '14px'} }
                 labelText={getTranslation('analytics_boundary_target')}
                 translateOptions={true}
@@ -87,7 +86,7 @@ function AnalyticsPeriodBoundary (props) {
                 value={props.boundaryTarget}
             />
 
-            <DD
+            <StyledDropDown
                 labelText={getTranslation('analytics_period_boundary_type')}
                 style={ {position: 'relative', marginRight: '14px'} }
                 translateOptions={true}
@@ -96,14 +95,14 @@ function AnalyticsPeriodBoundary (props) {
                 value={props.analyticsPeriodBoundaryType}
             />
 
-            <TF type="number"
+            <StyledTextField type="number"
                 style={ { flex: '0 1 auto' } }
                 labelText={getTranslation('period_number_offset')}
                 value={props.offsetNumberOfPeriods}
                 onChange={e => props.onChange(e, "offsetNumberOfPeriods")}
             />
 
-            <PTDD
+            <StyledPeriodTypeDropDown
                 labelText={getTranslation('period_offset')}
                 onChange={e => props.onChange(e, "offsetPeriodType")}
                 style={ { marginRight: '14px' } }
