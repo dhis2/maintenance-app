@@ -45,7 +45,7 @@ function replacePlaceholder(mappingKey, variablesToReplace) {
     const placeholderRegex = /\$\{(.+?)\}/g;
 
     return mappingKey.replace(placeholderRegex, (match, variable) => {
-        if (variablesToReplace.has(variable) && variablesToReplace.get(variable)) {
+        if (variablesToReplace.has(variable)) {
             return variablesToReplace.get(variable);
         }
         return '.+?';
