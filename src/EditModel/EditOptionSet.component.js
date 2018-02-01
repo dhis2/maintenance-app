@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import EditModelForm from './EditModelForm.component';
+import PropTypes from 'prop-types';
+
 import Tabs from 'material-ui/Tabs/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
-import OptionManagement from './option-set/OptionManagement.component';
-import { camelCaseToUnderscores } from 'd2-utilizr';
-import FormHeading from './FormHeading';
 import Paper from 'material-ui/Paper/Paper';
-import { goToRoute } from '../router-utils';
+
+import { camelCaseToUnderscores } from 'd2-utilizr';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+
+import EditModelForm from './EditModelForm.component';
+import OptionManagement from './option-set/OptionManagement.component';
+import FormHeading from './FormHeading';
+import { goToRoute } from '../router-utils';
 
 function onSaveError(errorMessage, props) {
     if (errorMessage === 'No changes to be saved') {
@@ -101,5 +105,9 @@ class EditOptionSet extends Component {
         );
     }
 }
+
+EditOptionSet.propTypes = {
+    params: PropTypes.any.isRequired,
+};
 
 export default addD2Context(EditOptionSet);

@@ -12,6 +12,7 @@
     "/edit/dataElementSection/dataElement": "/en/user/html/manage_data_element.html#create_data_element",
     "/list/dataElementSection": "/en/user/html/manage_data_element.html",
 
+    "/edit/dataSetSection/dataSet/${objectId}/sections": "/en/user/html/manage_data_set.html#manage_section_form",    
     "/edit/dataSetSection/dataSet": "/en/user/html/manage_data_set.html#create_data_set",
     "/list/dataSetSection/dataSet": "/en/user/html/manage_data_set.html",
 
