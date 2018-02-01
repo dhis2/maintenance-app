@@ -37,9 +37,15 @@ export default React.createClass({
             fieldsForReferenceType = 'id,displayName,name,valueType';
         }
 
+
         // program.programType is required for programIndicators to be able to determine if it is a tracker or event program
         if (this.props.referenceType === 'program') {
-            fieldsForReferenceType = 'id,displayName,name,programType';
+            /*
+             * DHIS-2444: program.programTrackedEntity is needed for the
+             * attributeselector to work when changing programs.
+             */
+
+            fieldsForReferenceType = 'id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]]';
         }
 
         const filter = this.props.queryParamFilter;
