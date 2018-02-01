@@ -7,6 +7,10 @@ import { camelCaseToUnderscores } from 'd2-utilizr';
 
 import inlineHelpMapping from '../config/inlinehelp-mapping.json';
 
+function mappingPathExists(mappingKey) {
+    return mappingKey && inlineHelpMapping[mappingKey];
+}
+
 /**
  * Returns the "version" of the documentation that corresponds with the current dhis2 version.
  *
@@ -24,19 +28,53 @@ function getDocsVersion({ major, minor, snapshot }) {
 }
 
 /** 
- * @param {string} key The mapping it currently is checking with 
- * @param {string} variablesToReplace The variables that are to be replaced with a help link 
+ * If ${placeholder} is found in mappingKey, it will be replaced with a matching name if 
+ * present from variablesToReplace.  
+ * 
+ * Eg. for the mappingKey "/edit/otherSection/${objectType}" the placeholder objectType
+ * will be found. If an entry in variablesToReplace exists objectType will be replaced 
+ * with the value to this entry, say constant. This will result in the new path  "/edit/otherSection/constant".
+ * If no match is found, the path will return.
+ * 
+ * @param {string} mappingKey The mapping that may have a placeholder to replace
+ * @param {Map} variablesToReplace The variables that are to be replaced with the placeholder 
  *
- * @returns {string} The partial path that is to be matched`
+ * @returns {string} The matched path with replaced placeholders if found
  */
-function getReplacedPath(key, variablesToReplace) {
-    const placeholder = /\$\{(.+?)\}/g;
-    return key.replace(placeholder, (match, variable) => {
+function replacePlaceholder(mappingKey, variablesToReplace) {
+    const placeholderRegex = /\$\{(.+?)\}/g;
+
+    return mappingKey.replace(placeholderRegex, (match, variable) => {
         if (variablesToReplace.has(variable) && variablesToReplace.get(variable)) {
             return variablesToReplace.get(variable);
         }
         return '.+?';
     });
+}
+
+/** 
+ * Checks if the mappingKeyPath with replaced placeholders matches the path were currently on.
+ * 
+ * @param {string} path The path to be matched with a mappingKey 
+ * @param {Map} variablesToReplace The variables that are to be replaced with a placeholder 
+ *
+ * @returns {string} The matched mappingKey with replaced placeholders if found
+ */
+function replaceMappingPathPlaceholder(path, variablesToReplace) {
+    return Object.keys(inlineHelpMapping)
+        .find((mappingKey) => {
+            const pathToMatch = replacePlaceholder(mappingKey, variablesToReplace);
+            return (new RegExp(pathToMatch)).test(path);
+        });
+}
+
+// Replaces the placeholders of the matched mappingKey url to create the complete partial help content path.
+function getPartialHelpContentPath(replacedMappingPath, variablesToReplaceCamel) {
+    if (mappingPathExists(replacedMappingPath)) {
+        return replacePlaceholder(inlineHelpMapping[replacedMappingPath], variablesToReplaceCamel);
+    }
+
+    return '';
 }
 
 /**
@@ -52,24 +90,12 @@ function getReplacedPath(key, variablesToReplace) {
  * @returns {string} The partial path that the refers to the help content in the documentation.  e.g. `/en/user/html/manage_org_unit.html`
  */
 function findHelpLinkForPath(path, schema) {
-    const variablesToReplace = new Map([
-        ['objectType', schema],
-    ]);
+    const variablesToReplace = new Map([['objectType', schema]]);
+    const variablesToReplaceCamel = new Map([['objectType', camelCaseToUnderscores(schema)]]);
 
-    const variablesToReplaceCamel = new Map([
-        ['objectType', camelCaseToUnderscores(schema)],
-    ]);
-    const firstRouteWithHelpLink = Object.keys(inlineHelpMapping)
-        .find((key) => {
-            const pathToMatch = getReplacedPath(key, variablesToReplace);
-            return (new RegExp(pathToMatch)).test(path);
-        });
+    const replacedMappingPath = replaceMappingPathPlaceholder(path, variablesToReplace);
 
-    if (firstRouteWithHelpLink && inlineHelpMapping[firstRouteWithHelpLink]) {
-        return getReplacedPath(inlineHelpMapping[firstRouteWithHelpLink], variablesToReplaceCamel);
-    }
-
-    return '';
+    return getPartialHelpContentPath(replacedMappingPath, variablesToReplaceCamel);
 }
 
 export default function HelpLink({ schema }, { d2 }) {
