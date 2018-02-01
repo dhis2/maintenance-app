@@ -1,31 +1,28 @@
 import React from 'react';
+
+import ColorPicker from '../../forms/form-fields/color-picker';
 import IconPicker from '../../forms/form-fields/icon-picker';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
-import { getManifest } from 'd2/lib/d2';
 
-class SymbolPickerField extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+const SymbolPickerField = (props, context) => {
+    const baseUrl = context.d2.Api.getApi().baseUrl;
+    const apiUrlSectionRegexp = /\/api(?:\/[0-9]{2})?$/;
+    const systemRootFolder = baseUrl.replace(apiUrlSectionRegexp, '');
 
-        const baseUrl = context.d2.Api.getApi().baseUrl;
-        const apiUrlSectionRegexp = /\/api(?:\/[0-9]{2})?$/;
-        const systemRootFolder = baseUrl.replace(apiUrlSectionRegexp, '');
+    const imgPath = `${systemRootFolder}/images/orgunitgroup`;
 
-        this.imgPath = `${systemRootFolder}/images/orgunitgroup`;
-    }
-
-    render() {
-        return (
-            <IconPicker
-                {...this.props}
-                imgPath={this.imgPath}
-            />
-        );
-    }
-}
+    return (
+        <IconPicker
+            {...props}
+            imgPath={imgPath}
+        />);
+};
 SymbolPickerField.contextTypes = { d2: React.PropTypes.any };
 
 export default new Map([
+    ['color', {
+        component: ColorPicker,
+    }],
     ['symbol', {
         component: SymbolPickerField,
         fieldOptions: {

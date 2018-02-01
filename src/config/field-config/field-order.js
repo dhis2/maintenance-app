@@ -157,6 +157,7 @@ const fieldOrderByName = new Map([
         'shortName',
         'code',
         'description',
+        'color',
         'symbol',
         'organisationUnits',
     ]],
@@ -230,10 +231,9 @@ const fieldOrderByName = new Map([
         'expiryDays',
         'programAttributes',
         'minAttributesRequiredToSearch',
-        'maxTeiCountToReturn'
-
+        'maxTeiCountToReturn',
     ]],
-    //Tracker-program
+    // Tracker-program
     ['enrollment', [
         'selectEnrollmentDatesInFuture',
         'selectIncidentDatesInFuture',
@@ -246,9 +246,7 @@ const fieldOrderByName = new Map([
         'relationshipType',
         'relationshipText',
         'relationshipFromA',
-        'relatedProgram'
-
-
+        'relatedProgram',
     ]],
     ['programStage', [
         'name',
@@ -314,6 +312,7 @@ const fieldOrderByName = new Map([
         'decimals',
         'aggregationType',
         'analyticsType',
+        'analyticsPeriodBoundaries',
         'displayInForm',
         'legendSets',
         'aggregateExportCategoryOptionCombo',

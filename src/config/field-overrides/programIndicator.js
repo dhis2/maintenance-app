@@ -21,6 +21,7 @@ import ExpressionStatusIcon, {
     getColorForExpressionStatus,
     getBackgroundColorForExpressionStatus } from './program-indicator/ExpressionStatusIcon';
 import OperatorButtons from '../../EditModel/OperatorButtons.component';
+import { AnalyticsPeriodBoundaries } from './program-indicator/AnalyticsPeriodBoundaries';
 
 const styles = {
     programIndicatorExpression: {
@@ -263,7 +264,10 @@ const enhance = compose(
 );
 
 export default new Map([
-    decimals,
+    [ 'analyticsPeriodBoundaries', {
+        component: AnalyticsPeriodBoundaries
+    }],
+
     ['expression', {
         component: enhance(ProgramIndicatorExpression),
     }],
@@ -271,4 +275,6 @@ export default new Map([
     ['filter', {
         component: enhance(ProgramIndicatorExpression),
     }],
+
+    decimals,
 ]);

@@ -1,5 +1,6 @@
 import React from 'react';
 import IconPicker from 'd2-ui/lib/icon-picker/IconPicker.component';
+import Divider from 'material-ui/Divider';
 
 export default function IconPickerField(props) {
     function transformChange(value) {
@@ -16,7 +17,10 @@ export default function IconPickerField(props) {
         .map(option => option.value);
 
     return (
-        <IconPicker {...otherProps} options={iconPickerOptions} onChange={transformChange} />
+        <div>
+            <IconPicker {...otherProps} options={iconPickerOptions} onChange={transformChange} />
+            <Divider />
+        </div>
     );
 }
 

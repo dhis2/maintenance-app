@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import { getInstance } from 'd2/lib/d2';
+import PropTypes from 'prop-types';
+
+import ErrorMessage from 'd2-ui/lib/messages/ErrorMessage.component';
+
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import modelToEditStore from '../../EditModel/modelToEditStore';
-import log from 'loglevel';
-import ErrorMessage from 'd2-ui/lib/messages/ErrorMessage.component';
 
 class LegendsField extends Component {
     constructor(props, context) {
         super(props, context);
-
         this.state = {
             isLoading: true,
             Legend: null,
         };
+    }
+
+    componentDidMount() {
+        this.loadLegendComponent();
     }
 
     loadLegendComponent() {
@@ -25,12 +29,19 @@ class LegendsField extends Component {
             });
     }
 
-    componentDidMount() {
-        this.loadLegendComponent();
+    updateLegends = (newLegends) => {
+        const model = modelToEditStore.getState();
+        model[this.props.referenceProperty] = newLegends;
+
+        this.props.onChange({
+            target: {
+                value: model[this.props.referenceProperty],
+            },
+        });
     }
 
     render() {
-        const legends = this.props.value || [];
+        const legends = this.props.value;
 
         if (this.state.isLoading || !this.state.Legend) {
             return (<LinearProgress />);
@@ -43,18 +54,20 @@ class LegendsField extends Component {
             </div>
         );
     }
-
-    updateLegends = (newLegends) => {
-        const model = modelToEditStore.getState();
-        model[this.props.referenceProperty] = newLegends;
-
-        this.props.onChange({
-            target: {
-                value: model[this.props.referenceProperty],
-            },
-        });
-    }
 }
+
+LegendsField.propTypes = {
+    referenceProperty: PropTypes.string.isRequired,
+    errorText: PropTypes.string,
+    value: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
+};
+
+LegendsField.defaultProps = {
+    value: [],
+    errorText: '',
+};
+
 
 export default new Map([
     ['legends', {
