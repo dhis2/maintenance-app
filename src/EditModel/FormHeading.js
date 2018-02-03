@@ -27,13 +27,13 @@ FormHeading.propTypes = {
         PropTypes.array,
     ]),
     level: PropTypes.number,
-    isDirtyHandler: PropTypes.bool,
+    isDirtyHandler: PropTypes.func,
     schema: PropTypes.string.isRequired,
     groupName: PropTypes.string.isRequired,
 };
 
 FormHeading.defaultProps = {
-    isDirtyHandler: false,
+    isDirtyHandler: () => {},
     level: 2,
     children: '',
 };

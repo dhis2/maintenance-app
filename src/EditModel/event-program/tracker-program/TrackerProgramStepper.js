@@ -1,9 +1,10 @@
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import { createStepperFromConfig } from '../../stepper/stepper';
 import { activeStepSelector, disabledSelector } from '../selectors';
-import { connect } from 'react-redux';
 import steps from './tracker-program-steps';
-import { changeStep, changeStepperDisabledState } from '../actions';
-import { bindActionCreators } from 'redux';
+import { changeStep } from '../actions';
 
 const mapStateToProps = state => ({
     activeStep: activeStepSelector(state),
@@ -13,7 +14,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
     bindActionCreators({ stepperClicked: changeStep }, dispatch);
 const EventProgramStepper = connect(mapStateToProps, mapDispatchToProps)(
-    createStepperFromConfig(steps)
+    createStepperFromConfig(steps),
 );
 
 export default EventProgramStepper;
