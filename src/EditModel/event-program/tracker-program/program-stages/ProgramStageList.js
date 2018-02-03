@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import log from 'loglevel';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
@@ -11,7 +10,6 @@ import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 
-import snackActions from '../../../../Snackbar/snack.actions';
 import { getTableColumnsForType } from '../../../../config/maintenance-models';
 import { getTranslatablePropertiesForModelType } from '../../../../List/List.component';
 import { translationSaved, translationError } from './contextActions';
