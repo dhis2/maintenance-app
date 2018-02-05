@@ -137,7 +137,8 @@ function removeSubField(model, onChange, idx, e) {
 }
 
 function addSubField(model, onChange) {
-    const list = model.analyticsPeriodBoundaries;
+    const list = model.analyticsPeriodBoundaries || [];
+
     const newVal = {
         analyticsPeriodBoundaryType: '',
         boundaryTarget: '',
@@ -153,7 +154,12 @@ function addSubField(model, onChange) {
 function AnalyticsPeriodBoundaryList ({ d2, model, onChange }) {
     const getTranslation = d2.i18n.getTranslation.bind(d2.i18n);
 
-    const boundaries = model.analyticsPeriodBoundaries.map((props, i) => (
+    let analyticsPeriodBoundaries = []
+    if (model.analyticsPeriodBoundaries) {
+        analyticsPeriodBoundaries = model.analyticsPeriodBoundaries;
+    }
+
+    const boundaries = analyticsPeriodBoundaries.map((props, i) => (
         <AnalyticsPeriodBoundary
             key={i}
             d2={d2}
