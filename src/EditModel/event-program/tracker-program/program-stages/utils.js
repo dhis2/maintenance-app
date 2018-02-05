@@ -15,13 +15,11 @@ export const firstProgramStage$ = programStore$.map(getFirstProgramStage);
 export const withProgramStageFromProgramStage$ = mapPropsStream(props$ =>
     props$.combineLatest(
         props$.flatMap(x => x.programStage$),
-        (props, programStage) => {
-            return {
-                ...props,
-                programStage,
-            };
-        }
-    )
+        (props, programStage) => ({
+            ...props,
+            programStage,
+        }),
+    ),
 );
 
 /**
@@ -37,9 +35,9 @@ export const withProgramAndStages = compose(
                 ...props,
                 program,
                 programStages,
-            })
-        )
-    )
+            }),
+        ),
+    ),
 );
 
 export const getProgramStageById$ = stageId =>
@@ -47,13 +45,13 @@ export const getProgramStageById$ = stageId =>
         .flatMap(x => x)
         .filter(stage => stage.id && stage.id === stageId);
 
-//Use programStage$ prop if present, else use first programStage
+// Use programStage$ prop if present, else use first programStage
 export const getProgramStageOrFirstFromProps$ = props$ =>
     props$
         .take(1)
         .flatMap(
             props =>
-                props.programStage$
+                (props.programStage$
                     ? props.programStage$
-                    : programStore$.map(getFirstProgramStage)
+                    : programStore$.map(getFirstProgramStage)),
         );

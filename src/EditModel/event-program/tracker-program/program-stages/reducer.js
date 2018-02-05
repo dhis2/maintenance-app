@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux';
 import {
     PROGRAM_STAGE_STEP_CHANGE,
     PROGRAM_STAGE_STEP_NEXT,
@@ -12,47 +11,47 @@ import { next, previous, first } from '../../../stepper/stepIterator';
 
 export function programStageStepperReducer(
     state = { activeStep: first(steps), stageId: null },
-    action
+    action,
 ) {
     switch (action.type) {
-        case PROGRAM_STAGE_STEP_CHANGE:
-            return {
-                ...state,
-                activeStep: action.payload.stepKey,
-            };
+    case PROGRAM_STAGE_STEP_CHANGE:
+        return {
+            ...state,
+            activeStep: action.payload.stepKey,
+        };
 
-        case PROGRAM_STAGE_STEP_NEXT:
-            return {
-                ...state,
-                activeStep: next(steps, state.activeStep),
-            };
+    case PROGRAM_STAGE_STEP_NEXT:
+        return {
+            ...state,
+            activeStep: next(steps, state.activeStep),
+        };
 
-        case PROGRAM_STAGE_STEP_PREVIOUS:
-            return {
-                ...state,
-                activeStep: previous(steps, state.activeStep),
-            };
+    case PROGRAM_STAGE_STEP_PREVIOUS:
+        return {
+            ...state,
+            activeStep: previous(steps, state.activeStep),
+        };
 
-        case STEPPER_RESET_ACTIVE_STEP:
-            return {
-                ...state,
-                activeStep: first(steps),
-            };
+    case STEPPER_RESET_ACTIVE_STEP:
+        return {
+            ...state,
+            activeStep: first(steps),
+        };
 
-        case PROGRAM_STAGE_EDIT:
-            return {
-                ...state,
-                stageId: action.payload.stageId,
-            };
+    case PROGRAM_STAGE_EDIT:
+        return {
+            ...state,
+            stageId: action.payload.stageId,
+        };
 
-        case PROGRAM_STAGE_EDIT_RESET:
-            return {
-                ...state,
-                activeStep: first(steps),
-                stageId: null,
-            };
-        default:
-            break;
+    case PROGRAM_STAGE_EDIT_RESET:
+        return {
+            ...state,
+            activeStep: first(steps),
+            stageId: null,
+        };
+    default:
+        break;
     }
 
     return state;

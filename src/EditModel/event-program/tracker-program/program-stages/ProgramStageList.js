@@ -1,36 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import programStore$ from '../../eventProgramStore';
-import {
-    compose,
-    lifecycle,
-    withHandlers,
-    withState,
-    withStateHandlers,
-} from 'recompose';
-import { get, noop, first, getOr, __, sortBy } from 'lodash/fp';
-import {
-    getTableColumnsForType,
-    getFilterFieldsForType,
-    getFiltersForType,
-} from '../../../../config/maintenance-models';
-import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
-import FontIcon from 'material-ui/FontIcon/FontIcon';
-import { addQuery } from '../../../../router-utils';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import DataTable from 'd2-ui/lib/data-table/DataTable.component';
+import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+
+import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
+
+import { getTableColumnsForType } from '../../../../config/maintenance-models';
+import { getTranslatablePropertiesForModelType } from '../../../../List/List.component';
+import { translationSaved, translationError } from './contextActions';
 import {
     editProgramStage,
     addProgramStage,
     deleteProgramStage,
 } from './actions';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
-import { getTranslatablePropertiesForModelType } from '../../../../List/List.component';
-import { translationSaved, translationError } from './contextActions';
 
-const FAB = props => {
+const FAB = (props) => {
     const cssStyles = {
         textAlign: 'right',
         marginTop: '1rem',
@@ -49,16 +38,18 @@ const FAB = props => {
     );
 };
 
-function isContextActionAllowed(model, action) {
-    return true;
-}
+FAB.propTypes = {
+    handleNewProgramStage: PropTypes.func.isRequired,
+};
 
 class ProgramStageList extends Component {
     constructor(props) {
         super(props);
         const modelType = 'programStage';
+
         this.state = {
-            modelType: modelType,
+            stages: this.props.programStages,
+            modelType,
             sharing: {
                 id: null,
             },
@@ -69,7 +60,7 @@ class ProgramStageList extends Component {
         };
     }
 
-    openSharing = model => {
+    openSharing = (model) => {
         this.setState({
             ...this.state,
             sharing: {
@@ -88,50 +79,82 @@ class ProgramStageList extends Component {
             },
         });
     };
-
-    renderSharing = () => {
-        return this.state.sharing.id
-            ? <SharingDialog
-                  id={this.state.sharing.id}
-                  type={this.state.modelType}
-                  open={!!this.state.sharing.id}
-                  onRequestClose={this.closeSharing}
-                  bodyStyle={{ minHeight: '400px' }}
-              />
-            : null;
-    };
-
-    openTranslate = model => {
+    openTranslate = (model) => {
         this.setState({
             ...this.state,
             translate: {
                 ...this.state.translate,
-                model: model,
+                model,
             },
         });
     };
 
-    renderTranslate = () => {
-        return this.state.translate.model
-            ? <TranslationDialog
-                  objectToTranslate={this.state.translate.model}
-                  objectTypeToTranslate={
-                      this.state.translate.model.modelDefinition
-                  }
-                  open={!!this.state.translate.model}
-                  onTranslationSaved={translationSaved}
-                  onTranslationError={translationError}
-                  onRequestClose={() =>
-                      this.setState({
-                          ...this.state,
-                          translate: { ...this.state.translate, model: null },
-                      })}
-                  fieldsToTranslate={getTranslatablePropertiesForModelType(
-                      this.state.modelType
-                  )}
-              />
-            : null;
+    handleOnRequestClose = () => {
+        this.setState({
+            ...this.state,
+            translate: { ...this.state.translate, model: null },
+        });
+    }
+
+    swapStages = (stageA, stageB) => {
+        this.setState((state) => {
+            const swapOrder = stageA.sortOrder;
+            stageA.sortOrder = stageB.sortOrder; // eslint-disable-line
+            stageB.sortOrder = swapOrder; // eslint-disable-line
+            return {
+                sections: state.stages.sort((a, b) => a.sortOrder - b.sortOrder),
+            };
+        });
+    }
+
+    contextActionChecker = (model, action) => {
+        if (action === 'move_up') {
+            return this.state.stages.indexOf(model) > 0;
+        } else if (action === 'move_down') {
+            return this.state.stages.indexOf(model) < this.state.stages.length - 1;
+        }
+        return true;
     };
+
+    moveStageUp = (stage) => {
+        const currentIndex = this.state.stages.indexOf(stage);
+        if (currentIndex > 0) {
+            const swapStage = this.state.stages[currentIndex - 1];
+            this.swapStages(swapStage, stage);
+        }
+    }
+
+    moveStageDown = (stage) => {
+        const currentIndex = this.state.stages.indexOf(stage);
+        if (currentIndex < this.state.stages.length - 1) {
+            const swapStage = this.state.stages[currentIndex + 1];
+            this.swapStages(swapStage, stage);
+        }
+    }
+
+    renderSharing = () => (!!this.state.sharing.id
+        && <SharingDialog
+            id={this.state.sharing.id}
+            type={this.state.modelType}
+            open={!!this.state.sharing.id}
+            onRequestClose={this.closeSharing}
+            bodyStyle={{ minHeight: '400px' }}
+        />);
+
+    renderTranslate = () => (!!this.state.translate.model
+        && <TranslationDialog
+            objectToTranslate={this.state.translate.model}
+            objectTypeToTranslate={
+                this.state.translate.model.modelDefinition
+            }
+            open={!!this.state.translate.model}
+            onTranslationSaved={translationSaved}
+            onTranslationError={translationError}
+            onRequestClose={this.handleOnRequestClose}
+            fieldsToTranslate={getTranslatablePropertiesForModelType(
+                this.state.modelType,
+            )}
+        />);
 
     render() {
         const contextActions = {
@@ -139,6 +162,8 @@ class ProgramStageList extends Component {
             share: this.openSharing,
             delete: this.props.handleDeleteProgramStage,
             translate: this.openTranslate,
+            move_up: this.moveStageUp,
+            move_down: this.moveStageDown,
         };
 
         const contextMenuIcons = {
@@ -151,12 +176,12 @@ class ProgramStageList extends Component {
         return (
             <div>
                 <DataTable
-                    rows={this.props.programStages}
+                    rows={this.state.stages}
                     columns={this.props.tableColumns}
                     primaryAction={this.props.handleEditProgramStage}
                     contextMenuActions={contextActions}
                     contextMenuIcons={contextMenuIcons}
-                    isContextActionAllowed={isContextActionAllowed}
+                    isContextActionAllowed={this.contextActionChecker}
                 />
                 <FAB {...this.props} />
                 {this.renderSharing()}
@@ -167,7 +192,14 @@ class ProgramStageList extends Component {
 }
 
 ProgramStageList.propTypes = {
-    programStages: PropTypes.array,
+    programStages: PropTypes.array.isRequired,
+    tableColumns: PropTypes.array,
+    handleEditProgramStage: PropTypes.func.isRequired,
+    handleDeleteProgramStage: PropTypes.func.isRequired,
+};
+
+ProgramStageList.defaultProps = {
+    tableColumns: ['name', 'lastUpdated'],
 };
 
 export default connect(null, dispatch =>
@@ -177,6 +209,6 @@ export default connect(null, dispatch =>
             handleNewProgramStage: () => addProgramStage(),
             handleDeleteProgramStage: model => deleteProgramStage(model.id),
         },
-        dispatch
-    )
+        dispatch,
+    ),
 )(ProgramStageList);

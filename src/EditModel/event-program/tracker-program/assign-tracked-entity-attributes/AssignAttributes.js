@@ -1,56 +1,61 @@
 import React, { PropTypes } from 'react';
-import mapProps from 'recompose/mapProps';
-import compose from 'recompose/compose';
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
-import Paper from 'material-ui/Paper/Paper';
-import mapPropsStream from 'recompose/mapPropsStream';
-import eventProgramStore from '../../eventProgramStore';
-import { get, noop, first, getOr, __ } from 'lodash/fp';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import Checkbox from 'material-ui/Checkbox/Checkbox';
-import Store from 'd2-ui/lib/store/Store';
-import { addAttributesToProgram, removeAttributesFromProgram, editProgramAttributes } from './actions';
-import withHandlers from 'recompose/withHandlers';
-import TextField from 'material-ui/TextField/TextField';
+import { get, getOr, __ } from 'lodash/fp';
+
+import mapProps from 'recompose/mapProps';
+import compose from 'recompose/compose';
+import mapPropsStream from 'recompose/mapPropsStream';
 import pure from 'recompose/pure';
 import withState from 'recompose/withState';
+import withHandlers from 'recompose/withHandlers';
+
+import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
+import Store from 'd2-ui/lib/store/Store';
+
+import Paper from 'material-ui/Paper/Paper';
+import Checkbox from 'material-ui/Checkbox/Checkbox';
+import TextField from 'material-ui/TextField/TextField';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+
+import eventProgramStore from '../../eventProgramStore';
+import { addAttributesToProgram, removeAttributesFromProgram, editProgramAttributes } from './actions';
+
 
 const program$ = eventProgramStore
-    .map(get('program'))
+    .map(get('program'));
 
 const availableAttributes$ = eventProgramStore
     .map(get('availableAttributes'))
     .take(1);
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    addAttributesToProgram: addAttributesToProgram,
-    removeAttributesFromProgram: removeAttributesFromProgram,
-    editProgramAttributes: editProgramAttributes,
+    addAttributesToProgram,
+    removeAttributesFromProgram,
+    editProgramAttributes,
 }, dispatch);
 
 const enhance = compose(
     mapProps(props => ({
         groupName: props.params.groupName,
         modelType: props.schema,
-        modelId: props.params.modelId })
+        modelId: props.params.modelId }),
     ),
     connect(null, mapDispatchToProps),
     mapPropsStream(props$ => props$
         .combineLatest(
             program$,
             availableAttributes$,
-            (props, program$, availableAttributes) => ({ ...props, availableAttributes, model: program$, items: program$.programTrackedEntityAttributes })
-        )
+            (props, program$, availableAttributes) => ({ ...props, availableAttributes, model: program$, items: program$.programTrackedEntityAttributes }),
+        ),
     ),
     withHandlers({
-        onAssignItems: ({ addAttributesToProgram}) => (attributes) => {
-            addAttributesToProgram({ attributes: attributes });
+        onAssignItems: ({ addAttributesToProgram }) => (attributes) => {
+            addAttributesToProgram({ attributes });
             return Promise.resolve();
         },
         onRemoveItems: ({ model, removeAttributesFromProgram }) => (attributes) => {
-            removeAttributesFromProgram({ attributes: attributes });
+            removeAttributesFromProgram({ attributes });
             return Promise.resolve();
         },
         onEditProgramAttribute: ({ model, editProgramAttributes }) => attribute => editProgramAttributes({
@@ -65,51 +70,51 @@ const flipBooleanPropertyOn = (object, key) => ({
     [key]: !object[key],
 });
 
-const ProgramAttribute = ({ programAttribute, onEditProgramAttribute}, { d2 }) => {
+const ProgramAttribute = ({ programAttribute, onEditProgramAttribute }, { d2 }) => {
     const isDateValue = programAttribute.trackedEntityAttribute.valueType === 'DATE';
     const isUnique = programAttribute.trackedEntityAttribute.unique;
     const hasOptionSet = !!programAttribute.trackedEntityAttribute.optionSet;
     const onChangeFlipBooleanForProperty = propertyName => () => onEditProgramAttribute(
-        flipBooleanPropertyOn(programAttribute, propertyName)
+        flipBooleanPropertyOn(programAttribute, propertyName),
     );
     const isCheckedForProp = getOr(false, __, programAttribute);
 
     return (
-    <TableRow>
-        <TableRowColumn>{programAttribute.trackedEntityAttribute.displayName}</TableRowColumn>
-        <TableRowColumn>
-            <Checkbox
-                checked={isCheckedForProp('displayInList')}
-                onClick={onChangeFlipBooleanForProperty('displayInList')}
-            />
-        </TableRowColumn>
-        <TableRowColumn>
-            <Checkbox
-                checked={isCheckedForProp('mandatory')}
-                onClick={onChangeFlipBooleanForProperty('mandatory')}
-            />
-        </TableRowColumn>
-        <TableRowColumn>
-            {isDateValue ? <Checkbox
-                checked={isCheckedForProp('allowFutureDate')}
-                onClick={onChangeFlipBooleanForProperty('allowFutureDate')}
-            /> : null}
-        </TableRowColumn>
-        <TableRowColumn>
-            {hasOptionSet ? <Checkbox
-                checked={isCheckedForProp('renderOptionsAsRadio')}
-                onClick={onChangeFlipBooleanForProperty('renderOptionsAsRadio')}
-            /> : null}
-        </TableRowColumn>
-        <TableRowColumn>
-            <Checkbox
-                checked={isUnique || isCheckedForProp('searchable')}
-                disabled={isUnique}
-                onClick={onChangeFlipBooleanForProperty('searchable')}
-                title={d2.i18n.getTranslation("unique_attributes_always_searchable")}
-            />
-        </TableRowColumn>
-    </TableRow>)
+        <TableRow>
+            <TableRowColumn>{programAttribute.trackedEntityAttribute.displayName}</TableRowColumn>
+            <TableRowColumn>
+                <Checkbox
+                    checked={isCheckedForProp('displayInList')}
+                    onClick={onChangeFlipBooleanForProperty('displayInList')}
+                />
+            </TableRowColumn>
+            <TableRowColumn>
+                <Checkbox
+                    checked={isCheckedForProp('mandatory')}
+                    onClick={onChangeFlipBooleanForProperty('mandatory')}
+                />
+            </TableRowColumn>
+            <TableRowColumn>
+                {isDateValue ? <Checkbox
+                    checked={isCheckedForProp('allowFutureDate')}
+                    onClick={onChangeFlipBooleanForProperty('allowFutureDate')}
+                /> : null}
+            </TableRowColumn>
+            <TableRowColumn>
+                {hasOptionSet ? <Checkbox
+                    checked={isCheckedForProp('renderOptionsAsRadio')}
+                    onClick={onChangeFlipBooleanForProperty('renderOptionsAsRadio')}
+                /> : null}
+            </TableRowColumn>
+            <TableRowColumn>
+                <Checkbox
+                    checked={isUnique || isCheckedForProp('searchable')}
+                    disabled={isUnique}
+                    onClick={onChangeFlipBooleanForProperty('searchable')}
+                    title={d2.i18n.getTranslation('unique_attributes_always_searchable')}
+                />
+            </TableRowColumn>
+        </TableRow>);
 };
 
 ProgramAttribute.contextTypes = {
@@ -128,7 +133,7 @@ function addDisplayProperties(attributes) {
                 displayName,
                 valueType,
                 optionSet,
-                unique
+                unique,
             },
         };
     };
@@ -142,15 +147,15 @@ function AssignAttributes(props, { d2 }) {
             id: attribute.id,
             text: attribute.displayName,
             value: attribute.id,
-        }))
+        })),
     );
 
-    //Assign existing attributes
+    // Assign existing attributes
     assignedItemStore.setState(
-        props.items.map(a => a.trackedEntityAttribute.id)
+        props.items.map(a => a.trackedEntityAttribute.id),
     );
 
-    //Create edit-able rows for assigned attributes
+    // Create edit-able rows for assigned attributes
     const tableRows = props.items
         .map(addDisplayProperties(props.availableAttributes))
         .map((programAttribute, index) => (

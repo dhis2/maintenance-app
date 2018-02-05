@@ -9,4 +9,4 @@ const actionCreator = type => payload => ({ type, payload });
 export const addAttributesToProgram = actionCreator(PROGRAM_ATTRIBUTES_ADD);
 export const removeAttributesFromProgram = actionCreator(PROGRAM_ATTRIBUTES_REMOVE);
 
-export const editProgramAttributes= actionCreator(PROGRAM_ATTRIBUTES_EDIT);
+export const editProgramAttributes = actionCreator(PROGRAM_ATTRIBUTES_EDIT);
