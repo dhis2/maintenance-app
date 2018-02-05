@@ -8,13 +8,13 @@ import { getInstance } from 'd2/lib/d2';
 import listStore from './list.store';
 import detailsStore from './details.store';
 import appState from '../App/appStateStore';
-
 import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForType } from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = [
     'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
     'code', 'publicAccess', 'access', 'href', 'level',
 ].join(',');
+
 const listActions = Action.createActionsFromNames([
     'loadList',
     'setListSource',
@@ -185,7 +185,7 @@ listActions.setFilterValue
         }
 
         const filterField = d2.models.hasOwnProperty(data.filterField) ? `${data.filterField}.id` : data.filterField;
-        const filterValue = data.filterValue && data.filterValue.hasOwnProperty('id')
+        const filterValue = (!!data.filterValue && !!data.filterValue.hasOwnProperty('id'))
             ? data.filterValue.id
             : data.filterValue;
 
