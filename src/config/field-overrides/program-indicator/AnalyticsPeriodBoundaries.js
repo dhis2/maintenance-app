@@ -154,7 +154,8 @@ function addSubField(model, onChange) {
 function AnalyticsPeriodBoundaryList ({ d2, model, onChange }) {
     const getTranslation = d2.i18n.getTranslation.bind(d2.i18n);
 
-    let analyticsPeriodBoundaries = []
+    let analyticsPeriodBoundaries = [];
+
     if (model.analyticsPeriodBoundaries) {
         analyticsPeriodBoundaries = model.analyticsPeriodBoundaries;
     }

@@ -31,7 +31,8 @@ export function defaultAnalyticsPeriodBoundaries (type, current) {
     };
 
     function isNotDefault(val) {
-        return !isEqual(val, defaultProps.event) && !isEqual(val, defaultProps.enrollment)
+        return !isEqual(val, defaultProps.event)
+            && !isEqual(val, defaultProps.enrollment)
     }
 
     if (current && isNotDefault(current)) {
