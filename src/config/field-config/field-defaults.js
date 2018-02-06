@@ -2,30 +2,35 @@ import {
     isEqual
 } from 'lodash/fp';
 
-export function defaultAnalyticsPeriodBoundaries (type, current) {
-    if (type === 'clear') {
-        return undefined;
-    }
+import {
+    BEFORE_START_OF_REPORTING_PERIOD,
+    BEFORE_END_OF_REPORTING_PERIOD,
+    AFTER_START_OF_REPORTING_PERIOD,
+    AFTER_END_OF_REPORTING_PERIOD,
+    EVENT_DATE,
+    ENROLLMENT_DATE
+} from '../field-overrides/program-indicator/enums'
 
+export function defaultAnalyticsPeriodBoundaries (type, current) {
     const defaultProps = {
         enrollment: [
             {
-                "analyticsPeriodBoundaryType": "AFTER_START_OF_REPORTING_PERIOD",
-                "boundaryTarget": "ENROLLMENT_DATE"
+                "analyticsPeriodBoundaryType": AFTER_START_OF_REPORTING_PERIOD,
+                "boundaryTarget": ENROLLMENT_DATE
             },
             {
-                "analyticsPeriodBoundaryType": "BEFORE_END_OF_REPORTING_PERIOD",
-                "boundaryTarget": "ENROLLMENT_DATE"
+                "analyticsPeriodBoundaryType": BEFORE_END_OF_REPORTING_PERIOD,
+                "boundaryTarget": ENROLLMENT_DATE
             }
         ],
         event: [
             {
-                "analyticsPeriodBoundaryType": "AFTER_START_OF_REPORTING_PERIOD",
-                "boundaryTarget": "EVENT_DATE"
+                "analyticsPeriodBoundaryType": AFTER_START_OF_REPORTING_PERIOD,
+                "boundaryTarget": EVENT_DATE
             },
             {
-                "analyticsPeriodBoundaryType": "BEFORE_END_OF_REPORTING_PERIOD",
-                "boundaryTarget": "EVENT_DATE"
+                "analyticsPeriodBoundaryType": BEFORE_END_OF_REPORTING_PERIOD,
+                "boundaryTarget": EVENT_DATE
             }
         ]
     };
