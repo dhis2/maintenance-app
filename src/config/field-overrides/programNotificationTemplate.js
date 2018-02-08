@@ -30,9 +30,12 @@ const ProgramStageNotificationSubjectAndMessageTemplateFields = compose(
     },
     dispatch,
     )),
-    withProps(({ dataElements }) => ({
-        variableTypes: map(toVariableType, PROGRAM_STAGE_VARIABLES).concat(map(toDataElementType, dataElements)),
-    })))(SubjectAndMessageTemplateFields);
+    withProps(({ dataElements }) => {
+        console.log(dataElements)
+        return {
+            variableTypes: map(toVariableType, PROGRAM_STAGE_VARIABLES).concat(map(toDataElementType, dataElements)),
+        }
+    }))(SubjectAndMessageTemplateFields);
 
 export default new Map([
     ['deliveryChannels', {
@@ -45,10 +48,7 @@ export default new Map([
         required: true,
         fieldOptions: {
             // For program stages only the following values are allowed
-            options: [
-                'COMPLETION',
-                'SCHEDULED_DAYS_DUE_DATE',
-            ],
+
         },
     }],
     ['notificationRecipient', {
@@ -64,6 +64,6 @@ export default new Map([
         },
     }],
     ['messageTemplate', {
-        component: ProgramStageNotificationSubjectAndMessageTemplateFields,
+        component: (props) => <ProgramStageNotificationSubjectAndMessageTemplateFields {...props}/>
     }],
 ]);

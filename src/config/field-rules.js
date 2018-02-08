@@ -459,5 +459,10 @@ export default new Map([
                 type: 'HIDE_FIELD'
             }]
         }
+    ]],
+    ['programStageNotificationTemplate', [
+        {
+            field: 'relativeScheduledDays'
+        }
     ]]
 ]);

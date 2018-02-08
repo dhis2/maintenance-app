@@ -85,7 +85,6 @@ const enhance = compose(
     ),
     withHandlers({
         onAssignItems: props => dataElements => {
-            console.log(props);
             const { model, addDataElementsToStage } = props;
             addDataElementsToStage({ programStage: model.id, dataElements });
             return Promise.resolve();

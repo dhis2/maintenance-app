@@ -8,7 +8,7 @@ async function getRelationshipTypes(model, d2) {
     const relationship = await d2.models.relationshipTypes.get(
         model.relationshipType.id
     );
-    const relationhipOptions = [
+    const relationshipOptions = [
         {
             text: relationship.aIsToB,
             value: true,
@@ -19,7 +19,7 @@ async function getRelationshipTypes(model, d2) {
         },
     ];
 
-    return relationhipOptions;
+    return relationshipOptions;
 }
 
 export default new Map([

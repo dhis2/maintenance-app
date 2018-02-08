@@ -28,6 +28,7 @@ class DropDownAsyncGetter extends React.Component {
     }
 
     async getOptions(programId) {
+        console.log("getoptions", programId)
         const options = await this.props.getter(programId, this.d2);
 
         if (this.d2) {
