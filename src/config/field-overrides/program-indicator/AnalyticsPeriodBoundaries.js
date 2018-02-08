@@ -13,6 +13,16 @@ import DropDown from '../../../forms/form-fields/drop-down';
 import TextField from '../../../forms/form-fields/text-field';
 import PeriodTypeDropDown from '../../../forms/form-fields/period-type-drop-down';
 
+import {
+    BEFORE_START_OF_REPORTING_PERIOD,
+    BEFORE_END_OF_REPORTING_PERIOD,
+    AFTER_START_OF_REPORTING_PERIOD,
+    AFTER_END_OF_REPORTING_PERIOD,
+    INCIDENT_DATE,
+    EVENT_DATE,
+    ENROLLMENT_DATE
+} from './enums'
+
 // just wrap the component in a span with some margins as they are
 // inline in this form
 const withStyle = function withStyle(BaseField, styles) {
@@ -34,34 +44,34 @@ const StyledPeriodTypeDropDown = withStyle(PeriodTypeDropDown, style);
 const boundaryTargets = [
     {
         text: 'boundary_target_incident_date',
-        value: 'INCIDENT_DATE'
+        value: INCIDENT_DATE
     },
     {
         text: 'boundary_target_event_date',
-        value: 'EVENT_DATE'
+        value: EVENT_DATE
     },
     {
         text: 'boundary_target_enrollment_date',
-        value: 'ENROLLMENT_DATE'
+        value: ENROLLMENT_DATE
     }
 ];
 
 const boundaryTypes =[
     {
         text: 'report_period_before_start',
-        value: 'BEFORE_START_OF_REPORTING_PERIOD'
+        value: BEFORE_START_OF_REPORTING_PERIOD
     },
     {
         text: 'report_period_before_end',
-        value: 'BEFORE_END_OF_REPORTING_PERIOD'
+        value: BEFORE_END_OF_REPORTING_PERIOD
     },
     {
         text: 'report_period_after_start',
-        value: 'AFTER_START_OF_REPORTING_PERIOD'
+        value: AFTER_START_OF_REPORTING_PERIOD
     },
     {
         text: 'report_period_after_end',
-        value: 'AFTER_END_OF_REPORTING_PERIOD'
+        value: AFTER_END_OF_REPORTING_PERIOD
     }
 ];
 
@@ -137,7 +147,8 @@ function removeSubField(model, onChange, idx, e) {
 }
 
 function addSubField(model, onChange) {
-    const list = model.analyticsPeriodBoundaries;
+    const list = model.analyticsPeriodBoundaries || [];
+
     const newVal = {
         analyticsPeriodBoundaryType: '',
         boundaryTarget: '',
@@ -153,7 +164,13 @@ function addSubField(model, onChange) {
 function AnalyticsPeriodBoundaryList ({ d2, model, onChange }) {
     const getTranslation = d2.i18n.getTranslation.bind(d2.i18n);
 
-    const boundaries = model.analyticsPeriodBoundaries.map((props, i) => (
+    let analyticsPeriodBoundaries = [];
+
+    if (model.analyticsPeriodBoundaries) {
+        analyticsPeriodBoundaries = model.analyticsPeriodBoundaries;
+    }
+
+    const boundaries = analyticsPeriodBoundaries.map((props, i) => (
         <AnalyticsPeriodBoundary
             key={i}
             d2={d2}
