@@ -35,26 +35,6 @@ const mapStateToProps = (state, { availableDataElements, programStages }) => {
     }
 };
 
-//Todo fix this
-const withDialogFix = lifecycle({
-    componentDidMount() {
-        console.log("MOUNTED")
-        // Hack to reposition the dialog when the first step is clicked
-        // Material-UI issue: https://github.com/callemall/material-ui/issues/5793
-        setTimeout(() => window.dispatchEvent(new Event('resize')), 500);
-        // Dispatch a resize event immediately to avoid the jerking around with the dialog
-       // requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
-    },
-    componentDidUpdate() {
-        console.log("did update!2")
-        setTimeout(() => window.dispatchEvent(new Event('resize')), 500);
-       // requestAnimationFrame(() => {
-        //    console.log("ANIMATIONFRAME")
-        //    window.dispatchEvent(new Event('resize'))
-      //  } );
-    }
-});
-
 const Stepper = compose(
     withState('activeStep', 'setActiveStep', 0),
     withProps(({ setActiveStep, dataElements }) => ({
@@ -94,9 +74,11 @@ function NotificationDialog({ model, onCancel, onConfirm, dataElements, ...props
             open={!!model}
             onRequestClose={onCancel}
             title={`${t('program_notification')} (${props.program.displayName || ''})`}
-            autoDetectWindowHeight
+            autoDetectWindowHeight={true}
+            repositionOnUpdate={false}
             autoScrollBodyContent
             contentStyle={notificationDialogStyle.content}
+            style={{paddingTop: 0}}
         >
             <Stepper dataElements={dataElements} isTracker={props.isTracker} programStages={props.programStages}/>
         </Dialog>
@@ -120,5 +102,5 @@ const mapDispatchToPropsForDialog = dispatch => bindActionCreators({
 
 export default compose(
     connect(mapStateToProps, mapDispatchToPropsForDialog),
-    branch(({ model }) => !model, renderNothing),
+    branch(({ model }) => !model, renderNothing)
 )(NotificationDialog);
