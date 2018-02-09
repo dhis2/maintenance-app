@@ -2,6 +2,7 @@ import Action from 'd2-ui/lib/action/Action';
 import modelToEditStore from './modelToEditStore';
 import log from 'loglevel';
 import { getInstance } from 'd2/lib/d2';
+import { generateUid } from 'd2/lib/uid';
 import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
 import { Observable } from 'rxjs';
@@ -263,16 +264,23 @@ objectActions.saveObject
         }
 
         const programRuleId = modelToEditStore.getState().id || (await api.get('/system/id')).codes[0];
+
+        const programRulesActionsWithNewUid = modelToEditStore.getState()
+            .programRuleActions
+            .toArray()
+            .map(action => Object.assign(action.clone(), {
+                programRule: { id: programRuleId },
+                id: generateUid()
+            }));
+
         const metadataPayload = {
             programRules: [Object.assign(getOwnedPropertyJSON(modelToEditStore.getState()), {
                 program: { id: modelToEditStore.getState().program.id },
                 id: programRuleId,
+                programRuleActions: programRulesActionsWithNewUid
             })],
-            programRuleActions: modelToEditStore.getState().programRuleActions.toArray()
-                .map(action => Object.assign(action, {
-                    programRule: { id: programRuleId },
-                }))
-                .map(getOwnedPropertyJSON),
+            programRuleActions:
+                programRulesActionsWithNewUid.map(getOwnedPropertyJSON),
         };
 
         try {
