@@ -270,7 +270,8 @@ objectActions.saveObject
             .toArray()
             .map(action => Object.assign(action, {
                 programRule: { id: programRuleId },
-                id: generateUid()
+                id: generateUid(),
+                href: '<strip from clone>'
             }));
 
         const metadataPayload = {
