@@ -268,7 +268,7 @@ objectActions.saveObject
         const programRulesActionsWithNewUid = modelToEditStore.getState()
             .programRuleActions
             .toArray()
-            .map(action => Object.assign(action.clone(), {
+            .map(action => Object.assign(action, {
                 programRule: { id: programRuleId },
                 id: generateUid()
             }));
