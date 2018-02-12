@@ -495,7 +495,7 @@ class List extends Component {
                     // Hack it to fix another hack - sweeet
                     row.noMoreGottaTranslateCauseIsDone = true;
                     if (row[columnName]) {
-                        prow[columnName] = this.getTranslation(getConstantDisplayNameOrOld(this.props.params.modelType, columnName, row[columnName]).toLowerCase());
+                        prow[columnName] = this.getTranslation(getConstantDisplayNameOrOld(row.modelDefinition.name, columnName, row[columnName]).toLowerCase());
                     }
                 }
                 return prow;
