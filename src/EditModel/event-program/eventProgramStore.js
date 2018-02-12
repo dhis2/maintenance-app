@@ -1,5 +1,5 @@
 import Store from 'd2-ui/lib/store/Store';
-import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, findIndex, isObject, values } from 'lodash/fp';
+import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, reduce, findIndex, isObject, values } from 'lodash/fp';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 
 // ___ programSelector :: StoreState -> Model<Program>
@@ -33,8 +33,19 @@ const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelecto
 const hasDirtyProgramStageSections = compose(some(checkIfDirty), programStageSectionsSelector);
 
 // ___ hasDirtyNotificationTemplate :: Object<{programStageNotifications, programStages}> -> Boolean
-const hasDirtyNotificationTemplate = state => some(checkIfDirty, get(getIdForFirstProgramStage(state), programStageNotificationsSelector(state)));
-
+//TODO Implement check for every notitfication, not just first stage
+//const hasDirtyNotificationTemplate = state => some(checkIfDirty, get(getIdForFirstProgramStage(state), programStageNotificationsSelector(state)));
+//const hasDirtyNotificationTemplate = compose(some(checkIfDirty), reduce, concat, map(get(__, programStageNotificationsSelector)), values, programStageNotificationsSelector)
+const hasDirtyNotificationTemplate = state => some(checkIfDirty, Object
+    .keys(programStageNotificationsSelector)
+    .map(get(__, programStageNotificationsSelector))
+    .reduce(concat))
+/*Object
+    .keys(programStageNotifications)
+    .map(get(__, programStageNotifications))
+    .reduce(concat)
+    .filter(checkIfDirty)
+    .map(modelToJson); */
 // ___ hasDirtyDataEntryForms :: Object<StoreState> -> Object<{programStageId: Model.DataEntryForm}> -> Boolean
 const hasDirtyDataEntryForms = compose(some(checkIfDirty), values, dataEntryFormsSelector);
 
@@ -90,7 +101,6 @@ export const getMetaDataToSend = (state) => {
             .map(modelToJson);
     }
 
-    try {
         if (hasDirtyDataEntryForms(state)) {
             const dataEntryForms = dataEntryFormsSelector(state);
 
@@ -100,9 +110,7 @@ export const getMetaDataToSend = (state) => {
                 .filter(checkIfDirty)
                 .map(modelToJson);
         }
-    } catch (e) {
-        console.error(e);
-    }
+
 
     return payload;
 };
@@ -118,6 +126,7 @@ function isValidState(state) {
         'availableDataElements',
         'availableAttributes',
         'dataEntryFormForProgramStage',
+        'programNotifications'
     ];
 
     return Object

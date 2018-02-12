@@ -47,12 +47,17 @@ const NotificationSubjectAndMessageTemplateFields = compose(
             dispatch
         )
     ),
-    withProps(({ dataElements, attributes, isProgram, ...props }) => {
-        const variables = props.isProgram
-            ? attributesToTypeMap(attributes)
-            : dataElementsTypeMap(dataElements);
+    withProps(({ dataElements, attributes, isProgram }) => {
+        let constantVariables = PROGRAM_STAGE_VARIABLES;
+        let variables = dataElementsTypeMap(dataElements);
+
+        if(isProgram) {
+            constantVariables = PROGRAM_VARIABLES;
+            variables = attributesToTypeMap(attributes);
+        }
+
         return {
-            variableTypes: map(toVariableType, PROGRAM_STAGE_VARIABLES).concat(
+            variableTypes: map(toVariableType, constantVariables).concat(
                 variables
             ),
         };

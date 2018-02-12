@@ -1,4 +1,4 @@
-import { NOTIFICATION_STAGE_REMOVE, NOTIFICATION_STAGE_SAVE, NOTIFICATION_SET_ADD_MODEL, removeStateNotificationSuccess, removeStateNotificationError, setEditModel, saveStageNotificationSuccess, saveStageNotificationError } from './actions';
+import { NOTIFICATION_STAGE_REMOVE, NOTIFICATION_STAGE_SAVE, NOTIFICATION_SET_ADD_MODEL, removeStateNotificationSuccess, removeStateNotificationError, setEditModel, saveStageNotificationSuccess, saveStageNotificationError, NOTIFICATION_PROGRAM_SAVE } from './actions';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import { getInstance } from 'd2/lib/d2';
@@ -76,19 +76,50 @@ const setProgramStageNotificationAddModel = (action$, store) => action$
         const model = d2.models.programNotificationTemplate.create();
         const psStore = eventProgramStore.getState();
 
-        if(notificationType == 'PROGRAM_NOTIFICATION') {
-            return setEditModel(model, 'PROGRAM_NOTIFICATION');
-        }
+
         // Set default values
         model.id = generateUid();
         model.lastUpdated = new Date().toISOString();
+        if(notificationType == 'PROGRAM_NOTIFICATION') {
+            return setEditModel(model, 'PROGRAM_NOTIFICATION');
+        }
+
         //set default to first programStage
         model.programStage = pick('id', first(psStore.programStages))
 
         return setEditModel(model);
     });
 
+const saveProgramNotification = (action$, store) => action$
+    .ofType(NOTIFICATION_PROGRAM_SAVE)
+    // FIXME: Remove href hack when d2 is fixed
+    .do(({ payload: {model} }) => {
+        model.dataValues.href = `${model.modelDefinition.apiEndpoint}/${model.id}`;
+    })
+    .mergeMap(({ payload: {model} }) => (
+        eventProgramStore
+            .take(1)
+            .flatMap((eventProgramState) => {
+                const { program, programStageNotifications } = eventProgramState;
+                const programNotifications = program.notificationTemplates;
+
+                // If we're dealing with a new model we have to add it to the notification lists
+                // Both on the notification list on the programStage and on the eventStore
+                if (negate(find(equals(model)))(program)) {
+                    programStageNotifications['program'] = [];
+                    programNotifications.add(model);
+                    programStageNotifications['program'].push(model);
+
+                }
+
+                return Observable.of(eventProgramState);
+            })
+            .map(eventProgramState => eventProgramStore.setState(eventProgramState))
+            .mapTo(Observable.of(saveStageNotificationSuccess(), setEditModel(null)))
+            .mergeAll()
+            .catch(error => Observable.of(saveStageNotificationError(error)))
+    ));
 
 
 
-export default combineEpics(removeProgramStageNotification, setProgramStageNotificationAddModel, saveProgramStageNotification);
+export default combineEpics(removeProgramStageNotification, setProgramStageNotificationAddModel, saveProgramStageNotification, saveProgramNotification);

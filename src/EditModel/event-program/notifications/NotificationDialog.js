@@ -23,7 +23,7 @@ import {
     saveProgramNotification,
 } from './actions';
 import { createFieldConfigsFor } from '../../formHelpers';
-import programStageSteps from './ProgramStageNotificationSteps';
+import programSteps from './ProgramNotificationSteps';
 import {
     getProgramStageDataElementsByStageId,
     getSelectedProgramStageId,
@@ -59,12 +59,12 @@ const Stepper = compose(
     withProps(({ setActiveStep, dataElements, isTracker }) => ({
         stepperClicked(stepKey) {
             setActiveStep(
-                programStageSteps.findIndex(step => step.key === stepKey)
+                programSteps.findIndex(step => step.key === stepKey)
             );
         },
         dataElements
     }))
-)(createStepperFromConfig(programStageSteps, 'vertical'));
+)(createStepperFromConfig(programSteps, 'vertical'));
 
 function ProgramNotificationDialog(
     { model, onCancel, onConfirm, dataElements, ...props },
