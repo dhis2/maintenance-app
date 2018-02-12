@@ -112,7 +112,6 @@ class WhatToSendStep extends Component {
             ...this.state,
             programStageId: sId
         });
-       // this.props.handleProgramStageSelect(sId);
         this.props.handleProgramStageSelect(sId);
     }
 
@@ -131,20 +130,20 @@ class WhatToSendStep extends Component {
     }
 
     render() {
-        const { fieldConfigs, onUpdateField, isTracker, dataElements } = this.props;
-        let fieldsToUse = isTracker
+        const { fieldConfigs, onUpdateField, isTracker, isProgram, dataElements, attributes } = this.props;
+        let fieldsToUse = isTracker && !isProgram
             ? [this.createProgramStageDropdown(), ...fieldConfigs]
             : fieldConfigs;
-        const addDataElementsToMessageTemplateField = fieldConfig => (
+        const addPropsToTemplateField = fieldConfig => (
             fieldConfig.name === 'messageTemplate'
                 ? Object.assign({}, fieldConfig, {
-                    props: Object.assign({}, fieldConfig.props, { dataElements }),
+                    props: Object.assign({}, fieldConfig.props, { dataElements, attributes, isProgram }),
                 })
                 : fieldConfig
         );
 
         return (
-            <FormBuilder fields={fieldsToUse.map(addDataElementsToMessageTemplateField)} onUpdateField={onUpdateField} />
+            <FormBuilder fields={fieldsToUse.map(addPropsToTemplateField)} onUpdateField={onUpdateField} />
         );
     }
 }

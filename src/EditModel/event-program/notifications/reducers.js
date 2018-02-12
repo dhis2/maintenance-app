@@ -1,16 +1,23 @@
 import {
-    NOTIFICATION_STATE_SET_EDIT_MODEL,
-    NOTIFICATION_STAGE_SET_VALUE,
+    NOTIFICATION_SET_EDIT_MODEL,
+    NOTIFICATION_SET_VALUE,
     NOTIFICATION_STAGE_SAVE_ERROR,
     NOTIFICATION_STAGE_SET_PROGRAM_STAGE,
 } from './actions';
 
+export const initialState = {
+    isDeleting: false,
+    selectedProgramStage: null,
+    modelToEdit: null,
+    notificationType: null
+}
+
 export function stageNotificationsReducer(
-    state = { isDeleting: false, selectedProgramStage: null },
+    state = initialState,
     action
 ) {
     switch (action.type) {
-        case NOTIFICATION_STAGE_SET_VALUE: {
+        case NOTIFICATION_SET_VALUE: {
             const model = state.modelToEdit;
             model[action.payload.property] = action.payload.value;
 
@@ -19,15 +26,11 @@ export function stageNotificationsReducer(
                 modelToEdit: model,
             };
         }
-        case NOTIFICATION_STATE_SET_EDIT_MODEL: {
+        case NOTIFICATION_SET_EDIT_MODEL: {
 
-            const selectedProgramStage = action.payload && action.payload.programStage && action.payload.programStage.id;
             return {
-                ...state,
-                ...(action.payload &&
-                    action.payload.id && {type: action.payload.id}),
-                modelToEdit: action.payload,
-                selectedProgramStage: selectedProgramStage || null,
+                notificationType: action.payload.notificationType,
+                modelToEdit: action.payload.model,
             };
         }
         case NOTIFICATION_STAGE_SAVE_ERROR:

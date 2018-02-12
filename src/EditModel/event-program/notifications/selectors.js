@@ -66,3 +66,11 @@ export const modelToEditSelector = get(
 export const getSelectedProgramStageId = get(
     'eventProgram.stageNotifications.selectedProgramStage'
 );
+
+export const getNotificationType = get(
+    'eventProgram.stageNotifications.notificationType'
+);
+
+export const isProgramNotification = state => 'PROGRAM_NOTIFICATION' == get(
+    'eventProgram.stageNotifications.notificationType'
+)(state);

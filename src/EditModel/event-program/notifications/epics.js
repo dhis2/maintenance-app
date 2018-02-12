@@ -1,4 +1,4 @@
-import { NOTIFICATION_STAGE_REMOVE, NOTIFICATION_STAGE_SAVE, NOTIFICATION_STAGE_SET_ADD_MODEL, removeStateNotificationSuccess, removeStateNotificationError, setEditModel, saveStageNotificationSuccess, saveStageNotificationError } from './actions';
+import { NOTIFICATION_STAGE_REMOVE, NOTIFICATION_STAGE_SAVE, NOTIFICATION_SET_ADD_MODEL, removeStateNotificationSuccess, removeStateNotificationError, setEditModel, saveStageNotificationSuccess, saveStageNotificationError } from './actions';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import { getInstance } from 'd2/lib/d2';
@@ -11,6 +11,12 @@ import { generateUid } from 'd2/lib/uid';
 // notEqualTo :: any -> any -> Boolean
 const notEqualTo = left => right => left !== right;
 
+/** Selector to get the programStage-id from the model.
+ * @param state the programState.
+ * @param model programNotification model with programStage property.
+ * @returns {*} The programStage model that the notification is part of, or the first programStage if
+ * programStage is not defined on the notification.
+ */
 const getProgramStageFromModel = (state, model) => model.programStage && model.programStage.id ? getProgramStageById(model.programStage.id, state) :
     first(programStages);
 
@@ -64,18 +70,25 @@ const saveProgramStageNotification = (action$, store) => action$
     ));
 
 const setProgramStageNotificationAddModel = (action$, store) => action$
-    .ofType(NOTIFICATION_STAGE_SET_ADD_MODEL)
-    .combineLatest(Observable.fromPromise(getInstance()), ({ payload }, d2) => ({ model: payload, d2 }))
-    .map(({ d2 }) => {
+    .ofType(NOTIFICATION_SET_ADD_MODEL)
+    .combineLatest(Observable.fromPromise(getInstance()), ({ payload }, d2) => ({ model: payload.model, notificationType: payload.notificationType, d2 }))
+    .map(({ d2, notificationType }) => {
         const model = d2.models.programNotificationTemplate.create();
         const psStore = eventProgramStore.getState();
+
+        if(notificationType == 'PROGRAM_NOTIFICATION') {
+            return setEditModel(model, 'PROGRAM_NOTIFICATION');
+        }
         // Set default values
         model.id = generateUid();
         model.lastUpdated = new Date().toISOString();
-        //set default to this
+        //set default to first programStage
         model.programStage = pick('id', first(psStore.programStages))
 
         return setEditModel(model);
     });
+
+
+
 
 export default combineEpics(removeProgramStageNotification, setProgramStageNotificationAddModel, saveProgramStageNotification);

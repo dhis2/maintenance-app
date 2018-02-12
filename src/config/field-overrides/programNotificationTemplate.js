@@ -20,50 +20,93 @@ const PROGRAM_STAGE_VARIABLES = [
     'current_date',
 ];
 
+const PROGRAM_VARIABLES = [
+    'program_name',
+    'org_unit_name',
+    'due_date',
+    'days_since_due_date',
+    'days_until_due_date',
+    'current_date',
+];
+
 const toVariableType = name => ['V', name];
 const toAttributeType = name => ['A', name]; // Used for program attributes
 const toDataElementType = name => ['#', name];
 
-const ProgramStageNotificationSubjectAndMessageTemplateFields = compose(
-    connect(undefined, dispatch => bindActionCreators({
-        onUpdate: ({ fieldName, value }) => setStageNotificationValue(fieldName, value),
-    },
-    dispatch,
-    )),
-    withProps(({ dataElements }) => {
-        console.log(dataElements)
+const dataElementsTypeMap = dataElements =>
+    map(toDataElementType, dataElements);
+const attributesToTypeMap = attributes => map(toAttributeType, attributes);
+
+const NotificationSubjectAndMessageTemplateFields = compose(
+    connect(undefined, dispatch =>
+        bindActionCreators(
+            {
+                onUpdate: ({ fieldName, value }) =>
+                    setStageNotificationValue(fieldName, value),
+            },
+            dispatch
+        )
+    ),
+    withProps(({ dataElements, attributes, isProgram, ...props }) => {
+        const variables = props.isProgram
+            ? attributesToTypeMap(attributes)
+            : dataElementsTypeMap(dataElements);
         return {
-            variableTypes: map(toVariableType, PROGRAM_STAGE_VARIABLES).concat(map(toDataElementType, dataElements)),
-        }
-    }))(SubjectAndMessageTemplateFields);
+            variableTypes: map(toVariableType, PROGRAM_STAGE_VARIABLES).concat(
+                variables
+            ),
+        };
+    })
+)(SubjectAndMessageTemplateFields);
 
 export default new Map([
-    ['deliveryChannels', {
-        component: DeliveryChannels,
-    }],
-    ['relativeScheduledDays', {
-        component: RelativeScheduledDays,
-    }],
-    ['notificationTrigger', {
-        required: true,
-        fieldOptions: {
-            // For program stages only the following values are allowed
-
+    [
+        'deliveryChannels',
+        {
+            component: DeliveryChannels,
         },
-    }],
-    ['notificationRecipient', {
-        required: 'true',
-    }],
-    ['recipientUserGroup', {
-        component: (props) => {
-            if (!props.model || props.model.notificationRecipient !== 'USER_GROUP') {
-                return null;
-            }
-
-            return <DropDownAsync {...props} />;
+    ],
+    [
+        'relativeScheduledDays',
+        {
+            component: RelativeScheduledDays,
         },
-    }],
-    ['messageTemplate', {
-        component: (props) => <ProgramStageNotificationSubjectAndMessageTemplateFields {...props}/>
-    }],
+    ],
+    [
+        'notificationTrigger',
+        {
+            required: true,
+            fieldOptions: {
+                // For program stages only the following values are allowed
+            },
+        },
+    ],
+    [
+        'notificationRecipient',
+        {
+            required: 'true',
+        },
+    ],
+    [
+        'recipientUserGroup',
+        {
+            component: props => {
+                if (
+                    !props.model ||
+                    props.model.notificationRecipient !== 'USER_GROUP'
+                ) {
+                    return null;
+                }
+
+                return <DropDownAsync {...props} />;
+            },
+        },
+    ],
+    [
+        'messageTemplate',
+        {
+            component: props =>
+                <NotificationSubjectAndMessageTemplateFields {...props} />,
+        },
+    ],
 ]);
