@@ -24,17 +24,14 @@ const enhance = compose(
             eventProgramStore$,
             (props, eventProgramState) => ({
                 ...props,
-                model: eventProgramState.program
-            })
-        )
+                model: eventProgramState.program,
+            }),
+        ),
     ),
-    spinnerWhileLoading(props => props.isLoading)
+    spinnerWhileLoading(props => props.isLoading),
 );
 
 function EditProgram(props) {
-    const schema = props.params.modelType || 'program';
-    const { groupName } = props.params;
-
     return props.model.programType === 'WITH_REGISTRATION'
         ? <EditTrackerProgram {...props} />
         : <EditEventProgram {...props} />;

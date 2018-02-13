@@ -9,6 +9,7 @@ import categoryCombo from './categoryCombo';
 import categoryOption from './categoryOption';
 import legendSet from './legendSet';
 import trackedEntityAttribute from './trackedEntityAttribute';
+import trackedEntityType from './trackedEntityType';
 import predictor from './predictor';
 import pushAnalysis from './pushAnalysis';
 import externalMapLayer from './externalMapLayer';
@@ -25,29 +26,30 @@ import programStage from './programStage';
 
 const overridesByType = {
     attribute,
-    dataElement,
-    indicator,
-    dataSet,
-    dataSetNotificationTemplate,
-    organisationUnit,
-    organisationUnitGroup,
     categoryCombo,
     categoryOption,
-    legendSet,
-    trackedEntityAttribute,
-    predictor,
-    pushAnalysis,
+    dataElement,
+    dataSet,
+    dataApprovalLevel,
+    dataApprovalWorkflow,
+    dataSetNotificationTemplate,
     externalMapLayer,
-    validationNotificationTemplate,
+    indicator,
+    legendSet,
+    organisationUnit,
+    organisationUnitGroup,
+    pushAnalysis,
     program,
+    programStage,
     programIndicator,
     programNotificationTemplate,
     programRule,
     programRuleVariable,
+    predictor,
     validationRule,
-    dataApprovalLevel,
-    dataApprovalWorkflow,
-    programStage,
+    validationNotificationTemplate,
+    trackedEntityAttribute,
+    trackedEntityType,
 };
 
 export default {
