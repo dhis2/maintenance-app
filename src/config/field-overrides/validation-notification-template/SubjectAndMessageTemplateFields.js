@@ -96,10 +96,13 @@ export default class SubjectAndMessageTemplateFields extends Component {
             subject: {
                 flex: '0 0 72px',
             },
+            fieldWrap: {
+                position: 'relative',
+            },
         };
 
         return (
-            <div>
+            <div style={{ ...styles.fieldWrap, ...this.props.style }}>
                 <Divider style={styles.divider} />
                 <Heading level={3} style={styles.heading}>Message template</Heading>
                 <Row>

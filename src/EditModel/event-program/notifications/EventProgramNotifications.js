@@ -71,8 +71,8 @@ const enhance = compose(
     }),
     mapPropsStream(props$ => props$
         .combineLatest(notifications$, programStageDataElements$, (props, notifications, dataElements) =>
-            ({ ...props, notifications, dataElements })
-        )
+            ({ ...props, notifications, dataElements }),
+        ),
     ),
 );
 

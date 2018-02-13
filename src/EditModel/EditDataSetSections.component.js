@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import log from 'loglevel';
 
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
@@ -13,7 +14,8 @@ import GreyFieldDialog from './GreyFieldDialog.component';
 
 import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';
-
+import FormHeading from './FormHeading';
+import FormSubHeading from './FormSubHeading';
 
 const styles = {
     heading: {
@@ -29,7 +31,7 @@ const styles = {
     },
 };
 
-class EditDataSetSections extends React.Component {
+class EditDataSetSections extends Component {
     constructor(props, context) {
         super(props, context);
 
@@ -42,7 +44,7 @@ class EditDataSetSections extends React.Component {
         Promise.all([
             context.d2.Api.getApi().get(
                 ['dataSets', props.params.modelId, 'categoryCombos'].join('/'),
-                { fields: 'id,displayName', paging: false }
+                { fields: 'id,displayName', paging: false },
             ),
         ]).then(([catComboList]) => {
             this.setState({
@@ -122,7 +124,9 @@ class EditDataSetSections extends React.Component {
                     .then(() => {
                         const newSections = modelToEditStore.state.sections;
                         modelToEditStore.setState(Object.assign(modelToEditStore.state, {
-                            sections: (Array.isArray(newSections) ? newSections : newSections.toArray()).filter(s => s.id !== section.id),
+                            sections: (Array.isArray(newSections)
+                                ? newSections
+                                : newSections.toArray()).filter(s => s.id !== section.id),
                         }));
 
                         snackActions.show({ message: this.getTranslation('section_deleted') });
@@ -144,11 +148,11 @@ class EditDataSetSections extends React.Component {
         });
     }
 
-    handleTranslationSaved() {
+    handleTranslationSaved = () => {
         snackActions.show({ message: 'translation_saved', translate: true });
     }
 
-    handleTranslationErrored(errorMessage) {
+    handleTranslationErrored = (errorMessage) => {
         log.error(errorMessage);
         snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
     }
@@ -226,9 +230,12 @@ class EditDataSetSections extends React.Component {
 
         return this.state.sections === undefined ? <LoadingMask /> : (
             <div>
-                <Heading style={styles.heading}>
-                    {modelToEditStore.state.displayName} {this.getTranslation('section_management')}
-                </Heading>
+                <FormHeading schema="dataSet" groupName="dataSetSection">
+                    {'section_management'}
+                </FormHeading>
+                <FormSubHeading>
+                    {modelToEditStore.state.displayName}
+                </FormSubHeading>
                 <DataTable
                     columns={['name']}
                     rows={this.state.sections}
@@ -270,10 +277,10 @@ class EditDataSetSections extends React.Component {
 }
 
 EditDataSetSections.propTypes = {
-    params: React.PropTypes.any.isRequired,
+    params: PropTypes.any.isRequired,
 };
 EditDataSetSections.contextTypes = {
-    d2: React.PropTypes.any.isRequired,
+    d2: PropTypes.any.isRequired,
 };
 
 export default EditDataSetSections;

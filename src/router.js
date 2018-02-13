@@ -1,20 +1,21 @@
 import React from 'react';
 import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-router';
-import log from 'loglevel';
-import modelToEditStore from './EditModel/modelToEditStore';
+
 import { getInstance } from 'd2/lib/d2';
+import log from 'loglevel';
+import LinearProgress from 'material-ui/LinearProgress';
+
+import modelToEditStore from './EditModel/modelToEditStore';
 import objectActions from './EditModel/objectActions';
 import listActions from './List/list.actions';
 import snackActions from './Snackbar/snack.actions';
 import { initAppState, default as appState } from './App/appStateStore';
-import LinearProgress from 'material-ui/LinearProgress';
 import App from './App/App.component';
 import listStore from './List/list.store';
 import store from './store';
 import { resetActiveStep } from './EditModel/actions';
 import { loadEventProgram } from './EditModel/event-program/actions';
 import { loadProgramIndicator } from './EditModel/program-indicator/actions';
-import { noop } from 'lodash/fp';
 
 import onDemand from './on-demand';
 
@@ -54,10 +55,8 @@ function initStateOuHierarchy() {
     });
 }
 
-// TODO: We could use an Observable that manages the current modelType
-// to load the correct d2.Model. This would clean up the load function
-// below.
-function loadObject({ params }, replace) {
+// TODO: We could use an Observable that manages the current modelType to load the correct d2.Model. This would clean up the load function below.
+function loadObject({ params }, replace, callback) {
     initState({ params });
 
     if (params.modelId === 'add') {
@@ -65,12 +64,10 @@ function loadObject({ params }, replace) {
             const modelToEdit = d2.models[params.modelType].create();
 
             // Set the parent for the new organisationUnit to the selected OU
-            // TODO: Should probably be able to do this in a different
-            // way when this becomes needed for multiple object types
+            // TODO: Should probably be able to do this in a different way when this becomes needed for multiple object types
             if (params.modelType === 'organisationUnit') {
                 return appState
-                    // Just take the first value as we don't want this
-                    // observer to keep updating the state
+                // Just take the first value as we don't want this observer to keep updating the state
                     .take(1)
                     .subscribe((state) => {
                         if (state.selectedOrganisationUnit && state.selectedOrganisationUnit.id) {
@@ -80,55 +77,58 @@ function loadObject({ params }, replace) {
                         }
 
                         modelToEditStore.setState(modelToEdit);
+                        callback();
                     });
             }
 
             // Use current list filters as default values for relevant fields
             const listFilters = listStore.getState() && Object.keys(listStore.getState().filters)
-                    .filter(fieldName => modelToEdit.hasOwnProperty(fieldName))
-                    .filter(fieldName => listStore.getState().filters[fieldName] !== null)
-                    .filter(fieldName => modelToEdit.modelDefinition.modelValidations[fieldName].writable)
-                    .reduce((out, modelType) => {
-                        out[modelType] = listStore.getState().filters[modelType];
-                        return out;
-                    }, {});
+                .filter(fieldName => modelToEdit.hasOwnProperty(fieldName))
+                .filter(fieldName => listStore.getState().filters[fieldName] !== null)
+                .filter(fieldName => modelToEdit.modelDefinition.modelValidations[fieldName].writable)
+                .reduce((out, modelType) => {
+                    out[modelType] = listStore.getState().filters[modelType];
+                    return out;
+                }, {});
 
             modelToEditStore.setState(Object.assign(modelToEdit, listFilters));
+            return callback();
         });
     } else {
         objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
             .subscribe(
-                noop,
+                () => callback(),
                 (errorMessage) => {
                     replace(`/list/${params.modelType}`);
                     snackActions.show({ message: errorMessage, action: 'ok' });
+                    callback();
                 }
             );
     }
 }
 
-function loadOrgUnitObject({ params }, replace) {
+function loadOrgUnitObject({ params }, replace, callback) {
     loadObject({
         params: {
             modelType: 'organisationUnit',
             groupName: params.groupName,
             modelId: params.modelId,
         },
-    }, replace);
+    }, replace, callback);
 }
 
-function loadOptionSetObject({ params }, replace) {
+function loadOptionSetObject({ params }, replace, callback) {
     loadObject({
         params: {
             modelType: 'optionSet',
             groupName: params.groupName,
             modelId: params.modelId,
         },
-    }, replace);
+    }, replace, callback);
 }
 
 function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiveStep) {
-    return ({ params }, replace) => {
+    return ({ location: { query }, params }, replace, callback) => {
         initState({
             params: {
                 modelType: schema,
@@ -136,52 +136,59 @@ function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiv
                 modelId: params.modelId,
             },
         });
-
         // Fire load action for the event program program to be edited
-        store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId }));
+        store.dispatch(actionCreatorForLoadingObject({ schema, id: params.modelId, query }));
         store.dispatch(resetActiveStep());
+
+        callback();
     };
 }
 
-function loadList({ params }, replace) {
+function loadList({ params }, replace, callback) {
     if (params.modelType === 'organisationUnit') {
-        // Don't load organisation units as they get loaded through the
-        // appState Also load the initialState without cache so we
-        // refresh the assigned organisation units These could have
-        // changed by adding an organisation unit which would need to be
-        // reflected in the organisation unit tree
+        // Don't load organisation units as they get loaded through the appState
+        // Also load the initialState without cache so we refresh the assigned organisation units
+        // These could have changed by adding an organisation unit which would need to be reflected in the
+        // organisation unit tree
         initState({ params });
+        return callback();
     }
 
     initState({ params });
     return listActions.loadList(params.modelType)
         .take(1)
         .subscribe(
-            noop,
+            (message) => {
+                log.debug(message);
+                callback();
+            },
             (message) => {
                 if (/^.+s$/.test(params.modelType)) {
                     const nonPluralAttempt = params.modelType.substring(0, params.modelType.length - 1);
                     log.warn(`Could not find requested model type '${params.modelType}' attempting to redirect to '${nonPluralAttempt}'`);
                     replace(`list/${nonPluralAttempt}`);
+                    callback();
                 } else {
                     log.error('No clue where', params.modelType, 'comes from... Redirecting to app root');
                     log.error(message);
 
                     replace('/');
+                    callback();
                 }
-            }
+            },
         );
 }
 
-function cloneObject({ params }, replace) {
+function cloneObject({ params }, replace, callback) {
     initState({ params });
 
     objectActions.getObjectOfTypeByIdAndClone({ objectType: params.modelType, objectId: params.modelId })
         .subscribe(
-            noop,
+            () => callback(),
             (errorMessage) => {
                 replace(`/list/${params.modelType}`);
                 snackActions.show({ message: errorMessage, action: 'ok' });
+                callback();
             }
         );
 }
@@ -247,7 +254,7 @@ const routes = (
                 </Route>
                 <Route
                     path="program/:modelId"
-                    component={delayRender(() => System.import('./EditModel/event-program/EditEventProgram.component'))}
+                    component={delayRender(() => System.import('./EditModel/event-program/EditProgram.component'))}
                     onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
                     hideSidebar
                     disableTabs

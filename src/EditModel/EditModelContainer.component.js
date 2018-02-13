@@ -1,6 +1,9 @@
 import React from 'react';
-import EditModel from './EditModel.component';
+import PropTypes from 'prop-types';
+
 import { camelCaseToUnderscores } from 'd2-utilizr';
+
+import EditModel from './EditModel.component';
 import FormHeading from './FormHeading';
 
 function EditModelContainer(props) {
@@ -21,5 +24,9 @@ function EditModelContainer(props) {
         </div>
     );
 }
+
+EditModelContainer.propTypes = {
+    params: PropTypes.any.isRequired,
+};
 
 export default EditModelContainer;

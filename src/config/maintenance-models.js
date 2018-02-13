@@ -26,6 +26,7 @@ export function getSideBarConfig() {
         dataSetSection: {
             items: [
                 'dataSet',
+                'dataSetNotificationTemplate',
             ],
         },
 
@@ -150,10 +151,8 @@ const typeDetails = {
         columns: ['displayName', 'valueType', 'aggregationType', 'unique', 'confidential', 'lastUpdated'],
     },
     program: {
-        columns: ['displayName', 'publicAccess', 'lastUpdated'],
-        defaultFilters: [
-            ['programType', 'WITHOUT_REGISTRATION'],
-        ],
+        columns: ['displayName', 'programType', 'publicAccess', 'lastUpdated'],
+        filters: ['programType'],
     },
     programIndicator: {
         filters: ['program'],
@@ -166,6 +165,9 @@ const typeDetails = {
     programRuleVariable: {
         filters: ['program', 'programRuleVariableSourceType'],
         columns: ['displayName', 'program[displayName]', 'programRuleVariableSourceType', 'lastUpdated'],
+    },
+    programStage: {
+        columns: ['displayName', 'lastUpdated'],
     },
     validationRule: {
         columns: ['displayName', 'importance', 'periodType', 'publicAccess', 'lastUpdated'],

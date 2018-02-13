@@ -1,3 +1,5 @@
+import { defaultAnalyticsPeriodBoundaries } from './field-config/field-defaults';
+
 /**
  * Rules for the form fields.
  * If multiple `when` objects are specified these are evaluated as an OR.
@@ -103,6 +105,25 @@ export default new Map([
                     fieldConfig.value = model[fieldConfig.name] = 'NONE';
                 },
             }],
+        },
+    ]],
+    ['dataSetNotificationTemplate', [
+        {
+            when: [{
+                field: 'dataSetNotificationTrigger',
+                operator: 'NOT_EQUALS',
+                value: 'SCHEDULED_DAYS',
+            }],
+            operations: [
+                {
+                    field: 'relativeScheduledDays',
+                    type: 'HIDE_FIELD',
+                },
+                {
+                    field: 'sendStrategy',
+                    type: 'HIDE_FIELD',
+                },
+            ],
         },
     ]],
     ['attribute', [
@@ -391,4 +412,84 @@ export default new Map([
             }],
         },
     ]],
+    ['programStage', [
+        {
+            field: 'autoGenerateEvent',
+            when: [{
+                field: 'autoGenerateEvent',
+                operator: 'NOT_EQUALS',
+                value: true
+            }],
+            operations: [{
+                field: 'openAfterEnrollment',
+                type: 'HIDE_FIELD'
+            }, {
+                field: 'reportDateToUse',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'reportDateToUse',
+            when: [{
+                field: 'openAfterEnrollment',
+                operator: 'NOT_EQUALS',
+                value: true
+            }],
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false
+            }]
+        }
+    ]],
+    ['enrollment', [
+        {
+            field: 'relationshipType',
+            when: [{
+                field: 'relationshipType',
+                operator: 'HAS_NO_VALUE',
+            }],
+            operations: [{
+                field: 'relationshipFromA',
+                type: 'HIDE_FIELD'
+            }, {
+                field: 'relationshipText',
+                type: 'HIDE_FIELD'
+            }, {
+                field: 'relatedProgram',
+                type: 'HIDE_FIELD'
+            }]
+        }
+    ]],
+    ['programIndicator', [{
+        field: 'analyticsPeriodBoundaries',
+        when: [{
+            field: 'analyticsType',
+            operator: 'EQUALS',
+            value: 'EVENT'
+        }],
+        operations: [{
+            type: 'CHANGE_VALUE',
+            setValue: (model, fieldConfig) => {
+                fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
+                    'event', fieldConfig.value);
+            },
+        }]
+    },{
+        field: 'analyticsPeriodBoundaries',
+        when: [{
+            field: 'analyticsType',
+            operator: 'EQUALS',
+            value: 'ENROLLMENT'
+        }],
+        operations: [{
+            type: 'CHANGE_VALUE',
+            setValue: (model, fieldConfig) => {
+                fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
+                    'enrollment', fieldConfig.value);
+            },
+        }]
+    }]]
 ]);
+

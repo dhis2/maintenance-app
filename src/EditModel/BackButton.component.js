@@ -5,9 +5,9 @@ import { config } from 'd2/lib/d2';
 import modelToEditStore from '../EditModel/modelToEditStore';
 
 function BackButton(props, context) {
-    const { tooltip, onClick, ...otherProps } = props;
+    const { tooltip, onClick, isDirtyHandler = modelToEditStore.getState.bind(modelToEditStore), ...otherProps } = props;
     const onClickWithConfirm = (...params) => {
-        const isDirty = modelToEditStore.getState() && modelToEditStore.getState().dirty;
+        const isDirty = isDirtyHandler && isDirtyHandler() && isDirtyHandler().dirty;
 
         if (!isDirty) {
             onClick(...params);

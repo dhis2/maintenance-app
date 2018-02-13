@@ -148,12 +148,12 @@ contextActions.compulsoryDataElements
         const getDataElementOperands = () => api
             .get(
                 'dataElementOperands',
-            {
-                fields: 'dataElement[id],categoryOptionCombo[id],displayName',
-                totals: false,
-                paging: false,
-                dataSet: model.id,
-            }
+                {
+                    fields: 'dataElement[id],categoryOptionCombo[id],displayName',
+                    totals: false,
+                    paging: false,
+                    dataSet: model.id,
+                },
             )
             .then(responseData => responseData.dataElementOperands);
 
@@ -170,7 +170,13 @@ contextActions.compulsoryDataElements
             .map(dataSetElement => dataSetElement.dataElement.id);
 
         const dataElementOperandsForDataSet = dataElementOperands
-            .map(dataElementOperand => Object.assign(dataElementOperand, { dataElementId: dataElementOperand.dataElement.id, optionComboId: dataElementOperand.categoryOptionCombo.id }))
+            .map(dataElementOperand => Object.assign(
+                dataElementOperand,
+                {
+                    dataElementId: dataElementOperand.dataElement.id,
+                    optionComboId: dataElementOperand.categoryOptionCombo && dataElementOperand.categoryOptionCombo.id,
+                },
+            ))
             .filter(dataElementOperand => dataSetDataElementIds.indexOf(dataElementOperand.dataElementId) >= 0);
 
         compulsoryDataElementStore.setState({

@@ -400,7 +400,7 @@ class EditDataEntryForm extends React.Component {
 }
 
 EditDataEntryForm.propTypes = {
-    params: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object,
     onFormChange: React.PropTypes.func,
     onStyleChange: React.PropTypes.func,
     onFormDelete: React.PropTypes.func,
