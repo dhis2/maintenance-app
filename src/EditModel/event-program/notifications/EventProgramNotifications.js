@@ -8,17 +8,32 @@ import withHandlers from 'recompose/withHandlers';
 import mapPropsStream from 'recompose/mapPropsStream';
 
 import NotificationList from './NotificationList';
-import { getStageNotifications, getProgramStageDataElements } from './selectors';
+import {
+    getStageNotifications,
+    getProgramStageDataElements,
+} from './selectors';
 import NotificationDeleteDialog from './NotificationDeleteDialog';
 import { removeStageNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
 import eventProgramStore from '../eventProgramStore';
 
 const notifications$ = eventProgramStore.map(getStageNotifications);
-const programStageDataElements$ = eventProgramStore.map(getProgramStageDataElements);
+const programStageDataElements$ = eventProgramStore.map(
+    getProgramStageDataElements
+);
 
-function EventProgramNotifications({ notifications, askForConfirmation, onCancel, onDelete, open, setOpen,
-                                     modelToDelete, setEditModel, setAddModel, dataElements }) {
+function EventProgramNotifications({
+    notifications,
+    askForConfirmation,
+    onCancel,
+    onDelete,
+    open,
+    setOpen,
+    modelToDelete,
+    setEditModel,
+    setAddModel,
+    dataElements,
+}) {
     return (
         <div>
             <NotificationList
@@ -51,7 +66,16 @@ EventProgramNotifications.propTypes = {
     dataElements: PropTypes.any.isRequired,
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({ removeStageNotification, setEditModel, setAddModel }, dispatch);
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(
+        {
+            removeStageNotification,
+            setEditModel: model =>
+                setEditModel(model, 'PROGRAM_STAGE_NOTIFICATION'),
+            setAddModel,
+        },
+        dispatch
+    );
 
 const enhance = compose(
     // TODO: Impure connect when the reducer is fixed to emit a pure model this can be a pure action
@@ -60,20 +84,30 @@ const enhance = compose(
     withState('modelToDelete', 'setModelToDelete', null),
     withHandlers({
         onCancel: ({ setOpen }) => () => setOpen(false),
-        onDelete: ({ setOpen, removeStageNotification, modelToDelete }) => () => {
+        onDelete: ({
+            setOpen,
+            removeStageNotification,
+            modelToDelete,
+        }) => () => {
             setOpen(false);
             removeStageNotification(modelToDelete);
         },
-        askForConfirmation: ({ setOpen, setModelToDelete }) => (model) => {
+        askForConfirmation: ({ setOpen, setModelToDelete }) => model => {
             setModelToDelete(model);
             setOpen(true);
         },
     }),
-    mapPropsStream(props$ => props$
-        .combineLatest(notifications$, programStageDataElements$, (props, notifications, dataElements) =>
-            ({ ...props, notifications, dataElements }),
-        ),
-    ),
+    mapPropsStream(props$ =>
+        props$.combineLatest(
+            notifications$,
+            programStageDataElements$,
+            (props, notifications, dataElements) => ({
+                ...props,
+                notifications,
+                dataElements,
+            })
+        )
+    )
 );
 
 export default enhance(EventProgramNotifications);

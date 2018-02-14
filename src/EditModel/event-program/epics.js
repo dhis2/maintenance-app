@@ -254,7 +254,6 @@ function createEventProgramStoreStateFromMetadataResponse(
             programStageNotifications: extractProgramNotifications(
                 programStages
             ),
-            programNotifications: createNotificationTemplateModels(getOr([], 'notificationTemplates', first(programs))),
             availableDataElements: dataElements,
             availableAttributes: trackedEntityAttributes,
             dataEntryFormForProgramStage: extractDataEntryForms(programStages),

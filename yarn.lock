@@ -1931,9 +1931,9 @@ d2-utilizr@^0.2.9:
     lodash.isset "^4.3.0"
     lodash.isstring "^4.0.1"
 
-d2@^28.3.0:
-  version "28.3.0"
-  resolved "https://registry.yarnpkg.com/d2/-/d2-28.3.0.tgz#7ca7e5369849aa5d8e8e3659c3b46999541508ff"
+d2@^29.0.1:
+  version "29.0.1"
+  resolved "https://registry.yarnpkg.com/d2/-/d2-29.0.1.tgz#3cbd44d4e703b429b226bdf61730a915c1a09d1d"
   dependencies:
     docdash "^0.4.0"
     jsdoc "^3.5.5"
@@ -4469,8 +4469,8 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
 
 marked@~0.3.6:
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.9.tgz#54ce6a57e720c3ac6098374ec625fcbcc97ff290"
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.12.tgz#7cf25ff2252632f3fe2406bde258e94eee927519"
 
 material-colors@^1.2.1:
   version "1.2.5"

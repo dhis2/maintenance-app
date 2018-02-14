@@ -100,16 +100,11 @@ const saveProgramNotification = (action$, store) => action$
         eventProgramStore
             .take(1)
             .flatMap((eventProgramState) => {
-                const { program, programStageNotifications } = eventProgramState;
-                const programNotifications = program.notificationTemplates;
+                const { program, programNotifications } = eventProgramState;
 
                 // If we're dealing with a new model we have to add it to the notification lists
-                // Both on the notification list on the programStage and on the eventStore
                 if (negate(find(equals(model)))(program)) {
-                    programStageNotifications['program'] = [];
-                    programNotifications.add(model);
-                    programStageNotifications['program'].push(model);
-
+                    program.notificationTemplates.add(model);
                 }
 
                 return Observable.of(eventProgramState);

@@ -16,7 +16,7 @@ import {
     getProgramStageDataElementsByStageId,
     getStageNotifications,
     getProgramStageDataElements,
-    getStageNotificationsForProgramStageId
+    getStageNotificationsForProgramStageId,
 } from './selectors';
 import NotificationDeleteDialog from './NotificationDeleteDialog';
 import { removeStageNotification, setEditModel, setAddModel } from './actions';
@@ -29,10 +29,12 @@ import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { hideIfNotAuthorizedToCreate } from '../notifications/NotificationList';
 const programStageTabIndex = 0;
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-import { getProgramStageById } from "../tracker-program/program-stages/selectors";
+import { getProgramStageById } from '../tracker-program/program-stages/selectors';
 
 const programStages$ = eventProgramStore.map(getProgramStages);
-const stageNotifications$ = eventProgramStore.map(get('programStageNotifications'))
+const stageNotifications$ = eventProgramStore.map(
+    get('programStageNotifications')
+);
 //const stageNotifications$ = stageId =>
 //   eventProgramStore.map(getStageNotificationsByProgramStageId(stageId));
 const programNotifications$ = eventProgramStore
@@ -147,25 +149,20 @@ const TrackerProgramNotifications = (
     },
     { d2 }
 ) => {
-
-
     const stageNotificationsWithStageNames = [];
 
     //Flatten stageNotifications to be a list of notifications
     //with reference to the programStage
-    for(let stageId in programStageNotifications) {
+    for (let stageId in programStageNotifications) {
         const notifications = programStageNotifications[stageId];
 
         const programStage = props.getProgramStageById(stageId);
-        const programStageProps = pick(
-            ['displayName', 'id'],
-            programStage
-        );
+        const programStageProps = pick(['displayName', 'id'], programStage);
 
         notifications.forEach(nf => {
             nf.programStage = programStageProps;
             stageNotificationsWithStageNames.push(nf);
-        })
+        });
     }
     return (
         <div>
@@ -231,14 +228,18 @@ TrackerProgramNotifications.contextTypes = {
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
-        { removeStageNotification, setEditModel, setAddModel },
+        {
+            removeStageNotification,
+            setEditModel: (model) =>
+                setEditModel(model, 'PROGRAM_NOTIFICATION'),
+            setAddModel,
+        },
         dispatch
     );
 
 const enhance = compose(
     // TODO: Impure connect when the reducer is fixed to emit a pure model this can be a pure action
-    connect((state) => ({
-    }), mapDispatchToProps, undefined, { pure: false }),
+    connect(state => ({}), mapDispatchToProps, undefined, { pure: false }),
     withState('open', 'setOpen', false),
     withState('modelToDelete', 'setModelToDelete', null),
     withHandlers({
@@ -269,7 +270,7 @@ const enhance = compose(
                 programStageNotifications,
                 programNotifications,
                 availableDataElements,
-                store,
+                store
             ) => {
                 return {
                     ...props,
@@ -277,7 +278,7 @@ const enhance = compose(
                     programStageNotifications,
                     programNotifications,
                     availableDataElements,
-                    getProgramStageById: getProgramStageById(store)
+                    getProgramStageById: getProgramStageById(store),
                 };
             }
         )

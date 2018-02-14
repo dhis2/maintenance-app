@@ -1,5 +1,5 @@
 import Store from 'd2-ui/lib/store/Store';
-import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, reduce, findIndex, isObject, values } from 'lodash/fp';
+import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, reduce, findIndex, isObject, keys, values, flatten } from 'lodash/fp';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 
 // ___ programSelector :: StoreState -> Model<Program>
@@ -17,6 +17,8 @@ const programStageNotificationsSelector = get('programStageNotifications');
 // ___ dataEntryFormsSelector :: StoreState -> Object<programStageId, DataEntryForm>
 const dataEntryFormsSelector = get('dataEntryFormForProgramStage');
 
+const programNotificationsSelector = get('program.notificationTemplates');
+
 // ___ checkIfDirty :: Model -> Boolean
 const checkIfDirty = model => model && model.isDirty();
 
@@ -32,20 +34,12 @@ const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelecto
 // ___ hasDirtyProgramStageSections :: Object<StoreState> -> Boolean
 const hasDirtyProgramStageSections = compose(some(checkIfDirty), programStageSectionsSelector);
 
+const hasDirtyProgramNotifications = state => programNotificationsSelector(state).isDirty();
+
 // ___ hasDirtyNotificationTemplate :: Object<{programStageNotifications, programStages}> -> Boolean
-//TODO Implement check for every notitfication, not just first stage
-//const hasDirtyNotificationTemplate = state => some(checkIfDirty, get(getIdForFirstProgramStage(state), programStageNotificationsSelector(state)));
-//const hasDirtyNotificationTemplate = compose(some(checkIfDirty), reduce, concat, map(get(__, programStageNotificationsSelector)), values, programStageNotificationsSelector)
-const hasDirtyNotificationTemplate = state => some(checkIfDirty, Object
-    .keys(programStageNotificationsSelector)
-    .map(get(__, programStageNotificationsSelector))
-    .reduce(concat))
-/*Object
-    .keys(programStageNotifications)
-    .map(get(__, programStageNotifications))
-    .reduce(concat)
-    .filter(checkIfDirty)
-    .map(modelToJson); */
+
+const hasDirtyNotificationTemplate = compose(some(checkIfDirty), flatten, values, programStageNotificationsSelector)
+
 // ___ hasDirtyDataEntryForms :: Object<StoreState> -> Object<{programStageId: Model.DataEntryForm}> -> Boolean
 const hasDirtyDataEntryForms = compose(some(checkIfDirty), values, dataEntryFormsSelector);
 
@@ -63,6 +57,7 @@ export const isStoreStateDirty = compose(
             hasDirtyProgramStageSections,
             hasDirtyNotificationTemplate,
             hasDirtyDataEntryForms,
+            hasDirtyProgramNotifications
         ]
     ),
     value => func => func(value)
@@ -101,15 +96,23 @@ export const getMetaDataToSend = (state) => {
             .map(modelToJson);
     }
 
-        if (hasDirtyDataEntryForms(state)) {
-            const dataEntryForms = dataEntryFormsSelector(state);
+    if(hasDirtyProgramNotifications(state)) {
+        payload.programNotificationTemplates = payload.programNotificationTemplates || [];
 
-            payload.dataEntryForms = Object
-                .keys(dataEntryForms)
-                .map(get(__, dataEntryForms))
-                .filter(checkIfDirty)
-                .map(modelToJson);
-        }
+        payload.programNotificationTemplates = payload.programNotificationTemplates.concat(
+            programNotificationsSelector(state).toArray().map(modelToJson)
+        )
+    }
+
+    if (hasDirtyDataEntryForms(state)) {
+        const dataEntryForms = dataEntryFormsSelector(state);
+
+        payload.dataEntryForms = Object
+            .keys(dataEntryForms)
+            .map(get(__, dataEntryForms))
+            .filter(checkIfDirty)
+            .map(modelToJson);
+    }
 
 
     return payload;
@@ -126,7 +129,6 @@ function isValidState(state) {
         'availableDataElements',
         'availableAttributes',
         'dataEntryFormForProgramStage',
-        'programNotifications'
     ];
 
     return Object
