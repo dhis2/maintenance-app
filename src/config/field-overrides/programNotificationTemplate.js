@@ -51,7 +51,7 @@ const NotificationSubjectAndMessageTemplateFields = compose(
         let constantVariables = PROGRAM_STAGE_VARIABLES;
         let variables = dataElementsTypeMap(dataElements);
 
-        if(isProgram) {
+        if (isProgram) {
             constantVariables = PROGRAM_VARIABLES;
             variables = attributesToTypeMap(attributes);
         }
@@ -64,12 +64,7 @@ const NotificationSubjectAndMessageTemplateFields = compose(
     })
 )(SubjectAndMessageTemplateFields);
 
-/**
- * programNotificationTemplate are shared for both program notification and
- * programStage notifications. We use a customFieldOrder name to differentiate
- * between these two, as they have different behavior and overrides.
- */
-export default new Map([
+const sharedOverrides = [
     [
         'deliveryChannels',
         {
@@ -80,27 +75,6 @@ export default new Map([
         'relativeScheduledDays',
         {
             component: RelativeScheduledDays,
-        },
-    ],
-    [
-        'notificationTrigger',
-        {
-            required: true,
-            fieldOptions: {
-                options: [
-                    'COMPLETION',
-                    'ENROLLMENT',
-                    'SCHEDULED_DAYS_INCIDENT_DATE',
-                    'SCHEDULED_DAYS_ENROLLMENT_DATE',
-                    'PROGRAM_RULE'
-                ]
-            },
-        },
-    ],
-    [
-        'notificationRecipient',
-        {
-            required: 'true',
         },
     ],
     [
@@ -125,9 +99,46 @@ export default new Map([
                 <NotificationSubjectAndMessageTemplateFields {...props} />,
         },
     ],
+];
+/**
+ * programNotificationTemplate are shared for both program notification and
+ * programStage notifications. We use a customFieldOrder name to differentiate
+ * between these two, as they have different behavior and overrides.
+ */
+export const programNotificationTemplate = new Map([
+    ...sharedOverrides,
+    [
+        'notificationTrigger',
+        {
+            required: true,
+            fieldOptions: {
+                options: [
+                    'COMPLETION',
+                    'ENROLLMENT',
+                    'SCHEDULED_DAYS_INCIDENT_DATE',
+                    'SCHEDULED_DAYS_ENROLLMENT_DATE',
+                    'PROGRAM_RULE',
+                ],
+            },
+        },
+    ],
+    [
+        'notificationRecipient',
+        {
+            required: 'true',
+            options: [
+                'TRACKED_ENTITY_INSTANCE',
+                'ORGANISATION_UNIT_CONTACT',
+                'USERS_AT_ORGANISATION_UNIT',
+                'USER_GROUP',
+                'PROGRAM_ATTRIBUTE',
+            ],
+        },
+    ],
 ]);
 
 export const programStageNotificationTemplate = new Map([
+    ...sharedOverrides,
     [
         'notificationTrigger',
         {
@@ -137,9 +148,25 @@ export const programStageNotificationTemplate = new Map([
                 options: [
                     'COMPLETION',
                     'SCHEDULED_DAYS_DUE_DATE',
-                    'PROGRAM_RULE'
-                ]
+                    'PROGRAM_RULE',
+                ],
             },
         },
-    ]
-])
+    ],
+    [
+        'notificationRecipient',
+        {
+            required: 'true',
+            options: [
+                'TRACKED_ENTITY_INSTANCE',
+                'ORGANISATION_UNIT_CONTACT',
+                'USERS_AT_ORGANISATION_UNIT',
+                'USER_GROUP',
+                'PROGRAM_ATTRIBUTE', //This is only for Tracker programs
+                'DATA_ELEMENT',
+            ],
+        },
+    ],
+]);
+
+export default programNotificationTemplate;

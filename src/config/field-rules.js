@@ -476,6 +476,20 @@ export default new Map([
                 field:'relativeScheduledDays',
                 type: 'HIDE_FIELD'
             }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NONEOF',
+                value: [
+                    'TRACKED_ENTITY_INSTANCE',
+                    'ORGANISATION_UNIT_CONTACT']
+            }],
+            operations: [{
+                field: 'deliveryChannels',
+                type: 'HIDE_FIELD'
+            }]
         }
     ]],
     ['programNotificationTemplate', [

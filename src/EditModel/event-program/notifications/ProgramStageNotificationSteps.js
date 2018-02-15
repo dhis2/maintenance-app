@@ -195,8 +195,9 @@ const steps = [
                     'recipientUserGroup',
                     'deliveryChannels',
                 ],
-                skipLogicForRecipients,
                 null,
+                null,
+                true,
                 'programStageNotificationTemplate'
             )
         )(({ fieldConfigs = [], onUpdateField }) =>
