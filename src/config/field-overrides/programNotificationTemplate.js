@@ -64,6 +64,11 @@ const NotificationSubjectAndMessageTemplateFields = compose(
     })
 )(SubjectAndMessageTemplateFields);
 
+/**
+ * programNotificationTemplate are shared for both program notification and
+ * programStage notifications. We use a customFieldOrder name to differentiate
+ * between these two, as they have different behavior and overrides.
+ */
 const sharedOverrides = [
     [
         'deliveryChannels',
@@ -100,11 +105,7 @@ const sharedOverrides = [
         },
     ],
 ];
-/**
- * programNotificationTemplate are shared for both program notification and
- * programStage notifications. We use a customFieldOrder name to differentiate
- * between these two, as they have different behavior and overrides.
- */
+
 export const programNotificationTemplate = new Map([
     ...sharedOverrides,
     [
@@ -126,13 +127,15 @@ export const programNotificationTemplate = new Map([
         'notificationRecipient',
         {
             required: 'true',
-            options: [
-                'TRACKED_ENTITY_INSTANCE',
-                'ORGANISATION_UNIT_CONTACT',
-                'USERS_AT_ORGANISATION_UNIT',
-                'USER_GROUP',
-                'PROGRAM_ATTRIBUTE',
-            ],
+            fieldOptions: {
+                options: [
+                    'TRACKED_ENTITY_INSTANCE',
+                    'ORGANISATION_UNIT_CONTACT',
+                    'USERS_AT_ORGANISATION_UNIT',
+                    'USER_GROUP',
+                    'PROGRAM_ATTRIBUTE',
+                ],
+            },
         },
     ],
 ]);
@@ -157,14 +160,16 @@ export const programStageNotificationTemplate = new Map([
         'notificationRecipient',
         {
             required: 'true',
-            options: [
-                'TRACKED_ENTITY_INSTANCE',
-                'ORGANISATION_UNIT_CONTACT',
-                'USERS_AT_ORGANISATION_UNIT',
-                'USER_GROUP',
-                'PROGRAM_ATTRIBUTE', //This is only for Tracker programs
-                'DATA_ELEMENT',
-            ],
+            fieldOptions: {
+                options: [
+                    'TRACKED_ENTITY_INSTANCE',
+                    'ORGANISATION_UNIT_CONTACT',
+                    'USERS_AT_ORGANISATION_UNIT',
+                    'USER_GROUP',
+                    'PROGRAM_ATTRIBUTE', //This is only for Tracker programs
+                    'DATA_ELEMENT',
+                ],
+            },
         },
     ],
 ]);

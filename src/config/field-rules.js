@@ -465,12 +465,8 @@ export default new Map([
             field: 'notificationTrigger',
             when: [{
                 field:'notificationTrigger',
-                operator: 'ONEOF',
-                value: [
-                    'COMPLETION',
-                    'ENROLLMENT',
-                    'PROGRAM_RULE'
-                ]
+                operator: 'NOT_EQUALS',
+                value: "SCHEDULED_DAYS_DUE_DATE"
             }],
             operations: [{
                 field:'relativeScheduledDays',
@@ -497,11 +493,10 @@ export default new Map([
             field: 'notificationTrigger',
             when: [{
                 field:'notificationTrigger',
-                operator: 'ONEOF',
+                operator: 'NONEOF',
                 value: [
-                    'COMPLETION',
-                    'ENROLLMENT',
-                    'PROGRAM_RULE'
+                    'SCHEDULED_DAYS_INCIDENT_DATE',
+                    'SCHEDULED_DAYS_ENROLLMENT_DATE',
                 ]
             }],
             operations: [{
