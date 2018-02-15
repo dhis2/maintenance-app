@@ -141,7 +141,7 @@ const steps = [
             createFieldConfigsFor(
                 'programNotificationTemplate',
                 ['notificationTrigger', 'relativeScheduledDays'],
-                skipLogicForNotificationTrigger
+                undefined,
             )
         )(({ fieldConfigs = [], onUpdateField }) =>
             <FormBuilder fields={fieldConfigs} onUpdateField={onUpdateField} />

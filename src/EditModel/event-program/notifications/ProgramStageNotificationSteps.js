@@ -40,6 +40,7 @@ const mapDispatchToProps = dispatch => ({
     },
 });
 
+
 // TODO: Can not modify the fieldConfigs props as the FormBuilder will fail when it can not find old formConfigs. Therefore we'll need to return the same number of fieldConfigs
 function skipLogicForNotificationTrigger(fieldConfigs = []) {
     const [notificationTriggerConfig, ...rest] = fieldConfigs;
@@ -171,7 +172,10 @@ const steps = [
             createFieldConfigsFor(
                 'programNotificationTemplate',
                 ['notificationTrigger', 'relativeScheduledDays'],
-                skipLogicForNotificationTrigger
+                undefined,
+                null,
+                true,
+                'programStageNotificationTemplate'
             )
         )(({ fieldConfigs = [], onUpdateField }) =>
             <FormBuilder fields={fieldConfigs} onUpdateField={onUpdateField} />
@@ -191,7 +195,9 @@ const steps = [
                     'recipientUserGroup',
                     'deliveryChannels',
                 ],
-                skipLogicForRecipients
+                skipLogicForRecipients,
+                null,
+                'programStageNotificationTemplate'
             )
         )(({ fieldConfigs = [], onUpdateField }) =>
             <FormBuilder fields={fieldConfigs} onUpdateField={onUpdateField} />

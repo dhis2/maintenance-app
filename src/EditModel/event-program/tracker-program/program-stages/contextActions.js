@@ -23,11 +23,6 @@ export async function deleteProgramStageWithSnackbar(model) {
 
         onActionTouchTap: () => {
             deleteProgramStageFromState(model.id);
-            snackActions.show({
-                message: `${model.displayName} ${d2.i18n.getTranslation(
-                    'was_deleted'
-                )}`,
-            });
 
             // Fire the afterDeleteHook
             afterDeleteHook$.next({

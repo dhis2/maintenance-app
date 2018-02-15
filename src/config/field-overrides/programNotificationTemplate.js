@@ -64,6 +64,11 @@ const NotificationSubjectAndMessageTemplateFields = compose(
     })
 )(SubjectAndMessageTemplateFields);
 
+/**
+ * programNotificationTemplate are shared for both program notification and
+ * programStage notifications. We use a customFieldOrder name to differentiate
+ * between these two, as they have different behavior and overrides.
+ */
 export default new Map([
     [
         'deliveryChannels',
@@ -82,7 +87,13 @@ export default new Map([
         {
             required: true,
             fieldOptions: {
-                // For program stages only the following values are allowed
+                options: [
+                    'COMPLETION',
+                    'ENROLLMENT',
+                    'SCHEDULED_DAYS_INCIDENT_DATE',
+                    'SCHEDULED_DAYS_ENROLLMENT_DATE',
+                    'PROGRAM_RULE'
+                ]
             },
         },
     ],
@@ -115,3 +126,20 @@ export default new Map([
         },
     ],
 ]);
+
+export const programStageNotificationTemplate = new Map([
+    [
+        'notificationTrigger',
+        {
+            required: true,
+            fieldOptions: {
+                // For program stages only the following values are allowed
+                options: [
+                    'COMPLETION',
+                    'SCHEDULED_DAYS_DUE_DATE',
+                    'PROGRAM_RULE'
+                ]
+            },
+        },
+    ]
+])

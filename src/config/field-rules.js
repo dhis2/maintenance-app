@@ -462,7 +462,38 @@ export default new Map([
     ]],
     ['programStageNotificationTemplate', [
         {
-            field: 'relativeScheduledDays'
+            field: 'notificationTrigger',
+            when: [{
+                field:'notificationTrigger',
+                operator: 'ONEOF',
+                value: [
+                    'COMPLETION',
+                    'ENROLLMENT',
+                    'PROGRAM_RULE'
+                ]
+            }],
+            operations: [{
+                field:'relativeScheduledDays',
+                type: 'HIDE_FIELD'
+            }]
+        }
+    ]],
+    ['programNotificationTemplate', [
+        {
+            field: 'notificationTrigger',
+            when: [{
+                field:'notificationTrigger',
+                operator: 'ONEOF',
+                value: [
+                    'COMPLETION',
+                    'ENROLLMENT',
+                    'PROGRAM_RULE'
+                ]
+            }],
+            operations: [{
+                field:'relativeScheduledDays',
+                type: 'HIDE_FIELD'
+            }]
         }
     ]]
 ]);

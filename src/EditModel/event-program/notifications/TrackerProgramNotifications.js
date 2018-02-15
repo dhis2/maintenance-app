@@ -141,7 +141,8 @@ const TrackerProgramNotifications = (
         open,
         setOpen,
         modelToDelete,
-        setEditModel,
+        setEditProgramModel,
+        setEditProgramStageModel,
         setAddModel,
         availableDataElements,
         model,
@@ -176,7 +177,7 @@ const TrackerProgramNotifications = (
                         showProgramStage
                         notifications={stageNotificationsWithStageNames}
                         onRemoveNotification={askForConfirmation}
-                        onEditNotification={setEditModel}
+                        onEditNotification={setEditProgramStageModel}
                         onAddNotification={setAddModel}
                         showAddButton={true}
                         addButton={TrackerNotificationAddButtonWithContext}
@@ -186,7 +187,7 @@ const TrackerProgramNotifications = (
                     <NotificationList
                         notifications={programNotifications}
                         onRemoveNotification={askForConfirmation}
-                        onEditNotification={setEditModel}
+                        onEditNotification={setEditProgramModel}
                         onAddNotification={setAddModel}
                         showAddButton={false}
                     />
@@ -230,7 +231,9 @@ const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
             removeStageNotification,
-            setEditModel: (model) =>
+            setEditProgramStageModel: (model) =>
+                setEditModel(model, 'PROGRAM_STAGE_NOTIFICATION'),
+            setEditProgramModel: (model) =>
                 setEditModel(model, 'PROGRAM_NOTIFICATION'),
             setAddModel,
         },

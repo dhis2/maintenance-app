@@ -1,7 +1,8 @@
 
 /* Map to translate constants to something else in the UI.
 *  Structured so that the same constant in one model may be translated
-*  independently of others. */
+*  independently of others.
+*  The constant should map to the i18n translation key*/
 
 const constantDisplayNameMap= {
     'program': { //model
@@ -10,9 +11,15 @@ const constantDisplayNameMap= {
             'WITHOUT_REGISTRATION': 'EVENT_PROGRAM'
         }
     },
+    'programStageNotificationTemplate': {
+        'notificationTrigger': {
+            'COMPLETION': 'program_stage_completion',
+        }
+    },
     'programNotificationTemplate': {
         'notificationTrigger': {
-            'COMPLETION': 'Program_stage'
+            'COMPLETION': 'program_completion',
+            'ENROLLMENT': 'program_enrollment'
         }
     }
 }
@@ -25,7 +32,7 @@ const constantDisplayNameMap= {
  * Useful when we have e.g "WITH_REGISTRATION" in the model
  * but want to show "Tracker program" in the UI.
  *
- * @param modelType - Modeltype that should be
+ * @param modelType - Modeltype that the constant should be translated for
  * @param fieldName
  * @param constantVal
  * @returns {*} The "mapped" value of the constant, or the constant not found in the  not exist
