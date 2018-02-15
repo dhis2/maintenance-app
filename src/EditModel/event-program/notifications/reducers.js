@@ -7,7 +7,6 @@ import {
 
 export const initialState = {
     isDeleting: false,
-    selectedProgramStage: null,
     modelToEdit: null,
     notificationType: null
 }
@@ -45,7 +44,6 @@ export function stageNotificationsReducer(
             return {
                 ...state,
                 modelToEdit: model,
-                selectedProgramStage: action.payload.stageId
             }
         }
     }

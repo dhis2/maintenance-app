@@ -3,6 +3,7 @@ import * as actions from '../actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
 import { PROGRAM_STEPPER_SET_DISABLE } from "../actions";
 import * as iterator from '../../stepper/stepIterator';
+import { initialState as noitificationsInitialState } from "../notifications/reducers";
 
 describe('Event Program', () => {
     beforeAll(() => {
@@ -32,9 +33,7 @@ describe('Event Program', () => {
                     disabled: false,
                     isLoading: true
                 },
-                stageNotifications: {
-                    isDeleting: false,
-                },
+                stageNotifications: noitificationsInitialState,
                 programStageStepper: {
                     activeStep: stepKey,
                     stageId: null
