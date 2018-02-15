@@ -53,10 +53,10 @@ function setProp(fieldConfig, operationParams, ruleResult) {
     put back to the "component" variable.
 */
 function hideField(fieldConfig, operationParams, ruleResult) {
-    if (ruleResult) {
+    if (ruleResult && fieldConfig) {
         fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
         fieldConfig.component = () => null;
-    } else if (fieldConfig.hiddenComponent) {
+    } else if (fieldConfig && fieldConfig.hiddenComponent) {
         fieldConfig.component = fieldConfig.hiddenComponent;
         delete fieldConfig.hiddenComponent;
     }

@@ -419,12 +419,7 @@ const fieldOrderByName = new Map([
         'name',
         'periodType',
         'dataApprovalLevels',
-    ]],
-   /* ['programNotificationTemplate', [
-        'name',
-        'messageTemplate',
-        'programStage'],
-    ] */
+    ]]
 ]);
 
 export default {

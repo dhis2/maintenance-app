@@ -19,17 +19,17 @@ function getLabelText(labelText, fieldConfig = {}) {
     return labelText;
 }
 
-export async function createFieldConfigForModelTypes(modelType, forcedFieldOrderNames, includeAttributes = true) {
+export async function createFieldConfigForModelTypes(modelType, forcedFieldOrderNames, includeAttributes = true, customFieldOrderName) {
     const d2 = await getInstance();
 
     const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
     formFieldsManager.setFieldOrder(forcedFieldOrderNames || fieldOrderNames.for(modelType));
 
-    for (const [fieldName, overrideConfig] of fieldOverrides.for(modelType)) {
+    for (const [fieldName, overrideConfig] of fieldOverrides.for(customFieldOrderName || modelType)) {
         formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
     }
 
-    return formFieldsManager.getFormFieldsForModel({ modelDefinition: d2.models[modelType] })
+    return formFieldsManager.getFormFieldsForModel({ modelDefinition: d2.models[modelType] }, customFieldOrderName)
         .map((fieldConfig) => {
             // Translate the sync validator messages if there are any validators
             if (fieldConfig.validators) {
@@ -145,15 +145,32 @@ function addValuesToFieldConfigs(fieldConfigs, model) {
         .map(addModelToFieldConfigProps(model));
 }
 
-export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity, includeAttributes) {
+/**
+ * Create fieldConfigs for a schema
+ * @param schema - Schema to create configs for
+ * @param fieldNames - Fields to use
+ * @param filterFieldConfigs - A filter function that should return an array of fieldConfigs (must be same amount of fieldConfigs)
+ * @param includeAttributes - Wether to include attributes
+ * @param runRules - Wheter to apply field-rules speciefied in field-rules file.
+ * @param customFieldOrderName - Custom name for the "schema", useful if the same schema has multiple purposes.
+ * Ie. programNotificationTemplate, which are used in program Notification and programStage notifications.
+ */
+export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity, includeAttributes, runRules=true, customFieldOrderName) {
+    filterFieldConfigs = filterFieldConfigs ? filterFieldConfigs : identity;
     return mapPropsStream(props$ => props$
         .filter(({ model }) => model)
         .combineLatest(
-            Observable.fromPromise(createFieldConfigForModelTypes(schema, fieldNames, includeAttributes)),
-            (props, fieldConfigs) => ({
+            Observable.fromPromise(createFieldConfigForModelTypes(schema, fieldNames, includeAttributes, customFieldOrderName)),
+            (props, fieldConfigs) => {
+                const fieldConfigsWithValues = addValuesToFieldConfigs(fieldConfigs, props.model);
+                const fieldConfigsToUse = runRules ? applyRulesToFieldConfigs(getRulesForModelType(customFieldOrderName || schema),
+                    filterFieldConfigs(fieldConfigsWithValues), props.model)
+                    : fieldConfigsWithValues;
+
+                return {
                 ...props,
-                fieldConfigs: filterFieldConfigs(addValuesToFieldConfigs(fieldConfigs, props.model)),
-            })
+                fieldConfigs: fieldConfigsToUse
+            }}
         )
     );
 }
@@ -172,7 +189,7 @@ export function createFormFor(source$, schema, properties, includeAttributes, cu
             .combineLatest(source$, (props, model) => {
                 return { ...props, model }})
         ),
-        createFieldConfigsFor(schema, properties, undefined, includeAttributes),
+        createFieldConfigsFor(schema, properties, undefined, includeAttributes, false),
     );
 
     function CreatedFormBuilderForm({ fieldConfigs, model, editFieldChanged, detailsFormStatusChange = noop }) {
