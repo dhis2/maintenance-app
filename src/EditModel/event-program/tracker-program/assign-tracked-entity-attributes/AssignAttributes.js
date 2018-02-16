@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { get, getOr, __ } from 'lodash/fp';
+import { get, getOr } from 'lodash/fp';
 
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
@@ -111,7 +111,7 @@ function AssignAttributes(props, { d2 }) {
 
     const onMoveAttributes = (newAttributesOrderIds) => {
         assignedItemStore.setState(newAttributesOrderIds);
-        // need to update this.props.assignedAttributes to reflect new order in epics
+        // TODO need to update this.props.assignedAttributes to reflect new order in epics
     };
 
     // Create edit-able rows for assigned attributes

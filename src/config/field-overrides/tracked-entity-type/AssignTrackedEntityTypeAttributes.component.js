@@ -31,7 +31,7 @@ class AssignTrackedEntityTypeAttributes extends Component {
         this.context.d2.models.trackedEntityAttribute.list({
             level: 1,
             paging: false,
-            fields: ['id,displayName,valueType,unique,optionSet,mandatory,searchable,displayInList'].join(','),
+            fields: ['id,displayName,valueType,unique,optionSet,mandatory,searchable,displayInList'],
         }).then((trackedEntityAttributes) => {
             this.state.availableAttributesStore.setState(
                 trackedEntityAttributes.toArray().map(attribute => ({
