@@ -169,8 +169,16 @@ contextActions.compulsoryDataElements
         const dataSetDataElementIds = modelItem.dataSetElements
             .map(dataSetElement => dataSetElement.dataElement.id);
 
+        console.log(dataElementOperands);
+
         const dataElementOperandsForDataSet = dataElementOperands
-            .map(dataElementOperand => Object.assign(dataElementOperand, { dataElementId: dataElementOperand.dataElement.id, optionComboId: dataElementOperand.categoryOptionCombo.id }))
+            .map(dataElementOperand => Object.assign(
+                dataElementOperand,
+                {
+                    dataElementId: dataElementOperand.dataElement.id,
+                    optionComboId: dataElementOperand.categoryOptionCombo && dataElementOperand.categoryOptionCombo.id,
+                },
+            ))
             .filter(dataElementOperand => dataSetDataElementIds.indexOf(dataElementOperand.dataElementId) >= 0);
 
         compulsoryDataElementStore.setState({
