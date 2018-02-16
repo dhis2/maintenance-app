@@ -120,9 +120,24 @@ const stepToFormBuilder = ({
     attributes,
 }) => {
     const fieldProps = { dataElements, isTracker, isProgram, attributes };
+    let fieldsToUse = fieldConfigs;
+
+    //TODO cleanup this
+    //Remove PROGRAM_ATTRIBUTE options when it's an event-program
+    if(!isTracker && !isProgram) {
+        fieldsToUse = fieldsToUse.map(field => {
+            if(field.name == 'notificationRecipient') {
+                const removedOptions = field.props.options.filter(opt => opt.value !== "PROGRAM_ATTRIBUTE");
+                const propsWithRemovedRecipient = {...field.props, options: removedOptions}
+                console.log(propsWithRemovedRecipient)
+                return { ...field, props: { ...propsWithRemovedRecipient} }
+            }
+            return field;
+        })
+    }
     return (
         <FormBuilder
-            fields={fieldConfigs.map(addPropsToFieldConfig(fieldProps))}
+            fields={fieldsToUse.map(addPropsToFieldConfig(fieldProps))}
             onUpdateField={onUpdateField}
         />
     );
@@ -199,5 +214,3 @@ export const programSteps = [
         )(stepToFormBuilder),
     },
 ];
-
-export default programStageSteps;

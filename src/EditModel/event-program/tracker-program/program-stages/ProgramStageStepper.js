@@ -50,7 +50,7 @@ const ProgramStageVerticalStepper = connect(
 )(createStepperFromConfig(stepperConfig(), 'vertical'));
 
 export const ProgramStageStepper = pure(props => {
-    console.log(props);
+
     return (
         <div>
             <ProgramStageVerticalStepper

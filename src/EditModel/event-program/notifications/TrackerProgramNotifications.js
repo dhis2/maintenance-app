@@ -52,7 +52,7 @@ const availableDataElements = eventProgramStore.map(
 class TrackerNotificationAddButton extends React.Component {
     constructor(props, context) {
         super(props, context);
-        console.log(context);
+
         this.state = {
             items: [
                 {

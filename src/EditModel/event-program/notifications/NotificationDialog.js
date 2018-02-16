@@ -13,10 +13,16 @@ import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withProps from 'recompose/withProps';
 import { createStepperFromConfig } from '../../stepper/stepper';
-import { setEditModel, saveStageNotification } from './actions';
-import { getProgramStageDataElementsByStageId, getNotificationType } from './selectors';
+import {
+    setEditModel,
+    saveStageNotification,
+    saveProgramNotification,
+} from './actions';
+import {
+    getProgramStageDataElementsByStageId,
+    getNotificationType,
+} from './selectors';
 import Subheader from 'material-ui/Subheader/';
-
 
 const withStepper = compose(
     withState('activeStep', 'setActiveStep', 0),
@@ -30,7 +36,8 @@ const withStepper = compose(
     }))
 );
 
-const stepperForSteps = steps => withStepper(createStepperFromConfig(steps, 'vertical'));
+const stepperForSteps = steps =>
+    withStepper(createStepperFromConfig(steps, 'vertical'));
 
 const ProgramStageStepper = stepperForSteps(programStageSteps);
 const ProgramStepper = stepperForSteps(programSteps);
@@ -49,7 +56,7 @@ const notificationDialogStyle = {
 
 const DialogTitle = props => {
     return (
-        <div style={{ ...props.style, paddingBottom: 0 }}>
+        <div style={{ ...props.style, paddingBottom: 10 }}>
             <h3 style={notificationDialogStyle.titleStyle}>
                 {props.title}
             </h3>
@@ -90,7 +97,7 @@ const NotificationDialog = (
             onTouchTap={() => onConfirm(model)}
         />,
     ];
-    const title = `${isTracker
+    const title = `${!isProgram
         ? t('program_stage_notification')
         : t('program_notification')}`;
     const StepperComponent = isProgram ? ProgramStepper : ProgramStageStepper;
@@ -159,15 +166,19 @@ export const ProgramStageNotificationDialog = connect(
     mapDispatchToPropsForDialog
 )(NotificationDialog);
 
-export const ProgramNotificationDialog = connect(
-    mapStateToProps,
-    mapDispatchToPropsForDialog
+export const ProgramNotificationDialog = connect(mapStateToProps, dispatch =>
+    bindActionCreators(
+        {
+            onCancel: setEditModel.bind(null, null),
+            onConfirm: saveProgramNotification,
+        },
+        dispatch
+    )
 )(NotificationDialog);
 
-
 /* Chooses what dialog to display according to isProgram prop */
-export const NotificationDialogChooser = ({ isProgram, ...props }) =>
-    isProgram
+export const NotificationDialogChooser = props =>
+    props.isProgram
         ? <ProgramNotificationDialog
               {...props}
               dialogStyle={notificationDialogStyle}

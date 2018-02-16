@@ -40,7 +40,6 @@ export function stageNotificationsReducer(
         case NOTIFICATION_STAGE_SET_PROGRAM_STAGE: {
             const model = state.modelToEdit;
             model.programStage.id = action.payload.stageId;
-            console.log(model);
             return {
                 ...state,
                 modelToEdit: model,

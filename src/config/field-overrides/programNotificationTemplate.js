@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { setStageNotificationValue } from '../../EditModel/event-program/notifications/actions';
 import DropDown from '../../forms/form-fields/drop-down';
-
+import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 const PROGRAM_STAGE_VARIABLES = [
     'program_name',
     'program_stage_name',
@@ -66,16 +66,18 @@ const NotificationSubjectAndMessageTemplateFields = compose(
     })
 )(SubjectAndMessageTemplateFields);
 
-const ProgramAttributeDropDown = compose(
-    connect(undefined, boundOnUpdate),
-)(props => {
+//Using dropdownasync-getter due to support for references
+const ProgramAttributeDropDown = compose(connect(undefined, boundOnUpdate))(props => {
+    const attributesOpts = props.attributes
+        .filter(attr => attr.valueType === 'PHONE_NUMBER')
+        .map(attr => ({
+            text: attr.displayName,
+            value: attr.trackedEntityAttribute.id,
+        }));
 
-    const attributesOpts = props.attributes.map(attr => ({
-        text: attr.displayName,
-        value: attr.id,
-    }));
+    const getAttrs = () => Promise.resolve(attributesOpts);
     return (
-        <DropDown
+        <DropDownAsyncGetter
             labelText={props.labelText}
             options={attributesOpts}
             onChange={event =>
@@ -86,19 +88,24 @@ const ProgramAttributeDropDown = compose(
             value={props.model.recipientProgramAttribute}
             fullWidth
             isRequired
+            model={props.model}
+            getter={getAttrs}
         />
     );
 });
 
 const DataElementDropDown = compose(
-    connect(undefined, boundOnUpdate),
+    connect(undefined, boundOnUpdate)
 )(props => {
-    const dataElementOpts = props.dataElements.map(de => ({
-        text: de.displayName,
-        value: de.id,
-    }));
+    const dataElementOpts = props.dataElements
+        .filter(de => de.valueType == 'PHONE_NUMBER')
+        .map(de => ({
+            text: de.displayName,
+            value: de.id,
+        }));
+    const getElems = () => Promise.resolve(dataElementOpts);
     return (
-        <DropDown
+        <DropDownAsyncGetter
             labelText={props.labelText}
             options={dataElementOpts}
             onChange={event =>
@@ -109,6 +116,8 @@ const DataElementDropDown = compose(
             value={props.model.recipientDataElement}
             fullWidth
             isRequired
+            model={props.model}
+            getter={getElems}
         />
     );
 });
@@ -232,7 +241,7 @@ export const programStageNotificationTemplate = new Map([
     [
         'recipientDataElement',
         {
-            component: DataElementDropDown
+            component: DataElementDropDown,
         },
     ],
 ]);

@@ -184,7 +184,6 @@ function createEventProgramStoreStateFromMetadataResponse(
         trackedEntityAttributes = [],
     } = eventProgramMetadata;
     const programStages = getOr([], 'programStages', first(programs));
-    console.log(programs)
     const storeState = getInstance().then(d2 => {
         // createModelFor :: ModelDefinition -> Function -> Model
         const createModelFor = schema => schema.create.bind(schema);
