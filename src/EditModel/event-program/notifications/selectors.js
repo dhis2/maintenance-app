@@ -35,7 +35,7 @@ export const getProgramStageDataElements = ({
 
 /**
  * Gets the list of dataElements that are referenced in the programStage
- *  identified by he given stageId
+ *  identified by the given stageId
  * @param state programState to get availableDataElements and programStages from
  * @returns {array} an array of dataElements
  */

@@ -91,6 +91,8 @@ const steps = [
                     'notificationRecipient',
                     'recipientUserGroup',
                     'deliveryChannels',
+                    'recipientDataElement',
+                    'recipientProgramAttribute'
                 ]
             )
         )(({ fieldConfigs = [], onUpdateField }) =>

@@ -9,6 +9,7 @@ import { map } from 'lodash/fp';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { setStageNotificationValue } from '../../EditModel/event-program/notifications/actions';
+import DropDown from '../../forms/form-fields/drop-down';
 
 const PROGRAM_STAGE_VARIABLES = [
     'program_name',
@@ -37,16 +38,17 @@ const dataElementsTypeMap = dataElements =>
     map(toDataElementType, dataElements);
 const attributesToTypeMap = attributes => map(toAttributeType, attributes);
 
+const boundOnUpdate = dispatch =>
+    bindActionCreators(
+        {
+            onUpdate: ({ fieldName, value }) =>
+                setStageNotificationValue(fieldName, value),
+        },
+        dispatch
+    );
+
 const NotificationSubjectAndMessageTemplateFields = compose(
-    connect(undefined, dispatch =>
-        bindActionCreators(
-            {
-                onUpdate: ({ fieldName, value }) =>
-                    setStageNotificationValue(fieldName, value),
-            },
-            dispatch
-        )
-    ),
+    connect(undefined, boundOnUpdate),
     withProps(({ dataElements, attributes, isProgram }) => {
         let constantVariables = PROGRAM_STAGE_VARIABLES;
         let variables = dataElementsTypeMap(dataElements);
@@ -63,6 +65,53 @@ const NotificationSubjectAndMessageTemplateFields = compose(
         };
     })
 )(SubjectAndMessageTemplateFields);
+
+const ProgramAttributeDropDown = compose(
+    connect(undefined, boundOnUpdate),
+)(props => {
+
+    const attributesOpts = props.attributes.map(attr => ({
+        text: attr.displayName,
+        value: attr.id,
+    }));
+    return (
+        <DropDown
+            labelText={props.labelText}
+            options={attributesOpts}
+            onChange={event =>
+                props.onUpdate({
+                    fieldName: 'recipientProgramAttribute',
+                    value: event.target.value,
+                })}
+            value={props.model.recipientProgramAttribute}
+            fullWidth
+            isRequired
+        />
+    );
+});
+
+const DataElementDropDown = compose(
+    connect(undefined, boundOnUpdate),
+)(props => {
+    const dataElementOpts = props.dataElements.map(de => ({
+        text: de.displayName,
+        value: de.id,
+    }));
+    return (
+        <DropDown
+            labelText={props.labelText}
+            options={dataElementOpts}
+            onChange={event =>
+                props.onUpdate({
+                    fieldName: 'recipientDataElement',
+                    value: event.target.value,
+                })}
+            value={props.model.recipientDataElement}
+            fullWidth
+            isRequired
+        />
+    );
+});
 
 /**
  * programNotificationTemplate are shared for both program notification and
@@ -95,6 +144,13 @@ const sharedOverrides = [
 
                 return <DropDownAsync {...props} />;
             },
+        },
+    ],
+
+    [
+        'recipientProgramAttribute',
+        {
+            component: ProgramAttributeDropDown,
         },
     ],
     [
@@ -170,6 +226,13 @@ export const programStageNotificationTemplate = new Map([
                     'DATA_ELEMENT',
                 ],
             },
+        },
+    ],
+
+    [
+        'recipientDataElement',
+        {
+            component: DataElementDropDown
         },
     ],
 ]);

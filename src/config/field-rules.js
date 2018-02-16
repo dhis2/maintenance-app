@@ -486,6 +486,30 @@ export default new Map([
                 field: 'deliveryChannels',
                 type: 'HIDE_FIELD'
             }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'DATA_ELEMENT'
+            }],
+            operations: [{
+                field: 'recipientDataElement',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'PROGRAM_ATTRIBUTE'
+            }],
+            operations: [{
+                field: 'recipientProgramAttribute',
+                type: 'HIDE_FIELD'
+            }]
         }
     ]],
     ['programNotificationTemplate', [
@@ -501,6 +525,32 @@ export default new Map([
             }],
             operations: [{
                 field:'relativeScheduledDays',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NONEOF',
+                value: [
+                    'TRACKED_ENTITY_INSTANCE',
+                    'ORGANISATION_UNIT_CONTACT']
+            }],
+            operations: [{
+                field: 'deliveryChannels',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'PROGRAM_ATTRIBUTE'
+            }],
+            operations: [{
+                field: 'recipientProgramAttribute',
                 type: 'HIDE_FIELD'
             }]
         }

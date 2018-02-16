@@ -7,7 +7,6 @@ import { __, first, get, noop, pick } from 'lodash/fp';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';
-import mapProps from 'recompose/mapProps';
 import mapPropsStream from 'recompose/mapPropsStream';
 import NotificationList from './NotificationList';
 import {
@@ -211,7 +210,7 @@ const TrackerProgramNotifications = (
 };
 
 TrackerProgramNotifications.propTypes = {
-    stageNotifications: PropTypes.any.isRequired,
+    programStageNotifications: PropTypes.any.isRequired,
     programNotifications: PropTypes.any.isRequired,
     askForConfirmation: PropTypes.any.isRequired,
     onCancel: PropTypes.any.isRequired,
@@ -219,7 +218,8 @@ TrackerProgramNotifications.propTypes = {
     open: PropTypes.any.isRequired,
     setOpen: PropTypes.any.isRequired,
     modelToDelete: PropTypes.any,
-    setEditModel: PropTypes.any.isRequired,
+    setEditProgramStageModel: PropTypes.func.isRequired,
+    setEditProgramModel: PropTypes.func.isRequired,
     setAddModel: PropTypes.any.isRequired,
 };
 

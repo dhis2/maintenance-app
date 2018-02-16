@@ -2,35 +2,38 @@ import React, { PropTypes, Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { get } from 'lodash/fp';
-
+import branch from 'recompose/branch';
+import renderNothing from 'recompose/renderNothing';
+import { modelToEditSelector } from './selectors';
+import { isProgramNotification } from './selectors';
+import { programStageSteps, programSteps } from './NotificationSteps';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withProps from 'recompose/withProps';
-import branch from 'recompose/branch';
-import renderNothing from 'recompose/renderNothing';
-import lifecycle from 'recompose/lifecycle';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
-
 import { createStepperFromConfig } from '../../stepper/stepper';
-import { modelToEditSelector } from './selectors';
-import {
-    setEditModel,
-    setStageNotificationValue,
-    saveStageNotification,
-    saveProgramNotification,
-} from './actions';
-import { createFieldConfigsFor } from '../../formHelpers';
-import programSteps from './ProgramNotificationSteps';
-import {
-    getProgramStageDataElementsByStageId,
-    getSelectedProgramStageId,
-    getNotificationType,
-    isProgramNotification,
-} from './selectors';
-import ProgramStageNotificationDialog from './StageNotificationDialog';
+import { setEditModel, saveStageNotification } from './actions';
+import { getProgramStageDataElementsByStageId, getNotificationType } from './selectors';
+import Subheader from 'material-ui/Subheader/';
+
+
+const withStepper = compose(
+    withState('activeStep', 'setActiveStep', 0),
+    withProps(({ setActiveStep, dataElements }) => ({
+        stepperClicked(stepKey) {
+            setActiveStep(
+                programStageSteps.findIndex(step => step.key === stepKey)
+            );
+        },
+        dataElements,
+    }))
+);
+
+const stepperForSteps = steps => withStepper(createStepperFromConfig(steps, 'vertical'));
+
+const ProgramStageStepper = stepperForSteps(programStageSteps);
+const ProgramStepper = stepperForSteps(programSteps);
 
 const notificationDialogStyle = {
     content: {
@@ -38,109 +41,149 @@ const notificationDialogStyle = {
         minWidth: 700,
         maxWidth: 'none',
     },
+    titleStyle: {
+        fontWeight: 400,
+        margin: 0,
+    },
 };
 
-export const NotificationDialog = ({ isProgram, ...props }) =>
-    isProgram
-        ? <ProgramNotificationDialog {...props} dialogStyle={notificationDialogStyle} />
-        : <ProgramStageNotificationDialog {...props} dialogStyle={notificationDialogStyle} />;
+const DialogTitle = props => {
+    return (
+        <div style={{ ...props.style, paddingBottom: 0 }}>
+            <h3 style={notificationDialogStyle.titleStyle}>
+                {props.title}
+            </h3>
+            <Subheader>
+                {props.subtitle}
+            </Subheader>
+        </div>
+    );
+};
 
-export const EnhancedDialog = compose(
-    connect(state => ({
-        notificationType: getNotificationType(state),
-        isProgram: isProgramNotification(state),
-        model: modelToEditSelector(state)
-    })),
-    branch(({ model }) => !model, renderNothing)
-)(NotificationDialog);
-
-const Stepper = compose(
-    withState('activeStep', 'setActiveStep', 0),
-    withProps(({ setActiveStep, dataElements, isTracker }) => ({
-        stepperClicked(stepKey) {
-            setActiveStep(
-                programSteps.findIndex(step => step.key === stepKey)
-            );
-        },
-        dataElements
-    }))
-)(createStepperFromConfig(programSteps, 'vertical'));
-
-function ProgramNotificationDialog(
-    { model, onCancel, onConfirm, dataElements, ...props },
+const NotificationDialog = (
+    {
+        model,
+        onCancel,
+        onConfirm,
+        dataElements,
+        isTracker,
+        isProgram,
+        ...props
+    },
     { d2 }
-) {
+) => {
     const t = d2.i18n.getTranslation.bind(d2.i18n);
     const stepperProps = {
-        isTracker: props.isTracker,
-        isProgram: props.isProgram,
-        attributes: props.program.programTrackedEntityAttributes,
+        attributes: isTracker
+            ? props.program.programTrackedEntityAttributes
+            : [],
         programStages: props.programStages,
         dataElements,
+        isTracker,
+        isProgram,
     };
     const actions = [
         <FlatButton label={t('cancel')} primary onTouchTap={onCancel} />,
         <FlatButton
-            label={t('save')}
+            label={t('done')}
             primary
             onTouchTap={() => onConfirm(model)}
         />,
     ];
-
+    const title = `${isTracker
+        ? t('program_stage_notification')
+        : t('program_notification')}`;
+    const StepperComponent = isProgram ? ProgramStepper : ProgramStageStepper;
     return (
         <Dialog
             actions={actions}
             open={!!model}
             onRequestClose={onCancel}
-            title={`${t('program_notification')} (${props.program.displayName ||
-                ''})`}
+            title={<DialogTitle title={title} subtitle={model.displayName} />}
             autoDetectWindowHeight={true}
             repositionOnUpdate={false}
             autoScrollBodyContent
-            contentStyle={props.contentStyle && props.contentStyle.content}
+            contentStyle={notificationDialogStyle.content}
             style={{ paddingTop: 0 }}
         >
-            <Stepper {...stepperProps} />
+            <StepperComponent {...stepperProps} />
         </Dialog>
     );
-}
-
-const mapStateToProps = (state, { program }) => ({
-    attributes: program.programTrackedEntityAttributes,
-});
-const mapDispatchToPropsForDialog = dispatch =>
-    bindActionCreators(
-        {
-            onCancel: setEditModel.bind(null, null),
-            onConfirm: saveProgramNotification,
-        },
-        dispatch
-    );
-
-ProgramNotificationDialog.contextTypes = {
+};
+NotificationDialog.contextTypes = {
     d2: PropTypes.object,
 };
-
-ProgramNotificationDialog.propTypes = {
+NotificationDialog.propTypes = {
     model: PropTypes.object.isRequired,
     onCancel: PropTypes.func.isRequired,
     onConfirm: PropTypes.func.isRequired,
-    attributes: PropTypes.array.isRequired,
+    dataElements: PropTypes.array.isRequired,
     isTracker: PropTypes.bool,
     isProgram: PropTypes.bool,
 };
 
-ProgramNotificationDialog.defaultProps = {
-    isProgram: true,
-    isTracker: true,
+NotificationDialog.defaultProps = {
+    isProgram: false,
+    isTracker: false,
 };
 
-ProgramNotificationDialog = connect(
+const mapStateToProps = (
+    state,
+    { model, availableDataElements, programStages, dataElements }
+) => {
+    const selectedPSId =
+        (model && model.programStage && model.programStage.id) ||
+        programStages[0].id;
+
+    return {
+        model,
+        dataElements:
+            dataElements ||
+            getProgramStageDataElementsByStageId({
+                availableDataElements,
+                programStages,
+            })(selectedPSId),
+    };
+};
+const mapDispatchToPropsForDialog = dispatch =>
+    bindActionCreators(
+        {
+            onCancel: setEditModel.bind(null, null),
+            onConfirm: saveStageNotification,
+        },
+        dispatch
+    );
+
+export const ProgramStageNotificationDialog = connect(
     mapStateToProps,
     mapDispatchToPropsForDialog
-)(ProgramNotificationDialog);
+)(NotificationDialog);
+
+export const ProgramNotificationDialog = connect(
+    mapStateToProps,
+    mapDispatchToPropsForDialog
+)(NotificationDialog);
 
 
+/* Chooses what dialog to display according to isProgram prop */
+export const NotificationDialogChooser = ({ isProgram, ...props }) =>
+    isProgram
+        ? <ProgramNotificationDialog
+              {...props}
+              dialogStyle={notificationDialogStyle}
+          />
+        : <ProgramStageNotificationDialog
+              {...props}
+              dialogStyle={notificationDialogStyle}
+          />;
 
+export const EnhancedDialog = compose(
+    connect(state => ({
+        notificationType: getNotificationType(state),
+        isProgram: isProgramNotification(state),
+        model: modelToEditSelector(state),
+    })),
+    branch(({ model }) => !model, renderNothing)
+)(NotificationDialogChooser);
 
 export default EnhancedDialog;

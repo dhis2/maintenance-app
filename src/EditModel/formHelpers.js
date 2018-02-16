@@ -207,6 +207,17 @@ export function createFormFor(source$, schema, properties, includeAttributes, cu
     return enhance(CreatedFormBuilderForm);
 }
 
-export function createFormActionButtonsFor() {
-
-}
+/**
+ * Add given props to the fieldConfig.
+ * If fieldNames has values, only fields with those name will be given the props.
+ * Useful if you to be given to a map of fieldConfigs.
+ *
+ * Only fields with name='shortname' will be given the props.
+ * @example
+ *  fieldConfigs.map(addPropsToFieldConfig[props, ['shortName']
+ * @param fieldNames to add the props to. The fieldConfig is given
+ * @param props to add to fields
+ * @returns {function(*): {props: {}}} fieldConfig with the props added.
+ */
+export const addPropsToFieldConfig = (props, fieldNames = []) => fieldConfig =>
+    fieldNames.length < 1 || fieldNames.includes(fieldConfig.name) ? { ...fieldConfig, props: { ...fieldConfig.props, ...props}} : fieldConfig;
