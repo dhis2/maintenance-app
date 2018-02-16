@@ -12,7 +12,6 @@ import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Store from 'd2-ui/lib/store/Store';
 
 import Paper from 'material-ui/Paper/Paper';
@@ -23,6 +22,15 @@ import ProgramAttributeRow from '../../../../forms/form-fields/attribute-row';
 import eventProgramStore from '../../eventProgramStore';
 import { addAttributesToProgram, removeAttributesFromProgram, editProgramAttributes } from './actions';
 
+const styles = {
+    groupEditor: {
+        padding: '2rem 3rem 4rem',
+    },
+    fieldname: {
+        fontSize: 16,
+        color: '#00000080',
+    },
+};
 
 const program$ = eventProgramStore
     .map(get('program'));
@@ -123,9 +131,10 @@ function AssignAttributes(props, { d2 }) {
 
     return (
         <Paper>
-            <div style={{ padding: '2rem 3rem 4rem' }}>
+            <div style={styles.groupEditor}>
+                <div style={styles.fieldname}>{d2.i18n.getTranslation('program_tracked_entity_attributes')}</div>
                 <TextField
-                    hintText={d2.i18n.getTranslation('search_available_selected_items')}
+                    hintText={d2.i18n.getTranslation('search_available_program_tracked_entity_attributes')}
                     onChange={props.onAttributeFilter}
                     value={props.attributeFilter}
                     fullWidth
@@ -143,12 +152,12 @@ function AssignAttributes(props, { d2 }) {
             <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('name')}</TableHeaderColumn>
-                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('display_in_list')}</TableHeaderColumn>
-                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('mandatory')}</TableHeaderColumn>
-                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('date_in_future')}</TableHeaderColumn>
-                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('render_options_as_radio')}</TableHeaderColumn>
-                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('searchable')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('name')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('display_in_list')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('mandatory')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('date_in_future')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('render_options_as_radio')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('searchable')}</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>

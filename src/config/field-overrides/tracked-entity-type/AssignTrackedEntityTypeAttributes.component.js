@@ -8,6 +8,16 @@ import TextField from 'material-ui/TextField/TextField';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
 import TETAttributeRow from '../../../forms/form-fields/attribute-row';
 
+const styles = {
+    groupEditor: {
+        padding: '2rem 0rem 4rem',
+    },
+    fieldname: {
+        fontSize: 16,
+        color: '#00000080',
+    },
+};
+
 class AssignTrackedEntityTypeAttributes extends Component {
     state = {
         isLoading: true,
@@ -125,7 +135,8 @@ class AssignTrackedEntityTypeAttributes extends Component {
         }
         return (
             <div>
-                <div style={{ padding: '2rem 0rem 4rem' }}>
+                <div style={styles.groupEditor}>
+                    <div style={styles.fieldname}>{this.context.d2.i18n.getTranslation('tracked_entity_type_attributes')}</div>
                     <TextField
                         hintText={this.context.d2.i18n.getTranslation('search_available_tracked_entity_type_attributes')}
                         onChange={this.setFilterText}
