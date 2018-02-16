@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { get, getOr } from 'lodash/fp';
+import { get } from 'lodash/fp';
 
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
@@ -56,7 +56,13 @@ const enhance = compose(
         .combineLatest(
             program$,
             availableAttributes$,
-            (props, program$, availableAttributes) => ({ ...props, availableAttributes, model: program$, assignedAttributes: program$.programTrackedEntityAttributes }),
+            (props, program$, availableAttributes) => (
+                {
+                    ...props,
+                    availableAttributes,
+                    model: program$,
+                    assignedAttributes: program$.programTrackedEntityAttributes,
+                }),
         ),
     ),
     withState('attributeFilter', 'setAttributeFilter', ''),
@@ -78,7 +84,13 @@ const enhance = compose(
 
 function addDisplayProperties(attributes) {
     return ({ trackedEntityAttribute, ...other }) => {
-        const { displayName, valueType, optionSet, unique } = attributes.find(({ id }) => id === trackedEntityAttribute.id);
+        const {
+            displayName,
+            valueType,
+            optionSet,
+            unique,
+        } = attributes.find(({ id }) => id === trackedEntityAttribute.id);
+
         return {
             ...other,
             trackedEntityAttribute: {

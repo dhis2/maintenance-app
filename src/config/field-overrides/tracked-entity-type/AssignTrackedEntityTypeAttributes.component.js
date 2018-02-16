@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { get, getOr, __ } from 'lodash/fp';
 
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import Store from 'd2-ui/lib/store/Store';
@@ -49,14 +48,18 @@ class AssignTrackedEntityTypeAttributes extends Component {
                     },
                 })),
             );
-            this.state.assignedAttributesStore.setState(this.state.assignedAttributes.map(attribute => attribute.trackedEntityAttribute.id));
+            this.state.assignedAttributesStore.setState(
+                this.state.assignedAttributes.map(attribute => attribute.trackedEntityAttribute.id),
+            );
             this.setState({ isLoading: false });
         });
     }
 
     onAssignAttributes = (assignedAttributesIds) => {
-        const newAssignedAttributes = this.state.assignedAttributes.concat(this.getAttributeModels(assignedAttributesIds));
-        const newAssignedAttributesIds = this.state.assignedAttributesStore.getState().concat(assignedAttributesIds);
+        const newAssignedAttributes = this.state.assignedAttributes
+            .concat(this.getAttributeModels(assignedAttributesIds));
+        const newAssignedAttributesIds = this.state.assignedAttributesStore.getState()
+            .concat(assignedAttributesIds);
 
         this.updateState(newAssignedAttributes, newAssignedAttributesIds);
         return Promise.resolve();
@@ -87,6 +90,8 @@ class AssignTrackedEntityTypeAttributes extends Component {
 
         this.updateState(newAssignedAttributes, newAttributesOrderIds);
     }
+
+    getTranslation = value => this.context.d2.i18n.getTranslation(value);
 
     getAttributeModels = assignedAttributes =>
         this.state.availableAttributesStore.getState()
@@ -136,9 +141,9 @@ class AssignTrackedEntityTypeAttributes extends Component {
         return (
             <div>
                 <div style={styles.groupEditor}>
-                    <div style={styles.fieldname}>{this.context.d2.i18n.getTranslation('tracked_entity_type_attributes')}</div>
+                    <div style={styles.fieldname}>{this.getTranslation('tracked_entity_type_attributes')}</div>
                     <TextField
-                        hintText={this.context.d2.i18n.getTranslation('search_available_tracked_entity_type_attributes')}
+                        hintText={this.getTranslation('search_available_tracked_entity_type_attributes')}
                         onChange={this.setFilterText}
                         value={this.state.filterText}
                         fullWidth
@@ -157,10 +162,10 @@ class AssignTrackedEntityTypeAttributes extends Component {
                 <Table>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
-                            <TableHeaderColumn>{this.context.d2.i18n.getTranslation('name')}</TableHeaderColumn>
-                            <TableHeaderColumn>{this.context.d2.i18n.getTranslation('display_in_list')}</TableHeaderColumn>
-                            <TableHeaderColumn>{this.context.d2.i18n.getTranslation('mandatory')}</TableHeaderColumn>
-                            <TableHeaderColumn>{this.context.d2.i18n.getTranslation('searchable')}</TableHeaderColumn>
+                            <TableHeaderColumn>{this.getTranslation('name')}</TableHeaderColumn>
+                            <TableHeaderColumn>{this.getTranslation('display_in_list')}</TableHeaderColumn>
+                            <TableHeaderColumn>{this.getTranslation('mandatory')}</TableHeaderColumn>
+                            <TableHeaderColumn>{this.getTranslation('searchable')}</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
