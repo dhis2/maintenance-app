@@ -79,7 +79,7 @@
   "dependencies": {
     "babel-polyfill": "^6.13.0",
     "d2": "^29.0.1",
-    "d2-ui": "^28.0.14",
+    "d2-ui": "^29.0.5",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-15": "^1.0.0",
     "jest": "^21.2.1",
