@@ -1,120 +1,171 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { get, getOr, __ } from 'lodash/fp';
 
-import compose from 'recompose/compose';
-
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
+import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import Store from 'd2-ui/lib/store/Store';
-
-import Paper from 'material-ui/Paper/Paper';
 import TextField from 'material-ui/TextField/TextField';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
-
 import TETAttributeRow from '../../../forms/form-fields/attribute-row';
 
-function addDisplayProperties(attributes) {
-    return ({ trackedEntityTypeAttribute, ...other }) => {
-        const { displayName, valueType, optionSet, unique } = attributes.find(({ id }) => id === trackedEntityTypeAttribute.id);
-        return {
-            ...other,
-            trackedEntityTypeAttribute: {
-                ...trackedEntityTypeAttribute,
-                displayName,
-                valueType,
-                optionSet,
-                unique,
-            },
-        };
+class AssignTrackedEntityTypeAttributes extends Component {
+    state = {
+        isLoading: true,
+        availableAttributesStore: Store.create(),
+        assignedAttributesStore: Store.create(),
+        filterText: '',
+        assignedAttributes: this.props.model.trackedEntityTypeAttributes || [],
     };
-}
 
-function AssignTrackedEntityTypeAttributes(props, { d2 }) {
-    const isLoading = true;
-    d2.models.trackedEntityAttribute.list({
-        level: 1,
-        paging: false,
-        fields: ['id,displayName,valueType,unique,optionSet'].join(','),
-    }).then(pung => console.log(pung.toArray()));
-
-    if (isLoading) {
-        return null;
+    componentDidMount() {
+        this.context.d2.models.trackedEntityAttribute.list({
+            level: 1,
+            paging: false,
+            fields: ['id,displayName,valueType,unique,optionSet,mandatory,searchable,displayInList'].join(','),
+        }).then((trackedEntityAttributes) => {
+            this.state.availableAttributesStore.setState(
+                trackedEntityAttributes.toArray().map(attribute => ({
+                    displayName: attribute.displayName,
+                    text: attribute.displayName,
+                    value: attribute.id,
+                    valueType: attribute.valueType,
+                    unique: attribute.unique,
+                    optionSet: attribute.optionSet,
+                    mandatory: attribute.mandatory,
+                    searchable: attribute.searchable,
+                    displayInList: attribute.displayInList,
+                    trackedEntityAttribute: {
+                        id: attribute.id,
+                    },
+                })),
+            );
+            this.state.assignedAttributesStore.setState(this.state.assignedAttributes.map(attribute => attribute.trackedEntityAttribute.id));
+            this.setState({ isLoading: false });
+        });
     }
 
-    const itemStore = Store.create();
-    const assignedItemStore = Store.create();
-    itemStore.setState(
-        props.availableAttributes.map(attribute => ({
-            id: attribute.id,
-            text: attribute.displayName,
-            value: attribute.id,
-        })),
-    );
+    onAssignAttributes = (assignedAttributesIds) => {
+        const newAssignedAttributes = this.state.assignedAttributes.concat(this.getAttributeModels(assignedAttributesIds));
+        const newAssignedAttributesIds = this.state.assignedAttributesStore.getState().concat(assignedAttributesIds);
 
-    // Assign existing attributes
-    assignedItemStore.setState(
-        props.items.map(a => a.trackedEntityAttribute.id),
-    );
+        this.updateState(newAssignedAttributes, newAssignedAttributesIds);
+        return Promise.resolve();
+    }
 
-    // Create edit-able rows for assigned attributes
-    const tableRows = props.items
-        .map(addDisplayProperties(props.availableAttributes))
-        .map(trackedEntityType => (
-            <TETAttributeRow
-                key={trackedEntityType.id}
-                displayName={trackedEntityType.trackedEntityTypeAttribute.displayName}
-                attribute={trackedEntityType}
-                onEditAttribute={props.onEditProgramAttribute}
-                isDateValue={trackedEntityType.trackedEntityAttribute.valueType === 'DATE'}
-                isUnique={trackedEntityType.trackedEntityTypeAttribute.unique}
-                hasOptionSet={!!trackedEntityType.trackedEntityTypeAttribute.optionSet}
-            />
-        ));
+    onRemoveAttributes = (removedAttributesIds) => {
+        const newAssignedAttributesIds = this.state.assignedAttributesStore.getState()
+            .filter(assignedAttributeId => !removedAttributesIds.includes(assignedAttributeId));
+        const newAssignedAttributes = this.state.assignedAttributes
+            .filter(assignedAttribute => !removedAttributesIds.includes(assignedAttribute.trackedEntityAttribute.id));
 
-    return (
-        <Paper>
-            <div style={{ padding: '2rem 3rem 4rem' }}>
-                <TextField
-                    hintText={d2.i18n.getTranslation('search_available_selected_items')}
-                    onChange={compose(props.attributeFilter, getOr('', 'target.value'))}
-                    value={props.attributeFilter}
-                    fullWidth
+        this.updateState(newAssignedAttributes, newAssignedAttributesIds);
+        return Promise.resolve();
+    }
+
+    onEditAttribute = (changedAttribute) => {
+        const newAssignedAttributes = this.state.assignedAttributes
+            .map(attribute => ((attribute.id === changedAttribute.id)
+                ? changedAttribute
+                : attribute),
+            );
+        this.updateState(newAssignedAttributes);
+    }
+
+    onMoveAttributes = (newAttributesOrderIds) => {
+        const newAssignedAttributes = newAttributesOrderIds.map(attributeId =>
+            this.state.assignedAttributes.filter(attribute => attribute.trackedEntityAttribute.id === attributeId)[0]);
+
+        this.updateState(newAssignedAttributes, newAttributesOrderIds);
+    }
+
+    getAttributeModels = assignedAttributes =>
+        this.state.availableAttributesStore.getState()
+            .filter(attribute => assignedAttributes.includes(attribute.trackedEntityAttribute.id));
+
+    getTableRows = () =>
+        this.state.assignedAttributes
+            .map(trackedEntityTypeAttribute => (
+                <TETAttributeRow
+                    columns={['displayInList', 'mandatory', 'searchable']}
+                    key={trackedEntityTypeAttribute.trackedEntityAttribute.id}
+                    displayName={trackedEntityTypeAttribute.displayName}
+                    attribute={trackedEntityTypeAttribute}
+                    onEditAttribute={this.onEditAttribute}
+                    isDateValue={trackedEntityTypeAttribute.valueType === 'DATE'}
+                    isUnique={trackedEntityTypeAttribute.unique}
+                    hasOptionSet={!!trackedEntityTypeAttribute.optionSet}
                 />
-                <GroupEditor
-                    itemStore={itemStore}
-                    assignedItemStore={assignedItemStore}
-                    height={250}
-                    filterText={props.attributeFilter}
-                    onAssignItems={props.onAssignItems}
-                    onRemoveItems={props.onRemoveItems}
-                />
+            ));
+
+    setFilterText = (event) => {
+        this.setState({ filterText: event.target.value });
+    }
+
+    updateState = (assignedAttributes, assignedAttributesIds) => {
+        assignedAttributesIds && this.state.assignedAttributesStore.setState(assignedAttributesIds);
+        this.updateAssignedState(assignedAttributes);
+        this.signalChangeToParent(assignedAttributes);
+    }
+
+    updateAssignedState = (assignedAttributes) => {
+        this.setState({ assignedAttributes });
+    }
+
+    signalChangeToParent = (assignedAttributes) => {
+        this.props.onChange({
+            target: {
+                value: assignedAttributes,
+            },
+        });
+    }
+
+    render() {
+        if (this.state.isLoading) {
+            return null;
+        }
+        return (
+            <div>
+                <div style={{ padding: '2rem 0rem 4rem' }}>
+                    <TextField
+                        hintText={this.context.d2.i18n.getTranslation('search_available_tracked_entity_type_attributes')}
+                        onChange={this.setFilterText}
+                        value={this.state.filterText}
+                        fullWidth
+                    />
+                    <GroupEditorWithOrdering
+                        itemStore={this.state.availableAttributesStore}
+                        assignedItemStore={this.state.assignedAttributesStore}
+                        loading={this.state.isLoading}
+                        height={250}
+                        filterText={this.state.filterText}
+                        onAssignItems={this.onAssignAttributes}
+                        onRemoveItems={this.onRemoveAttributes}
+                        onOrderChanged={this.onMoveAttributes}
+                    />
+                </div>
+                <Table>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                        <TableRow>
+                            <TableHeaderColumn>{this.context.d2.i18n.getTranslation('name')}</TableHeaderColumn>
+                            <TableHeaderColumn>{this.context.d2.i18n.getTranslation('display_in_list')}</TableHeaderColumn>
+                            <TableHeaderColumn>{this.context.d2.i18n.getTranslation('mandatory')}</TableHeaderColumn>
+                            <TableHeaderColumn>{this.context.d2.i18n.getTranslation('searchable')}</TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={false}>
+                        {this.getTableRows()}
+                    </TableBody>
+                </Table>
             </div>
-            <Table>
-                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                    <TableRow>
-                        <TableHeaderColumn>Name</TableHeaderColumn>
-                        <TableHeaderColumn>Display in list</TableHeaderColumn>
-                        <TableHeaderColumn>Mandatory</TableHeaderColumn>
-                        <TableHeaderColumn>Date in future</TableHeaderColumn>
-                        <TableHeaderColumn>Render options as radio</TableHeaderColumn>
-                        <TableHeaderColumn>Searchable</TableHeaderColumn>
-                    </TableRow>
-                </TableHeader>
-                <TableBody displayRowCheckbox={false}>
-                    {tableRows}
-                </TableBody>
-            </Table>
-        </Paper>
-    );
+        );
+    }
 }
 
 AssignTrackedEntityTypeAttributes.propTypes = {
-    availableAttributes: PropTypes.array.isRequired,
-    items: PropTypes.array.isRequired,
-    onEditProgramAttribute: PropTypes.func.isRequired,
-    attributeFilter: PropTypes.string.isRequired,
-    onAssignItems: PropTypes.func.isRequired,
-    onRemoveItems: PropTypes.func.isRequired,
+    model: PropTypes.shape({
+        trackedEntityTypeAttributes: PropTypes.array,
+    }).isRequired,
+    onChange: PropTypes.func.isRequired,
 };
 
 AssignTrackedEntityTypeAttributes.contextTypes = {

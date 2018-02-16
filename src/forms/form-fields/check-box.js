@@ -50,7 +50,10 @@ const CheckboxWrap = (props) => {
 
 CheckboxWrap.propTypes = {
     onChange: PropTypes.func.isRequired,
-    labelText: PropTypes.string.isRequired,
+    labelText: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object,
+    ]).isRequired,
     value: PropTypes.oneOfType([
         PropTypes.bool,
         PropTypes.oneOf(['true', 'false']),

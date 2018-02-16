@@ -11,39 +11,50 @@ const flipBooleanPropertyOn = (object, key) => ({
     [key]: !object[key],
 });
 
-const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, isUnique, hasOptionSet }, { d2 }) => {
+const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, isUnique, hasOptionSet, columns }, { d2 }) => {
     const onChangeFlipBooleanForProperty = propertyName => () => onEditAttribute(
         flipBooleanPropertyOn(attribute, propertyName),
     );
+
     const isCheckedForProp = getOr(false, __, attribute);
 
     return (
         <TableRow>
             <TableRowColumn>{displayName}</TableRowColumn>
+
+            {columns.includes('displayInList') &&
             <TableRowColumn>
                 <Checkbox
                     checked={isCheckedForProp('displayInList')}
                     onClick={onChangeFlipBooleanForProperty('displayInList')}
                 />
-            </TableRowColumn>
+            </TableRowColumn>}
+
+            {columns.includes('mandatory') &&
             <TableRowColumn>
                 <Checkbox
                     checked={isCheckedForProp('mandatory')}
                     onClick={onChangeFlipBooleanForProperty('mandatory')}
                 />
-            </TableRowColumn>
+            </TableRowColumn>}
+
+            {columns.includes('allowFutureDate') &&
             <TableRowColumn>
                 {isDateValue && <Checkbox
                     checked={isCheckedForProp('allowFutureDate')}
                     onClick={onChangeFlipBooleanForProperty('allowFutureDate')}
                 />}
-            </TableRowColumn>
+            </TableRowColumn>}
+
+            {columns.includes('renderOptionsAsRadio') &&
             <TableRowColumn>
                 {hasOptionSet && <Checkbox
                     checked={isCheckedForProp('renderOptionsAsRadio')}
                     onClick={onChangeFlipBooleanForProperty('renderOptionsAsRadio')}
                 />}
-            </TableRowColumn>
+            </TableRowColumn>}
+
+            {columns.includes('searchable') &&
             <TableRowColumn>
                 <Checkbox
                     checked={isUnique || isCheckedForProp('searchable')}
@@ -51,7 +62,7 @@ const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, is
                     onClick={onChangeFlipBooleanForProperty('searchable')}
                     title={d2.i18n.getTranslation('unique_attributes_always_searchable')}
                 />
-            </TableRowColumn>
+            </TableRowColumn>}
         </TableRow>);
 };
 
@@ -62,12 +73,15 @@ AttributeRow.propTypes = {
     isUnique: PropTypes.bool,
     isDateValue: PropTypes.bool,
     hasOptionSet: PropTypes.bool,
+    columns: PropTypes.array,
 };
 
 AttributeRow.defaultProps = {
     isDateValue: false,
     isUnique: false,
     hasOptionSet: false,
+    columns: ['displayInList', 'mandatory', 'allowFutureDate', 'renderOptionsAsRadio', 'searchable'],
+
 };
 
 AttributeRow.contextTypes = {

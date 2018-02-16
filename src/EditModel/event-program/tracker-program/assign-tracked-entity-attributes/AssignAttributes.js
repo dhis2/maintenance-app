@@ -11,6 +11,7 @@ import mapPropsStream from 'recompose/mapPropsStream';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 
+import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Store from 'd2-ui/lib/store/Store';
 
@@ -47,9 +48,10 @@ const enhance = compose(
         .combineLatest(
             program$,
             availableAttributes$,
-            (props, program$, availableAttributes) => ({ ...props, availableAttributes, model: program$, items: program$.programTrackedEntityAttributes }),
+            (props, program$, availableAttributes) => ({ ...props, availableAttributes, model: program$, assignedAttributes: program$.programTrackedEntityAttributes }),
         ),
     ),
+    withState('attributeFilter', 'setAttributeFilter', ''),
     withHandlers({
         onAssignItems: ({ addAttributesToProgram }) => (attributes) => {
             addAttributesToProgram({ attributes });
@@ -62,8 +64,8 @@ const enhance = compose(
         onEditProgramAttribute: ({ editProgramAttributes }) => attribute => editProgramAttributes({
             attribute,
         }),
+        onAttributeFilter: ({ setAttributeFilter }) => e => setAttributeFilter(e.target.value),
     }),
-    withState('attributeFilter', 'setDataElementFilter', ''),
 );
 
 function addDisplayProperties(attributes) {
@@ -83,9 +85,10 @@ function addDisplayProperties(attributes) {
 }
 
 function AssignAttributes(props, { d2 }) {
-    const itemStore = Store.create();
+    const availableItemStore = Store.create();
     const assignedItemStore = Store.create();
-    itemStore.setState(
+
+    availableItemStore.setState(
         props.availableAttributes.map(attribute => ({
             id: attribute.id,
             text: attribute.displayName,
@@ -95,11 +98,16 @@ function AssignAttributes(props, { d2 }) {
 
     // Assign existing attributes
     assignedItemStore.setState(
-        props.items.map(a => a.trackedEntityAttribute.id),
+        props.assignedAttributes.map(a => a.trackedEntityAttribute.id),
     );
 
+    const onMoveAttributes = (newAttributesOrderIds) => {
+        assignedItemStore.setState(newAttributesOrderIds);
+        // need to update this.props.assignedAttributes to reflect new order in epics
+    };
+
     // Create edit-able rows for assigned attributes
-    const tableRows = props.items
+    const tableRows = props.assignedAttributes
         .map(addDisplayProperties(props.availableAttributes))
         .map(programAttribute => (
             <ProgramAttributeRow
@@ -118,17 +126,18 @@ function AssignAttributes(props, { d2 }) {
             <div style={{ padding: '2rem 3rem 4rem' }}>
                 <TextField
                     hintText={d2.i18n.getTranslation('search_available_selected_items')}
-                    onChange={compose(props.attributeFilter, getOr('', 'target.value'))}
+                    onChange={props.onAttributeFilter}
                     value={props.attributeFilter}
                     fullWidth
                 />
-                <GroupEditor
-                    itemStore={itemStore}
+                <GroupEditorWithOrdering
+                    itemStore={availableItemStore}
                     assignedItemStore={assignedItemStore}
                     height={250}
                     filterText={props.attributeFilter}
                     onAssignItems={props.onAssignItems}
                     onRemoveItems={props.onRemoveItems}
+                    onOrderChanged={onMoveAttributes}
                 />
             </div>
             <Table>
@@ -152,9 +161,10 @@ function AssignAttributes(props, { d2 }) {
 
 AssignAttributes.propTypes = {
     availableAttributes: PropTypes.array.isRequired,
-    items: PropTypes.array.isRequired,
+    assignedAttributes: PropTypes.array.isRequired,
     onEditProgramAttribute: PropTypes.func.isRequired,
     attributeFilter: PropTypes.string.isRequired,
+    onAttributeFilter: PropTypes.func.isRequired,
     onAssignItems: PropTypes.func.isRequired,
     onRemoveItems: PropTypes.func.isRequired,
 };
