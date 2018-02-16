@@ -143,12 +143,12 @@ function AssignAttributes(props, { d2 }) {
             <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn>Name</TableHeaderColumn>
-                        <TableHeaderColumn>Display in list</TableHeaderColumn>
-                        <TableHeaderColumn>Mandatory</TableHeaderColumn>
-                        <TableHeaderColumn>Date in future</TableHeaderColumn>
-                        <TableHeaderColumn>Render options as radio</TableHeaderColumn>
-                        <TableHeaderColumn>Searchable</TableHeaderColumn>
+                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('name')}</TableHeaderColumn>
+                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('display_in_list')}</TableHeaderColumn>
+                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('mandatory')}</TableHeaderColumn>
+                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('date_in_future')}</TableHeaderColumn>
+                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('render_options_as_radio')}</TableHeaderColumn>
+                        <TableHeaderColumn>{this.context.d2.i18n.getTranslation('searchable')}</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
