@@ -108,8 +108,8 @@ function AnalyticsPeriodBoundary (props) {
             <StyledTextField type="number"
                 style={ { flex: '0 1 auto' } }
                 labelText={getTranslation('period_number_offset')}
-                value={props.offsetNumberOfPeriods}
-                onChange={e => props.onChange(e, "offsetNumberOfPeriods")}
+                value={props.offsetPeriods}
+                onChange={e => props.onChange(e, "offsetPeriods")}
             />
 
             <StyledPeriodTypeDropDown
@@ -152,7 +152,7 @@ function addSubField(model, onChange) {
     const newVal = {
         analyticsPeriodBoundaryType: '',
         boundaryTarget: '',
-        offsetNumberOfPeriods: 0,
+        offsetPeriods: 0,
         offsetPeriodType: ''
     };
 
