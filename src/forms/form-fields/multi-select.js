@@ -29,11 +29,9 @@ multiSelectActions.addItemsToModelCollection
     .subscribe(({ data, complete, error }) => {
         try {
             const [modelsToAdd, propertyName, model] = data;
-
             if (!model[propertyName]) {
                 error(`Model does not have property called '${propertyName}'`);
             }
-
             modelsToAdd
                 .forEach((itemToAdd) => {
                     model[propertyName].add(itemToAdd);

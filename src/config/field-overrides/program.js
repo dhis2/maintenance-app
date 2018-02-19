@@ -2,13 +2,13 @@ import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 
 async function getRelationshipTypes(model, d2) {
-    if(!model.relationshipType) {
+    if (!model.relationshipType) {
         return [];
     }
     const relationship = await d2.models.relationshipTypes.get(
-        model.relationshipType.id
+        model.relationshipType.id,
     );
-    const relationhipOptions = [
+    const relationshipOptions = [
         {
             text: relationship.aIsToB,
             value: true,
@@ -19,7 +19,7 @@ async function getRelationshipTypes(model, d2) {
         },
     ];
 
-    return relationhipOptions;
+    return relationshipOptions;
 }
 
 export default new Map([

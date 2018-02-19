@@ -33,12 +33,12 @@ const getProgramStageIndexById = curry((stageId, store) =>
 /**
  * Deletes a programStage from state by id.
  * @param stageId to delete
- * @param setState flag to indicate if the function should set the state.
- * If not, the function can be used to get the "setter"-object to use with setState
- * . And is useful if you are setting the state manually later. Default true
+ * @param shouldSetState flag to indicate if the function should set the state.
+ * If not, the function can be used to get the "setter"-object to use with setState.
+ * And is useful if you are setting the state manually later. Default true
  * @returns {*} the state that should be modified, to use as a setter for store.setState().
  */
-export const deleteProgramStageFromState = (stageId, setState = true) => {
+export const deleteProgramStageFromState = (stageId, shouldSetState = true) => {
     const state = programStore.getState();
     const programStage = getProgramStageById(stageId, state);
     const index = getProgramStageIndexById(stageId, state);
@@ -51,7 +51,7 @@ export const deleteProgramStageFromState = (stageId, setState = true) => {
     const setters = set('program', program)(
         set('programStages', removedFromProgramStages, state),
     );
-    setState && programStore.setState(setters);
+    shouldSetState && programStore.setState(setters);
     return setters;
 };
 

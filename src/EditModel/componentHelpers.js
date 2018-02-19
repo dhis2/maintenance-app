@@ -3,7 +3,7 @@ import { isNil } from 'lodash/fp';
 import Paper from 'material-ui/Paper/Paper';
 import mapProps from 'recompose/mapProps';
 
-export const wrapInPaperWithStyle = style => BaseComponent => {
+export const wrapInPaperWithStyle = style => (BaseComponent) => {
     const styleToApply = isNil(style) ? { padding: '3rem' } : style;
 
     return function WrappedInPaper(props) {

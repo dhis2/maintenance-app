@@ -25,8 +25,8 @@ indicatorExpressionStatusActions.requestExpressionStatus
 const IndicatorExpressionManagerContainer = React.createClass({
     propTypes: {
         indicatorExpressionChanged: React.PropTypes.func.isRequired,
-        description: React.PropTypes.string.isRequired,
-        formula: React.PropTypes.string.isRequired,
+        description: React.PropTypes.string,
+        formula: React.PropTypes.string,
         titleText: React.PropTypes.string,
     },
 

@@ -1,26 +1,36 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { get, getOr, __ } from 'lodash/fp';
+import { get } from 'lodash/fp';
 
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
 import mapPropsStream from 'recompose/mapPropsStream';
-import pure from 'recompose/pure';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
+import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import Store from 'd2-ui/lib/store/Store';
 
 import Paper from 'material-ui/Paper/Paper';
-import Checkbox from 'material-ui/Checkbox/Checkbox';
 import TextField from 'material-ui/TextField/TextField';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
 
+import ProgramAttributeRow from '../../../../forms/form-fields/attribute-row';
 import eventProgramStore from '../../eventProgramStore';
 import { addAttributesToProgram, removeAttributesFromProgram, editProgramAttributes } from './actions';
 
+const styles = {
+    groupEditor: {
+        padding: '2rem 3rem 4rem',
+    },
+    fieldname: {
+        fontSize: 16,
+        color: '#00000080',
+    },
+};
 
 const program$ = eventProgramStore
     .map(get('program'));
@@ -46,85 +56,40 @@ const enhance = compose(
         .combineLatest(
             program$,
             availableAttributes$,
-            (props, program$, availableAttributes) => ({ ...props, availableAttributes, model: program$, items: program$.programTrackedEntityAttributes }),
+            (props, program$, availableAttributes) => (
+                {
+                    ...props,
+                    availableAttributes,
+                    model: program$,
+                    assignedAttributes: program$.programTrackedEntityAttributes,
+                }),
         ),
     ),
+    withState('attributeFilter', 'setAttributeFilter', ''),
     withHandlers({
         onAssignItems: ({ addAttributesToProgram }) => (attributes) => {
             addAttributesToProgram({ attributes });
             return Promise.resolve();
         },
-        onRemoveItems: ({ model, removeAttributesFromProgram }) => (attributes) => {
+        onRemoveItems: ({ removeAttributesFromProgram }) => (attributes) => {
             removeAttributesFromProgram({ attributes });
             return Promise.resolve();
         },
-        onEditProgramAttribute: ({ model, editProgramAttributes }) => attribute => editProgramAttributes({
+        onEditProgramAttribute: ({ editProgramAttributes }) => attribute => editProgramAttributes({
             attribute,
         }),
+        onAttributeFilter: ({ setAttributeFilter }) => e => setAttributeFilter(e.target.value),
     }),
-    withState('attributeFilter', 'setDataElementFilter', ''),
 );
-
-const flipBooleanPropertyOn = (object, key) => ({
-    ...object,
-    [key]: !object[key],
-});
-
-const ProgramAttribute = ({ programAttribute, onEditProgramAttribute }, { d2 }) => {
-    const isDateValue = programAttribute.trackedEntityAttribute.valueType === 'DATE';
-    const isUnique = programAttribute.trackedEntityAttribute.unique;
-    const hasOptionSet = !!programAttribute.trackedEntityAttribute.optionSet;
-    const onChangeFlipBooleanForProperty = propertyName => () => onEditProgramAttribute(
-        flipBooleanPropertyOn(programAttribute, propertyName),
-    );
-    const isCheckedForProp = getOr(false, __, programAttribute);
-
-    return (
-        <TableRow>
-            <TableRowColumn>{programAttribute.trackedEntityAttribute.displayName}</TableRowColumn>
-            <TableRowColumn>
-                <Checkbox
-                    checked={isCheckedForProp('displayInList')}
-                    onClick={onChangeFlipBooleanForProperty('displayInList')}
-                />
-            </TableRowColumn>
-            <TableRowColumn>
-                <Checkbox
-                    checked={isCheckedForProp('mandatory')}
-                    onClick={onChangeFlipBooleanForProperty('mandatory')}
-                />
-            </TableRowColumn>
-            <TableRowColumn>
-                {isDateValue ? <Checkbox
-                    checked={isCheckedForProp('allowFutureDate')}
-                    onClick={onChangeFlipBooleanForProperty('allowFutureDate')}
-                /> : null}
-            </TableRowColumn>
-            <TableRowColumn>
-                {hasOptionSet ? <Checkbox
-                    checked={isCheckedForProp('renderOptionsAsRadio')}
-                    onClick={onChangeFlipBooleanForProperty('renderOptionsAsRadio')}
-                /> : null}
-            </TableRowColumn>
-            <TableRowColumn>
-                <Checkbox
-                    checked={isUnique || isCheckedForProp('searchable')}
-                    disabled={isUnique}
-                    onClick={onChangeFlipBooleanForProperty('searchable')}
-                    title={d2.i18n.getTranslation('unique_attributes_always_searchable')}
-                />
-            </TableRowColumn>
-        </TableRow>);
-};
-
-ProgramAttribute.contextTypes = {
-    d2: PropTypes.object,
-};
-const PureProgramAttribute = pure(ProgramAttribute);
 
 function addDisplayProperties(attributes) {
     return ({ trackedEntityAttribute, ...other }) => {
-        const { displayName, valueType, optionSet, unique } = attributes.find(({ id }) => id === trackedEntityAttribute.id);
+        const {
+            displayName,
+            valueType,
+            optionSet,
+            unique,
+        } = attributes.find(({ id }) => id === trackedEntityAttribute.id);
 
         return {
             ...other,
@@ -140,9 +105,10 @@ function addDisplayProperties(attributes) {
 }
 
 function AssignAttributes(props, { d2 }) {
-    const itemStore = Store.create();
+    const availableItemStore = Store.create();
     const assignedItemStore = Store.create();
-    itemStore.setState(
+
+    availableItemStore.setState(
         props.availableAttributes.map(attribute => ({
             id: attribute.id,
             text: attribute.displayName,
@@ -152,47 +118,58 @@ function AssignAttributes(props, { d2 }) {
 
     // Assign existing attributes
     assignedItemStore.setState(
-        props.items.map(a => a.trackedEntityAttribute.id),
+        props.assignedAttributes.map(a => a.trackedEntityAttribute.id),
     );
 
+    const onMoveAttributes = (newAttributesOrderIds) => {
+        assignedItemStore.setState(newAttributesOrderIds);
+        // TODO need to update this.props.assignedAttributes to reflect new order in epics
+    };
+
     // Create edit-able rows for assigned attributes
-    const tableRows = props.items
+    const tableRows = props.assignedAttributes
         .map(addDisplayProperties(props.availableAttributes))
-        .map((programAttribute, index) => (
-            <PureProgramAttribute
+        .map(programAttribute => (
+            <ProgramAttributeRow
                 key={programAttribute.id}
-                programAttribute={programAttribute}
-                onEditProgramAttribute={props.onEditProgramAttribute}
+                displayName={programAttribute.trackedEntityAttribute.displayName}
+                attribute={programAttribute}
+                onEditAttribute={props.onEditProgramAttribute}
+                isDateValue={programAttribute.trackedEntityAttribute.valueType === 'DATE'}
+                isUnique={programAttribute.trackedEntityAttribute.unique}
+                hasOptionSet={!!programAttribute.trackedEntityAttribute.optionSet}
             />
         ));
 
     return (
         <Paper>
-            <div style={{ padding: '2rem 3rem 4rem' }}>
+            <div style={styles.groupEditor}>
+                <div style={styles.fieldname}>{d2.i18n.getTranslation('program_tracked_entity_attributes')}</div>
                 <TextField
-                    hintText={d2.i18n.getTranslation('search_available_selected_items')}
-                    onChange={compose(props.attributeFilter, getOr('', 'target.value'))}
+                    hintText={d2.i18n.getTranslation('search_available_program_tracked_entity_attributes')}
+                    onChange={props.onAttributeFilter}
                     value={props.attributeFilter}
                     fullWidth
                 />
-                <GroupEditor
-                    itemStore={itemStore}
+                <GroupEditorWithOrdering
+                    itemStore={availableItemStore}
                     assignedItemStore={assignedItemStore}
                     height={250}
                     filterText={props.attributeFilter}
                     onAssignItems={props.onAssignItems}
                     onRemoveItems={props.onRemoveItems}
+                    onOrderChanged={onMoveAttributes}
                 />
             </div>
             <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn>Name</TableHeaderColumn>
-                        <TableHeaderColumn>Display in list</TableHeaderColumn>
-                        <TableHeaderColumn>Mandatory</TableHeaderColumn>
-                        <TableHeaderColumn>Date in future</TableHeaderColumn>
-                        <TableHeaderColumn>Render options as radio</TableHeaderColumn>
-                        <TableHeaderColumn>Searchable</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('name')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('display_in_list')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('mandatory')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('date_in_future')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('render_options_as_radio')}</TableHeaderColumn>
+                        <TableHeaderColumn>{d2.i18n.getTranslation('searchable')}</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
@@ -202,6 +179,16 @@ function AssignAttributes(props, { d2 }) {
         </Paper>
     );
 }
+
+AssignAttributes.propTypes = {
+    availableAttributes: PropTypes.array.isRequired,
+    assignedAttributes: PropTypes.array.isRequired,
+    onEditProgramAttribute: PropTypes.func.isRequired,
+    attributeFilter: PropTypes.string.isRequired,
+    onAttributeFilter: PropTypes.func.isRequired,
+    onAssignItems: PropTypes.func.isRequired,
+    onRemoveItems: PropTypes.func.isRequired,
+};
 
 AssignAttributes.contextTypes = {
     d2: PropTypes.object,
