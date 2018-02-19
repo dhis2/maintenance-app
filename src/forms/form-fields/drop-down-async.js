@@ -1,33 +1,79 @@
-import React from 'react';
-import DropDown from './drop-down';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { getInstance } from 'd2/lib/d2';
+
+import DropDown from './drop-down';
 import QuickAddLink from './helpers/QuickAddLink.component';
 import RefreshMask from './helpers/RefreshMask.component';
 
-export default React.createClass({
-    propTypes: {
-        referenceType: React.PropTypes.string.isRequired,
-        value: React.PropTypes.shape({
-            id: React.PropTypes.string.isRequired,
-        }),
-        onChange: React.PropTypes.func.isRequired,
-        quickAddLink: React.PropTypes.bool,
-        preventAutoDefault: React.PropTypes.bool,
+const styles = {
+    fieldStyle: {
+        display: 'flex',
+        alignItems: 'flex-end',
     },
+    fieldWrap: {
+        position: 'relative',
+    },
+};
 
-    getDefaultProps() {
-        return {
-            quickAddLink: true,
-            preventAutoDefault: false,
-        };
-    },
+class DropDownAsync extends Component {
+    state = {
+        options: [],
+        isRefreshing: false,
+    }
 
-    getInitialState() {
-        return {
-            options: [],
-            isRefreshing: false,
-        };
-    },
+    componentDidMount() {
+        this.loadOptions();
+    }
+
+    // TODO: Remove this hack to update the categoryCombo property when the domainType is set to TRACKER
+    // This should probably be done in the objectActions, however there we currently do not have any knowledge of the
+    // options.. It might be worth loading the categoryOption with name `default` just for this.
+    componentWillReceiveProps(newProps) {
+        const defaultOption = this.state.options.find(option => option.model.name === 'default');
+
+        if (newProps.value && defaultOption && defaultOption.model.id !== newProps.value.id &&
+            this.props.model && this.props.model.domainType === 'TRACKER') {
+            this.props.onChange({
+                target: {
+                    value: defaultOption.model,
+                },
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        this.omgLikeJustStop = true;
+    }
+
+    onRefreshClick = () => {
+        this.setState({
+            isRefreshing: true,
+        });
+
+        this.loadOptions()
+            .then(() => this.setState({ isRefreshing: false }));
+    }
+
+    onChange = (event) => {
+        if (event.target.value === null) {
+            this.props.onChange({
+                target: {
+                    value: null,
+                },
+            });
+            return;
+        }
+
+        const option = this.state.options.find(opt => opt.model.id === event.target.value);
+        if (option && option.model) {
+            this.props.onChange({
+                target: {
+                    value: option.model,
+                },
+            });
+        }
+    }
 
     loadOptions() {
         let fieldsForReferenceType = 'id,displayName,name';
@@ -36,7 +82,6 @@ export default React.createClass({
         if (this.props.referenceType === 'optionSet') {
             fieldsForReferenceType = 'id,displayName,name,valueType';
         }
-
 
         // program.programType is required for programIndicators to be able to determine if it is a tracker or event program
         if (this.props.referenceType === 'program') {
@@ -55,13 +100,16 @@ export default React.createClass({
             .then((d2) => {
                 d2i = d2;
                 if (d2.models.hasOwnProperty(this.props.referenceType)) {
-                    return d2.models[this.props.referenceType].list(Object.assign({
-                        fields: fieldsForReferenceType,
-                        paging: false,
-                        filter,
-                    }, filter && filter.length > 1 ? {
-                        rootJunction: 'OR',
-                    } : {}));
+                    return d2.models[this.props.referenceType].list(Object.assign(
+                        {
+                            fields: fieldsForReferenceType,
+                            paging: false,
+                            filter,
+                        },
+                        filter && filter.length > 1
+                            ? { rootJunction: 'OR' }
+                            : {},
+                    ));
                 } else if (this.props.referenceType.indexOf('.') !== -1) {
                     const modelName = this.props.referenceType.substr(0, this.props.referenceType.indexOf('.'));
                     const modelProp = this.props.referenceType.substr(modelName.length + 1);
@@ -72,7 +120,8 @@ export default React.createClass({
             .then(modelCollection => (
                 modelCollection
                     ? (modelCollection.toArray ? modelCollection.toArray() : modelCollection)
-                    : []))
+                    : []
+            ))
             .then(values => values.map(model => ({
                 text: model.displayName,
                 value: model.id,
@@ -95,31 +144,7 @@ export default React.createClass({
                     });
                 }
             });
-    },
-
-    componentDidMount() {
-        this.loadOptions();
-    },
-
-    // TODO: Remove this hack to update the categoryCombo property when the domainType is set to TRACKER
-    // This should probably be done in the objectActions, however there we currently do not have any knowledge of the
-    // options.. It might be worth loading the categoryOption with name `default` just for this.
-    componentWillReceiveProps(newProps) {
-        const defaultOption = this.state.options.find(option => option.model.name === 'default');
-
-        if (newProps.value && defaultOption && defaultOption.model.id !== newProps.value.id &&
-            this.props.model && this.props.model.domainType === 'TRACKER') {
-            this.props.onChange({
-                target: {
-                    value: defaultOption.model,
-                },
-            });
-        }
-    },
-
-    componentWillUnmount() {
-        this.omgLikeJustStop = true;
-    },
+    }
 
     render() {
         const {
@@ -142,98 +167,70 @@ export default React.createClass({
             ...other
         } = this.props;
 
-        const styles = {
-            fieldStyle: {
-                display: 'flex',
-                alignItems: 'flex-end',
-            },
-            fieldWrap: {
-                position: 'relative',
-            },
-        };
-
         return (
             <div style={{ ...styles.fieldWrap, ...style }}>
                 <div style={styles.fieldStyle}>
-                    {this.state.isRefreshing ? <RefreshMask horizontal /> : null}
+                    {this.state.isRefreshing && <RefreshMask horizontal />}
                     <DropDown
                         {...other}
                         options={this.state.options}
-                        value={this.props.value ? this.props.value.id : undefined}
-                        onChange={this._onChange}
-                        fullWidth
+                        value={this.props.value ? this.props.value.id : this.props.value}
+                        onChange={this.onChange}
+                        fullWidth={fullWidth}
                     />
-                    {quickAddLink ?
+                    {quickAddLink &&
                         <QuickAddLink
                             referenceType={this.props.referenceType}
-                            onRefreshClick={this._onRefreshClick}
+                            onRefreshClick={this.onRefreshClick}
                         />
-                        : null}
+                    }
                 </div>
             </div>
         );
-    },
+    }
+}
 
-    // Doesnt seem to be in use. Can be removed
-    renderQuickAddLink() {
-        const sectionForReferenceType = getSectionForType(this.props.referenceType);
+DropDownAsync.propTypes = {
+    value: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+    }),
+    referenceType: PropTypes.string.isRequired,
+    queryParamFilter: PropTypes.array,
+    errorText: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    translateOptions: PropTypes.bool,
+    preventAutoDefault: PropTypes.bool,
+    isInteger: PropTypes.bool,
+    quickAddLink: PropTypes.bool,
+    multiLine: PropTypes.bool,
+    fullWidth: PropTypes.bool,
+    style: PropTypes.object,
+    errorStyle: PropTypes.object,
+    referenceProperty: PropTypes.string,
+    modelDefinition: PropTypes.object,
+    models: PropTypes.object,
+    model: PropTypes.object,
+    options: PropTypes.array,
+};
 
-        if (!sectionForReferenceType) {
-            return null;
-        }
+DropDownAsync.defaultProps = {
+    queryParamFilter: undefined,
+    value: undefined,
+    translateOptions: false,
+    fullWidth: true,
+    multiLine: false,
+    isInteger: false,
+    quickAddLink: true,
+    preventAutoDefault: false,
+    errorText: '',
+    style: {},
+    referenceProperty: '',
+    errorStyle: {},
+    modelDefinition: {},
+    models: {},
+    model: {},
+    options: [],
+};
 
-        const styles = {
-            quickAddWrap: {
-                display: 'flex',
-            },
-        };
+export default DropDownAsync;
 
-        return (
-            <div style={styles.quickAddWrap}>
-                <Link
-                    tooltip="Add some related object"
-                    tooltipPosition="top-left"
-                    to={`/edit/${sectionForReferenceType}/${this.props.referenceType}/add`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <IconButton tooltip="Add new" tooltipPosition="top-left">
-                        <AddCircleOutlineIcon />
-                    </IconButton>
-                </Link>
-                <IconButton tooltip="Refresh values" tooltipPosition="top-left" onClick={this._onRefreshClick}>
-                    <RefreshIcon />
-                </IconButton>
-            </div>
-        );
-    },
-
-    _onRefreshClick() {
-        this.setState({
-            isRefreshing: true,
-        });
-
-        this.loadOptions()
-            .then(() => this.setState({ isRefreshing: false }));
-    },
-
-    _onChange(event) {
-        if (event.target.value === null) {
-            this.props.onChange({
-                target: {
-                    value: null,
-                },
-            });
-            return;
-        }
-
-        const option = this.state.options.find(opt => opt.model.id === event.target.value);
-        if (option && option.model) {
-            this.props.onChange({
-                target: {
-                    value: option.model,
-                },
-            });
-        }
-    },
-});

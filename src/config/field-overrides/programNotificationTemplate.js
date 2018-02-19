@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import withProps from 'recompose/withProps';
 import compose from 'recompose/compose';
+import { map } from 'lodash/fp';
+
 import RelativeScheduledDays from './program-notification-template/RelativeScheduledDays';
 import DeliveryChannels from './program-notification-template/DeliveryChannels';
 import DropDownAsync from '../../forms/form-fields/drop-down-async';
 import SubjectAndMessageTemplateFields from './validation-notification-template/SubjectAndMessageTemplateFields';
-import { map } from 'lodash/fp';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { setStageNotificationValue } from '../../EditModel/event-program/notifications/actions';
 
 const PROGRAM_STAGE_VARIABLES = [
@@ -52,7 +53,7 @@ export default new Map([
         },
     }],
     ['notificationRecipient', {
-        required: 'true',
+        required: true,
     }],
     ['recipientUserGroup', {
         component: (props) => {

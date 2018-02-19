@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import SelectField from 'material-ui/SelectField/SelectField';
 import TextField from 'material-ui/TextField';
 import isString from 'd2-utilizr/lib/isString';
@@ -12,12 +13,8 @@ class Dropdown extends React.Component {
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
 
-        this._onChange = this._onChange.bind(this);
-        this.openDialog = this.openDialog.bind(this);
-        this.closeDialog = this.closeDialog.bind(this);
-
         this.state = {
-            value: (this.props.value !== undefined && this.props.value !== null) ? this.props.value : '',
+            value: this.props.value,
             options: this.getOptions(this.props.options, this.props.isRequired),
             dialogOpen: false,
         };
@@ -29,7 +26,15 @@ class Dropdown extends React.Component {
         });
     }
 
-    getOptions(options, required = false) {
+    onChange = (event, index, value) => {
+        this.props.onChange({
+            target: {
+                value,
+            },
+        });
+    }
+
+    getOptions(options) {
         const opts = options
             .map(option => ({
                 value: option.value,
@@ -45,47 +50,39 @@ class Dropdown extends React.Component {
             });
     }
 
-    _onChange(event, index, value) {
-        this.props.onChange({
-            target: {
-                value,
-            },
-        });
-    }
+    getOptionText = value => (value && this.state.options.length
+        ? this.state.options.find(option => option.value === value).text
+        : '')
 
-    openDialog() {
-        this.setState({ dialogOpen: true, filterText: '' });
-    }
-
-    closeDialog() {
+    closeDialog = () => {
         this.setState({ dialogOpen: false });
     }
 
-    getOptionText(value) {
-        return value && this.state.options.length
-            ? this.state.options.find(option => option.value === value).text
-            : '';
+    openDialog = () => {
+        this.setState({ dialogOpen: true, filterText: '' });
     }
 
-    renderDialogOption(value, label) {
-        return (
-            <div
-                style={{ cursor: 'pointer', margin: 8 }}
-                key={value}
-                onClick={() => {
-                    this.props.onChange({ target: { value } });
-                    this.setState({ dialogOpen: false, value });
-                }}
-            ><a>{label}</a></div>
-        );
+    textFieldOnChange = (e, value) => {
+        this.setState({ filterText: value });
     }
 
-    renderOptions() {
+    renderDialogOption = (value, label) => (
+        <div
+            style={{ cursor: 'pointer', margin: 8 }}
+            key={value}
+            onClick={() => {
+                this.props.onChange({ target: { value } });
+                this.setState({ dialogOpen: false, value });
+            }}
+        ><a>{label}</a></div>
+    )
+
+    renderOptions = () => {
         const options = this.state.options
-            .map((option, index) => (
+            .map(option => (
                 <MenuItem
                     primaryText={option.text}
-                    key={index}
+                    key={option.value}
                     value={option.value}
                     label={option.text}
                 />
@@ -114,7 +111,7 @@ class Dropdown extends React.Component {
                 value={this.state.value}
                 fullWidth={this.props.fullWidth}
                 {...other}
-                onChange={this._onChange}
+                onChange={this.onChange}
                 floatingLabelText={this.props.labelText}
             >
                 {this.renderOptions()}
@@ -122,15 +119,13 @@ class Dropdown extends React.Component {
         );
     }
 
+
     renderDialogDropDown(other) {
         const styles = {
             fieldStyle: {
                 width: this.props.fullWidth ? '100%' : 'inherit',
                 position: 'relative',
                 top,
-            },
-            textField: {
-                marginBottom: 16,
             },
             openInNew: {
                 position: 'absolute',
@@ -140,6 +135,7 @@ class Dropdown extends React.Component {
                 cursor: 'pointer',
             },
         };
+
 
         return (
             <div style={styles.fieldStyle}>
@@ -155,7 +151,7 @@ class Dropdown extends React.Component {
                 >
                     <TextField
                         floatingLabelText="Filter list"
-                        onChange={(e, value) => { this.setState({ filterText: value }); }}
+                        onChange={this.textFieldOnChange}
                         style={styles.textField}
                     />
                     {!this.props.isRequired && this.renderDialogOption(null, this.getTranslation('no_value'))}
@@ -174,6 +170,7 @@ class Dropdown extends React.Component {
                     value={this.getOptionText(this.state.value)}
                     onClick={this.openDialog}
                     onChange={this.openDialog}
+                    style={styles.textField}
                     floatingLabelText={this.props.labelText}
                     inputStyle={{ cursor: 'pointer' }}
                 />
@@ -205,34 +202,57 @@ class Dropdown extends React.Component {
         } = this.props;
 
         return (
-            this.state.options.length > limit
-                ? this.renderDialogDropDown(other)
-                : this.renderSelectField(other)
+            <div style={{ ...style }}>
+                {this.state.options.length > limit
+                    ? this.renderDialogDropDown(other)
+                    : this.renderSelectField(other)}
+            </div>
         );
     }
 }
 
 Dropdown.propTypes = {
-    onFocus: React.PropTypes.func,
-    onBlur: React.PropTypes.func,
-    onChange: React.PropTypes.func,
-    options: React.PropTypes.array.isRequired,
-    fullWidth: React.PropTypes.bool,
-    translateOptions: React.PropTypes.bool,
-    isRequired: React.PropTypes.bool,
-    limit: React.PropTypes.number,
-    labelText: React.PropTypes.string.isRequired,
-    top: React.PropTypes.any,
-    style: React.PropTypes.any,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+    onChange: PropTypes.func,
+    fullWidth: PropTypes.bool,
+    translateOptions: PropTypes.bool,
+    isInteger: PropTypes.bool,
+    isRequired: PropTypes.bool,
+    limit: PropTypes.number,
+    top: PropTypes.any,
+    style: PropTypes.any,
+    value: PropTypes.string,
+    labelText: PropTypes.string.isRequired,
+    translateLabel: PropTypes.string,
+    referenceProperty: PropTypes.string,
+    modelDefinition: PropTypes.object,
+    models: PropTypes.object,
+    model: PropTypes.object,
+    referenceType: PropTypes.object,
+    options: PropTypes.array.isRequired,
 };
+
 Dropdown.defaultProps = {
+    onFocus: () => {},
+    onBlur: () => {},
+    onChange: () => {},
     limit: 50,
     translateOptions: false,
     isRequired: false,
     fullWidth: false,
+    isInteger: false,
     top: undefined,
     style: undefined,
+    value: '',
+    translateLabel: '',
+    referenceProperty: '',
+    modelDefinition: {},
+    models: {},
+    model: {},
+    referenceType: {},
 };
+
 Dropdown.contextTypes = {
     d2: React.PropTypes.any,
 };
