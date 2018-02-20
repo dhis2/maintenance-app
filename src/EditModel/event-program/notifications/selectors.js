@@ -42,7 +42,7 @@ export const getProgramStageDataElements = ({
 
 export const getProgramStageDataElementsByStageId = state => id => {
     const { programStages, availableDataElements } = state;
-    const index = getProgramStageIndexById(id, state);
+    const index = getProgramStageIndexById(state, id);
     if(index < 0) return null;
     const programStageDataElements = programStages[
         index
