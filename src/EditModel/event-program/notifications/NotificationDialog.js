@@ -142,7 +142,6 @@ const mapStateToProps = (
     state,
     { model, availableDataElements, programStages, dataElements }
 ) => {
-    console.log(programStages);
     const selectedPSId =
         (model && model.programStage && model.programStage.id) ||
         (programStages.length > 0 && programStages[0].id) ||

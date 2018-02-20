@@ -9,124 +9,26 @@ import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';
 import mapPropsStream from 'recompose/mapPropsStream';
 import NotificationList from './NotificationList';
-import {
-    getProgramStages,
-    getProgramNotifications,
-    getProgramStageDataElementsByStageId,
-    getStageNotifications,
-    getProgramStageDataElements,
-    getStageNotificationsForProgramStageId,
-} from './selectors';
+import { getProgramStages, getProgramNotifications } from './selectors';
 import NotificationDeleteDialog from './NotificationDeleteDialog';
 import { removeStageNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
 import eventProgramStore from '../eventProgramStore';
-import { getCurrentProgramStageId } from '../tracker-program/program-stages/selectors';
-import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
-import Avatar from 'material-ui/Avatar';
-import FontIcon from 'material-ui/FontIcon/FontIcon';
-import { hideIfNotAuthorizedToCreate } from '../notifications/NotificationList';
 const programStageTabIndex = 0;
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-import { getProgramStageById } from '../tracker-program/program-stages/selectors';
 
+import { getProgramStageById } from '../tracker-program/program-stages/selectors';
+import TrackerNotificationAddButton from './TrackerNotificationAddButton';
 const programStages$ = eventProgramStore.map(getProgramStages);
 const stageNotifications$ = eventProgramStore.map(
     get('programStageNotifications')
 );
-//const stageNotifications$ = stageId =>
-//   eventProgramStore.map(getStageNotificationsByProgramStageId(stageId));
+
 const programNotifications$ = eventProgramStore
     .map(getProgramNotifications)
     .map(n => n.toArray());
-const programStageDataElementsById$ = stageId =>
-    eventProgramStore.map(getProgramStageDataElementsByStageId(stageId));
-const programStageDataElements$ = eventProgramStore.map(
-    getProgramStageDataElements
-);
 
 const availableDataElements = eventProgramStore.map(
     get('availableDataElements')
-);
-
-class TrackerNotificationAddButton extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = {
-            items: [
-                {
-                    id: 'PROGRAM_NOTIFICATION',
-                    primaryText: context.d2.i18n.getTranslation(
-                        'program_notification'
-                    ),
-                    rightAvatar: (
-                        <Avatar
-                            className="material-icons"
-                            icon={<FontIcon>event</FontIcon>}
-                        />
-                    ),
-                },
-                {
-                    id: 'PROGRAM_STAGE_NOTIFICATION',
-                    primaryText: context.d2.i18n.getTranslation(
-                        'program_stage_notification'
-                    ),
-                    rightAvatar: (
-                        <Avatar
-                            className="material-icons"
-                            icon={<FontIcon>event_note</FontIcon>}
-                        />
-                    ),
-                },
-            ],
-            open: false,
-        };
-    }
-
-    handleOpen = ({ isOpen }) => {
-        this.setState({
-            ...this.state,
-            open: isOpen,
-        });
-    };
-
-    handleItemClick = (item, event) => {
-        this.setState({
-            ...this.state,
-            open: false,
-        });
-
-        this.props.onAddClick(item);
-    };
-
-    render() {
-        return (
-            <SpeedDial
-                hasBackdrop={true}
-                isOpen={this.state.open}
-                onChange={this.handleOpen}
-            >
-                <BubbleList>
-                    {this.state.items.map((item, index) =>
-                        <BubbleListItem
-                            key={item.id}
-                            {...item}
-                            onClick={this.handleItemClick.bind(this, item.id)}
-                        />
-                    )}
-                </BubbleList>
-            </SpeedDial>
-        );
-    }
-}
-
-TrackerNotificationAddButton.propTypes = {
-    onAddClick: PropTypes.func.isRequired,
-};
-
-const TrackerNotificationAddButtonWithContext = hideIfNotAuthorizedToCreate(
-    addD2Context(TrackerNotificationAddButton)
 );
 
 const TrackerProgramNotifications = (
@@ -179,7 +81,7 @@ const TrackerProgramNotifications = (
                         onEditNotification={setEditProgramStageModel}
                         onAddNotification={setAddModel}
                         showAddButton={true}
-                        addButton={TrackerNotificationAddButtonWithContext}
+                        addButton={TrackerNotificationAddButton}
                     />
                 </Tab>
                 <Tab label={d2.i18n.getTranslation('program_notifications')}>
@@ -231,9 +133,9 @@ const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
             removeStageNotification,
-            setEditProgramStageModel: (model) =>
+            setEditProgramStageModel: model =>
                 setEditModel(model, 'PROGRAM_STAGE_NOTIFICATION'),
-            setEditProgramModel: (model) =>
+            setEditProgramModel: model =>
                 setEditModel(model, 'PROGRAM_NOTIFICATION'),
             setAddModel,
         },
