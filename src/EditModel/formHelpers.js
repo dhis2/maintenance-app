@@ -150,8 +150,8 @@ function addValuesToFieldConfigs(fieldConfigs, model) {
  * @param schema - Schema to create configs for
  * @param fieldNames - Fields to use
  * @param filterFieldConfigs - A filter function that should return an array of fieldConfigs (must be same amount of fieldConfigs)
- * @param includeAttributes - Wether to include attributes
- * @param runRules - Wheter to apply field-rules speciefied in field-rules file.
+ * @param includeAttributes - Whether to include attributes
+ * @param runRules - Whether to apply field-rules specified in field-rules file.
  * @param customFieldOrderName - Custom name for the "schema", useful if the same schema has multiple purposes.
  * Ie. programNotificationTemplate, which are used in program Notification and programStage notifications.
  */
@@ -210,12 +210,12 @@ export function createFormFor(source$, schema, properties, includeAttributes, cu
 /**
  * Add given props to the fieldConfig.
  * If fieldNames has values, only fields with those name will be given the props.
- * Useful if you to be given to a map of fieldConfigs.
+ * Useful to be given to map() of fieldConfigs.
  *
- * Only fields with name='shortname' will be given the props.
+ * Ie: Only fields with name='shortname' will be given the props.
  * @example
  *  fieldConfigs.map(addPropsToFieldConfig[props, ['shortName']
- * @param fieldNames to add the props to. The fieldConfig is given
+ * @param fieldNames to add the props to.
  * @param props to add to fields
  * @returns {function(*): {props: {}}} fieldConfig with the props added.
  */
