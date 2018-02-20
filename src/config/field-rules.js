@@ -472,8 +472,10 @@ export default new Map([
         operations: [{
             type: 'CHANGE_VALUE',
             setValue: (model, fieldConfig) => {
-                fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
-                    'event', fieldConfig.value);
+                if (fieldConfig) {
+                    fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
+                        'event', fieldConfig.value);
+                }
             },
         }]
     },{
@@ -486,8 +488,10 @@ export default new Map([
         operations: [{
             type: 'CHANGE_VALUE',
             setValue: (model, fieldConfig) => {
-                fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
-                    'enrollment', fieldConfig.value);
+                if (fieldConfig) {
+                    fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
+                        'enrollment', fieldConfig.value);
+                }
             },
         }]
     }]]
