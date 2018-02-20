@@ -1,32 +1,8 @@
-import React from 'react';
 
-import { map } from 'lodash/fp';
-import withProps from 'recompose/withProps';
-import mapProps from 'recompose/mapProps';
-import compose from 'recompose/compose';
-
-import actions from '../../EditModel/objectActions';
 import DeliveryChannels from './program-notification-template/DeliveryChannels';
 import RelativeScheduledDays from './program-notification-template/RelativeScheduledDays';
-import SubjectAndMessageTemplateFields from './validation-notification-template/SubjectAndMessageTemplateFields';
-import DropDownAsync from '../../forms/form-fields/drop-down-async';
-
-const DATA_SET_VARIABLES = [
-    'data_set_name',
-    'current_date',
-];
-
-const toVariableType = name => ['V', name];
-
-const DataSetNotificationSubjectAndMessageTemplateFields = compose(
-    withProps({
-        variableTypes: map(toVariableType, DATA_SET_VARIABLES),
-    }),
-    mapProps(props => ({
-        ...props,
-        onUpdate: actions.update,
-    })),
-)(SubjectAndMessageTemplateFields);
+import RecipentUserGroup from './data-set-notification-template/RecipentUserGroup';
+import DataSetNotificationSubjectAndMessageTemplateFields from './data-set-notification-template/DataSetNotificationSubjectAndMessageTemplateFields';
 
 export default new Map([
     ['deliveryChannels', {
@@ -48,15 +24,9 @@ export default new Map([
         component: DataSetNotificationSubjectAndMessageTemplateFields,
     }],
     ['notificationRecipient', {
-        required: 'true',
+        required: true,
     }],
     ['recipientUserGroup', {
-        component: (props) => {
-            if (!props.model || props.model.notificationRecipient !== 'USER_GROUP') {
-                return null;
-            }
-
-            return <DropDownAsync {...props} />;
-        },
+        component: RecipentUserGroup,
     }],
 ]);

@@ -130,6 +130,9 @@ const typeDetails = {
         filters: ['formType'],
         columns: ['displayName', 'formType', 'periodType', 'publicAccess', 'lastUpdated'],
     },
+    dataSetNotificationTemplate: {
+        columns: ['displayName', 'lastUpdated'],
+    },
     indicator: {
         filters: ['indicatorType'],
         columns: ['displayName', 'indicatorType[displayName]', 'publicAccess', 'lastUpdated'],

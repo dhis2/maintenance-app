@@ -25,6 +25,7 @@ export default function RefreshMask({ horizontal }, { d2 }) {
         </div>
     );
 }
-RefreshMask.contextTypes = {
-    d2: PropTypes.object,
-};
+
+RefreshMask.propTypes = { horizontal: PropTypes.bool };
+RefreshMask.defaultProps = { horizontal: false };
+RefreshMask.contextTypes = { d2: PropTypes.object };
