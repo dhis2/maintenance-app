@@ -32,7 +32,8 @@ const isProgramStageDirty = compose(some(checkIfDirty), programStagesSelector);
 const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelector);
 
 // ___ hasDirtyProgramStageSections :: Object<StoreState> -> Boolean
-const hasDirtyProgramStageSections = compose(some(checkIfDirty), programStageSectionsSelector);
+//const hasDirtyProgramStageSections = compose(some(checkIfDirty), programStageSectionsSelector);
+const hasDirtyProgramStageSections = compose(some(checkIfDirty), flatten, values, programStageSectionsSelector)
 
 const hasDirtyProgramNotifications = state => programNotificationsSelector(state).isDirty();
 
@@ -78,11 +79,13 @@ export const getMetaDataToSend = (state) => {
     }
 
     if (hasDirtyProgramStageSections(state)) {
-        const programStages = programStageSectionsSelector(state);
-
-        payload.programStageSections = programStages
+        const programStageSections = programStageSectionsSelector(state);
+        payload.programStageSections = Object
+            .keys(programStageSections)
+            .map(get(__, programStageSections))
+            .reduce(concat)
             .filter(checkIfDirty)
-            .map(modelToJson);
+            .map(modelToJson)
     }
 
     if (hasDirtyNotificationTemplate(state)) {
@@ -129,6 +132,7 @@ function isValidState(state) {
         'availableDataElements',
         'availableAttributes',
         'dataEntryFormForProgramStage',
+        //'programStageSectionsExtracted' //FIX ME REMOVE
     ];
 
     return Object

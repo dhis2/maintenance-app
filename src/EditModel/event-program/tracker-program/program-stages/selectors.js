@@ -18,7 +18,7 @@ export const getProgramStageIndexById = curry((store, stageId) =>
 );
 
 export const getStageSectionsById = curry((state, id) => {
-    const { programStageSectionsExtracted } = state;
+    const { programStageSections } = state;
 
-    return get(id, programStageSectionsExtracted);
+    return get(id, programStageSections);
 });

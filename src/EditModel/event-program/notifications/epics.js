@@ -53,11 +53,15 @@ const saveProgramStageNotification = (action$, store) => action$
                 const { programStages, programStageNotifications } = eventProgramState;
                 const programStage = getProgramStageFromModel(eventProgramState, model);
 
-                const stageNotifications = getStageNotificationsForProgramStageId(eventProgramState, programStage.id)
+                let stageNotifications = getStageNotificationsForProgramStageId(eventProgramState, programStage.id)
                 // If we're dealing with a new model we have to add it to the notification lists
                 // Both on the notification list on the programStage and on the eventStore
                 if (negate(find(equals(model)))(stageNotifications)) {
                     programStage.notificationTemplates.add(model);
+                    //Add empty stageNotifications if its a new programStage
+                    if(!stageNotifications) {
+                        stageNotifications = eventProgramState.programStageNotifications[programStage.id] = [];
+                    }
                     stageNotifications.push(model);
                 }
 

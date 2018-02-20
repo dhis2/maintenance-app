@@ -12,6 +12,7 @@ import {
     PROGRAM_STAGE_SECTION_NAME_EDIT,
     PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE_COMPLETE,
 } from './actions';
+import { getStageSectionsById, getProgramStageById } from "../tracker-program/program-stages/selectors";
 
 const d2$ = Observable.fromPromise(getInstance());
 
@@ -41,11 +42,14 @@ const changeProgramStageSectionName = store => action$ => action$
         .ofType(PROGRAM_STAGE_SECTION_NAME_EDIT)
         .map((action) => {
             const state = store.getState();
+            const programStageId = get('payload.programStage', action);
+            const programStage = getProgramStageById(state, programStageId);
+
             const programStageSectionId = get('payload.programStageSectionId', action);
             const newProgramStageSectionName = get('payload.newProgramStageSectionName', action);
+            const programStageSections = getStageSectionsById(store, programStage)
 
-            const programStageSections = getOr([], 'programStageSections', state)
-                .map((section) => {
+            programStageSections.map((section) => {
                     // Modify the original Model instance
                     if (isEqual(section.id, programStageSectionId)) {
                         section.name = newProgramStageSectionName;
@@ -56,7 +60,7 @@ const changeProgramStageSectionName = store => action$ => action$
                 });
 
             store.setState({
-                programStageSections,
+                state,
             });
         })
         .flatMapTo(Observable.never());
@@ -71,14 +75,19 @@ const changeProgramStageSectionOrder = store => action$ => action$
         .ofType(PROGRAM_STAGE_SECTIONS_ORDER_CHANGE)
         .map((action) => {
             const state = store.getState();
-            console.warn('STATE IS:', state);
+            const programStageId = get('payload.programStage', action);
+            const programStage = getProgramStageById(state, programStageId);
+
+            let programStageSections = getStageSectionsById(state, programStageId);
 
             const newSections = get('payload.programStageSections', action);
-            const programStageSections = compose(sortBy('sortOrder'), setSortOrderToIndex)(newSections);
 
-            store.setState({
-                programStageSections,
-            });
+            const sortedSections = compose(sortBy('sortOrder'), setSortOrderToIndex)(newSections);
+            programStageSections = sortedSections;
+
+            store.setState(
+                state
+            );
         })
         .flatMapTo(Observable.never());
 
@@ -88,10 +97,11 @@ const addProgramStageSection = store => action$ => action$
         .map(([d2, action]) => {
             const state = store.getState();
             const newSectionName = get('payload.newSectionName', action);
-            const programStageSections = getOr([], 'programStageSections', state);
-            const sortOrder = getOr(-1, 'sortOrder', maxBy(section => get('sortOrder', section), programStageSections)) + 1;
+            const programStageId = get('payload.programStage', action);
+            const programStage = getProgramStageById(state, programStageId);
 
-            const programStage = get('programStages[0]', state);
+            let programStageSections = getStageSectionsById(state, programStageId);
+            const sortOrder = getOr(-1, 'sortOrder', maxBy(section => get('sortOrder', section), programStageSections)) + 1;
 
             // Create new section model and set the properties we can
             const newSection = d2.models.programStageSection.create({ id: generateUid(), dataElements: [] });
@@ -105,11 +115,13 @@ const addProgramStageSection = store => action$ => action$
             // Using the  programStageSection -> programStage relationship is not sufficient and the programStage -> programStageSection is the required relationship.Th
             programStage.programStageSections.add(newSection);
 
-            const updatedProgramStageSections = getOr([], 'programStageSections', state).concat(newSection);
-
-            store.setState({
-                programStageSections: updatedProgramStageSections,
-            });
+            //Add empty stageNotifications if its a new programStage
+            if(!programStageSections) {
+                programStageSections = state.programStageNotifications[programStageId] = [];
+            }
+            programStageSections.push(newSection);
+            console.log(programStageSections)
+            store.setState(state);
         })
         .flatMapTo(Observable.never());
 
@@ -121,16 +133,16 @@ const removeProgramStageSection = store => action$ => action$
             const state = store.getState();
             const sectionToDelete = get('payload.programStageSectionId', action);
 
-            const programStageSections = getOr([], 'programStageSections', state);
+            const programStageId = get('payload.programStage', action);
+            const programStageSections = getStageSectionsById(store, programStageId)
             const updatedProgramStageSections = filter(section => !isEqual(sectionToDelete, section.id), programStageSections);
 
             // Remove section from programStage
-            const programStage = get('programStages[0]', state);
             programStage.programStageSections = updatedProgramStageSections;
-
-            store.setState({
-                programStageSections: updatedProgramStageSections,
-            });
+            programStageSections[programStageId] = updatedProgramStageSections;
+            store.setState(
+                state
+            );
         })
         .flatMapTo(Observable.never());
 

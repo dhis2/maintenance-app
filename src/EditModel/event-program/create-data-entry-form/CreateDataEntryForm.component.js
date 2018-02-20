@@ -23,6 +23,7 @@ import {
     removeProgramStageSection,
     editProgramStageSectionName,
 } from './actions';
+import { getStageSectionsById } from "../tracker-program/program-stages/selectors";
 
 const sectionFormIndex = 1;
 
@@ -165,15 +166,17 @@ const enhance = compose(
             getProgramStageOrFirstFromProps$(props$),
             programStageSections$,
             trackerDataElements$,
+            eventProgramStore,
             (
                 props,
                 programStage,
                 programStageSections,
-                trackerDataElements
+                trackerDataElements,
+                store,
             ) => ({
                 ...props,
                 programStage,
-                programStageSections,
+                programStageSections: getStageSectionsById(store, props.programStage.id) || [],
                 trackerDataElements,
             })
         )
@@ -241,17 +244,27 @@ const enhance = compose(
             });
         },
         onSectionOrderChanged: ({
+            programStage,
             changeProgramStageSectionOrder,
         }) => programStageSections => {
-            changeProgramStageSectionOrder({ programStageSections });
+            changeProgramStageSectionOrder({
+                programStage: programStage.id,
+                programStageSections
+            });
         },
-        onSectionAdded: ({ addProgramStageSection }) => newSectionName => {
-            addProgramStageSection({ newSectionName });
+        onSectionAdded: ({ programStage, addProgramStageSection }) => newSectionName => {
+            addProgramStageSection({
+                programStage: programStage.id,
+                newSectionName
+            });
         },
         onSectionRemoved: ({
+            programStage,
             removeProgramStageSection,
         }) => programStageSectionId => {
-            removeProgramStageSection({ programStageSectionId });
+            removeProgramStageSection({
+                programStage: programStage.id,
+                programStageSectionId });
         },
     })
 );
