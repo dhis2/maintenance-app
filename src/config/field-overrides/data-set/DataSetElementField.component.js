@@ -40,6 +40,7 @@ function getDataElementNameForGroupEditor(dataSetElements, dataElement) {
 const styles = {
     fieldWrap: {
         marginBottom: '5rem',
+        marginTop: '3rem',
     },
 
     label: {
@@ -47,9 +48,10 @@ const styles = {
         display: 'block',
         width: 'calc(100% - 60px)',
         lineHeight: '24px',
-        color: 'rgba(0,0,0,0.3)',
+        color: 'rgba(0,0,0,0.5)',
         marginTop: '1rem',
         fontSize: 16,
+        fontWeight: 500,
     },
 };
 
