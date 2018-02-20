@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SelectField from 'material-ui/SelectField/SelectField';
 import TextField from 'material-ui/TextField';
@@ -7,7 +7,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 
-class Dropdown extends React.Component {
+class Dropdown extends Component {
     constructor(props, context) {
         super(props, context);
 
@@ -108,6 +108,7 @@ class Dropdown extends React.Component {
     renderSelectField(other) {
         return (
             <SelectField
+                style={this.props.style}
                 value={this.state.value}
                 fullWidth={this.props.fullWidth}
                 {...other}
@@ -138,7 +139,7 @@ class Dropdown extends React.Component {
 
 
         return (
-            <div style={styles.fieldStyle}>
+            <div style={{ ...styles.fieldStyle, ...this.props.style }}>
                 <Dialog
                     title={this.props.labelText}
                     open={this.state.dialogOpen}
@@ -202,11 +203,9 @@ class Dropdown extends React.Component {
         } = this.props;
 
         return (
-            <div style={{ ...style }}>
-                {this.state.options.length > limit
-                    ? this.renderDialogDropDown(other)
-                    : this.renderSelectField(other)}
-            </div>
+            this.state.options.length > limit
+                ? this.renderDialogDropDown(other)
+                : this.renderSelectField(other)
         );
     }
 }
@@ -224,7 +223,7 @@ Dropdown.propTypes = {
     style: PropTypes.any,
     value: PropTypes.string,
     labelText: PropTypes.string.isRequired,
-    translateLabel: PropTypes.string,
+    translateLabel: PropTypes.bool,
     referenceProperty: PropTypes.string,
     modelDefinition: PropTypes.object,
     models: PropTypes.object,
@@ -240,12 +239,12 @@ Dropdown.defaultProps = {
     limit: 50,
     translateOptions: false,
     isRequired: false,
-    fullWidth: false,
+    fullWidth: true,
     isInteger: false,
     top: undefined,
     style: undefined,
     value: '',
-    translateLabel: '',
+    translateLabel: false,
     referenceProperty: '',
     modelDefinition: {},
     models: {},
