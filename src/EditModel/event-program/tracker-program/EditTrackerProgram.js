@@ -1,29 +1,31 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
+
 import { camelCaseToUnderscores } from 'd2-utilizr';
-import mapPropsStream from 'recompose/mapPropsStream';
+
 import FormHeading from '../../FormHeading';
 import FormSubHeading from '../../FormSubHeading';
 import EventProgramStepper from './TrackerProgramStepper';
 import TrackerProgramStepperContent from './TrackerProgramStepperContent';
 import eventProgramStore$, { isStoreStateDirty } from '../eventProgramStore';
 import EventActionButtons from '../EventActionButtons';
+import { previousStep, nextStep } from '../actions';
 import {
     createConnectedForwardButton,
     createConnectedBackwardButton,
     createStepperNavigation,
 } from '../../stepper/stepper';
-import { previousStep, nextStep } from '../actions';
 
 const EventProgramStepperNavigationForward = createConnectedForwardButton(
-    nextStep
+    nextStep,
 );
 const EventProgramStepperNavigationBackward = createConnectedBackwardButton(
-    previousStep
+    previousStep,
 );
 
 const StepperNavigation = createStepperNavigation(
     EventProgramStepperNavigationBackward,
-    EventProgramStepperNavigationForward
+    EventProgramStepperNavigationForward,
 );
 
 const styles = {
@@ -71,5 +73,15 @@ function EditTrackerProgram(props) {
         </div>
     );
 }
+
+EditTrackerProgram.propTypes = {
+    params: PropTypes.object.isRequired,
+    isProgramStageStepperActive: PropTypes.bool,
+    model: PropTypes.object.isRequired,
+};
+
+EditTrackerProgram.defaultProps = {
+    isProgramStageStepperActive: false,
+};
 
 export default EditTrackerProgram;

@@ -1,19 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
+import withD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { get, compose, curry } from 'lodash/fp';
+
 import Checkbox from '../../forms/form-fields/check-box';
 import DropDown from '../../forms/form-fields/drop-down';
 import DropDownAsync from '../../forms/form-fields/drop-down-async';
-import { get, compose, curry } from 'lodash/fp';
 import actions from '../../EditModel/objectActions';
 import TextField from '../../forms/form-fields/text-field';
 import ConfidentialField from './tracked-entity-attribute/ConfidentialField';
 import switchOnBoolean from './helpers/switchOnBoolean';
-import withD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import withSkipLogic from './helpers/withSkipLogic';
 import SubFieldWrap from './helpers/SubFieldWrap';
 
-const isUniqueInSystem = trackedEntityAttribute => (trackedEntityAttribute.orgunitScope === false || trackedEntityAttribute.orgunitScope === undefined) &&
+const isUniqueInSystem = trackedEntityAttribute =>
+    (trackedEntityAttribute.orgunitScope === false || trackedEntityAttribute.orgunitScope === undefined) &&
     (trackedEntityAttribute.programScope === false || trackedEntityAttribute.programScope === undefined);
-const isUniqueInOrgUnit = trackedEntityAttribute => trackedEntityAttribute.orgunitScope === true && (trackedEntityAttribute.programScope === false || trackedEntityAttribute.programScope === undefined);
+
+const isUniqueInOrgUnit = trackedEntityAttribute =>
+    trackedEntityAttribute.orgunitScope === true &&
+    (trackedEntityAttribute.programScope === false || trackedEntityAttribute.programScope === undefined);
 
 const getUniqueInDropDownValueFromTrackedEntityAttribute = (trackedEntityAttribute) => {
     if (isUniqueInSystem(trackedEntityAttribute)) {
@@ -46,13 +51,13 @@ const GenerateFields = (props, context) => (
             onChange={compose(updateValueForField('pattern'), get('target.value'))}
         /> : null}
     </div>
-    );
+);
 
 GenerateFields.contextTypes = {
     d2: React.PropTypes.object,
 };
 
-const UniqueSubFields = (props, context) => {
+const UniqueSubFields = (props) => {
     const uniqueWithinOption = [
         {
             text: 'entire_system',

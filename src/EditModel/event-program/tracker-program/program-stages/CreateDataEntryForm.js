@@ -1,6 +1,5 @@
 import React from 'react';
 
-
-export default (props) => (
+export default () => (
     <span>Data Entry Form</span>
 );

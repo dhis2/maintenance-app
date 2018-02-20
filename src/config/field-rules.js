@@ -1,3 +1,5 @@
+import { defaultAnalyticsPeriodBoundaries } from './field-config/field-defaults';
+
 /**
  * Rules for the form fields.
  * If multiple `when` objects are specified these are evaluated as an OR.
@@ -460,6 +462,35 @@ export default new Map([
             }]
         }
     ]],
+    ['programIndicator', [{
+        field: 'analyticsPeriodBoundaries',
+        when: [{
+            field: 'analyticsType',
+            operator: 'EQUALS',
+            value: 'EVENT'
+        }],
+        operations: [{
+            type: 'CHANGE_VALUE',
+            setValue: (model, fieldConfig) => {
+                fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
+                    'event', fieldConfig.value);
+            },
+        }]
+    }, {
+        field: 'analyticsPeriodBoundaries',
+        when: [{
+            field: 'analyticsType',
+            operator: 'EQUALS',
+            value: 'ENROLLMENT'
+        }],
+        operations: [{
+            type: 'CHANGE_VALUE',
+            setValue: (model, fieldConfig) => {
+                fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
+                    'enrollment', fieldConfig.value);
+            },
+        }],
+    }]],
     ['programStageNotificationTemplate', [
         {
             field: 'notificationTrigger',

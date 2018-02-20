@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { camelCaseToUnderscores } from 'd2-utilizr';
-import mapPropsStream from 'recompose/mapPropsStream';
 import FormHeading from '../FormHeading';
 import FormSubHeading from '../FormSubHeading';
 import EventProgramStepper from './EventProgramStepper';
@@ -13,18 +14,17 @@ import {
     createStepperNavigation,
 } from '../stepper/stepper';
 import { previousStep, nextStep } from './actions';
-import PropTypes from 'prop-types';
 
 const EventProgramStepperNavigationForward = createConnectedForwardButton(
-    nextStep
+    nextStep,
 );
 const EventProgramStepperNavigationBackward = createConnectedBackwardButton(
-    previousStep
+    previousStep,
 );
 
 const StepperNavigation = createStepperNavigation(
     EventProgramStepperNavigationBackward,
-    EventProgramStepperNavigationForward
+    EventProgramStepperNavigationForward,
 );
 
 const styles = {
@@ -71,5 +71,17 @@ function EditEventProgram(props) {
         </div>
     );
 }
+
+
+EditEventProgram.propTypes = {
+    params: PropTypes.object.isRequired,
+    isProgramStageStepperActive: PropTypes.bool,
+    model: PropTypes.object.isRequired,
+};
+
+EditEventProgram.defaultProps = {
+    isProgramStageStepperActive: false,
+};
+
 
 export default EditEventProgram;

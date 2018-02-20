@@ -2,11 +2,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { get, compose } from 'lodash/fp';
+
 import { createStepperContentFromConfig } from '../../stepper/stepper';
 import { activeStepSelector } from '../selectors';
 import programStore from '../eventProgramStore';
 import steps from './tracker-program-steps';
-import AssignDataElements from '../assign-data-elements/AssignDataElements';
 import EditDataEntryForm from '../create-data-entry-form/CreateDataEntryForm.component';
 import AssignOrganisationUnits from '../assign-organisation-units/AssignOrganisationUnits';
 import TrackerProgramNotifications from '../notifications/TrackerProgramNotifications';
@@ -25,7 +25,7 @@ const stepperConfig = () => {
 
     const connectEditForm = compose(
         flattenRouterProps,
-        connect(null, mapDispatchToProps)
+        connect(null, mapDispatchToProps),
     );
     const trackerDetailsFields = fieldOrder.for('trackerProgram');
     const enrollmentFields = fieldOrder.for('enrollment');
@@ -33,11 +33,11 @@ const stepperConfig = () => {
     const stepComponents = {
         EditProgramDetailsForm: connectEditForm(
             wrapInPaper(
-                createFormFor(program$, 'program', trackerDetailsFields, true, 'trackerProgram')
-            )
+                createFormFor(program$, 'program', trackerDetailsFields, true, 'trackerProgram'),
+            ),
         ),
         Enrollment: connectEditForm(
-            wrapInPaper(createFormFor(program$, 'program', enrollmentFields, true, 'enrollment'))
+            wrapInPaper(createFormFor(program$, 'program', enrollmentFields, true, 'enrollment')),
         ),
         AssignAttributes,
         ProgramStage,
@@ -46,7 +46,7 @@ const stepperConfig = () => {
         TrackerProgramNotifications,
     };
 
-    return steps.map(step => {
+    return steps.map((step) => {
         step.component = stepComponents[step.componentName]; // eslint-disable-line no-param-reassign
         return step;
     });
@@ -62,8 +62,8 @@ const TrackerProgramStepperContent = compose(
         props$.combineLatest(programStore, (props, { program }) => ({
             ...props,
             modelToEdit: program,
-        }))
-    )
+        })),
+    ),
 )(createStepperContentFromConfig(stepperConfig()));
 
 export default TrackerProgramStepperContent;

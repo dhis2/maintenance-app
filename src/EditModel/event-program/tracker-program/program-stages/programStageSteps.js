@@ -13,8 +13,7 @@ const steps = [
         key: 'create_data_entry_form',
         name: 'create_data_entry_form',
         componentName: 'CreateDataEntryForm',
-    }
-
+    },
 ];
 
 export default steps;

@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { get, isEqual } from 'lodash/fp';
-import { compose, lifecycle, pure } from 'recompose';
-import { withProgramStageFromProgramStage$ } from './utils';
+import { compose, lifecycle } from 'recompose';
+
 import ProgramStageStepper from './ProgramStageStepper';
+import { withProgramStageFromProgramStage$ } from './utils';
 import { changeStepperDisabledState } from '../../actions';
 import { saveProgramStageEdit, cancelProgramStageEdit, editProgramStageReset } from './actions';
 import FormActionButtons from '../../../FormActionButtons';
 
-const EditProgramStage = props => {
+const EditProgramStage = (props) => {
     const styles = {
         buttons: {
             padding: '2rem 1rem 1rem',
@@ -39,10 +39,10 @@ export default compose(
                 changeStepperDisabledState,
                 saveProgramStageEdit,
                 cancelProgramStageEdit,
-                editProgramStageReset
+                editProgramStageReset,
             },
-            dispatch
-        )
+            dispatch,
+        ),
     ),
     lifecycle({
         componentWillMount() {
@@ -66,5 +66,5 @@ export default compose(
             return nextProps !== this.props;
         },
     }),
-    withProgramStageFromProgramStage$
+    withProgramStageFromProgramStage$,
 )(EditProgramStage);

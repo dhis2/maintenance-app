@@ -100,6 +100,7 @@ const fieldOrderByName = new Map([
         'compulsory',
         'indicatorGroups',
     ]],
+    // TODO: Split into field group
     ['dataSet', [
         'name',
         'shortName',
@@ -302,6 +303,7 @@ const fieldOrderByName = new Map([
         'description',
         'minAttributesRequiredToSearch',
         'maxTeiCountToReturn',
+        'trackedEntityTypeAttributes',
     ]],
     ['programIndicator', [
         'program',

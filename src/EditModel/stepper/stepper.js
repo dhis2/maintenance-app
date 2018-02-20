@@ -9,8 +9,7 @@ import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
 import log from 'loglevel';
-import { isString } from 'lodash/fp';
-import { isNumber } from 'lodash/fp';
+import { isString, isNumber } from 'lodash/fp';
 
 // TODO: Redux helpers, leave these here
 import { connect } from 'react-redux';
@@ -78,7 +77,7 @@ export const createStepperFromConfig = (stepperConfig, orientation = 'horizontal
  *
  * @returns {ReactComponent} A React component that will render the `component` property of the currently active step.
  */
-export const createStepperContentFromConfig = (stepperConfig) => ({ activeStep, ...props }) => {
+export const createStepperContentFromConfig = stepperConfig => ({ activeStep, ...props }) => {
     const step = stepperConfig.find(stepConfig => stepConfig.key === activeStep);
 
     if (step && step.component) {
@@ -126,7 +125,7 @@ export function createStepperNavigation(BackwardButton, ForwardButton) {
             {children}
             <ForwardButton />
         </div>
-        );
+    );
 
     return StepperNavigation;
 }
