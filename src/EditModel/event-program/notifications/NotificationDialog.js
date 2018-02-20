@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { get } from 'lodash/fp';
 import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';
+import renderComponent from 'recompose/renderComponent';
 import { modelToEditSelector } from './selectors';
 import { isProgramNotification } from './selectors';
 import { programStageSteps, programSteps } from './NotificationSteps';
@@ -12,6 +13,7 @@ import Dialog from 'material-ui/Dialog';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withProps from 'recompose/withProps';
+import lifeCycle from 'recompose/lifecycle';
 import { createStepperFromConfig } from '../../stepper/stepper';
 import {
     setEditModel,
@@ -23,6 +25,8 @@ import {
     getNotificationType,
 } from './selectors';
 import Subheader from 'material-ui/Subheader/';
+import snackActions from '../../../Snackbar/snack.actions';
+import { branchWithMessage } from '../../../Snackbar/snackBarUtils';
 
 const withStepper = compose(
     withState('activeStep', 'setActiveStep', 0),
@@ -124,7 +128,7 @@ NotificationDialog.propTypes = {
     model: PropTypes.object.isRequired,
     onCancel: PropTypes.func.isRequired,
     onConfirm: PropTypes.func.isRequired,
-    dataElements: PropTypes.array.isRequired,
+    dataElements: PropTypes.array,
     isTracker: PropTypes.bool,
     isProgram: PropTypes.bool,
 };
@@ -138,9 +142,11 @@ const mapStateToProps = (
     state,
     { model, availableDataElements, programStages, dataElements }
 ) => {
+    console.log(programStages);
     const selectedPSId =
         (model && model.programStage && model.programStage.id) ||
-        programStages[0].id;
+        (programStages.length > 0 && programStages[0].id) ||
+        null;
 
     return {
         model,
@@ -161,12 +167,30 @@ const mapDispatchToPropsForDialog = dispatch =>
         dispatch
     );
 
-export const ProgramStageNotificationDialog = connect(
-    mapStateToProps,
-    mapDispatchToPropsForDialog
+const NoProgramStageSnackbar = () => {
+    return null;
+};
+const SnackbarThing = compose(
+    lifeCycle({
+        componentDidMount() {
+            snackActions.show({
+                message:
+                    'cannot_create_program_notification_without_program_stage',
+                translate: true,
+            });
+        },
+    })
+)(NoProgramStageSnackbar);
+
+export const ProgramStageNotificationDialog = compose(
+    branchWithMessage(({ programStages }) => programStages.length < 1, {
+        message: 'cannot_create_program_notification_without_program_stage',
+        translate: true,
+    }),
+    connect(mapStateToProps, mapDispatchToPropsForDialog)
 )(NotificationDialog);
 
-export const ProgramNotificationDialog = connect(mapStateToProps, dispatch =>
+export const ProgramNotificationDialog = connect(null, dispatch =>
     bindActionCreators(
         {
             onCancel: setEditModel.bind(null, null),
