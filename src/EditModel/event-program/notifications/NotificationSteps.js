@@ -129,7 +129,6 @@ const stepToFormBuilder = ({
             if(field.name == 'notificationRecipient') {
                 const removedOptions = field.props.options.filter(opt => opt.value !== "PROGRAM_ATTRIBUTE");
                 const propsWithRemovedRecipient = {...field.props, options: removedOptions}
-                console.log(propsWithRemovedRecipient)
                 return { ...field, props: { ...propsWithRemovedRecipient} }
             }
             return field;
@@ -137,7 +136,7 @@ const stepToFormBuilder = ({
     }
     return (
         <FormBuilder
-            fields={fieldsToUse.map(addPropsToFieldConfig(fieldProps))}
+            fields={fieldsToUse.map(addPropsToFieldConfig(fieldProps, ['recipientDataElement', 'recipientProgramAttribute']))}
             onUpdateField={onUpdateField}
         />
     );

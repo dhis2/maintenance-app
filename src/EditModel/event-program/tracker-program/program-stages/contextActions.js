@@ -16,8 +16,7 @@ export async function deleteProgramStageWithSnackbar(model) {
                 `confirm_delete_${camelCaseToUnderscores(
                     model.modelDefinition.name
                 )}`
-            ),
-            model.name,
+            )
         ].join(' '),
         action: 'confirm',
 

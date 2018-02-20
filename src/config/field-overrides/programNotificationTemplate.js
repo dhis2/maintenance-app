@@ -191,7 +191,7 @@ export const programNotificationTemplate = new Map([
     [
         'notificationRecipient',
         {
-            required: 'true',
+            required: true,
             fieldOptions: {
                 options: [
                     'TRACKED_ENTITY_INSTANCE',
@@ -224,7 +224,7 @@ export const programStageNotificationTemplate = new Map([
     [
         'notificationRecipient',
         {
-            required: 'true',
+            required: true,
             fieldOptions: {
                 options: [
                     'TRACKED_ENTITY_INSTANCE',
