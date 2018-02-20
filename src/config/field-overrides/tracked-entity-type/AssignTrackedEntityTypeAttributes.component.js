@@ -77,7 +77,7 @@ class AssignTrackedEntityTypeAttributes extends Component {
 
     onEditAttribute = (changedAttribute) => {
         const newAssignedAttributes = this.state.assignedAttributes
-            .map(attribute => ((attribute.id === changedAttribute.id)
+            .map(attribute => ((attribute.trackedEntityAttribute.id === changedAttribute.trackedEntityAttribute.id)
                 ? changedAttribute
                 : attribute),
             );
