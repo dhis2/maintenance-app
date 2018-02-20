@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import IconButton from 'material-ui/IconButton/IconButton';
 import AddCircleOutlineIcon from 'material-ui/svg-icons/content/add-circle-outline';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import { getSectionForType } from '../../../config/maintenance-models';
-import { Link } from 'react-router';
 
 export default function QuickAddLink(props) {
     const { referenceType, onRefreshClick } = props;
@@ -40,3 +41,8 @@ export default function QuickAddLink(props) {
         </div>
     );
 }
+
+QuickAddLink.propTypes = {
+    referenceType: PropTypes.string.isRequired,
+    onRefreshClick: PropTypes.func.isRequired,
+};

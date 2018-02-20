@@ -8,7 +8,7 @@ import withD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 
 export default new Map([
     ['imageFormat', {
-        component: withD2Context((props, { d2 }) => props.model.mapService === 'WMS' ?
+        component: withD2Context((props, { d2 }) => (props.model.mapService === 'WMS' ?
             <SubFieldWrap>
                 <DropDown
                     labelText={props.labelText}
@@ -25,7 +25,7 @@ export default new Map([
                     onChange={(e) => { actions.update({ fieldName: 'layers', value: e.target.value }); }}
                     style={{ width: '97.5%' }}
                 />
-            </SubFieldWrap> : null),
+            </SubFieldWrap> : null)),
     }],
     ['url', { validators: [{ validator: isUrl, message: isUrl.message }] }],
     ['legendSetUrl', { validators: [{ validator: isUrl, message: isUrl.message }] }],

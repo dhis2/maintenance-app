@@ -160,6 +160,7 @@ export default React.createClass({
                 color: 'rgba(0,0,0,0.5)',
                 marginTop: '1rem',
                 fontSize: 16,
+                fontWeight: 500,
             },
 
             labelWrap: {
