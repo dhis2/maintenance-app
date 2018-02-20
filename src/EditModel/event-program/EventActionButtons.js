@@ -2,9 +2,12 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { saveEventProgram } from './actions';
 import { createConnectedFormActionButtonsForSchema } from '../FormActionButtons';
+import { isSaving } from "./selectors";
 
 const mapDispatchToProps = dispatch => bindActionCreators({ onSaveAction: saveEventProgram }, dispatch);
-
-const EventActionButtons = createConnectedFormActionButtonsForSchema(mapDispatchToProps);
+const mapStateToProps = state => ({
+    isSaving: isSaving(state)
+})
+const EventActionButtons = createConnectedFormActionButtonsForSchema(mapDispatchToProps, mapStateToProps);
 
 export default EventActionButtons;

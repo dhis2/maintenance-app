@@ -4,6 +4,7 @@ import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
 import { PROGRAM_STEPPER_SET_DISABLE } from "../actions";
 import * as iterator from '../../stepper/stepIterator';
 import { initialState as notificationsInitialState } from "../notifications/reducers";
+import { initialState as stepperInitialState} from "../reducers";
 
 describe('Event Program', () => {
     beforeAll(() => {
@@ -28,11 +29,7 @@ describe('Event Program', () => {
             const actualState = reducer(undefined, {});
 
             const expectedState = {
-                step: {
-                    activeStep: stepKey,
-                    disabled: false,
-                    isLoading: true
-                },
+                step: stepperInitialState,
                 stageNotifications: notificationsInitialState,
                 programStageStepper: {
                     activeStep: stepKey,
@@ -49,11 +46,7 @@ describe('Event Program', () => {
             const stepKey = 'sprint';
             iterator.first.mockReturnValue(stepKey);
 
-            const expectedStepState = {
-                activeStep: stepKey,
-                disabled: false,
-                isLoading: true
-            };
+            const expectedStepState = stepperInitialState;
 
             const actualState = reducer(undefined, {});
 

@@ -169,12 +169,14 @@ function isValidState(state) {
  */
 const eventProgramStore = Store.create();
 
-// eventProgramStore.subscribe(state => {
-//     console.log('=====================');
-//     console.info('new store state');
-//     console.log(state);
-//     console.log('=====================');
-// });
+if (process.env.NODE_ENV === "development") {
+    eventProgramStore.subscribe(state => {
+        console.log('=====================');
+        console.info('new store state');
+        console.log(state);
+        console.log('=====================');
+    });
+}
 
 const storeSetState = eventProgramStore.setState.bind(eventProgramStore);
 
@@ -191,7 +193,5 @@ eventProgramStore.setState = (newState) => {
         ...newState,
     });
 };
-
-eventProgramStore.subscribe(val => console.log(val))
 
 export default eventProgramStore;
