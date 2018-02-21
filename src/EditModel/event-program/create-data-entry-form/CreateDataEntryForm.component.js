@@ -58,7 +58,6 @@ class CreateDataEntryForm extends Component {
     };
 
     render() {
-        console.log(this.props)
         return (
             <Paper>
                 <Tabs initialSelectedIndex={sectionFormIndex}>

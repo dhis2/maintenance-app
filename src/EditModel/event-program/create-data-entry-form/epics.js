@@ -76,9 +76,6 @@ const changeProgramStageSectionOrder = store => action$ => action$
         .map((action) => {
             const state = store.getState();
             const programStageId = get('payload.programStage', action);
-            const programStage = getProgramStageById(state, programStageId);
-
-            const programStageSections = getStageSectionsById(state, programStageId);
 
             const newSections = get('payload.programStageSections', action);
 
