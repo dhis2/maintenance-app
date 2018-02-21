@@ -49,7 +49,7 @@ const changeProgramStageSectionName = store => action$ => action$
             const newProgramStageSectionName = get('payload.newProgramStageSectionName', action);
             const programStageSections = getStageSectionsById(store, programStage)
 
-            programStageSections.map((section) => {
+            state.programStageSections[programStageId] = programStageSections.map((section) => {
                     // Modify the original Model instance
                     if (isEqual(section.id, programStageSectionId)) {
                         section.name = newProgramStageSectionName;
@@ -59,9 +59,9 @@ const changeProgramStageSectionName = store => action$ => action$
                     return section;
                 });
 
-            store.setState({
-                state,
-            });
+            store.setState(
+                state
+            );
         })
         .flatMapTo(Observable.never());
 
@@ -78,12 +78,12 @@ const changeProgramStageSectionOrder = store => action$ => action$
             const programStageId = get('payload.programStage', action);
             const programStage = getProgramStageById(state, programStageId);
 
-            let programStageSections = getStageSectionsById(state, programStageId);
+            const programStageSections = getStageSectionsById(state, programStageId);
 
             const newSections = get('payload.programStageSections', action);
 
             const sortedSections = compose(sortBy('sortOrder'), setSortOrderToIndex)(newSections);
-            programStageSections = sortedSections;
+            state.programStageSections[programStageId] = sortedSections;
 
             store.setState(
                 state
@@ -117,10 +117,10 @@ const addProgramStageSection = store => action$ => action$
 
             //Add empty stageNotifications if its a new programStage
             if(!programStageSections) {
-                programStageSections = state.programStageNotifications[programStageId] = [];
+                programStageSections = state.programStageSections[programStageId] = [];
             }
             programStageSections.push(newSection);
-            console.log(programStageSections)
+
             store.setState(state);
         })
         .flatMapTo(Observable.never());
@@ -134,12 +134,14 @@ const removeProgramStageSection = store => action$ => action$
             const sectionToDelete = get('payload.programStageSectionId', action);
 
             const programStageId = get('payload.programStage', action);
-            const programStageSections = getStageSectionsById(store, programStageId)
-            const updatedProgramStageSections = filter(section => !isEqual(sectionToDelete, section.id), programStageSections);
+            const programStage = getProgramStageById(state, programStageId);
 
-            // Remove section from programStage
-            programStage.programStageSections = updatedProgramStageSections;
-            programStageSections[programStageId] = updatedProgramStageSections;
+            const programStageSections = getStageSectionsById(state, programStageId);
+            const updatedProgramStageSections = filter(section => !isEqual(sectionToDelete.id, section.id), programStageSections);
+
+            // Remove section from programStage and normalized-store
+            programStage.programStageSections.remove(sectionToDelete);
+            state.programStageSections[programStageId] = updatedProgramStageSections;
             store.setState(
                 state
             );
