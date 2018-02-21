@@ -49,7 +49,7 @@ const CheckboxWrap = (props) => {
 };
 
 CheckboxWrap.propTypes = {
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     labelText: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.object,
@@ -59,5 +59,11 @@ CheckboxWrap.propTypes = {
         PropTypes.oneOf(['true', 'false']),
     ]),
 };
+
+CheckboxWrap.defaultProps = {
+    onChange: () => {},
+    value: false,
+};
+
 
 export default CheckboxWrap;
