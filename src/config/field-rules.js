@@ -26,6 +26,26 @@ import { defaultAnalyticsPeriodBoundaries } from './field-config/field-defaults'
         }],
  * ```
  */
+
+// TODO: This function does a mutable modification. It is more efficient this way however it might
+// collide and is not very transparent. Especially the fact that the new value needs to be set
+// on both the model and the fieldConfig is not very clear.
+// It would probably make sense to run the model modification rules before sending the values to
+// the FormBuilder.
+function setOptionSetValue(model, fieldConfig) {
+    // Do not not change the valueType when there is no optionSet or when there is no valueType
+    // for the optionSet (which can occur during the initial run of the rules)
+    if (model.optionSet && model.optionSet.valueType) {
+        // Update the fieldConfig to contain the correct value
+        fieldConfig.value = model.optionSet.valueType;
+
+        // Update the model only when the value is not the same as the current
+        if (model[fieldConfig.name] !== model.optionSet.valueType) {
+            model[fieldConfig.name] = model.optionSet.valueType;
+        }
+    }
+}
+
 export default new Map([
     ['dataElement', [
         {
@@ -55,24 +75,8 @@ export default new Map([
                 elseValue: false,
             }, {
                 type: 'CHANGE_VALUE',
-                // TODO: This function does a mutable modification. It is more efficient this way however it might
-                // collide and is not very transparent. Especially the fact that the new value needs to be set
-                // on both the model and the fieldConfig is not very clear.
-                // It would probably make sense to run the model modification rules before sending the values to
-                // the FormBuilder.
-                setValue: (model, fieldConfig) => {
-                    // Do not not change the valueType when there is no optionSet or when there is no valueType
-                    // for the optionSet (which can occur during the initial run of the rules)
-                    if (model.optionSet && model.optionSet.valueType) {
-                        // Update the fieldConfig to contain the correct value
-                        fieldConfig.value = model.optionSet.valueType;
 
-                        // Update the model only when the value is not the same as the current
-                        if (model[fieldConfig.name] !== model.optionSet.valueType) {
-                            model[fieldConfig.name] = model.optionSet.valueType;
-                        }
-                    }
-                },
+                setValue: setOptionSetValue
             }],
         },
         {
@@ -140,9 +144,7 @@ export default new Map([
                 elseValue: false,
             }, {
                 type: 'CHANGE_VALUE',
-                setValue: (model, fieldConfig) => {
-                    fieldConfig.value = model[fieldConfig.name] = model.optionSet.valueType;
-                },
+                setValue: setOptionSetValue
             }],
         },
     ]],
@@ -187,9 +189,7 @@ export default new Map([
                 elseValue: false,
             }, {
                 type: 'CHANGE_VALUE',
-                setValue: (model, fieldConfig) => {
-                    fieldConfig.value = model[fieldConfig.name] = model.optionSet.valueType;
-                },
+                setValue: setOptionSetValue
             }],
         },
     ]],
