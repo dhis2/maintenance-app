@@ -478,7 +478,7 @@ export default new Map([
                 }
             },
         }]
-    },{
+    }, {
         field: 'analyticsPeriodBoundaries',
         when: [{
             field: 'analyticsType',
@@ -493,7 +493,101 @@ export default new Map([
                         'enrollment', fieldConfig.value);
                 }
             },
-        }]
-    }]]
+        }],
+    }]],
+    ['programStageNotificationTemplate', [
+        {
+            field: 'notificationTrigger',
+            when: [{
+                field:'notificationTrigger',
+                operator: 'NOT_EQUALS',
+                value: "SCHEDULED_DAYS_DUE_DATE"
+            }],
+            operations: [{
+                field:'relativeScheduledDays',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NONEOF',
+                value: [
+                    'TRACKED_ENTITY_INSTANCE',
+                    'ORGANISATION_UNIT_CONTACT']
+            }],
+            operations: [{
+                field: 'deliveryChannels',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'DATA_ELEMENT'
+            }],
+            operations: [{
+                field: 'recipientDataElement',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'PROGRAM_ATTRIBUTE'
+            }],
+            operations: [{
+                field: 'recipientProgramAttribute',
+                type: 'HIDE_FIELD'
+            }]
+        }
+    ]],
+    ['programNotificationTemplate', [
+        {
+            field: 'notificationTrigger',
+            when: [{
+                field:'notificationTrigger',
+                operator: 'NONEOF',
+                value: [
+                    'SCHEDULED_DAYS_INCIDENT_DATE',
+                    'SCHEDULED_DAYS_ENROLLMENT_DATE',
+                ]
+            }],
+            operations: [{
+                field:'relativeScheduledDays',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NONEOF',
+                value: [
+                    'TRACKED_ENTITY_INSTANCE',
+                    'ORGANISATION_UNIT_CONTACT']
+            }],
+            operations: [{
+                field: 'deliveryChannels',
+                type: 'HIDE_FIELD'
+            }]
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'PROGRAM_ATTRIBUTE'
+            }],
+            operations: [{
+                field: 'recipientProgramAttribute',
+                type: 'HIDE_FIELD'
+            }]
+        }
+    ]]
 ]);
-

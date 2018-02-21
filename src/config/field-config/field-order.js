@@ -421,7 +421,7 @@ const fieldOrderByName = new Map([
         'name',
         'periodType',
         'dataApprovalLevels',
-    ]],
+    ]]
 ]);
 
 export default {

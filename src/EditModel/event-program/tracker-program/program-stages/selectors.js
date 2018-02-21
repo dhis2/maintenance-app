@@ -1,3 +1,5 @@
+import { curry, curryRight, get } from 'lodash/fp';
+
 export const getCurrentProgramStageId = state =>
     state.eventProgram.programStageStepper.stageId;
 
@@ -6,3 +8,17 @@ export const getActiveProgramStageStep = state =>
 
 export const isProgramStageStepperActive = state =>
     !!state.eventProgram.programStageStepper.stageId;
+
+export const getProgramStageById = curry((store, stageId) =>
+    store.programStages.find(stage => stage.id == stageId)
+);
+
+export const getProgramStageIndexById = curry((store, stageId) =>
+    store.programStages.findIndex(stage => stage.id == stageId)
+);
+
+export const getStageSectionsById = curry((state, id) => {
+    const { programStageSections } = state;
+
+    return get(id, programStageSections);
+});

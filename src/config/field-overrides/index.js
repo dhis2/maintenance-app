@@ -16,7 +16,7 @@ import externalMapLayer from './externalMapLayer';
 import validationRule from './validationRule';
 import validationNotificationTemplate from './validationNotificationTemplate';
 import programIndicator from './programIndicator';
-import programNotificationTemplate from './programNotificationTemplate';
+import programNotificationTemplate, {programStageNotificationTemplate} from './programNotificationTemplate';
 import program from './program';
 import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
@@ -43,6 +43,7 @@ const overridesByType = {
     programStage,
     programIndicator,
     programNotificationTemplate,
+    programStageNotificationTemplate,
     programRule,
     programRuleVariable,
     predictor,

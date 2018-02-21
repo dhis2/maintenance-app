@@ -12,6 +12,7 @@ const whenOperatorMap = new Map([
     ['HAS_NO_VALUE', negate(hasValueOperator)],
     ['HAS_STRING_VALUE', hasStringValueOperator],
     ['ONEOF', oneOfOperator],
+    ['NONEOF', noneOfOperator],
     ['SYSTEM_SETTING_IS_TRUE', systemSettingIsTrueOperator],
     ['SYSTEM_SETTING_IS_FALSE', systemSettingIsFalseOperator],
     ['IS_VALID_POINT', isPointOperator],
@@ -53,10 +54,10 @@ function setProp(fieldConfig, operationParams, ruleResult) {
     put back to the "component" variable.
 */
 function hideField(fieldConfig, operationParams, ruleResult) {
-    if (ruleResult) {
+    if (ruleResult && fieldConfig) {
         fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
         fieldConfig.component = () => null;
-    } else if (fieldConfig.hiddenComponent) {
+    } else if (fieldConfig && fieldConfig.hiddenComponent) {
         fieldConfig.component = fieldConfig.hiddenComponent;
         delete fieldConfig.hiddenComponent;
     }
@@ -98,6 +99,10 @@ function notEqualsOperator(left, right) {
 
 function oneOfOperator(value, list) {
     return list.indexOf(value) >= 0;
+}
+
+function noneOfOperator(value, list) {
+    return list.indexOf(value) < 0;
 }
 
 function isPointOperator(value) {

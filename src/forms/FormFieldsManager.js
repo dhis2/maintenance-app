@@ -7,8 +7,8 @@ class FormFieldsManager {
         this.headerFields = [];
     }
 
-    getFormFieldsForModel(model) {
-        return this.fieldsForModelService.getFormFieldsForModel(model, this.fieldOverrides);
+    getFormFieldsForModel(model, customFieldOrderName) {
+        return this.fieldsForModelService.getFormFieldsForModel(model, this.fieldOverrides, customFieldOrderName);
     }
 
     setFieldOrder(fieldNames) {

@@ -4,7 +4,8 @@ import log from 'loglevel';
 
 import snackActions from '../../../../Snackbar/snack.actions';
 import { afterDeleteHook$ } from '../../../../List/ContextActions';
-import { deleteProgramStageFromState } from '../epics';
+import { deleteProgramStageFromState } from "../epics";
+import { Observable } from 'rxjs';
 
 export async function deleteProgramStageWithSnackbar(model) {
     const d2 = await getInstance();
@@ -12,14 +13,13 @@ export async function deleteProgramStageWithSnackbar(model) {
         message: [
             d2.i18n.getTranslation(
                 `confirm_delete_${camelCaseToUnderscores(
-                    model.modelDefinition.name,
-                )}`,
+                    model.modelDefinition.name
+                )}`
             ),
             model.name,
         ].join(' '),
         action: 'confirm',
-        // TODO we cant delete from the API if the item is not already saved to the server!
-        // e.g. when creating a new stage then deleting
+
         onActionTouchTap: () => {
             model
                 .delete()
@@ -27,7 +27,7 @@ export async function deleteProgramStageWithSnackbar(model) {
                     deleteProgramStageFromState(model.id);
                     snackActions.show({
                         message: `${model.displayName} ${d2.i18n.getTranslation(
-                            'was_deleted',
+                            'was_deleted'
                         )}`,
                     });
 

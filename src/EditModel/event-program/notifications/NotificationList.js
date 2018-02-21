@@ -5,6 +5,7 @@ import AddIcon from 'material-ui/svg-icons/content/add';
 import getContext from 'recompose/getContext';
 import compose from 'recompose/compose';
 import branch from 'recompose/branch';
+import withContext from 'recompose/withContext';
 import renderNothing from 'recompose/renderNothing';
 
 function AddButton({ onAddClick }) {
@@ -26,8 +27,8 @@ function AddButton({ onAddClick }) {
     );
 }
 
-const hideIfNotAuthorizedToCreate = compose(
-    getContext({ d2: PropTypes.object }),
+export const hideIfNotAuthorizedToCreate = compose(
+    getContext({d2: PropTypes.object}),
     branch(
         ({ d2, modelType }) => !(d2.currentUser.canCreate(d2.models[modelType])),
         renderNothing,
@@ -36,16 +37,20 @@ const hideIfNotAuthorizedToCreate = compose(
 
 const AddButtonWithAuthCheck = hideIfNotAuthorizedToCreate(AddButton);
 
-export default function NotificationList({ notifications, onRemoveNotification, onEditNotification, onAddNotification }) {
+export default function NotificationList({ notifications, onRemoveNotification, onEditNotification, onAddNotification, addButton, showProgramStage, showAddButton }) {
+    const columns = showProgramStage
+        ? ['name', 'programStage', 'lastUpdated']
+        : ['name', 'lastUpdated'];
+    const AddButtonToUse = addButton ? addButton : AddButtonWithAuthCheck
     return (
         <div>
-            <AddButtonWithAuthCheck
+            {showAddButton && <AddButtonToUse
                 modelType="programNotificationTemplate"
                 onAddClick={onAddNotification}
-            />
+            />}
             <DataTable
                 rows={notifications}
-                columns={['name', 'lastUpdated']}
+                columns={columns}
                 contextMenuActions={{ // TODO: Check for permissions
                     edit: onEditNotification,
                     delete: onRemoveNotification,
@@ -57,4 +62,9 @@ export default function NotificationList({ notifications, onRemoveNotification, 
 }
 NotificationList.propTypes = {
     notifications: PropTypes.array,
+    showAddButton: PropTypes.bool,
+  //  addButton: PropTypes.node
 };
+NotificationList.defaultProps = {
+    showAddButton: true
+}

@@ -80,14 +80,6 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             programs: [
                 {
                     id: programUid,
-                    /* programStages: [
-                    {
-                        id: programStageUid,
-                        programStageDataElements: [],
-                        notificationTemplates: [],
-                        programStageSections: [],
-                    },
-                ], */
                     programStages,
                     programTrackedEntityAttributes: [],
                     organisationUnits: [],
@@ -208,6 +200,18 @@ function createEventProgramStoreStateFromMetadataResponse(
             createModelFor(d2.models.programNotificationTemplate),
         );
 
+        const extractProgramStageSections =
+            programStages =>
+                programStages.reduce(
+                    (acc, programStage) => ({
+                        ...acc,
+                        [programStage.id]: createProgramStageSectionModels(
+                            getOr([], 'programStageSections', programStage),
+                        ),
+                    }),
+                    {},
+                );
+
         // extractProgramNotifications :: Array<Object> -> Object<programStageId, [Model]>
         const extractProgramNotifications = programStages =>
             programStages.reduce(
@@ -242,16 +246,10 @@ function createEventProgramStoreStateFromMetadataResponse(
             programStages: createProgramStageModels(
                 getOr([], 'programStages', first(programs)),
             ),
-            programStageSections: createProgramStageSectionModels(
-                getOr(
-                    [],
-                    'programStages[0].programStageSections',
-                    first(programs),
-                ),
-            ),
             programStageNotifications: extractProgramNotifications(
                 programStages,
             ),
+            programStageSections: extractProgramStageSections(programStages),
             availableDataElements: dataElements,
             availableAttributes: trackedEntityAttributes,
             dataEntryFormForProgramStage: extractDataEntryForms(programStages),

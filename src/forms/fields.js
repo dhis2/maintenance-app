@@ -7,6 +7,7 @@ import CheckBox from './form-fields/check-box';
 import DropDown from './form-fields/drop-down';
 import DropDownAsync from './form-fields/drop-down-async';
 import DateSelect from './form-fields/date-select';
+import { constantNameConverter } from "../config/field-overrides/helpers/constantNameConverter";
 
 export const CHECKBOX = Symbol('CHECKBOX');
 export const INPUT = Symbol('INPUT');
@@ -143,7 +144,7 @@ export function getFieldUIComponent(type) {
     return TextField;
 }
 
-export function createFieldConfig(fieldConfig, modelDefinition, models) {
+export function createFieldConfig(fieldConfig, modelDefinition, models, customFieldOrderName) {
     const fieldConstants = modelDefinition.modelProperties[fieldConfig.name] &&
         modelDefinition.modelProperties[fieldConfig.name].constants ||
         [];
@@ -171,7 +172,7 @@ export function createFieldConfig(fieldConfig, modelDefinition, models) {
                     }
 
                     return {
-                        text: constant,
+                        text: constantNameConverter(customFieldOrderName || modelDefinition.name, fieldConfig.name, constant),
                         value: constant.toString(),
                     };
                 }),

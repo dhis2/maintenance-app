@@ -9,7 +9,7 @@ import programStore from '../eventProgramStore';
 import steps from './tracker-program-steps';
 import EditDataEntryForm from '../create-data-entry-form/CreateDataEntryForm.component';
 import AssignOrganisationUnits from '../assign-organisation-units/AssignOrganisationUnits';
-import EventProgramNotifications from '../notifications/EventProgramNotifications';
+import TrackerProgramNotifications from '../notifications/TrackerProgramNotifications';
 import { createFormFor } from '../../formHelpers';
 import { editFieldChanged } from '../actions';
 import { flattenRouterProps, wrapInPaper } from '../../componentHelpers';
@@ -43,7 +43,7 @@ const stepperConfig = () => {
         ProgramStage,
         EditDataEntryForm,
         AssignOrganisationUnits,
-        EventProgramNotifications,
+        TrackerProgramNotifications,
     };
 
     return steps.map((step) => {

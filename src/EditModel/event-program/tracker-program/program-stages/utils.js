@@ -23,7 +23,7 @@ export const withProgramStageFromProgramStage$ = mapPropsStream(props$ =>
 );
 
 /**
- * Adds program and programStages as props to the enhanced compontents.
+ * Adds program and programStages as props to the enhanced components.
  */
 
 export const withProgramAndStages = compose(

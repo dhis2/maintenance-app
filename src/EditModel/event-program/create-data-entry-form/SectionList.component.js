@@ -30,7 +30,7 @@ const SectionList = ({
                 onToggleOpen={() => { onToggleSection(section.id); }}
                 onSelect={() => { onSelectSection(section.id); }}
                 onNameChanged={(newName) => { onSectionNameChanged(section.id, newName); }}
-                onSectionRemoved={() => { onSectionRemoved(section.id); }}
+                onSectionRemoved={() => { onSectionRemoved(section); }}
                 onDataElementRemoved={(dataElementId) => { onDataElementRemoved(dataElementId, section.id); }}
                 sortItems={({ oldIndex, newIndex }) => { sortItems(index, oldIndex, newIndex); }}
             />

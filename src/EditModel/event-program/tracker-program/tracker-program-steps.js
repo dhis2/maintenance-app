@@ -27,7 +27,7 @@ const steps = [
     {
         key: 'notifications',
         name: 'create_notifications',
-        componentName: 'EventProgramNotifications',
+        componentName: 'TrackerProgramNotifications',
     },
 ];
 

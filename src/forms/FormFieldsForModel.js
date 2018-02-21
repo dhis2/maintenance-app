@@ -20,7 +20,7 @@ class FormFieldsForModel {
         this.fieldOrder = fieldNames || [];
     }
 
-    getFormFieldsForModel(model, fieldOverrides = {}) {
+    getFormFieldsForModel(model, fieldOverrides = {}, customFieldOrderName) {
         if (!(model && model.modelDefinition && model.modelDefinition.modelValidations)) {
             throw new TypeError('Passed model does not seem to adhere to the d2 model structure ' +
                 '(model.modelDefinition.modelValidations is not available)');
@@ -81,8 +81,7 @@ class FormFieldsForModel {
                     });
             }
             modelValidation.type = fieldType;
-
-            return createFieldConfig(modelValidation, modelDefinition, this.models, model);
+            return createFieldConfig(modelValidation, modelDefinition, this.models, customFieldOrderName);
         }
     }
 }
