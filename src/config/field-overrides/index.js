@@ -19,7 +19,7 @@ import programIndicator from './programIndicator';
 import programNotificationTemplate, {
     programStageNotificationTemplate,
 } from './programNotificationTemplate';
-import program, { trackerProgram, enrollment } from './program';
+import { eventProgram, trackerProgram, enrollment } from './program';
 import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
@@ -41,7 +41,7 @@ const overridesByType = {
     organisationUnit,
     organisationUnitGroup,
     pushAnalysis,
-    program,
+    eventProgram,
     programStage,
     programIndicator,
     programNotificationTemplate,

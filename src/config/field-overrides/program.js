@@ -48,7 +48,7 @@ const sharedOverrides = new Map([
     ],
 ]);
 
-export const eventProgram = new Map([...sharedOverrides, []]);
+export const eventProgram = new Map([...sharedOverrides]);
 
 //Enrollment is used as customFieldOrderName for enrollment-stepper
 export const enrollment = new Map([
@@ -65,7 +65,7 @@ export const enrollment = new Map([
             },
         },
     ],
-])
+]);
 
 export const trackerProgram = new Map([
     ...sharedOverrides,
@@ -73,9 +73,9 @@ export const trackerProgram = new Map([
     [
         'trackedEntityType',
         {
-            required: true
-        }
-    ]
+            required: true,
+        },
+    ],
 ]);
 
 export default eventProgram;
