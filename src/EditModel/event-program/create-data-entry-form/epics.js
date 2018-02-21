@@ -131,7 +131,7 @@ const removeProgramStageSection = store => action$ => action$
         .map((action) => {
             // TODO: Update sortOrder? map(section => ({ ...section, sortOrder: section.sortOrder - 1 }), filter(section => section.sortOrder > sortOrderOfDeletedSection, sections));
             const state = store.getState();
-            const sectionToDelete = get('payload.programStageSectionId', action);
+            const sectionToDelete = get('payload.programStageSection', action);
 
             const programStageId = get('payload.programStage', action);
             const programStage = getProgramStageById(state, programStageId);

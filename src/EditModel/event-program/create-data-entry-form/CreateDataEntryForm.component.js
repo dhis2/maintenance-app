@@ -58,6 +58,7 @@ class CreateDataEntryForm extends Component {
     };
 
     render() {
+        console.log(this.props)
         return (
             <Paper>
                 <Tabs initialSelectedIndex={sectionFormIndex}>
@@ -176,7 +177,7 @@ const enhance = compose(
             ) => ({
                 ...props,
                 programStage,
-                programStageSections: getStageSectionsById(store, props.programStage.id) || [],
+                programStageSections: getStageSectionsById(store, programStage.id) || [],
                 trackerDataElements,
             })
         )
@@ -261,10 +262,10 @@ const enhance = compose(
         onSectionRemoved: ({
             programStage,
             removeProgramStageSection,
-        }) => programStageSectionId => {
+        }) => programStageSection => {
             removeProgramStageSection({
                 programStage: programStage.id,
-                programStageSectionId });
+                programStageSection });
         },
     })
 );
