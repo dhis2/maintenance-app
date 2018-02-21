@@ -126,7 +126,7 @@ class Dropdown extends Component {
             fieldStyle: {
                 width: this.props.fullWidth ? '100%' : 'inherit',
                 position: 'relative',
-                top,
+                top: this.props.top,
             },
             openInNew: {
                 position: 'absolute',
