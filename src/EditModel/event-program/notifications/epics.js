@@ -18,7 +18,7 @@ const notEqualTo = left => right => left !== right;
  * programStage is not defined on the notification.
  */
 const getProgramStageFromModel = (state, model) => model.programStage && model.programStage.id ? getProgramStageById(state, model.programStage.id) :
-    first(programStages);
+    first(state.programStages);
 
 const removeProgramStageNotification = action$ => action$
     .ofType(NOTIFICATION_STAGE_REMOVE)

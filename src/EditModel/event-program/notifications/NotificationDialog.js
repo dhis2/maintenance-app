@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { get } from 'lodash/fp';
 import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';
-import renderComponent from 'recompose/renderComponent';
 import { modelToEditSelector } from './selectors';
 import { isProgramNotification } from './selectors';
 import { programStageSteps, programSteps } from './NotificationSteps';
@@ -13,7 +12,6 @@ import Dialog from 'material-ui/Dialog';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withProps from 'recompose/withProps';
-import lifeCycle from 'recompose/lifecycle';
 import { createStepperFromConfig } from '../../stepper/stepper';
 import {
     setEditModel,
@@ -25,7 +23,6 @@ import {
     getNotificationType,
 } from './selectors';
 import Subheader from 'material-ui/Subheader/';
-import snackActions from '../../../Snackbar/snack.actions';
 import { branchWithMessage } from '../../../Snackbar/snackBarUtils';
 
 const withStepper = compose(
@@ -142,6 +139,7 @@ const mapStateToProps = (
     state,
     { model, availableDataElements, programStages, dataElements }
 ) => {
+
     const selectedPSId =
         (model && model.programStage && model.programStage.id) ||
         (programStages.length > 0 && programStages[0].id) ||
@@ -166,23 +164,8 @@ const mapDispatchToPropsForDialog = dispatch =>
         dispatch
     );
 
-const NoProgramStageSnackbar = () => {
-    return null;
-};
-const SnackbarThing = compose(
-    lifeCycle({
-        componentDidMount() {
-            snackActions.show({
-                message:
-                    'cannot_create_program_notification_without_program_stage',
-                translate: true,
-            });
-        },
-    })
-)(NoProgramStageSnackbar);
-
 export const ProgramStageNotificationDialog = compose(
-    branchWithMessage(({ programStages }) => programStages.length < 1, {
+    branchWithMessage(({ programStages }) => programStages && programStages.length < 1, {
         message: 'cannot_create_program_notification_without_program_stage',
         translate: true,
     }),

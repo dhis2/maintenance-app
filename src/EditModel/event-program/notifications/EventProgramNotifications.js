@@ -11,6 +11,7 @@ import NotificationList from './NotificationList';
 import {
     getStageNotifications,
     getProgramStageDataElements,
+    getProgramStages
 } from './selectors';
 import NotificationDeleteDialog from './NotificationDeleteDialog';
 import { removeStageNotification, setEditModel, setAddModel } from './actions';
@@ -21,6 +22,7 @@ const notifications$ = eventProgramStore.map(getStageNotifications);
 const programStageDataElements$ = eventProgramStore.map(
     getProgramStageDataElements
 );
+const programStages$ = eventProgramStore.map(getProgramStages);
 
 function EventProgramNotifications({
     notifications,
@@ -33,6 +35,7 @@ function EventProgramNotifications({
     setEditModel,
     setAddModel,
     dataElements,
+    programStages
 }) {
     return (
         <div>
@@ -42,7 +45,7 @@ function EventProgramNotifications({
                 onEditNotification={setEditModel}
                 onAddNotification={setAddModel}
             />
-            <NotificationDialog dataElements={dataElements} />
+            <NotificationDialog dataElements={dataElements} programStages={programStages}/>
             <NotificationDeleteDialog
                 setOpen={setOpen}
                 open={open}
@@ -99,10 +102,12 @@ const enhance = compose(
     }),
     mapPropsStream(props$ =>
         props$.combineLatest(
+            programStages$,
             notifications$,
             programStageDataElements$,
-            (props, notifications, dataElements) => ({
+            (props, programStages, notifications, dataElements) => ({
                 ...props,
+                programStages,
                 notifications,
                 dataElements,
             })
