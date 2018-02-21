@@ -6,7 +6,7 @@ async function getRelationshipTypes(model, d2) {
         return [];
     }
     const relationship = await d2.models.relationshipTypes.get(
-        model.relationshipType.id,
+        model.relationshipType.id
     );
     const relationshipOptions = [
         {
@@ -22,7 +22,13 @@ async function getRelationshipTypes(model, d2) {
     return relationshipOptions;
 }
 
-export default new Map([
+/**
+ * Program-model are shared for both event-programs and
+ * tracker-programs notifications. We use a customFieldOrder name to differentiate
+ * between these two, as they have different behavior and overrides.
+ */
+
+const sharedOverrides = new Map([
     [
         'categoryCombo',
         {
@@ -40,7 +46,14 @@ export default new Map([
             component: PeriodTypeDropDown,
         },
     ],
-    // Translate realtionShipFromA to a drop-down consisting of the relationships
+]);
+
+export const eventProgram = new Map([...sharedOverrides, []]);
+
+//Enrollment is used as customFieldOrderName for enrollment-stepper
+export const enrollment = new Map([
+    ...sharedOverrides,
+    // Translate relationShipFromA to a drop-down consisting of the relationships
     [
         'relationshipFromA',
         {
@@ -52,4 +65,17 @@ export default new Map([
             },
         },
     ],
+])
+
+export const trackerProgram = new Map([
+    ...sharedOverrides,
+
+    [
+        'trackedEntityType',
+        {
+            required: true
+        }
+    ]
 ]);
+
+export default eventProgram;
