@@ -6,7 +6,7 @@ async function getRelationshipTypes(model, d2) {
         return [];
     }
     const relationship = await d2.models.relationshipTypes.get(
-        model.relationshipType.id
+        model.relationshipType.id,
     );
     const relationshipOptions = [
         {
