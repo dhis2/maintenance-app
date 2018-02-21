@@ -221,7 +221,10 @@ Dropdown.propTypes = {
     limit: PropTypes.number,
     top: PropTypes.any,
     style: PropTypes.any,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.string,
+    ]),
     labelText: PropTypes.string,
     translateLabel: PropTypes.bool,
     referenceProperty: PropTypes.string,

@@ -1,6 +1,7 @@
 import React from 'react';
 import DropDown from './drop-down';
 import { isNil } from 'lodash/fp';
+
 class DropDownAsyncGetter extends React.Component {
     constructor(props, context) {
         super(props, context);
