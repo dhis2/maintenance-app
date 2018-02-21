@@ -16,8 +16,10 @@ import externalMapLayer from './externalMapLayer';
 import validationRule from './validationRule';
 import validationNotificationTemplate from './validationNotificationTemplate';
 import programIndicator from './programIndicator';
-import programNotificationTemplate, {programStageNotificationTemplate} from './programNotificationTemplate';
-import program from './program';
+import programNotificationTemplate, {
+    programStageNotificationTemplate,
+} from './programNotificationTemplate';
+import { eventProgram, trackerProgram, enrollment } from './program';
 import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
@@ -39,7 +41,7 @@ const overridesByType = {
     organisationUnit,
     organisationUnitGroup,
     pushAnalysis,
-    program,
+    eventProgram,
     programStage,
     programIndicator,
     programNotificationTemplate,
@@ -51,6 +53,8 @@ const overridesByType = {
     validationNotificationTemplate,
     trackedEntityAttribute,
     trackedEntityType,
+    trackerProgram,
+    enrollment,
 };
 
 export default {

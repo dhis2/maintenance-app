@@ -460,6 +460,32 @@ export default new Map([
                 field: 'relatedProgram',
                 type: 'HIDE_FIELD'
             }]
+        },
+        {
+            field: 'relationshipFromA',
+            when: [{
+                field: 'relationshipType',
+                operator: 'HAS_VALUE'
+            }],
+            operations: [{
+                field: 'relatedProgram',
+                type: 'SET_PROP',
+                propName: 'isRequired',
+                thenValue: true,
+                elseValue: false
+            }, {
+                field: 'relationshipFromA',
+                type: 'SET_PROP',
+                propName: 'isRequired',
+                thenValue: true,
+                elseValue: false
+            }, {
+                field: 'relationshipText',
+                type: 'SET_PROP',
+                propName: 'required',
+                thenValue: true,
+                elseValue: false
+            }]
         }
     ]],
     ['programIndicator', [{

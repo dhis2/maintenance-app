@@ -189,7 +189,7 @@ export function createFormFor(source$, schema, properties, includeAttributes, cu
             .combineLatest(source$, (props, model) => {
                 return { ...props, model }})
         ),
-        createFieldConfigsFor(schema, properties, undefined, includeAttributes, false),
+        createFieldConfigsFor(schema, properties, undefined, includeAttributes, false, customFieldOrderName),
     );
 
     function CreatedFormBuilderForm({ fieldConfigs, model, editFieldChanged, detailsFormStatusChange = noop }) {
