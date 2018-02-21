@@ -168,11 +168,11 @@ class DropDownAsync extends Component {
         } = this.props;
 
         return (
-            <div style={{ ...styles.fieldWrap, ...style }}>
-                <div style={styles.fieldStyle}>
+            <div style={{...styles.fieldStyle, ...style}}>
                     {this.state.isRefreshing && <RefreshMask horizontal />}
                     <DropDown
                         {...other}
+                        top={'-15px'}
                         options={this.state.options}
                         value={this.props.value ? this.props.value.id : this.props.value}
                         onChange={this.onChange}
@@ -184,7 +184,6 @@ class DropDownAsync extends Component {
                             onRefreshClick={this.onRefreshClick}
                         />
                     }
-                </div>
             </div>
         );
     }
