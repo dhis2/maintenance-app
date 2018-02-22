@@ -3,24 +3,34 @@ import PropTypes from 'prop-types';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { get } from 'lodash/fp';
+import { get, has } from 'lodash/fp';
 
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
 import mapPropsStream from 'recompose/mapPropsStream';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
-
+import lifecycle from 'recompose/lifecycle';
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import Store from 'd2-ui/lib/store/Store';
 
 import Paper from 'material-ui/Paper/Paper';
 import TextField from 'material-ui/TextField/TextField';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+} from 'material-ui/Table';
 
 import ProgramAttributeRow from '../../../../forms/form-fields/attribute-row';
 import eventProgramStore from '../../eventProgramStore';
-import { addAttributesToProgram, removeAttributesFromProgram, editProgramAttributes } from './actions';
+import {
+    addAttributesToProgram,
+    removeAttributesFromProgram,
+    editProgramAttributes,
+} from './actions';
 
 const styles = {
     groupEditor: {
@@ -32,64 +42,106 @@ const styles = {
     },
 };
 
-const program$ = eventProgramStore
-    .map(get('program'));
+const program$ = eventProgramStore.map(get('program'));
 
 const availableAttributes$ = eventProgramStore
     .map(get('availableAttributes'))
     .take(1);
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-    addAttributesToProgram,
-    removeAttributesFromProgram,
-    editProgramAttributes,
-}, dispatch);
+const mapStateToProps = state => ({
+    tetAttributes: state.eventProgram.step.tetAttributes,
+});
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(
+        {
+            addAttributesToProgram,
+            removeAttributesFromProgram,
+            editProgramAttributes,
+        },
+        dispatch
+    );
+
+/**
+ * Extracts attributes that are in TrackedEntityTypeAttributes, but not in
+ * programTrackedEntityAttributes
+ * @param programModel Program model to use for programTrackedEntityAttributes
+ * @param tetAttributes TrackedEntityType-attributes that we should check for.
+ * @returns {Array} An array of TrackedEntityAttributes that are in tetAttributes, but
+ * not in programTrackedEntityAttributes, or empty if none.
+ */
+export function tetAttributesNotInProgram(programModel, tetAttributes) {
+    if (
+        programModel &&
+        has('trackedEntityType.trackedEntityTypeAttributes', programModel)
+    ) {
+        return tetAttributes.filter(teta => {
+            console.log(teta);
+            const hasAttribute = programModel.programTrackedEntityAttributes.find(
+                ptea =>
+                    ptea.trackedEntityAttribute.id ==
+                    teta.trackedEntityAttribute.id
+            );
+            console.log(hasAttribute);
+            return !hasAttribute;
+        });
+    }
+    return [];
+}
 
 const enhance = compose(
     mapProps(props => ({
         groupName: props.params.groupName,
         modelType: props.schema,
-        modelId: props.params.modelId }),
-    ),
-    connect(null, mapDispatchToProps),
-    mapPropsStream(props$ => props$
-        .combineLatest(
+        modelId: props.params.modelId,
+    })),
+    connect(mapStateToProps, mapDispatchToProps),
+    mapPropsStream(props$ =>
+        props$.combineLatest(
             program$,
             availableAttributes$,
-            (props, program$, availableAttributes) => (
-                {
-                    ...props,
-                    availableAttributes,
-                    model: program$,
-                    assignedAttributes: program$.programTrackedEntityAttributes,
-                }),
-        ),
+            (props, program, availableAttributes) => ({
+                ...props,
+                availableAttributes,
+                model: program,
+                assignedAttributes: program.programTrackedEntityAttributes, //.concat(props.tetAttributes)
+            })
+        )
     ),
+    lifecycle({
+        componentDidMount() {
+            //Assign attributes for selected trackedEntityType
+            const attributes = tetAttributesNotInProgram(
+                this.props.model,
+                this.props.tetAttributes
+            ).map(a => a.trackedEntityAttribute.id);
+            this.props.addAttributesToProgram({ attributes });
+        },
+    }),
     withState('attributeFilter', 'setAttributeFilter', ''),
     withHandlers({
-        onAssignItems: ({ addAttributesToProgram }) => (attributes) => {
+        onAssignItems: ({ addAttributesToProgram }) => attributes => {
             addAttributesToProgram({ attributes });
             return Promise.resolve();
         },
-        onRemoveItems: ({ removeAttributesFromProgram }) => (attributes) => {
+        onRemoveItems: ({ removeAttributesFromProgram }) => attributes => {
             removeAttributesFromProgram({ attributes });
             return Promise.resolve();
         },
-        onEditProgramAttribute: ({ editProgramAttributes }) => attribute => editProgramAttributes({
-            attribute,
-        }),
-        onAttributeFilter: ({ setAttributeFilter }) => e => setAttributeFilter(e.target.value),
-    }),
+        onEditProgramAttribute: ({ editProgramAttributes }) => attribute =>
+            editProgramAttributes({
+                attribute,
+            }),
+        onAttributeFilter: ({ setAttributeFilter }) => e =>
+            setAttributeFilter(e.target.value),
+    })
 );
 
 function addDisplayProperties(attributes) {
     return ({ trackedEntityAttribute, ...other }) => {
-        const {
-            displayName,
-            valueType,
-            optionSet,
-            unique,
-        } = attributes.find(({ id }) => id === trackedEntityAttribute.id);
+        const { displayName, valueType, optionSet, unique } = attributes.find(
+            ({ id }) => id === trackedEntityAttribute.id
+        );
 
         return {
             ...other,
@@ -113,7 +165,7 @@ function AssignAttributes(props, { d2 }) {
             id: attribute.id,
             text: attribute.displayName,
             value: attribute.id,
-        })),
+        }))
     );
 
     // Assign existing attributes
@@ -129,24 +181,36 @@ function AssignAttributes(props, { d2 }) {
     // Create edit-able rows for assigned attributes
     const tableRows = props.assignedAttributes
         .map(addDisplayProperties(props.availableAttributes))
-        .map(programAttribute => (
+        .map(programAttribute =>
             <ProgramAttributeRow
                 key={programAttribute.id}
-                displayName={programAttribute.trackedEntityAttribute.displayName}
+                displayName={
+                    programAttribute.trackedEntityAttribute.displayName
+                }
                 attribute={programAttribute}
                 onEditAttribute={props.onEditProgramAttribute}
-                isDateValue={programAttribute.trackedEntityAttribute.valueType === 'DATE'}
+                isDateValue={
+                    programAttribute.trackedEntityAttribute.valueType === 'DATE'
+                }
                 isUnique={programAttribute.trackedEntityAttribute.unique}
-                hasOptionSet={!!programAttribute.trackedEntityAttribute.optionSet}
+                hasOptionSet={
+                    !!programAttribute.trackedEntityAttribute.optionSet
+                }
             />
-        ));
+        );
 
     return (
         <Paper>
             <div style={styles.groupEditor}>
-                <div style={styles.fieldname}>{d2.i18n.getTranslation('program_tracked_entity_attributes')}</div>
+                <div style={styles.fieldname}>
+                    {d2.i18n.getTranslation(
+                        'program_tracked_entity_attributes'
+                    )}
+                </div>
                 <TextField
-                    hintText={d2.i18n.getTranslation('search_available_program_tracked_entity_attributes')}
+                    hintText={d2.i18n.getTranslation(
+                        'search_available_program_tracked_entity_attributes'
+                    )}
                     onChange={props.onAttributeFilter}
                     value={props.attributeFilter}
                     fullWidth
@@ -164,12 +228,24 @@ function AssignAttributes(props, { d2 }) {
             <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn>{d2.i18n.getTranslation('name')}</TableHeaderColumn>
-                        <TableHeaderColumn>{d2.i18n.getTranslation('display_in_list')}</TableHeaderColumn>
-                        <TableHeaderColumn>{d2.i18n.getTranslation('mandatory')}</TableHeaderColumn>
-                        <TableHeaderColumn>{d2.i18n.getTranslation('date_in_future')}</TableHeaderColumn>
-                        <TableHeaderColumn>{d2.i18n.getTranslation('render_options_as_radio')}</TableHeaderColumn>
-                        <TableHeaderColumn>{d2.i18n.getTranslation('searchable')}</TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('name')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('display_in_list')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('mandatory')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('date_in_future')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('render_options_as_radio')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('searchable')}
+                        </TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
