@@ -6,13 +6,12 @@ import getContext from 'recompose/getContext';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';
+import { has } from 'lodash/fp';
 
 const relativeScheduledDaysStyle = {
-    wrap: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
 };
 
 const enhance = compose(
@@ -35,11 +34,19 @@ const enhance = compose(
     })
 );
 
-function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDays, d2, value }) {
+function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDays, d2, value, style }) {
     const t = d2.i18n.getTranslation.bind(d2.i18n);
 
+    /* Because of bad alignment of material ui textfield and selectfield, the compoents becomes skewed when
+       using the hide method EditModelForm.component (setting the display to none/block). The component 
+       must instead chose to either use display:none from style or its defined display:flex. 
+    */
+    const wrapStyle = (style && (style.display === 'none'))
+        ? { ...relativeScheduledDaysStyle, ...style }
+        : relativeScheduledDaysStyle;
+
     return (
-        <div style={relativeScheduledDaysStyle.wrap}>
+        <div style={wrapStyle}>
             <span>{t('send_notification')}</span>
             <TextField
                 hintText={t('number_of_days')}
