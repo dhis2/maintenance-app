@@ -108,7 +108,6 @@ class Dropdown extends Component {
     renderSelectField(other) {
         return (
             <SelectField
-                style={this.props.style}
                 value={this.state.value}
                 fullWidth={this.props.fullWidth}
                 {...other}
@@ -137,9 +136,8 @@ class Dropdown extends Component {
             },
         };
 
-
         return (
-            <div style={{ ...styles.fieldStyle, ...this.props.style }}>
+            <div style={styles.fieldStyle}>
                 <Dialog
                     title={this.props.labelText}
                     open={this.state.dialogOpen}
@@ -201,6 +199,10 @@ class Dropdown extends Component {
             style,
             ...other
         } = this.props;
+
+        if (style && style.display && style.display === 'none') {
+            return null;
+        }
 
         return (
             this.state.options.length > limit
