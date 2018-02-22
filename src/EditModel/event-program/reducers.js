@@ -9,15 +9,12 @@ import {
     EVENT_PROGRAM_SAVE,
     EVENT_PROGRAM_SAVE_SUCCESS,
     EVENT_PROGRAM_SAVE_ERROR,
-    MODEL_TO_EDIT_FIELD_CHANGED,
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
 import { stageNotificationsReducer } from './notifications/reducers';
 import { programStageStepperReducer } from './tracker-program/program-stages/reducer';
 import steps from './event-program-steps';
 import { next, previous, first } from '../stepper/stepIterator';
-import { generateUid } from 'd2/lib/uid';
-import { has } from 'lodash/fp';
 
 export const initialState = {
     activeStep: first(steps),
@@ -52,12 +49,11 @@ function eventProgramStepperReducer(state = initialState, action) {
                 activeStep: first(steps),
                 isLoading: true,
             };
-        case EVENT_PROGRAM_LOAD_SUCCESS: {
+        case EVENT_PROGRAM_LOAD_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
             };
-        }
         case PROGRAM_STEPPER_SET_DISABLE:
             return {
                 ...state,
