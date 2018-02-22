@@ -60,6 +60,15 @@ class ProgramStageList extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(this.props.stages != nextProps.programStages && this.props.programStages != nextProps.programStages) {
+            this.setState({
+                ...this.state,
+                stages: nextProps.programStages
+            })
+        }
+    }
+
     openSharing = (model) => {
         this.setState({
             ...this.state,
