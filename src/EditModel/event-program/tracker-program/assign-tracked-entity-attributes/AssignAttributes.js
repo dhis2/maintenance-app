@@ -66,7 +66,6 @@ const mapDispatchToProps = dispatch =>
  * Extracts attributes that are in TrackedEntityTypeAttributes, but not in
  * programTrackedEntityAttributes
  * @param programModel Program model to use for programTrackedEntityAttributes
- * @param tetAttributes TrackedEntityType-attributes that we should check for.
  * @returns {Array} An array of TrackedEntityAttributes that are in tetAttributes, but
  * not in programTrackedEntityAttributes, or empty if none.
  */
