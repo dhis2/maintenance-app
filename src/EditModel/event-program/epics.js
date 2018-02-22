@@ -144,7 +144,6 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         'dataEntryForm[:owner]',
         'notificationTemplates[:owner]',
         'programTrackedEntityAttributes',
-        'trackedEntityType[trackedEntityTypeAttributes[trackedEntityAttribute]'
     ].join(',');
 
     return api$
@@ -265,7 +264,7 @@ export const programModel = action$ =>
         .map(get('payload'))
         .flatMap(loadEventProgramMetadataByProgramId)
         .do(storeState => eventProgramStore.setState(storeState))
-        .map(storeState => loadEventProgramSuccess(storeState.program));
+        .mapTo(loadEventProgramSuccess());
 
 export const programModelEdit = createModelToEditEpic(
     MODEL_TO_EDIT_FIELD_CHANGED,

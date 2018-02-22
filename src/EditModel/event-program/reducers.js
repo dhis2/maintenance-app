@@ -18,7 +18,6 @@ import steps from './event-program-steps';
 import { next, previous, first } from '../stepper/stepIterator';
 import { generateUid } from 'd2/lib/uid';
 import { has } from 'lodash/fp';
-import { tetAttributesNotInProgram } from "./tracker-program/assign-tracked-entity-attributes/AssignAttributes";
 
 export const initialState = {
     activeStep: first(steps),
@@ -55,16 +54,10 @@ function eventProgramStepperReducer(state = initialState, action) {
                 isLoading: true,
             };
         case EVENT_PROGRAM_LOAD_SUCCESS: {
-            const programModel = action.payload;
-            let tetAttributes = [];
-            if(programModel && has('trackedEntityType.trackedEntityTypeAttributes', programModel)) {
-                const attrs = tetAttributesNotInProgram(programModel, programModel.trackedEntityType.trackedEntityTypeAttributes);
-                tetAttributes = attrs.map(teta => ({id: generateUid(), ...teta}));
-            }
             return {
                 ...state,
                 isLoading: false,
-                tetAttributes: tetAttributes
+                tetAttributes: [],
             };
         }
         case PROGRAM_STEPPER_SET_DISABLE:
@@ -83,6 +76,7 @@ function eventProgramStepperReducer(state = initialState, action) {
             return {
                 ...state,
                 isSaving: false,
+                tetAttributes: [],
             };
         case MODEL_TO_EDIT_FIELD_CHANGED: {
             const {field, value } = action.payload;
