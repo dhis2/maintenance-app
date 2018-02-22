@@ -24,7 +24,6 @@ export const initialState = {
     disabled: false,
     isLoading: true,
     isSaving: false,
-    tetAttributes: []
 };
 
 function eventProgramStepperReducer(state = initialState, action) {
@@ -57,7 +56,6 @@ function eventProgramStepperReducer(state = initialState, action) {
             return {
                 ...state,
                 isLoading: false,
-                tetAttributes: [],
             };
         }
         case PROGRAM_STEPPER_SET_DISABLE:
@@ -76,22 +74,7 @@ function eventProgramStepperReducer(state = initialState, action) {
             return {
                 ...state,
                 isSaving: false,
-                tetAttributes: [],
             };
-        case MODEL_TO_EDIT_FIELD_CHANGED: {
-            const {field, value } = action.payload;
-            if(field === 'trackedEntityType' && value.trackedEntityTypeAttributes) {
-                return {
-                    ...state,
-                    tetAttributes: value.trackedEntityTypeAttributes.map(teta => (
-                        {
-                            id: generateUid(),
-                            ...teta
-                        }))
-                }
-            }
-            return state;
-        }
         default:
             break;
     }

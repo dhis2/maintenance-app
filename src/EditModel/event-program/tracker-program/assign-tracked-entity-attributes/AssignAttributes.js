@@ -70,21 +70,22 @@ const mapDispatchToProps = dispatch =>
  * @returns {Array} An array of TrackedEntityAttributes that are in tetAttributes, but
  * not in programTrackedEntityAttributes, or empty if none.
  */
-export function tetAttributesNotInProgram(programModel, tetAttributes) {
+export function tetAttributesNotInProgram(programModel) {
     if (
         programModel &&
         has('trackedEntityType.trackedEntityTypeAttributes', programModel)
     ) {
-        return tetAttributes.filter(teta => {
-            console.log(teta);
-            const hasAttribute = programModel.programTrackedEntityAttributes.find(
-                ptea =>
-                    ptea.trackedEntityAttribute.id ==
-                    teta.trackedEntityAttribute.id
-            );
-            console.log(hasAttribute);
-            return !hasAttribute;
-        });
+        return programModel.trackedEntityType.trackedEntityTypeAttributes.filter(
+            teta => {
+                console.log(teta);
+                const hasAttribute = programModel.programTrackedEntityAttributes.find(
+                    ptea =>
+                        ptea.trackedEntityAttribute.id ==
+                        teta.trackedEntityAttribute.id
+                );
+                return !hasAttribute;
+            }
+        );
     }
     return [];
 }
@@ -104,17 +105,16 @@ const enhance = compose(
                 ...props,
                 availableAttributes,
                 model: program,
-                assignedAttributes: program.programTrackedEntityAttributes, //.concat(props.tetAttributes)
+                assignedAttributes: program.programTrackedEntityAttributes,
             })
         )
     ),
     lifecycle({
         componentDidMount() {
             //Assign attributes for selected trackedEntityType
-            const attributes = tetAttributesNotInProgram(
-                this.props.model,
-                this.props.tetAttributes
-            ).map(a => a.trackedEntityAttribute.id);
+            const attributes = tetAttributesNotInProgram(this.props.model).map(
+                a => a.trackedEntityAttribute.id
+            );
             this.props.addAttributesToProgram({ attributes });
         },
     }),
@@ -170,10 +170,10 @@ function AssignAttributes(props, { d2 }) {
 
     // Assign existing attributes
     assignedItemStore.setState(
-        props.assignedAttributes.map(a => a.trackedEntityAttribute.id),
+        props.assignedAttributes.map(a => a.trackedEntityAttribute.id)
     );
 
-    const onMoveAttributes = (newAttributesOrderIds) => {
+    const onMoveAttributes = newAttributesOrderIds => {
         assignedItemStore.setState(newAttributesOrderIds);
         // TODO need to update this.props.assignedAttributes to reflect new order in epics
     };
