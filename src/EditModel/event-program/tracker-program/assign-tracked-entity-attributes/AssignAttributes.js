@@ -48,10 +48,6 @@ const availableAttributes$ = eventProgramStore
     .map(get('availableAttributes'))
     .take(1);
 
-const mapStateToProps = state => ({
-    tetAttributes: state.eventProgram.step.tetAttributes,
-});
-
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
@@ -76,10 +72,9 @@ export function tetAttributesNotInProgram(programModel) {
     ) {
         return programModel.trackedEntityType.trackedEntityTypeAttributes.filter(
             teta => {
-                console.log(teta);
                 const hasAttribute = programModel.programTrackedEntityAttributes.find(
                     ptea =>
-                        ptea.trackedEntityAttribute.id ==
+                        ptea.trackedEntityAttribute.id ===
                         teta.trackedEntityAttribute.id
                 );
                 return !hasAttribute;
@@ -95,7 +90,7 @@ const enhance = compose(
         modelType: props.schema,
         modelId: props.params.modelId,
     })),
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(null, mapDispatchToProps),
     mapPropsStream(props$ =>
         props$.combineLatest(
             program$,
