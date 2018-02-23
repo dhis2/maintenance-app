@@ -15,8 +15,8 @@ export default new Map([
     ['rightSide', {
         component: RightSideExpressionField,
     }],
-    ["organisationUnitLevels", {
-            referenceType: 'organisationUnitLevel',
-            fieldOptions: {},
-        }]
+    ['organisationUnitLevels', {
+        referenceType: 'organisationUnitLevel',
+        fieldOptions: {},
+    }],
 ]);

@@ -2,8 +2,6 @@ import React from 'react';
 import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
 import DropDown from '../../forms/form-fields/drop-down';
 
-
-
 const reportDateOptions = [
     {
         text: 'incident_date',
@@ -27,7 +25,7 @@ const reportDateOptions = [
  */
 
 const ReportDateToUseDropDown = props =>
-    <DropDown {...props} options={reportDateOptions} translateOptions={true} />;
+    <DropDown {...props} options={reportDateOptions} translateOptions />;
 
 export default new Map([
     [
