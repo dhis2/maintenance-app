@@ -87,6 +87,10 @@ class DropDownAsync extends Component {
 
             fieldsForReferenceType = 'id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]]';
         }
+        //Need trackedEntityAttribute-ids for trackerProgram to assign programTrackedEntityAttributes
+        if(this.props.referenceType === 'trackedEntityType') {
+            fieldsForReferenceType = fieldsForReferenceType.concat(',trackedEntityTypeAttributes[trackedEntityAttribute]');
+        }
 
         const filter = this.props.queryParamFilter;
         let d2i = {};
