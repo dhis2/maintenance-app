@@ -327,7 +327,7 @@ export const programModelSaveResponses = action$ =>
             );
             const firstErrorMessage = getFirstErrorMessageFromAction(
                 action.payload,
-            );
+            ) || action.payload.message;
 
             return notifyUser({ message: firstErrorMessage, translate: false });
         }),
