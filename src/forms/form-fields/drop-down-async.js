@@ -6,14 +6,9 @@ import DropDown from './drop-down';
 import QuickAddLink from './helpers/QuickAddLink.component';
 import RefreshMask from './helpers/RefreshMask.component';
 
-const styles = {
-    fieldStyle: {
-        display: 'flex',
-        alignItems: 'flex-end',
-    },
-    fieldWrap: {
-        position: 'relative',
-    },
+const wrapStyles = {
+    display: 'flex',
+    alignItems: 'flex-end',
 };
 
 class DropDownAsync extends Component {
@@ -167,8 +162,16 @@ class DropDownAsync extends Component {
             ...other
         } = this.props;
 
+        /* Because of bad alignment of material ui textfield and selectfield, the compoents becomes skewed when
+            using the hide method EditModelForm.component (setting the display to none/block). The component 
+            must instead chose to either use display:none from style or its defined display:flex. 
+        */
+        if (style && style.display && style.display === 'none') {
+            return null;
+        }
+
         return (
-            <div style={{...styles.fieldStyle, ...style}}>
+            <div style={wrapStyles}>
                     {this.state.isRefreshing && <RefreshMask horizontal />}
                     <DropDown
                         {...other}
