@@ -20,9 +20,12 @@ export const NOTIFICATION_PROGRAM_REMOVE_SUCCESS = 'NOTIFICATION_PROGRAM_REMOVE_
 export const NOTIFICATION_PROGRAM_REMOVE_ERROR = 'NOTIFICATION_PROGRAM_REMOVE_ERROR';
 
 export const removeStageNotification = model => ({ type: NOTIFICATION_STAGE_REMOVE, payload: model });
+export const removeStageNotificationSuccess = createActionCreator(NOTIFICATION_STAGE_REMOVE_SUCCESS);
+export const removeStageNotificationError = createActionCreator(NOTIFICATION_STAGE_REMOVE_ERROR);
 
-export const removeStateNotificationSuccess = createActionCreator(NOTIFICATION_STAGE_REMOVE_SUCCESS);
-export const removeStateNotificationError = createActionCreator(NOTIFICATION_STAGE_REMOVE_ERROR);
+export const removeProgramNotification = model => ({ type: NOTIFICATION_PROGRAM_REMOVE, payload: model });
+export const removeProgramNotificationSuccess = createActionCreator(NOTIFICATION_PROGRAM_REMOVE_SUCCESS);
+
 
 /**
  * Action to set the notification model and show the dialog
