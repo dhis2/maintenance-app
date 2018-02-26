@@ -282,6 +282,9 @@ const fieldOrderByName = new Map([
         'valueType',
         'aggregationType',
         'unique',
+        'orgunitScope',
+        'generated',
+        'pattern',
         'inherit',
         'confidential',
         'displayInListNoProgram',
@@ -423,7 +426,7 @@ const fieldOrderByName = new Map([
         'name',
         'periodType',
         'dataApprovalLevels',
-    ]]
+    ]],
 ]);
 
 export default {

@@ -33,6 +33,7 @@ const CheckboxWrap = (props) => {
         isRequired,
         options,
         model,
+        undefined,
         ...otherProps
     } = props;
 

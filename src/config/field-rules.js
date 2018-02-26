@@ -1,6 +1,8 @@
 import { defaultAnalyticsPeriodBoundaries } from './field-config/field-defaults';
 
 /**
+ * Rule functions in EditModel/form-rules
+ * 
  * Rules for the form fields.
  * If multiple `when` objects are specified these are evaluated as an OR.
  * The following would result check if either of the statements return true
@@ -77,8 +79,7 @@ export default new Map([
                 elseValue: false,
             }, {
                 type: 'CHANGE_VALUE',
-
-                setValue: setValueTypeToOptionSet
+                setValue: setValueTypeToOptionSet,
             }],
         },
         {
@@ -108,7 +109,8 @@ export default new Map([
                 field: 'aggregationType',
                 type: 'CHANGE_VALUE',
                 setValue: (model, fieldConfig) => {
-                    fieldConfig.value = model[fieldConfig.name] = 'NONE';
+                    fieldConfig.value = 'NONE';
+                    model[fieldConfig.name] = 'NONE';
                 },
             }],
         },
@@ -146,14 +148,15 @@ export default new Map([
                 elseValue: false,
             }, {
                 type: 'CHANGE_VALUE',
-                setValue: setValueTypeToOptionSet
+                setValue: setValueTypeToOptionSet,
             }],
         },
     ]],
     ['trackedEntityAttribute', [
         {
-            field: 'valueType',
+            field: 'unique',
             when: [{
+                field: 'valueType',
                 operator: 'ONEOF',
                 value: [
                     'BOOLEAN',
@@ -164,19 +167,23 @@ export default new Map([
                     'OPTION_SET',
                 ],
             }],
-            operations: [{
-                field: 'unique',
-                type: 'SET_PROP',
-                propName: 'disabled',
-                thenValue: true,
-                elseValue: false,
-            }, {
-                field: 'unique',
-                type: 'CHANGE_VALUE',
-                setValue: (model, fieldConfig) => {
-                    fieldConfig.value = model[fieldConfig.property] = false;
+            operations: [
+                {
+                    field: 'unique',
+                    type: 'SET_PROP',
+                    propName: 'disabled',
+                    thenValue: true,
+                    elseValue: false,
                 },
-            }],
+                {
+                    field: 'unique',
+                    type: 'CHANGE_VALUE',
+                    setValue: (model, fieldConfig) => {
+                        fieldConfig.value = false;
+                        model.unique = false;
+                    },
+                },
+            ],
         },
         {
             field: 'valueType',
@@ -184,15 +191,97 @@ export default new Map([
                 field: 'optionSet',
                 operator: 'HAS_VALUE',
             },
-            operations: [{
-                type: 'SET_PROP',
-                propName: 'disabled',
-                thenValue: true,
-                elseValue: false,
-            }, {
-                type: 'CHANGE_VALUE',
-                setValue: setValueTypeToOptionSet
-            }],
+            operations: [
+                {
+                    type: 'SET_PROP',
+                    propName: 'disabled',
+                    thenValue: true,
+                    elseValue: false,
+                }, {
+                    type: 'CHANGE_VALUE',
+                    setValue: setValueTypeToOptionSet,
+                },
+            ],
+        },
+        {
+            field: 'orgunitScope',
+            when: [
+                {
+                    field: 'unique',
+                    operator: 'NOT_EQUALS',
+                    value: true,
+                },
+                {
+                    field: 'valueType',
+                    operator: 'ONEOF',
+                    value: [
+                        'BOOLEAN',
+                        'TRUE_ONLY',
+                        'DATE',
+                        'TRACKER_ASSOCIATE',
+                        'USERNAME',
+                        'OPTION_SET',
+                    ],
+                },
+            ],
+            operations: [{ type: 'HIDE_FIELD' }],
+        },
+        {
+            field: 'generated',
+            when: [
+                {
+                    field: 'orgunitScope',
+                    operator: 'IS_HIDDEN_FIELD',
+                },
+                {
+                    field: 'orgunitScope',
+                    operator: 'ONEOF',
+                    value: ['organisation_unit'],
+                },
+                {
+                    field: 'orgunitScope',
+                    operator: 'EQUALS',
+                    value: true,
+                },
+            ],
+            operations: [
+                {
+                    type: 'HIDE_FIELD',
+                },
+                {
+                    type: 'CHANGE_VALUE',
+                    setValue: (model, fieldConfig) => {
+                        fieldConfig.value = false;
+                        model.generated = false;
+                    },
+                },
+            ],
+        },
+        {
+            field: 'pattern',
+            when: [
+                {
+                    field: 'generated',
+                    operator: 'IS_HIDDEN_FIELD',
+                },
+                {
+                    field: 'generated',
+                    operator: 'NOT_EQUALS',
+                    value: true,
+                },
+            ],
+            operations: [
+                {
+                    type: 'HIDE_FIELD',
+                },
+                {
+                    type: 'CHANGE_VALUE',
+                    setValue: (model, fieldConfig) => {
+                        fieldConfig.value = null;
+                        model.pattern = null;
+                    },
+                },
+            ],
         },
     ]],
     ['externalMapLayer', [
@@ -252,10 +341,10 @@ export default new Map([
                     const isValidPoint = (value) => {
                         try {
                             const poly = JSON.parse(value);
-                            return Array.isArray(poly) && (poly.length === 0 || (poly.length === 2 && !isNaN(poly[0]) && !isNaN(poly[1])));
-                        } catch (e) {
-                        }
-
+                            return Array.isArray(poly)
+                            && (poly.length === 0
+                                || (poly.length === 2 && !isNaN(poly[0]) && !isNaN(poly[1])));
+                        } catch (e) {}
                         return false;
                     };
 
@@ -420,30 +509,30 @@ export default new Map([
             when: [{
                 field: 'autoGenerateEvent',
                 operator: 'NOT_EQUALS',
-                value: true
+                value: true,
             }],
             operations: [{
                 field: 'openAfterEnrollment',
-                type: 'HIDE_FIELD'
+                type: 'HIDE_FIELD',
             }, {
                 field: 'reportDateToUse',
-                type: 'HIDE_FIELD'
-            }]
+                type: 'HIDE_FIELD',
+            }],
         },
         {
             field: 'reportDateToUse',
             when: [{
                 field: 'openAfterEnrollment',
                 operator: 'NOT_EQUALS',
-                value: true
+                value: true,
             }],
             operations: [{
                 type: 'SET_PROP',
                 propName: 'disabled',
                 thenValue: true,
-                elseValue: false
-            }]
-        }
+                elseValue: false,
+            }],
+        },
     ]],
     ['enrollment', [
         {
@@ -454,71 +543,71 @@ export default new Map([
             }],
             operations: [{
                 field: 'relationshipFromA',
-                type: 'HIDE_FIELD'
+                type: 'HIDE_FIELD',
             }, {
                 field: 'relationshipText',
-                type: 'HIDE_FIELD'
+                type: 'HIDE_FIELD',
             }, {
                 field: 'relatedProgram',
-                type: 'HIDE_FIELD'
-            }]
+                type: 'HIDE_FIELD',
+            }],
         },
         {
             field: 'relationshipFromA',
             when: [{
                 field: 'relationshipType',
-                operator: 'HAS_VALUE'
+                operator: 'HAS_VALUE',
             }],
             operations: [{
                 field: 'relatedProgram',
                 type: 'SET_PROP',
                 propName: 'isRequired',
                 thenValue: true,
-                elseValue: false
+                elseValue: false,
             }, {
                 field: 'relationshipFromA',
                 type: 'SET_PROP',
                 propName: 'isRequired',
                 thenValue: true,
-                elseValue: false
+                elseValue: false,
             }, {
                 field: 'relationshipText',
                 type: 'SET_PROP',
                 propName: 'required',
                 thenValue: true,
-                elseValue: false
-            }]
-        }
+                elseValue: false,
+            }],
+        },
     ]],
     ['programIndicator', [{
         field: 'analyticsPeriodBoundaries',
         when: [{
             field: 'analyticsType',
             operator: 'EQUALS',
-            value: 'EVENT'
+            value: 'EVENT',
         }],
         operations: [{
             type: 'CHANGE_VALUE',
             setValue: (model, fieldConfig) => {
                 if (fieldConfig) {
-                    fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
-                        'event', fieldConfig.value);
+                    fieldConfig.value = defaultAnalyticsPeriodBoundaries('event', fieldConfig.value);
+                    model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries('event', fieldConfig.value);
                 }
             },
-        }]
+        }],
     }, {
         field: 'analyticsPeriodBoundaries',
         when: [{
             field: 'analyticsType',
             operator: 'EQUALS',
-            value: 'ENROLLMENT'
+            value: 'ENROLLMENT',
         }],
         operations: [{
             type: 'CHANGE_VALUE',
             setValue: (model, fieldConfig) => {
                 if (fieldConfig) {
-                    fieldConfig.value = model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries(
-                        'enrollment', fieldConfig.value);
+                    fieldConfig.value = defaultAnalyticsPeriodBoundaries('enrollment', fieldConfig.value);
+                    model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries('enrollment', fieldConfig.value);
                 }
             },
         }],
@@ -527,14 +616,14 @@ export default new Map([
         {
             field: 'notificationTrigger',
             when: [{
-                field:'notificationTrigger',
+                field: 'notificationTrigger',
                 operator: 'NOT_EQUALS',
-                value: "SCHEDULED_DAYS_DUE_DATE"
+                value: 'SCHEDULED_DAYS_DUE_DATE',
             }],
             operations: [{
-                field:'relativeScheduledDays',
-                type: 'HIDE_FIELD'
-            }]
+                field: 'relativeScheduledDays',
+                type: 'HIDE_FIELD',
+            }],
         },
         {
             field: 'notificationRecipient',
@@ -543,53 +632,54 @@ export default new Map([
                 operator: 'NONEOF',
                 value: [
                     'TRACKED_ENTITY_INSTANCE',
-                    'ORGANISATION_UNIT_CONTACT']
+                    'ORGANISATION_UNIT_CONTACT',
+                ],
             }],
             operations: [{
                 field: 'deliveryChannels',
-                type: 'HIDE_FIELD'
-            }]
+                type: 'HIDE_FIELD',
+            }],
         },
         {
             field: 'notificationRecipient',
             when: [{
                 field: 'notificationRecipient',
                 operator: 'NOT_EQUALS',
-                value: 'DATA_ELEMENT'
+                value: 'DATA_ELEMENT',
             }],
             operations: [{
                 field: 'recipientDataElement',
-                type: 'HIDE_FIELD'
-            }]
+                type: 'HIDE_FIELD',
+            }],
         },
         {
             field: 'notificationRecipient',
             when: [{
                 field: 'notificationRecipient',
                 operator: 'NOT_EQUALS',
-                value: 'PROGRAM_ATTRIBUTE'
+                value: 'PROGRAM_ATTRIBUTE',
             }],
             operations: [{
                 field: 'recipientProgramAttribute',
-                type: 'HIDE_FIELD'
-            }]
-        }
+                type: 'HIDE_FIELD',
+            }],
+        },
     ]],
     ['programNotificationTemplate', [
         {
             field: 'notificationTrigger',
             when: [{
-                field:'notificationTrigger',
+                field: 'notificationTrigger',
                 operator: 'NONEOF',
                 value: [
                     'SCHEDULED_DAYS_INCIDENT_DATE',
                     'SCHEDULED_DAYS_ENROLLMENT_DATE',
-                ]
+                ],
             }],
             operations: [{
-                field:'relativeScheduledDays',
-                type: 'HIDE_FIELD'
-            }]
+                field: 'relativeScheduledDays',
+                type: 'HIDE_FIELD',
+            }],
         },
         {
             field: 'notificationRecipient',
@@ -598,24 +688,25 @@ export default new Map([
                 operator: 'NONEOF',
                 value: [
                     'TRACKED_ENTITY_INSTANCE',
-                    'ORGANISATION_UNIT_CONTACT']
+                    'ORGANISATION_UNIT_CONTACT',
+                ],
             }],
             operations: [{
                 field: 'deliveryChannels',
-                type: 'HIDE_FIELD'
-            }]
+                type: 'HIDE_FIELD',
+            }],
         },
         {
             field: 'notificationRecipient',
             when: [{
                 field: 'notificationRecipient',
                 operator: 'NOT_EQUALS',
-                value: 'PROGRAM_ATTRIBUTE'
+                value: 'PROGRAM_ATTRIBUTE',
             }],
             operations: [{
                 field: 'recipientProgramAttribute',
-                type: 'HIDE_FIELD'
-            }]
-        }
-    ]]
+                type: 'HIDE_FIELD',
+            }],
+        },
+    ]],
 ]);

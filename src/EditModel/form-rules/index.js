@@ -1,10 +1,12 @@
 import noop from 'd2-utilizr/lib/noop';
 import log from 'loglevel';
-import fieldRules from '../../config/field-rules';
-import isArray from 'd2-utilizr/lib/isArray';
-import systemSettingsStore from '../../App/systemSettingsStore';
 import { negate } from 'lodash/fp';
+import isArray from 'd2-utilizr/lib/isArray';
 
+import fieldRules from '../../config/field-rules';
+import systemSettingsStore from '../../App/systemSettingsStore';
+
+/* eslint-disable no-use-before-define */
 const whenOperatorMap = new Map([
     ['EQUALS', equalsOperator],
     ['NOT_EQUALS', notEqualsOperator],
@@ -16,6 +18,7 @@ const whenOperatorMap = new Map([
     ['SYSTEM_SETTING_IS_TRUE', systemSettingIsTrueOperator],
     ['SYSTEM_SETTING_IS_FALSE', systemSettingIsFalseOperator],
     ['IS_VALID_POINT', isPointOperator],
+    ['IS_HIDDEN_FIELD', isHiddenFieldOperator],
 ]);
 
 const operationsMap = new Map([
@@ -24,6 +27,7 @@ const operationsMap = new Map([
     ['HIDE_FIELD', hideField],
     ['SHOW_FIELD', showField],
 ]);
+/* eslint-enable no-use-before-define */
 
 export function getRulesForModelType(fieldName) {
     if (fieldRules.has(fieldName)) {
@@ -34,6 +38,9 @@ export function getRulesForModelType(fieldName) {
 }
 
 function changeValue(fieldConfig, operationParams, ruleResult, model) {
+    console.log(model);
+    console.log(fieldConfig);
+    console.log(ruleResult);
     if (ruleResult) {
         operationParams.setValue(model, fieldConfig);
     }
@@ -67,9 +74,9 @@ function showField(fieldConfig, operationParams, ruleResult) {
     if (ruleResult && fieldConfig.hiddenComponent) {
         fieldConfig.component = fieldConfig.hiddenComponent;
         delete fieldConfig.hiddenComponent;
-    } else {
-        fieldConfig.component = () => null;
+    } else if (!ruleResult) {
         fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
+        fieldConfig.component = () => null;
     }
 }
 
@@ -115,6 +122,10 @@ function isPointOperator(value) {
     }
 }
 
+function isHiddenFieldOperator(a, b, fieldConfig) {
+    return fieldConfig.hasOwnProperty('hiddenComponent');
+}
+
 function systemSettingIsTrueOperator(value, settingKey) {
     const settingsValue = systemSettingsStore.getState() ? systemSettingsStore.getState()[settingKey] : undefined;
     return settingsValue === true;
@@ -126,13 +137,18 @@ function systemSettingIsFalseOperator(value, settingKey) {
 }
 
 function ruleRunner({ whenFieldName, operatorFn, whenValue }, fieldConfig, model) {
-    return operatorFn(model[whenFieldName], whenValue);
+    return operatorFn(model[whenFieldName], whenValue, fieldConfig, model, whenFieldName);
 }
 
+
 function rulesRunner(rules, rule, modelToEdit, fieldConfigs) {
-    return rules.map((whenRule) => {
-        log.debug(`For ${rule.field} run the rule where when ${whenRule.field || rule.field} ${getWhenOperator(whenRule.operator).name} ${whenRule.value || ''} then run`);
-        const fieldConfigForRule = fieldConfigs.find(fieldConfig => fieldConfig.name === (whenRule.field || rule.field));
+    return rules.map((whenRule, index) => {
+        log.debug(`For field ${rule.field} run the when-rule where field ` +
+            ` ${whenRule.field || rule.field} ${getWhenOperator(whenRule.operator).name}` +
+            ` ${whenRule.value || ''} ${rule.field} ${rules.length > (index + 1) && 'then run'}`);
+
+        const fieldConfigForRule = fieldConfigs.find(fieldConfig =>
+            fieldConfig.name === (whenRule.field || rule.field));
 
         const whenFieldName = whenRule.field ? whenRule.field : rule.field;
         const operatorFn = getWhenOperator(whenRule.operator);
@@ -143,29 +159,31 @@ function rulesRunner(rules, rule, modelToEdit, fieldConfigs) {
 }
 
 export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
-    rules
-        .forEach((rule) => {
-            const rules = isArray(rule.when) ? rule.when : [rule.when];
-            const rulePassed = rulesRunner(rules, rule, modelToEdit, fieldConfigs).some(result => result === true);
+    rules.forEach((rule) => {
+        const rules = isArray(rule.when) ? rule.when : [rule.when];
+        const rulePassed = rulesRunner(rules, rule, modelToEdit, fieldConfigs).some(result => result === true);
 
-            log.debug('And the result is', rulePassed);
+        log.debug('And the result is', rulePassed);
 
-            (rule.operations || [rule.operation])
-                .forEach((operation) => {
-                    const fieldConfigForOperation = fieldConfigs.find(fieldConfig => fieldConfig.name === (operation.field || rule.field));
-                    const {
-                        field,
-                        type,
-                        ...operationParams
-                    } = operation;
+        (rule.operations || [rule.operation])
+            .forEach((operation) => {
+                const fieldConfigForOperation = fieldConfigs.find(fieldConfig =>
+                    fieldConfig.name === (operation.field || rule.field));
 
-                    log.debug(`---- For field ${field || rule.field} 
-                            execute ${getOperation(type).name} 
-                            with`, operationParams);
+                console.log(fieldConfigForOperation)
+                const {
+                    field,
+                    type,
+                    ...operationParams
+                } = operation;
 
-                    getOperation(type)(fieldConfigForOperation, operationParams, rulePassed, modelToEdit);
-                });
-        });
+                log.debug(`---- For field ${field || rule.field} 
+                        execute ${getOperation(type).name} 
+                        with`, operationParams);
+
+                getOperation(type)(fieldConfigForOperation, operationParams, rulePassed, modelToEdit);
+            });
+    });
 
     return fieldConfigs;
 }
