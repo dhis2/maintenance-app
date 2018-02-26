@@ -1,8 +1,11 @@
 import { combineEpics } from 'redux-observable';
 import { getOr, get, map, compose, isEqual, includes, negate, filter, __ } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
-
-import { PROGRAM_ATTRIBUTES_ADD, PROGRAM_ATTRIBUTES_REMOVE, PROGRAM_ATTRIBUTES_ADDREMOVE_COMPLETE, PROGRAM_ATTRIBUTES_EDIT, PROGRAM_ATTRIBUTES_EDIT_COMPLETE } from './actions';
+import { Observable } from 'rxjs';
+import {
+    PROGRAM_ATTRIBUTES_ADD, PROGRAM_ATTRIBUTES_REMOVE, PROGRAM_ATTRIBUTES_ADDREMOVE_COMPLETE,
+    PROGRAM_ATTRIBUTES_EDIT, PROGRAM_ATTRIBUTES_EDIT_COMPLETE, PROGRAM_ATTRIBUTES_SET_ORDER
+} from './actions';
 
 const programAttributeExistsInAttributeUidList = uids => compose(includes(__, uids), get('trackedEntityAttribute.id'));
 const keepProgramAttributesNotInUidList = uids => filter(negate(programAttributeExistsInAttributeUidList(uids)));
@@ -74,10 +77,28 @@ const editAttribute = store => action$ => action$
     })
     .mapTo({ type: PROGRAM_ATTRIBUTES_EDIT_COMPLETE });
 
+const setAttributesOrder = store => action$ => action$
+    .ofType(PROGRAM_ATTRIBUTES_SET_ORDER)
+    .map((action) => {
+        const { payload : { newOrderIds} } = action;
+        const program = getOr([], 'program', store.getState());
+        const programAttributes = getOr([], 'programTrackedEntityAttributes', program);
+        const newAssignedAttributes = newOrderIds.map(teaId =>
+            programAttributes.find(attribute => attribute.trackedEntityAttribute.id === teaId));
+        program.programTrackedEntityAttributes = newAssignedAttributes;
+        store.setState({
+            ...store.getState(),
+            program
+        })
+
+    })
+    .flatMapTo(Observable.never())
+
 export default function createEpicsForStore(store) {
     return combineEpics(
         addAttributeToProgram(store),
         removeAttributeFromProgram(store),
         editAttribute(store),
+        setAttributesOrder(store)
     );
 }
