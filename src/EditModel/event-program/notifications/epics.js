@@ -140,7 +140,6 @@ const removeProgramNotification = action$ => action$
             .take(1)
             .map((eventProgramState) => {
                 const { program } = eventProgramState;
-                // Remove the model from both the lists (store and programStage property collection)
                 program.notificationTemplates.remove(model);
 
                 eventProgramStore.setState(eventProgramState);
