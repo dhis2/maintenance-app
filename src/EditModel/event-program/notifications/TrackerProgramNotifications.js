@@ -11,7 +11,7 @@ import mapPropsStream from 'recompose/mapPropsStream';
 import NotificationList from './NotificationList';
 import { getProgramStages, getProgramNotifications } from './selectors';
 import NotificationDeleteDialog from './NotificationDeleteDialog';
-import { removeStageNotification, setEditModel, setAddModel } from './actions';
+import { removeStageNotification, removeProgramNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
 import eventProgramStore from '../eventProgramStore';
 const programStageTabIndex = 0;
@@ -133,6 +133,7 @@ const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
             removeStageNotification,
+            removeProgramNotification,
             setEditProgramStageModel: model =>
                 setEditModel(model, 'PROGRAM_STAGE_NOTIFICATION'),
             setEditProgramModel: model =>
@@ -152,10 +153,16 @@ const enhance = compose(
         onDelete: ({
             setOpen,
             removeStageNotification,
+            removeProgramNotification,
             modelToDelete,
         }) => () => {
             setOpen(false);
-            removeStageNotification(modelToDelete);
+            if(modelToDelete.programStages) {
+                removeStageNotification(modelToDelete);
+            } else {
+                removeProgramNotification(modelToDelete);
+            }
+
         },
         askForConfirmation: ({ setOpen, setModelToDelete }) => model => {
             setModelToDelete(model);

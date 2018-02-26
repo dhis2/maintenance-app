@@ -1,4 +1,8 @@
-import { NOTIFICATION_STAGE_REMOVE, NOTIFICATION_STAGE_SAVE, NOTIFICATION_SET_ADD_MODEL, removeStateNotificationSuccess, removeStateNotificationError, setEditModel, saveStageNotificationSuccess, saveStageNotificationError, NOTIFICATION_PROGRAM_SAVE } from './actions';
+import {
+    NOTIFICATION_STAGE_REMOVE, NOTIFICATION_STAGE_SAVE, NOTIFICATION_SET_ADD_MODEL, removeProgramNotificationSuccess,
+    setEditModel, saveStageNotificationSuccess, saveStageNotificationError,
+    NOTIFICATION_PROGRAM_SAVE, NOTIFICATION_PROGRAM_REMOVE
+} from './actions';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import { getInstance } from 'd2/lib/d2';
@@ -7,6 +11,7 @@ import { getProgramStageById } from "../tracker-program/program-stages/selectors
 import eventProgramStore from '../eventProgramStore';
 import { equals, first, negate, some, get, compose, find, identity, map, __, pick } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
+import snackActions from "../../../Snackbar/snack.actions";
 
 // notEqualTo :: any -> any -> Boolean
 const notEqualTo = left => right => left !== right;
@@ -87,6 +92,15 @@ const setProgramStageNotificationAddModel = (action$, store) => action$
         if(notificationType == 'PROGRAM_NOTIFICATION') {
             return setEditModel(model, 'PROGRAM_NOTIFICATION');
         }
+        if(psStore.programStages.length < 1) {
+            snackActions.show({
+                message: 'cannot_create_program_notification_without_program_stage',
+                translate: true,
+            });
+            return {
+                type: "SET_EDIT_MODEL_ERROR",
+            }
+        }
 
         //set default to first programStage
         model.programStage = pick('id', first(psStore.programStages))
@@ -119,6 +133,25 @@ const saveProgramNotification = (action$, store) => action$
             .catch(error => Observable.of(saveStageNotificationError(error)))
     ));
 
+const removeProgramNotification = action$ => action$
+    .ofType(NOTIFICATION_PROGRAM_REMOVE)
+    .flatMap(({ payload: model }) => Observable.of(model)
+        .flatMap(model => eventProgramStore
+            .take(1)
+            .map((eventProgramState) => {
+                const { program } = eventProgramState;
+                program.notificationTemplates.remove(model);
+
+                eventProgramStore.setState(eventProgramState);
+            })
+        )
+    )
+    .mapTo(removeProgramNotificationSuccess());
 
 
-export default combineEpics(removeProgramStageNotification, setProgramStageNotificationAddModel, saveProgramStageNotification, saveProgramNotification);
+export default combineEpics(
+    removeProgramStageNotification,
+    setProgramStageNotificationAddModel,
+    saveProgramStageNotification,
+    saveProgramNotification,
+    removeProgramNotification);
