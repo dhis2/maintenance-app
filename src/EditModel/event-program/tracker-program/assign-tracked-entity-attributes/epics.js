@@ -1,11 +1,12 @@
 import { combineEpics } from 'redux-observable';
-import { getOr, get, map, compose, isEqual, includes, negate, filter, __ } from 'lodash/fp';
+import { getOr, get, has, map, compose, isEqual, includes, negate, filter, __ } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
 import { Observable } from 'rxjs';
 import {
     PROGRAM_ATTRIBUTES_ADD, PROGRAM_ATTRIBUTES_REMOVE, PROGRAM_ATTRIBUTES_ADDREMOVE_COMPLETE,
     PROGRAM_ATTRIBUTES_EDIT, PROGRAM_ATTRIBUTES_EDIT_COMPLETE, PROGRAM_ATTRIBUTES_SET_ORDER
 } from './actions';
+import snackActions from "../../../../Snackbar/snack.actions";
 
 const programAttributeExistsInAttributeUidList = uids => compose(includes(__, uids), get('trackedEntityAttribute.id'));
 const keepProgramAttributesNotInUidList = uids => filter(negate(programAttributeExistsInAttributeUidList(uids)));
@@ -39,8 +40,22 @@ const removeAttributeFromProgram = store => action$ => action$
         const state = store.getState();
         const program = getOr([], 'program', state);
         const programAttributes = getOr([], 'programTrackedEntityAttributes', program);
-        const attributeIdsToRemove = getOr([], 'payload.attributes', action);
+        let attributeIdsToRemove = getOr([], 'payload.attributes', action)
+
+        //Prevent removal of TEAs that are in selected TET
+        if(has('trackedEntityType.trackedEntityTypeAttributes', program)) {
+            const attributesInTet = program.trackedEntityType.trackedEntityTypeAttributes
+                .map(teta => teta.trackedEntityAttribute.id);
+            const withoutTetAttrs = attributeIdsToRemove.filter(a => !attributesInTet.includes(a));
+
+            if(attributeIdsToRemove.length !== withoutTetAttrs.length) {
+                attributeIdsToRemove = withoutTetAttrs;
+                snackActions.show({message: "cannot_remove_program_attribute_defined_in_tet", translate: true})
+            }
+        }
+
         const removeAttributes = keepProgramAttributesNotInUidList(attributeIdsToRemove);
+
         program.programTrackedEntityAttributes = removeAttributes(programAttributes);
         store.setState({
             ...store.getState(),
