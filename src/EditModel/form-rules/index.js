@@ -38,9 +38,6 @@ export function getRulesForModelType(fieldName) {
 }
 
 function changeValue(fieldConfig, operationParams, ruleResult, model) {
-    console.log(model);
-    console.log(fieldConfig);
-    console.log(ruleResult);
     if (ruleResult) {
         operationParams.setValue(model, fieldConfig);
     }
@@ -170,7 +167,6 @@ export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
                 const fieldConfigForOperation = fieldConfigs.find(fieldConfig =>
                     fieldConfig.name === (operation.field || rule.field));
 
-                console.log(fieldConfigForOperation)
                 const {
                     field,
                     type,
