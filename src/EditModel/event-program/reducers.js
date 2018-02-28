@@ -9,20 +9,25 @@ import {
     EVENT_PROGRAM_SAVE,
     EVENT_PROGRAM_SAVE_SUCCESS,
     EVENT_PROGRAM_SAVE_ERROR,
+    TRACKER_PROGRAM_STEP_NEXT,
+    TRACKER_PROGRAM_STEP_PREVIOUS,
 } from './actions';
 import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
 import { stageNotificationsReducer } from './notifications/reducers';
 import { programStageStepperReducer } from './tracker-program/program-stages/reducer';
-import steps from './event-program-steps';
+import eventSteps from './event-program-steps';
+import trackerSteps from './tracker-program/tracker-program-steps';
 import { next, previous, first } from '../stepper/stepIterator';
 
 export const initialState = {
-    activeStep: first(steps),
+    activeStep: first(eventSteps),
     disabled: false,
     isLoading: true,
     isSaving: false,
 };
 
+/*  TODO should probably have its own reducer for trackerPrograms.
+    first(eventSteps) works just because the key of both steppers are "details". */
 function eventProgramStepperReducer(state = initialState, action) {
     switch (action.type) {
         case EVENT_PROGRAM_STEP_CHANGE:
@@ -34,19 +39,31 @@ function eventProgramStepperReducer(state = initialState, action) {
         case EVENT_PROGRAM_STEP_NEXT:
             return {
                 ...state,
-                activeStep: next(steps, state.activeStep),
+                activeStep: next(eventSteps, state.activeStep),
             };
 
         case EVENT_PROGRAM_STEP_PREVIOUS:
             return {
                 ...state,
-                activeStep: previous(steps, state.activeStep),
+                activeStep: previous(eventSteps, state.activeStep),
+            };
+
+        case TRACKER_PROGRAM_STEP_NEXT:
+            return {
+                ...state,
+                activeStep: next(trackerSteps, state.activeStep),
+            };
+
+        case TRACKER_PROGRAM_STEP_PREVIOUS:
+            return {
+                ...state,
+                activeStep: previous(trackerSteps, state.activeStep),
             };
 
         case STEPPER_RESET_ACTIVE_STEP:
             return {
                 ...state,
-                activeStep: first(steps),
+                activeStep: first(eventSteps),
                 isLoading: true,
             };
         case EVENT_PROGRAM_LOAD_SUCCESS:
