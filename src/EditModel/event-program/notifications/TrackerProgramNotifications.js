@@ -157,7 +157,7 @@ const enhance = compose(
             modelToDelete,
         }) => () => {
             setOpen(false);
-            if(modelToDelete.programStages) {
+            if(modelToDelete.programStage) {
                 removeStageNotification(modelToDelete);
             } else {
                 removeProgramNotification(modelToDelete);
