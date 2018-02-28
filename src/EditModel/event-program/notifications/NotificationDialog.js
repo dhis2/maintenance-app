@@ -98,9 +98,9 @@ const NotificationDialog = (
             onTouchTap={() => onConfirm(model)}
         />,
     ];
-    const title = `${!isProgram
-        ? t('program_stage_notification')
-        : t('program_notification')}`;
+    const title = `${!isTracker || isProgram
+        ? t('program_notification')
+        : t('program_stage_notification')}`;
     const StepperComponent = isProgram ? ProgramStepper : ProgramStageStepper;
     return (
         <Dialog
