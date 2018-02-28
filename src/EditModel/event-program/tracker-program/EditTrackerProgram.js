@@ -9,7 +9,7 @@ import EventProgramStepper from './TrackerProgramStepper';
 import TrackerProgramStepperContent from './TrackerProgramStepperContent';
 import eventProgramStore$, { isStoreStateDirty } from '../eventProgramStore';
 import EventActionButtons from '../EventActionButtons';
-import { previousStep, nextStep } from '../actions';
+import { previousTrackerStep, nextTrackerStep } from '../actions';
 import {
     createConnectedForwardButton,
     createConnectedBackwardButton,
@@ -17,10 +17,10 @@ import {
 } from '../../stepper/stepper';
 
 const EventProgramStepperNavigationForward = createConnectedForwardButton(
-    nextStep,
+    nextTrackerStep,
 );
 const EventProgramStepperNavigationBackward = createConnectedBackwardButton(
-    previousStep,
+    previousTrackerStep,
 );
 
 const StepperNavigation = createStepperNavigation(
