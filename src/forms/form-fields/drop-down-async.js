@@ -142,7 +142,7 @@ class DropDownAsync extends Component {
                         )),
                     });
                 }
-            });
+            })
     }
 
     render() {

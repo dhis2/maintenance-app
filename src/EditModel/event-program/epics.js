@@ -258,11 +258,34 @@ function createEventProgramStoreStateFromMetadataResponse(
     return Observable.fromPromise(storeState);
 }
 
+async function loadAdditionalTrackerMetadata(loadedMetadata) {
+    const program = loadedMetadata.program;
+
+    if(!program.programType || program.programType !== 'WITH_REGISTRATION' || !program.trackedEntityType) {
+        return loadedMetadata;
+    }
+    //Load trackedEntityTypeAttributes
+    const tetId = program.trackedEntityType.id;
+    const d2 = await getInstance();
+    try {
+        const tet = await d2.models.trackedEntityType.get(tetId, {
+            fields: 'id,displayName,name,trackedEntityTypeAttributes[trackedEntityAttribute]'
+        });
+        program.trackedEntityType = tet;
+        program.resetDirtyState();
+    } catch(e) {
+        return loadedMetadata;
+    }
+
+    return loadedMetadata;
+}
+
 export const programModel = action$ =>
     action$
         .ofType(EVENT_PROGRAM_LOAD)
         .map(get('payload'))
         .flatMap(loadEventProgramMetadataByProgramId)
+        .flatMap(loadAdditionalTrackerMetadata)
         .do(storeState => eventProgramStore.setState(storeState))
         .mapTo(loadEventProgramSuccess());
 
