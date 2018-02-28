@@ -44,13 +44,13 @@ const removeAttributeFromProgram = store => action$ => action$
 
         //Prevent removal of TEAs that are in selected TET
         if(has('trackedEntityType.trackedEntityTypeAttributes', program)) {
-            const attributesInTet = program.trackedEntityType.trackedEntityTypeAttributes
-                .map(teta => teta.trackedEntityAttribute.id);
-            const withoutTetAttrs = attributeIdsToRemove.filter(a => !attributesInTet.includes(a));
+            const attributesInTet = program.trackedEntityType.trackedEntityTypeAttributes;
+            const withoutTetAttrs = attributeIdsToRemove.filter(a => !attributesInTet
+                .find(teta => teta.trackedEntityAttribute.id === a));
 
             if(attributeIdsToRemove.length !== withoutTetAttrs.length) {
                 attributeIdsToRemove = withoutTetAttrs;
-                snackActions.show({message: "cannot_remove_program_attribute_defined_in_tet", translate: true})
+                snackActions.show({message: "cannot_remove_program_attribute_inherited_from_tet", translate: true})
             }
         }
 

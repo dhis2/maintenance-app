@@ -143,7 +143,6 @@ class DropDownAsync extends Component {
                     });
                 }
             })
-            .then(() => this.onChange({ target: { value: this.props.value ? this.props.value.id : this.props.value} }))
     }
 
     render() {
