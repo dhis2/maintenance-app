@@ -71,7 +71,7 @@ function showField(fieldConfig, operationParams, ruleResult) {
     if (ruleResult && fieldConfig.hiddenComponent) {
         fieldConfig.component = fieldConfig.hiddenComponent;
         delete fieldConfig.hiddenComponent;
-    } else if (!ruleResult) {
+    } else {
         fieldConfig.hiddenComponent = fieldConfig.hiddenComponent || fieldConfig.component;
         fieldConfig.component = () => null;
     }
