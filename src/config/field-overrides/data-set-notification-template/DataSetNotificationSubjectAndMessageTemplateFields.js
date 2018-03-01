@@ -8,6 +8,12 @@ import actions from '../../../EditModel/objectActions';
 const DATA_SET_VARIABLES = [
     'data_set_name',
     'current_date',
+    'data_description',
+    'registration_ou',
+    'registration_period',
+    'registration_user',
+    'registration_time',
+    'att_opt_combo',
 ];
 
 const toVariableType = name => ['V', name];
