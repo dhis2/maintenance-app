@@ -14,7 +14,7 @@ const relativeScheduledDaysStyle = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '60%',
+    width: '80%',
 };
 
 const enhance = compose(
@@ -24,12 +24,10 @@ const enhance = compose(
         onChangeBeforeAfter: ({ onChange, setBeforeOrAfter, value }) => (event, index, beforeOrAfter) => {
             const days = beforeOrAfter === 'after' ? Number(value) : -1 * Number(value);
             setBeforeOrAfter(beforeOrAfter);
-
             onChange({ target: { value: days } });
         },
         onChangeDays: ({ onChange, beforeOrAfter }) => (event, value) => {
             const days = beforeOrAfter === 'after' ? Number(value) : -1 * Number(value);
-
             if (!Number.isNaN(days)) {
                 onChange({ target: { value: days } });
             }
@@ -53,7 +51,7 @@ function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDay
             <span>{t('send_notification')}</span>
             <TextField
                 hintText={t('number_of_days')}
-                value={Math.abs(value)}
+                value={Math.abs(value || 0)}
                 onChange={onChangeDays}
             />
             <span>{ t('days') }</span>
