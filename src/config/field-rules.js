@@ -117,11 +117,13 @@ export default new Map([
     ]],
     ['dataSetNotificationTemplate', [
         {
-            when: [{
-                field: 'dataSetNotificationTrigger',
-                operator: 'NOT_EQUALS',
-                value: 'SCHEDULED_DAYS',
-            }],
+            when: [
+                {
+                    field: 'dataSetNotificationTrigger',
+                    operator: 'NOT_EQUALS',
+                    value: 'SCHEDULED_DAYS',
+                },
+            ],
             operations: [
                 {
                     field: 'relativeScheduledDays',
@@ -129,6 +131,22 @@ export default new Map([
                 },
                 {
                     field: 'sendStrategy',
+                    type: 'HIDE_FIELD',
+                },
+            ],
+        },
+        {
+            field: 'deliveryChannels',
+            when: [
+                {
+                    field: 'notificationRecipient',
+                    operator: 'NOT_EQUALS',
+                    value: 'ORGANISATION_UNIT_CONTACT',
+                },
+            ],
+            operations: [
+                {
+                    field: 'deliveryChannels',
                     type: 'HIDE_FIELD',
                 },
             ],

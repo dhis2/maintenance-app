@@ -135,7 +135,7 @@ const fieldOrderByName = new Map([
         // Step 2
         'dataSetNotificationTrigger', 'relativeScheduledDays', 'sendStrategy',
         // Step 3
-        'notificationRecipient', 'recipientUserGroup',
+        'notificationRecipient', 'recipientUserGroup', 'deliveryChannels',
     ]],
     ['organisationUnit', [
         'name',

@@ -10,7 +10,6 @@ import DeliveryChannels from './program-notification-template/DeliveryChannels';
 import DropDownAsync from '../../forms/form-fields/drop-down-async';
 import SubjectAndMessageTemplateFields from './validation-notification-template/SubjectAndMessageTemplateFields';
 import { setStageNotificationValue } from '../../EditModel/event-program/notifications/actions';
-import DropDown from '../../forms/form-fields/drop-down';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 
 const PROGRAM_STAGE_VARIABLES = [
@@ -46,7 +45,7 @@ const boundOnUpdate = dispatch =>
             onUpdate: ({ fieldName, value }) =>
                 setStageNotificationValue(fieldName, value),
         },
-        dispatch
+        dispatch,
     );
 
 const NotificationSubjectAndMessageTemplateFields = compose(
@@ -62,14 +61,14 @@ const NotificationSubjectAndMessageTemplateFields = compose(
 
         return {
             variableTypes: map(toVariableType, constantVariables).concat(
-                variables
+                variables,
             ),
         };
-    })
+    }),
 )(SubjectAndMessageTemplateFields);
 
-//Using dropdownasync-getter due to support for references
-const ProgramAttributeDropDown = compose(connect(undefined, boundOnUpdate))(props => {
+// Using dropdownasync-getter due to support for references
+const ProgramAttributeDropDown = compose(connect(undefined, boundOnUpdate))((props) => {
     const attributesOpts = props.attributes
         .filter(attr => attr.valueType === 'PHONE_NUMBER')
         .map(attr => ({
@@ -97,8 +96,8 @@ const ProgramAttributeDropDown = compose(connect(undefined, boundOnUpdate))(prop
 });
 
 const DataElementDropDown = compose(
-    connect(undefined, boundOnUpdate)
-)(props => {
+    connect(undefined, boundOnUpdate),
+)((props) => {
     const dataElementOpts = props.dataElements
         .filter(de => de.valueType == 'PHONE_NUMBER')
         .map(de => ({
@@ -145,7 +144,7 @@ const sharedOverrides = [
     [
         'recipientUserGroup',
         {
-            component: props => {
+            component: (props) => {
                 if (
                     !props.model ||
                     props.model.notificationRecipient !== 'USER_GROUP'
@@ -233,7 +232,7 @@ export const programStageNotificationTemplate = new Map([
                     'ORGANISATION_UNIT_CONTACT',
                     'USERS_AT_ORGANISATION_UNIT',
                     'USER_GROUP',
-                    'PROGRAM_ATTRIBUTE', //This is only for Tracker programs
+                    'PROGRAM_ATTRIBUTE', // This is only for Tracker programs
                     'DATA_ELEMENT',
                 ],
             },

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Checkbox from 'material-ui/Checkbox';
 
 const createOnCheckFor = toCheck => (values, onChange) => () => {
@@ -18,11 +19,11 @@ const createOnCheckFor = toCheck => (values, onChange) => () => {
 const onChangeSMS = createOnCheckFor('SMS');
 const onChangeEMAIL = createOnCheckFor('EMAIL');
 
-function DeliveryChannels({ value = [], onChange }) {
+function DeliveryChannels({ value, onChange, style }) {
     const valueSet = new Set(value);
 
     return (
-        <div>
+        <div style={style}>
             <Checkbox
                 label="SMS"
                 checked={valueSet.has('SMS')}
@@ -36,5 +37,15 @@ function DeliveryChannels({ value = [], onChange }) {
         </div>
     );
 }
+
+DeliveryChannels.propTypes = {
+    value: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
+    style: PropTypes.object,
+};
+DeliveryChannels.defaultProps = {
+    value: [],
+    style: {},
+};
 
 export default DeliveryChannels;

@@ -43,7 +43,11 @@ const fieldGroupsForModelType = new Map([
             },
             {
                 label: 'who_to_send_it_to',
-                fields: ['notificationRecipient', 'recipientUserGroup'],
+                fields: [
+                    'notificationRecipient',
+                    'recipientUserGroup',
+                    'deliveryChannels',
+                ],
             },
         ],
     ],
