@@ -723,13 +723,7 @@ export default new Map([
             }],
             operations: [{
                 field: 'recipientProgramAttribute',
-<<<<<<< Updated upstream
                 type: 'HIDE_FIELD',
-            }],
-        },
-    ]],
-=======
-                type: 'HIDE_FIELD'
             }]
         }
     ]],
@@ -743,12 +737,9 @@ export default new Map([
             operations: [{
                 type: 'CHANGE_VALUE',
                 setValue: (model, fieldConfig) => {
-                    console.log(model);
-                    console.log(fieldConfig)
                     fieldConfig.value = model[fieldConfig.name] = 'DISAGGREGATION'
                 }
             }]
         }
      ]],
->>>>>>> Stashed changes
 ]);
