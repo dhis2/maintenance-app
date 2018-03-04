@@ -218,6 +218,13 @@ const fieldOrderByName = new Map([
         'expiryPeriodType',
         'expiryDays',
     ]],
+    ['eventProgramStage', [
+        'blockEntryForm',
+        'captureCoordinates',
+        'validCompleteOnly',
+        'preGenerateUID',
+        'executionDateLabel'
+    ]],
     ['trackerProgram', [
         'name',
         'shortName',
