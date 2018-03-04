@@ -723,8 +723,32 @@ export default new Map([
             }],
             operations: [{
                 field: 'recipientProgramAttribute',
+<<<<<<< Updated upstream
                 type: 'HIDE_FIELD',
             }],
         },
     ]],
+=======
+                type: 'HIDE_FIELD'
+            }]
+        }
+    ]],
+    ['categoryCombo', [
+        {
+            field: 'dataDimensionType',
+            when: [{
+                field: 'dataDimensionType',
+                operator: 'HAS_NO_VALUE'
+            }],
+            operations: [{
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    console.log(model);
+                    console.log(fieldConfig)
+                    fieldConfig.value = model[fieldConfig.name] = 'DISAGGREGATION'
+                }
+            }]
+        }
+     ]],
+>>>>>>> Stashed changes
 ]);
