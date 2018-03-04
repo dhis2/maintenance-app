@@ -6,7 +6,7 @@ const steps = [
     },
     {
         key: 'enrollment',
-        name: 'enrollment',
+        name: 'add_enrollment_details',
         componentName: 'Enrollment',
     },
     {
@@ -16,7 +16,7 @@ const steps = [
     },
     {
         key: 'stages',
-        name: 'program_stages',
+        name: 'manage_program_stages',
         componentName: 'ProgramStage',
     },
     {
