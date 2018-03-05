@@ -1,17 +1,17 @@
 const steps = [
     {
         key: 'details',
-        name: 'add_program_details',
+        name: 'program_details',
         componentName: 'EditProgramDetailsForm',
     },
     {
         key: 'enrollment',
-        name: 'enrollment',
+        name: 'enrollment_details',
         componentName: 'Enrollment',
     },
     {
         key: 'tracked_attributes',
-        name: 'assign_attributes',
+        name: 'attributes',
         componentName: 'AssignAttributes',
     },
     {
@@ -21,12 +21,12 @@ const steps = [
     },
     {
         key: 'assign_organisation_units',
-        name: 'assign_organisation_units',
+        name: 'organisation_units',
         componentName: 'AssignOrganisationUnits',
     },
     {
         key: 'notifications',
-        name: 'create_notifications',
+        name: 'notifications',
         componentName: 'TrackerProgramNotifications',
     },
 ];
