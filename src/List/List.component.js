@@ -388,7 +388,7 @@ class List extends Component {
                                     preventAutoDefault
                                     style={styles.filterDrowDownAsync}
                                     limit={1}
-                                    top={16}
+                                    top={-15}
                                 />)
                             }
                         </div>
