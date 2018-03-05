@@ -724,7 +724,22 @@ export default new Map([
             operations: [{
                 field: 'recipientProgramAttribute',
                 type: 'HIDE_FIELD',
-            }],
-        },
+            }]
+        }
     ]],
+    ['categoryCombo', [
+        {
+            field: 'dataDimensionType',
+            when: [{
+                field: 'dataDimensionType',
+                operator: 'HAS_NO_VALUE'
+            }],
+            operations: [{
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.name] = 'DISAGGREGATION'
+                }
+            }]
+        }
+     ]],
 ]);
