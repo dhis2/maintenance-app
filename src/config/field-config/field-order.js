@@ -135,7 +135,7 @@ const fieldOrderByName = new Map([
         // Step 2
         'dataSetNotificationTrigger', 'relativeScheduledDays', 'sendStrategy',
         // Step 3
-        'notificationRecipient', 'recipientUserGroup',
+        'notificationRecipient', 'recipientUserGroup', 'deliveryChannels',
     ]],
     ['organisationUnit', [
         'name',
@@ -218,6 +218,13 @@ const fieldOrderByName = new Map([
         'expiryPeriodType',
         'expiryDays',
     ]],
+    ['eventProgramStage', [
+        'blockEntryForm',
+        'captureCoordinates',
+        'validCompleteOnly',
+        'preGenerateUID',
+        'executionDateLabel'
+    ]],
     ['trackerProgram', [
         'name',
         'shortName',
@@ -282,6 +289,9 @@ const fieldOrderByName = new Map([
         'valueType',
         'aggregationType',
         'unique',
+        'orgunitScope',
+        'generated',
+        'pattern',
         'inherit',
         'confidential',
         'displayInListNoProgram',
@@ -423,7 +433,7 @@ const fieldOrderByName = new Map([
         'name',
         'periodType',
         'dataApprovalLevels',
-    ]]
+    ]],
 ]);
 
 export default {

@@ -330,15 +330,15 @@ export const programModelSave = action$ =>
             if (isStoreStateDirty(eventProgramStore)) {
                 return saveEventProgram;
             }
-
-            return Observable.of(notifyUser('no_changes_to_be_saved')).do(() =>
+            const successObs = Observable.of(saveEventProgramSuccess());
+            return successObs.concat(Observable.of(notifyUser({message: 'no_changes_to_be_saved', translate: true})).do(() =>
                 goToAndScrollUp('/list/programSection/program'),
-            );
+            ));
         });
 
 export const programModelSaveResponses = action$ =>
     Observable.merge(
-        action$.ofType(EVENT_PROGRAM_SAVE_SUCCESS).mapTo(notifyUser('success')),
+        action$.ofType(EVENT_PROGRAM_SAVE_SUCCESS).mapTo(notifyUser({message: 'success', translate: true})),
         action$.ofType(EVENT_PROGRAM_SAVE_ERROR).map((action) => {
             const getFirstErrorMessageFromAction = compose(
                 get('message'),

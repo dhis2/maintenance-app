@@ -23,24 +23,6 @@ import {
     ENROLLMENT_DATE
 } from './enums'
 
-// just wrap the component in a span with some margins as they are
-// inline in this form
-const withStyle = function withStyle(BaseField, styles) {
-    return props => (
-        <span style={styles}>
-            <BaseField {...props}/>
-        </span>
-    );
-};
-
-const style = {
-    marginRight: '14px'
-};
-
-const StyledDropDown = withStyle(DropDown, style);
-const StyledTextField = withStyle(TextField, style);
-const StyledPeriodTypeDropDown = withStyle(PeriodTypeDropDown, style);
-
 const boundaryTargets = [
     {
         text: 'boundary_target_incident_date',
@@ -85,41 +67,62 @@ function AnalyticsPeriodBoundary (props) {
                 display: 'flex',
                 flexWrap: 'wrap',
                 justifyContent: '',
-                alignItems: 'center'
+                alignItems: 'top'
         }}>
-            <StyledDropDown
-                style={ {marginRight: '14px'} }
-                labelText={getTranslation('analytics_boundary_target')}
-                translateOptions={true}
-                options={boundaryTargets}
-                onChange={e => props.onChange(e, "boundaryTarget")}
-                value={props.boundaryTarget}
-            />
 
-            <StyledDropDown
-                labelText={getTranslation('analytics_period_boundary_type')}
-                style={ {position: 'relative', marginRight: '14px'} }
-                translateOptions={true}
-                options={boundaryTypes}
-                onChange={e => props.onChange(e, "analyticsPeriodBoundaryType")}
-                value={props.analyticsPeriodBoundaryType}
-            />
+            <div style={{
+                flex: '0 1 240px',
+                marginRight: '14px'
+            }}>
+                <DropDown
+                    labelText={getTranslation('analytics_boundary_target')}
+                    translateOptions={true}
+                    options={boundaryTargets}
+                    onChange={e => props.onChange(e, "boundaryTarget")}
+                    value={props.boundaryTarget}
+                />
+            </div>
 
-            <StyledTextField type="number"
-                style={ { flex: '0 1 auto' } }
-                labelText={getTranslation('period_number_offset')}
-                value={props.offsetPeriods}
-                onChange={e => props.onChange(e, "offsetPeriods")}
-            />
+            <div style={{
+                flex: '0 1 300px',
+                marginRight: '14px',
+            }}>
+                <DropDown
+                    labelText={getTranslation('analytics_period_boundary_type')}
+                    translateOptions={true}
+                    options={boundaryTypes}
+                    onChange={e => props.onChange(e, "analyticsPeriodBoundaryType")}
+                    value={props.analyticsPeriodBoundaryType}
+                />
+            </div>
 
-            <StyledPeriodTypeDropDown
-                labelText={getTranslation('period_offset')}
-                onChange={e => props.onChange(e, "offsetPeriodType")}
-                style={ { marginRight: '14px' } }
-                value={props.offsetPeriodType}
-            />
+            <div style={{
+                flex: '0 1 64px',
+                marginRight: '14px',
+            }}>
+                <TextField type="number"
+                    labelText={getTranslation('period_number_offset')}
+                    value={props.offsetPeriods}
+                    onChange={e => props.onChange(e, "offsetPeriods")}
+                />
+            </div>
 
-            <div style={{ flex: '0 1 auto' }}>
+            <div style={{
+                flex: '0 1 256px',
+                marginRight: '14px'
+            }}>
+                <PeriodTypeDropDown
+                    labelText={getTranslation('period_offset')}
+                    onChange={e => props.onChange(e, "offsetPeriodType")}
+                    value={props.offsetPeriodType}
+                />
+            </div>
+
+            <div style={{
+                flex: '0 1 auto',
+                marginRight: '14px',
+                paddingTop: '21px'
+            }}>
                 <RaisedButton
                     label={getTranslation('remove_singular')}
                     onClick={e => props.onClick(e)}/>

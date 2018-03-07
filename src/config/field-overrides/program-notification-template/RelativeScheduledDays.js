@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import MenuItem from 'material-ui/MenuItem';
@@ -12,6 +13,8 @@ const relativeScheduledDaysStyle = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '80%',
 };
 
 const enhance = compose(
@@ -21,12 +24,10 @@ const enhance = compose(
         onChangeBeforeAfter: ({ onChange, setBeforeOrAfter, value }) => (event, index, beforeOrAfter) => {
             const days = beforeOrAfter === 'after' ? Number(value) : -1 * Number(value);
             setBeforeOrAfter(beforeOrAfter);
-
             onChange({ target: { value: days } });
         },
         onChangeDays: ({ onChange, beforeOrAfter }) => (event, value) => {
             const days = beforeOrAfter === 'after' ? Number(value) : -1 * Number(value);
-
             if (!Number.isNaN(days)) {
                 onChange({ target: { value: days } });
             }
@@ -39,14 +40,14 @@ function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDay
 
     /* Because of bad alignment of material ui textfield and selectfield, the compoents becomes skewed when
        using the hide method EditModelForm.component (setting the display to none/block). The component 
-       must instead chose to either use display:none from style or its defined display:flex. 
+       must instead chose to return on display:'none'
     */
-    const wrapStyle = (style && (style.display === 'none'))
-        ? { ...relativeScheduledDaysStyle, ...style }
-        : relativeScheduledDaysStyle;
+    if (style && (style.display === 'none')) {
+        return null;
+    }
 
     return (
-        <div style={wrapStyle}>
+        <div style={relativeScheduledDaysStyle}>
             <span>{t('send_notification')}</span>
             <TextField
                 hintText={t('number_of_days')}
@@ -62,5 +63,20 @@ function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDay
         </div>
     );
 }
+
+RelativeScheduledDays.propTypes = {
+    onChangeBeforeAfter: PropTypes.func.isRequired,
+    beforeOrAfter: PropTypes.any.isRequired,
+    onChangeDays: PropTypes.func.isRequired,
+    d2: PropTypes.object.isRequired,
+    value: PropTypes.number,
+    style: PropTypes.object,
+};
+
+RelativeScheduledDays.defaultProps = {
+    value: 0,
+    style: {},
+};
+
 
 export default enhance(RelativeScheduledDays);

@@ -1,6 +1,6 @@
 {
   "name": "maintenance-app",
-  "version": "29.1.1",
+  "version": "29.1.5",
   "description": "DHIS2 Maintenance app",
   "main": "index.js",
   "repository": {
@@ -78,7 +78,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.13.0",
-    "d2": "^29.0.1",
+    "d2": "29.1.2",
     "d2-ui": "29.0.11",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-15": "^1.0.0",
