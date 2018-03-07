@@ -43,12 +43,11 @@ const changeProgramStageSectionName = store => action$ => action$
         .map((action) => {
             const state = store.getState();
             const programStageId = get('payload.programStage', action);
-            const programStage = getProgramStageById(state, programStageId);
 
             const programStageSectionId = get('payload.programStageSectionId', action);
             const newProgramStageSectionName = get('payload.newProgramStageSectionName', action);
-            const programStageSections = getStageSectionsById(store, programStage)
 
+            const programStageSections = getStageSectionsById(state, programStageId)
             state.programStageSections[programStageId] = programStageSections.map((section) => {
                     // Modify the original Model instance
                     if (isEqual(section.id, programStageSectionId)) {
