@@ -18,22 +18,23 @@ const SnackBar = props => (
         action={props.action}
         autoHideDuration={props.autoHideDuration}
         open={!!props.message}
-        onActionTouchTap={props.actionHandler}
+        // if no onActionTouchTap is provided, action will default to close
+        onActionTouchTap={props.actionHandler ? props.actionHandler : props.onRequestClose}
         onRequestClose={props.onRequestClose}
     />
 );
 
 const mapStateToProps = state => (
     {
-        message: snackBarMessageSelector(state) || '',
-        action: snackBarActionTextSelector(state) || '',
-        autoHideDuration: snackBarActionAutoHideSelector(state) || 0,
-        actionHandler: snackBarActionHandlerSelector(state) || null,
+        message: snackBarMessageSelector(state),
+        action: snackBarActionTextSelector(state),
+        autoHideDuration: snackBarActionAutoHideSelector(state),
+        actionHandler: snackBarActionHandlerSelector(state),
     }
 );
 
 const mapDispatchToProps = dispatch => ({
-    onRequestClose: (...args) => dispatch(hideSnackBarMessage(...args)),
+    onRequestClose: (...args) => dispatch(hideSnackBarMessage({ ...args })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SnackBar);
@@ -43,5 +44,11 @@ SnackBar.propTypes = {
     action: PropTypes.string,
     actionHandler: PropTypes.func,
     autoHideDuration: PropTypes.number,
-    onRequestClose: PropTypes.func,
+    onRequestClose: PropTypes.func.isRequired,
+};
+
+SnackBar.defaultProps = {
+    action: '',
+    actionHandler: null,
+    autoHideDuration: 0,
 };

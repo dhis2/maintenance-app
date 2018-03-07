@@ -18,7 +18,7 @@ const snackBarEpic = (action$) => {
                     ...payload,
                     translate: false,
                     message: d2.i18n.getTranslation(payload.message),
-                }))
+                })),
         )
         .map(payload => showSnackBarMessage(payload));
 };
