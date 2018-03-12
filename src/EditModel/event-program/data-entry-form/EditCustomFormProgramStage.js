@@ -18,37 +18,12 @@ import snackActions from '../../../Snackbar/snack.actions';
 import eventProgramStore from '../eventProgramStore';
 import CKEditor from './CKEditor';
 import '../../../../scss/EditModel/EditDataEntryFormProgramStage.scss';
+import { getProgramStageDataElementsByStageId } from "../notifications/selectors";
 
-const firstProgramStage$ = eventProgramStore
-    .map(compose(first, get('programStages')));
-
-const availableTrackerDataElements$ = eventProgramStore
-    .map(get('availableDataElements'))
-    .take(1);
-
-const dataEntryFormForFirstProgramStage$ = eventProgramStore
-    .map((state) => {
-        const firstProgramStage = first(get('programStages', state));
-
-        return state.dataEntryFormForProgramStage[firstProgramStage.id];
-    });
-
-function addMissingDisplayNamesFrom(trackerDataElements, dataElement) {
-    return getOr('Unknown', 'displayName', find(compose(isEqual(dataElement.id), get('id')), trackerDataElements));
-}
-
-const programStageDataElements$ = firstProgramStage$
-    .combineLatest(availableTrackerDataElements$, (programStage, trackerDataElements) => ({ programStage, trackerDataElements }))
-    .map(({ programStage, trackerDataElements }) => {
-        const programStageDataElements = getOr([], 'programStageDataElements', programStage);
-
-        return programStageDataElements
-            .filter(get('dataElement'))
-            .map(programStageDataElement => ({
-                id: `${programStage.id}.${programStageDataElement.dataElement.id}`,
-                displayName: programStageDataElement.dataElement.displayName || addMissingDisplayNamesFrom(trackerDataElements, programStageDataElement.dataElement),
-            }));
-    });
+const programStageDataElementWithProgramId = programStageId => programStageDataElement => ({
+    id: `${programStageId}.${programStageDataElement.id}`,
+    displayName: programStageDataElement.displayName
+})
 
 const inputPattern = /<input.*?\/>/gi;
 const dataElementCategoryOptionIdPattern = /id="(\w*?)-(\w*?)-val"/;
@@ -146,20 +121,14 @@ class EditDataEntryForm extends React.Component {
         };
 
         this.disposables = new Set();
-
-        // Load form data, operands and flags
-        this.disposables.add(Observable.combineLatest(
-            firstProgramStage$,
-            programStageDataElements$,
-            Observable.fromPromise(context.d2.Api.getApi().get('system/flags')),
-            (programStage, ops, flags) => ([programStage, ops, flags])
-        )
-            .take(1)
-            .subscribe(([programStage, programStageDataElements, flags]) => {
+        const { programStage, programStageDataElements } = props;
+            // Load flags
+            this.disposables.add(Observable.fromPromise(context.d2.Api.getApi().get('system/flags'))
+            .subscribe(flags => {
                 // Operands with ID's that contain a dot ('.') are combined dataElementId's and categoryOptionId's
                 // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
                 // custom forms: "dataElementId-categoryOptionId-val"
-                this.operands = programStageDataElements
+                this.operands = programStageDataElements.map(programStageDataElementWithProgramId(programStage.id))
                     .filter(op => op.id.indexOf('.') !== -1)
                     .reduce((out, op) => {
                         const id = `${op.id.split('.').join('-')}-val`;
@@ -425,12 +394,12 @@ const mapDispatchToProps = (dispatch, { programStage }) => bindActionCreators({
 const enhance = compose(
     mapPropsStream(props$ => props$
         .combineLatest(
-            firstProgramStage$,
-            dataEntryFormForFirstProgramStage$,
-            (props, programStage, dataEntryForm) => ({
+            eventProgramStore,
+            ({programStage, ...props}, state) => ({
                 ...props,
                 programStage,
-                dataEntryForm,
+                dataEntryForm: state.dataEntryFormForProgramStage[programStage.id],
+                programStageDataElements: getProgramStageDataElementsByStageId(state)(programStage.id)
             })
         )
     ),
