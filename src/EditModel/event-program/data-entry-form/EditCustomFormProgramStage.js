@@ -19,6 +19,8 @@ import eventProgramStore from '../eventProgramStore';
 import CKEditor from './CKEditor';
 import '../../../../scss/EditModel/EditDataEntryFormProgramStage.scss';
 import { getProgramStageDataElementsByStageId } from "../notifications/selectors";
+import PaletteSection from './PaletteSection';
+import { bindFuncsToKeys, moveEditorSelection, processFormData, insertElement as insElem, elementPatterns } from "./dataEntryFormUtils";
 
 const programStageDataElementWithProgramId = programStageId => programStageDataElement => ({
     id: `${programStageId}.${programStageDataElement.id}`,
@@ -27,6 +29,8 @@ const programStageDataElementWithProgramId = programStageId => programStageDataE
 
 const inputPattern = /<input.*?\/>/gi;
 const dataElementCategoryOptionIdPattern = /id="(\w*?)-(\w*?)-val"/;
+
+const PurePaletteSection = PaletteSection;
 
 const styles = {
     heading: {
@@ -64,49 +68,6 @@ const styles = {
     },
 };
 
-function PaletteSection({ keySet, label, filter, expand, expandClick, usedIds, insertFn }, { d2 }) {
-    const filteredItems = Object.keys(keySet)
-        .filter(key => !filter.length || filter.every(
-            filter => keySet[key].toLowerCase().indexOf(filter.toLowerCase()) !== -1
-        ));
-
-    const cellClass = label === expand ? 'cell expanded' : 'cell';
-
-    return (
-        <div className={cellClass}>
-            <div style={styles.paletteHeader} className="header" onClick={expandClick}>
-                <div className="arrow">&#9656;</div>
-                {d2.i18n.getTranslation(label)}:
-                <div className="count">{filteredItems.length}</div>
-            </div>
-            <div className="items">
-                {
-                    filteredItems
-                        .sort((a, b) => keySet[a] ? keySet[a].localeCompare(keySet[b]) : a.localeCompare(b))
-                        .map((key) => {
-                            // Active items are items that are not already added to the form
-                            const isActive = usedIds.indexOf(key) === -1;
-                            const className = isActive ? 'item active' : 'item inactive';
-                            const name = keySet[key].name || keySet[key];
-
-                            return (
-                                <div key={key} className={className} title={name}>
-                                    <a onClick={insertFn[key]}>{name}</a>
-                                </div>
-                            );
-                        })
-                }
-            </div>
-        </div>
-    );
-}
-
-PaletteSection.contextTypes = {
-    d2: React.PropTypes.object,
-};
-
-const PurePaletteSection = pure(PaletteSection);
-
 class EditDataEntryForm extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -122,13 +83,14 @@ class EditDataEntryForm extends React.Component {
 
         this.disposables = new Set();
         const { programStage, programStageDataElements } = props;
-            // Load flags
-            this.disposables.add(Observable.fromPromise(context.d2.Api.getApi().get('system/flags'))
+        // Load flags
+        this.disposables.add(Observable.fromPromise(context.d2.Api.getApi().get('system/flags'))
             .subscribe(flags => {
                 // Operands with ID's that contain a dot ('.') are combined dataElementId's and categoryOptionId's
                 // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
                 // custom forms: "dataElementId-categoryOptionId-val"
-                this.operands = programStageDataElements.map(programStageDataElementWithProgramId(programStage.id))
+                this.operands = programStageDataElements
+                    .map(programStageDataElementWithProgramId(programStage.id))
                     .filter(op => op.id.indexOf('.') !== -1)
                     .reduce((out, op) => {
                         const id = `${op.id.split('.').join('-')}-val`;
@@ -143,27 +105,19 @@ class EditDataEntryForm extends React.Component {
 
                 // Create inserter functions for all insertable elements
                 // This avoids having to bind the functions during rendering
-                const insertFn = {};
+        /*        const insertFn = {};
                 Object.keys(this.operands).forEach((x) => {
                     insertFn[x] = this.insertElement.bind(this, x);
                 });
                 Object.keys(this.flags).forEach((flag) => {
                     insertFn[flag] = this.insertFlag.bind(this, flag);
-                });
+                }); */
+                const boundOps = bindFuncsToKeys(this.operands, this.insertElement, this);
+                const boundFlags = bindFuncsToKeys(this.flags, this.insertElement, this);
+                const insertFn = { ...boundOps, ...boundFlags}
 
-                // Create element filtering action
-                this.filterAction = Action.create('filter');
-                this.filterAction
-                    .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
-                    .debounceTime(75)
-                    .subscribe((args) => {
-                        const filter = args.data
-                            .split(' ')
-                            .filter(x => x.length);
-                        this.setState({ filter });
-                    });
-
-                const formHtml = dataEntryForm ? this.processFormData(getOr('', 'htmlCode', dataEntryForm)) : '';
+                const { outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.operands, elementPatterns.dataElementCategoryOptionIdPattern);
+                const formHtml = dataEntryForm ? outHtml : '';
 
                 this.setState({
                     insertFn,
@@ -171,6 +125,17 @@ class EditDataEntryForm extends React.Component {
                     dataEntryForm,
                     formTitle: programStage.displayName,
                 });
+            }));
+        // Create element filtering action
+        this.filterAction = Action.create('filter');
+        this.disposables.add(this.filterAction
+            .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
+            .debounceTime(75)
+            .subscribe((args) => {
+                const filter = args.data
+                    .split(' ')
+                    .filter(x => x.length);
+                this.setState({ filter });
             }));
 
         this.getTranslation = this.context.d2.i18n.getTranslation.bind(this.context.d2.i18n);
@@ -185,7 +150,9 @@ class EditDataEntryForm extends React.Component {
 
     componentWillReceiveProps({ dataEntryForm }) {
         if (this.state.dataEntryForm && dataEntryForm !== this.state.dataEntryForm) {
-            const formHtml = dataEntryForm ? this.processFormData(getOr('', 'htmlCode', dataEntryForm)) : '';
+            const { outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.operands, elementPatterns.dataElementCategoryOptionIdPattern);
+
+            const formHtml = outHtml || '';
 
             this._editor.setData(formHtml);
         }
@@ -224,6 +191,8 @@ class EditDataEntryForm extends React.Component {
         let inputElement = inputPattern.exec(inHtml);
         let inPos = 0;
         while (inputElement !== null) {
+            console.log(inputElement)
+            console.log(inHtml)
             outHtml += inHtml.substr(inPos, inputElement.index - inPos);
             inPos = inputPattern.lastIndex;
 
@@ -232,7 +201,7 @@ class EditDataEntryForm extends React.Component {
             const inputDisabled = /disabled/.exec(inputHtml) !== null;
 
             const idMatch = dataElementCategoryOptionIdPattern.exec(inputHtml);
-
+            console.log(idMatch)
             if (idMatch) {
                 const id = `${idMatch[1]}-${idMatch[2]}-val`;
                 usedIds.push(id);
@@ -249,9 +218,9 @@ class EditDataEntryForm extends React.Component {
             usedIds,
         }, () => {
             // If there is no dataEntryFormyet we'll just ignore.
-            if (!this.state.dataEntryForm) {
-                return;
-            }
+        //    if (!this.state.dataEntryForm) {
+            //    return;
+          //  }
 
             // Emit a value when the html changed
             if (this.state.dataEntryForm.htmlCode !== outHtml) {
@@ -262,10 +231,26 @@ class EditDataEntryForm extends React.Component {
         return outHtml;
     }
 
+    handleEditorChanged = (editorData) => {
+       // this.processFormData.call(this, editorData)
+       // return;
+        const { usedIds, outHtml} = processFormData(editorData, this.operands, elementPatterns.dataElementCategoryOptionIdPattern);
+        this.setState({
+            usedIds,
+        }, () => {
+            // Emit a value when the html changed
+            if (!this.state.dataEntryForm ||this.state.dataEntryForm.htmlCode !== outHtml) {
+                console.log("FORM CHANGE")
+                this.props.onFormChange(outHtml);
+            }
+        });
+    }
+
     insertElement(id) {
         if (this.state.usedIds.indexOf(id) !== -1) {
             return;
         }
+        return insElem(id, this.operands[id], this._editor);
 
         this._editor.insertHtml(this.generateHtml(id), 'unfiltered_html');
         this.setState(state => ({ usedIds: state.usedIds.concat(id) }));
@@ -328,9 +313,7 @@ class EditDataEntryForm extends React.Component {
                 <div className="programStageEditForm">
                     <div className="left">
                         <CKEditor
-                            onEditorChange={(editorData) => {
-                                this.processFormData.call(this, editorData);
-                            }}
+                            onEditorChange={this.handleEditorChanged}
                             onEditorInitialized={this.setEditorReference}
                             initialContent={this.state.formHtml}
                         />

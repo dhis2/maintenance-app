@@ -17,20 +17,27 @@ const findProgramStageById = programStageId => compose(
 
 const dataEntryFormChangedEpic = action$ => action$
     .ofType(PROGRAM_STAGE_DATA_ENTRY_FORM_FIELD_CHANGED)
-    .map((action) => {
+    .combineLatest(d2$, (action, d2) => ({ action, d2 }))
+    .mergeMap(({ action, d2 }) => {
         const fieldName = get('payload.field', action);
         const value = get('payload.value', action);
         const programStageId = get('payload.programStage', action);
-
         const storeState = eventProgramStore.getState();
+        let dataEntryFormForProgramStage = storeState.dataEntryFormForProgramStage;
+
         const programStage = findProgramStageById(programStageId)(storeState);
-        const dataEntryForm = storeState.dataEntryFormForProgramStage[programStageId];
+        let dataEntryForm = dataEntryFormForProgramStage[programStageId];
 
         // Set the uid in case we're dealing with a new form
-        dataEntryForm.id = getOr(generateUid(), 'id', dataEntryForm);
-        dataEntryForm.name = getOr(programStage.name, 'name', dataEntryForm);
+        if(!dataEntryForm || !dataEntryForm.id) {
+            const id = generateUid();
+            dataEntryForm = d2.models.dataEntryForm.create({id, name: programStage.name})
+            dataEntryFormForProgramStage[programStageId] = dataEntryForm;
+        }
+
         log.debug('Setting', fieldName, 'to', value);
         dataEntryForm[fieldName] = value;
+
 
         if (!programStage.dataEntryForm) {
             programStage.dataEntryForm = dataEntryForm;
@@ -38,6 +45,7 @@ const dataEntryFormChangedEpic = action$ => action$
 
         // Force a state update on the store
         eventProgramStore.setState({});
+        return Observable.empty();
     })
     .flatMapTo(Observable.never());
 
