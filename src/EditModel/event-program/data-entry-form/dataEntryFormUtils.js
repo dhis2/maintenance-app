@@ -55,6 +55,15 @@ export function processFormData(formData, elements, idPattern) {
     }
 }
 
+/**
+ * Helper to bind the keys of an object to given function
+ * So that multiple elements can be bound to the same function.
+ * The first parameter of each bound function will be the key.
+ * @param obj Object with keys to bind
+ * @param func Function to bind each key to
+ * @param selfArg this context of the function
+ * @returns {{}} - And object where each property is a bound function
+ */
 export function bindFuncsToKeys(obj, func, selfArg) {
     const boundFuncs = {};
     Object.keys(obj).forEach((x) => {
@@ -67,5 +76,12 @@ export function insertElement(id, label, editor) {
     editor.insertHtml(generateHtmlForField(id, null, null, label), 'unfiltered_html');
     // Move the current selection to just after the newly inserted element
     const range = editor.getSelection().getRanges()[0];
-    range.moveToElementEditablePosition(range.endContainer, true);
+    console.log(range)
+    range && range.moveToElementEditablePosition(range.endContainer, true);
+}
+
+export function insertFlag(img, editor) {
+    editor.insertHtml(`<img src="../dhis-web-commons/flags/${img}" />`, 'unfiltered_html');
+    const range = editor.getSelection().getRanges()[0];
+    range && range.moveToElementEditablePosition(range.endContainer, true);
 }

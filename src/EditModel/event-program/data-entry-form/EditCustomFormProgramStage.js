@@ -22,7 +22,7 @@ import { getProgramStageDataElementsByStageId } from "../notifications/selector
 import PaletteSection from './PaletteSection';
 import { bindFuncsToKeys, moveEditorSelection, processFormData, insertElement as insElem, elementPatterns } from "./dataEntryFormUtils";
 
-const programStageDataElementWithProgramId = programStageId => programStageDataElement => ({
+const programStageDataElementWithProgramStageId = programStageId => programStageDataElement => ({
     id: `${programStageId}.${programStageDataElement.id}`,
     displayName: programStageDataElement.displayName
 })
@@ -82,15 +82,15 @@ class EditDataEntryForm extends React.Component {
         };
 
         this.disposables = new Set();
-        const { programStage, programStageDataElements } = props;
+        const { programStage, dataElements } = props;
         // Load flags
         this.disposables.add(Observable.fromPromise(context.d2.Api.getApi().get('system/flags'))
             .subscribe(flags => {
                 // Operands with ID's that contain a dot ('.') are combined dataElementId's and categoryOptionId's
                 // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
                 // custom forms: "dataElementId-categoryOptionId-val"
-                this.operands = programStageDataElements
-                    .map(programStageDataElementWithProgramId(programStage.id))
+                this.operands = dataElements
+                  //  .map(programStageDataElementWithProgramId(programStage.id))
                     .filter(op => op.id.indexOf('.') !== -1)
                     .reduce((out, op) => {
                         const id = `${op.id.split('.').join('-')}-val`;
@@ -123,7 +123,7 @@ class EditDataEntryForm extends React.Component {
                     insertFn,
                     formHtml,
                     dataEntryForm,
-                    formTitle: programStage.displayName,
+                    formTitle: this.props.formTitle,
                 });
             }));
         // Create element filtering action
@@ -147,14 +147,14 @@ class EditDataEntryForm extends React.Component {
     componentWillUnmount() {
         this.disposables.forEach(disposable => disposable.unsubscribe());
     }
-
+    //FIX loosing input-position on input
     componentWillReceiveProps({ dataEntryForm }) {
         if (this.state.dataEntryForm && dataEntryForm !== this.state.dataEntryForm) {
             const { outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.operands, elementPatterns.dataElementCategoryOptionIdPattern);
 
             const formHtml = outHtml || '';
 
-            this._editor.setData(formHtml);
+            //this._editor.setData(formHtml);
         }
     }
 
@@ -180,55 +180,6 @@ class EditDataEntryForm extends React.Component {
 
         log.warn('Failed to generate HTML for ID:', id);
         return '';
-    }
-
-    processFormData(formData) {
-        const inHtml = formData;
-        let outHtml = '';
-
-        const usedIds = [];
-
-        let inputElement = inputPattern.exec(inHtml);
-        let inPos = 0;
-        while (inputElement !== null) {
-            console.log(inputElement)
-            console.log(inHtml)
-            outHtml += inHtml.substr(inPos, inputElement.index - inPos);
-            inPos = inputPattern.lastIndex;
-
-            const inputHtml = inputElement[0];
-            const inputStyle = (/style="(.*?)"/.exec(inputHtml) || ['', ''])[1];
-            const inputDisabled = /disabled/.exec(inputHtml) !== null;
-
-            const idMatch = dataElementCategoryOptionIdPattern.exec(inputHtml);
-            console.log(idMatch)
-            if (idMatch) {
-                const id = `${idMatch[1]}-${idMatch[2]}-val`;
-                usedIds.push(id);
-                outHtml += this.generateHtml(id, inputStyle, inputDisabled);
-            } else {
-                outHtml += inputHtml;
-            }
-
-            inputElement = inputPattern.exec(inHtml);
-        }
-        outHtml += inHtml.substr(inPos);
-
-        this.setState({
-            usedIds,
-        }, () => {
-            // If there is no dataEntryFormyet we'll just ignore.
-        //    if (!this.state.dataEntryForm) {
-            //    return;
-          //  }
-
-            // Emit a value when the html changed
-            if (this.state.dataEntryForm.htmlCode !== outHtml) {
-                this.props.onFormChange(outHtml);
-            }
-        });
-
-        return outHtml;
     }
 
     handleEditorChanged = (editorData) => {
@@ -368,13 +319,13 @@ EditDataEntryForm.contextTypes = {
     d2: React.PropTypes.any,
 };
 
-const mapDispatchToProps = (dispatch, { programStage }) => bindActionCreators({
+const mapDispatchToPropsForProgramStage = (dispatch, { programStage }) => bindActionCreators({
     onFormChange: curry(dataEntryFormChanged)(programStage.id)('htmlCode'),
     onStyleChange: curry(dataEntryFormChanged)(programStage.id)('style'),
     onFormDelete: dataEntryFormRemove.bind(undefined, programStage.id),
 }, dispatch);
 
-const enhance = compose(
+const programStageDataEntryForm = compose(
     mapPropsStream(props$ => props$
         .combineLatest(
             eventProgramStore,
@@ -382,11 +333,36 @@ const enhance = compose(
                 ...props,
                 programStage,
                 dataEntryForm: state.dataEntryFormForProgramStage[programStage.id],
-                programStageDataElements: getProgramStageDataElementsByStageId(state)(programStage.id)
+                dataElements: getProgramStageDataElementsByStageId(state)(programStage.id),
+                formTitle: programStage.displayName
             })
         )
     ),
-    connect(undefined, mapDispatchToProps)
+    connect(undefined, mapDispatchToPropsForProgramStage)
 );
 
-export default enhance(EditDataEntryForm);
+const mapDispatchToPropsForProgram = (dispatch, { program }) => bindActionCreators({
+    onFormChange: curry(dataEntryFormChanged)(program.id)('htmlCode'),
+    onStyleChange: curry(dataEntryFormChanged)(program.id)('style'),
+    onFormDelete: dataEntryFormRemove.bind(undefined, program.id),
+}, dispatch);
+
+const programDataEntryForm = compose(
+    mapPropsStream(props$ => props$
+        .combineLatest(
+            eventProgramStore,
+            (props, {program}) => ({
+                ...props,
+                program,
+                dataEntryForm: program.dataEntryForm,
+                dataElements: program.programTrackedEntityAttributes, //getProgramStageDataElementsByStageId(state)(programStage.id),
+                formTitle: program.displayName
+            })
+        )
+    ),
+    connect(undefined, mapDispatchToPropsForProgram)
+);
+
+export default programStageDataEntryForm(EditDataEntryForm);
+
+export const CustomRegistrationDataEntryForm = programDataEntryForm(EditDataEntryForm);
