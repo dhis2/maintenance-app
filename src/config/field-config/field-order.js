@@ -295,6 +295,7 @@ const fieldOrderByName = new Map([
         'inherit',
         'confidential',
         'displayInListNoProgram',
+        'skipSynchronization',
         'legendSets',
     ]],
     ['trackedEntityAttributeGroup', [
