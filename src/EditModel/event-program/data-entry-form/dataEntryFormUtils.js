@@ -2,10 +2,16 @@ import log from 'loglevel';
 
 const inputPattern = /<input.*?\/>/gi;
 
+/* AttributeIdPattern is used in tracker-programs Custom registration forms
+   programIdPattern is used in tracker-programs Custom registration forms
+        Fixed to incidentDate and enrollmentDate
+* dataElementCateGoryOptionIdPattern is used for:
+*   - Event-programs data entry form (dataelementId-categoryOptionId)
+*   - Tracker-programs Data entry form (programStageId-dataelementId)*/
 export const elementPatterns = {
     attributeIdPattern: /attributeid="(\w*?)"/,
     programIdPattern: /programid="(\w*?)"/,
-    dataElementCategoryOptionIdPattern: /id="(\w*?)-(\w*?)-val"/
+    dataElementCategoryOptionIdPattern: /id="(\w*?)-(\w*?)-val"/ //TODO: rename to combinedIdPattern?
 }
 
 export function generateHtmlForField(id, styleAttr, disabledAttr, label, nameAttr = "entryfield") {

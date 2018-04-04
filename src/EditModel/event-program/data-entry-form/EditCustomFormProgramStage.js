@@ -90,7 +90,7 @@ class EditDataEntryForm extends React.Component {
                 // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
                 // custom forms: "dataElementId-categoryOptionId-val"
                 this.operands = dataElements
-                  //  .map(programStageDataElementWithProgramId(programStage.id))
+                    .map(programStageDataElementWithProgramId(programStage.id))
                     .filter(op => op.id.indexOf('.') !== -1)
                     .reduce((out, op) => {
                         const id = `${op.id.split('.').join('-')}-val`;
