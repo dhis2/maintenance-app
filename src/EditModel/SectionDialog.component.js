@@ -6,6 +6,7 @@ import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import TextField from 'material-ui/TextField/TextField';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
+
 import Store from 'd2-ui/lib/store/Store';
 import Checkbox from 'material-ui/Checkbox';
 
@@ -13,11 +14,11 @@ import DropDown from '../forms/form-fields/drop-down';
 import snackActions from '../Snackbar/snack.actions';
 
 import modelToEditStore from './modelToEditStore';
+
 const dataElementStore = Store.create();
 const assignedDataElementStore = Store.create();
 const indicatorStore = Store.create();
 const assignedIndicatorStore = Store.create();
-
 
 class SectionDialog extends React.Component {
     constructor(props, context) {
@@ -30,22 +31,6 @@ class SectionDialog extends React.Component {
         assignedDataElementStore.setState([]);
         indicatorStore.setState([]);
         assignedIndicatorStore.setState([]);
-
-        this.handleCategoryComboChange = this.handleCategoryComboChange.bind(this);
-        this.handleFilterChange = this.handleFilterChange.bind(this);
-        this.handleNameChange = this.handleNameChange.bind(this);
-        this.handleCodeChange = this.handleCodeChange.bind(this);
-        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-        this.assignDataElements = this.assignDataElements.bind(this);
-        this.removeDataElements = this.removeDataElements.bind(this);
-        this.setAssignedDataElements = this.setAssignedDataElements.bind(this);
-        this.assignIndicators = this.assignIndicators.bind(this);
-        this.removeIndicators = this.removeIndicators.bind(this);
-        this.setAssignedIndicators = this.setAssignedIndicators.bind(this);
-        this.saveSection = this.saveSection.bind(this);
-
-        this.handleRowTotalsChange = (e, value) => { this.setState({ showRowTotals: value }); };
-        this.handleColumnTotalsChange = (e, value) => { this.setState({ showColumnTotals: value }); };
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
@@ -65,25 +50,30 @@ class SectionDialog extends React.Component {
             const otherSections = sectionArray.filter(s => s.id !== currentSectionId);
             const filterDataElementIds = otherSections
                 .reduce((elements, section) => elements.concat((Array.isArray(section.dataElements)
-                        ? section.dataElements
-                        : section.dataElements.toArray()
+                    ? section.dataElements
+                    : section.dataElements.toArray()
                 ).map(de => de.id)), []);
 
             // Default category combo filter = no filter
             const categoryComboId = false;
 
+
             assignedDataElementStore.setState(
-                props.sectionModel.dataElements && props.sectionModel.dataElements.toArray().map(de => de.id) || []
+                props.sectionModel.dataElements
+                    ? props.sectionModel.dataElements.toArray().map(de => de.id)
+                    : [],
             );
 
             indicatorStore.setState(
                 modelToEditStore.state.indicators
                     .toArray()
                     .map(i => ({ value: i.id, text: i.displayName }))
-                    .sort((a, b) => a.text.localeCompare(b.text))
+                    .sort((a, b) => a.text.localeCompare(b.text)),
             );
             assignedIndicatorStore.setState(
-                props.sectionModel.indicators && props.sectionModel.indicators.toArray().map(i => i.id) || []
+                props.sectionModel.indicators
+                    ? props.sectionModel.indicators.toArray().map(i => i.id)
+                    : [],
             );
 
             this.setState({
@@ -107,7 +97,73 @@ class SectionDialog extends React.Component {
         this.subscriptions.forEach(disposable => disposable.unsubscribe());
     }
 
-    handleCategoryComboChange(event) {
+    setAssignedDataElements = (dataElements) => {
+        assignedDataElementStore.setState(dataElements);
+    }
+
+    setAssignedIndicators = (indicators) => {
+        assignedIndicatorStore.setState(indicators);
+    }
+
+    removeIndicators = (indicators) => {
+        assignedIndicatorStore.setState(assignedIndicatorStore.state.filter(i => indicators.indexOf(i) === -1));
+        return Promise.resolve();
+    }
+
+    assignIndicators = (indicators) => {
+        assignedIndicatorStore.setState(assignedIndicatorStore.state.concat(indicators));
+        return Promise.resolve();
+    }
+
+    handleRowTotalsChange = (e, value) => {
+        this.setState({ showRowTotals: value });
+    }
+
+    handleColumnTotalsChange = (e, value) => {
+        this.setState({ showColumnTotals: value });
+    }
+
+    handleFilterChange = (e) => {
+        this.setState({ filterText: e.target.value });
+    }
+
+    handleNameChange = (e) => {
+        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
+            ? modelToEditStore.getState().sections
+            : modelToEditStore.getState().sections.toArray();
+        const nameDupe = sectionArray
+            .filter(s => s.id !== this.props.sectionModel.id)
+            .reduce((res, s) => res || s.name === e.target.value, false);
+
+        this.setState({ name: e.target.value, nameError: nameDupe ? this.getTranslation('value_not_unique') : '' });
+    }
+
+    handleCodeChange = (e) => {
+        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
+            ? modelToEditStore.getState().sections
+            : modelToEditStore.getState().sections.toArray();
+        const codeDupe = sectionArray
+            .filter(s => s.id !== this.props.sectionModel.id)
+            .reduce((res, s) => res || (s.code && s.code === e.target.value), false);
+
+        this.setState({ code: e.target.value, codeError: codeDupe ? this.getTranslation('value_not_unique') : '' });
+    }
+
+    handleDescriptionChange = (e) => {
+        this.setState({ description: e.target.value });
+    }
+
+    assignDataElements = (dataElements) => {
+        assignedDataElementStore.setState(assignedDataElementStore.state.concat(dataElements));
+        return Promise.resolve();
+    }
+
+    removeDataElements = (dataElements) => {
+        assignedDataElementStore.setState(assignedDataElementStore.state.filter(de => dataElements.indexOf(de) === -1));
+        return Promise.resolve();
+    }
+
+    handleCategoryComboChange = (event) => {
         const categoryComboId = event.target.value;
 
         if (modelToEditStore.state.dataSetElements) {
@@ -121,12 +177,12 @@ class SectionDialog extends React.Component {
                         }
                         return true;
                     })
-                    .filter(dse => this.state.filterDataElementIds
+                    .filter(dse => (this.state.filterDataElementIds
                         ? !this.state.filterDataElementIds.includes(dse.dataElement.id)
-                        : true
+                        : true),
                     )
                     .map(dse => ({ value: dse.dataElement.id, text: dse.dataElement.displayName }))
-                    .sort((a, b) => a.text.localeCompare(b.text))
+                    .sort((a, b) => a.text.localeCompare(b.text)),
             );
         }
 
@@ -135,65 +191,7 @@ class SectionDialog extends React.Component {
         });
     }
 
-    handleFilterChange(e) {
-        this.setState({ filterText: e.target.value });
-    }
-
-    handleNameChange(e) {
-        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
-            ? modelToEditStore.getState().sections
-            : modelToEditStore.getState().sections.toArray();
-        const nameDupe = sectionArray
-            .filter(s => s.id !== this.props.sectionModel.id)
-            .reduce((res, s) => res || s.name === e.target.value, false);
-
-        this.setState({ name: e.target.value, nameError: nameDupe ? this.getTranslation('value_not_unique') : '' });
-    }
-
-    handleCodeChange(e) {
-        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
-            ? modelToEditStore.getState().sections
-            : modelToEditStore.getState().sections.toArray();
-        const codeDupe = sectionArray
-            .filter(s => s.id !== this.props.sectionModel.id)
-            .reduce((res, s) => res || (s.code && s.code === e.target.value), false);
-
-        this.setState({ code: e.target.value, codeError: codeDupe ? this.getTranslation('value_not_unique') : '' });
-    }
-
-    handleDescriptionChange(e) {
-        this.setState({ description: e.target.value });
-    }
-
-    assignDataElements(dataElements) {
-        assignedDataElementStore.setState(assignedDataElementStore.state.concat(dataElements));
-        return Promise.resolve();
-    }
-
-    removeDataElements(dataElements) {
-        assignedDataElementStore.setState(assignedDataElementStore.state.filter(de => dataElements.indexOf(de) === -1));
-        return Promise.resolve();
-    }
-
-    setAssignedDataElements(dataElements) {
-        assignedDataElementStore.setState(dataElements);
-    }
-
-    assignIndicators(indicators) {
-        assignedIndicatorStore.setState(assignedIndicatorStore.state.concat(indicators));
-        return Promise.resolve();
-    }
-
-    removeIndicators(indicators) {
-        assignedIndicatorStore.setState(assignedIndicatorStore.state.filter(i => indicators.indexOf(i) === -1));
-        return Promise.resolve();
-    }
-
-    setAssignedIndicators(indicators) {
-        assignedIndicatorStore.setState(indicators);
-    }
-
-    saveSection() {
+    saveSection = () => {
         if (!this.state.name || this.state.name.trim().length === 0) {
             snackActions.show({
                 message: this.getTranslation('name_is_required'),
@@ -242,7 +240,7 @@ class SectionDialog extends React.Component {
             });
     }
 
-    renderFilters() {
+    renderFilters = () => {
         const catCombos = [{ value: false, text: this.getTranslation('no_filter') }]
             .concat(this.props.categoryCombos.sort((a, b) => a.text.localeCompare(b.text)));
 
@@ -257,16 +255,11 @@ class SectionDialog extends React.Component {
                     disabled={this.props.categoryCombos.length === 1}
                     style={{ width: 284 }}
                 />
-                <TextField
-                    floatingLabelText={this.getTranslation('filter')}
-                    onChange={this.handleFilterChange}
-                    style={{ float: 'right', marginRight: 34, width: 284 }}
-                />
             </div>
         );
     }
 
-    renderAvailableOptions() {
+    renderAvailableOptions = () => {
         const labelStyle = {
             position: 'relative',
             display: 'block',
@@ -277,10 +270,20 @@ class SectionDialog extends React.Component {
             fontSize: 16,
         };
 
+        const editorStyle = {
+            marginBottom: 80,
+        };
+
         return (
             <div>
-                <div style={{ marginBottom: 80 }}>
+                <div style={editorStyle}>
                     <label style={labelStyle}>{this.getTranslation('data_elements')}</label>
+                    <TextField
+                        fullWidth
+                        hintText={this.getTranslation('search_available_selected_items')}
+                        defaultValue={this.state.filterText}
+                        onChange={this.handleFilterChange}
+                    />
                     <GroupEditor
                         itemStore={dataElementStore}
                         assignedItemStore={assignedDataElementStore}
@@ -292,7 +295,7 @@ class SectionDialog extends React.Component {
                     />
                 </div>
                 {indicatorStore.state.length ? (
-                    <div style={{ marginBottom: 80 }}>
+                    <div style={editorStyle}>
                         <label style={labelStyle}>{this.getTranslation('indicators')}</label>
                         <GroupEditor
                             itemStore={indicatorStore}
