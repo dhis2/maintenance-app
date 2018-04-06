@@ -223,7 +223,7 @@ const fieldOrderByName = new Map([
         'captureCoordinates',
         'validCompleteOnly',
         'preGenerateUID',
-        'executionDateLabel'
+        'executionDateLabel',
     ]],
     ['trackerProgram', [
         'name',
