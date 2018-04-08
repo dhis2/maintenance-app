@@ -21,6 +21,13 @@ const styles = {
 class ListDataTable extends Component {
     getTranslation = key => this.context.d2.i18n.getTranslation(key);
 
+    getRows = () => (
+        this.props.dataRows
+            .map(this.magicallyUnwrapChildValues)
+            .map(this.defaultReallyMeansNone)
+            .map(this.translateConstants)
+    );
+
     // For table columns like 'a___b', flatten values to b being a child of a
     magicallyUnwrapChildValues = (row) => {
         this.props.tableColumns.reduce((o, col) => {
@@ -50,7 +57,6 @@ class ListDataTable extends Component {
         return row;
     }
 
-
     // Get translations for row values that are constants
     // Some props are read only on the model object, which means the can not be translated - boo!
     translateConstants = (row) => {
@@ -66,7 +72,6 @@ class ListDataTable extends Component {
             );
             return b;
         };
-
 
         return row.noMoreGottaTranslateCauseIsDone
             ? row
@@ -214,16 +219,16 @@ class ListDataTable extends Component {
                     return actions;
                 }, {});
 
-        const rows = this.props.dataRows
-            .map(this.magicallyUnwrapChildValues)
-            .map(this.defaultReallyMeansNone)
-            .map(this.translateConstants);
-
         return (
             <div style={styles.dataTableWrap}>
                 {!!this.props.dataRows && !!this.props.dataRows.length
                     ? (<DataTable
-                        rows={rows}
+                        rows={
+                            this.props.dataRows
+                                .map(this.magicallyUnwrapChildValues)
+                                .map(this.defaultReallyMeansNone)
+                                .map(this.translateConstants)
+                        }
                         columns={this.props.tableColumns}
                         contextMenuActions={availableActions}
                         contextMenuIcons={contextMenuIcons}

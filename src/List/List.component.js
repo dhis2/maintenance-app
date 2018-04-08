@@ -132,10 +132,10 @@ class List extends Component {
                 sharing: sharingState,
                 dataRows: state.dataRows.map((row) => {
                     if (row.id === sharingState.model.id) {
-                        return {
-                            ...row,
-                            ...{ publicAccess: sharingState.model.publicAccess },
-                        };
+                        return Object.assign(
+                            row,
+                            { publicAccess: sharingState.model.publicAccess },
+                        );
                     }
                     return row;
                 }),
@@ -172,7 +172,7 @@ class List extends Component {
             this.setState({
                 isLoading: true,
                 detailsObject: null,
-                translation: { ...this.state.translation, ...{ open: false } },
+                translation: Object.assign({}, this.state.translation, { open: false }),
             });
         }
     }
@@ -199,25 +199,28 @@ class List extends Component {
     }
 
     closeTranslationDialog = () => {
-        translationStore.setState({
-            ...translationStore.state,
-            ...{ open: false },
-        });
+        translationStore.setState(Object.assign({},
+            translationStore.state,
+            { open: false }),
+        );
     }
 
     closeSharingDialog = (sharingState) => {
         const model = sharingState
-            ? { ...sharingStore.state.model, ...{ publicAccess: sharingState.publicAccess } }
+            ? Object.assign(sharingStore.state.model, { publicAccess: sharingState.publicAccess })
             : sharingStore.state.model;
 
-        sharingStore.setState({
-            ...sharingStore.state,
-            ...{ model, open: false },
-        });
+        sharingStore.setState(Object.assign({},
+            sharingStore.state,
+            { model, open: false }),
+        );
     }
 
     closeDataElementOperandDialog = () => {
-        dataElementOperandStore.setState({ ...dataElementOperandStore.state, ...{ open: false } });
+        dataElementOperandStore.setState(Object.assign({},
+            dataElementOperandStore.state,
+            { open: false }),
+        );
     }
 
     render() {

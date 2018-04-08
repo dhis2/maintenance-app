@@ -72,10 +72,10 @@ class PredictorDialog extends Component {
     });
 
     requestClose = () => {
-        predictorDialogStore.setState({
-            ...predictorDialogStore.state,
-            ...{ open: false },
-        });
+        predictorDialogStore.setState(Object.assign({},
+            predictorDialogStore.state,
+            { open: false }),
+        );
     }
 
     showMessageWithOk = message => snackActions.show({

@@ -59,7 +59,7 @@ export default class OrganisationUnitList extends Component {
         return (
             <List
                 {...otherProps}
-                params={{ ...{ modelType: 'organisationUnit' }, ...params }}
+                params={Object.assign({ modelType: 'organisationUnit' }, params)}
             />
         );
     }
