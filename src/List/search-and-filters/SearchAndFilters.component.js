@@ -1,6 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getOr } from 'lodash/fp';
+import { path } from 'lodash/fp';
 import log from 'loglevel';
 
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
@@ -71,8 +72,7 @@ class SearchAndFilters extends Component {
     };
 
     isConstantField = (modelDefinition, filterField) =>
-        modelDefinition.modelProperties.hasOwnProperty(filterField)
-        && modelDefinition.modelProperties[filterField].hasOwnProperty('constants');
+        path(`${filterField}.constants`, modelDefinition.modelProperties)
 
     renderFilters = (filterField) => {
         const modelDefinition = this.context.d2.models[this.props.modelType];

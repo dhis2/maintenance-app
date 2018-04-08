@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign, import/no-extraneous-dependencies */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
@@ -7,6 +8,7 @@ import contextActions from './ContextActions';
 import getConstantDisplayNameOrOld from '../helpers/getConstantDisplayNameOrOld';
 import snackActions from '../../Snackbar/snack.actions';
 import { withAuth } from '../../utils/Auth';
+
 
 const styles = {
     dataTableWrap: {

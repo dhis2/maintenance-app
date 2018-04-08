@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rxjs';
 import { isUndefined } from 'lodash/fp';

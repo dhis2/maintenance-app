@@ -12,6 +12,6 @@ const LoadingStatus = ({ isLoading }) => (
     </div>
 );
 
-LoadingStatus.propTypes = { isLoading: PropTypes.bool.isRequired }
+LoadingStatus.propTypes = { isLoading: PropTypes.bool.isRequired };
 
 export default LoadingStatus;

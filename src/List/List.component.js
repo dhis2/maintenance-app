@@ -51,6 +51,9 @@ const styles = {
         marginTop: '-2rem',
         paddingBottom: '0.5rem',
     },
+    sharingDialogBody: {
+        minHeight: '400px',
+    },
 };
 
 export function getTranslatablePropertiesForModelType(modelType) {
@@ -180,8 +183,7 @@ class List extends Component {
 
     setIsLoadingState = () => this.setState({ isLoading: true });
 
-    setSearchListDisposable = searchListByNameDisposable =>
-        this.registerDisposable(searchListByNameDisposable)
+    setSearchListDisposable = searchListByNameDisposable => this.registerDisposable(searchListByNameDisposable)
 
     getTranslation = key => this.context.d2.i18n.getTranslation(key);
 
@@ -281,7 +283,7 @@ class List extends Component {
                         type={this.props.params.modelType}
                         open={this.state.sharing.open}
                         onRequestClose={this.closeSharingDialog}
-                        bodyStyle={{ minHeight: '400px' }}
+                        bodyStyle={styles.sharingDialogBody}
                     />}
 
                 {!!this.state.translation.model &&

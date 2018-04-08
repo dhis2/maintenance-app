@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { Subject, Observable } from 'rxjs';
 import Store from 'd2-ui/lib/store/Store';
 import { getTableColumnsForType, getFilterFieldsForType, getFiltersForType } from '../config/maintenance-models';

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React from 'react';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/TextField/TextField';

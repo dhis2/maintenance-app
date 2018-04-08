@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { addValueRenderer } from 'd2-ui/lib/data-table/data-value/valueRenderers';
 import branch from 'recompose/branch';
