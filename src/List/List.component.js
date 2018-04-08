@@ -172,7 +172,7 @@ class List extends Component {
             this.setState({
                 isLoading: true,
                 detailsObject: null,
-                translation: Object.assign({}, this.state.translation, { open: false }),
+                translation: { ...this.state.translation, ...{ open: false } },
             });
         }
     }
@@ -199,10 +199,10 @@ class List extends Component {
     }
 
     closeTranslationDialog = () => {
-        translationStore.setState(Object.assign({},
-            translationStore.state,
-            { open: false }),
-        );
+        translationStore.setState({
+            ...translationStore.state,
+            ...{ open: false },
+        });
     }
 
     closeSharingDialog = (sharingState) => {
@@ -210,17 +210,17 @@ class List extends Component {
             ? Object.assign(sharingStore.state.model, { publicAccess: sharingState.publicAccess })
             : sharingStore.state.model;
 
-        sharingStore.setState(Object.assign({},
-            sharingStore.state,
-            { model, open: false }),
-        );
+        sharingStore.setState({
+            ...sharingStore.state,
+            ...{ model, open: false },
+        });
     }
 
     closeDataElementOperandDialog = () => {
-        dataElementOperandStore.setState(Object.assign({},
-            dataElementOperandStore.state,
-            { open: false }),
-        );
+        dataElementOperandStore.setState({
+            ...dataElementOperandStore.state,
+            ...{ open: false },
+        });
     }
 
     render() {
