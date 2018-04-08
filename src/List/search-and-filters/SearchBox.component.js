@@ -1,9 +1,9 @@
 import React from 'react';
-import ObservedEvents from '../utils/ObservedEvents.mixin';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/TextField/TextField';
-import { config } from 'd2/lib/d2';
-import { currentSubSection$ } from '../App/appStateStore';
+
+import { currentSubSection$ } from '../../App/appStateStore';
+import ObservedEvents from '../../utils/ObservedEvents.mixin';
 
 const unsearchableSections = [
     'organisationUnit',
@@ -30,7 +30,11 @@ const SearchBox = React.createClass({
     componentDidMount() {
         const searchObserver = this.events.searchBox
             .debounceTime(400)
-            .map(event => event && event.target && event.target.value ? event.target.value : '')
+            .map(event =>
+                (event && event.target && event.target.value
+                    ? event.target.value
+                    : ''
+                ))
             .distinctUntilChanged();
 
         this.props.searchObserverHandler(searchObserver);
@@ -46,6 +50,13 @@ const SearchBox = React.createClass({
         this.subscription && this.subscription.unsubscribe && this.subscription.unsubscribe();
     },
 
+    onKeyUp(event) {
+        this.setState({
+            value: event.target.value,
+        });
+        this.searchBoxCb(event);
+    },
+
     render() {
         const style = {
             display: 'inline-block',
@@ -53,25 +64,17 @@ const SearchBox = React.createClass({
             position: 'relative',
             top: -15,
         };
-        return this.state.showSearchField ? (
-            <div className="search-list-items" style={style}>
+        return !!this.state.showSearchField &&
+            (<div className="search-list-items" style={style}>
                 <TextField
                     className="list-search-field"
                     value={this.state.value}
                     fullWidth={false}
                     type="search"
-                    onChange={this._onKeyUp}
+                    onChange={this.onKeyUp}
                     floatingLabelText={`${this.getTranslation('search_by_name')}`}
                 />
-            </div>
-        ) : null;
-    },
-
-    _onKeyUp(event) {
-        this.setState({
-            value: event.target.value,
-        });
-        this.searchBoxCb(event);
+            </div>);
     },
 });
 

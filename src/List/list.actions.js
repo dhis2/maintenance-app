@@ -6,7 +6,7 @@ import log from 'loglevel';
 import { getInstance } from 'd2/lib/d2';
 
 import listStore from './list.store';
-import detailsStore from './details.store';
+import detailsStore from './details-box/details.store';
 import appState from '../App/appStateStore';
 import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForType } from '../config/maintenance-models';
 

@@ -20,7 +20,6 @@ class DetailsBoxWithScroll extends Component {
 
     render() {
         const paperStyle = { maxWidth: 500, minWidth: 300, marginTop: document.querySelector('body').scrollTop };
-
         return (
             <div style={this.props.style}>
                 <Paper zDepth={1} rounded={false} style={paperStyle}>

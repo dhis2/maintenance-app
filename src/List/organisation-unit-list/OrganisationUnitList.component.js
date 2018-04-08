@@ -1,12 +1,14 @@
-import React from 'react';
-import List from '../List.component';
-import appState from '../../App/appStateStore';
-import { getInstance } from 'd2/lib/d2';
-import listActions, { fieldFilteringForQuery } from '../list.actions';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import log from 'loglevel';
+import { getInstance } from 'd2/lib/d2';
 import ModelCollection from 'd2/lib/model/ModelCollection';
 
-export default class OrganisationUnitList extends React.Component {
+import List from '../List.component';
+import appState from '../../App/appStateStore';
+import listActions, { fieldFilteringForQuery } from '../list.actions';
+
+export default class OrganisationUnitList extends Component {
     componentDidMount() {
         this.subscription = appState
             // Only do this is we're actually about to show organisation units
@@ -43,7 +45,7 @@ export default class OrganisationUnitList extends React.Component {
 
                     listActions.setListSource(organisationUnitList);
                 },
-                error => log.error(error)
+                error => log.error(error),
             );
     }
 
@@ -57,8 +59,10 @@ export default class OrganisationUnitList extends React.Component {
         return (
             <List
                 {...otherProps}
-                params={Object.assign({ modelType: 'organisationUnit' }, params)}
+                params={{ ...{ modelType: 'organisationUnit' }, ...params }}
             />
         );
     }
 }
+
+OrganisationUnitList.propTypes = { params: PropTypes.object.isRequired };

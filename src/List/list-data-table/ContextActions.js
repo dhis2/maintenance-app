@@ -1,19 +1,19 @@
 import { Subject } from 'rxjs';
 import log from 'loglevel';
 
-import { config, getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2/lib/d2';
 import Action from 'd2-ui/lib/action/Action';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
-import detailsStore from './details.store';
-import snackActions from '../Snackbar/snack.actions';
-import listStore from './list.store';
-import sharingStore from './sharing.store';
-import translateStore from './translation-dialog/translationStore';
-import compulsoryDataElementStore from './compulsory-data-elements-dialog/compulsoryDataElementStore';
-import appStore from '../App/appStateStore';
-import predictorDialogStore from './predictor-dialog/predictorDialogStore';
-import { goToRoute } from '../router-utils';
+import detailsStore from '../details-box/details.store';
+import snackActions from '../../Snackbar/snack.actions';
+import listStore from '../list.store';
+import sharingStore from '../sharing.store';
+import translateStore from '../translation-dialog/translationStore';
+import compulsoryDataElementStore from '../compulsory-data-elements-dialog/compulsoryDataElementStore';
+import appStore from '../../App/appStateStore';
+import predictorDialogStore from '../predictor-dialog/predictorDialogStore';
+import { goToRoute } from '../../router-utils';
 
 export const afterDeleteHook$ = new Subject();
 
@@ -31,13 +31,6 @@ const contextActions = Action.createActionsFromNames([
     'preview',
     'runNow',
 ]);
-
-const confirm = message => new Promise((resolve, reject) => {
-    if (window.confirm(message)) {
-        resolve();
-    }
-    reject();
-});
 
 // TODO: The action assumes that the appState actually has state
 contextActions.edit
@@ -104,7 +97,7 @@ contextActions.delete
                         });
                 },
             });
-        })
+        }),
     );
 
 contextActions.details
@@ -113,7 +106,7 @@ contextActions.details
     });
 
 contextActions.share
-    .subscribe(async({ data: model }) => {
+    .subscribe(async ({ data: model }) => {
         const d2 = await getD2();
         const modelToShare = await d2.models[model.modelDefinition.name].get(model.id);
 
@@ -124,7 +117,7 @@ contextActions.share
     });
 
 contextActions.translate
-    .subscribe(async({ data: model }) => {
+    .subscribe(async ({ data: model }) => {
         const d2 = await getD2();
         const modelToTranslate = await d2.models[model.modelDefinition.name].get(model.id);
 
