@@ -13,20 +13,24 @@ import mapPropsStream from 'recompose/mapPropsStream';
 import { get, compose, first, getOr, noop, isEqual, find, curry } from 'lodash/fp';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { dataEntryFormChanged, dataEntryFormRemove } from './actions';
+import { programDataEntryFormChanged, programDataEntryFormRemove } from './actions';
 import snackActions from '../../../Snackbar/snack.actions';
 import eventProgramStore from '../eventProgramStore';
 import CKEditor from './CKEditor';
 import '../../../../scss/EditModel/EditDataEntryFormProgramStage.scss';
 import { getProgramStageDataElementsByStageId } from "../notifications/selectors";
 import PaletteSection from './PaletteSection';
-import { bindFuncsToKeys, moveEditorSelection, processFormData, insertElement as insElem, elementPatterns } from "./dataEntryFormUtils";
+import { bindFuncsToKeys, moveEditorSelection, processFormData, insertElement as insElem, elementPatterns, transformElementsToCustomForm } from "./dataEntryFormUtils";
 import PropTypes from 'prop-types';
 
-const programStageDataElementWithProgramStageId = programStageId => programStageDataElement => ({
-    id: `${programStageId}.${programStageDataElement.id}`,
-    displayName: programStageDataElement.displayName
-})
+const pteaToAttributes = ({programTrackedEntityAttributes, availableAttributes })  => {
+    const out = {};
+    programTrackedEntityAttributes.map(ptea => {
+        const attr = availableAttributes.find(attr => attr.id === ptea.trackedEntityAttribute.id);
+        out[attr.id] = attr.displayName
+    })
+    return out;
+}
 
 const inputPattern = /<input.*?\/>/gi;
 const dataElementCategoryOptionIdPattern = /id="(\w*?)-(\w*?)-val"/;
@@ -69,66 +73,30 @@ const styles = {
     },
 };
 
+
+
 class EditDataEntryForm extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         const dataEntryForm = props.dataEntryForm;
+        const { outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.props.elements, elementPatterns.attributeIdPattern);
+        const formHtml = dataEntryForm ? outHtml : '';
 
         this.state = {
             usedIds: [],
             filter: '',
             expand: 'data_elements',
-            insertFn: {},
+            insertFn: {
+                ...bindFuncsToKeys(props.elements, this.insertElement, this)
+            },
+            formTitle: this.props.formTitle,
+            formHtml
         };
 
-        this.disposables = new Set();
-        const { programStage, dataElements } = props;
-        // Load flags
-        this.disposables.add(Observable.fromPromise(context.d2.Api.getApi().get('system/flags'))
-            .subscribe(flags => {
-                // Operands with ID's that contain a dot ('.') are combined dataElementId's and categoryOptionId's
-                // The API returns "dataElementId.categoryOptionId", which are transformed to the format expected by
-                // custom forms: "dataElementId-categoryOptionId-val"
-                this.operands = dataElements
-                    .map(programStageDataElementWithProgramStageId(programStage.id))
-                    .filter(op => op.id.indexOf('.') !== -1)
-                    .reduce((out, op) => {
-                        const id = `${op.id.split('.').join('-')}-val`;
-                        out[id] = op.displayName; // eslint-disable-line
-                        return out;
-                    }, {});
-
-                this.flags = flags.reduce((out, flag) => {
-                    out[flag.path] = flag.name; // eslint-disable-line
-                    return out;
-                }, {});
-
-                // Create inserter functions for all insertable elements
-                // This avoids having to bind the functions during rendering
-        /*        const insertFn = {};
-                Object.keys(this.operands).forEach((x) => {
-                    insertFn[x] = this.insertElement.bind(this, x);
-                });
-                Object.keys(this.flags).forEach((flag) => {
-                    insertFn[flag] = this.insertFlag.bind(this, flag);
-                }); */
-                const boundOps = bindFuncsToKeys(this.operands, this.insertElement, this);
-                const boundFlags = bindFuncsToKeys(this.flags, this.insertElement, this);
-                const insertFn = { ...boundOps, ...boundFlags}
-
-                const { outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.operands, elementPatterns.combinedIdPattern);
-                const formHtml = dataEntryForm ? outHtml : '';
-
-                this.setState({
-                    insertFn,
-                    formHtml,
-                    dataEntryForm,
-                    formTitle: this.props.formTitle,
-                });
-            }));
         // Create element filtering action
         this.filterAction = Action.create('filter');
+        this.disposables = new Set();
         this.disposables.add(this.filterAction
             .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
             .debounceTime(75)
@@ -202,7 +170,7 @@ class EditDataEntryForm extends React.Component {
         if (this.state.usedIds.indexOf(id) !== -1) {
             return;
         }
-        return insElem(id, this.operands[id], this._editor);
+        return insElem(id, this.props.elements[id], this._editor);
 
         this._editor.insertHtml(this.generateHtml(id), 'unfiltered_html');
         this.setState(state => ({ usedIds: state.usedIds.concat(id) }));
@@ -235,7 +203,7 @@ class EditDataEntryForm extends React.Component {
                     </div>
                     <div className="elements">
                         <PurePaletteSection
-                            keySet={this.operands}
+                            keySet={this.props.elements}
                             label="data_elements"
                             filter={this.state.filter}
                             expand={this.state.expand}
@@ -243,15 +211,7 @@ class EditDataEntryForm extends React.Component {
                             usedIds={this.state.usedIds}
                             insertFn={this.state.insertFn}
                         />
-                        <PurePaletteSection
-                            keySet={this.flags}
-                            label="flags"
-                            filter={this.state.filter}
-                            expand={this.state.expand}
-                            expandClick={() => { this.setState({ expand: 'flags' }); }}
-                            usedIds={this.state.usedIds}
-                            insertFn={this.state.insertFn}
-                        />
+
                     </div>
                 </div>
             </div>
@@ -308,9 +268,7 @@ EditDataEntryForm.propTypes = {
     onFormChange: PropTypes.func,
     onStyleChange: PropTypes.func,
     onFormDelete: PropTypes.func,
-    elements: PropTypes.shape({
 
-    })
 };
 
 EditDataEntryForm.defaulRFFtProps = {
@@ -324,9 +282,9 @@ EditDataEntryForm.contextTypes = {
 };
 
 const mapDispatchToPropsForProgramStage = (dispatch, { programStage }) => bindActionCreators({
-    onFormChange: curry(dataEntryFormChanged)(programStage.id)('htmlCode'),
-    onStyleChange: curry(dataEntryFormChanged)(programStage.id)('style'),
-    onFormDelete: dataEntryFormRemove.bind(undefined, programStage.id),
+    onFormChange: curry(programDataEntryFormChanged)(programStage.id)('htmlCode'),
+    onStyleChange: curry(programDataEntryFormChanged)(programStage.id)('style'),
+    onFormDelete: programDataEntryFormRemove.bind(undefined, programStage.id),
 }, dispatch);
 
 const programStageDataEntryForm = compose(
@@ -355,18 +313,16 @@ const programDataEntryForm = compose(
     mapPropsStream(props$ => props$
         .combineLatest(
             eventProgramStore,
-            (props, {program}) => ({
+            (props, {program, availableAttributes }) => ({
                 ...props,
                 program,
                 dataEntryForm: program.dataEntryForm,
-                dataElements: program.programTrackedEntityAttributes, //getProgramStageDataElementsByStageId(state)(programStage.id),
+                elements: pteaToAttributes({ programTrackedEntityAttributes: program.programTrackedEntityAttributes, availableAttributes}), //getProgramStageDataElementsByStageId(state)(programStage.id),
                 formTitle: program.displayName
             })
         )
     ),
     connect(undefined, mapDispatchToPropsForProgram)
 );
-
-export default programStageDataEntryForm(EditDataEntryForm);
 
 export const CustomRegistrationDataEntryForm = programDataEntryForm(EditDataEntryForm);

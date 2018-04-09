@@ -3,7 +3,7 @@ import { get, compose } from 'lodash/fp';
 import Checkbox from 'material-ui/Checkbox';
 import programStore from '../eventProgramStore';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-import { CustomRegistrationDataEntryForm } from "../data-entry-form/EditCustomFormProgramStage";
+import { CustomRegistrationDataEntryForm } from "../data-entry-form/EditCustomRegistrationForm";
 
 class CustomRegistrationForm extends Component {
     state = {
