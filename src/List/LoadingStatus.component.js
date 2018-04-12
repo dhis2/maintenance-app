@@ -1,22 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 
-export default React.createClass({
-    propTypes: {
-        isLoading: React.PropTypes.bool.isRequired,
-    },
+const LoadingStatus = ({ isLoading }) => (
+    <div>
+        {isLoading &&
+        <LinearProgress
+            mode="indeterminate"
+            style={{ backgroundColor: 'lightblue' }}
+        />}
+    </div>
+);
 
-    getDefaultProps() {
-        return {
-            isLoading: false,
-        };
-    },
+LoadingStatus.propTypes = { isLoading: PropTypes.bool.isRequired };
 
-    render() {
-        if (!this.props.isLoading) { return null; }
-
-        return (
-            <LinearProgress mode="indeterminate" style={{ backgroundColor: 'lightblue' }} />
-        );
-    },
-});
+export default LoadingStatus;

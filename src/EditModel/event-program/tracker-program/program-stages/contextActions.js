@@ -1,11 +1,11 @@
-import snackActions from '../../../../Snackbar/snack.actions';
-import { afterDeleteHook$ } from '../../../../List/ContextActions';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import { getInstance } from 'd2/lib/d2';
 import log from 'loglevel';
 import { set } from 'lodash/fp';
+
+import snackActions from '../../../../Snackbar/snack.actions';
+import { afterDeleteHook$ } from '../../../../List/list-data-table/ContextActions';
 import { deleteProgramStageFromState } from '../epics';
-import { Observable } from 'rxjs';
 
 export async function deleteProgramStageWithSnackbar(model) {
     const d2 = await getInstance();
@@ -13,8 +13,8 @@ export async function deleteProgramStageWithSnackbar(model) {
         message: [
             d2.i18n.getTranslation(
                 `confirm_delete_${camelCaseToUnderscores(
-                    model.modelDefinition.name
-                )}`
+                    model.modelDefinition.name,
+                )}`,
             ),
             model.name,
         ].join(' '),

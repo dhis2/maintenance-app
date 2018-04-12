@@ -1,11 +1,13 @@
 import React from 'react';
-import appStateStore, { reloadUserOrganisationUnits } from '../App/appStateStore';
-import FontIcon from 'material-ui/FontIcon/FontIcon';
-import objectActions from '../EditModel/objectActions';
-import modelToEditStore from '../EditModel/modelToEditStore';
-import { afterDeleteHook$ } from '../List/ContextActions.js';
 import { Observable } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
+
+import FontIcon from 'material-ui/FontIcon/FontIcon';
+
+import appStateStore, { reloadUserOrganisationUnits } from '../App/appStateStore';
+import objectActions from '../EditModel/objectActions';
+import modelToEditStore from '../EditModel/modelToEditStore';
+import { afterDeleteHook$ } from '../List/list-data-table/ContextActions';
 
 class DefaultSideBarIcon extends FontIcon {
     shouldComponentUpdate() {

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rxjs';
 import { isUndefined } from 'lodash/fp';
@@ -6,7 +7,7 @@ import log from 'loglevel';
 import { getInstance } from 'd2/lib/d2';
 
 import listStore from './list.store';
-import detailsStore from './details.store';
+import detailsStore from './details-box/details.store';
 import appState from '../App/appStateStore';
 import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForType } from '../config/maintenance-models';
 

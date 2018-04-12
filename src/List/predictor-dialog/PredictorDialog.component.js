@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
@@ -11,21 +11,39 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 import snackActions from '../../Snackbar/snack.actions';
 import predictorDialogStore from './predictorDialogStore';
 
-class PredictorDialog extends React.Component {
-    constructor(...args) {
-        super(...args);
+const styles = {
+    flatButtonStyle: {
+        marginRight: 16,
+    },
+    progressBarStyle: {
+        progress: {
+            marginTop: 32,
+            marginRight: 64,
+            textAlign: 'center',
+        },
+        title: {
+            textAlign: 'center',
+            marginRight: 64,
+        },
+    },
+    dialogStyle: {
+        body: {
+            marginLeft: 64,
+        },
+        content: {
+            maxWidth: 450,
+        },
+        margin: {
+            marginBottom: 16,
+        },
+    },
+};
 
-        this.state = {
-            open: false,
-            running: false,
-        };
-
-        this.getTranslation = this.context.d2.i18n.getTranslation.bind(this.context.d2.i18n);
-
-        this.setStartDate = this.setStartDate.bind(this);
-        this.setEndDate = this.setEndDate.bind(this);
-        this.executeAction = this.executeAction.bind(this);
-    }
+class PredictorDialog extends Component {
+    state = {
+        open: false,
+        running: false,
+    };
 
     componentDidMount() {
         this.subscriptions = [];
@@ -36,35 +54,52 @@ class PredictorDialog extends React.Component {
         this.subscriptions.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
-    requestClose() {
-        predictorDialogStore.setState(Object.assign({}, predictorDialogStore.state, { open: false }));
-    }
+    getTranslation = key => this.context.d2.i18n.getTranslation(key);
 
-    setStartDate(e, value) {
+    setStartDate = (e, value) => {
         const d = new Date(value);
         this.setState({ startDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
     }
 
-    setEndDate(e, value) {
+    setEndDate = (e, value) => {
         const d = new Date(value);
         this.setState({ endDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
     }
 
-    async executeAction() {
+    setCloseAndStop = () => this.setState({
+        open: false,
+        running: false,
+    });
+
+    requestClose = () => {
+        predictorDialogStore.setState({
+            ...predictorDialogStore.state,
+            ...{ open: false },
+        });
+    }
+
+    showMessageWithOk = message => snackActions.show({
+        message,
+        action: 'ok',
+    });
+
+    executeAction = async () => {
         const d2 = await getD2();
         const href = [this.state.model.modelDefinition.plural, this.state.model.id, 'run'].join('/');
         const targetUrl = `${href}?startDate=${this.state.startDate}&endDate=${this.state.endDate}`;
 
         this.setState({ running: true });
 
-        d2.Api.getApi().post(targetUrl, { startDate: this.state.startDate, endDate: this.state.endDate })
+        d2.Api.getApi()
+            .post(targetUrl, { startDate: this.state.startDate, endDate: this.state.endDate })
             .then((res) => {
-                snackActions.show({ message: res.message, action: 'ok' });
-                this.setState({ open: false, running: false });
+                this.showMessageWithOk(res.message);
+                this.setCloseAndStop();
             })
             .catch((err) => {
-                snackActions.show({ message: `${this.getTranslation('failed_to_start_predictor')}: ${err.message}`, action: 'ok' });
-                this.setState({ open: false, running: false });
+                const message = `${this.getTranslation('failed_to_start_predictor')}: ${err.message}`;
+                this.showMessageWithOk(message);
+                this.setCloseAndStop();
                 console.error(err);
             });
     }
@@ -74,7 +109,7 @@ class PredictorDialog extends React.Component {
             <FlatButton
                 label={this.getTranslation('cancel')}
                 onClick={this.requestClose}
-                style={{ marginRight: 16 }}
+                style={styles.flatButtonStyle}
                 disabled={this.state.running}
             />,
             <RaisedButton
@@ -85,38 +120,44 @@ class PredictorDialog extends React.Component {
             />,
         ];
 
+        const DatePickers = (
+            <div>
+                <DatePicker
+                    autoOk
+                    floatingLabelText={`${this.getTranslation('start_date')} (*)`}
+                    onChange={this.setStartDate}
+                />
+                <DatePicker
+                    autoOk
+                    floatingLabelText={`${this.getTranslation('end_date')} (*)`}
+                    onChange={this.setEndDate}
+                />
+            </div>
+        );
+
+        const ProgressBar = (
+            <div>
+                <div style={styles.progressBarStyle.title}>
+                    {this.getTranslation('running_predictor')}
+                </div>
+                <div style={styles.progressBarStyle.progress}>
+                    <CircularProgress />
+                </div>
+            </div>
+        );
+
         return (
             <Dialog
                 open={this.state.open}
                 actions={actions}
                 title={this.getTranslation('run_predictor')}
-                contentStyle={{ maxWidth: 450 }}
-                bodyStyle={{ marginLeft: 64 }}
+                contentStyle={styles.dialogStyle.content}
+                bodyStyle={styles.dialogStyle.body}
             >
-                {this.state.running ? (
-                    <div>
-                        <div style={{ textAlign: 'center', marginRight: 64 }}>
-                            {this.getTranslation('running_predictor')}
-                        </div>
-                        <div style={{ marginTop: 32, marginRight: 64, textAlign: 'center' }}>
-                            <CircularProgress />
-                        </div>
-                    </div>
-                ) : (
-                    <div>
-                        <DatePicker
-                            autoOk
-                            floatingLabelText={`${this.getTranslation('start_date')} (*)`}
-                            onChange={this.setStartDate}
-                        />
-                        <DatePicker
-                            autoOk
-                            floatingLabelText={`${this.getTranslation('end_date')} (*)`}
-                            onChange={this.setEndDate}
-                        />
-                    </div>
-                )}
-                <div style={{ marginBottom: 16 }} />
+                {this.state.running
+                    ? ProgressBar
+                    : DatePickers}
+                <div style={styles.dialogStyle.margin} />
             </Dialog>
         );
     }
