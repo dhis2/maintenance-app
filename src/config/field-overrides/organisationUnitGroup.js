@@ -11,11 +11,7 @@ const SymbolPickerField = (props, context) => {
 
     const imgPath = `${systemRootFolder}/images/orgunitgroup`;
 
-    return (
-        <IconPicker
-            {...props}
-            imgPath={imgPath}
-        />);
+    return (<IconPicker {...props} imgPath={imgPath} />);
 };
 SymbolPickerField.contextTypes = { d2: React.PropTypes.any };
 
