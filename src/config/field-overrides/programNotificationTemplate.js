@@ -9,7 +9,7 @@ import RelativeScheduledDays from './program-notification-template/RelativeSched
 import DeliveryChannels from './program-notification-template/DeliveryChannels';
 import DropDownAsync from '../../forms/form-fields/drop-down-async';
 import SubjectAndMessageTemplateFields from './validation-notification-template/SubjectAndMessageTemplateFields';
-import { setStageNotificationValue } from '../../EditModel/event-program/notifications/actions';
+import { setStageNotificationValue } from '../../EditModel/edit-event-program/notifications/actions';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 
 const PROGRAM_STAGE_VARIABLES = [

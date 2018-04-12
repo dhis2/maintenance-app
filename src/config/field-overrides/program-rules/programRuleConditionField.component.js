@@ -8,7 +8,7 @@ import TextEditor from '../../../forms/form-fields/text-editor-field';
 import modelToEditStore from '../../../EditModel/modelToEditStore';
 import programRuleFunctions from './programRuleFunctions';
 
-import OperatorButtons from '../../../EditModel/OperatorButtons.component';
+import OperatorButtons from '../../../EditModel/form-buttons/OperatorButtons.component';
 
 class ProgramRuleConditionField extends React.Component {
     constructor(props, context) {

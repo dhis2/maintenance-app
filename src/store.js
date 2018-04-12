@@ -1,12 +1,13 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createLogger } from 'redux-logger';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
-import eventProgramReducer from './EditModel/event-program/reducers';
-import eventProgramEpics from './EditModel/event-program/epics';
-import programIndicatorEpics from './EditModel/program-indicator/epics';
-import programIndicatorReducer from './EditModel/program-indicator/reducers';
+
+import eventProgramReducer from './EditModel/edit-event-program/reducers';
+import eventProgramEpics from './EditModel/edit-event-program/epics';
+import programIndicatorEpics from './EditModel/edit-program-indicator/epics';
+import programIndicatorReducer from './EditModel/edit-program-indicator/reducers';
 import snackBarReducer from './Snackbar/reducers';
 import snackBarEpics from './Snackbar/epics';
-import { createLogger } from "redux-logger";
 
 const epics = combineEpics(eventProgramEpics, programIndicatorEpics, snackBarEpics);
 const middlewares = [createEpicMiddleware(epics)];

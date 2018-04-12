@@ -16,7 +16,11 @@ function getLoadingdataElement() {
 function findValue(optionList, model) {
     return optionList
         .map(option => option.value)
-        .find(option => Array.from(model.dataElementGroups.values()).map(dataElementGroup => dataElementGroup.id).indexOf(option) !== -1);
+        .find(option =>
+            Array.from(model.dataElementGroups.values())
+                .map(dataElementGroup => dataElementGroup.id)
+                .indexOf(option) !== -1,
+        );
 }
 
 export default React.createClass({

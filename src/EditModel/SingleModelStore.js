@@ -2,6 +2,7 @@ import Store from 'd2-ui/lib/store/Store';
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { Observable } from 'rxjs';
 import isString from 'd2-utilizr/lib/isString';
+import { get } from 'lodash/fp';
 
 export const requestParams = new Map([
     ['dataElement', {
@@ -122,15 +123,15 @@ const singleModelStoreConfig = {
                     return Promise.reject(response);
                 }
 
-                if (response.messages && response.messages.length > 0) {
+                if (get('messages.length', response) > 0) {
                     return Promise.reject(response.messages[0].message);
                 }
 
-                if (response && response.response && response.response.errorReports && response.response.errorReports.length > 0) {
+                if (get('response.errorReports.length', response) > 0) {
                     return Promise.reject(response.response.errorReports[0].message);
                 }
 
-                if (response && response.message) {
+                if (get('message', response)) {
                     return Promise.reject(response.message);
                 }
 
@@ -143,7 +144,7 @@ const singleModelStoreConfig = {
 
 export default {
     create(config) {
-        const storeConfig = Object.assign({}, singleModelStoreConfig, config || {});
+        const storeConfig = { ...singleModelStoreConfig, ...config };
 
         return Store.create(storeConfig);
     },

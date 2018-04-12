@@ -1,27 +1,28 @@
 import React, { PropTypes } from 'react';
-
-import ExpressionFormula from 'd2-ui/lib/expression-manager/ExpressionFormula';
-import Paper from 'material-ui/Paper/Paper';
 import { Observable, ReplaySubject } from 'rxjs';
-import { isFunction, compose, isEmpty, memoize, get, getOr, values, identity, noop, negate } from 'lodash/fp';
 import withState from 'recompose/withState';
 import getContext from 'recompose/getContext';
 import { getInstance } from 'd2/lib/d2';
 import lifecycle from 'recompose/lifecycle';
-import InfoIcon from 'material-ui/svg-icons/action/info';
+import { compose, isEmpty, memoize, get, getOr, negate } from 'lodash/fp';
+
 import { blue50, blue200 } from 'material-ui/styles/colors';
-import { decimals } from './sharedFields';
+import Paper from 'material-ui/Paper/Paper';
+import InfoIcon from 'material-ui/svg-icons/action/info';
+import ExpressionFormula from 'd2-ui/lib/expression-manager/ExpressionFormula';
 
 import AttributeSelector from './program-indicator/AttributeSelector';
 import VariableSelector from './program-indicator/VariableSelector';
 import ConstantSelector from './program-indicator/ConstantSelector';
 import DataElementSelectors from './program-indicator/DataElementSelectors';
+import OperatorButtons from '../../EditModel/form-buttons/OperatorButtons.component';
+import { AnalyticsPeriodBoundaries } from './program-indicator/AnalyticsPeriodBoundaries';
 import ExpressionStatusIcon, {
     ExpressionStatus,
     getColorForExpressionStatus,
     getBackgroundColorForExpressionStatus } from './program-indicator/ExpressionStatusIcon';
-import OperatorButtons from '../../EditModel/OperatorButtons.component';
-import { AnalyticsPeriodBoundaries } from './program-indicator/AnalyticsPeriodBoundaries';
+
+import { decimals } from './sharedFields';
 
 const styles = {
     programIndicatorExpression: {

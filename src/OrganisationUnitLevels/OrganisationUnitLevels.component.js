@@ -1,18 +1,20 @@
 import React, { PropTypes } from 'react';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-import organisationUnitLevelsStore from './organisationUnitLevels.store';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
-import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
+
+import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import Heading from 'd2-ui/lib/headings/Heading.component';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
-import actions from './organisationUnitLevels.actions';
 import IconButton from 'material-ui/IconButton/IconButton';
 import Paper from 'material-ui/Paper/Paper';
-import SaveButton from '../EditModel/SaveButton.component';
-import FormButtons from '../EditModel/FormButtons.component';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
+
+import SaveButton from '../EditModel/form-buttons/SaveButton.component';
+import FormButtons from '../EditModel/form-buttons/FormButtons.component';
+
+import organisationUnitLevelsStore from './organisationUnitLevels.store';
+import actions from './organisationUnitLevels.actions';
 import snackActions from '../Snackbar/snack.actions';
-import Heading from 'd2-ui/lib/headings/Heading.component';
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
-import AccessDenied from '../App/AccessDenied.component';
 
 function saveOrganisationUnitLevels(i18n) {
     actions.saveOrganisationUnitLevels()
