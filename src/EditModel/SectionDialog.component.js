@@ -257,11 +257,6 @@ class SectionDialog extends React.Component {
                     disabled={this.props.categoryCombos.length === 1}
                     style={{ width: 284 }}
                 />
-                <TextField
-                    floatingLabelText={this.getTranslation('filter')}
-                    onChange={this.handleFilterChange}
-                    style={{ float: 'right', marginRight: 34, width: 284 }}
-                />
             </div>
         );
     }
@@ -279,6 +274,12 @@ class SectionDialog extends React.Component {
 
         return (
             <div>
+                <TextField
+                    fullWidth
+                    hintText={this.getTranslation('filter')}
+                    defaultValue={this.state.filterText}
+                    onChange={this.handleFilterChange}
+                />
                 <div style={{ marginBottom: 80 }}>
                     <label style={labelStyle}>{this.getTranslation('data_elements')}</label>
                     <GroupEditor
