@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { camelCaseToUnderscores } from 'd2-utilizr';
 
 import EditModel from './EditModel.component';
-import FormHeading from './FormHeading';
+import FormHeading from './form-heading/FormHeading';
 
 function EditModelContainer(props) {
     const schema = props.params.modelType || 'organisationUnit';

@@ -14,8 +14,8 @@ import App from './App/App.component';
 import listStore from './List/list.store';
 import store from './store';
 import { resetActiveStep } from './EditModel/actions';
-import { loadEventProgram } from './EditModel/event-program/actions';
-import { loadProgramIndicator } from './EditModel/program-indicator/actions';
+import { loadEventProgram } from './EditModel/edit-event-program/actions';
+import { loadProgramIndicator } from './EditModel/edit-program-indicator/actions';
 
 import onDemand from './on-demand';
 
@@ -102,7 +102,7 @@ function loadObject({ params }, replace, callback) {
                     replace(`/list/${params.modelType}`);
                     snackActions.show({ message: errorMessage, action: 'ok' });
                     callback();
-                }
+                },
             );
     }
 }
@@ -189,7 +189,7 @@ function cloneObject({ params }, replace, callback) {
                 replace(`/list/${params.modelType}`);
                 snackActions.show({ message: errorMessage, action: 'ok' });
                 callback();
-            }
+            },
         );
 }
 
@@ -244,7 +244,7 @@ const routes = (
                 />
                 <Route
                     path="optionSet/:modelId"
-                    component={delayRender(() => System.import('./EditModel/EditOptionSet.component'))}
+                    component={delayRender(() => System.import('./EditModel/edit-option-set/EditOptionSet.component'))}
                     onEnter={loadOptionSetObject}
                     hideSidebar
                     disableTabs
@@ -254,21 +254,21 @@ const routes = (
                 </Route>
                 <Route
                     path="program/:modelId"
-                    component={delayRender(() => System.import('./EditModel/event-program/EditProgram.component'))}
+                    component={delayRender(() => System.import('./EditModel/edit-event-program/EditProgram.component'))}
                     onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
                     hideSidebar
                     disableTabs
                 />
                 <Route
                     path="programIndicator/:modelId"
-                    component={delayRender(() => System.import('./EditModel/program-indicator/EditProgramIndicator'))}
+                    component={delayRender(() => System.import('./EditModel/edit-program-indicator/EditProgramIndicator'))}
                     onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator, resetActiveStep)}
                     hideSidebar
                     disableTabs
                 />
                 <Route
                     path=":modelType/:modelId/sections"
-                    component={delayRender(() => System.import('./EditModel/EditDataSetSections.component'))}
+                    component={delayRender(() => System.import('./EditModel/edit-data-set-sections/EditDataSetSections.component'))}
                     onEnter={loadObject}
                     hideSidebar
                     disableTabs

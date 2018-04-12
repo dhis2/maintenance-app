@@ -30,9 +30,13 @@ function clampPaletteWidth(width) {
     return Math.min(750, Math.max(width, 250));
 }
 
-
 // TODO?: Automatic labels <span label-id="{id}-{id}"></span> / <span label-id="{id}"></span>
-
+// TOOD shouldnt this rather be called EditCustomForm?
+/*
+ *
+ * This is a custom edit form. Currently used for Event and Tracker-Programs
+ * 
+*/
 const styles = {
     heading: {
         paddingBottom: 18,
