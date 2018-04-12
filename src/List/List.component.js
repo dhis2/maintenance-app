@@ -165,7 +165,7 @@ class List extends Component {
                 if (!isIterable(listStoreValue.list)) {
                     return; // Received value is not iterable, keep waiting
                 }
-
+                listActions.hideDetailsBox();
                 this.setState({
                     dataRows: listStoreValue.list,
                     pager: listStoreValue.pager,
