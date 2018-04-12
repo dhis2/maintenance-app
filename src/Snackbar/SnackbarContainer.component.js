@@ -18,7 +18,7 @@ const SnackBar = props => (
         action={props.action}
         autoHideDuration={props.autoHideDuration}
         open={!!props.message}
-        onActionTouchTap={props.actionHandler}
+        onActionTouchTap={props.actionHandler ? props.actionHandler : props.onRequestClose}
         onRequestClose={props.onRequestClose}
     />
 );
