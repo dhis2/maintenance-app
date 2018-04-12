@@ -155,12 +155,12 @@ objectActions.saveObject
         const d2 = await getInstance();
         const organisationUnit = modelToEditStore.getState();
 
-        if (!organisationUnit.isDirty() && !organisationUnit.dataSets.isDirty()) {
+        if (!organisationUnit.isDirty() && !organisationUnit.dataSets.isDirty() && !organisationUnit.programs.isDirty()) {
             completeAction('no_changes_to_be_saved');
         } else {
             // The orgunit has to be saved before it can be linked to datasets so these operations are done sequentially
             organisationUnit.save()
-                .then(() => organisationUnit.dataSets.save(), (error) => {
+                .then(() => Promise.all([organisationUnit.dataSets.save(), organisationUnit.programs.save()]), (error) => {
                     log.error(error);
                     snackActions.show({
                         message: Array.isArray(error.messages)
