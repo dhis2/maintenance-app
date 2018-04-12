@@ -20,7 +20,7 @@ let SnackBar = (props, { d2 }) => (
         action={props.action}
         autoHideDuration={props.autoHideDuration}
         open={!!props.message}
-        onActionTouchTap={props.actionHandler}
+        onActionTouchTap={props.actionHandler ? props.actionHandler : props.onRequestClose}
         onRequestClose={props.onRequestClose}
 />);
 SnackBar = addD2Context(SnackBar);
