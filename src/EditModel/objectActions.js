@@ -132,8 +132,11 @@ objectActions.saveObject
             }
         };
 
+        // DHIS2-3336: Related to DHIS2-2342. We need to generate
+        // a new uid when saving/cloning objects before sending it to
+        // the server to ensure that cloned objects get a new uid.
         return modelToEditStore
-            .save(action.data.id)
+            .save(generateUid())
             .subscribe(successHandler, errorHandler);
     }, (e) => {
         log.error(e);
@@ -265,7 +268,7 @@ objectActions.saveObject
 
         const programRuleId = modelToEditStore.getState().id || (await api.get('/system/id')).codes[0];
 
-        // TODO (DHIS2-2342) The client should not need to generate a
+        // DHIS2-2342: The client should not need to generate a
         // new for the programRuleAction here to avoid highjacking the
         // reference to original. Cloning these complex objects should
         // be done on the backend to solve the entire category of bugs
