@@ -110,7 +110,10 @@ const actionTypeFieldMapping = {
     },
     SENDMESSAGE: {
         label: 'send_message',
-        optional: ['programNotificationTemplate']
+        optional: ['programNotificationTemplate', 'data'],
+        labelOverrides: {
+            data: 'date_to_send_message'
+        }
     }
 };
 
