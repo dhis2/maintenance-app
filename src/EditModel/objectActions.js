@@ -132,11 +132,8 @@ objectActions.saveObject
             }
         };
 
-        // DHIS2-3336: Related to DHIS2-2342. We need to generate
-        // a new uid when saving/cloning objects before sending it to
-        // the server to ensure that cloned objects get a new uid.
         return modelToEditStore
-            .save(generateUid())
+            .save()
             .subscribe(successHandler, errorHandler);
     }, (e) => {
         log.error(e);

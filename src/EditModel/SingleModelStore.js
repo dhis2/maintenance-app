@@ -82,6 +82,19 @@ export const requestParams = new Map([
     }],
 ]);
 
+function cloneHandlerByObjectType(objectType, model) {
+    switch(objectType) {
+        case'programIndicator': {
+            //Clear analyticsPeriodBoundaries ids, let server generate them
+            model.analyticsPeriodBoundaries = model.analyticsPeriodBoundaries.map((a) => ({
+                ...a,
+                id: undefined
+            }))
+        }
+    }
+    return model;
+}
+
 function loadModelFromD2(objectType, objectId) {
     return getD2().then((d2) => {
         if (d2.models[objectType]) {
@@ -107,7 +120,7 @@ const singleModelStoreConfig = {
                 model.id = undefined;
                 // Some objects also have a uuid property that should be cleared
                 model.uuid = undefined;
-
+                model = cloneHandlerByObjectType(objectType, model);
                 this.setState(model);
             });
 
