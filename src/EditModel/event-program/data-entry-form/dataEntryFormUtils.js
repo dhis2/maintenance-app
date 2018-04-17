@@ -9,18 +9,25 @@ const inputPattern = /<input.*?\/>/gi;
 *   - Event-programs data entry form (dataElementId-categoryOptionId)
 *   - Tracker-programs Data entry form (programStageId-dataElementId)*/
 export const elementPatterns = {
-    attributeIdPattern: /attributeid="(\w*?)"/,
-    programIdPattern: /programid="(\w*?)"/,
-    combinedIdPattern: /id="(\w*?)-(\w*?)-val"/
+    programid: /attributeid="(\w*?)"/,
+    attributeid: /programid="(\w*?)"/,
+    id: /id="(\w*?)-(\w*?)-val"/
 }
 
 const fieldTypes = {
-    'programid': 'programIdPattern',
-    'attributeid': 'attributeIdPattern',
-    'id': 'combinedIdPattern'
+    'programid': 'programid',
+    'attributeid': 'attributeid',
+    'id': 'id'
 }
 
 const allPatterns = /attributeid="(\w*?)"|programid="(\w*?)"|id="(\w*?)-(\w*?)-val"/
+
+const matchIndexes = {
+    'attributeid': 1,
+    'programid': 3,
+    'id': ''
+}
+
 
 //These elements are static for Custom Registration Form
 const staticElements = [
@@ -33,6 +40,8 @@ export function generateHtmlForField(id, styleAttr, disabledAttr, label, nameAtt
     const disabled = disabledAttr ? ` disabled=${disabledAttr}` : '';
 
     const attr = `name="${nameAttr}" title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
+    console.log(attr)
+    console.log("FIELDTYPE", fieldType)
     return `<input ${fieldType}="${id}" ${attr}/>`;
 
 }
@@ -58,13 +67,13 @@ export function processFormData(formData, elements, idPattern) {
     let outHtml = '';
 
     const usedIds = [];
-
+    idPattern = elementPatterns.attributeid
     let inputElement = inputPattern.exec(inHtml);
     let inPos = 0;
     while (inputElement !== null) {
         outHtml += inHtml.substr(inPos, inputElement.index - inPos);
         inPos = inputPattern.lastIndex;
-
+        const fieldType = elementPatterns.attributeid
         const inputHtml = inputElement[0];
         const inputStyle = (/style="(.*?)"/.exec(inputHtml) || ['', ''])[1];
         const inputDisabled = /disabled/.exec(inputHtml) !== null;
@@ -72,12 +81,13 @@ export function processFormData(formData, elements, idPattern) {
         const idMatch = idPattern.exec(inputHtml);
         const allMatch = allPatterns.exec(inputHtml);
         console.log(allMatch)
+        console.log(idMatch)
         if (idMatch) {
          //   console.log(idMatch);
             const id = idMatch.length > 2 ? `${idMatch[1]}-${idMatch[2]}-val` : `${idMatch[1]}`;
             usedIds.push(id);
             const label = elements && elements[id];
-            outHtml += generateHtmlForField(id, inputStyle, inputDisabled, label);
+            outHtml += generateHtmlForField(id, inputStyle, inputDisabled, label, undefined, fieldType);
         } else {
             outHtml += inputHtml;
         }
@@ -99,10 +109,10 @@ export function processFormData(formData, elements, idPattern) {
  * @param obj Object with keys to bind
  * @param func Function to bind each key to
  * @param selfArg this context of the function
- * @param extraArgs Any extra arguments to bind to function
+ * @param extraArgs An object of extra arguments
  * @returns {{}} - And object where each property is a bound function
  */
-export function bindFuncsToKeys(obj, func, selfArg, ...extraArgs) {
+export function bindFuncsToKeys(obj, func, selfArg, extraArgs) {
     const boundFuncs = {};
     Object.keys(obj).forEach((x) => {
         boundFuncs[x] = func.bind(selfArg, x, extraArgs);
@@ -111,8 +121,10 @@ export function bindFuncsToKeys(obj, func, selfArg, ...extraArgs) {
 }
 
 export function insertElement(id, label, editor, fieldType = 'id') {
-    console.log("ASF")
-    editor.insertHtml(generateHtmlForField(id, null, null, label, undefined, ), 'unfiltered_html');
+    console.log(fieldType)
+    const elementHtml = generateHtmlForField(id, null, null, label, undefined, fieldType);
+    console.log("ElementHTML", elementHtml);
+    editor.insertHtml(elementHtml, 'unfiltered_html');
     // Move the current selection to just after the newly inserted element
     const range = editor.getSelection().getRanges()[0];
     console.log(range)

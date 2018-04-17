@@ -79,9 +79,11 @@ const ProgramDataEntryFormChangedEpic = action$ => action$
     .ofType(PROGRAM_DATA_ENTRY_FORM_FIELD_CHANGED)
     .combineLatest(d2$, (action, d2) => ({ action, d2 }))
     .mergeMap(({ action, d2 }) => {
+
         const fieldName = get('payload.field', action);
         const value = get('payload.value', action);
         const storeState = eventProgramStore.getState();
+
         const program = storeState.program;
         let dataEntryForm = storeState.program.dataEntryForm;
 
@@ -112,8 +114,9 @@ const ProgramDataEntryFormRemoveEpic = action$ => action$
         const storeState = eventProgramStore.getState();
         const programStageId = action.payload;
 
-        program.dataEntryForm = undefined;
+        storeState.program.dataEntryForm = undefined;
         eventProgramStore.setState({});
+        return Observable.empty();
     })
     .mergeMapTo(Observable.never());
 

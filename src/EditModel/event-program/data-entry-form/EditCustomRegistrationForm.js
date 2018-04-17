@@ -116,16 +116,6 @@ class EditDataEntryForm extends React.Component {
     componentWillUnmount() {
         this.disposables.forEach(disposable => disposable.unsubscribe());
     }
-    //FIX loosing input-position on input
-    componentWillReceiveProps({ dataEntryForm }) {
-        if (this.state.dataEntryForm && dataEntryForm !== this.state.dataEntryForm) {
-            const { outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.operands, elementPatterns.combinedIdPattern);
-
-            const formHtml = outHtml || '';
-
-            //this._editor.setData(formHtml);
-        }
-    }
 
     handleDeleteClick() {
         this.props.onFormDelete();
@@ -154,23 +144,27 @@ class EditDataEntryForm extends React.Component {
     handleEditorChanged = (editorData) => {
        // this.processFormData.call(this, editorData)
        // return;
-        const { usedIds, outHtml} = processFormData(editorData, this.operands, elementPatterns.combinedIdPattern);
+        const { usedIds, outHtml} = processFormData(editorData, this.props.elements, elementPatterns.attributeid);
+        console.log("ISEQUAL?", outHtml === editorData)
+        console.log(usedIds)
+        console.log(outHtml)
         this.setState({
             usedIds,
         }, () => {
             // Emit a value when the html changed
-            if (!this.state.dataEntryForm ||this.state.dataEntryForm.htmlCode !== outHtml) {
+            if (!this.state.dataEntryForm || this.state.dataEntryForm.htmlCode !== outHtml) {
                 console.log("FORM CHANGE")
                 this.props.onFormChange(outHtml);
             }
         });
     }
 
-    insertElement(id) {
+    insertElement(id, fieldType="attributeid" ) {
+        console.log(fieldType)
         if (this.state.usedIds.indexOf(id) !== -1) {
             return;
         }
-        return insElem(id, this.props.elements[id], this._editor);
+        return insElem(id, this.props.elements[id], this._editor, fieldType);
 
         this._editor.insertHtml(this.generateHtml(id), 'unfiltered_html');
         this.setState(state => ({ usedIds: state.usedIds.concat(id) }));

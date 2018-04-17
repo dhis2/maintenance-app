@@ -241,11 +241,12 @@ function createEventProgramStoreStateFromMetadataResponse(
                 {},
             );
 
+        const program = createProgramModel(programs);
+        program.dataEntryForm = createDataEntryFormModel(getOr({}, 'dataEntryForm', program))
+
         return {
-            program: createProgramModel(programs),
-            programStages: createProgramStageModels(
-                getOr([], 'programStages', first(programs)),
-            ),
+            program,
+            programStages: createProgramStageModels(programStages),
             programStageNotifications: extractProgramNotifications(
                 programStages,
             ),
@@ -334,7 +335,7 @@ export const programModelSave = action$ =>
             return successObs.concat(Observable.of(notifyUser({message: 'no_changes_to_be_saved', translate: true})).do(() =>
                 goToAndScrollUp('/list/programSection/program'),
             ));
-        });
+        }).catch(e => console.log(e));
 
 export const programModelSaveResponses = action$ =>
     Observable.merge(
