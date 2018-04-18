@@ -186,8 +186,7 @@ class ProgramRuleConditionField extends React.Component {
                     to="/edit/programSection/programRuleVariable/add"
                     target="_blank"
                     rel="noopener nofollow"
-                >
-                    {AddVariableButton}
+                >{AddVariableButton}
                 </Link>
                 {RefreshVariableButton}
             </div>
@@ -250,7 +249,7 @@ class ProgramRuleConditionField extends React.Component {
         };
 
         return (
-            <div style={{ ...styles.outerWrap, ...this.props.style }}>
+            <div style={Object.assign(styles.outerWrap, this.props.style)}>
                 <div style={styles.labelStyle}>{this.props.labelText}</div>
 
                 <div style={styles.rightWrap}>
