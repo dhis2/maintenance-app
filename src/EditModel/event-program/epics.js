@@ -242,7 +242,7 @@ function createEventProgramStoreStateFromMetadataResponse(
             );
 
         const program = createProgramModel(programs);
-        program.dataEntryForm = createDataEntryFormModel(getOr({}, 'dataEntryForm', program))
+        program.dataEntryForm = program.dataEntryForm ? createDataEntryFormModel(getOr({}, 'dataEntryForm', program)) : undefined
 
         return {
             program,
