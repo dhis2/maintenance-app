@@ -28,7 +28,7 @@ function ValidationRuleExpressionDialog({ open, close, actions, expressionDetail
             onRequestClose={close}
             modal
             actions={actions}
-            contentStyle={styles.customContentStyle}xw
+            contentStyle={styles.customContentStyle}
             title={d2.i18n.getTranslation(buttonLabel)}
             autoScrollBodyContent
         >
