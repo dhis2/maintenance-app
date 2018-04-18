@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
-import { withState, withProps, compose, onlyUpdateForKeys } from 'recompose';
+import React from 'react';
+import { withState, withProps, compose } from 'recompose';
+import Store from 'd2-ui/lib/store/Store';
+import { result } from 'lodash/fp';
+
+import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton/FlatButton';
+
 import MissingValueStrategy from './MissingValueStrategy';
 import SlidingWindow from './SlidingWindow';
-import Dialog from 'material-ui/Dialog';
-import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
-import Store from 'd2-ui/lib/store/Store';
-import FlatButton from 'material-ui/FlatButton/FlatButton';
-import { isUndefined } from 'lodash/fp';
 
 const styles = {
     saveButton: {
@@ -26,7 +28,7 @@ function ValidationRuleExpressionDialog({ open, close, actions, expressionDetail
             onRequestClose={close}
             modal
             actions={actions}
-            contentStyle={styles.customContentStyle}
+            contentStyle={styles.customContentStyle}xw
             title={d2.i18n.getTranslation(buttonLabel)}
             autoScrollBodyContent
         >
@@ -55,21 +57,29 @@ ValidationRuleExpressionDialog.contextTypes = {
 const enhanceExpressionDialog = compose(
     withState('expressionDetails', 'updateExpressionDetails', ({ value }) => ({ ...value })),
     withState('expressionStatusStore', 'updateStore', () => Store.create()),
-    withProps(({ close, save, value, store, expressionDetails, expressionStatusStore, updateExpressionDetails, buttonLabel }) => {
-        const isExpressionValid = isUndefined(expressionStatusStore.getState()) || expressionStatusStore.getState().status === 'OK';
+    withProps(({ close, save, value, expressionDetails, expressionStatusStore, updateExpressionDetails, buttonLabel }) => {
+        const isExpressionValid = result('getState.status', expressionStatusStore) === 'OK';
+
+        const onClickSave = () => save(expressionDetails);
+        const discardChanges = () => updateExpressionDetails({ ...value });
+
+        const onClickClose = () => {
+            discardChanges();
+            close();
+        };
 
         return ({
             buttonLabel,
             actions: [
                 <FlatButton
-                    onClick={close}
-                    label={<Translate>close</Translate>}
+                    onClick={onClickClose}
+                    label={<Translate>cancel</Translate>}
                 />,
                 <FlatButton
-                    onClick={() => save(expressionDetails)}
+                    onClick={onClickSave}
                     disabled={!isExpressionValid}
                     style={styles.saveButton}
-                    label={<Translate>done</Translate>}
+                    label={<Translate>save</Translate>}
                 />,
             ],
             onExpressionChanged: ({ description, formula }) => updateExpressionDetails({
@@ -86,7 +96,7 @@ const enhanceExpressionDialog = compose(
                 slidingWindow,
             }),
         });
-    })
+    }),
 );
 
 export default enhanceExpressionDialog(ValidationRuleExpressionDialog);
