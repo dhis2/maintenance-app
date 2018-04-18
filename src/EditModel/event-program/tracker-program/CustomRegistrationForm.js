@@ -4,6 +4,7 @@ import Checkbox from 'material-ui/Checkbox';
 import programStore from '../eventProgramStore';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import { CustomRegistrationDataEntryForm } from "../data-entry-form/EditCustomRegistrationForm";
+import { bindActionCreators } from 'redux';
 
 const styles = {
     outer: {
@@ -16,7 +17,7 @@ const styles = {
 
 class CustomRegistrationForm extends Component {
     state = {
-        useCustom: !!this.props.model.dataEntryForm,
+        useCustom: !!this.props.model.dataEntryForm && !!this.props.model.dataEntryForm.id,
     };
 
     handleUseCustom = (e, checked) => {
@@ -27,8 +28,15 @@ class CustomRegistrationForm extends Component {
         return <CustomRegistrationDataEntryForm />
     };
 
+
+    handleNameChange = (e, val) => {
+        console.log(e)
+        console.log(val);
+
+
+    }
+
     render() {
-        console.log(this.state.useCustom);
         return (
             <div style={styles.outer}>
                 <Checkbox
@@ -44,4 +52,5 @@ class CustomRegistrationForm extends Component {
         );
     }
 }
+
 export default addD2Context(CustomRegistrationForm);

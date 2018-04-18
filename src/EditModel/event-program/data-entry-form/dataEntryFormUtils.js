@@ -5,7 +5,7 @@ const inputPattern = /<input.*?\/>/gi;
 /* AttributeIdPattern is used in tracker-programs Custom registration forms
    programIdPattern is used in tracker-programs Custom registration forms
         Fixed to incidentDate and enrollmentDate
-* combinedIdPattern is used for:
+* id is used for combined-ids:
 *   - Event-programs data entry form (dataElementId-categoryOptionId)
 *   - Tracker-programs Data entry form (programStageId-dataElementId)*/
 export const elementPatterns = {
@@ -14,26 +14,16 @@ export const elementPatterns = {
     id: /id="(\w*?)-(\w*?)-val"/
 }
 
-const fieldTypes = {
-    'programid': 'programid',
-    'attributeid': 'attributeid',
-    'id': 'id'
-}
+//When matching with exec, match[0] will be idString, including the ID. Ie: attributeid="someid"
+const allPatterns = /attributeid="(\w*?)"|programid="(\w*?)"|id="((\w*?)-(\w*?)-val)"/
 
-const allPatterns = /attributeid="(\w*?)"|programid="(\w*?)"|id="(\w*?)-(\w*?)-val"/
-
+//Map over the position of the match of the pattern in the allPattern.
+//matchIndexes[attributeid] will be the id of the element matched.
 const matchIndexes = {
     'attributeid': 1,
-    'programid': 3,
-    'id': ''
+    'programid': 2,
+    'id': 3,
 }
-
-
-//These elements are static for Custom Registration Form
-const staticElements = [
-    'incidentDate',
-    'enrollmentDate'
-]
 
 export function generateHtmlForField(id, styleAttr, disabledAttr, label, nameAttr = "entryfield", fieldType='id') {
     const style = styleAttr ? ` style=${styleAttr}` : '';
@@ -62,6 +52,33 @@ export function transformElementsToCustomForm(elements) {
         }, {});
 }
 
+
+/**
+ * Gets the id and idString from a matched element.
+ *
+ *  The idString is the entire string to be used as a html-attribute.
+ *  Ie. attributeid="IpHINAT79UW"
+ *  The id is then "IpHINAT79UW".
+ *
+ * @param match the Regex-match object to use
+ * @returns {*} an object with idString, id and fieldType of the element.
+ */
+function getFieldInfoFromMatch(match) {
+    for(let patternId in matchIndexes) {
+        const index = matchIndexes[patternId];
+        const elemId = match[index];
+        if(elemId) {
+            let id = elemId;
+            return {
+                idString: match[0],
+                id,
+                fieldType: patternId
+            }
+        }
+    }
+    return null;
+}
+
 export function processFormData(formData, elements, idPattern) {
     const inHtml = formData;
     let outHtml = '';
@@ -73,18 +90,19 @@ export function processFormData(formData, elements, idPattern) {
     while (inputElement !== null) {
         outHtml += inHtml.substr(inPos, inputElement.index - inPos);
         inPos = inputPattern.lastIndex;
-        const fieldType = elementPatterns.attributeid
         const inputHtml = inputElement[0];
         const inputStyle = (/style="(.*?)"/.exec(inputHtml) || ['', ''])[1];
         const inputDisabled = /disabled/.exec(inputHtml) !== null;
 
         const idMatch = idPattern.exec(inputHtml);
         const allMatch = allPatterns.exec(inputHtml);
+        const { idString, id, fieldType} = getFieldInfoFromMatch(allMatch)
+        console.log(idString)
+        console.log(id)
         console.log(allMatch)
         console.log(idMatch)
-        if (idMatch) {
+        if (idString && id) {
          //   console.log(idMatch);
-            const id = idMatch.length > 2 ? `${idMatch[1]}-${idMatch[2]}-val` : `${idMatch[1]}`;
             usedIds.push(id);
             const label = elements && elements[id];
             outHtml += generateHtmlForField(id, inputStyle, inputDisabled, label, undefined, fieldType);

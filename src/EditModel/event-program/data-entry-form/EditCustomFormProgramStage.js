@@ -20,16 +20,13 @@ import CKEditor from './CKEditor';
 import '../../../../scss/EditModel/EditDataEntryFormProgramStage.scss';
 import { getProgramStageDataElementsByStageId } from "../notifications/selectors";
 import PaletteSection from './PaletteSection';
-import { bindFuncsToKeys, moveEditorSelection, processFormData, insertElement as insElem, elementPatterns } from "./dataEntryFormUtils";
+import { bindFuncsToKeys, moveEditorSelection, processFormData, insertElement as insElem } from "./dataEntryFormUtils";
 import PropTypes from 'prop-types';
 
 const programStageDataElementWithProgramStageId = programStageId => programStageDataElement => ({
     id: `${programStageId}.${programStageDataElement.id}`,
     displayName: programStageDataElement.displayName
 })
-
-const inputPattern = /<input.*?\/>/gi;
-const dataElementCategoryOptionIdPattern = /id="(\w*?)-(\w*?)-val"/;
 
 const PurePaletteSection = PaletteSection;
 
@@ -106,27 +103,22 @@ class EditDataEntryForm extends React.Component {
 
                 // Create inserter functions for all insertable elements
                 // This avoids having to bind the functions during rendering
-        /*        const insertFn = {};
-                Object.keys(this.operands).forEach((x) => {
-                    insertFn[x] = this.insertElement.bind(this, x);
-                });
-                Object.keys(this.flags).forEach((flag) => {
-                    insertFn[flag] = this.insertFlag.bind(this, flag);
-                }); */
                 const boundOps = bindFuncsToKeys(this.operands, this.insertElement, this);
-                const boundFlags = bindFuncsToKeys(this.flags, this.insertElement, this);
+                const boundFlags = bindFuncsToKeys(this.flags, this.insertFlag, this);
                 const insertFn = { ...boundOps, ...boundFlags}
 
-                const { outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.operands, elementPatterns.combinedIdPattern);
+                const { usedIds, outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.operands);
                 const formHtml = dataEntryForm ? outHtml : '';
 
                 this.setState({
+                    usedIds,
                     insertFn,
                     formHtml,
                     dataEntryForm,
                     formTitle: this.props.formTitle,
                 });
             }));
+
         // Create element filtering action
         this.filterAction = Action.create('filter');
         this.disposables.add(this.filterAction
@@ -148,16 +140,6 @@ class EditDataEntryForm extends React.Component {
     componentWillUnmount() {
         this.disposables.forEach(disposable => disposable.unsubscribe());
     }
-    //FIX loosing input-position on input
-    componentWillReceiveProps({ dataEntryForm }) {
-        if (this.state.dataEntryForm && dataEntryForm !== this.state.dataEntryForm) {
-            const { outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.operands, elementPatterns.combinedIdPattern);
-
-            const formHtml = outHtml || '';
-
-            //this._editor.setData(formHtml);
-        }
-    }
 
     handleDeleteClick() {
         this.props.onFormDelete();
@@ -169,24 +151,11 @@ class EditDataEntryForm extends React.Component {
         }
     }
 
-    generateHtml(id, styleAttr, disabledAttr) {
-        const style = styleAttr ? ` style=${styleAttr}` : '';
-        const disabled = disabledAttr ? ` disabled=${disabledAttr}` : '';
-
-        if (id.indexOf('-') !== -1) {
-            const label = this.operands && this.operands[id];
-            const attr = `name="entryfield" title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
-            return `<input id="${id}" ${attr}/>`;
-        }
-
-        log.warn('Failed to generate HTML for ID:', id);
-        return '';
-    }
-
     handleEditorChanged = (editorData) => {
        // this.processFormData.call(this, editorData)
        // return;
-        const { usedIds, outHtml} = processFormData(editorData, this.operands, elementPatterns.combinedIdPattern);
+        const { usedIds, outHtml} = processFormData(editorData, this.operands);
+        console.log(usedIds)
         this.setState({
             usedIds,
         }, () => {
@@ -203,12 +172,6 @@ class EditDataEntryForm extends React.Component {
             return;
         }
         return insElem(id, this.operands[id], this._editor);
-
-        this._editor.insertHtml(this.generateHtml(id), 'unfiltered_html');
-        this.setState(state => ({ usedIds: state.usedIds.concat(id) }));
-        // Move the current selection to just after the newly inserted element
-        const range = this._editor.getSelection().getRanges()[0];
-        range.moveToElementEditablePosition(range.endContainer, true);
     }
 
     insertFlag(img) {
@@ -308,9 +271,7 @@ EditDataEntryForm.propTypes = {
     onFormChange: PropTypes.func,
     onStyleChange: PropTypes.func,
     onFormDelete: PropTypes.func,
-    elements: PropTypes.shape({
-
-    })
+    elements: PropTypes.array,
 };
 
 EditDataEntryForm.defaulRFFtProps = {
@@ -345,28 +306,4 @@ const programStageDataEntryForm = compose(
     connect(undefined, mapDispatchToPropsForProgramStage)
 );
 
-const mapDispatchToPropsForProgram = (dispatch, { program }) => bindActionCreators({
-    onFormChange: curry(programDataEntryFormChanged)(program.id)('htmlCode'),
-    onStyleChange: curry(programDataEntryFormChanged)(program.id)('style'),
-    onFormDelete: programDataEntryFormRemove.bind(undefined, program.id),
-}, dispatch);
-
-const programDataEntryForm = compose(
-    mapPropsStream(props$ => props$
-        .combineLatest(
-            eventProgramStore,
-            (props, {program}) => ({
-                ...props,
-                program,
-                dataEntryForm: program.dataEntryForm,
-                dataElements: program.programTrackedEntityAttributes, //getProgramStageDataElementsByStageId(state)(programStage.id),
-                formTitle: program.displayName
-            })
-        )
-    ),
-    connect(undefined, mapDispatchToPropsForProgram)
-);
-
 export default programStageDataEntryForm(EditDataEntryForm);
-
-export const CustomRegistrationDataEntryForm = programDataEntryForm(EditDataEntryForm);

@@ -8,6 +8,6 @@ export const dataEntryFormRemove = programStageId => ({ type: PROGRAM_STAGE_DATA
 export const PROGRAM_DATA_ENTRY_FORM_FIELD_CHANGED = 'PROGRAM_DATA_ENTRY_FORM_FIELD_CHANGED';
 export const PROGRAM_DATA_ENTRY_FORM_REMOVE = 'PROGRAM_DATA_ENTRY_FORM_REMOVE';
 
-export const programDataEntryFormChanged = (programId, field, value) => ({ type: PROGRAM_DATA_ENTRY_FORM_FIELD_CHANGED, payload: { program: programId, field, value } });
+export const programDataEntryFormChanged = (field, value) => ({ type: PROGRAM_DATA_ENTRY_FORM_FIELD_CHANGED, payload: { field, value } });
 
 export const programDataEntryFormRemove = programId => ({ type: PROGRAM_DATA_ENTRY_FORM_REMOVE, payload: programId });

@@ -92,12 +92,10 @@ const ProgramDataEntryFormChangedEpic = action$ => action$
             const id = generateUid();
             dataEntryForm = d2.models.dataEntryForm.create({id, name: program.displayName})
         }
-
         log.debug('Setting', fieldName, 'to', value);
         dataEntryForm[fieldName] = value;
 
-
-        if (!program.dataEntryForm) {
+        if (!program.dataEntryForm || !program.dataEntryForm.id) {
             program.dataEntryForm = dataEntryForm;
         }
 
