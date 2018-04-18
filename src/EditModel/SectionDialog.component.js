@@ -255,6 +255,12 @@ class SectionDialog extends React.Component {
                     disabled={this.props.categoryCombos.length === 1}
                     style={{ width: 284 }}
                 />
+                <TextField
+                    fullWidth
+                    hintText={this.getTranslation('search_available_selected_items')}
+                    defaultValue={this.state.filterText}
+                    onChange={this.handleFilterChange}
+                />
             </div>
         );
     }
@@ -278,12 +284,6 @@ class SectionDialog extends React.Component {
             <div>
                 <div style={editorStyle}>
                     <label style={labelStyle}>{this.getTranslation('data_elements')}</label>
-                    <TextField
-                        fullWidth
-                        hintText={this.getTranslation('search_available_selected_items')}
-                        defaultValue={this.state.filterText}
-                        onChange={this.handleFilterChange}
-                    />
                     <GroupEditor
                         itemStore={dataElementStore}
                         assignedItemStore={assignedDataElementStore}
