@@ -89,7 +89,6 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
         );
         const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
             .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
-        console.log(fieldConfigs)
         return {
             fieldConfigs: fieldConfigsWithAttributeFieldsAndUniqueValidators,
             modelToEdit,
@@ -239,7 +238,6 @@ export default React.createClass({
 
     _onUpdateField(fieldName, value) {
         const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name == fieldName);
-        console.log(fieldConfig)
         if (fieldConfig && fieldConfig.beforeUpdateConverter) {
             return objectActions.update({ fieldName, value: fieldConfig.beforeUpdateConverter(value) });
         }

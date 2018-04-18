@@ -128,10 +128,6 @@ export const getMetaDataToSend = (state) => {
             payload.dataEntryForms.concat(programStageDataEntryForms) : programStageDataEntryForms;
     }
 
-    console.log(payload)
-
-
-
     return payload;
 };
 
