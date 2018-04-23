@@ -30,8 +30,6 @@ export function generateHtmlForField(id, styleAttr, disabledAttr, label, nameAtt
     const disabled = disabledAttr ? ` disabled=${disabledAttr}` : '';
 
     const attr = `name="${nameAttr}" title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
-    console.log(attr)
-    console.log("FIELDTYPE", fieldType)
     return `<input ${fieldType}="${id}" ${attr}/>`;
 
 }
@@ -94,13 +92,9 @@ export function processFormData(formData, elements, idPattern) {
         const inputStyle = (/style="(.*?)"/.exec(inputHtml) || ['', ''])[1];
         const inputDisabled = /disabled/.exec(inputHtml) !== null;
 
-        const idMatch = idPattern.exec(inputHtml);
         const allMatch = allPatterns.exec(inputHtml);
         const { idString, id, fieldType} = getFieldInfoFromMatch(allMatch)
-        console.log(idString)
-        console.log(id)
-        console.log(allMatch)
-        console.log(idMatch)
+
         if (idString && id) {
          //   console.log(idMatch);
             usedIds.push(id);
@@ -139,13 +133,10 @@ export function bindFuncsToKeys(obj, func, selfArg, extraArgs) {
 }
 
 export function insertElement(id, label, editor, fieldType = 'id') {
-    console.log(fieldType)
     const elementHtml = generateHtmlForField(id, null, null, label, undefined, fieldType);
-    console.log("ElementHTML", elementHtml);
     editor.insertHtml(elementHtml, 'unfiltered_html');
     // Move the current selection to just after the newly inserted element
     const range = editor.getSelection().getRanges()[0];
-    console.log(range)
     range && range.moveToElementEditablePosition(range.endContainer, true);
 }
 
