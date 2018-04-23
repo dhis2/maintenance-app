@@ -5,6 +5,8 @@ import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 // ___ programSelector :: StoreState -> Model<Program>
 const programSelector = get('program');
 
+const progamDataEntrySelector = get('program.dataEntryForm');
+
 // ___ programStagesSelector :: StoreState -> Array<Model<ProgramStage>>
 const programStagesSelector = get('programStages');
 
@@ -71,6 +73,12 @@ export const getMetaDataToSend = (state) => {
     if (isProgramDirty(state)) {
         payload.programs = [programSelector(state)]
             .map(modelToJson);
+
+        //For custom-form
+        const programDataEntryForm = state.program.dataEntryForm;
+        if(programDataEntryForm && programDataEntryForm.id && programDataEntryForm.isDirty()) {
+            payload.dataEntryForms  = [programDataEntryForm].map(modelToJson);
+        }
     }
 
     if (isProgramStageDirty(state)) {
@@ -107,16 +115,18 @@ export const getMetaDataToSend = (state) => {
         )
     }
 
+    //Program stage dataEntryForms
     if (hasDirtyDataEntryForms(state)) {
         const dataEntryForms = dataEntryFormsSelector(state);
-
-        payload.dataEntryForms = Object
+        const programStageDataEntryForms = Object
             .keys(dataEntryForms)
             .map(get(__, dataEntryForms))
             .filter(checkIfDirty)
             .map(modelToJson);
-    }
 
+        payload.dataEntryForms = payload.dataEntryForms ?
+            payload.dataEntryForms.concat(programStageDataEntryForms) : programStageDataEntryForms;
+    }
 
     return payload;
 };

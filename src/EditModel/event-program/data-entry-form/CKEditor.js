@@ -64,13 +64,13 @@ export default class CKEditor extends Component {
         return false;
     }
 
-    setContainerRef(textarea) {
+    setContainerRef = (textarea) => {
         this.editorContainer = textarea;
     }
 
     render() {
         return (
-            <textarea ref={this.setContainerRef.bind(this)} />
+            <textarea ref={this.setContainerRef} />
         );
     }
 }
