@@ -28,8 +28,9 @@ const matchIndexes = {
 export function generateHtmlForField(id, styleAttr, disabledAttr, label, nameAttr = "entryfield", fieldType='id') {
     const style = styleAttr ? ` style=${styleAttr}` : '';
     const disabled = disabledAttr ? ` disabled=${disabledAttr}` : '';
-
-    const attr = `name="${nameAttr}" title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
+    const name = nameAttr ? `name="${nameAttr}"` : '';
+    console.log(name)
+    const attr = `${name} title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
     return `<input ${fieldType}="${id}" ${attr}/>`;
 
 }
@@ -77,12 +78,20 @@ function getFieldInfoFromMatch(match) {
     return null;
 }
 
-export function processFormData(formData, elements, idPattern) {
+/**
+ * Processes the formData and generates the output.
+ * This is used when the form is loaded, and we parse through
+ * the html and generate meta-data, like the ids used in the form.
+ * @param formData to use (raw html)
+ * @param elements elements that can be in the form. Object with
+ * the shape of inputPattern: Name of element. Like: { kffjgj5kf12: Name, kggjgj5kf12: Gender  }
+ * @returns {{usedIds: Array, outHtml: string}}
+ */
+export function processFormData(formData, elements) {
     const inHtml = formData;
     let outHtml = '';
 
     const usedIds = [];
-    idPattern = elementPatterns.attributeid
     let inputElement = inputPattern.exec(inHtml);
     let inPos = 0;
     while (inputElement !== null) {
@@ -99,7 +108,8 @@ export function processFormData(formData, elements, idPattern) {
          //   console.log(idMatch);
             usedIds.push(id);
             const label = elements && elements[id];
-            outHtml += generateHtmlForField(id, inputStyle, inputDisabled, label, undefined, fieldType);
+            const nameAttr = fieldType === "id" ? "entryfield" : null; //used for data-entry
+            outHtml += generateHtmlForField(id, inputStyle, inputDisabled, label, nameAttr, fieldType);
         } else {
             outHtml += inputHtml;
         }
@@ -133,7 +143,8 @@ export function bindFuncsToKeys(obj, func, selfArg, extraArgs) {
 }
 
 export function insertElement(id, label, editor, fieldType = 'id') {
-    const elementHtml = generateHtmlForField(id, null, null, label, undefined, fieldType);
+    const nameAttr = fieldType === "id" ? "entryfield" : null; //used for data-entry
+    const elementHtml = generateHtmlForField(id, null, null, label, nameAttr, fieldType);
     editor.insertHtml(elementHtml, 'unfiltered_html');
     // Move the current selection to just after the newly inserted element
     const range = editor.getSelection().getRanges()[0];
