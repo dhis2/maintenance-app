@@ -29,7 +29,7 @@ export function generateHtmlForField(id, styleAttr, disabledAttr, label, nameAtt
     const style = styleAttr ? ` style=${styleAttr}` : '';
     const disabled = disabledAttr ? ` disabled=${disabledAttr}` : '';
     const name = nameAttr ? `name="${nameAttr}"` : '';
-    console.log(name)
+
     const attr = `${name} title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
     return `<input ${fieldType}="${id}" ${attr}/>`;
 

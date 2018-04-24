@@ -76,12 +76,8 @@ export const getMetaDataToSend = (state) => {
 
         //For custom-form
         const programDataEntryForm = state.program.dataEntryForm;
-        if(programDataEntryForm && programDataEntryForm.id) {
-            if(programDataEntryForm.isDirty()) {
-                payload.dataEntryForms  = [programDataEntryForm].map(modelToJson);
-            }
-        } else {
-            state.program.dataEntryForm = undefined;
+        if(programDataEntryForm && programDataEntryForm.id && programDataEntryForm.isDirty()) {
+            payload.dataEntryForms  = [programDataEntryForm].map(modelToJson);
         }
     }
 
