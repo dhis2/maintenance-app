@@ -99,7 +99,7 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
 }
 
 async function loadSelectedOrganisationUnitState() {
-    if (appState.state && appState.state.selectedOrganisationUnit && appState.state.selectedOrganisationUnit.length) {
+    if (appState.state && appState.state.selectedOrganisationUnit) {
         return appState.state.selectedOrganisationUnit;
     }
 
