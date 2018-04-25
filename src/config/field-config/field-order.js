@@ -152,6 +152,8 @@ const fieldOrderByName = new Map([
         'phoneNumber',
         'coordinates',
         'dataSets',
+        'programs'
+
     ]],
     ['organisationUnitGroup', [
         'name',
