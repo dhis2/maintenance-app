@@ -82,6 +82,34 @@ export const requestParams = new Map([
     }],
 ]);
 
+/**
+ * Called when cloning through the context-menu
+ *
+ * Some objects may need special case handling when cloning,
+ * and cannot be too generic - as some objects need new ID's for
+ * nested objects (often the case with embedded objects),
+ * and some should keep them (for shared references between objects).
+ *
+ * Ideally this should be done by the server.
+ *
+ * @param objectType to check for. ie. "indicator"
+ * @param model of the objectType to use for the special case.
+ * @returns {*} the model after its's processed by a special case or the original model.
+ */
+function cloneHandlerByObjectType(objectType, model) {
+    switch(objectType) {
+        case'programIndicator': {
+            //Clear analyticsPeriodBoundaries ids, let server generate them
+            model.analyticsPeriodBoundaries = model.analyticsPeriodBoundaries.map((a) => ({
+                ...a,
+                id: undefined
+            }))
+            break;
+        }
+    }
+    return model;
+}
+
 function loadModelFromD2(objectType, objectId) {
     return getD2().then((d2) => {
         if (d2.models[objectType]) {
@@ -107,7 +135,7 @@ const singleModelStoreConfig = {
                 model.id = undefined;
                 // Some objects also have a uuid property that should be cleared
                 model.uuid = undefined;
-
+                model = cloneHandlerByObjectType(objectType, model);
                 this.setState(model);
             });
 

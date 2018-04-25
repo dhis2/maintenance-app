@@ -1,6 +1,6 @@
 import React from 'react';
-import snackActions from './snack.actions';
 import { branch, lifecycle } from 'recompose';
+import snackActions from './snack.actions';
 
 export const emptyComponent = () => null;
 
@@ -17,8 +17,7 @@ export const RenderSnackbarError = lifecycle({
  * @param snackAction - snackBarAction to fire if test passes
  * @returns {*} A component that renders nothing if test passes
  */
-export const branchWithMessage = (test, snackAction) => {
-    return branch(test, _ => _ =>
-        <RenderSnackbarError snackAction={snackAction} />
+export const branchWithMessage = (test, snackAction) =>
+    branch(test, _ => _ =>
+        <RenderSnackbarError snackAction={snackAction} />,
     );
-};

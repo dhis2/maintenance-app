@@ -91,7 +91,7 @@
     "react-speed-dial": "^0.4.7",
     "react-test-renderer": "15",
     "redux": "^3.6.0",
-    "redux-observable": "^0.14.1",
+    "redux-observable": "0.18.0",
     "rxjs": "^5.2.0"
   },
   "pre-commit": [
