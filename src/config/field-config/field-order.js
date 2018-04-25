@@ -316,6 +316,7 @@ const fieldOrderByName = new Map([
     ['trackedEntityType', [
         'name',
         'description',
+        'allowAuditLog',
         'minAttributesRequiredToSearch',
         'maxTeiCountToReturn',
         'trackedEntityTypeAttributes',
