@@ -44,6 +44,8 @@ const styles = {
         alignItems: 'center',
     },
     formSection: {
+        display: 'flex',
+        flexWrap: 'wrap'
     },
     cancelButton: {
         marginLeft: '2rem',
@@ -141,6 +143,13 @@ class EditDataEntryForm extends React.Component {
         this.disposables.forEach(disposable => disposable.unsubscribe());
     }
 
+    //Used for when the form is deleted, to update the form
+    componentWillReceiveProps({ dataEntryForm }) {
+        if (this.props.dataEntryForm && (!dataEntryForm || !dataEntryForm.id )) {
+            this._editor.setData('');
+        }
+    }
+
     handleDeleteClick() {
         this.props.onFormDelete();
     }
@@ -152,16 +161,16 @@ class EditDataEntryForm extends React.Component {
     }
 
     handleEditorChanged = (editorData) => {
-       // this.processFormData.call(this, editorData)
-       // return;
+        //prevent creation of new dataEntryForm when empty
+        if(!editorData && !this.props.dataEntryForm) {
+            return;
+        }
         const { usedIds, outHtml} = processFormData(editorData, this.operands);
-        console.log(usedIds)
         this.setState({
             usedIds,
         }, () => {
             // Emit a value when the html changed
-            if (!this.state.dataEntryForm ||this.state.dataEntryForm.htmlCode !== outHtml) {
-                console.log("FORM CHANGE")
+            if (!this.props.dataEntryForm || this.props.dataEntryForm.htmlCode !== outHtml) {
                 this.props.onFormChange(outHtml);
             }
         });
@@ -274,7 +283,7 @@ EditDataEntryForm.propTypes = {
     elements: PropTypes.array,
 };
 
-EditDataEntryForm.defaulRFFtProps = {
+EditDataEntryForm.defaultProps = {
     onFormChange: noop,
     onStyleChange: noop,
     onFormDelete: noop,

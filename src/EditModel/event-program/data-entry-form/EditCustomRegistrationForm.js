@@ -48,6 +48,8 @@ const styles = {
         alignItems: 'center',
     },
     formSection: {
+        display: 'flex',
+        flexWrap: 'wrap'
     },
     cancelButton: {
         marginLeft: '2rem',
@@ -77,14 +79,14 @@ class EditDataEntryForm extends React.Component {
         this.getTranslation = this.context.d2.i18n.getTranslation.bind(this.context.d2.i18n);
 
         const dataEntryForm = props.dataEntryForm;
-        const { usedIds, outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), this.props.elements);
-        const formHtml = dataEntryForm ? outHtml : '';
 
         const programElements = {
             'incidentDate': this.getTranslation('date_of_incident'),
             'enrollmentDate': this.getTranslation('date_of_enrollment')
         }
 
+        const { usedIds, outHtml } = processFormData(getOr('', 'htmlCode', dataEntryForm), { ...programElements, ...this.props.elements });
+        const formHtml = dataEntryForm ? outHtml : '';
         this.state = {
             usedIds: usedIds || [],
             filter: '',
@@ -121,6 +123,13 @@ class EditDataEntryForm extends React.Component {
         this.disposables.forEach(disposable => disposable.unsubscribe());
     }
 
+    //Used for when the form is deleted, to update the form
+    componentWillReceiveProps({ dataEntryForm }) {
+        if (this.props.dataEntryForm && !dataEntryForm) {
+            this._editor.setData('');
+        }
+    }
+
     handleDeleteClick() {
         this.props.onFormDelete();
     }
@@ -132,13 +141,17 @@ class EditDataEntryForm extends React.Component {
     }
 
     handleEditorChanged = (editorData) => {
-        const { usedIds, outHtml} = processFormData(editorData, this.props.elements);
+        //prevent creation of new dataEntryForm when empty
+        if(!editorData && !this.props.dataEntryForm) {
+            return;
+        }
+        const { usedIds, outHtml} = processFormData(editorData, { ...this.state.programElements, ...this.props.elements } );
+
         this.setState({
             usedIds,
         }, () => {
             // Emit a value when the html changed
             if (!this.props.dataEntryForm || this.props.dataEntryForm.htmlCode !== outHtml) {
-                console.log("FORM CHANGE")
                 this.props.onFormChange(outHtml);
             }
         });
@@ -218,7 +231,7 @@ class EditDataEntryForm extends React.Component {
                             <div style={styles.formSection}>
                                 <TextField
                                     floatingLabelText={this.getTranslation('form_name')}
-                                    defaultValue={this.props.dataEntryForm.name}
+                                    defaultValue={this.props.program.displayName}
                                     onChange={this.props.onFormNameChange} />
                                 <SelectField
                                     value={getOr('NORMAL', 'style', props.dataEntryForm)}
