@@ -110,8 +110,8 @@ const actionTypeFieldMapping = {
     },
     SENDMESSAGE: {
         label: 'send_message',
-        optional: ['programNotificationTemplate']
-    }
+        optional: ['programNotificationTemplate'],
+    },
 };
 
 export default actionTypeFieldMapping;
