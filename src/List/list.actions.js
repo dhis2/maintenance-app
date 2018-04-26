@@ -99,7 +99,12 @@ listActions.loadList
             throw new Error(`${modelName} is not a valid schema name`);
         }
 
-        listStore.setState(Object.assign(listStore.state || {}, { searchString: '' }));
+        //Remember the searchString if its the same model
+        const searchString = listStore.state && listStore.state.modelType
+            && listStore.state.modelType === modelName ?
+                listStore.state.searchString : '';
+
+        listStore.setState(Object.assign(listStore.state || {}, { searchString }));
         return Observable.of({
             schema: d2.models[modelName],
             query: getQueryForSchema(modelName),

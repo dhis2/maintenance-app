@@ -166,12 +166,14 @@ class List extends Component {
                     return; // Received value is not iterable, keep waiting
                 }
                 listActions.hideDetailsBox();
+
                 this.setState({
                     dataRows: listStoreValue.list,
                     pager: listStoreValue.pager,
                     tableColumns: listStoreValue.tableColumns,
                     filters: listStoreValue.filters,
                     isLoading: false,
+                    searchString: listStoreValue.searchString,
                 });
             });
 
@@ -351,7 +353,7 @@ class List extends Component {
 
         return (
             <div>
-                <SearchBox searchObserverHandler={this.searchListByName} />
+                <SearchBox initialValue={this.state.searchString} searchObserverHandler={this.searchListByName} />
                 {getFilterFieldsForType(this.props.params.modelType).map((filterField) => {
                     const modelDefinition = this.context.d2.models[this.props.params.modelType];
 

@@ -12,6 +12,7 @@ const unsearchableSections = [
 const SearchBox = React.createClass({
     propTypes: {
         searchObserverHandler: React.PropTypes.func.isRequired,
+        initialValue: React.PropTypes.string
     },
 
     mixins: [ObservedEvents, Translate],
@@ -19,7 +20,7 @@ const SearchBox = React.createClass({
     getInitialState() {
         return {
             showSearchField: false,
-            value: '',
+            value: this.props.initialValue || '',
         };
     },
 
@@ -37,7 +38,6 @@ const SearchBox = React.createClass({
 
         this.subscription = currentSubSection$
             .subscribe(currentSection => this.setState({
-                value: '',
                 showSearchField: !unsearchableSections.includes(currentSection),
             }));
     },
