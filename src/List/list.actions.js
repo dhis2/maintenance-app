@@ -11,9 +11,14 @@ import appState from '../App/appStateStore';
 import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForType } from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = [
-    'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
+    'displayName', 'name', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
     'code', 'publicAccess', 'access', 'href', 'level',
 ].join(',');
+
+//Set over schemas that should not filter out name=default
+const schemasThatShouldHaveDefaultInTheList = new Set([
+    'categoryOptionCombo',
+]);
 
 const listActions = Action.createActionsFromNames([
     'loadList',
@@ -26,7 +31,15 @@ const listActions = Action.createActionsFromNames([
     'hideDetailsBox',
 ]);
 
+/**
+ * Filters the modelDefinition on displayname, shortName, id and code
+ *
+ * @param searchString to filter on
+ * @param modelDefinition to filter
+ * @returns {ModelDefinition} the modelDefinition with applied filters.
+ */
 function applySearchFilter(searchString, modelDefinition) {
+    //map of what property to filter on the modelDefinition, and what operator to use
     const filterProps = {
         'shortName': 'token',
         'id': 'equals',
@@ -36,7 +49,7 @@ function applySearchFilter(searchString, modelDefinition) {
     const filters = modelDefinition.filter().logicMode('OR');
     Object.keys(filterProps).map((key) => {
         const filterFuncName = filterProps[key];
-        if(modelDefinition.modelProperties[key]) { //do not send if model does not have the prop
+        if(modelDefinition.modelProperties[key]) { //apply only if model has the prop
             filters.on(key)[filterFuncName](searchString);
         }
     })
@@ -81,15 +94,27 @@ function applyCurrentFilters(modelDefinitions, modelName) {
 }
 
 function getSchemaWithFilters(modelDefinitions, modelName) {
-    const schemasThatShouldHaveDefaultInTheList = new Set([
-        'categoryOptionCombo',
-    ]);
-
-    if (!schemasThatShouldHaveDefaultInTheList.has(modelName)) {
-        //FIXME: What to do with this filter? Cannot do both AND query and OR-query. When is default-name used?
-        return applyCurrentFilters(modelDefinitions, modelName)//.filter().logicMode('AND').on('name').notEqual('default');
-    }
     return applyCurrentFilters(modelDefinitions, modelName);
+}
+
+/**
+ * As we cannot have both OR and AND. We need to filter out default
+ * names on the client side.
+ * This is done by removing any entries with name equal 'default'
+ * @param modelCollection to remove default names from
+ * @returns {*} the modelCollection with removed names
+ */
+
+function removeDefaultNamesFromCollection(modelCollection) {
+    if (!schemasThatShouldHaveDefaultInTheList.has(modelCollection.modelDefinition.name)) {
+        for(let [key, value] of modelCollection.entries()) {
+            if(value.name && value.name === 'default') {
+                log.debug("DELETED KEY", key, "with value ", value)
+                modelCollection.delete(key);
+            }
+        }
+    }
+    return modelCollection;
 }
 
 function getOrderingForSchema(modelName) {
@@ -112,6 +137,8 @@ function getQueryForSchema(modelName) {
 }
 
 listActions.setListSource.subscribe((action) => {
+    //FIXME: Decide if we should filter dem out
+    removeDefaultNamesFromCollection(action.data);
     listStore.listSourceSubject.next(Observable.of(action.data));
 });
 
@@ -201,29 +228,6 @@ listActions.searchByName
         complete(`${data.modelType} list with search on 'displayName' for '${data.searchString}' is loading`);
     }, log.error.bind(log));
 
-//search by name, displayname, UID, short name, code
-listActions.searchByIdentifiers
-    .filter(({ data }) => !nonDefaultSearchSchemas.has(data.modelType))
-    .subscribe(async ({ data, complete, error }) => {
-        const d2 = await getInstance();
-
-        if (!d2.models[data.modelType]) {
-            error(`${data.modelType} is not a valid schema name`);
-        }
-
-        if (data.searchString) {
-            listStore.setState(Object.assign(listStore.state, { searchString: data.searchString }));
-        } else {
-            listStore.setState(Object.assign(listStore.state, { searchString: '' }));
-        }
-
-        const searchResultsCollection = await getSchemaWithFilters(d2.models, data.modelType)
-            .list(getQueryForSchema(data.modelType));
-
-        listActions.setListSource(searchResultsCollection);
-
-        complete(`${data.modelType} list with search on 'displayName' for '${data.searchString}' is loading`);
-    }, log.error.bind(log));
 // ~
 // ~ Filter current list by property
 // ~

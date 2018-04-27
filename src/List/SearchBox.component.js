@@ -61,7 +61,7 @@ const SearchBox = React.createClass({
                     fullWidth={false}
                     type="search"
                     onChange={this._onKeyUp}
-                    floatingLabelText={`${this.getTranslation('search_by_name')}`}
+                    floatingLabelText={`${this.getTranslation('search_by_name_code_id')}`}
                 />
             </div>
         ) : null;
