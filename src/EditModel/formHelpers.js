@@ -78,7 +78,6 @@ function setRequiredFieldsLabelText(fieldConfig, d2) {
 function setRequiredFieldsStepName(fieldConfig, modelType, d2) {
     // TODO: Find way to fix programNotificationTemplate sending the correct modelType
     if (fieldGroups.isGroupedFields(modelType) && modelType !== 'programNotificationTemplate') {
-        console.log(modelType);
         const stepNo = fieldGroups.groupNoByName(fieldConfig.name, modelType);
         const stepName = fieldGroups.groupNameByStep(stepNo, modelType);
         fieldConfig.step = `${stepNo + 1}: ${d2.i18n.getTranslation(stepName)}`;

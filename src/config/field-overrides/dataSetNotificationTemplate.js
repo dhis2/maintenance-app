@@ -22,8 +22,6 @@ export default new Map([
     }],
     ['messageTemplate', {
         component: DataSetNotificationSubjectAndMessageTemplateFields,
-        required: true,
-        isRequired: true,
     }],
     ['notificationRecipient', {
         required: true,

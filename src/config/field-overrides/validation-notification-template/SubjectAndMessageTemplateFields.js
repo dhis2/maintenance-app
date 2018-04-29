@@ -86,7 +86,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
                                 multiLine
                                 fullWidth
                                 errorText={this.props.errorText}
-                                isRequired={this.props.isRequired}
+                                required={this.props.isRequired}
                                 floatingLabelText={`${messageLabel} ${this.props.isRequired ? '(*)' : ''}`}
                                 onBlur={this.setActiveField('messageTemplate')}
                                 value={this.props.model.messageTemplate || ''}
