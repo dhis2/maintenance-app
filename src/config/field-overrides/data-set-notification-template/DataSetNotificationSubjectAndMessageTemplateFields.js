@@ -21,10 +21,12 @@ const toVariableType = name => ['V', name];
 const DataSetNotificationSubjectAndMessageTemplateFields = compose(
     withProps({
         variableTypes: map(toVariableType, DATA_SET_VARIABLES),
+        isRequired: true,
     }),
     mapProps(props => ({
         ...props,
         onUpdate: actions.update,
+        isRequired: true,
     })),
 )(SubjectAndMessageTemplateFields);
 

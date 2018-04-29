@@ -1,15 +1,21 @@
+import React from 'react';
+
+import { Observable } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
-import FormFieldsForModel from '../forms/FormFieldsForModel';
-import FormFieldsManager from '../forms/FormFieldsManager';
-import fieldOrderNames from '../config/field-config/field-order';
-import fieldOverrides from '../config/field-overrides/index';
-import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { identity, noop, compose } from 'lodash/fp';
-import { Observable } from 'rxjs';
-import React from 'react';
+
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
-import {applyRulesToFieldConfigs, getRulesForModelType} from "./form-rules";
+
+import FormFieldsForModel from '../forms/FormFieldsForModel';
+import FormFieldsManager from '../forms/FormFieldsManager';
+
+import fieldOrderNames from '../config/field-config/field-order';
+import fieldGroups from '../config/field-config/field-groups';
+import fieldOverrides from '../config/field-overrides/index';
+
+import { createFieldConfig, typeToFieldMap } from '../forms/fields';
+import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
 
 function getLabelText(labelText, fieldConfig = {}) {
     // Add required indicator when the field is required
@@ -17,6 +23,66 @@ function getLabelText(labelText, fieldConfig = {}) {
         return `${labelText} (*)`;
     }
     return labelText;
+}
+
+function createAttributeFieldConfigs(d2, schemaName) {
+    const modelDefinition = d2.models[schemaName];
+
+    return Object
+        .keys(modelDefinition.attributeProperties)
+        .map((attributeName) => {
+            const attribute = modelDefinition.attributeProperties[attributeName];
+            return createFieldConfig({
+                name: attribute.name,
+                valueType: attribute.valueType,
+                type: typeToFieldMap.get(attribute.optionSet ? 'CONSTANT' : attribute.valueType),
+                required: Boolean(attribute.mandatory),
+                fieldOptions: {
+                    labelText: attribute.name,
+                    options: attribute.optionSet ? attribute.optionSet.options.map(option => ({
+                        name: option.displayName || option.name,
+                        value: option.code,
+                    })) : [],
+                },
+            }, modelDefinition, d2.models);
+        });
+}
+
+// Translate the sync validator messages if there are any validators
+function translateValidators(fieldConfig, d2) {
+    if (fieldConfig.validators) {
+        fieldConfig.validators = fieldConfig.validators
+            .map(validator => ({
+                ...validator,
+                message: d2.i18n.getTranslation(validator.message),
+            }));
+    }
+}
+
+// Get the field's label with required indicator if the field is required
+// Save one translated label for validation messages
+function setRequiredFieldsLabelText(fieldConfig, d2) {
+    fieldConfig.translatedName = d2.i18n.getTranslation(fieldConfig.props.labelText);
+    fieldConfig.props.labelText = getLabelText(
+        fieldConfig.translatedName,
+        fieldConfig,
+    );
+}
+
+/* 
+ * If the modelType are grouped in field-groups.js, the step number and group/step name 
+ * will be added to the fieldConfig. This string can later be used for the validating
+ * step in EditModelForm.isRequiredFieldsValid to tell the user which step to find the 
+ * non-valid required field.
+ */
+function setRequiredFieldsStepName(fieldConfig, modelType, d2) {
+    // TODO: Find way to fix programNotificationTemplate sending the correct modelType
+    if (fieldGroups.isGroupedFields(modelType) && modelType !== 'programNotificationTemplate') {
+        console.log(modelType);
+        const stepNo = fieldGroups.groupNoByName(fieldConfig.name, modelType);
+        const stepName = fieldGroups.groupNameByStep(stepNo, modelType);
+        fieldConfig.step = `${stepNo + 1}: ${d2.i18n.getTranslation(stepName)}`;
+    }
 }
 
 export async function createFieldConfigForModelTypes(modelType, forcedFieldOrderNames, includeAttributes = true, customFieldOrderName) {
@@ -29,20 +95,12 @@ export async function createFieldConfigForModelTypes(modelType, forcedFieldOrder
         formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
     }
 
-    return formFieldsManager.getFormFieldsForModel({ modelDefinition: d2.models[modelType] }, customFieldOrderName)
+    return formFieldsManager
+        .getFormFieldsForModel({ modelDefinition: d2.models[modelType] }, customFieldOrderName)
         .map((fieldConfig) => {
-            // Translate the sync validator messages if there are any validators
-            if (fieldConfig.validators) {
-                fieldConfig.validators = fieldConfig.validators
-                    .map(validator => ({
-                        ...validator,
-                        message: d2.i18n.getTranslation(validator.message),
-                    }));
-            }
-
-            // Get the field's label with required indicator if the field is required
-            fieldConfig.props.labelText = getLabelText(d2.i18n.getTranslation(fieldConfig.props.labelText), fieldConfig);
-
+            translateValidators(fieldConfig, d2);
+            setRequiredFieldsStepName(fieldConfig, modelType, d2);
+            setRequiredFieldsLabelText(fieldConfig, d2);
             return fieldConfig;
         }).concat(includeAttributes ? createAttributeFieldConfigs(d2, modelType) : []);
 }
@@ -80,30 +138,6 @@ export function addUniqueValidatorWhenUnique(fieldConfig, modelToEdit) {
     }
 
     return fieldConfig;
-}
-
-function createAttributeFieldConfigs(d2, schemaName) {
-    const modelDefinition = d2.models[schemaName];
-
-    return Object
-        .keys(modelDefinition.attributeProperties)
-        .map((attributeName) => {
-            const attribute = modelDefinition.attributeProperties[attributeName];
-
-            return createFieldConfig({
-                name: attribute.name,
-                valueType: attribute.valueType,
-                type: typeToFieldMap.get(attribute.optionSet ? 'CONSTANT' : attribute.valueType),
-                required: Boolean(attribute.mandatory),
-                fieldOptions: {
-                    labelText: attribute.name,
-                    options: attribute.optionSet ? attribute.optionSet.options.map(option => ({
-                        name: option.displayName || option.name,
-                        value: option.code,
-                    })) : [],
-                },
-            }, modelDefinition, d2.models);
-        });
 }
 
 export function isAttribute(model, fieldConfig) {
@@ -155,8 +189,8 @@ function addValuesToFieldConfigs(fieldConfigs, model) {
  * @param customFieldOrderName - Custom name for the "schema", useful if the same schema has multiple purposes.
  * Ie. programNotificationTemplate, which are used in program Notification and programStage notifications.
  */
-export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity, includeAttributes, runRules=true, customFieldOrderName) {
-    filterFieldConfigs = filterFieldConfigs ? filterFieldConfigs : identity;
+export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity, includeAttributes, runRules = true, customFieldOrderName) {
+    filterFieldConfigs = filterFieldConfigs || identity;
     return mapPropsStream(props$ => props$
         .filter(({ model }) => model)
         .combineLatest(
@@ -168,11 +202,10 @@ export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = i
                     : fieldConfigsWithValues;
 
                 return {
-                ...props,
-                fieldConfigs: fieldConfigsToUse
-            }}
-        )
-    );
+                    ...props,
+                    fieldConfigs: fieldConfigsToUse,
+                };
+            }));
 }
 
 const convertValueUsingFieldConverter = (fieldConfigs, onChangeCallback) => (fieldName, value) => {
@@ -186,8 +219,7 @@ const convertValueUsingFieldConverter = (fieldConfigs, onChangeCallback) => (fie
 export function createFormFor(source$, schema, properties, includeAttributes, customFieldOrderName) {
     const enhance = compose(
         mapPropsStream(props$ => props$
-            .combineLatest(source$, (props, model) => {
-                return { ...props, model }})
+            .combineLatest(source$, (props, model) => ({ ...props, model })),
         ),
         createFieldConfigsFor(schema, properties, undefined, includeAttributes, false, customFieldOrderName),
     );
@@ -220,4 +252,6 @@ export function createFormFor(source$, schema, properties, includeAttributes, cu
  * @returns {function(*): {props: {}}} fieldConfig with the props added.
  */
 export const addPropsToFieldConfig = (props, fieldNames = []) => fieldConfig =>
-    fieldNames.length < 1 || fieldNames.includes(fieldConfig.name) ? { ...fieldConfig, props: { ...fieldConfig.props, ...props}} : fieldConfig;
+    ((fieldNames.length < 1 || fieldNames.includes(fieldConfig.name))
+        ? { ...fieldConfig, props: { ...fieldConfig.props, ...props } }
+        : fieldConfig);

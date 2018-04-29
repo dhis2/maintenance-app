@@ -1,31 +1,33 @@
 import React from 'react';
-
 import log from 'loglevel';
 import { Observable } from 'rxjs';
 
-import { Step, Stepper, StepButton } from 'material-ui/Stepper';
-
 import { getInstance } from 'd2/lib/d2';
 import { isString } from 'd2-utilizr';
+
+import { Step, Stepper, StepButton } from 'material-ui/Stepper';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 
-import fieldGroups from '../config/field-config/field-groups';
-import disabledOnEdit from '../config/disabled-on-edit';
-import modelToEditStore from './modelToEditStore';
-import objectActions from './objectActions';
-import snackActions from '../Snackbar/snack.actions';
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
 import SharingNotification from './SharingNotification.component';
 import FormButtons from './FormButtons.component';
+
+import fieldGroups from '../config/field-config/field-groups';
 import extraFields from './extraFields';
 
-import appState from '../App/appStateStore';
-import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttributeFieldConfigs } from './formHelpers';
-import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
+import disabledOnEdit from '../config/disabled-on-edit';
+import modelToEditStore from './modelToEditStore';
 
+import objectActions from './objectActions';
+import snackActions from '../Snackbar/snack.actions';
+
+import appState from '../App/appStateStore';
+import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique } from './formHelpers';
+import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
+import getFirstInvalidFieldMessage from './form-helpers/validateFields';
 
 const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
@@ -40,7 +42,8 @@ const isAddOperation = model => model.id === undefined;
 
 const d2$ = Observable.fromPromise(getInstance());
 
-const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, editFormFieldsForCurrentSection$, currentSection$, d2$)
+const modelToEditAndModelForm$ = Observable
+    .combineLatest(modelToEditStore, editFormFieldsForCurrentSection$, currentSection$, d2$)
     .filter(([modelToEdit, formFields, currentType]) => {
         if (modelToEdit && modelToEdit.modelDefinition && modelToEdit.modelDefinition.name) {
             return modelToEdit.modelDefinition.name === currentType;
@@ -77,7 +80,11 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
                 return fieldConfig;
             });
 
-        const fieldConfigsAfterRules = applyRulesToFieldConfigs(getRulesForModelType(modelToEdit.modelDefinition.name), fieldConfigs, modelToEdit);
+        const fieldConfigsAfterRules = applyRulesToFieldConfigs(
+            getRulesForModelType(modelToEdit.modelDefinition.name),
+            fieldConfigs,
+            modelToEdit,
+        );
         const fieldConfigsWithAttributeFields = [].concat(
             fieldConfigsAfterRules,
             // getAttributeFieldConfigs(d2, modelToEdit),
@@ -96,10 +103,6 @@ const modelToEditAndModelForm$ = Observable.combineLatest(modelToEditStore, edit
         };
     });
 
-function PlaceholderComponent(props) {
-    return null;
-}
-
 export default React.createClass({
     propTypes: {
         modelId: React.PropTypes.string.isRequired,
@@ -117,7 +120,7 @@ export default React.createClass({
             isLoading: true,
             formState: {
                 validating: false,
-                valid: false,
+                valid: true,
                 pristine: true,
             },
             activeStep: 0,
@@ -193,6 +196,7 @@ export default React.createClass({
                     fields={this.state.fieldConfigs}
                     onUpdateField={this._onUpdateField}
                     onUpdateFormStatus={this._onUpdateFormStatus}
+                    ref={this.setFormRef}
                 />
                 <FormButtons>
                     <SaveButton
@@ -215,10 +219,10 @@ export default React.createClass({
     },
 
     /*
-        Sets the style of the fields that are not part of the active steps to 'none'
-        so that they are "hidden". For this to work, the components needs to have
-        an outer div that receives the props.style. 
-    */
+     *  Sets the style of the fields that are not part of the active steps to 'none'
+     *  so that they are "hidden". For this to work, the components needs to have
+     *  an outer div that receives the props.style. 
+     */
     setActiveStep(step) {
         const stepsByField = fieldGroups.groupsByField(this.props.modelType);
         if (stepsByField) {
@@ -236,12 +240,18 @@ export default React.createClass({
         }
     },
 
-    _onUpdateField(fieldName, value) {
-        const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name == fieldName);
-        if (fieldConfig && fieldConfig.beforeUpdateConverter) {
-            return objectActions.update({ fieldName, value: fieldConfig.beforeUpdateConverter(value) });
-        }
+    setFormRef(form) {
+        this.formRef = form;
+    },
 
+    _onUpdateField(fieldName, value) {
+        const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name === fieldName);
+        if (fieldConfig && fieldConfig.beforeUpdateConverter) {
+            return objectActions.update({
+                fieldName,
+                value: fieldConfig.beforeUpdateConverter(value),
+            });
+        }
         return objectActions.update({ fieldName, value });
     },
 
@@ -253,6 +263,16 @@ export default React.createClass({
 
     _saveAction(event) {
         event.preventDefault();
+
+        const invalidFieldMessage = getFirstInvalidFieldMessage(this.state.fieldConfigs, this.formRef);
+        if (invalidFieldMessage) {
+            snackActions.show({
+                message: `${this.getTranslation('missing_required_property_field')} ${invalidFieldMessage}`,
+                action: 'ok',
+            });
+            return;
+        }
+
         // Set state to saving so forms actions are being prevented
         this.setState({ isSaving: true });
 

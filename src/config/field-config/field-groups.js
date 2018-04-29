@@ -1,3 +1,4 @@
+import { findIndex } from 'lodash/fp';
 import fieldOrder from './field-order';
 
 /*
@@ -100,7 +101,7 @@ const fieldGroupsForModelType = new Map([
 
 export default {
     for(modelType) {
-        if (modelType && fieldGroupsForModelType.has(modelType)) {
+        if (this.isGroupedFields(modelType)) {
             return fieldGroupsForModelType.get(modelType);
         }
 
@@ -112,14 +113,34 @@ export default {
         ];
     },
 
+    isGroupedFields(modelType) {
+        return modelType && fieldGroupsForModelType.has(modelType);
+    },
+
+    groupNoByName(fieldName, modelType) {
+        if (this.isGroupedFields(modelType)) {
+            const modelGroup = fieldGroupsForModelType.get(modelType);
+            return findIndex((group => group.fields.includes(fieldName)), modelGroup);
+        }
+        return 0;
+    },
+
+    groupNameByStep(stepNo, modelType) {
+        if (this.isGroupedFields(modelType)) {
+            const modelGroup = fieldGroupsForModelType.get(modelType);
+            return modelGroup[stepNo].label;
+        }
+        return '';
+    },
+
     groupsByField(modelType) {
-        if (modelType && fieldGroupsForModelType.has(modelType)) {
+        if (this.isGroupedFields(modelType)) {
             return fieldGroupsForModelType
                 .get(modelType)
-                .map(g => g.fields)
-                .reduce((o, f, s) => {
-                    f.forEach(x => (o[x] = s));
-                    return o;
+                .map(group => group.fields)
+                .reduce((fieldsWithStep, groupFields, stepNo) => {
+                    groupFields.map(field => fieldsWithStep[field] = stepNo);
+                    return fieldsWithStep;
                 }, {});
         }
     },
