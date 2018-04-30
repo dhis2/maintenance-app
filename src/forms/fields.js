@@ -1,13 +1,14 @@
 import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from 'd2-ui/lib/forms/Validators';
 import isString from 'd2-utilizr/lib/isString';
-import isNumber from 'lodash.isnumber';
+import { getOr, isNumber } from 'lodash/fp';
+
 import TextField from './form-fields/text-field';
 import MultiSelect from './form-fields/multi-select';
 import CheckBox from './form-fields/check-box';
 import DropDown from './form-fields/drop-down';
 import DropDownAsync from './form-fields/drop-down-async';
 import DateSelect from './form-fields/date-select';
-import { constantNameConverter } from "../config/field-overrides/helpers/constantNameConverter";
+import { constantNameConverter } from '../config/field-overrides/helpers/constantNameConverter';
 
 export const CHECKBOX = Symbol('CHECKBOX');
 export const INPUT = Symbol('INPUT');
@@ -22,10 +23,6 @@ export const URL = Symbol('URL');
 export const EMAIL = Symbol('EMAIL');
 export const NUMBER = Symbol('NUMBER');
 export const COMPLEX = Symbol('COMPLEX');
-
-function toInteger(value) {
-    return Number.parseInt(value, 10);
-}
 
 function isIntegerValidator(value) {
     // Empty string values are correct values
@@ -47,7 +44,7 @@ function createValidatorFromValidatorFunction(validatorFn) {
     };
 }
 
-function addValidatorForType(type, modelValidation, modelDefinition) {
+function addValidatorForType(type, modelValidation) {
     function maxNumber(value) {
         return Number(value) <= modelValidation.max;
     }
@@ -102,6 +99,7 @@ function addValidatorForType(type, modelValidation, modelDefinition) {
         break;
     case EMAIL:
         validators.push(createValidatorFromValidatorFunction(isEmail));
+        break;
     default:
         break;
     }
@@ -145,9 +143,7 @@ export function getFieldUIComponent(type) {
 }
 
 export function createFieldConfig(fieldConfig, modelDefinition, models, customFieldOrderName) {
-    const fieldConstants = modelDefinition.modelProperties[fieldConfig.name] &&
-        modelDefinition.modelProperties[fieldConfig.name].constants ||
-        [];
+    const fieldConstants = getOr([], `modelProperties[${fieldConfig.name}].constants`, modelDefinition);
     const basicFieldConfig = {
         name: fieldConfig.name,
         component: fieldConfig.component || getFieldUIComponent(fieldConfig.type),
@@ -172,7 +168,11 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, customFi
                     }
 
                     return {
-                        text: constantNameConverter(customFieldOrderName || modelDefinition.name, fieldConfig.name, constant),
+                        text: constantNameConverter(
+                            customFieldOrderName || modelDefinition.name,
+                            fieldConfig.name,
+                            constant,
+                        ),
                         value: constant.toString(),
                     };
                 }),
@@ -189,7 +189,9 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, customFi
         basicFieldConfig.translate = true;
     }
 
-    const validators = [].concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition)).concat(fieldConfig.validators || []);
+    const validators = []
+        .concat(getValidatorsFromModelValidation(fieldConfig, modelDefinition))
+        .concat(fieldConfig.validators || []);
 
     return Object.assign(fieldConfig, { validators }, basicFieldConfig);
 }

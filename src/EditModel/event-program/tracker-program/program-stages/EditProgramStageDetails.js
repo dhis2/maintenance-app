@@ -35,7 +35,7 @@ export const EditProgramStageDetails = (props) => {
 };
 
 EditProgramStageDetails.propTypes = {
-    programStage$: PropTypes.object,
+    programStage$: PropTypes.object.isRequired,
 };
 
 export default EditProgramStageDetails;

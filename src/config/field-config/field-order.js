@@ -152,6 +152,8 @@ const fieldOrderByName = new Map([
         'phoneNumber',
         'coordinates',
         'dataSets',
+        'programs'
+
     ]],
     ['organisationUnitGroup', [
         'name',
@@ -223,7 +225,7 @@ const fieldOrderByName = new Map([
         'captureCoordinates',
         'validCompleteOnly',
         'preGenerateUID',
-        'executionDateLabel'
+        'executionDateLabel',
     ]],
     ['trackerProgram', [
         'name',
@@ -295,6 +297,7 @@ const fieldOrderByName = new Map([
         'inherit',
         'confidential',
         'displayInListNoProgram',
+        'skipSynchronization',
         'legendSets',
     ]],
     ['trackedEntityAttributeGroup', [
@@ -313,6 +316,7 @@ const fieldOrderByName = new Map([
     ['trackedEntityType', [
         'name',
         'description',
+        'allowAuditLog',
         'minAttributesRequiredToSearch',
         'maxTeiCountToReturn',
         'trackedEntityTypeAttributes',

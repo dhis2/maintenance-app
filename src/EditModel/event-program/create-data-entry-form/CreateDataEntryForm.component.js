@@ -93,7 +93,7 @@ class CreateDataEntryForm extends Component {
 
                     {this.renderTab(
                         this.getTranslation('custom'),
-                        <CustomForm />
+                        <CustomForm programStage={this.props.programStage} />
                     )}
                 </Tabs>
             </Paper>

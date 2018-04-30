@@ -347,6 +347,17 @@ export default new Map([
             }],
         },
         {
+            field: 'programs',
+            when: [{
+                operator: 'SYSTEM_SETTING_IS_FALSE',
+                value: 'keyAllowObjectAssignment',
+            }],
+            operations: [{
+                field: 'programs',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
             field: 'featureType',
             when: [{
                 field: 'coordinates',

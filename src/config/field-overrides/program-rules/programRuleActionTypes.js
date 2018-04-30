@@ -114,7 +114,7 @@ const actionTypeFieldMapping = {
         labelOverrides: {
             data: 'date_to_send_message'
         }
-    }
+    },
 };
 
 export default actionTypeFieldMapping;

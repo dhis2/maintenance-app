@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -13,9 +14,9 @@ import CreateDataEntryFormWithoutMargin from '../../create-data-entry-form/Creat
 import { getActiveProgramStageStep } from './selectors';
 
 const CreateDataEntryForm = props =>
-    <div style={{ marginTop: '15px' }}>
+    (<div style={{ marginTop: '15px' }}>
         <CreateDataEntryFormWithoutMargin {...props} />
-    </div>;
+    </div>);
 
 const stepperConfig = () => {
     const stepComponents = {
@@ -24,8 +25,8 @@ const stepperConfig = () => {
         CreateDataEntryForm,
     };
 
-    return steps.map(step => {
-        step.component = stepComponents[step.componentName]; // eslint-disable-line no-param-reassign
+    return steps.map((step) => {
+        step.component = stepComponents[step.componentName];
         step.content = stepComponents[step.componentName];
         return step;
     });
@@ -35,20 +36,17 @@ const ProgramStageVerticalStepper = connect(
     state => ({
         activeStep: getActiveProgramStageStep(state),
     }),
-    dispatch => bindActionCreators({ stepperClicked: changeStep }, dispatch)
+    dispatch => bindActionCreators({ stepperClicked: changeStep }, dispatch),
 )(createStepperFromConfig(stepperConfig(), 'vertical'));
 
-export const ProgramStageStepper = pure(props => {
-
-    return (
-        <div>
-            <ProgramStageVerticalStepper
-                programStage$={props.programStage$}
-                programStage={props.programStage}
-            />
-        </div>
-    );
-});
+export const ProgramStageStepper = pure(props => (
+    <div>
+        <ProgramStageVerticalStepper
+            programStage$={props.programStage$}
+            programStage={props.programStage}
+        />
+    </div>
+));
 
 ProgramStageStepper.propTypes = {
     /**

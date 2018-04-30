@@ -133,7 +133,7 @@ objectActions.saveObject
         };
 
         return modelToEditStore
-            .save(action.data.id)
+            .save()
             .subscribe(successHandler, errorHandler);
     }, (e) => {
         log.error(e);
@@ -155,12 +155,12 @@ objectActions.saveObject
         const d2 = await getInstance();
         const organisationUnit = modelToEditStore.getState();
 
-        if (!organisationUnit.isDirty() && !organisationUnit.dataSets.isDirty()) {
+        if (!organisationUnit.isDirty() && !organisationUnit.dataSets.isDirty() && !organisationUnit.programs.isDirty()) {
             completeAction('no_changes_to_be_saved');
         } else {
             // The orgunit has to be saved before it can be linked to datasets so these operations are done sequentially
             organisationUnit.save()
-                .then(() => organisationUnit.dataSets.save(), (error) => {
+                .then(() => Promise.all([organisationUnit.dataSets.save(), organisationUnit.programs.save()]), (error) => {
                     log.error(error);
                     snackActions.show({
                         message: Array.isArray(error.messages)
@@ -265,7 +265,7 @@ objectActions.saveObject
 
         const programRuleId = modelToEditStore.getState().id || (await api.get('/system/id')).codes[0];
 
-        // TODO (DHIS2-2342) The client should not need to generate a
+        // DHIS2-2342: The client should not need to generate a
         // new for the programRuleAction here to avoid highjacking the
         // reference to original. Cloning these complex objects should
         // be done on the backend to solve the entire category of bugs

@@ -15,7 +15,7 @@ const snackBarTranslate = get('snackBar.translate');
 let SnackBar = (props, { d2 }) => (
     <Snackbar
         style={{ maxWidth: 'auto', zIndex: 5 }}
-        bodyStyle={{ maxWidth: 'auto' }}
+        bodyStyle={{ maxWidth: 'auto', height: 'auto' }}
         message={props.translate ? d2.i18n.getTranslation(props.message) : props.message}
         action={props.action}
         autoHideDuration={props.autoHideDuration}
