@@ -155,6 +155,7 @@ export default React.createClass({
                     options={this.state.options}
                     value={this.props.value ? this.props.value.id : undefined}
                     onChange={this._onChange}
+                    errorText={this.props.errorText}
                     fullWidth
                 />
                 {quickAddLink ?
