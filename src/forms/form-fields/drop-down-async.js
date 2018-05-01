@@ -157,6 +157,7 @@ export default React.createClass({
                 <DropDown
                     {...other}
                     options={this.state.options}
+                    errorText={this.props.errorText}
                     value={this.props.value ? this.props.value.id : undefined}
                     onChange={this._onChange}
                     fullWidth
