@@ -198,7 +198,6 @@ const LoadableComponent = opts => Loadable({
     ...opts
 });
 
-//const LoadableMenuCards = LoadableComponent({loaders: () => import()})
 const routes = (
     <Router history={hashHistory}>
         <Route
