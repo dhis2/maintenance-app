@@ -181,6 +181,7 @@ class DropDownAsync extends Component {
                         {...other}
                         top={this.props.top}
                         options={this.state.options}
+                        errorText={this.props.errorText}
                         value={this.props.value ? this.props.value.id : this.props.value}
                         onChange={this.onChange}
                         fullWidth={fullWidth}

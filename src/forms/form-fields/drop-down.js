@@ -111,6 +111,7 @@ class Dropdown extends Component {
                 value={this.state.value}
                 fullWidth={this.props.fullWidth}
                 {...other}
+                errorText={this.props.errorText}
                 onChange={this.onChange}
                 floatingLabelText={this.props.labelText}
             >

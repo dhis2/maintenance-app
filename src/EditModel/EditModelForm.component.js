@@ -26,6 +26,8 @@ import appState from '../App/appStateStore';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttributeFieldConfigs } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
 
+import getFirstInvalidFieldMessage from './form-helpers/validateFields';
+
 
 const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
@@ -117,7 +119,7 @@ export default React.createClass({
             isLoading: true,
             formState: {
                 validating: false,
-                valid: false,
+                valid: true,
                 pristine: true,
             },
             activeStep: 0,
@@ -193,6 +195,7 @@ export default React.createClass({
                     fields={this.state.fieldConfigs}
                     onUpdateField={this._onUpdateField}
                     onUpdateFormStatus={this._onUpdateFormStatus}
+                    ref={this.setFormRef}
                 />
                 <FormButtons>
                     <SaveButton
@@ -236,6 +239,10 @@ export default React.createClass({
         }
     },
 
+    setFormRef(form) {
+        this.formRef = form;
+    },
+
     _onUpdateField(fieldName, value) {
         const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name == fieldName);
         if (fieldConfig && fieldConfig.beforeUpdateConverter) {
@@ -253,6 +260,16 @@ export default React.createClass({
 
     _saveAction(event) {
         event.preventDefault();
+
+        const invalidFieldMessage = getFirstInvalidFieldMessage(this.state.fieldConfigs, this.formRef);
+        if (invalidFieldMessage) {
+            snackActions.show({
+                message: `${this.getTranslation('missing_required_property_field')} ${invalidFieldMessage}`,
+                action: 'ok',
+            });
+            return;
+        }
+
         // Set state to saving so forms actions are being prevented
         this.setState({ isSaving: true });
 
