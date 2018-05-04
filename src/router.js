@@ -3,7 +3,6 @@ import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-rou
 
 import { getInstance } from 'd2/lib/d2';
 import log from 'loglevel';
-import LinearProgress from 'material-ui/LinearProgress';
 
 import modelToEditStore from './EditModel/modelToEditStore';
 import objectActions from './EditModel/objectActions';
@@ -16,8 +15,7 @@ import store from './store';
 import { resetActiveStep } from './EditModel/actions';
 import { loadEventProgram } from './EditModel/event-program/actions';
 import { loadProgramIndicator } from './EditModel/program-indicator/actions';
-import Loadable from 'react-loadable';
-import LoadingMask from './loading-mask/LoadingMask.component';
+import LoadableComponent from './utils/LoadableComponent';
 
 function initState({ params }) {
     initAppState({
@@ -193,10 +191,7 @@ function cloneObject({ params }, replace, callback) {
         );
 }
 
-const LoadableComponent = opts => Loadable({
-    loading: LoadingMask,
-    ...opts
-});
+
 
 const routes = (
     <Router history={hashHistory}>
