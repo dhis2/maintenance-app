@@ -1,7 +1,7 @@
 import React from 'react';
 import ColorPicker from 'd2-ui/lib/legend/ColorPicker.component';
 import Divider from 'material-ui/Divider';
-
+import PropTypes from 'prop-types';
 
 const styles = {
     field: {
@@ -27,13 +27,24 @@ export default function ColorPickerField(props) {
 
     return (
         <div>
-            <div style={styles.field} >
+            <div style={styles.field}>
                 <div style={styles.colorPickerLabel}> Color </div>
-                <ColorPicker color={'Select color'} {...props} onChange={transformChange} />
+                {props.PickerComponent || (
+                    <ColorPicker
+                        color={'Select color'}
+                        {...props}
+                        onChange={transformChange}
+                    />
+                )}
             </div>
             <Divider />
         </div>
     );
 }
-
-ColorPickerField.propTypes = ColorPicker.propTypes;
+ColorPickerField.defaultProps = {
+    PickerComponent: null,
+};
+ColorPickerField.propTypes = {
+    ...ColorPicker.propTypes,
+    PickerComponent: PropTypes.node,
+};

@@ -70,12 +70,14 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         const programStages =
             programPayload.query.type == 'WITH_REGISTRATION'
                 ? []
-                : [{
-                    id: programStageUid,
-                    programStageDataElements: [],
-                    notificationTemplates: [],
-                    programStageSections: [],
-                }];
+                : [
+                      {
+                          id: programStageUid,
+                          programStageDataElements: [],
+                          notificationTemplates: [],
+                          programStageSections: [],
+                      },
+                  ];
         const newProgramMetadata = {
             programs: [
                 {
@@ -87,19 +89,19 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             ],
         };
 
-        const availableData$ = d2$.flatMap((d2) => {
+        const availableData$ = d2$.flatMap(d2 => {
             const dataElements$ = Observable.fromPromise(
                 d2.models.dataElements
                     .filter()
                     .on('domainType')
                     .equals('TRACKER')
                     .list({ paging: false })
-                    .then(dataElements => dataElements.toArray()),
+                    .then(dataElements => dataElements.toArray())
             );
             const trackedEntityAttributes$ = Observable.fromPromise(
                 d2.models.trackedEntityAttributes
                     .list({ paging: false })
-                    .then(attributes => attributes.toArray()),
+                    .then(attributes => attributes.toArray())
             );
 
             return Observable.combineLatest(
@@ -108,7 +110,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 (elements, attributes) => ({
                     elements,
                     attributes,
-                }),
+                })
             );
         });
 
@@ -120,10 +122,10 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 ...metadata,
                 dataElements: available.elements,
                 trackedEntityAttributes: available.attributes,
-            }),
+            })
         )
             .flatMap(createEventProgramStoreStateFromMetadataResponse)
-            .map((state) => {
+            .map(state => {
                 // Set some eventProgram defaults
                 // Set programType to router-query type
                 const programType = programPayload.query.type;
@@ -139,6 +141,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
     }
     const programFields = [
         ':owner,displayName',
+        'style',
         'attributeValues[:all,attribute[id,name,displayName]]',
         'organisationUnits[id,path]',
         'dataEntryForm[:owner]',
@@ -158,15 +161,15 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                         '&dataElements:fields=id,displayName,valueType,optionSet',
                         '&dataElements:filter=domainType:eq:TRACKER',
                         '&trackedEntityAttributes:fields=id,displayName,valueType,optionSet,unique',
-                    ].join(''),
-                ),
-            ),
+                    ].join('')
+                )
+            )
         )
         .flatMap(createEventProgramStoreStateFromMetadataResponse);
 }
 
 function createEventProgramStoreStateFromMetadataResponse(
-    eventProgramMetadata,
+    eventProgramMetadata
 ) {
     const {
         programs = [],
@@ -175,42 +178,41 @@ function createEventProgramStoreStateFromMetadataResponse(
     } = eventProgramMetadata;
     const programStages = getOr([], 'programStages', first(programs));
 
-    const storeState = getInstance().then((d2) => {
+    const storeState = getInstance().then(d2 => {
         // createModelFor :: ModelDefinition -> Function -> Model
         const createModelFor = schema => schema.create.bind(schema);
 
         // createProgramModel :: Array<Object> -> Model
         const createProgramModel = compose(
             createModelFor(d2.models.program),
-            first,
+            first
         );
 
         // createProgramStageSectionModels :: Array<Object> -> Array<Model>
         const createProgramStageSectionModels = map(
-            createModelFor(d2.models.programStageSection),
+            createModelFor(d2.models.programStageSection)
         );
 
         // createProgramStageModels :: Array<Object> -> Array<Model>
         const createProgramStageModels = map(
-            createModelFor(d2.models.programStage),
+            createModelFor(d2.models.programStage)
         );
 
         // createNotificationTemplateModels :: Array<Object> -> Array<Model>
         const createNotificationTemplateModels = map(
-            createModelFor(d2.models.programNotificationTemplate),
+            createModelFor(d2.models.programNotificationTemplate)
         );
 
-        const extractProgramStageSections =
-            programStages =>
-                programStages.reduce(
-                    (acc, programStage) => ({
-                        ...acc,
-                        [programStage.id]: createProgramStageSectionModels(
-                            getOr([], 'programStageSections', programStage),
-                        ),
-                    }),
-                    {},
-                );
+        const extractProgramStageSections = programStages =>
+            programStages.reduce(
+                (acc, programStage) => ({
+                    ...acc,
+                    [programStage.id]: createProgramStageSectionModels(
+                        getOr([], 'programStageSections', programStage)
+                    ),
+                }),
+                {}
+            );
 
         // extractProgramNotifications :: Array<Object> -> Object<programStageId, [Model]>
         const extractProgramNotifications = programStages =>
@@ -218,15 +220,15 @@ function createEventProgramStoreStateFromMetadataResponse(
                 (acc, programStage) => ({
                     ...acc,
                     [programStage.id]: createNotificationTemplateModels(
-                        getOr([], 'notificationTemplates', programStage),
+                        getOr([], 'notificationTemplates', programStage)
                     ),
                 }),
-                {},
+                {}
             );
 
         // createDataEntryFormModel :: Object<DataEntryForm> :: Model<DataEntryForm>
         const createDataEntryFormModel = createModelFor(
-            d2.models.dataEntryForm,
+            d2.models.dataEntryForm
         );
 
         // extractDataEntryForms :: Array<Object> -> Object<programStageId, Model>
@@ -235,20 +237,22 @@ function createEventProgramStoreStateFromMetadataResponse(
                 (acc, programStage) => ({
                     ...acc,
                     [programStage.id]: createDataEntryFormModel(
-                        getOr({}, 'dataEntryForm', programStage),
+                        getOr({}, 'dataEntryForm', programStage)
                     ),
                 }),
-                {},
+                {}
             );
 
         const program = createProgramModel(programs);
-        program.dataEntryForm = program.dataEntryForm ? createDataEntryFormModel(getOr({}, 'dataEntryForm', program)) : undefined
+        program.dataEntryForm = program.dataEntryForm
+            ? createDataEntryFormModel(getOr({}, 'dataEntryForm', program))
+            : undefined;
 
         return {
             program,
             programStages: createProgramStageModels(programStages),
             programStageNotifications: extractProgramNotifications(
-                programStages,
+                programStages
             ),
             programStageSections: extractProgramStageSections(programStages),
             availableDataElements: dataElements,
@@ -262,7 +266,11 @@ function createEventProgramStoreStateFromMetadataResponse(
 async function loadAdditionalTrackerMetadata(loadedMetadata) {
     const program = loadedMetadata.program;
 
-    if(!program.programType || program.programType !== 'WITH_REGISTRATION' || !program.trackedEntityType) {
+    if (
+        !program.programType ||
+        program.programType !== 'WITH_REGISTRATION' ||
+        !program.trackedEntityType
+    ) {
         return loadedMetadata;
     }
     //Load trackedEntityTypeAttributes
@@ -270,11 +278,12 @@ async function loadAdditionalTrackerMetadata(loadedMetadata) {
     const d2 = await getInstance();
     try {
         const tet = await d2.models.trackedEntityType.get(tetId, {
-            fields: 'id,displayName,name,trackedEntityTypeAttributes[trackedEntityAttribute]'
+            fields:
+                'id,displayName,name,trackedEntityTypeAttributes[trackedEntityAttribute]',
         });
         program.trackedEntityType = tet;
         program.resetDirtyState();
-    } catch(e) {
+    } catch (e) {
         return loadedMetadata;
     }
 
@@ -293,13 +302,13 @@ export const programModel = action$ =>
 export const programModelEdit = createModelToEditEpic(
     MODEL_TO_EDIT_FIELD_CHANGED,
     eventProgramStore,
-    'program',
+    'program'
 );
 
 export const programStageModelEdit = createModelToEditProgramStageEpic(
     PROGRAM_STAGE_FIELD_EDIT,
     eventProgramStore,
-    'programStages',
+    'programStages'
 );
 
 const saveEventProgram = eventProgramStore
@@ -309,10 +318,10 @@ const saveEventProgram = eventProgramStore
     .flatMap(metaDataPayload =>
         api$
             .flatMap(api =>
-                Observable.fromPromise(api.post('metadata', metaDataPayload)),
+                Observable.fromPromise(api.post('metadata', metaDataPayload))
             )
             .map(getImportStatus)
-            .map((importStatus) => {
+            .map(importStatus => {
                 if (importStatus.isOk()) {
                     // TODO: Not the most elegant place to do this maybe
                     goToAndScrollUp('/list/programSection/program');
@@ -320,41 +329,49 @@ const saveEventProgram = eventProgramStore
                 }
                 return saveEventProgramError(importStatus.errorsPerObject);
             })
-            .catch(err => Observable.of(saveEventProgramError(err))),
+            .catch(err => Observable.of(saveEventProgramError(err)))
     );
 
 export const programModelSave = action$ =>
     action$
         .ofType(EVENT_PROGRAM_SAVE)
         .flatMapTo(eventProgramStore.take(1))
-        .flatMap((eventProgramStore) => {
+        .flatMap(eventProgramStore => {
             if (isStoreStateDirty(eventProgramStore)) {
                 return saveEventProgram;
             }
             const successObs = Observable.of(saveEventProgramSuccess());
-            return successObs.concat(Observable.of(notifyUser({message: 'no_changes_to_be_saved', translate: true})).do(() =>
-                goToAndScrollUp('/list/programSection/program'),
-            ));
-        }).catch(e => console.log(e));
+            return successObs.concat(
+                Observable.of(
+                    notifyUser({
+                        message: 'no_changes_to_be_saved',
+                        translate: true,
+                    })
+                ).do(() => goToAndScrollUp('/list/programSection/program'))
+            );
+        })
+        .catch(e => console.log(e));
 
 export const programModelSaveResponses = action$ =>
     Observable.merge(
-        action$.ofType(EVENT_PROGRAM_SAVE_SUCCESS).mapTo(notifyUser({message: 'success', translate: true})),
-        action$.ofType(EVENT_PROGRAM_SAVE_ERROR).map((action) => {
+        action$
+            .ofType(EVENT_PROGRAM_SAVE_SUCCESS)
+            .mapTo(notifyUser({ message: 'success', translate: true })),
+        action$.ofType(EVENT_PROGRAM_SAVE_ERROR).map(action => {
             const getFirstErrorMessageFromAction = compose(
                 get('message'),
                 first,
                 flatten,
                 values,
                 getOr([], 'errors'),
-                first,
+                first
             );
-            const firstErrorMessage = getFirstErrorMessageFromAction(
-                action.payload,
-            ) || action.payload.message;
+            const firstErrorMessage =
+                getFirstErrorMessageFromAction(action.payload) ||
+                action.payload.message;
 
             return notifyUser({ message: firstErrorMessage, translate: false });
-        }),
+        })
     );
 
 export default combineEpics(
@@ -368,5 +385,5 @@ export default combineEpics(
     createAssignAttributeEpics(eventProgramStore),
     createCreateDataEntryFormEpics(eventProgramStore),
     dataEntryFormEpics,
-    trackerProgramEpics,
+    trackerProgramEpics
 );

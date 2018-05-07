@@ -210,6 +210,7 @@ const fieldOrderByName = new Map([
     ]],
     ['eventProgram', [
         'name',
+        'style',
         'shortName',
         'code',
         'description',
