@@ -26,8 +26,8 @@ export const LoadableMap = opts =>
     LoadableMap does not complete the loading before both "Comp" (the dynamic-loaded component)
     and predefinedStore-promises resolve.
 
-    @params {object} A react-loadable options object. The loader a function with the dynamic import() to import
-    the component.
+    @params {object} A react-loadable options object. The only required part of the object is
+     'loader': a function with the import() statement.
 
  */
 export const LoadableWithPreloadedStore = ({ loader: load, ...rest }) =>
