@@ -156,9 +156,19 @@ export const programModel = action$ => action$
 
 export const programModelEdit = createModelToEditEpic(MODEL_TO_EDIT_FIELD_CHANGED, eventProgramStore, 'program');
 
+const setEventPSStage = (state) => {
+    const ps = first(state.programStages);
+    ps.name = state.program.name || state.program.id;
+    return {
+        ...state,
+        programStages: [ps],
+    };
+};
+
 const saveEventProgram = eventProgramStore
     .take(1)
     .filter(isStoreStateDirty)
+    .map(setEventPSStage)
     .map(getMetaDataToSend)
     .flatMap(metaDataPayload => api$
         .flatMap(api => Observable.fromPromise(api.post('metadata', metaDataPayload)))
