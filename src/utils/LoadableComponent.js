@@ -18,15 +18,19 @@ export const LoadableMap = opts =>
     });
 
 /**
- *  Due to removing async routes, and some routes depending on ModelToEditStore.state being available,
+ * A HOC that dynamically loads a component, and ensures modelToEditStore.state being available.
+ * Due to removing async routes, and some routes depending on ModelToEditStore.state being available,
     we have a loadable-component-HOC that also makes sure the modelToEditStore is initialized. 
     Preventing race conditions.
 
-    LoadableMap does complete the loading before both "Comp" (the dynamic-loaded component)
+    LoadableMap does not complete the loading before both "Comp" (the dynamic-loaded component)
     and predefinedStore-promises resolve.
 
+    @params {object} A react-loadable options object. The loader a function with the dynamic import() to import
+    the component.
+
  */
-export const LoadableWithPreloadedStore = ({ loader: load }) =>
+export const LoadableWithPreloadedStore = ({ loader: load, ...rest }) =>
     LoadableMap({
         loader: {
             Comp: load,
@@ -36,4 +40,5 @@ export const LoadableWithPreloadedStore = ({ loader: load }) =>
             const Comp = loaded.Comp.default;
             return <Comp {...props} />;
         },
+        ...rest,
     });
