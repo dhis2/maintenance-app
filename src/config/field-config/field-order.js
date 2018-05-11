@@ -3,6 +3,7 @@ const fieldOrderByName = new Map([
         'name',
         'shortName',
         'code',
+        'style',
         'description',
         'formName',
         'domainType',
@@ -232,6 +233,7 @@ const fieldOrderByName = new Map([
         'name',
         'shortName',
         'code',
+        'style',
         'description',
         'version',
         'trackedEntityType',
@@ -263,6 +265,7 @@ const fieldOrderByName = new Map([
     ]],
     ['programStage', [
         'name',
+        'style',
         'description',
         'minDaysFromStart',
         'repeatable',
@@ -316,6 +319,7 @@ const fieldOrderByName = new Map([
     ]],
     ['trackedEntityType', [
         'name',
+        'style',
         'description',
         'allowAuditLog',
         'minAttributesRequiredToSearch',

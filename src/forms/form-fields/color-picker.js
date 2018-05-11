@@ -29,7 +29,7 @@ export default function ColorPickerField(props) {
         <div>
             <div style={styles.field}>
                 <div style={styles.colorPickerLabel}> Color </div>
-                {props.PickerComponent || (
+                {props.children || (
                     <ColorPicker
                         color={'Select color'}
                         {...props}

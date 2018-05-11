@@ -9,5 +9,16 @@
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true
         }
+    },
+    "rules": {
+        "react/prop-types": 0,
+        "indent": 0,
+        "complexity": 0,
+        "arrow-parens": "off",
+        "no-unused-expressions": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/extensions": "off",
+        "import/no-unresolved": "off",
+        "no-confusing-arrow": "off"
     }
 }

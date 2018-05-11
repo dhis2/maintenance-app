@@ -1,6 +1,9 @@
+/* eslint-disable no-bitwise */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Button from 'd2-ui/lib/button/Button';
 import LoadableComponent from '../../utils/LoadableComponent';
+import ColorPickerField from './color-picker';
 
 const LoadablePicker = LoadableComponent({
     loader: () => import('react-color/lib/components/twitter/Twitter'),
@@ -26,9 +29,21 @@ const styles = {
     },
 };
 
+function isColorDark(color) {
+    if (!color) return false;
+    const hex = color.substring(1);
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+
+    const avg = (r + g + b) / 3;
+    return avg < 140;
+}
+
 export default class StyleFields extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
 
         const style = {
             color: '',
@@ -66,7 +81,6 @@ export default class StyleFields extends Component {
     };
 
     handleColorChange = val => {
-        console.log(val);
         const color = val.hex;
 
         const style = {
@@ -83,13 +97,15 @@ export default class StyleFields extends Component {
         });
     };
 
-    render() {
-        const { color } = this.state.style.color;
+    renderColorPicker = () => {
+        const { color } = this.state.style;
+        const isDark = isColorDark(color);
+
         const mergedStyles = {
             ...styles,
             color: {
-                backgroundColor: color,
-                //color: hcl(color).l < 70 ? '#fff' : '#000',
+                backgroundColor: color || '#fffff',
+                color: isDark ? '#fff' : '#000',
                 textAlign: 'center',
                 position: 'relative',
                 width: 90,
@@ -101,13 +117,18 @@ export default class StyleFields extends Component {
                 cursor: 'pointer',
             },
         };
+
         return (
             <div style={mergedStyles.wrapper}>
-                <div style={mergedStyles.color} onClick={this.handleOpenColor}>
-                    {this.state.style.color}
-                </div>
+                <Button
+                    style={mergedStyles.color}
+                    onClick={this.handleOpenColor}
+                >
+                    {this.state.style.color ||
+                        this.context.d2.i18n.getTranslation('none')}
+                </Button>
                 {this.state.colorOpen && (
-                    <div is="popover">
+                    <div>
                         <div
                             style={styles.cover}
                             onClick={this.handleCloseColor}
@@ -122,5 +143,13 @@ export default class StyleFields extends Component {
                 )}
             </div>
         );
+    };
+
+    render() {
+        return <ColorPickerField>{this.renderColorPicker()}</ColorPickerField>;
     }
 }
+
+StyleFields.contextTypes = {
+    d2: PropTypes.object,
+};
