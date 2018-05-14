@@ -117,7 +117,7 @@ export default React.createClass({
             isLoading: true,
             formState: {
                 validating: false,
-                valid: false,
+                valid: true,
                 pristine: true,
             },
             activeStep: 0,
