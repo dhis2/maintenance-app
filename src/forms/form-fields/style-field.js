@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'd2-ui/lib/button/Button';
 import LoadableComponent from '../../utils/LoadableComponent';
-import ColorPickerField from './color-picker';
+import FieldWrapper from './helpers/FieldWrapper';
 
 const LoadablePicker = LoadableComponent({
     loader: () => import('react-color/lib/components/twitter/Twitter'),
@@ -24,11 +24,28 @@ const styles = {
     picker: {
         position: 'absolute',
         zIndex: '100',
-        // top: -207,
-        // left: 120,
+    },
+    buttonColor: {
+        backgroundColor: '#fffff',
+        color: '#000',
+        textAlign: 'center',
+        position: 'relative',
+        minWidth: 129,
+        height: 36,
+        lineHeight: 2.5,
+        marginTop: 10,
+        boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
+        cursor: 'pointer',
     },
 };
 
+/** 
+ * Computes the "darkness" of a color.
+ * So that we can change the text-color to white or black
+ * according to the selected color;
+ * @returns True if the color is "dark", or False
+ * if color is falsy or "light"
+ */
 function isColorDark(color) {
     if (!color) return false;
     const hex = color.substring(1);
@@ -103,29 +120,21 @@ export default class StyleFields extends Component {
 
         const mergedStyles = {
             ...styles,
-            color: {
+            buttonColor: {
+                ...styles.buttonColor,
                 backgroundColor: color || '#fffff',
                 color: isDark ? '#fff' : '#000',
-                textAlign: 'center',
-                position: 'relative',
-                width: 90,
-                height: 36,
-                lineHeight: 2.5,
-                marginTop: 10,
-                boxShadow:
-                    '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
-                cursor: 'pointer',
             },
         };
 
         return (
             <div style={mergedStyles.wrapper}>
                 <Button
-                    style={mergedStyles.color}
+                    style={mergedStyles.buttonColor}
                     onClick={this.handleOpenColor}
                 >
                     {this.state.style.color ||
-                        this.context.d2.i18n.getTranslation('none')}
+                        this.context.d2.i18n.getTranslation('select_color')}
                 </Button>
                 {this.state.colorOpen && (
                     <div>
@@ -146,7 +155,11 @@ export default class StyleFields extends Component {
     };
 
     render() {
-        return <ColorPickerField>{this.renderColorPicker()}</ColorPickerField>;
+        return (
+            <FieldWrapper label="Color">
+                {this.renderColorPicker()}
+            </FieldWrapper>
+        );
     }
 }
 
