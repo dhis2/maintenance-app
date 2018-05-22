@@ -81,6 +81,7 @@ export function getSideBarConfig() {
                 'externalMapLayer',
                 'dataApprovalLevel',
                 'dataApprovalWorkflow',
+                'locale'
             ],
         },
     };
@@ -207,6 +208,14 @@ const typeDetails = {
         columns: [
             'displayName',
             'periodType',
+            'publicAccess',
+            'lastUpdated',
+        ],
+    },
+    locales: {
+        columns: [
+            'displayName',
+            'locale',
             'publicAccess',
             'lastUpdated',
         ],
