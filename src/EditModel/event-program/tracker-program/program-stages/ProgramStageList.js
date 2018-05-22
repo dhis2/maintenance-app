@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import SharingDialog from 'd2-ui-sharing';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
