@@ -3,6 +3,7 @@ import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-rou
 
 import { getInstance } from 'd2/lib/d2';
 import log from 'loglevel';
+import noop from 'lodash/fp/noop';
 
 import modelToEditStore from './EditModel/modelToEditStore';
 import objectActions from './EditModel/objectActions';
@@ -17,8 +18,7 @@ import { loadEventProgram } from './EditModel/event-program/actions';
 import { loadProgramIndicator } from './EditModel/program-indicator/actions';
 import LoadableComponent, { LoadableWithPreloadedStore } from './utils/LoadableComponent';
 
-const noop = () => {};
-
+listStore.subscribe(state => console.log(state));
 function initState({ params }) {
     initAppState({
         sideBar: {
@@ -99,7 +99,7 @@ function loadObject({ params }, replace) {
     } else {
         objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
             .subscribe(
-                () => {},
+                noop,
                 (errorMessage) => {
                     replace(`/list/${params.modelType}`);
                     snackActions.show({ message: errorMessage, action: 'ok' });
