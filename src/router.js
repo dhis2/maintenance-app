@@ -19,6 +19,7 @@ import { loadProgramIndicator } from './EditModel/program-indicator/actions';
 import LoadableComponent, { LoadableWithPreloadedStore } from './utils/LoadableComponent';
 
 listStore.subscribe(state => console.log(state));
+
 function initState({ params }) {
     initAppState({
         sideBar: {
@@ -59,8 +60,9 @@ function initStateOuHierarchy() {
 // to load the correct d2.Model. This would clean up the load function
 // below.
 function loadObject({ params }, replace) {
+    console.log("LOAD OBJECT")
     initState({ params });
-
+    const cb = noop;
     if (params.modelId === 'add') {
         getInstance().then((d2) => {
             const modelToEdit = d2.models[params.modelType].create();
@@ -81,6 +83,7 @@ function loadObject({ params }, replace) {
                         }
 
                         modelToEditStore.setState(modelToEdit);
+                        cb();
                     });
             }
 
@@ -95,11 +98,12 @@ function loadObject({ params }, replace) {
                 }, {});
 
             modelToEditStore.setState(Object.assign(modelToEdit, listFilters));
+            cb();
         });
     } else {
         objectActions.getObjectOfTypeById({ objectType: params.modelType, objectId: params.modelId })
             .subscribe(
-                noop,
+                () => { console.log("OBJECT LOADED"); cb() },
                 (errorMessage) => {
                     replace(`/list/${params.modelType}`);
                     snackActions.show({ message: errorMessage, action: 'ok' });
@@ -152,7 +156,7 @@ function loadList({ params }, replace) {
         // reflected in the organisation unit tree
         initState({ params });
     }
-
+    listStore.setState({});
     initState({ params });
     return listActions.loadList(params.modelType)
         .take(1)
