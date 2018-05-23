@@ -212,12 +212,10 @@ const typeDetails = {
             'lastUpdated',
         ],
     },
-    locales: {
+    locale: {
         columns: [
-            'displayName',
+            'name',
             'locale',
-            'publicAccess',
-            'lastUpdated',
         ],
     },
 };

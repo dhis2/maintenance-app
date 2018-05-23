@@ -13,21 +13,21 @@ const localeSchemaDefinition = {
         {
             type: 'CREATE_PUBLIC',
             authorities: [
-                'F_SYSTEM_SETTING'
-            ]
+                'F_SYSTEM_SETTING',
+            ],
         },
         {
             type: 'CREATE_PRIVATE',
             authorities: [
-                'F_SYSTEM_SETTING'
-            ]
+                'F_SYSTEM_SETTING',
+            ],
         },
         {
             type: 'DELETE',
             authorities: [
-                'F_SYSTEM_SETTING'
-            ]
-        }
+                'F_SYSTEM_SETTING',
+            ],
+        },
     ],
     properties: [
         {
@@ -42,7 +42,7 @@ const localeSchemaDefinition = {
             propertyType: 'TEXT',
             unique: true,
             name: 'locale',
-            persisted: true
+            persisted: true,
         },
         {
             owner: false,
@@ -56,9 +56,33 @@ const localeSchemaDefinition = {
             propertyType: 'TEXT',
             unique: true,
             name: 'name',
-            persisted: true
+            persisted: true,
         },
-    ]
-}
+        {
+            fieldName: 'id',
+            simple: true,
+            required: false,
+            writable: true,
+            min: 0,
+            nameableObject: false,
+            klass: 'java.lang.Integer',
+            propertyType: 'INTEGER',
+            oneToOne: false,
+            attribute: false,
+            owner: false,
+            readable: true,
+            ordered: false,
+            identifiableObject: false,
+            max: 2147483647,
+            manyToMany: false,
+            collection: false,
+            embeddedObject: false,
+            unique: false,
+            name: 'id',
+            persisted: false,
+            manyToOne: false,
+        },
+    ],
+};
 
 export default localeSchemaDefinition;

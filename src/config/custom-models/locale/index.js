@@ -2,8 +2,8 @@ import LocaleModelDefinition from './LocaleModelDefinition';
 import localeSchemeDefinition from './localeSchemaDefinition';
 
 const locale = {
-    ModelDefinition: LocaleModelDefinition,
+    CustomModelDefinition: LocaleModelDefinition,
     schema: localeSchemeDefinition,
-}
+};
 
 export default locale;
