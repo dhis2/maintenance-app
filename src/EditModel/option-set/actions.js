@@ -1,13 +1,30 @@
 import log from 'loglevel';
 import Action from 'd2-ui/lib/action/Action';
-import { getInstance } from 'd2/lib/d2';
-import { optionDialogStore, optionsForOptionSetStore } from './stores.js';
 import isArray from 'd2-utilizr/lib/isArray';
-import modelToEditStore from '../modelToEditStore';
+import { getInstance } from 'd2/lib/d2';
+import { has } from 'lodash/fp';
+
 import snackActions from '../../Snackbar/snack.actions';
 import { isAttribute } from '../formHelpers';
+import modelToEditStore from '../modelToEditStore';
+import { optionDialogStore, optionsForOptionSetStore } from './stores';
 
-const actions = Action.createActionsFromNames(['saveOption', 'setActiveModel', 'closeOptionDialog', 'getOptionsFor', 'deleteOption', 'updateModel'], 'optionSet');
+const actions = Action.createActionsFromNames([
+    'saveOption',
+    'setActiveModel',
+    'closeOptionDialog',
+    'getOptionsFor',
+    'deleteOption',
+    'updateModel',
+], 'optionSet');
+
+export async function loadOptionsForOptionSet(optionSetId, paging) {
+    const d2 = await getInstance();
+
+    return d2.models.option
+        .filter().on('optionSet.id').equals(optionSetId)
+        .list({ fields: ':all,attributeValues[:owner,attribute[id,name]', paging });
+}
 
 function processResponse(options) {
     if (!options.pager.hasNextPage() && !options.pager.hasPreviousPage()) {
@@ -95,11 +112,17 @@ actions.saveOption
             })
             .then(complete)
             .catch((response) => {
-                if (response.response && response.response.errorReports && response.response.errorReports.length && response.response.errorReports[0].message) {
-                    return error({ message: response.response.errorReports[0].message, translate: false });
+                if (has('response.errrorReports[0].message', response)) {
+                    return error({
+                        message: response.response.errorReports[0].message,
+                        translate: false,
+                    });
                 }
 
-                return error({ message: 'option_failed_to_save', translate: true });
+                return error({
+                    message: 'option_failed_to_save',
+                    translate: true,
+                });
             });
     });
 
@@ -141,13 +164,5 @@ actions.deleteOption.subscribe(async ({ data: [modelToDelete, modelParent], comp
         .then(complete)
         .catch(error);
 });
-
-export async function loadOptionsForOptionSet(optionSetId, paging) {
-    const d2 = await getInstance();
-
-    return d2.models.option
-        .filter().on('optionSet.id').equals(optionSetId)
-        .list({ fields: ':all,attributeValues[:owner,attribute[id,name]', paging });
-}
 
 export default actions;

@@ -101,7 +101,10 @@ export async function createFieldConfigForModelTypes(modelType, forcedFieldOrder
             setRequiredFieldsStepName(fieldConfig, modelType, d2);
             setRequiredFieldsLabelText(fieldConfig, d2);
             return fieldConfig;
-        }).concat(includeAttributes ? createAttributeFieldConfigs(d2, modelType) : []);
+        })
+        .concat(includeAttributes
+            ? createAttributeFieldConfigs(d2, modelType)
+            : []);
 }
 
 function createUniqueValidator(fieldConfig, modelDefinition, uid) {

@@ -1,12 +1,16 @@
-import { get, find } from 'lodash/fp';
+import { get } from 'lodash/fp';
 
 /* *
  * The result coming from FormBuilder validateField will contain an error message on fail and 
- * a boolean true if it succeeds. This 
+ * a boolean true if it succeeds.
  */
 const isInvalidField = validatedResult => validatedResult !== true;
 
 const isRequiredField = field => get('isRequired', field.fieldOptions) === true;
+
+const isDirtyField = field => field.value;
+
+const isRequiredOrDirtyField = field => isRequiredField(field) || isDirtyField(field);
 
 const validateField = (field, formRef, formRefStateClone) => {
     const validateResult = formRef.validateField(formRefStateClone, field.name, field.value);
@@ -14,6 +18,7 @@ const validateField = (field, formRef, formRefStateClone) => {
         invalid: isInvalidField(validateResult),
         step: field.step,
         name: field.translatedName,
+        message: validateResult,
     };
 };
 
@@ -23,28 +28,30 @@ const validateField = (field, formRef, formRefStateClone) => {
  */
 const getErrorMessage = (field) => {
     const fieldStep = field.step ? `On step ${field.step}` : '';
-
-    const errorMessage = `: ${field.name}. ${fieldStep}`;
+    const errorMessage = `${field.message} : ${field.name}. ${fieldStep}`;
     return errorMessage;
 };
 
 /** 
- * Will filter out all the fields that are required. 
- * The it will validate the fields using the formBuilder
- * and lastly fetch the first field that is required and invalid.
+ * Will first filter out all the fields that are invalid. 
+ * This includes fields that are:
+ * - Required.
+ * - Field with a filled out value.
+ * Then it will validate the fields using a reference to the formBuilder.
+ * Lastly it will fetch the first field with a failing validator.
  */
 const getFirstInvalidField = (fieldConfigs, formRef, formRefStateClone) =>
     fieldConfigs
-        .filter(fieldConfig => isRequiredField(fieldConfig))
+        .filter(fieldConfig => isRequiredOrDirtyField(fieldConfig))
         .map(fieldConfig => validateField(fieldConfig, formRef, formRefStateClone))
         .find(field => field.invalid);
 
 /**
- * Validate checks all the fields that are marked as required in the form.
+ * Validate checks all the fields that are required or has a invalid value in the form.
  * The validation will set the fields as invalid in the formbuilder and set
  * the new state of the form.
  * 
- * If any the required fields are not valid not it will create a message string 
+ * If any the fields are not valid, it will create a message string 
  * of the first invalid field.
  * 
  * @returns {string} 
