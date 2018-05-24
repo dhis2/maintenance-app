@@ -19,7 +19,7 @@ const relativeScheduledDaysStyle = {
 
 const enhance = compose(
     getContext({ d2: PropTypes.object }),
-    withState('beforeOrAfter', 'setBeforeOrAfter', ({ value }) => value >= 0 ? 'after' : 'before'),
+    withState('beforeOrAfter', 'setBeforeOrAfter', ({ value }) => (value >= 0 ? 'after' : 'before')),
     withHandlers({
         onChangeBeforeAfter: ({ onChange, setBeforeOrAfter, value }) => (event, index, beforeOrAfter) => {
             const days = beforeOrAfter === 'after' ? Number(value) : -1 * Number(value);
@@ -32,7 +32,7 @@ const enhance = compose(
                 onChange({ target: { value: days } });
             }
         },
-    })
+    }),
 );
 
 function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDays, d2, value, style }) {

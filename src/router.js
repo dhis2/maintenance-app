@@ -3,7 +3,6 @@ import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-rou
 
 import { getInstance } from 'd2/lib/d2';
 import log from 'loglevel';
-import LinearProgress from 'material-ui/LinearProgress';
 
 import modelToEditStore from './EditModel/modelToEditStore';
 import objectActions from './EditModel/objectActions';
@@ -16,8 +15,7 @@ import store from './store';
 import { resetActiveStep } from './EditModel/actions';
 import { loadEventProgram } from './EditModel/event-program/actions';
 import { loadProgramIndicator } from './EditModel/program-indicator/actions';
-
-import onDemand from './on-demand';
+import LoadableComponent from './utils/LoadableComponent';
 
 function initState({ params }) {
     initAppState({
@@ -193,13 +191,7 @@ function cloneObject({ params }, replace, callback) {
         );
 }
 
-function delayRender(importFactory, loadingComponent = <LinearProgress />) {
-    return (props) => {
-        const BaseComponent = onDemand.loadDefault(importFactory, { loadingComponent: () => loadingComponent });
 
-        return <BaseComponent {...props} />;
-    };
-}
 
 const routes = (
     <Router history={hashHistory}>
@@ -210,41 +202,41 @@ const routes = (
             <IndexRedirect to="/list/all" />
             <Route
                 path="list/all"
-                component={delayRender(() => System.import('./MenuCards/MenuCardsForAllSections.component'))}
+                component={LoadableComponent({loader: () => import('./MenuCards/MenuCardsForAllSections.component')})}
                 onEnter={() => initState({ params: { groupName: 'all' } })}
             />
             <Route path="list/:groupName">
                 <IndexRoute
-                    component={delayRender(() => System.import('./MenuCards/MenuCardsForSection.component'))}
+                    component={LoadableComponent({loader: () => import('./MenuCards/MenuCardsForSection.component')})}
                     onEnter={initState}
                 />
                 <Route
                     path="organisationUnit"
-                    component={delayRender(() => System.import('./List/organisation-unit-list/OrganisationUnitList.component.js'))}
+                    component={LoadableComponent({loader: () => import('./List/organisation-unit-list/OrganisationUnitList.component.js')})}
                     onEnter={initStateOrgUnitList}
                 />
                 <Route
                     path="organisationUnitLevel"
-                    component={delayRender(() => System.import('./OrganisationUnitLevels/OrganisationUnitLevels.component'))}
+                    component={LoadableComponent({loader: () => import('./OrganisationUnitLevels/OrganisationUnitLevels.component')})}
                     onEnter={initStateOrgUnitLevels}
                 />
                 <Route
                     path=":modelType"
-                    component={delayRender(() => System.import('./List/List.component'))}
+                    component={LoadableComponent({loader: () => import('./List/List.component')})}
                     onEnter={loadList}
                 />
             </Route>
             <Route path="edit/:groupName">
                 <Route
                     path="organisationUnit/:modelId"
-                    component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
+                    component={LoadableComponent({loader: () => import('./EditModel/EditModelContainer.component')})}
                     onEnter={loadOrgUnitObject}
                     hideSidebar
                     disableTabs
                 />
                 <Route
                     path="optionSet/:modelId"
-                    component={delayRender(() => System.import('./EditModel/EditOptionSet.component'))}
+                    component={LoadableComponent({loader: () => import('./EditModel/EditOptionSet.component')})}
                     onEnter={loadOptionSetObject}
                     hideSidebar
                     disableTabs
@@ -254,35 +246,35 @@ const routes = (
                 </Route>
                 <Route
                     path="program/:modelId"
-                    component={delayRender(() => System.import('./EditModel/event-program/EditProgram.component'))}
+                    component={LoadableComponent({loader: () => import('./EditModel/event-program/EditProgram.component')})}
                     onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
                     hideSidebar
                     disableTabs
                 />
                 <Route
                     path="programIndicator/:modelId"
-                    component={delayRender(() => System.import('./EditModel/program-indicator/EditProgramIndicator'))}
+                    component={LoadableComponent({loader: () => import('./EditModel/program-indicator/EditProgramIndicator')})}
                     onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator, resetActiveStep)}
                     hideSidebar
                     disableTabs
                 />
                 <Route
                     path=":modelType/:modelId/sections"
-                    component={delayRender(() => System.import('./EditModel/EditDataSetSections.component'))}
+                    component={LoadableComponent({loader: () => import('./EditModel/EditDataSetSections.component')})}
                     onEnter={loadObject}
                     hideSidebar
                     disableTabs
                 />
                 <Route
                     path=":modelType/:modelId/dataEntryForm"
-                    component={delayRender(() => System.import('./EditModel/EditDataEntryForm.component'))}
+                    component={LoadableComponent({loader: () => import('./EditModel/EditDataEntryForm.component')})}
                     onEnter={loadObject}
                     hideSidebar
                     disableTabs
                 />
                 <Route
                     path=":modelType/:modelId"
-                    component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
+                    component={LoadableComponent({loader: () => import('./EditModel/EditModelContainer.component')})}
                     onEnter={loadObject}
                     hideSidebar
                     disableTabs
@@ -290,19 +282,19 @@ const routes = (
             </Route>
             <Route
                 path="clone/:groupName/:modelType/:modelId"
-                component={delayRender(() => System.import('./EditModel/EditModelContainer.component'))}
+                component={LoadableComponent({loader: () => import('./EditModel/EditModelContainer.component')})}
                 onEnter={cloneObject}
                 hideSidebar
                 disableTabs
             />
             <Route
                 path="group-editor"
-                component={delayRender(() => System.import('./GroupEditor/GroupEditor.component'))}
+                component={LoadableComponent({loader: () => import('./GroupEditor/GroupEditor.component')})}
                 onEnter={initState}
             />
             <Route
                 path="organisationUnitSection/hierarchy"
-                component={delayRender(() => System.import('./OrganisationUnitHierarchy'))}
+                component={LoadableComponent({loader: () => import('./OrganisationUnitHierarchy')})}
                 onEnter={initStateOuHierarchy}
             />
         </Route>

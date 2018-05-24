@@ -302,9 +302,19 @@ export const programStageModelEdit = createModelToEditProgramStageEpic(
     'programStages',
 );
 
+const setEventPSStage = (state) => {
+    const ps = first(state.programStages);
+    ps.name = state.program.name || state.program.id;
+    return {
+        ...state,
+        programStages: [ps],
+    };
+};
+
 const saveEventProgram = eventProgramStore
     .take(1)
     .filter(isStoreStateDirty)
+    .map(setEventPSStage)
     .map(getMetaDataToSend)
     .flatMap(metaDataPayload =>
         api$

@@ -3,32 +3,13 @@ import PropTypes from 'prop-types';
 
 import ErrorMessage from 'd2-ui/lib/messages/ErrorMessage.component';
 
-import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import modelToEditStore from '../../EditModel/modelToEditStore';
+import LoadableComponent from '../../utils/LoadableComponent';
+
+
+const LoadableLegendComponent = LoadableComponent({ loader: () => import('d2-ui/lib/legend/Legend.component') });
 
 class LegendsField extends Component {
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            isLoading: true,
-            Legend: null,
-        };
-    }
-
-    componentDidMount() {
-        this.loadLegendComponent();
-    }
-
-    loadLegendComponent() {
-        return System.import('d2-ui/lib/legend/Legend.component')
-            .then((module) => {
-                this.setState({
-                    Legend: module.default,
-                    isLoading: false,
-                });
-            });
-    }
-
     updateLegends = (newLegends) => {
         const model = modelToEditStore.getState();
         model[this.props.referenceProperty] = newLegends;
@@ -43,13 +24,9 @@ class LegendsField extends Component {
     render() {
         const legends = this.props.value;
 
-        if (this.state.isLoading || !this.state.Legend) {
-            return (<LinearProgress />);
-        }
-
         return (
             <div>
-                <this.state.Legend items={legends} onItemsChange={this.updateLegends} />
+                <LoadableLegendComponent items={legends} onItemsChange={this.updateLegends} />
                 <ErrorMessage message={this.props.errorText} />
             </div>
         );

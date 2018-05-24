@@ -110,13 +110,14 @@ class ProgramRuleActionsList extends React.Component {
                 break;
 
             case 'SENDMESSAGE':
+                const withDateString = action.data ? `${this.getTranslation('at_date')} "${action.data}"` : ''
                 const displayName = action.programNotificationTemplate
                         ? action.programNotificationTemplate.displayName
                         : this.getTranslation('no_notification_template_specified');
 
                 actionDetails = `${this.getTranslation(
                     programRuleActionTypes[action.programRuleActionType].label)
-                }: ${displayName}`;
+                }: ${displayName} ${withDateString}`;
 
                 break;
 

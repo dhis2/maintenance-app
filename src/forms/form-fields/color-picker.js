@@ -1,22 +1,10 @@
 import React from 'react';
 import ColorPicker from 'd2-ui/lib/legend/ColorPicker.component';
 import Divider from 'material-ui/Divider';
+import PropTypes from 'prop-types';
+import FieldWrapper from './helpers/FieldWrapper';
 
-
-const styles = {
-    field: {
-        display: 'inline-block',
-        padding: '1rem 0',
-    },
-    colorPickerLabel: {
-        transformOrigin: 'left top 0px',
-        color: 'rgba(0, 0, 0, 0.498039)',
-        transform: 'scale(.75)',
-        fontSize: '18px',
-    },
-};
-
-export default function ColorPickerField(props) {
+export default function ColorPickerField(props, context) {
     function transformChange(value) {
         props.onChange({
             target: {
@@ -27,13 +15,25 @@ export default function ColorPickerField(props) {
 
     return (
         <div>
-            <div style={styles.field} >
-                <div style={styles.colorPickerLabel}> Color </div>
-                <ColorPicker color={props.value} {...props} onChange={transformChange} />
-            </div>
+            <FieldWrapper label={context.d2.i18n.getTranslation('color')}>
+                <ColorPicker
+                    color={props.value || context.d2.i18n.getTranslation('select_color')}
+                    {...props}
+                    onChange={transformChange}
+                />
+            </FieldWrapper>
             <Divider />
         </div>
     );
 }
+ColorPickerField.defaultProps = {
+    PickerComponent: null,
+};
+ColorPickerField.propTypes = {
+    ...ColorPicker.propTypes,
+    PickerComponent: PropTypes.node,
+};
 
-ColorPickerField.propTypes = ColorPicker.propTypes;
+ColorPickerField.contextTypes = {
+    d2: PropTypes.object,
+};

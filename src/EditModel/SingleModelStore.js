@@ -135,6 +135,8 @@ const singleModelStoreConfig = {
                 model.id = undefined;
                 // Some objects also have a uuid property that should be cleared
                 model.uuid = undefined;
+                //let server handle created date
+                model.created = undefined;
                 model = cloneHandlerByObjectType(objectType, model);
                 this.setState(model);
             });

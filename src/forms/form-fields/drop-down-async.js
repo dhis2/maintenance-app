@@ -87,9 +87,10 @@ class DropDownAsync extends Component {
 
             fieldsForReferenceType = 'id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]]';
         }
-        //Need trackedEntityAttribute-ids for trackerProgram to assign programTrackedEntityAttributes
-        if(this.props.referenceType === 'trackedEntityType') {
-            fieldsForReferenceType = fieldsForReferenceType.concat(',trackedEntityTypeAttributes[trackedEntityAttribute]');
+        // Need trackedEntityAttribute-ids for trackerProgram to assign programTrackedEntityAttributes
+        if (this.props.referenceType === 'trackedEntityType') {
+            fieldsForReferenceType = fieldsForReferenceType
+                .concat(',trackedEntityTypeAttributes[trackedEntityAttribute]');
         }
 
         const filter = this.props.queryParamFilter;
@@ -142,7 +143,7 @@ class DropDownAsync extends Component {
                         )),
                     });
                 }
-            })
+            });
     }
 
     render() {
@@ -176,21 +177,21 @@ class DropDownAsync extends Component {
 
         return (
             <div style={wrapStyles}>
-                    {this.state.isRefreshing && <RefreshMask horizontal />}
-                    <DropDown
-                        {...other}
-                        top={this.props.top}
-                        options={this.state.options}
-                        value={this.props.value ? this.props.value.id : this.props.value}
-                        onChange={this.onChange}
-                        fullWidth={fullWidth}
-                    />
-                    {quickAddLink &&
-                        <QuickAddLink
-                            referenceType={this.props.referenceType}
-                            onRefreshClick={this.onRefreshClick}
-                        />
-                    }
+                {this.state.isRefreshing && <RefreshMask horizontal />}
+                <DropDown
+                    {...other}
+                    errorText={this.props.errorText}
+                    top={this.props.top}
+                    options={this.state.options}
+                    value={this.props.value ? this.props.value.id : this.props.value}
+                    onChange={this.onChange}
+                    fullWidth={fullWidth}
+                />
+                {quickAddLink &&
+                <QuickAddLink
+                    referenceType={this.props.referenceType}
+                    onRefreshClick={this.onRefreshClick}
+                />}
             </div>
         );
     }

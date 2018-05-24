@@ -7,20 +7,20 @@ import nest from 'recompose/nest';
 import { compose } from 'lodash/fp';
 import { green500, red500, red50, green50, orange50, orange500 } from 'material-ui/styles/colors';
 
-const ExpressionInvalidIcon = nest('span', mapProps(props => ({ color: red500 }))(NotInterestedIcon));
-const ExpressionValidIcon = nest('span', mapProps(props => ({ color: green500 }))(CheckCircleIcon));
-const ExpressionPendingIcon = nest('span', mapProps(props => ({ color: orange500 }))(CheckCircleIcon));
-
-const ExpressionStatusIcon = compose(
-    branch(props => props.status === ExpressionStatus.VALID, renderComponent(ExpressionValidIcon)),
-    branch(props => props.status === ExpressionStatus.INVALID, renderComponent(ExpressionInvalidIcon)),
-)(ExpressionPendingIcon);
+const ExpressionInvalidIcon = nest('span', mapProps(() => ({ color: red500 }))(NotInterestedIcon));
+const ExpressionValidIcon = nest('span', mapProps(() => ({ color: green500 }))(CheckCircleIcon));
+const ExpressionPendingIcon = nest('span', mapProps(() => ({ color: orange500 }))(CheckCircleIcon));
 
 export const ExpressionStatus = {
     VALID: 'VALID',
     INVALID: 'INVALID',
     PENDING: 'PENDING',
 };
+
+const ExpressionStatusIcon = compose(
+    branch(props => props.status === ExpressionStatus.VALID, renderComponent(ExpressionValidIcon)),
+    branch(props => props.status === ExpressionStatus.INVALID, renderComponent(ExpressionInvalidIcon)),
+)(ExpressionPendingIcon);
 
 export function getColorForExpressionStatus(status) {
     if (status === ExpressionStatus.VALID) {

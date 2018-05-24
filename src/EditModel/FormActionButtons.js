@@ -13,11 +13,10 @@ const styles = {
     },
 };
 
-// TODO: Make the isValid prop actually useful..
 export default function FormActionButtons({ onSaveAction, onCancelAction, isDirtyHandler, isSaving }) {
     return (
         <div>
-            <SaveButton onClick={onSaveAction} isValid isSaving={isSaving} />
+            <SaveButton onClick={onSaveAction} isSaving={isSaving} />
             <CancelButton onClick={onCancelAction} isDirtyHandler={isDirtyHandler} style={styles.cancelButton} />
         </div>
     );
