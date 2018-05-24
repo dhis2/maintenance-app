@@ -1,10 +1,6 @@
 import React from 'react';
 import Loadable from 'react-loadable';
 import LoadingMask from '../loading-mask/LoadingMask.component';
-import modelToEditStore from '../EditModel/modelToEditStore';
-import listStore from '../List/list.store';
-
-modelToEditStore.subscribe(state => console.log('modeltoEditStore: ', state));
 
 const LoadableComponent = opts =>
     Loadable({
@@ -13,119 +9,53 @@ const LoadableComponent = opts =>
     });
 
 export default LoadableComponent;
+
 export const LoadableMap = opts =>
     Loadable.Map({
         loading: LoadingMask,
         ...opts,
     });
 
-const LoaderHackzorz = opts => {
-    const LoadedComponent = LoadableComponent(opts);
-    //Handle loading of component here, as we do it once
- /*   let loaded = null;
-    if (!loaded) {
-        const promise = opts.loader();
-        loaded = {
-            error: false,
-            loading: true,
-            loaded: null,
-        };
-        loaded.promise = promise
-            .then(loadedComp => {
-                loaded.loading = false;
-                loaded.comp = loadedComp.default;
-                console.log(loadedComp);
-                console.log(loaded.comp)
-                return loaded.comp;
-            })
-            .catch(err => {
-                loaded.loading = false;
-                loaded.error = err;
-                return err;
-            });
-    } */
-    return class LoaderHack extends React.Component {
+/**
+ * HOC that wraps LoadableComponent with
+ * additional loaders (any promise), that should
+ * always be resolved before the component is loaded.
+ * This is useful to load data before the component is rendered.
+ *
+ * @param {object} loadableOpts Loadable options
+ * @param {Promise[]|Promise} loaders Promises that should be resolved.
+ * All the loaders will be called with the props of the component.
+ */
+export const LoadableWithLoaders = (loadableOpts, loaders) => {
+    const LoadedComponent = LoadableComponent(loadableOpts);
+    const Loader = loadableOpts.loading || LoadingMask;
+
+    return class WithLoaders extends React.Component {
         constructor(props) {
             super(props);
             this.state = {
-                loading: true, //loading of extra promises
-                component: null,
+                loading: true,
                 error: false,
             };
         }
 
         componentWillMount() {
-            const promise = modelToEditStore
-                .filter(
-                    state =>
-                        state.sections && state.id === this.props.params.modelId
-                )
-                .take(1)
-                .toPromise();
+            // Start loading the component instead of waiting for loaders to resolve
+            LoadedComponent.preload();
+            if (typeof loaders === 'function') {
+                loaders = [loaders];
+            }
 
-            promise.then(state => {
-                console.log('haczors,state', state);
-                this.setState({ loading: false });
-            });
-            /*
-            loaded.promise
-                .then(comp =>
-                    this.setState({component: comp, error: false })
-                )
-                .catch(err =>
-                    this.setState({
-                        error: loaded.error,
-                        loaded: null,
-                        loading: false,
-                    })
-                ); */
+            Promise.all(loaders.map(loader => loader(this.props)))
+                .then(() => this.setState({ loading: false }))
+                .catch(error => this.setState({ error }));
         }
 
         render() {
-            if(!this.state.loading) {
-                return <LoadedComponent {...this.props} />
-            }  
-            return <LoadingMask />
+            if (!this.state.loading && !this.state.error) {
+                return <LoadedComponent {...this.props} />;
+            }
+            return <Loader error={this.state.error} />;
         }
     };
-};
-
-/**
- * A HOC that dynamically loads a component, and ensures modelToEditStore.state being available.
- * Due to removing async routes, and some routes depending on ModelToEditStore.state being available,
-    we have a loadable-component-HOC that also makes sure the modelToEditStore is initialized. 
-    Preventing race conditions.
-
-    LoadableMap does not complete the loading before both "Comp" (the dynamic-loaded component)
-    and predefinedStore-promises resolve.
-
-    @params {object} A react-loadable options object. The only required part of the object is
-     'loader': a function with the import() statement.
-
- */
-export const LoadableWithPreloadedStore = ({ loader: load, ...rest }) => {
-    console.log('rest', rest);
-    return LoaderHackzorz({ loader: load });
-    return LoadableMap({
-        loader: {
-            Comp: load,
-            predefinedStore: () =>
-                (() => {
-                    console.log('predefinedstore');
-                    return modelToEditStore.take(1).toPromise();
-                })(),
-            /*listStore: () => {
-                console.log('takeWhile!');
-                return modelToEditStore
-                    .takeWhile(state => !state.sections)
-                    .toPromise();
-            },*/
-        },
-        render(loaded, props) {
-            console.log('render loadable!');
-            const Comp = loaded.Comp.default;
-            return <Comp {...props} />;
-        },
-        ...rest,
-    });
 };
