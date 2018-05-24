@@ -33,7 +33,7 @@ const styles = {
     },
     sortBarStyle: {
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         paddingBottom: '1rem',
     },
     sortButtonStyle: {
