@@ -35,9 +35,11 @@ const styles = {
         display: 'flex',
         justifyContent: 'flex-end',
         paddingBottom: '1rem',
+        paddingLeft: '1rem',
     },
     sortButtonStyle: {
         flex: '0 0 15rem',
+        marginLeft: '1rem',
     },
     alertWrapper: {
         color: 'orange',
