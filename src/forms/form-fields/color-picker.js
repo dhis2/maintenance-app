@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import ColorPicker from 'd2-ui/lib/legend/ColorPicker.component';
 import Divider from 'material-ui/Divider';
-
 
 const styles = {
     field: {
@@ -16,7 +17,7 @@ const styles = {
     },
 };
 
-export default function ColorPickerField(props) {
+export default function ColorPickerField(props, context) {
     function transformChange(value) {
         props.onChange({
             target: {
@@ -29,7 +30,11 @@ export default function ColorPickerField(props) {
         <div>
             <div style={styles.field} >
                 <div style={styles.colorPickerLabel}> Color </div>
-                <ColorPicker color={props.value} {...props} onChange={transformChange} />
+                <ColorPicker
+                    color={props.value || context.d2.i18n.getTranslation('select_color')}
+                    {...props}
+                    onChange={transformChange}
+                />
             </div>
             <Divider />
         </div>
@@ -37,3 +42,7 @@ export default function ColorPickerField(props) {
 }
 
 ColorPickerField.propTypes = ColorPicker.propTypes;
+
+ColorPickerField.contextTypes = {
+    d2: PropTypes.object,
+};
