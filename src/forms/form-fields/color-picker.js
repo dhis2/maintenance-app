@@ -17,7 +17,7 @@ export default function ColorPickerField(props, context) {
         <div>
             <FieldWrapper label={context.d2.i18n.getTranslation('color')}>
                 <ColorPicker
-                    color={context.d2.i18n.getTranslation('select_color')}
+                    color={props.value || context.d2.i18n.getTranslation('select_color')}
                     {...props}
                     onChange={transformChange}
                 />
