@@ -30,7 +30,7 @@ function createValidatorForUniqueNames(nameFieldConfig, modelToEdit, d2) {
         }
         return true;
     };
-    uniqueNameValidator.message = d2.i18n.getTranslation('name_must_be_unique');
+    uniqueNameValidator.message = d2.i18n.getTranslation('option_name_must_be_unique');
 
     nameFieldConfig.validators
         .push(createValidatorFromValidatorFunction(uniqueNameValidator));

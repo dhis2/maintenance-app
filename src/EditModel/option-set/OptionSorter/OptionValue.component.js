@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function OptionValue(props, context) {
+export default function OptionValue(props) {
     const {
         connectDragSource,
         connectDropTarget,

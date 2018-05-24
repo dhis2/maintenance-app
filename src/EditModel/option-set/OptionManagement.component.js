@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
@@ -25,28 +24,20 @@ import { optionsForOptionSetStore } from './stores';
 
 const styles = {
     optionManagementWrap: {
-        paddingTop: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '1rem 1rem 1rem 1rem',
     },
     dataTableWrap: {
-        padding: '1rem',
-        paddingTop: '2.5rem',
-        marginTop: '1rem',
         position: 'relative',
     },
-    addButton: {
-        position: 'absolute',
-        right: '.5rem',
-    },
     sortBarStyle: {
-        paddingLeft: '1rem',
         display: 'flex',
+        justifyContent: 'space-between',
+        paddingBottom: '1rem',
     },
     sortButtonStyle: {
         flex: '0 0 15rem',
-        marginRight: '1rem',
-    },
-    paginationWrap: {
-        padding: '0 1rem',
     },
     alertWrapper: {
         color: 'orange',
@@ -54,11 +45,14 @@ const styles = {
         padding: '0.5rem',
         border: '1px dotted orange',
         borderRadius: '0.5rem',
-        margin: '2rem 1rem 0',
+        marginTop: '2rem',
     },
     alertText: {
         lineHeight: '2rem',
         paddingLeft: '1rem',
+    },
+    addButton: {
+        float: 'right',
     },
 };
 
@@ -144,11 +138,7 @@ class OptionManagement extends Component {
             currentlyShown: calculatePageValue(this.props.pager),
         };
 
-        return (
-            <div style={styles.paginationWrap}>
-                <Pagination {...paginationProps} />
-            </div>
-        );
+        return <Pagination {...paginationProps} />;
     }
 
     render() {
@@ -163,41 +153,46 @@ class OptionManagement extends Component {
         };
 
         return (
-            <div>
-                <div style={styles.optionManagementWrap}>
-                    <OptionSorter
-                        style={styles.sortBarStyle}
-                        buttonStyle={styles.sortButtonStyle}
+            <div style={styles.optionManagementWrap}>
+                {this.displayInCorrectOrderWarning()}
+                {this.renderPagination()}
+                <OptionSorter
+                    style={styles.sortBarStyle}
+                    buttonStyle={styles.sortButtonStyle}
+                    rows={this.props.rows}
+                />
+                <div style={styles.dataTableWrap}>
+                    {this.props.isLoading && <LinearProgress />}
+                    <DataTable
                         rows={this.props.rows}
+                        columns={this.props.columns}
+                        primaryAction={this.onEditOption}
+                        contextMenuActions={contextActions}
                     />
-                    {this.displayInCorrectOrderWarning()}
-                    {this.renderPagination()}
-                    <div style={styles.dataTableWrap}>
-                        {this.props.isLoading && <LinearProgress />}
-                        <DataTable
-                            rows={this.props.rows}
-                            columns={this.props.columns}
-                            primaryAction={this.onEditOption}
-                            contextMenuActions={contextActions}
-                        />
-                    </div>
-                    <OptionDialogForOptions
-                        onRequestClose={this.onAddDialogClose}
-                        parentModel={this.props.model}
-                    />
-                    {this.state.modelToTranslate && <TranslationDialog
-                        objectToTranslate={this.state.modelToTranslate}
-                        objectTypeToTranslate={this.state.modelToTranslate && this.state.modelToTranslate.modelDefinition}
-                        open={Boolean(this.state.modelToTranslate)}
-                        onTranslationSaved={this.translationSaved}
-                        onTranslationError={this.translationErrored}
-                        onRequestClose={() => this.setState({ modelToTranslate: null })}
-                        fieldsToTranslate={['name']}
-                    />}
                 </div>
-                <FloatingActionButton onClick={this.onAddOption} style={styles.addButton}>
-                    <ContentAdd />
-                </FloatingActionButton>
+                <OptionDialogForOptions
+                    onRequestClose={this.onAddDialogClose}
+                    parentModel={this.props.model}
+                />
+                {this.state.modelToTranslate && <TranslationDialog
+                    objectToTranslate={this.state.modelToTranslate}
+                    objectTypeToTranslate={
+                        this.state.modelToTranslate &&
+                        this.state.modelToTranslate.modelDefinition}
+                    open={Boolean(this.state.modelToTranslate)}
+                    onTranslationSaved={this.translationSaved}
+                    onTranslationError={this.translationErrored}
+                    onRequestClose={() => this.setState({ modelToTranslate: null })}
+                    fieldsToTranslate={['name']}
+                />}
+                <div>
+                    <RaisedButton
+                        label={this.i18n.getTranslation('add_option')}
+                        primary
+                        onClick={this.onAddOption}
+                        style={styles.addButton}
+                    />
+                </div>
             </div>
         );
     }
