@@ -47,8 +47,10 @@ class EditDataSetSections extends Component {
                 { fields: 'id,displayName', paging: false },
             ),
         ]).then(([catComboList]) => {
+            const sections = modelToEditStore.state.sections;
+            const sectionArray = Array.isArray(sections) ? sections : sections.toArray();
             this.setState({
-                sections: modelToEditStore.state.sections.toArray().sort((a, b) => a.sortOrder - b.sortOrder),
+                sections: sectionArray.sort((a, b) => a.sortOrder - b.sortOrder),
                 categoryCombos: catComboList.categoryCombos.map(cc => ({
                     value: cc.id,
                     text: cc.displayName === 'default' ? this.getTranslation('none') : cc.displayName,
