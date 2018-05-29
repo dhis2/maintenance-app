@@ -18,8 +18,6 @@ import { loadEventProgram } from './EditModel/event-program/actions';
 import { loadProgramIndicator } from './EditModel/program-indicator/actions';
 import LoadableComponent, { LoadableWithLoaders } from './utils/LoadableComponent';
 
-listStore.subscribe(val => console.log(val));
-
 function initState({ params }) {
     initAppState({
         sideBar: {
@@ -161,7 +159,6 @@ function loadList({ params }, replace) {
         return;
     }
     initState({ params });
-   // listStore.setState({isLoading: true})
     return listActions.loadList(params.modelType)
         .take(1)
         .subscribe(
