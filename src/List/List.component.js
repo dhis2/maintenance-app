@@ -162,11 +162,10 @@ class List extends Component {
 
         const sourceStoreDisposable = listStore
             .subscribe((listStoreValue) => {
-                if (!isIterable(listStoreValue.list)) {
-                    return; // Received value is not iterable, keep waiting
+                if (!isIterable(listStoreValue.list) || listStoreValue.modelType !== this.props.params.modelType) {
+                    return; // Received value is not iterable or not correct model, keep waiting
                 }
                 listActions.hideDetailsBox();
-
                 this.setState({
                     dataRows: listStoreValue.list,
                     pager: listStoreValue.pager,
@@ -516,7 +515,6 @@ class List extends Component {
                 });
             }
         };
-
         return (
             <div>
                 <div>

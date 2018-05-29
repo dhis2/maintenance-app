@@ -45,11 +45,23 @@ export const LoadableWithLoaders = (loadableOpts, loaders) => {
             if (typeof loaders === 'function') {
                 loaders = [loaders];
             }
+        }
 
-            Promise.all(loaders.map(loader => loader(this.props)))
+        componentDidMount() {
+            this.runLoaders();
+        }
+        componentWillReceiveProps(nextProps) {
+            // reload when switching sections
+            if (nextProps.params.modelType !== this.props.params.modelType) {
+                this.runLoaders(nextProps);
+            }
+        }
+
+        runLoaders = (propsToUse = this.props) => {
+            Promise.all(loaders.map(loader => loader(propsToUse)))
                 .then(() => this.setState({ loading: false }))
                 .catch(error => this.setState({ error }));
-        }
+        };
 
         render() {
             if (!this.state.loading && !this.state.error) {

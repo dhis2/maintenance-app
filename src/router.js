@@ -18,6 +18,8 @@ import { loadEventProgram } from './EditModel/event-program/actions';
 import { loadProgramIndicator } from './EditModel/program-indicator/actions';
 import LoadableComponent, { LoadableWithLoaders } from './utils/LoadableComponent';
 
+listStore.subscribe(val => console.log(val));
+
 function initState({ params }) {
     initAppState({
         sideBar: {
@@ -148,7 +150,7 @@ function createLoaderForSchema(schema, actionCreatorForLoadingObject, resetActiv
     };
 }
 
-function loadList({ params, router: { replace } }) {
+function loadList({ params }, replace) {
     if (params.modelType === 'organisationUnit') {
         // Don't load organisation units as they get loaded through the
         // appState Also load the initialState without cache so we
@@ -156,14 +158,14 @@ function loadList({ params, router: { replace } }) {
         // changed by adding an organisation unit which would need to be
         // reflected in the organisation unit tree
         initState({ params });
+        return;
     }
-    listStore.setState({});
     initState({ params });
-    return new Promise((resolve, reject) => {
-        listActions.loadList(params.modelType)
+   // listStore.setState({isLoading: true})
+    return listActions.loadList(params.modelType)
         .take(1)
         .subscribe(
-            resolve,
+            noop,
             (message) => {
                 if (/^.+s$/.test(params.modelType)) {
                     const nonPluralAttempt = params.modelType.substring(0, params.modelType.length - 1);
@@ -174,11 +176,9 @@ function loadList({ params, router: { replace } }) {
                     log.error(message);
 
                     replace('/');
-                    reject(message);
                 }
             },
         );
-    });
 }
 
 function cloneObject({ params, router: { replace } }) {
@@ -225,7 +225,8 @@ const routes = (
                 />
                 <Route
                     path=":modelType"
-                    component={LoadableWithLoaders({ loader: () => import('./List/List.component') }, loadList)}
+                    component={LoadableComponent({ loader: () => import('./List/List.component') })}
+                    onEnter={loadList}
                 />
             </Route>
             <Route path="edit/:groupName">
