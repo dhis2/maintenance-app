@@ -100,6 +100,7 @@ DetailsBox.defaultProps = {
     source: PropTypes.object,
     fields: [
         'name',
+        'locale',
         'shortName',
         'code',
         'displayDescription',

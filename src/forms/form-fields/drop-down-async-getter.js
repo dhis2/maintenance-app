@@ -37,12 +37,16 @@ class DropDownAsyncGetter extends React.Component {
     }
 
     render() {
-        const { getter, shouldRender, useValueDotId, ...props } = this.props;
+        const { getter, shouldRender, useValueDotId, useFullOptionAsValue, ...props } = this.props;       
+
         if (shouldRender(this.props.model)) {
             const eventIdWrapper = (event) => {
                 if (!isNil(event.target.value)) {
                     if (useValueDotId) {
                         this.props.onChange({ target: { value: { id: event.target.value } } });
+                    } else if (useFullOptionAsValue) {
+                        const selectedOption = this.state.options.find(({ value }) => event.target.value === value);
+                        this.props.onChange({ target: { value: { id: selectedOption.value, ...selectedOption } } });
                     } else {
                         this.props.onChange({ target: { value: event.target.value } });
                     }
@@ -54,7 +58,7 @@ class DropDownAsyncGetter extends React.Component {
             return (
                 <DropDown
                     {...props}
-                    value={useValueDotId ? this.props.value && this.props.value.id : this.props.value}
+                    value={useValueDotId || useFullOptionAsValue ? this.props.value && this.props.value.id : this.props.value}
                     onChange={eventIdWrapper}
                     options={this.state.options}
                 />
