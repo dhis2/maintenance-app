@@ -443,6 +443,13 @@ const fieldOrderByName = new Map([
         'periodType',
         'dataApprovalLevels',
     ]],
+    ['sqlView', [
+        'name',
+        'description',
+        'cacheStrategy',
+        'type',
+        'sqlQuery',
+    ]],
 ]);
 
 export default {

@@ -30,6 +30,9 @@ const contextActions = Action.createActionsFromNames([
     'pdfDataSetForm',
     'preview',
     'runNow',
+    'executeQuery',
+    'refresh',
+    'showSqlView',
 ]);
 
 const confirm = message => new Promise((resolve, reject) => {
@@ -249,5 +252,41 @@ contextActions.preview
                 actionFailed(err);
             });
     });
+
+contextActions.executeQuery
+    .subscribe(async ({ data: model, complete: actionComplete, error: actionFailed }) => {
+        const d2 = await getD2();
+
+        d2.Api.getApi().post(`/sqlViews/${model.id}/execute`)
+            .then(() => {
+                snackActions.show({ message: d2.i18n.getTranslation('sql_view_executed_successfully') });
+                actionComplete();
+            })
+            .catch((err) => {
+                snackActions.show({ message: d2.i18n.getTranslation('sql_view_execute_error'), action: 'ok' });
+                actionFailed(err);
+            });
+    });
+
+contextActions.refresh
+    .subscribe(async ({ data: model, complete: actionComplete, error: actionFailed }) => {
+        const d2 = await getD2();
+
+        d2.Api.getApi().post(`/sqlViews/${model.id}/refresh`)
+            .then(() => {
+                snackActions.show({ message: d2.i18n.getTranslation('sql_view_refreshed_successfully') });
+                actionComplete();
+            })
+            .catch((err) => {
+                snackActions.show({ message: d2.i18n.getTranslation('sql_view_refresh_error'), action: 'ok' });
+                actionFailed(err);
+            });
+    });
+
+contextActions.showSqlView
+    .subscribe(({ data: model }) => {
+        goToRoute(`sqlViews/${model.id}`);
+    });
+
 
 export default contextActions;

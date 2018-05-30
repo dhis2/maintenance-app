@@ -296,6 +296,12 @@ const routes = (
                 component={LoadableComponent({ loader: () => import('./OrganisationUnitHierarchy') })}
                 onEnter={initStateOuHierarchy}
             />
+            <Route
+                path="sqlViews/:modelId"
+                component={LoadableComponent({ loader: () => import('./SqlView') })}
+                hideSidebar
+                disableTabs
+            />
         </Route>
     </Router>
 );
