@@ -56,7 +56,6 @@ export const LoadableWithLoaders = (loadableOpts, loaders, loaderOpts = {}) => {
         }
 
         componentWillMount() {
-            console.log('WILL MOUNT');
             // Start loading the component instead of waiting for loaders to resolve
             LoadedComponent.preload();
             if (typeof loaders === 'function') {
@@ -75,7 +74,6 @@ export const LoadableWithLoaders = (loadableOpts, loaders, loaderOpts = {}) => {
         }
 
         runLoaders = (propsToUse = this.props) => {
-            console.log('RUN LOADERS');
             Promise.all(loaders.map(loader => loader(propsToUse)))
                 .then(() => this.setState({ loading: false }))
                 .catch(error => this.setState({ error }));
