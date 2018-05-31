@@ -12,14 +12,18 @@ const backToList = () => {
 };
 
 class SqlView extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
         this.state = {
             listGrid: null,
         };
     }
 
-    async componentWillMount() {
+    componentDidMount() {
+        this.getSqlView();
+    }
+
+    async getSqlView() {
         const { d2 } = this.context;
         const { params: { modelId } } = this.props;
         const url = `sqlViews/${modelId}/data`;
