@@ -117,7 +117,7 @@ const actionTypeFieldMapping = {
     },
     SCHEDULEMESSAGE: {
         label: 'schedule_message',
-        required: ['data'],
+        required: ['programNotificationTemplate', 'data'],
         labelOverrides: {
             data: 'date_to_send_message',
         }
