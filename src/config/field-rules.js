@@ -735,8 +735,20 @@ export default new Map([
             operations: [{
                 field: 'recipientProgramAttribute',
                 type: 'HIDE_FIELD',
-            }]
-        }
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
     ]],
     ['categoryCombo', [
         {

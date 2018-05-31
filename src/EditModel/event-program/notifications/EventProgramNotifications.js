@@ -74,8 +74,9 @@ const mapDispatchToProps = dispatch =>
         {
             removeStageNotification,
             setEditModel: model =>
-                setEditModel(model, 'PROGRAM_STAGE_NOTIFICATION'),
-            setAddModel,
+                setEditModel(model, 'PROGRAM_NOTIFICATION'),
+            setAddModel: model =>
+                setEditModel(model, 'PROGRAM_NOTIFICATION'),
         },
         dispatch
     );

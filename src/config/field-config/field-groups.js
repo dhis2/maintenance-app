@@ -70,6 +70,8 @@ const fieldGroupsForModelType = new Map([
                     'recipientUserGroup',
                     'deliveryChannels',
                     'recipientProgramAttribute',
+                    'notifyUsersInHierarchyOnly',
+                    'notifyParentOrganisationUnitOnly',
                 ],
             },
         ],
@@ -88,11 +90,13 @@ const fieldGroupsForModelType = new Map([
             {
                 label: 'who_to_send_it_to',
                 fields: [
+                    'notifyParentOrganisationUnitOnly',
                     'notificationRecipient',
                     'recipientUserGroup',
                     'deliveryChannels',
                     'recipientDataElement',
                     'recipientProgramAttribute',
+                    'notifyParentOrganisationUnitOnly',
                 ],
             },
         ],
