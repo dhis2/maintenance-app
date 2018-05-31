@@ -4,6 +4,10 @@
         "browser": true,
         "jest": true
     },
+    "rules": {
+        "no-param-reassign": [2, { "props": false }],
+        "import/no-extraneous-dependencies": 0
+    },
     "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
