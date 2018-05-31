@@ -263,7 +263,8 @@ contextActions.executeQuery
                 actionComplete();
             })
             .catch((err) => {
-                snackActions.show({ message: d2.i18n.getTranslation('sql_view_execute_error'), action: 'ok' });
+                const message = `${d2.i18n.getTranslation('sql_view_execute_error')} - ${err && err.message}`;
+                snackActions.show({ message, action: 'ok' });
                 actionFailed(err);
             });
     });
