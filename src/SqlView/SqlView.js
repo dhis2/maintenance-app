@@ -71,7 +71,7 @@ class SqlView extends Component {
                 className="sql-view__download-btn"
                 key={label}
                 label={d2.i18n.getTranslation(label)}
-                onClick={() => this.openFileLink(file)}
+                onClick={() => this.openFileLink(file)} // eslint-disable-line react/jsx-no-bind
             />
         ));
     }

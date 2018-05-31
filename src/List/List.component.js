@@ -300,11 +300,11 @@ class List extends Component {
         case 'preview':
             return model.modelDefinition.name === 'pushAnalysis' && model.access.write;
         case 'executeQuery':
-            return model.modelDefinition.name === 'sqlView' && model.access.write;
+            return model.modelDefinition.name === 'sqlView' && model.access.read;
         case 'refresh':
-            return model.modelDefinition.name === 'sqlView' && model.access.write;
+            return model.modelDefinition.name === 'sqlView' && model.access.read;
         case 'showSqlView':
-            return model.modelDefinition.name === 'sqlView' && model.access.write;
+            return model.modelDefinition.name === 'sqlView' && model.access.read;
         default:
             return true;
         }
