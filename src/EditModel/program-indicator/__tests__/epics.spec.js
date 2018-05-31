@@ -1,6 +1,6 @@
 import { ActionsObservable } from 'redux-observable';
 import Store from 'd2-ui/lib/store/Store';
-import * as d2 from 'd2/lib/d2';
+import d2 from 'd2/lib/d2';
 import { PROGRAM_INDICATOR_LOAD, PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED } from '../actions';
 import * as epics from '../epics';
 
@@ -58,12 +58,13 @@ describe('Program indicator epics', () => {
                         () => {
                             const fieldFilters = ':all,attributeValues[:all,attribute[id,name,displayName]],program[id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]]]';
 
-                            expect(mockD2.models.programIndicator.get).toBeCalledWith('pTo4uMt3xur', { fields: fieldFilters });
+                            expect(mockD2.models.programIndicator.get)
+                                .toBeCalledWith('pTo4uMt3xur', { fields: fieldFilters });
 
                             done();
                         },
                         done);
-            }
+            },
         );
 
         test('should set the programIndicator onto the store', (done) => {
@@ -112,7 +113,7 @@ describe('Program indicator epics', () => {
                             done();
                         },
                         done);
-            }
+            },
         );
     });
 
@@ -157,7 +158,7 @@ describe('Program indicator epics', () => {
 
                         done();
                     },
-                    done
+                    done,
                 );
         });
 
@@ -185,7 +186,7 @@ describe('Program indicator epics', () => {
 
                         done();
                     },
-                    done
+                    done,
                 );
         });
     });

@@ -5,13 +5,11 @@ describe('Program indicator selectors', () => {
         test('should return the activeStep from the state', () => {
             const state = {
                 programIndicator: {
-                    step: {
-                        activeStep: 'details',
-                    },
+                    activeStep: 0,
                 },
             };
 
-            expect(activeStepSelector(state)).toBe('details');
+            expect(activeStepSelector(state)).toBe(0);
         });
 
         test('should return undefined if step does not exist', () => {

@@ -1,64 +1,15 @@
 import Store from 'd2-ui/lib/store/Store';
-import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, findIndex, isObject } from 'lodash/fp';
-import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
+import { equals, some, isObject, get } from 'lodash/fp';
 
-// // programSelector :: StoreState -> Model<Program>
-// const programSelector = get('program');
-//
-// // programStagesSelector :: StoreState -> Array<Model<ProgramStage>>
-// const programStagesSelector = get('programStages');
-//
-// // programStageNotificationsSelector :: StoreState -> Object<programStageId, programStageNotifications>
-// const programStageNotificationsSelector = get('programStageNotifications');
-//
-// // checkIfDirty :: Model -> Boolean
-// const checkIfDirty = model => model && model.isDirty();
-//
-// // modelToJson :: Model -> Object
-// const modelToJson = getOwnedPropertyJSON;
-//
-// // isProgramStageDirty :: Object<{programStages}> -> Boolean
-// const isProgramStageDirty = compose(checkIfDirty, first, programStagesSelector);
-//
-// // getIdForFirstProgramStage :: Object<{programStages}> -> String
-// const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelector);
-//
-// // hasDirtyNotificationTemplate :: Object<{programStageNotifications, programStages}> -> Boolean
-// const hasDirtyNotificationTemplate = state => some(checkIfDirty, get(getIdForFirstProgramStage(state), programStageNotificationsSelector(state)));
-//
-// // isProgramDirty :: Object<{program}> -> Boolean
-// const isProgramDirty = compose(checkIfDirty, programSelector);
-//
-// // isStoreStateDirty :: StoreState -> Boolean
-// export const isStoreStateDirty = compose(some(identity), map(__, [isProgramDirty, hasDirtyNotificationTemplate, isProgramStageDirty]), value => func => func(value));
-//
-// // getMetaDataToSend :: StoreState -> SaveState
-// export const getMetaDataToSend = state => {
-//     const payload = {};
-//
-//     if (isProgramDirty(state)) {
-//         payload.programs = [programSelector(state)]
-//             .map(modelToJson);
-//     }
-//
-//     if (isProgramStageDirty(state)) {
-//         payload.programStages = programStagesSelector(state)
-//             .map(modelToJson);
-//     }
-//
-//     if (hasDirtyNotificationTemplate(state)) {
-//         const programStageNotifications = programStageNotificationsSelector(state);
-//
-//         payload.programNotificationTemplates = Object
-//             .keys(programStageNotifications)
-//             .map(get(__, programStageNotifications))
-//             .reduce(concat)
-//             .filter(checkIfDirty)
-//             .map(modelToJson);
-//     }
-//
-//     return payload;
-// };
+const programSelector = get('programIndicator');
+
+const checkIfDirty = model => model && model.isDirty();
+
+// __ isStoreStateDirty :: StoreState -> Boolean
+export const isStoreStateDirty = (store) => {
+    const model = programSelector(store.getState());
+    return checkIfDirty(model);
+};
 
 // isValidState :: StoreState -> Boolean
 function isValidState(state) {
