@@ -1,6 +1,5 @@
 import ModelDefinition from 'd2/lib/model/ModelDefinition';
 import ModelCollection from 'd2/lib/model/ModelCollection';
-import { generateUid } from 'd2/lib/uid';
 
 let cachedLocales = null;
 const resetCache = () => {
@@ -16,7 +15,8 @@ export default class LocaleModelDefinition extends ModelDefinition {
 
         // Otherwise fetch
         return Promise.all([
-            this.api.get('/locales/ui'),
+            // TODO: This is a new API endpoint. Make sure to introduce new .war file first
+            this.api.get('/locales/dbLocales'),
             this.api.get('me/authorization'),
         ]).then(([locales, authorities]) => {
             const canCreateAndDelete = authorities.some(auth => ['F_SYSTEM_SETTING', 'ALL'].includes(auth));
@@ -32,8 +32,8 @@ export default class LocaleModelDefinition extends ModelDefinition {
             // Cache the response first time and keep using it
             cachedLocales = locales.map((locale) => {
                 const model = this.create({
+                    // TODO: Check if id is indeed a property of locale, because it is required for a new Model instance
                     ...locale,
-                    id: generateUid(),
                     access,
                     displayName: locale.name,
                 });
@@ -88,7 +88,7 @@ export default class LocaleModelDefinition extends ModelDefinition {
         const name = `${language.text} (${country.text})`;
         // TODO: Fix API call when DHIS2-3801 is done
         // Final code should look a little bit like this
-        // return this.api.post('/locales/ui/', { locale: model.locale, name: model.name })
+        // return this.api.post('/locales/dbLocales', { locale: model.locale, name: model.name })
         //     .then(() => {
         //         resetCache();
 
@@ -97,14 +97,12 @@ export default class LocaleModelDefinition extends ModelDefinition {
         //         };
         //     });
 
-
-
         // FAKE - This will only add on the client
         return this.getLocalesAndAuthorities().then((locales) => {
             const newLocale = this.create({
                 name,
                 locale,
-                id: generateUid(),
+                id: 'E4sMBVqTjMu',
                 access: {
                     read: true,
                     update: true,
@@ -126,7 +124,7 @@ export default class LocaleModelDefinition extends ModelDefinition {
         console.log(model);
         // TODO: Fix API call when DHIS2-3801 is done
         // Final code should look a little bit like this
-        // return this.api.delete(`/locales/ui/${model.locale}`).then(() => {
+        // return this.api.delete(`/locales/dbLocales/${model.id}`).then(() => {
         //     resetCache();
 
         //     return {
