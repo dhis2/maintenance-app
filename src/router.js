@@ -253,7 +253,7 @@ const routes = (
                 />
                 <Route
                     path="programIndicator/:modelId"
-                    component={LoadableComponent({ oader: () => import('./EditModel/program-indicator/EditProgramIndicator') })}
+                    component={LoadableComponent({ loader: () => import('./EditModel/program-indicator/EditProgramIndicator') })}
                     onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator, resetActiveStep)}
                     hideSidebar
                     disableTabs
