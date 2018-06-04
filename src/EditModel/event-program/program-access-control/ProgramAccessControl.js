@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import IconButton from 'material-ui/IconButton/IconButton';
 import List from 'material-ui/List/List';
@@ -12,7 +13,7 @@ import FontIcon from 'material-ui/FontIcon';
 import FlatButton from 'material-ui/FlatButton';
 import { Checkbox } from 'material-ui';
 import { blue500 } from 'material-ui/styles/colors';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 import { isEqual } from 'lodash/fp';
 import { yellow500 } from 'material-ui/styles/colors';
 
@@ -39,6 +40,16 @@ const styles = {
         color: '#aaa',
         fontWeight: 400,
     },
+    programStageList: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    warningIcon: {
+        top: '22px',
+        height: '32px',
+        width: '32px',
+    },
 };
 
 const areSharingPropertiesSimilar = (a, b) => {
@@ -61,13 +72,71 @@ const areSharingPropertiesSimilar = (a, b) => {
     );
 };
 
+const extractDisplayName = model => model.dataValues.displayName;
+const extractUserGroupLength = model => model.dataValues.userGroupAccesses.length;
+
+const getPublicAccessDescription = publicAccess => {
+    if (publicAccess.substr(0, 4) === '----') return 'No public access';
+    if (publicAccess.substr(0, 4) === 'rwrw') return 'Complete public access';
+
+    let description = '';
+    switch (publicAccess.substr(0, 2)) {
+        case 'rw':
+            description += 'Public metadata read- and write access';
+            break;
+        case 'r-':
+            description += 'Public metadata read access';
+            break;
+        default:
+            description += 'No public metadata access';
+            break;
+    }
+
+    description = description += ', ';
+
+    switch (publicAccess.substr(2, 2)) {
+        case 'rw':
+            return description + 'public data read- and write access';
+        case 'r-':
+            return description + 'public data read access';
+        default:
+            return description + 'no public data access';
+    }
+};
+
+const generateSharingDescription = model => {
+    console.warn('Input: ', model);
+    const publicAccessDescription = getPublicAccessDescription(model.publicAccess);
+    const userGroupCount = model.dataValues.userGroupAccesses.length;
+    const userCount = model.dataValues.userAccesses.length;
+
+    let description = publicAccessDescription;
+    if (userCount || userGroupCount) {
+        description += ', accessible to ';
+        if (userCount) {
+            const plural = (userCount > 1) ? 's' : ''
+            description += `${userCount} user${plural}`;
+        }
+
+        if (userGroupCount) {
+            if (userCount)
+                description += ' and ';
+
+            const plural = (userGroupCount > 1) ? 's' : ''
+            description += `${userGroupCount} user group${plural}`;
+        }
+    }
+
+    return description;
+};
+
 class ProgramAccessControl extends React.Component {
     state = {
         propagateAccess: true,
         sharingDialogOpen: false,
     };
 
-    constructor(props) {
+    constructor(props, context) {
         super(props);
 
         const programSharing = this.props.model.dataValues;
@@ -75,28 +144,29 @@ class ProgramAccessControl extends React.Component {
             this.props.model.dataValues.programStages.valuesContainerMap,
         ).map(stage => stage[1]);
 
-        const stageAccessToggle = {},
-            stageAccessPropagate = {};
+        const propagationMap = {},
+            propagationMapAllEnabled = {};
         stagesSharing.forEach(stage => {
-            stageAccessPropagate[stage.id] = true;
-            stageAccessToggle[stage.id] = areSharingPropertiesSimilar(programSharing, stage);
+            propagationMapAllEnabled[stage.id] = true;
+            propagationMap[stage.id] = areSharingPropertiesSimilar(programSharing, stage);
         });
 
-        const stagesWithSimilarAccessAsProgram = Object.keys(stageAccessToggle).filter(
-            stageId => stageAccessToggle[stageId],
+        const stagesWithSimilarAccessAsProgram = Object.keys(propagationMap).filter(
+            stageId => propagationMap[stageId],
         );
 
         this.state = {
+            sharingDialogOpen: false,
             stagesSharing,
-            stageAccessToggle,
-            stageAccessPropagate,
-            allToggledForPropagation: this.areAllStagesToggledForPropagation(stageAccessToggle),
+            propagationMap,
+            propagationMapAllEnabled,
+            fullPropagation: this.areAllStagesToggledForPropagation(propagationMap),
             stagesWithSimilarAccessAsProgram,
         };
     }
 
-    areAllStagesToggledForPropagation = stageAccessToggle =>
-        Object.values(stageAccessToggle).reduce((acc, b) => acc && b);
+    areAllStagesToggledForPropagation = propagationMap =>
+        Object.values(propagationMap).reduce((acc, b) => acc && b);
 
     togglePropagateAccess = event => {
         event.stopPropagation();
@@ -107,8 +177,8 @@ class ProgramAccessControl extends React.Component {
 
     togglePropagationForAllStages = () => {
         this.setState({
-            stageAccessToggle: { ...this.state.stageAccessPropagate },
-            allToggledForPropagation: true,
+            propagationMap: { ...this.state.propagationMapAllEnabled },
+            fullPropagation: true,
         });
     };
 
@@ -128,109 +198,108 @@ class ProgramAccessControl extends React.Component {
 
     toggleStagePropagation = id => (event, isChecked) => {
         console.warn('Toggling shit ...', id);
-        const stageAccessToggle = {
-            ...this.state.stageAccessToggle,
+        const propagationMap = {
+            ...this.state.propagationMap,
             [id]: isChecked,
         };
 
         this.setState({
-            stageAccessToggle,
-            allToggledForPropagation: this.areAllStagesToggledForPropagation(stageAccessToggle),
+            propagationMap,
+            fullPropagation: this.areAllStagesToggledForPropagation(propagationMap),
         });
     };
 
-    extractDisplayName = model => model.dataValues.displayName;
-    extractUserGroupLength = model => model.dataValues.userGroupAccesses.length;
-
-    render = () => (
-        <div style={styles.container}>
-            {this.state.sharingDialogOpen && (
+    render = () => {
+        console.warn('d2:', this.context.d2);
+        return (
+            <div style={styles.container}>
+                <ListItem
+                    onClick={() =>
+                        this.openSharingDialog(this.props.model.dataValues.id, 'program')
+                    }
+                    primaryText={extractDisplayName(this.props.model)}
+                    secondaryText={generateSharingDescription(this.props.model)}
+                    rightIconButton={
+                        <FlatButton
+                            primary
+                            disabled={Object.values(this.state.propagationMap).reduce(
+                                (acc, b) => !(acc || b),
+                            )}
+                            style={{ height: 45 }}
+                            icon={<ArrowDownwardIcon />}
+                            label="Apply to selected stages"
+                            labelPosition="before"
+                            onClick={this.togglePropagateAccess}
+                        />
+                    }
+                />
+                <Divider />
+                <Toolbar
+                    checkAll={this.togglePropagationForAllStages}
+                    fullPropagation={this.state.fullPropagation}
+                />
+                {this.state.stagesSharing.length !== 0 && (
+                    <div style={styles.programStageList}>
+                        <div style={{ flex: 1 }}>
+                            {this.state.stagesSharing.map(stage => (
+                                <ListItem
+                                    style={{ height: '80px' }}
+                                    onClick={() =>
+                                        !this.state.propagateAccess &&
+                                        this.openSharingDialog(stage.id, 'programStage')
+                                    }
+                                    leftAvatar={
+                                        this.state.stagesWithSimilarAccessAsProgram.includes(
+                                            stage.id,
+                                        ) ? (
+                                            <div />
+                                        ) : (
+                                            <WarningIcon
+                                                style={styles.warningIcon}
+                                                color="lightGray"
+                                            />
+                                        )
+                                    }
+                                    key={stage.id}
+                                    disabled={this.state.propagateAccess}
+                                    primaryText={stage.displayName}
+                                    secondaryText={generateSharingDescription(stage)}
+                                />
+                            ))}
+                        </div>
+                        <div>
+                            {this.state.stagesSharing.map(stage => (
+                                <Checkbox
+                                    key={stage.id}
+                                    style={{
+                                        height: '80px',
+                                        paddingTop: '24px',
+                                        paddingLeft: '32px',
+                                    }}
+                                    onCheck={this.toggleStagePropagation(stage.id)}
+                                    checked={this.state.propagationMap[stage.id]}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
                 <SharingDialog
                     open={this.state.sharingDialogOpen}
                     id={this.state.sharingId}
                     type={this.state.sharingType}
                     onRequestClose={this.closeSharingDialog}
+                    d2={this.context.d2}
                 />
-            )}
-            <ListItem
-                onClick={() => this.openSharingDialog(this.props.model.dataValues.id, 'program')}
-                primaryText={this.extractDisplayName(this.props.model)}
-                secondaryText={`Accessible to ${this.extractUserGroupLength(
-                    this.props.model,
-                )} user groups`}
-                rightIconButton={
-                    <FlatButton
-                        primary
-                        disabled={Object.values(this.state.stageAccessToggle).reduce(
-                            (acc, b) => !(acc || b),
-                        )}
-                        style={{ height: 45 }}
-                        icon={<ArrowDownwardIcon />}
-                        label="Apply to selected stages"
-                        labelPosition="before"
-                        onClick={this.togglePropagateAccess}
-                    />
-                }
-            />
-            <Divider />
-            <Toolbar
-                checkAll={this.togglePropagationForAllStages}
-                allChecked={this.state.allToggledForPropagation}
-            />
-            {this.state.stagesSharing.length !== 0 && (
-                <div
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                    }}
-                >
-                    <div style={{ flex: 1 }}>
-                        {this.state.stagesSharing.map(stage => (
-                            <ListItem
-                                style={{ height: '80px' }}
-                                onClick={() =>
-                                    !this.state.propagateAccess &&
-                                    this.openSharingDialog(stage.id, 'programStage')
-                                }
-                                leftAvatar={
-                                    this.state.stagesWithSimilarAccessAsProgram.includes(
-                                        stage.id,
-                                    ) ? (
-                                        <div />
-                                    ) : (
-                                        <WarningIcon
-                                            style={{ top: '22px', height: '32px', width: '32px' }}
-                                            color={yellow500}
-                                        />
-                                    )
-                                }
-                                key={stage.id}
-                                disabled={this.state.propagateAccess}
-                                primaryText={stage.displayName}
-                                secondaryText={`Accessible to ${
-                                    stage.userGroupAccesses.length
-                                } user groups`}
-                            />
-                        ))}
-                    </div>
-                    <div>
-                        {this.state.stagesSharing.map(stage => (
-                            <Checkbox
-                                key={stage.id}
-                                style={{ height: '80px', paddingTop: '24px', paddingLeft: '32px' }}
-                                onCheck={this.toggleStagePropagation(stage.id)}
-                                checked={this.state.stageAccessToggle[stage.id]}
-                            />
-                        ))}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+            </div>
+        );
+    };
 }
 
-const Toolbar = ({ checkAll, allChecked }) => (
+ProgramAccessControl.contextTypes = {
+    d2: PropTypes.object,
+};
+
+const Toolbar = ({ checkAll, fullPropagation }) => (
     <div
         style={{
             alignSelf: 'flex-end',
@@ -243,7 +312,7 @@ const Toolbar = ({ checkAll, allChecked }) => (
         <FlatButton
             primary
             labelPosition="before"
-            disabled={allChecked}
+            disabled={fullPropagation}
             style={{ height: 45 }}
             icon={<CheckIcon />}
             label="Select all"
