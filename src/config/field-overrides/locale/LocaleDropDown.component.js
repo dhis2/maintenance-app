@@ -6,15 +6,25 @@ class LocaleDropDown extends Component {
     constructor(props, context) {
         super(props, context);
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+        this.api = context.d2.Api.getApi();
+        this.getter = () =>
+            context.d2.Api.getApi().get(props.getUrl)
+                .then(options => Object.keys(options).map((optionKey) => {
+                    const text = options[optionKey];
+                    return {
+                        value: optionKey,
+                        text,
+                    };
+                }));
     }
 
     render() {
-        const { value, labelKey, ...rest } = this.props;
+        const { value, labelKey, getUrl, ...rest } = this.props;
         const extendedProps = {
             ...rest,
+            getter: this.getter,
             value: value && value.id ? value.id : value,
             labelText: `${this.getTranslation(labelKey)} *`,
-            useFullOptionAsValue: true,
             useValueDotId: false,
         };
 
@@ -27,9 +37,9 @@ LocaleDropDown.propTypes = {
     model: PropTypes.shape({
         notificationRecipient: PropTypes.string,
     }),
-    value: PropTypes.object,
+    value: PropTypes.string,
     labelKey: PropTypes.string.isRequired,
-    getter: PropTypes.func.isRequired,
+    getUrl: PropTypes.string.isRequired,
 };
 
 LocaleDropDown.defaultProps = {

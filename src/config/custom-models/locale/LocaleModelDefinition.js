@@ -15,8 +15,7 @@ export default class LocaleModelDefinition extends ModelDefinition {
 
         // Otherwise fetch
         return Promise.all([
-            // TODO: This is a new API endpoint. Make sure to introduce new .war file first
-            this.api.get('/locales/dbLocales'),
+            this.api.get('locales/dbLocales'),
             this.api.get('me/authorization'),
         ]).then(([locales, authorities]) => {
             const canCreateAndDelete = authorities.some(auth => ['F_SYSTEM_SETTING', 'ALL'].includes(auth));
@@ -32,12 +31,10 @@ export default class LocaleModelDefinition extends ModelDefinition {
             // Cache the response first time and keep using it
             cachedLocales = locales.map((locale) => {
                 const model = this.create({
-                    // TODO: Check if id is indeed a property of locale, because it is required for a new Model instance
                     ...locale,
                     access,
                     displayName: locale.name,
                 });
-                model.customSaveMethod = this.save;
                 return model;
             });
             return cachedLocales;
@@ -46,10 +43,11 @@ export default class LocaleModelDefinition extends ModelDefinition {
 
     get(id) {
         const promise = cachedLocales ?
-            Promise.resolve(cachedLocales) :
-            this.getLocalesAndAuthorities();
+            Promise.resolve(cachedLocales.find(locale => locale.id === id)) :
+            // TODO: Change me to this.api.get(`locales/dbLocales${id}`);
+            this.api.get(`locales/${id}`);
 
-        return promise.then(locales => locales.find(locale => locale.id === id));
+        return promise.then(locales => locales);
     }
 
     list() {
@@ -62,8 +60,8 @@ export default class LocaleModelDefinition extends ModelDefinition {
             .then((locales) => {
                 const filteredLocales = locales.filter(locale =>
                     !queryString ||
-                    (locale.locale.toLowerCase()).indexOf(queryString) > -1 ||
-                    (locale.name.toLowerCase()).indexOf(queryString) > -1,
+                    (locale.locale.toLowerCase()).indexOf(queryString.toLowerCase()) > -1 ||
+                    (locale.displayName.toLowerCase()).indexOf(queryString.toLowerCase()) > -1,
                 );
 
                 return ModelCollection.create(
@@ -84,57 +82,22 @@ export default class LocaleModelDefinition extends ModelDefinition {
 
     save(model) {
         const { name: language, locale: country } = model;
-        const locale = `${language.id}_${country.id}`;
-        const name = `${language.text} (${country.text})`;
-        // TODO: Fix API call when DHIS2-3801 is done
-        // Final code should look a little bit like this
-        // return this.api.post('/locales/dbLocales', { locale: model.locale, name: model.name })
-        //     .then(() => {
-        //         resetCache();
+        // TODO: change url to locales/dbLocales?....
+        return this.api.post(`locales?country=${country}&language=${language}`)
+            .then(() => {
+                resetCache();
 
-        //         return {
-        //             status: 'OK',
-        //         };
-        //     });
-
-        // FAKE - This will only add on the client
-        return this.getLocalesAndAuthorities().then((locales) => {
-            const newLocale = this.create({
-                name,
-                locale,
-                id: 'E4sMBVqTjMu',
-                access: {
-                    read: true,
-                    update: true,
-                    externalize: false,
-                    delete: true,
-                    write: true,
-                    manage: false,
-                },
-                displayName: model.name,
+                return {
+                    status: 'OK',
+                };
             });
-            cachedLocales = [newLocale, ...locales];
-            return {
-                status: 'OK',
-            };
-        });
     }
 
     delete(model) {
-        console.log(model);
-        // TODO: Fix API call when DHIS2-3801 is done
-        // Final code should look a little bit like this
-        // return this.api.delete(`/locales/dbLocales/${model.id}`).then(() => {
-        //     resetCache();
+        // TODO: change url to locales/dbLocales?....
+        return this.api.delete(`/locales/${model.id}`).then(() => {
+            resetCache();
 
-        //     return {
-        //         status: 'OK',
-        //     };
-        // });
-
-        // FAKE - This will only delte on the client
-        return Promise.resolve('I did not delete anything').then(() => {
-            cachedLocales = cachedLocales.filter(({ id }) => id !== model.id);
             return {
                 status: 'OK',
             };
