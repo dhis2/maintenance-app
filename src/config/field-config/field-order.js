@@ -241,7 +241,7 @@ const fieldOrderByName = new Map([
         'workflow',
         'displayFrontPageList',
         'useFirstStageDuringRegistration',
-        'allowAuditLog',
+        'accessLevel',
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
