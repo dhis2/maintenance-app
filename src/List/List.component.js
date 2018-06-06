@@ -279,9 +279,10 @@ class List extends Component {
         case 'clone':
             return model.modelDefinition.name !== 'dataSet' &&
                 model.modelDefinition.name !== 'program' &&
+                model.modelDefinition.name !== 'sqlView' &&
                 model.access.write;
         case 'translate':
-            return model.access.read && model.modelDefinition.identifiableObject;
+            return model.access.read && model.modelDefinition.identifiableObject && model.modelDefinition.name !== 'sqlView';
         case 'details':
             return model.access.read;
         case 'share':
@@ -298,6 +299,12 @@ class List extends Component {
             return model.modelDefinition.name === 'pushAnalysis' && model.access.write;
         case 'preview':
             return model.modelDefinition.name === 'pushAnalysis' && model.access.write;
+        case 'executeQuery':
+            return model.modelDefinition.name === 'sqlView' && model.access.read;
+        case 'refresh':
+            return model.modelDefinition.name === 'sqlView' && model.access.read;
+        case 'showSqlView':
+            return model.modelDefinition.name === 'sqlView' && model.access.read;
         default:
             return true;
         }
@@ -441,6 +448,9 @@ class List extends Component {
             compulsoryDataElements: 'border_color',
             runNow: 'queue_play_next',
             preview: 'dashboard',
+            executeQuery: 'playlist_play',
+            refresh: 'refresh',
+            showSqlView: 'view_module',
         };
 
         // For table columns like 'a___b', flatten values to b being a child of a

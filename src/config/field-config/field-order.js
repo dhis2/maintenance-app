@@ -241,7 +241,7 @@ const fieldOrderByName = new Map([
         'workflow',
         'displayFrontPageList',
         'useFirstStageDuringRegistration',
-        'accessLevel',
+        'allowAuditLog',
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
@@ -443,6 +443,13 @@ const fieldOrderByName = new Map([
         'name',
         'periodType',
         'dataApprovalLevels',
+    ]],
+    ['sqlView', [
+        'name',
+        'description',
+        'cacheStrategy',
+        'type',
+        'sqlQuery',
     ]],
 ]);
 

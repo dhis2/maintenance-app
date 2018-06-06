@@ -1,0 +1,33 @@
+.sql-view__header {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+.sql-view__content {
+    overflow-x: scroll;
+}
+
+.sql-view__btn-strip {
+    margin-bottom: 1.5rem;
+}
+
+.sql-view__download-btn {
+    margin-right: 1rem;
+}
+
+.sql-view__table {
+    text-align: left;
+    border-collapse: collapse;
+    width: 100%;
+
+    th, td {
+        border-bottom: 1px solid #E0E0E0;
+        padding: 4px 8px;
+    }
+
+    th {
+        border-bottom-width: 2px;
+        text-transform: capitalize;
+    }
+}
