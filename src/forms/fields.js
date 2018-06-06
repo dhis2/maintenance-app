@@ -1,4 +1,9 @@
-import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from 'd2-ui/lib/forms/Validators';
+import {
+    isRequired,
+    isUrl,
+    isNumber as isNumberValidator,
+    isEmail,
+} from 'd2-ui/lib/forms/Validators';
 import isString from 'd2-utilizr/lib/isString';
 import { getOr, isNumber } from 'lodash/fp';
 
@@ -8,6 +13,7 @@ import CheckBox from './form-fields/check-box';
 import DropDown from './form-fields/drop-down';
 import DropDownAsync from './form-fields/drop-down-async';
 import DateSelect from './form-fields/date-select';
+import StyleField from './form-fields/style-field';
 import { constantNameConverter } from '../config/field-overrides/helpers/constantNameConverter';
 
 export const CHECKBOX = Symbol('CHECKBOX');
@@ -68,46 +74,63 @@ function addValidatorForType(type, modelValidation) {
     const validators = [];
 
     switch (type) {
-    case NUMBER:
-        validators.push(createValidatorFromValidatorFunction(isNumberValidator));
-        break;
-    case INTEGER:
-        validators.push(createValidatorFromValidatorFunction(isNumberValidator));
-        validators.push(createValidatorFromValidatorFunction(isIntegerValidator));
+        case NUMBER:
+            validators.push(
+                createValidatorFromValidatorFunction(isNumberValidator)
+            );
+            break;
+        case INTEGER:
+            validators.push(
+                createValidatorFromValidatorFunction(isNumberValidator)
+            );
+            validators.push(
+                createValidatorFromValidatorFunction(isIntegerValidator)
+            );
 
-        if (isNumber(modelValidation.max)) {
-            validators.push(createValidatorFromValidatorFunction(maxNumber));
-        }
+            if (isNumber(modelValidation.max)) {
+                validators.push(
+                    createValidatorFromValidatorFunction(maxNumber)
+                );
+            }
 
-        if (isNumber(modelValidation.min)) {
-            validators.push(createValidatorFromValidatorFunction(minNumber));
-        }
-        break;
-    case IDENTIFIER:
-    case INPUT:
-        if (isNumber(modelValidation.max)) {
-            validators.push(createValidatorFromValidatorFunction(maxTextOrArray));
-        }
+            if (isNumber(modelValidation.min)) {
+                validators.push(
+                    createValidatorFromValidatorFunction(minNumber)
+                );
+            }
+            break;
+        case IDENTIFIER:
+        case INPUT:
+            if (isNumber(modelValidation.max)) {
+                validators.push(
+                    createValidatorFromValidatorFunction(maxTextOrArray)
+                );
+            }
 
-        if (isNumber(modelValidation.min)) {
-            validators.push(createValidatorFromValidatorFunction(minTextOrArray));
-        }
+            if (isNumber(modelValidation.min)) {
+                validators.push(
+                    createValidatorFromValidatorFunction(minTextOrArray)
+                );
+            }
 
-        break;
-    case URL:
-        validators.push(createValidatorFromValidatorFunction(isUrl));
-        break;
-    case EMAIL:
-        validators.push(createValidatorFromValidatorFunction(isEmail));
-        break;
-    default:
-        break;
+            break;
+        case URL:
+            validators.push(createValidatorFromValidatorFunction(isUrl));
+            break;
+        case EMAIL:
+            validators.push(createValidatorFromValidatorFunction(isEmail));
+            break;
+        default:
+            break;
     }
 
     return validators;
 }
 
-export function getValidatorsFromModelValidation(modelValidation, modelDefinition) {
+export function getValidatorsFromModelValidation(
+    modelValidation,
+    modelDefinition
+) {
     let validators = [];
 
     if (modelValidation.required) {
@@ -115,38 +138,61 @@ export function getValidatorsFromModelValidation(modelValidation, modelDefinitio
     }
 
     if (modelDefinition) {
-        validators = validators.concat(addValidatorForType(modelValidation.type, modelValidation, modelDefinition));
+        validators = validators.concat(
+            addValidatorForType(
+                modelValidation.type,
+                modelValidation,
+                modelDefinition
+            )
+        );
     }
 
     return validators;
 }
 
-export function getFieldUIComponent(type) {
+export function getFieldUIComponent(type, name) {
     switch (type) {
-    case SELECT:
-        return DropDown;
-    case SELECTASYNC:
-        return DropDownAsync;
-    case CHECKBOX:
-        return CheckBox;
-    case MULTISELECT:
-        return MultiSelect;
-    case DATE:
-        return DateSelect;
-    case EMAIL:
-    case INPUT:
-    case IDENTIFIER:
-    default:
-        break;
+        case SELECT:
+            return DropDown;
+        case SELECTASYNC:
+            return DropDownAsync;
+        case CHECKBOX:
+            return CheckBox;
+        case MULTISELECT:
+            return MultiSelect;
+        case DATE:
+            return DateSelect;
+
+        case COMPLEX: {
+            if (name === 'style') {
+                return StyleField;
+            }
+        }
+        case EMAIL:
+        case INPUT:
+        case IDENTIFIER:
+        default:
+            break;
     }
     return TextField;
 }
 
-export function createFieldConfig(fieldConfig, modelDefinition, models, customFieldOrderName) {
-    const fieldConstants = getOr([], `modelProperties[${fieldConfig.name}].constants`, modelDefinition);
+export function createFieldConfig(
+    fieldConfig,
+    modelDefinition,
+    models,
+    customFieldOrderName
+) {
+    const fieldConstants = getOr(
+        [],
+        `modelProperties[${fieldConfig.name}].constants`,
+        modelDefinition
+    );
     const basicFieldConfig = {
         name: fieldConfig.name,
-        component: fieldConfig.component || getFieldUIComponent(fieldConfig.type),
+        component:
+            fieldConfig.component ||
+            getFieldUIComponent(fieldConfig.type, fieldConfig.name),
         props: Object.assign(fieldConfig.fieldOptions || {}, {
             labelText: fieldConfig.fieldOptions.labelText,
             modelDefinition,
@@ -158,8 +204,8 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, customFi
             fullWidth: true,
             translateOptions: fieldConstants && !!fieldConstants.length,
             isRequired: fieldConfig.required,
-            options: (fieldConfig.fieldOptions.options || fieldConstants)
-                .map((constant) => {
+            options: (fieldConfig.fieldOptions.options || fieldConstants).map(
+                constant => {
                     if (constant.name && constant.value) {
                         return {
                             text: constant.name,
@@ -171,11 +217,12 @@ export function createFieldConfig(fieldConfig, modelDefinition, models, customFi
                         text: constantNameConverter(
                             customFieldOrderName || modelDefinition.name,
                             fieldConfig.name,
-                            constant,
+                            constant
                         ),
                         value: constant.toString(),
                     };
-                }),
+                }
+            ),
         }),
     };
 

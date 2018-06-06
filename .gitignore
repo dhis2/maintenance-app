@@ -1,6 +1,6 @@
 *.iml
 .idea/*
-.vscode/
+.vscode/*
 
 node_modules*
 .sass-cache

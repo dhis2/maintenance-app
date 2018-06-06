@@ -8,7 +8,8 @@ const programRuleBuiltInVariables = [
     'V{enrollment_id}',
     'V{event_id}',
     'V{orgunit_code}',
-    'V{orgunit_code}',
+    'V{program_stage_name}',
+    'V{program_stage_id}',
 ];
 
 export default programRuleBuiltInVariables;

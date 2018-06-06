@@ -26,6 +26,7 @@ import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
 import dataApprovalWorkflow from './dataApprovalWorkflow';
 import programStage from './programStage';
+import sqlView from './sqlView';
 
 const overridesByType = {
     attribute,
@@ -57,6 +58,7 @@ const overridesByType = {
     trackedEntityType,
     trackerProgram,
     enrollment,
+    sqlView,
 };
 
 export default {
