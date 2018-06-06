@@ -44,7 +44,6 @@ const StepperNavigation = createStepperNavigation(
     EventProgramStepperNavigationForward,
 );
 
-// const EditProgramIndicator = ({ programIndicator, params, fieldConfigs, isLoading, ...props }) => {
 class EditProgramIndicator extends Component {
     onSaveWithValidation = () => {
         this.props.saveAndValidateProgramIndicator(

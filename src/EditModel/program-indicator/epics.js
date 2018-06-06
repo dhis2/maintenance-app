@@ -3,9 +3,9 @@ import { combineEpics } from 'redux-observable';
 import { get, getOr, compose, first, filter, identity } from 'lodash/fp';
 import { getInstance } from 'd2/lib/d2';
 
-import { notifyUser } from '../actions';
 import programIndicatorStore, { isStoreStateDirty } from './programIndicatorStore';
 import { requestParams } from '../SingleModelStore';
+
 import { addChangedFieldValueToModel } from '../epicHelpers';
 import { getModelFromStore } from './selectors';
 import { createFieldConfigForModelTypes } from '../form-helpers/modelFieldConfigCreator';
@@ -13,6 +13,9 @@ import getFirstInvalidFieldMessage from '../form-helpers/validateFields';
 import { addValuesToFieldConfigs } from '../form-helpers/schemaFieldConfigCreator';
 import fieldOrder from '../../config/field-config/field-order';
 import { goToAndScrollUp } from '../../router-utils';
+
+import showSnackBarMessageEpic from '../../Snackbar/epics';
+import { notifyUser } from '../actions';
 import {
     PROGRAM_INDICATOR_LOAD,
     PROGRAM_INDICATOR_SAVE_AND_VALIDATE,
@@ -62,10 +65,12 @@ const handleMessageResults = store => (message) => {
     if (message) {
         return Observable.of(notifyUser({ message, action: 'ok' }));
     }
-
     if (!isStoreStateDirty(store)) {
-        return Observable.of(notifyUser({ message: 'no_changes_to_be_saved', translate: true }))
-            .do(() => goToAndScrollUp('/list/indicatorSection/programIndicator'));
+        return Observable.of(notifyUser({
+            message: 'no_changes_to_be_saved',
+            translate: true,
+        }),
+        ).do(() => goToAndScrollUp('/list/indicatorSection/programIndicator'));
     }
 
     return Observable.of(saveProgramIndicator());
@@ -122,13 +127,20 @@ export const programIndicatorModelSaveResponses = action$ => Observable
     .merge(
         action$
             .ofType(PROGRAM_INDICATOR_SAVE_SUCCESS)
-            .mapTo(notifyUser({ message: 'success', action: 'ok', translate: true })),
+            .mapTo(notifyUser({
+                message: 'success',
+                action: 'ok',
+                translate: true,
+            })),
         action$
             .ofType(PROGRAM_INDICATOR_SAVE_ERROR)
             .map((action) => {
                 const firstErrorMessage = extractFirstErrorMessage(action.payload);
 
-                return notifyUser({ message: firstErrorMessage, translate: false });
+                return notifyUser({
+                    message: firstErrorMessage,
+                    translate: false,
+                });
             }),
     );
 
@@ -139,5 +151,6 @@ export default (function createEpicsForStore(store) {
         programIndicatorSaveAndValidate(store),
         programIndicatorSave(store),
         programIndicatorModelSaveResponses,
+        showSnackBarMessageEpic,
     );
 }(programIndicatorStore));

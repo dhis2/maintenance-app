@@ -1,7 +1,12 @@
 import { Observable } from 'rxjs';
-import { getOr, get, find, isEqual, compose } from 'lodash/fp';
+import { get, find, isEqual, compose } from 'lodash/fp';
+import { generateUid } from 'd2/lib/uid';
+import { getInstance } from 'd2/lib/d2';
 import log from 'loglevel';
 import { combineEpics } from 'redux-observable';
+
+import showSnackBarMessageEpic from '../../../Snackbar/epics';
+import { notifyUser } from '../../actions';
 import {
     PROGRAM_STAGE_DATA_ENTRY_FORM_FIELD_CHANGED,
     PROGRAM_STAGE_DATA_ENTRY_FORM_REMOVE,
@@ -9,10 +14,6 @@ import {
     PROGRAM_DATA_ENTRY_FORM_REMOVE,
 } from './actions';
 import eventProgramStore from '../eventProgramStore';
-import { generateUid } from 'd2/lib/uid';
-import { getInstance } from 'd2/lib/d2';
-import eventProgram from '../../../config/field-overrides/program';
-import { notifyUser } from '../../actions';
 
 const d2$ = Observable.fromPromise(getInstance());
 
@@ -175,5 +176,6 @@ export default combineEpics(
     dataEntryFormChangedEpic,
     dataEntryFormRemoveEpic,
     ProgramDataEntryFormChangedEpic,
-    ProgramDataEntryFormRemoveEpic
+    ProgramDataEntryFormRemoveEpic,
+    showSnackBarMessageEpic,
 );

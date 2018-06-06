@@ -1,8 +1,12 @@
+/**
+ * @jest-environment node
+ */
+
 import { ActionsObservable } from 'redux-observable';
 import Store from 'd2-ui/lib/store/Store';
 import d2 from 'd2/lib/d2';
 import { PROGRAM_INDICATOR_LOAD, PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED } from '../actions';
-import * as epics from '../epics';
+import { programIndicatorLoad, programIndicatorEdit } from '../epics';
 
 describe('Program indicator epics', () => {
     const createActionStreamFor = action => ActionsObservable.of(action);
@@ -40,7 +44,7 @@ describe('Program indicator epics', () => {
         let epic;
 
         beforeEach(() => {
-            epic = epics.programIndicatorLoad(store);
+            epic = programIndicatorLoad(store);
         });
 
         test(
@@ -60,7 +64,6 @@ describe('Program indicator epics', () => {
 
                             expect(mockD2.models.programIndicator.get)
                                 .toBeCalledWith('pTo4uMt3xur', { fields: fieldFilters });
-
                             done();
                         },
                         done);
@@ -121,7 +124,7 @@ describe('Program indicator epics', () => {
         let epic;
 
         beforeEach(() => {
-            epic = epics.programIndicatorEdit(store);
+            epic = programIndicatorEdit(store);
 
             store.setState({
                 programIndicator: {

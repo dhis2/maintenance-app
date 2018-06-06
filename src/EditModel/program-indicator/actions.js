@@ -1,7 +1,5 @@
 import { createActionCreator } from '../actions';
 
-export { NOTIFY_USER, notifyUser } from '../actions';
-
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Stepper
 export const PROGRAM_INDICATOR_STEP_CHANGE = 'PROGRAM_INDICATOR_STEP_CHANGE';
