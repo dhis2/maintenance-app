@@ -1,12 +1,8 @@
-/**
- * @jest-environment node
- */
-
 import { ActionsObservable } from 'redux-observable';
 import Store from 'd2-ui/lib/store/Store';
-import d2 from 'd2/lib/d2';
+import * as d2 from 'd2/lib/d2';
 import { PROGRAM_INDICATOR_LOAD, PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED } from '../actions';
-import { programIndicatorLoad, programIndicatorEdit } from '../epics';
+import * as epics from '../epics';
 
 describe('Program indicator epics', () => {
     const createActionStreamFor = action => ActionsObservable.of(action);
@@ -25,6 +21,11 @@ describe('Program indicator epics', () => {
                         id: 'pTo4uMt3xur',
                         name: 'Age at visit - calc from days',
                     })),
+                    modelValidations: {
+                        name: {
+                            required: true,
+                        },
+                    },
                 },
             },
         };
@@ -44,7 +45,7 @@ describe('Program indicator epics', () => {
         let epic;
 
         beforeEach(() => {
-            epic = programIndicatorLoad(store);
+            epic = epics.programIndicatorLoad(store);
         });
 
         test(
@@ -124,7 +125,7 @@ describe('Program indicator epics', () => {
         let epic;
 
         beforeEach(() => {
-            epic = programIndicatorEdit(store);
+            epic = epics.programIndicatorEdit(store);
 
             store.setState({
                 programIndicator: {
