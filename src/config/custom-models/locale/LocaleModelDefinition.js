@@ -44,8 +44,7 @@ export default class LocaleModelDefinition extends ModelDefinition {
     get(id) {
         const promise = cachedLocales ?
             Promise.resolve(cachedLocales.find(locale => locale.id === id)) :
-            // TODO: Change me to this.api.get(`locales/dbLocales${id}`);
-            this.api.get(`locales/${id}`);
+            this.api.get(`locales/dbLocales/${id}`);
 
         return promise.then(locales => locales);
     }
@@ -82,8 +81,7 @@ export default class LocaleModelDefinition extends ModelDefinition {
 
     save(model) {
         const { name: language, locale: country } = model;
-        // TODO: change url to locales/dbLocales?....
-        return this.api.post(`locales?country=${country}&language=${language}`)
+        return this.api.post(`locales/dbLocales?country=${country}&language=${language}`)
             .then(() => {
                 resetCache();
 
@@ -95,7 +93,7 @@ export default class LocaleModelDefinition extends ModelDefinition {
 
     delete(model) {
         // TODO: change url to locales/dbLocales?....
-        return this.api.delete(`/locales/${model.id}`).then(() => {
+        return this.api.delete(`locales/dbLocales/${model.id}`).then(() => {
             resetCache();
 
             return {
