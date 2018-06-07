@@ -6,7 +6,6 @@ class LocaleDropDown extends Component {
     constructor(props, context) {
         super(props, context);
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
-        this.api = context.d2.Api.getApi();
         this.getter = () =>
             context.d2.Api.getApi().get(props.getUrl)
                 .then(options => Object.keys(options).map((optionKey) => {
