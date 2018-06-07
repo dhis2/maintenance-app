@@ -81,6 +81,7 @@ export function getSideBarConfig() {
                 'externalMapLayer',
                 'dataApprovalLevel',
                 'dataApprovalWorkflow',
+                'locale',
                 'sqlView',
             ],
         },
@@ -210,6 +211,12 @@ const typeDetails = {
             'periodType',
             'publicAccess',
             'lastUpdated',
+        ],
+    },
+    locale: {
+        columns: [
+            'name',
+            'locale',
         ],
     },
     sqlView: {

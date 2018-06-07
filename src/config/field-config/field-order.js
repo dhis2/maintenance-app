@@ -444,6 +444,10 @@ const fieldOrderByName = new Map([
         'periodType',
         'dataApprovalLevels',
     ]],
+    ['locale', [
+        'name',
+        'locale',
+    ]],
     ['sqlView', [
         'name',
         'description',
