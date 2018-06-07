@@ -2,18 +2,16 @@
     display: flex;
     flex-direction: row;
     margin-bottom: 1rem;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .sql-view__content {
     overflow-x: scroll;
 }
 
-.sql-view__btn-strip {
-    margin-bottom: 1.5rem;
-}
-
-.sql-view__download-btn {
-    margin-right: 1rem;
+.sql-view__dropdown-button {
+    margin-top: 1rem;
 }
 
 .sql-view__table {
@@ -29,5 +27,7 @@
     th {
         border-bottom-width: 2px;
         text-transform: capitalize;
+        padding-top: 8px;
+        padding-bottom: 8px;
     }
 }

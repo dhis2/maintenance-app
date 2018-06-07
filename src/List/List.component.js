@@ -300,9 +300,9 @@ class List extends Component {
         case 'preview':
             return model.modelDefinition.name === 'pushAnalysis' && model.access.write;
         case 'executeQuery':
-            return model.modelDefinition.name === 'sqlView' && model.access.read;
+            return model.modelDefinition.name === 'sqlView' && model.access.read && ['MATERIALIZED_VIEW', 'VIEW'].includes(model.type);
         case 'refresh':
-            return model.modelDefinition.name === 'sqlView' && model.access.read;
+            return model.modelDefinition.name === 'sqlView' && model.access.read && model.type === 'MATERIALIZED_VIEW';
         case 'showSqlView':
             return model.modelDefinition.name === 'sqlView' && model.access.read;
         default:

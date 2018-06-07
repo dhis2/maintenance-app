@@ -1,1 +1,1 @@
-export default from './SqlView';
+export default from './SqlView.component';
