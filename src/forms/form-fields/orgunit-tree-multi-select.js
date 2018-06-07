@@ -97,7 +97,6 @@ export default class OrganisationUnitTreeMultiSelect extends Component {
                 const rootOrgUnits = orgUnits
                     .toArray()
                     .filter(ou => (new RegExp(`${this.state.searchValue}`)).test(ou.displayName));
-
                 this.setState({
                     originalRoots: rootOrgUnits,
                     isLoading: false,
@@ -115,12 +114,12 @@ export default class OrganisationUnitTreeMultiSelect extends Component {
                 if (!searchValue.trim()) {
                     return Observable.of(this.state.originalRoots);
                 }
-                console.log(this.context.d2.models.organisationUnits);
                 const organisationUnitRequest = this.context.d2.models.organisationUnits
                     .filter().on('displayName').ilike(searchValue)
                     // withinUserHierarchy makes the query only apply to the subtrees of the organisation units that are
                     // assigned to the current user
                     .list({
+                        pageSize: 100,
                         fields: 'id,displayName,path,children::isNotEmpty',
                         withinUserHierarchy: true,
                     })
