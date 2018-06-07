@@ -30,5 +30,5 @@ SqlQuery.defaultProps = {
     errorStyle: {},
     errorText: null,
     fullWidth: true,
-    value: null,
+    value: '',
 };
