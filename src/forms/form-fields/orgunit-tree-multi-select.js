@@ -246,7 +246,6 @@ export default class OrganisationUnitTreeMultiSelect extends Component {
         if (this.state.isLoading) {
             return (<div>{this.context.d2.i18n.getTranslation('determining_your_root_orgunits')}</div>);
         }
-        console.log(this.state.rootOrgUnits);
         return (
             <div style={styles.multiSelectWrapper}>
                 <TextField
