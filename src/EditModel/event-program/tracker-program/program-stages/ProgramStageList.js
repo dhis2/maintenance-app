@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
@@ -66,7 +66,7 @@ class ProgramStageList extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        // shouldnt this be this.state.stages? 
+        // shouldnt this be this.state.stages?
         // Also any reason for the != instead of !==?
         if (this.props.stages != nextProps.programStages && this.props.programStages != nextProps.programStages) {
             this.setState({
@@ -153,6 +153,8 @@ class ProgramStageList extends Component {
         }
     }
 
+    // here you need to get d2 and pass it as a `d2` prop to sharing
+    // dialog, to do that you need to get d2 in here
     renderSharing = () => (!!this.state.sharing.id &&
         <SharingDialog
             id={this.state.sharing.id}
