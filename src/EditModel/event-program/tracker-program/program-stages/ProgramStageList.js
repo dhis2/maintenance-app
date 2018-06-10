@@ -66,9 +66,7 @@ class ProgramStageList extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        // shouldnt this be this.state.stages?
-        // Also any reason for the != instead of !==?
-        if (this.props.stages != nextProps.programStages && this.props.programStages != nextProps.programStages) {
+        if (this.state.stages !== nextProps.programStages && this.props.programStages !== nextProps.programStages) {
             this.setState({
                 ...this.state,
                 stages: nextProps.programStages,
@@ -153,8 +151,6 @@ class ProgramStageList extends Component {
         }
     }
 
-    // here you need to get d2 and pass it as a `d2` prop to sharing
-    // dialog, to do that you need to get d2 in here
     renderSharing = () => (!!this.state.sharing.id &&
         <SharingDialog
             id={this.state.sharing.id}
@@ -162,6 +158,7 @@ class ProgramStageList extends Component {
             open={!!this.state.sharing.id}
             onRequestClose={this.closeSharing}
             bodyStyle={styles.sharingDialogBody}
+            d2={this.context.d2}
         />
     );
 
@@ -245,6 +242,10 @@ ProgramStageList.propTypes = {
 
 ProgramStageList.defaultProps = {
     tableColumns: ['name', 'lastUpdated'],
+};
+
+ProgramStageList.contextTypes = {
+    d2: PropTypes.object.isRequired,
 };
 
 export default connect(null, dispatch =>
