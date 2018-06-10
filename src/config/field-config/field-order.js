@@ -455,7 +455,7 @@ export default {
      *
      * @example
      * ```
-     * import fielOrder from 'field-order';
+     * import fieldOrder from 'field-order';
      *
      * let dataElementFields = fieldOrder.for('dataElement');
      * ```
