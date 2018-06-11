@@ -6,6 +6,7 @@ const programRuleBuiltInVariables = [
     'V{enrollment_date}',
     'V{incident_date}',
     'V{enrollment_id}',
+    'V{environment}',
     'V{event_id}',
     'V{orgunit_code}',
     'V{program_stage_name}',
