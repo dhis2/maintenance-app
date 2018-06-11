@@ -205,7 +205,7 @@ export default React.createClass({
                 <FormButtons>
                     <SaveButton
                         onClick={this._saveAction}
-                        isValid={this.state.formState.valid && !this.state.formState.validating}
+                        isValid={!this.state.formState.validating}
                         isSaving={this.state.isSaving}
                     />
                     <CancelButton onClick={this._closeAction} />
