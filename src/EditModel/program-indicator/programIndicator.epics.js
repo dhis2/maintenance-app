@@ -3,11 +3,11 @@ import { combineEpics } from 'redux-observable';
 import { get, getOr, compose, first, filter, identity } from 'lodash/fp';
 import { getInstance } from 'd2/lib/d2';
 
-import programIndicatorStore, { isStoreStateDirty } from './programIndicatorStore';
+import programIndicatorStore, { isStoreStateDirty } from './programIndicator.store';
 import { requestParams } from '../SingleModelStore';
 
 import { addChangedFieldValueToModel } from '../epicHelpers';
-import { getModelFromStore } from './selectors';
+import { getModelFromStore } from './programIndicator.selectors';
 import { createFieldConfigForModelTypes } from '../form-helpers/modelFieldConfigCreator';
 import getFirstInvalidFieldMessage from '../form-helpers/validateFields';
 import { addValuesToFieldConfigs } from '../form-helpers/schemaFieldConfigCreator';
@@ -28,7 +28,7 @@ import {
     saveProgramIndicator,
     saveProgramIndicatorSuccess,
     saveProgramIndicatorError,
-} from './actions';
+} from './programIndicator.actions';
 
 function loadProgramIndicator(programIndicatorId) {
     return Observable.fromPromise(

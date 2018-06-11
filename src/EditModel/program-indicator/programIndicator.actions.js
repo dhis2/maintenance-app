@@ -1,16 +1,6 @@
 import { createActionCreator } from '../actions';
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Stepper
-export const PROGRAM_INDICATOR_STEP_CHANGE = 'PROGRAM_INDICATOR_STEP_CHANGE';
-export const PROGRAM_INDICATOR_STEP_NEXT = 'PROGRAM_INDICATOR_STEP_NEXT';
-export const PROGRAM_INDICATOR_STEP_PREVIOUS = 'PROGRAM_INDICATOR_STEP_PREVIOUS';
-
-export const changeStep = createActionCreator(PROGRAM_INDICATOR_STEP_CHANGE);
-export const nextStep = createActionCreator(PROGRAM_INDICATOR_STEP_NEXT);
-export const previousStep = createActionCreator(PROGRAM_INDICATOR_STEP_PREVIOUS);
-
-// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Program Indicator
 export const PROGRAM_INDICATOR_LOAD = 'PROGRAM_INDICATOR_LOAD';
 export const PROGRAM_INDICATOR_LOAD_SUCCESS = 'PROGRAM_INDICATOR_LOAD_SUCCESS';

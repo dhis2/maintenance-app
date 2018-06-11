@@ -14,13 +14,12 @@ import FormHeading from '../FormHeading';
 import FormSubHeading from '../FormSubHeading';
 import ProgramIndicatorActionButtons from './ProgramIndicatorActionButtons';
 import ProgramIndicatorNumberStepper from './ProgramIndicatorNumberStepper';
-import ProgramIndicatorArrowStepper from './ProgramIndicatorArrowStepper';
+import ArrowStepper from '../stepper/ArrowStepper';
 
 import fieldGroups from '../../config/field-config/field-groups';
-import programIndicatorStore from './programIndicatorStore';
-import { fieldConfigsSelector, isLoadingSelector, isSavingSelector } from './selectors';
-import { editFieldChanged, saveAndValidateProgramIndicator } from './actions';
-
+import programIndicatorStore from './programIndicator.store';
+import { getFieldConfigs, getIsLoading, getIsSaving } from './programIndicator.selectors';
+import { editFieldChanged, saveAndValidateProgramIndicator } from './programIndicator.actions';
 
 const styles = {
     heading: {
@@ -70,14 +69,14 @@ class EditProgramIndicator extends Component {
                         />
                     </Paper>
                 }
-                <ProgramIndicatorArrowStepper>
+                <ArrowStepper>
                     <ProgramIndicatorActionButtons
                         onSaveAction={this.onSaveWithValidation}
                         groupName={groupName}
                         schema={schema}
                         isSaving={this.props.isSaving}
                     />
-                </ProgramIndicatorArrowStepper>
+                </ArrowStepper>
             </div>
         );
     }
@@ -89,9 +88,9 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = state => ({
-    fieldConfigs: fieldConfigsSelector(state),
-    isLoading: isLoadingSelector(state),
-    isSaving: isSavingSelector(state),
+    fieldConfigs: getFieldConfigs(state),
+    isLoading: getIsLoading(state),
+    isSaving: getIsSaving(state),
 });
 
 const withPreLoadedModel = compose(

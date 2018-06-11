@@ -2,10 +2,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { createStepper } from '../stepper/stepper';
-import { activeStepSelector } from './selectors';
-import { changeStep } from './actions';
+import { getActiveStep } from './programIndicator.selectors';
+import { changeStep } from '../stepper/stepper.actions';
 
-const mapStateToProps = state => ({ activeStep: activeStepSelector(state) });
+const mapStateToProps = state => ({ activeStep: getActiveStep(state) });
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators({ stepperClicked: step => changeStep(step) }, dispatch);

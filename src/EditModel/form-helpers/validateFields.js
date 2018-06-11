@@ -19,7 +19,7 @@ const validateField = (field, formRef, formRefStateClone) => {
 
 /* *
  * Constructs the error message to present to the snackBar.
- * Adds the step the field can be found on if present.
+ * Adds the step that the field can be found on (if present).
  */
 const getErrorMessage = (field) => {
     const fieldStep = field.step ? `On step ${field.step}` : '';

@@ -1,8 +1,8 @@
 import { ActionsObservable } from 'redux-observable';
 import Store from 'd2-ui/lib/store/Store';
 import * as d2 from 'd2/lib/d2';
-import { PROGRAM_INDICATOR_LOAD, PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED } from '../actions';
-import * as epics from '../epics';
+import { PROGRAM_INDICATOR_LOAD, PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED } from '../programIndicator.actions';
+import * as epics from '../programIndicator.epics';
 
 describe('Program indicator epics', () => {
     const createActionStreamFor = action => ActionsObservable.of(action);

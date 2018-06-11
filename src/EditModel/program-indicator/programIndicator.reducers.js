@@ -1,17 +1,22 @@
 import fieldGroups from '../../config/field-config/field-groups';
+
 import { nextStep, prevStep } from '../stepper/stepIterator';
 import { getStepFields } from '../stepper/stepper';
-import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
+import {
+    STEPPER_RESET_ACTIVE_STEP,
+    STEPPER_STEP_CHANGE,
+    STEPPER_STEP_NEXT,
+    STEPPER_STEP_PREVIOUS,
+} from '../stepper/stepper.actions';
+
 import {
     PROGRAM_INDICATOR_TO_EDIT_FIELD_CHANGED_DONE,
     PROGRAM_INDICATOR_SAVE,
     PROGRAM_INDICATOR_LOAD_SUCCESS,
     PROGRAM_INDICATOR_SAVE_SUCCESS,
     PROGRAM_INDICATOR_SAVE_ERROR,
-    PROGRAM_INDICATOR_STEP_CHANGE,
-    PROGRAM_INDICATOR_STEP_NEXT,
-    PROGRAM_INDICATOR_STEP_PREVIOUS,
-} from './actions';
+} from './programIndicator.actions';
+
 
 const getActiveStepFields = (activeStep, fieldConfigs) =>
     getStepFields(activeStep, fieldConfigs, 'programIndicator');
@@ -49,19 +54,19 @@ export function programIndicatorFormReducer(state = initialState, action) {
             ...state,
             isSaving: false,
         };
-    case PROGRAM_INDICATOR_STEP_CHANGE:
+    case STEPPER_STEP_CHANGE:
         return {
             ...state,
             activeStep: action.payload,
             fieldConfigs: getActiveStepFields(action.payload, state.fieldConfigs),
         };
-    case PROGRAM_INDICATOR_STEP_NEXT:
+    case STEPPER_STEP_NEXT:
         return {
             ...state,
             activeStep: nextStep(state.activeStep, stepLength),
             fieldConfigs: getActiveStepFields(nextStep(state.activeStep, stepLength), state.fieldConfigs),
         };
-    case PROGRAM_INDICATOR_STEP_PREVIOUS:
+    case STEPPER_STEP_PREVIOUS:
         return {
             ...state,
             activeStep: prevStep(state.activeStep),

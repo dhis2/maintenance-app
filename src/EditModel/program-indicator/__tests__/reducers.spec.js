@@ -1,6 +1,10 @@
-import reducer from '../reducers';
-import * as actions from '../actions';
-import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
+import reducer from '../programIndicator.reducers';
+import {
+    STEPPER_RESET_ACTIVE_STEP,
+    STEPPER_STEP_CHANGE,
+    STEPPER_STEP_NEXT,
+    STEPPER_STEP_PREVIOUS,
+} from '../../stepper/stepper.actions';
 import * as iterator from '../../stepper/stepIterator';
 
 describe('Program Indicator', () => {
@@ -41,7 +45,7 @@ describe('Program Indicator', () => {
                 isSaving: false,
             };
 
-            test('should change the activeStep when receiving an PROGRAM_INDICATOR_STEP_CHANGE action', () => {
+            test('should change the activeStep when receiving an STEPPER_STEP_CHANGE action', () => {
                 const expectedStepKey = 2;
 
                 const expectedState = {
@@ -52,14 +56,14 @@ describe('Program Indicator', () => {
                 };
 
                 const actualState = reducer(initialState, {
-                    type: actions.PROGRAM_INDICATOR_STEP_CHANGE,
+                    type: STEPPER_STEP_CHANGE,
                     payload: expectedStepKey,
                 });
 
                 expect(actualState).toEqual(expectedState);
             });
 
-            test('should request the next step when receiving an PROGRAM_INDICATOR_STEP_NEXT action', () => {
+            test('should request the next step when receiving an STEPPER_STEP_NEXT action', () => {
                 const expectedStepKey = 1;
                 iterator.nextStep.mockReturnValue(1);
 
@@ -70,14 +74,14 @@ describe('Program Indicator', () => {
                     isSaving: false,
                 };
 
-                const actualState = reducer(initialState, { type: actions.PROGRAM_INDICATOR_STEP_NEXT });
+                const actualState = reducer(initialState, { type: STEPPER_STEP_NEXT });
 
                 expect(iterator.nextStep).toHaveBeenCalledTimes(2);
                 expect(iterator.prevStep).toHaveBeenCalledTimes(0);
                 expect(actualState).toEqual(expectedState);
             });
 
-            test('should request the previous step when receiving an PROGRAM_INDICATOR_STEP_PREVIOUS action', () => {
+            test('should request the previous step when receiving an STEPPER_STEP_PREVIOUS action', () => {
                 const expectedStepKey = 0;
                 iterator.prevStep.mockReturnValue(0);
 
@@ -88,7 +92,7 @@ describe('Program Indicator', () => {
                     isSaving: false,
                 };
 
-                const actualState = reducer(initialState, { type: actions.PROGRAM_INDICATOR_STEP_PREVIOUS });
+                const actualState = reducer(initialState, { type: STEPPER_STEP_PREVIOUS });
 
                 expect(iterator.nextStep).toHaveBeenCalledTimes(0);
                 expect(iterator.prevStep).toHaveBeenCalledTimes(2);

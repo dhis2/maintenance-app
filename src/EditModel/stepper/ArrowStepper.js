@@ -1,9 +1,9 @@
-import { previousStep, nextStep } from './actions';
+import { previousStep, nextStep } from './stepper.actions';
 import {
     createConnectedForwardButton,
     createConnectedBackwardButton,
     createStepperNavigation,
-} from '../stepper/stepper';
+} from './stepper';
 
 const EventProgramStepperNavigationForward = createConnectedForwardButton(nextStep);
 const EventProgramStepperNavigationBackward = createConnectedBackwardButton(previousStep);
