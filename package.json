@@ -59,7 +59,7 @@
     "moment": "^2.16.0",
     "node-fetch": "^1.6.3",
     "node-pre-gyp": "^0.6.30",
-    "node-sass": "^4.1.1",
+    "node-sass": "4.9.0",
     "precommit-hook": "^3.0.0",
     "recompose": "^0.23.1",
     "redux-logger": "^3.0.6",

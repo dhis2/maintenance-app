@@ -13,5 +13,11 @@
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true
         }
+    },
+    "rules": {
+        "no-unused-expressions": ["error", {
+            "allowTernary": true,
+            "allowShortCircuit": true
+        }]
     }
 }
