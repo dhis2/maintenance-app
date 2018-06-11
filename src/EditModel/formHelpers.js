@@ -3,6 +3,7 @@ import FormFieldsForModel from '../forms/FormFieldsForModel';
 import FormFieldsManager from '../forms/FormFieldsManager';
 import fieldOrderNames from '../config/field-config/field-order';
 import fieldOverrides from '../config/field-overrides/index';
+import fieldGroups from '../config/field-config/field-groups';
 import { createFieldConfig, typeToFieldMap } from '../forms/fields';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { identity, noop, compose } from 'lodash/fp';
@@ -19,6 +20,42 @@ function getLabelText(labelText, fieldConfig = {}) {
     return labelText;
 }
 
+// Translate the sync validator messages if there are any validators
+function translateValidators(fieldConfig, d2) {
+    if (fieldConfig.validators) {
+        fieldConfig.validators = fieldConfig.validators
+            .map(validator => ({
+                ...validator,
+                message: d2.i18n.getTranslation(validator.message),
+            }));
+    }
+}
+
+// Get the field's label with required indicator if the field is required
+// Save one translated label for validation messages
+function setRequiredFieldsLabelText(fieldConfig, d2) {
+    fieldConfig.translatedName = d2.i18n.getTranslation(fieldConfig.props.labelText);
+    fieldConfig.props.labelText = getLabelText(
+        fieldConfig.translatedName,
+        fieldConfig,
+    );
+}
+
+/* 
+ * If the modelType are grouped in field-groups.js, the step number and group/step name 
+ * will be added to the fieldConfig. This string can later be used for the validating
+ * step in EditModelForm.isRequiredFieldsValid to tell the user which step to find the 
+ * non-valid required field.
+ */
+function setRequiredFieldsStepName(fieldConfig, modelType, d2) {
+    // TODO: Find way to fix programNotificationTemplate sending the correct modelType
+    if (fieldGroups.isGroupedFields(modelType) && modelType !== 'programNotificationTemplate') {
+        const stepNo = fieldGroups.groupNoByName(fieldConfig.name, modelType);
+        const stepName = fieldGroups.groupNameByStep(stepNo, modelType);
+        fieldConfig.step = `${stepNo + 1}: ${d2.i18n.getTranslation(stepName)}`;
+    }
+}
+
 export async function createFieldConfigForModelTypes(modelType, forcedFieldOrderNames, includeAttributes = true, customFieldOrderName) {
     const d2 = await getInstance();
 
@@ -31,18 +68,9 @@ export async function createFieldConfigForModelTypes(modelType, forcedFieldOrder
 
     return formFieldsManager.getFormFieldsForModel({ modelDefinition: d2.models[modelType] }, customFieldOrderName)
         .map((fieldConfig) => {
-            // Translate the sync validator messages if there are any validators
-            if (fieldConfig.validators) {
-                fieldConfig.validators = fieldConfig.validators
-                    .map(validator => ({
-                        ...validator,
-                        message: d2.i18n.getTranslation(validator.message),
-                    }));
-            }
-
-            // Get the field's label with required indicator if the field is required
-            fieldConfig.props.labelText = getLabelText(d2.i18n.getTranslation(fieldConfig.props.labelText), fieldConfig);
-
+            translateValidators(fieldConfig, d2);
+            setRequiredFieldsStepName(fieldConfig, modelType, d2);
+            setRequiredFieldsLabelText(fieldConfig, d2);
             return fieldConfig;
         }).concat(includeAttributes ? createAttributeFieldConfigs(d2, modelType) : []);
 }
