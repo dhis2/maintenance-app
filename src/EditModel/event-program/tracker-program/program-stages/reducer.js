@@ -5,7 +5,7 @@ import {
     PROGRAM_STAGE_EDIT,
     PROGRAM_STAGE_EDIT_RESET,
 } from './actions';
-import { STEPPER_RESET_ACTIVE_STEP } from '../../../actions';
+import { STEPPER_RESET_ACTIVE_STEP } from '../../../stepper/stepper.actions';
 import steps from './programStageSteps';
 import { next, previous, first } from '../../../stepper/stepIterator';
 

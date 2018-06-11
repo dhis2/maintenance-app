@@ -97,6 +97,39 @@ const fieldGroupsForModelType = new Map([
             },
         ],
     ],
+    [
+        'programIndicator',
+        [
+            {
+                label: 'program_indicator__details',
+                fields: [
+                    'program',
+                    'name',
+                    'shortName',
+                    'code',
+                    'description',
+                    'decimals',
+                    'aggregationType',
+                    'analyticsType',
+                    'analyticsPeriodBoundaries',
+                    'displayInForm',
+                    'legendSets',
+                    'aggregateExportCategoryOptionCombo',
+                    'aggregateExportAttributeOptionCombo',
+                ],
+            },
+            {
+                label: 'program_indicator__edit_expression',
+                fields: ['expression'],
+            },
+            {
+                label: 'program_indicator__edit_filter',
+                fields: [
+                    'filter',
+                ],
+            },
+        ],
+    ],
 ]);
 
 export default {
@@ -115,6 +148,14 @@ export default {
 
     isGroupedFields(modelType) {
         return modelType && fieldGroupsForModelType.has(modelType);
+    },
+
+    getStepLength(modelType) {
+        if (this.isGroupedFields(modelType)) {
+            const modelGroup = fieldGroupsForModelType.get(modelType);
+            return modelGroup.length;
+        }
+        return 0;
     },
 
     groupNoByName(fieldName, modelType) {

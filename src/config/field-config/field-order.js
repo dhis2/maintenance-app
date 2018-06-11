@@ -153,7 +153,7 @@ const fieldOrderByName = new Map([
         'phoneNumber',
         'coordinates',
         'dataSets',
-        'programs'
+        'programs',
 
     ]],
     ['organisationUnitGroup', [
@@ -467,9 +467,9 @@ export default {
      *
      * @example
      * ```
-     * import fieldOverrides from 'field-overrides';
+     * import fieldOrder from 'field-order';
      *
-     * let dataElementOverrides = fieldOverrides.for('dataElement');
+     * let dataElementFields = fieldOrder.for('dataElement');
      * ```
      */
     for(schemaName) {

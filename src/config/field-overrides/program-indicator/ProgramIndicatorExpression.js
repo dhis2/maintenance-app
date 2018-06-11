@@ -60,14 +60,14 @@ const styles = {
         whiteSpace: 'nowrap',
     },
 };
-function ProgramIndicatorExpression({ d2, onChange, status, model, value: formula = '', referenceProperty }) {
+function ProgramIndicatorExpression({ d2, onChange, status, model, value: formula = '', referenceProperty, style }) {
     const programType = getOr('WITHOUT_REGISTRATION', 'program.programType', model);
 
     const onFormulaChange = value => onChange({ target: { value } });
     const onSelect = value => onChange({ target: { value: formula + value } });
 
     return (
-        <div>
+        <div style={style}>
             <div style={styles.programIndicatorExpression.container}>
 
                 <Paper style={styles.programIndicatorExpression.formula}>
@@ -125,7 +125,8 @@ ProgramIndicatorExpression.propTypes = {
     model: PropTypes.object.isRequired,
     referenceProperty: PropTypes.string.isRequired,
     value: PropTypes.string,
+    style: PropTypes.object,
 };
-ProgramIndicatorExpression.defaultProps = { value: '' };
+ProgramIndicatorExpression.defaultProps = { value: '', style: {} };
 
 export default ProgramIndicatorExpression;

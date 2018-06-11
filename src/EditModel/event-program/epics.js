@@ -1,3 +1,25 @@
+import { getInstance } from 'd2/lib/d2';
+import { generateUid } from 'd2/lib/uid';
+import { Observable } from 'rxjs';
+import { combineEpics } from 'redux-observable';
+import { get, getOr, first, map, compose, values, flatten } from 'lodash/fp';
+
+import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
+
+import { getImportStatus } from './metadataimport-helpers';
+import { goToAndScrollUp } from '../../router-utils';
+
+import notificationEpics from './notifications/epics';
+import createAssignDataElementEpics from './assign-data-elements/epics';
+import createAssignAttributeEpics from './tracker-program/assign-tracked-entity-attributes/epics';
+import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
+import dataEntryFormEpics from './data-entry-form/epics';
+import trackerProgramEpics from './tracker-program/epics';
+import { createModelToEditEpic, createModelToEditProgramStageEpic } from '../epicHelpers';
+
+import showSnackBarMessageEpic from '../../Snackbar/epics';
+import { notifyUser } from '../actions';
+import { PROGRAM_STAGE_FIELD_EDIT } from './tracker-program/program-stages/actions';
 import {
     MODEL_TO_EDIT_FIELD_CHANGED,
     EVENT_PROGRAM_LOAD,
@@ -5,57 +27,9 @@ import {
     EVENT_PROGRAM_SAVE_SUCCESS,
     EVENT_PROGRAM_SAVE_ERROR,
     loadEventProgramSuccess,
-    notifyUser,
     saveEventProgramError,
     saveEventProgramSuccess,
 } from './actions';
-
-import {
-    PROGRAM_STAGE_FIELD_EDIT,
-    PROGRAM_STAGE_EDIT_RESET,
-    PROGRAM_STAGE_EDIT_CANCEL,
-    PROGRAM_STAGE_EDIT_SAVE,
-    PROGRAM_STAGE_DELETE,
-    editProgramStageReset,
-    PROGRAM_STAGE_ADD,
-    PROGRAM_STAGE_EDIT,
-    editProgramStage,
-} from './tracker-program/program-stages/actions';
-import eventProgramStore, {
-    isStoreStateDirty,
-    getMetaDataToSend,
-} from './eventProgramStore';
-import { Observable } from 'rxjs';
-import { combineEpics } from 'redux-observable';
-import {
-    get,
-    getOr,
-    set,
-    first,
-    map,
-    compose,
-    groupBy,
-    isEqual,
-    find,
-    memoize,
-    values,
-    flatten,
-} from 'lodash/fp';
-import { getInstance } from 'd2/lib/d2';
-import { generateUid } from 'd2/lib/uid';
-import { getImportStatus } from './metadataimport-helpers';
-import { goToAndScrollUp } from '../../router-utils';
-import { hashHistory } from 'react-router';
-import notificationEpics from './notifications/epics';
-import createAssignDataElementEpics from './assign-data-elements/epics';
-import createAssignAttributeEpics from './tracker-program/assign-tracked-entity-attributes/epics';
-import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
-import dataEntryFormEpics from './data-entry-form/epics';
-import {
-    createModelToEditEpic,
-    createModelToEditProgramStageEpic,
-} from '../epicHelpers';
-import trackerProgramEpics from './tracker-program/epics';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
@@ -68,7 +42,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
 
         // A api format payload that contains a program and a programStage
         const programStages =
-            programPayload.query.type == 'WITH_REGISTRATION'
+            programPayload.query.type === 'WITH_REGISTRATION'
                 ? []
                 : [{
                     id: programStageUid,
@@ -379,4 +353,5 @@ export default combineEpics(
     createCreateDataEntryFormEpics(eventProgramStore),
     dataEntryFormEpics,
     trackerProgramEpics,
+    showSnackBarMessageEpic,
 );

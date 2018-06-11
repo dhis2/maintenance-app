@@ -13,9 +13,9 @@ import { initAppState, default as appState } from './App/appStateStore';
 import App from './App/App.component';
 import listStore from './List/list.store';
 import store from './store';
-import { resetActiveStep } from './EditModel/actions';
+import { resetActiveStep } from './EditModel/stepper/stepper.actions';
 import { loadEventProgram } from './EditModel/event-program/actions';
-import { loadProgramIndicator } from './EditModel/program-indicator/actions';
+import { loadProgramIndicator } from './EditModel/program-indicator/programIndicator.actions';
 import LoadableComponent, { LoadableWithLoaders } from './utils/LoadableComponent';
 
 function initState({ params }) {
