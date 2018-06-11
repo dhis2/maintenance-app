@@ -10,9 +10,9 @@ const mapStateToProps = state => ({ activeStep: activeStepSelector(state) });
 const mapDispatchToProps = dispatch =>
     bindActionCreators({ stepperClicked: step => changeStep(step) }, dispatch);
 
-const ProgramIndicatorStepper = connect(
+const ProgramIndicatorNumberStepper = connect(
     mapStateToProps,
     mapDispatchToProps,
 )(createStepper);
 
-export default ProgramIndicatorStepper;
+export default ProgramIndicatorNumberStepper;

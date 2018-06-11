@@ -13,17 +13,14 @@ import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import FormHeading from '../FormHeading';
 import FormSubHeading from '../FormSubHeading';
 import ProgramIndicatorActionButtons from './ProgramIndicatorActionButtons';
-import ProgramIndicatorStepper from './ProgramIndicatorStepper';
+import ProgramIndicatorNumberStepper from './ProgramIndicatorNumberStepper';
+import ProgramIndicatorArrowStepper from './ProgramIndicatorArrowStepper';
 
 import fieldGroups from '../../config/field-config/field-groups';
 import programIndicatorStore from './programIndicatorStore';
 import { fieldConfigsSelector, isLoadingSelector, isSavingSelector } from './selectors';
-import { previousStep, nextStep, editFieldChanged, saveAndValidateProgramIndicator } from './actions';
-import {
-    createConnectedForwardButton,
-    createConnectedBackwardButton,
-    createStepperNavigation,
-} from '../stepper/stepper';
+import { editFieldChanged, saveAndValidateProgramIndicator } from './actions';
+
 
 const styles = {
     heading: {
@@ -35,14 +32,6 @@ const styles = {
         padding: '3rem',
     },
 };
-
-const EventProgramStepperNavigationForward = createConnectedForwardButton(nextStep);
-const EventProgramStepperNavigationBackward = createConnectedBackwardButton(previousStep);
-
-const StepperNavigation = createStepperNavigation(
-    EventProgramStepperNavigationBackward,
-    EventProgramStepperNavigationForward,
-);
 
 class EditProgramIndicator extends Component {
     onSaveWithValidation = () => {
@@ -71,7 +60,7 @@ class EditProgramIndicator extends Component {
                     <FormHeading schema={schema} groupName={groupName}>{camelCaseToUnderscores(schema)}</FormHeading>
                     <FormSubHeading>{programAndIndicatorName}</FormSubHeading>
                 </div>
-                <ProgramIndicatorStepper steps={fieldGroups.for(schema)} />
+                <ProgramIndicatorNumberStepper steps={fieldGroups.for(schema)} />
                 {!this.props.isLoading &&
                     <Paper style={styles.formWrapper}>
                         <FormBuilder
@@ -81,14 +70,14 @@ class EditProgramIndicator extends Component {
                         />
                     </Paper>
                 }
-                <StepperNavigation>
+                <ProgramIndicatorArrowStepper>
                     <ProgramIndicatorActionButtons
                         onSaveAction={this.onSaveWithValidation}
                         groupName={groupName}
                         schema={schema}
                         isSaving={this.props.isSaving}
                     />
-                </StepperNavigation>
+                </ProgramIndicatorArrowStepper>
             </div>
         );
     }
