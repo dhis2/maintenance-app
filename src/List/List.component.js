@@ -162,8 +162,8 @@ class List extends Component {
 
         const sourceStoreDisposable = listStore
             .subscribe((listStoreValue) => {
-                if (!isIterable(listStoreValue.list)) {
-                    return; // Received value is not iterable, keep waiting
+                if (!isIterable(listStoreValue.list) || listStoreValue.modelType !== this.props.params.modelType) {
+                    return; // Received value is not iterable or not correct model, keep waiting
                 }
                 listActions.hideDetailsBox();
                 this.setState({
@@ -172,6 +172,7 @@ class List extends Component {
                     tableColumns: listStoreValue.tableColumns,
                     filters: listStoreValue.filters,
                     isLoading: false,
+                    searchString: listStoreValue.searchString,
                 });
             });
 
@@ -351,7 +352,7 @@ class List extends Component {
 
         return (
             <div>
-                <SearchBox searchObserverHandler={this.searchListByName} />
+                <SearchBox initialValue={this.state.searchString} searchObserverHandler={this.searchListByName} />
                 {getFilterFieldsForType(this.props.params.modelType).map((filterField) => {
                     const modelDefinition = this.context.d2.models[this.props.params.modelType];
 
@@ -514,7 +515,6 @@ class List extends Component {
                 });
             }
         };
-
         return (
             <div>
                 <div>
