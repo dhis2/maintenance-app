@@ -21,6 +21,7 @@ import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique, getAttrib
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
 
 import { Step, Stepper, StepButton } from 'material-ui/Stepper';
+import getFirstInvalidFieldMessage from './form-helpers/validateFields';
 
 const currentSection$ = appState
     .filter(state => state.sideBar && state.sideBar.currentSection)
@@ -199,6 +200,7 @@ export default React.createClass({
                     fields={this.state.fieldConfigs}
                     onUpdateField={this._onUpdateField}
                     onUpdateFormStatus={this._onUpdateFormStatus}
+                    ref={this.setFormRef}
                 />
                 <FormButtons>
                     <SaveButton onClick={this._saveAction}
@@ -216,6 +218,10 @@ export default React.createClass({
         }
 
         return this.renderForm();
+    },
+
+    setFormRef(form) {
+        this.formRef = form;
     },
 
     setActiveStep(step) {
@@ -262,6 +268,16 @@ export default React.createClass({
 
     _saveAction(event) {
         event.preventDefault();
+
+        const invalidFieldMessage = getFirstInvalidFieldMessage(this.state.fieldConfigs, this.formRef);
+        if (invalidFieldMessage) {
+            snackActions.show({
+                message: `${this.getTranslation('missing_required_property_field')} ${invalidFieldMessage}`,
+                action: 'ok',
+            });
+            return;
+        }
+
         // Set state to saving so forms actions are being prevented
         this.setState({ isSaving: true });
 
