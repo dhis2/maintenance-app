@@ -145,7 +145,12 @@ const singleModelStoreConfig = {
     },
 
     save() {
-        const importResultPromise = this.state.save(true)
+        // Save new locale entries via the extended ModelDefinition, not the model directly
+        const importResultPromise = this.state.modelDefinition.name === 'locale' ?
+            this.state.modelDefinition.save(this.state) :
+            this.state.save(true);
+        
+        importResultPromise
             .then(response => response)
             .catch((response) => {
                 if (isString(response)) {

@@ -15,6 +15,8 @@ import { isString, isNumber } from 'lodash/fp';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import fieldGroups from '../../config/field-config/field-groups';
+
 function isActiveStep(activeStep, step, index) {
     if (isString(activeStep)) {
         return activeStep === step.key;
@@ -22,6 +24,36 @@ function isActiveStep(activeStep, step, index) {
 
     return activeStep === index;
 }
+
+export const getStepFields = (step, fieldConfigs, modelType) => {
+    const stepsByField = fieldGroups.groupsByField(modelType);
+    if (stepsByField) {
+        fieldConfigs.map((field) => {
+            if (stepsByField[field.name] === step) {
+                field.props.style = { display: 'block' };
+            } else {
+                field.props.style = { display: 'none' };
+            }
+            return field;
+        });
+    }
+    return [...fieldConfigs];
+};
+
+export const createStepper = ({ steps, activeStep, stepperClicked, orientation = 'horizontal'}, ) => (
+    <Stepper
+        activeStep={activeStep}
+        linear={false}
+        orientation={orientation}
+        style={{ margin: '0 -16px' }}
+    >
+        {steps.map((step, index) => (
+            <Step key={step.label}>
+                <StepButton onClick={() => stepperClicked(index)}><Translate>{step.label}</Translate></StepButton>
+            </Step>
+        ))}
+    </Stepper>
+);
 
 /**
  * Create a Stepper component from a configuration object.

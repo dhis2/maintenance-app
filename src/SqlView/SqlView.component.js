@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import HardwareKeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import FormHeading from '../EditModel/FormHeading';
 import { goToRoute } from '../router-utils';
 import LoadingMask from '../loading-mask/LoadingMask.component';
@@ -16,6 +20,8 @@ class SqlView extends Component {
         super(props, context);
         this.state = {
             listGrid: null,
+            downloadMenuOpen: false,
+            downloadMenuAnchor: null,
         };
     }
 
@@ -40,7 +46,21 @@ class SqlView extends Component {
 
     openFileLink(file) {
         const { params: { modelId } } = this.props;
+        this.closeDownloadMenu();
         window.location.href = `../api/sqlViews/${modelId}/${file}`;
+    }
+
+    openDownloadMenu = (event) => {
+        this.setState({
+            downloadMenuOpen: true,
+            downloadMenuAnchor: event.currentTarget,
+        });
+    }
+
+    closeDownloadMenu = () => {
+        this.setState({
+            downloadMenuOpen: false,
+        });
     }
 
     renderHeader() {
@@ -57,24 +77,51 @@ class SqlView extends Component {
                 >
                     {headerText}
                 </FormHeading>
+                {this.renderDropDownButton()}
             </div>
         );
     }
 
-    renderButtonStrip() {
+    renderDropDownButton() {
+        const { d2 } = this.context;
+        return (
+            <div className="sql-view__dropdown-button">
+                <RaisedButton
+                    onClick={this.openDownloadMenu}
+                    className="sql-view__download-btn"
+                    labelPosition="before"
+                    primary
+                    icon={<HardwareKeyboardArrowDown />}
+                    label={d2.i18n.getTranslation('download_as')}
+                />
+                <Popover
+                    open={this.state.downloadMenuOpen}
+                    anchorEl={this.state.downloadMenuAnchor}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    onRequestClose={this.closeDownloadMenu}
+                >
+                    <Menu>
+                        { this.renderDropDownMenuItems() }
+                    </Menu>
+                </Popover>
+            </div>
+        );
+    }
+
+    renderDropDownMenuItems() {
         const { d2 } = this.context;
         return [
-            { label: 'download_as_excel', file: 'data.xls' },
-            { label: 'download_as_csv', file: 'data.csv' },
-            { label: 'download_as_pdf', file: 'data.pdf' },
-            { label: 'download_as_html', file: 'data.html+css' },
-            { label: 'download_as_xml', file: 'data.xml' },
-            { label: 'download_as_json', file: 'data.json' },
+            { label: 'excel', file: 'data.xls' },
+            { label: 'csv', file: 'data.csv' },
+            { label: 'pdf', file: 'data.pdf' },
+            { label: 'html', file: 'data.html+css' },
+            { label: 'xml', file: 'data.xml' },
+            { label: 'json', file: 'data.json' },
         ].map(({ label, file }) => (
-            <RaisedButton
-                className="sql-view__download-btn"
+            <MenuItem
                 key={label}
-                label={d2.i18n.getTranslation(label)}
+                primaryText={d2.i18n.getTranslation(label)}
                 onClick={() => this.openFileLink(file)} // eslint-disable-line react/jsx-no-bind
             />
         ));
@@ -109,9 +156,6 @@ class SqlView extends Component {
         return (
             <div>
                 {this.renderHeader()}
-                <div className="sql-view__btn-strip">
-                    {this.renderButtonStrip()}
-                </div>
                 <Paper className="sql-view__content">
                     {this.renderTable()}
                 </Paper>

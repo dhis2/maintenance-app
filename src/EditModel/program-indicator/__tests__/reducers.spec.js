@@ -1,13 +1,16 @@
-import reducer from '../reducers';
-import * as actions from '../actions';
-import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
+import reducer from '../programIndicator.reducers';
+import {
+    STEPPER_RESET_ACTIVE_STEP,
+    STEPPER_STEP_CHANGE,
+    STEPPER_STEP_NEXT,
+    STEPPER_STEP_PREVIOUS,
+} from '../../stepper/stepper.actions';
 import * as iterator from '../../stepper/stepIterator';
 
 describe('Program Indicator', () => {
     beforeAll(() => {
-        iterator.next = jest.fn();
-        iterator.previous = jest.fn();
-        iterator.first = jest.fn();
+        iterator.nextStep = jest.fn();
+        iterator.prevStep = jest.fn();
     });
 
     beforeEach(() => {
@@ -19,101 +22,98 @@ describe('Program Indicator', () => {
     });
 
     describe('combined reducer', () => {
-        test('should return the program indicator state', () => {
-            const stepKey = 'shuffle';
-            iterator.first.mockReturnValue(stepKey);
+        test('should return the default state', () => {
+            const stepKey = 0;
 
             const actualState = reducer(undefined, {});
 
             const expectedState = {
-                step: {
-                    activeStep: stepKey,
-                },
+                activeStep: stepKey,
+                fieldConfigs: [],
+                isLoading: true,
+                isSaving: false,
             };
 
             expect(actualState).toEqual(expectedState);
         });
-    });
-
-    describe('stepper reducer', () => {
-        test('should return the default state', () => {
-            const stepKey = 'sprint';
-            iterator.first.mockReturnValue(stepKey);
-
-            const expectedStepState = {
-                activeStep: stepKey,
-            };
-
-            const actualState = reducer(undefined, {});
-
-            expect(actualState.step).toEqual(expectedStepState);
-        });
 
         describe('when receiving actions', () => {
             const initialState = {
-                step: {
-                    activeStep: 'slow-walk',
-                },
+                activeStep: 0,
+                fieldConfigs: [],
+                isLoading: true,
+                isSaving: false,
             };
 
-            test('should change the activeStep when receiving an PROGRAM_INDICATOR_STEP_CHANGE action', () => {
-                const expectedStepKey = 'hop';
+            test('should change the activeStep when receiving an STEPPER_STEP_CHANGE action', () => {
+                const expectedStepKey = 2;
 
                 const expectedState = {
                     activeStep: expectedStepKey,
+                    fieldConfigs: [],
+                    isLoading: true,
+                    isSaving: false,
                 };
 
                 const actualState = reducer(initialState, {
-                    type: actions.PROGRAM_INDICATOR_STEP_CHANGE,
+                    type: STEPPER_STEP_CHANGE,
                     payload: expectedStepKey,
                 });
 
-                expect(actualState.step).toEqual(expectedState);
+                expect(actualState).toEqual(expectedState);
             });
 
-            test('should request the next step when receiving an PROGRAM_INDICATOR_STEP_NEXT action', () => {
-                const expectedStepKey = 'march';
-                iterator.next.mockReturnValue(expectedStepKey);
+            test('should request the next step when receiving an STEPPER_STEP_NEXT action', () => {
+                const expectedStepKey = 1;
+                iterator.nextStep.mockReturnValue(1);
 
                 const expectedState = {
                     activeStep: expectedStepKey,
+                    fieldConfigs: [],
+                    isLoading: true,
+                    isSaving: false,
                 };
 
-                const actualState = reducer(initialState, { type: actions.PROGRAM_INDICATOR_STEP_NEXT });
+                const actualState = reducer(initialState, { type: STEPPER_STEP_NEXT });
 
-                expect(iterator.next).toHaveBeenCalledTimes(1);
-                expect(iterator.previous).toHaveBeenCalledTimes(0);
-                expect(actualState.step).toEqual(expectedState);
+                expect(iterator.nextStep).toHaveBeenCalledTimes(2);
+                expect(iterator.prevStep).toHaveBeenCalledTimes(0);
+                expect(actualState).toEqual(expectedState);
             });
 
-            test('should request the previous step when receiving an PROGRAM_INDICATOR_STEP_PREVIOUS action', () => {
-                const expectedStepKey = 'jog';
-                iterator.previous.mockReturnValue(expectedStepKey);
+            test('should request the previous step when receiving an STEPPER_STEP_PREVIOUS action', () => {
+                const expectedStepKey = 0;
+                iterator.prevStep.mockReturnValue(0);
 
                 const expectedState = {
                     activeStep: expectedStepKey,
+                    fieldConfigs: [],
+                    isLoading: true,
+                    isSaving: false,
                 };
 
-                const actualState = reducer(initialState, { type: actions.PROGRAM_INDICATOR_STEP_PREVIOUS });
+                const actualState = reducer(initialState, { type: STEPPER_STEP_PREVIOUS });
 
-                expect(iterator.next).toHaveBeenCalledTimes(0);
-                expect(iterator.previous).toHaveBeenCalledTimes(1);
-                expect(actualState.step).toEqual(expectedState);
+                expect(iterator.nextStep).toHaveBeenCalledTimes(0);
+                expect(iterator.prevStep).toHaveBeenCalledTimes(2);
+                expect(actualState).toEqual(expectedState);
             });
 
             test('shoud request the first step when receiving an STEPPER_RESET_ACTIVE_STEP action', () => {
-                const expectedStepKey = 'sprint';
-                iterator.first.mockReturnValue(expectedStepKey);
+                const expectedStepKey = 0;
 
                 const expectedState = {
                     activeStep: expectedStepKey,
+                    fieldConfigs: [],
+                    isLoading: true,
+                    isSaving: false,
                 };
 
                 const actualState = reducer(initialState, { type: STEPPER_RESET_ACTIVE_STEP });
 
-                expect(iterator.next).toHaveBeenCalledTimes(0);
-                expect(iterator.previous).toHaveBeenCalledTimes(0);
-                expect(actualState.step).toEqual(expectedState);
+                expect(iterator.nextStep).toHaveBeenCalledTimes(0);
+                expect(iterator.prevStep).toHaveBeenCalledTimes(0);
+                expect(actualState).toEqual(expectedState);
             });
         });
     });

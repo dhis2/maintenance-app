@@ -12,7 +12,7 @@ import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForTyp
 
 export const fieldFilteringForQuery = [
     'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
-    'code', 'publicAccess', 'access', 'href', 'level',
+    'code', 'publicAccess', 'access', 'href', 'level', 'type',
 ].join(',');
 
 const listActions = Action.createActionsFromNames([

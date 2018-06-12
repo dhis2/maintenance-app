@@ -8,6 +8,7 @@ import organisationUnitGroup from './organisationUnitGroup';
 import categoryCombo from './categoryCombo';
 import categoryOption from './categoryOption';
 import legendSet from './legendSet';
+import locale from './locale';
 import trackedEntityAttribute from './trackedEntityAttribute';
 import trackedEntityType from './trackedEntityType';
 import predictor from './predictor';
@@ -39,6 +40,7 @@ const overridesByType = {
     externalMapLayer,
     indicator,
     legendSet,
+    locale,
     organisationUnit,
     organisationUnitGroup,
     pushAnalysis,

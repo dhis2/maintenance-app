@@ -37,7 +37,8 @@ class DropDownAsyncGetter extends React.Component {
     }
 
     render() {
-        const { getter, shouldRender, useValueDotId, ...props } = this.props;
+        const { getter, shouldRender, useValueDotId, ...props } = this.props;       
+
         if (shouldRender(this.props.model)) {
             const eventIdWrapper = (event) => {
                 if (!isNil(event.target.value)) {

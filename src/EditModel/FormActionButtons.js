@@ -1,11 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { connect } from 'react-redux';
 import withProps from 'recompose/withProps';
 import { compose } from 'lodash/fp';
+
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';
+
 import { goToAndScrollUp } from '../router-utils';
-import eventProgramStore from './event-program/eventProgramStore';
 
 const styles = {
     cancelButton: {
@@ -22,7 +25,7 @@ export default function FormActionButtons({ onSaveAction, onCancelAction, isDirt
     );
 }
 
-export function createConnectedFormActionButtonsForSchema(mapDispatchToProps, mapStateToProps = null) {
+export function createConnectedFormActionButtonsForSchema(mapDispatchToProps = null, mapStateToProps = null) {
     const onCancelActionCreator = (groupName, schema) => () => goToAndScrollUp(`/list/${groupName}/${schema}`);
 
     const enhance = compose(
@@ -34,3 +37,15 @@ export function createConnectedFormActionButtonsForSchema(mapDispatchToProps, ma
 
     return enhance(FormActionButtons);
 }
+
+FormActionButtons.propTypes = {
+    onSaveAction: PropTypes.func.isRequired,
+    onCancelAction: PropTypes.func.isRequired,
+    isDirtyHandler: PropTypes.func,
+    isSaving: PropTypes.bool,
+};
+
+FormActionButtons.defaultProps = {
+    isDirtyHandler: () => {},
+    isSaving: false,
+};

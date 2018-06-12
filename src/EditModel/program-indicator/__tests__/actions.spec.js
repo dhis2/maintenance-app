@@ -1,27 +1,36 @@
-import * as actions from '../actions';
+import * as actions from '../programIndicator.actions';
+import { NOTIFY_USER, notifyUser } from '../../actions';
+import {
+    STEPPER_STEP_CHANGE,
+    STEPPER_STEP_NEXT,
+    STEPPER_STEP_PREVIOUS,
+    changeStep,
+    nextStep,
+    previousStep,
+} from '../../stepper/stepper.actions';
 
 describe('Program indicator actions', () => {
     describe('for stepper', () => {
         test('should have defined the stepper constants', () => {
-            expect(actions.PROGRAM_INDICATOR_STEP_PREVIOUS).toBe('PROGRAM_INDICATOR_STEP_PREVIOUS');
-            expect(actions.PROGRAM_INDICATOR_STEP_NEXT).toBe('PROGRAM_INDICATOR_STEP_NEXT');
-            expect(actions.PROGRAM_INDICATOR_STEP_CHANGE).toBe('PROGRAM_INDICATOR_STEP_CHANGE');
+            expect(STEPPER_STEP_PREVIOUS).toBe('STEPPER_STEP_PREVIOUS');
+            expect(STEPPER_STEP_NEXT).toBe('STEPPER_STEP_NEXT');
+            expect(STEPPER_STEP_CHANGE).toBe('STEPPER_STEP_CHANGE');
         });
 
-        test('should create the PROGRAM_INDICATOR_STEP_CHANGE action', () => {
-            expect(actions.changeStep()).toEqual({ type: actions.PROGRAM_INDICATOR_STEP_CHANGE, payload: undefined });
+        test('should create the STEPPER_STEP_CHANGE action', () => {
+            expect(changeStep()).toEqual({ type: STEPPER_STEP_CHANGE, payload: undefined });
         });
 
         test('should use the parameter as the payload', () => {
-            expect(actions.changeStep('details')).toEqual({ type: actions.PROGRAM_INDICATOR_STEP_CHANGE, payload: 'details' });
+            expect(changeStep('details')).toEqual({ type: STEPPER_STEP_CHANGE, payload: 'details' });
         });
 
-        test('should create the PROGRAM_INDICATOR_STEP_NEXT action', () => {
-            expect(actions.nextStep()).toEqual({ type: actions.PROGRAM_INDICATOR_STEP_NEXT });
+        test('should create the STEPPER_STEP_NEXT action', () => {
+            expect(nextStep()).toEqual({ type: STEPPER_STEP_NEXT });
         });
 
-        test('should create the PROGRAM_INDICATOR_STEP_PREVIOUS action', () => {
-            expect(actions.previousStep()).toEqual({ type: actions.PROGRAM_INDICATOR_STEP_PREVIOUS });
+        test('should create the STEPPER_STEP_PREVIOUS action', () => {
+            expect(previousStep()).toEqual({ type: STEPPER_STEP_PREVIOUS });
         });
     });
 
@@ -101,22 +110,22 @@ describe('Program indicator actions', () => {
                 };
 
                 expect(actions.saveProgramIndicatorError(new Error('Could not load'))).toEqual(expectedAction);
-            }
+            },
         );
     });
 
     describe('for notifying users', () => {
         test('should defined the notification constants', () => {
-            expect(actions.NOTIFY_USER).toBe('NOTIFY_USER');
+            expect(NOTIFY_USER).toBe('NOTIFY_USER');
         });
 
         test('should create a notify user action when calling notifyUser', () => {
             const expectedAction = {
-                type: actions.NOTIFY_USER,
+                type: NOTIFY_USER,
                 payload: undefined,
             };
 
-            expect(actions.notifyUser()).toEqual(expectedAction);
+            expect(notifyUser()).toEqual(expectedAction);
         });
     });
 });

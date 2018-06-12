@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
 import { isString } from 'd2-utilizr';
 
-import { Step, Stepper, StepButton } from 'material-ui/Stepper';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
@@ -27,6 +26,7 @@ import snackActions from '../Snackbar/snack.actions';
 import appState from '../App/appStateStore';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
+import { getStepFields, createStepper } from './stepper/stepper';
 import getFirstInvalidFieldMessage from './form-helpers/validateFields';
 
 const currentSection$ = appState
@@ -162,16 +162,12 @@ export default React.createClass({
     renderStepper() {
         const steps = fieldGroups.for(this.props.modelType);
         const stepCount = steps.length;
-
-        return stepCount > 1 ? (
-            <Stepper activeStep={this.state.activeStep} linear={false} style={{ margin: '0 -16px' }}>
-                {steps.map((step, s) => (
-                    <Step key={s}>
-                        <StepButton onClick={() => this.setActiveStep(s)}>{this.getTranslation(step.label)}</StepButton>
-                    </Step>
-                ))}
-            </Stepper>
-        ) : null;
+        return stepCount > 1 &&
+            createStepper({
+                steps,
+                activeStep: this.state.activeStep,
+                stepperClicked: this.setActiveStep,
+            });
     },
 
     renderForm() {
@@ -214,7 +210,6 @@ export default React.createClass({
         if (this.state.loading) {
             return (<div>Loading data....</div>);
         }
-
         return this.renderForm();
     },
 
@@ -224,20 +219,14 @@ export default React.createClass({
      *  an outer div that receives the props.style. 
      */
     setActiveStep(step) {
-        const stepsByField = fieldGroups.groupsByField(this.props.modelType);
-        if (stepsByField) {
-            this.setState({
-                activeStep: step,
-                fieldConfigs: this.state.fieldConfigs.map((field) => {
-                    if (stepsByField[field.name] === step) {
-                        field.props.style = { display: 'block' };
-                    } else {
-                        field.props.style = { display: 'none' };
-                    }
-                    return field;
-                }),
-            });
-        }
+        this.setState({
+            activeStep: step,
+            fieldConfigs: getStepFields(
+                step,
+                this.state.fieldConfigs,
+                this.props.modelType,
+            ),
+        });
     },
 
     setFormRef(form) {
