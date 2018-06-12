@@ -92,7 +92,9 @@ const addProgramStageSection = store => action$ => action$
         .combineLatest(d2$, (action, d2) => ([d2, action]))
         .map(([d2, action]) => {
             const state = store.getState();
-            const newSectionName = get('payload.newSectionName', action);
+
+            const newSectionData = get('payload.newSectionData', action);
+            // const newSectionName = get('payload.newSectionName', action);
             const programStageId = get('payload.programStage', action);
             const programStage = getProgramStageById(state, programStageId);
 
@@ -101,9 +103,13 @@ const addProgramStageSection = store => action$ => action$
 
             // Create new section model and set the properties we can
             const newSection = d2.models.programStageSection.create({ id: generateUid(), dataElements: [] });
-            newSection.name = newSectionName;
-            newSection.displayName = newSectionName;
+            newSection.name = newSectionData.name;
+            newSection.displayName = newSectionData.name;
+            newSection.description = newSectionData.description;
+            newSection.renderType = newSectionData.renderType;
             newSection.sortOrder = sortOrder;
+
+            console.log(newSection);
 
             // Add the section to the programStage, otherwise the section won't be associated with the programStage
             newSection.programStage = programStage;

@@ -252,10 +252,10 @@ const enhance = compose(
                 programStageSections
             });
         },
-        onSectionAdded: ({ programStage, addProgramStageSection }) => newSectionName => {
+        onSectionAdded: ({ programStage, addProgramStageSection }) => (newSectionData) => {
             addProgramStageSection({
                 programStage: programStage.id,
-                newSectionName
+                newSectionData,
             });
         },
         onSectionRemoved: ({

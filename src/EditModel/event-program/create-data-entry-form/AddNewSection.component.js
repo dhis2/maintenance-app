@@ -2,8 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import {
+    PROGRAM_STAGE_SECTION_RENDER_TYPES,
+    DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
+} from './render-types';
 
 const styles = {
     container: {
@@ -18,12 +24,25 @@ class AddNewSection extends Component {
         this.state = {
             dialogOpen: false,
             sectionName: '',
+            sectionDescription: '',
+            sectionRenderType: DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
         };
     }
 
-    getTranslation = key => {
-        return this.context.d2.i18n.getTranslation(key);
+    onNameChanged = (event, sectionName) => {
+        this.setState({ sectionName });
     };
+
+    onDescriptionChanged = (event, sectionDescription) => {
+        this.setState({ sectionDescription });
+    };
+
+    onRenderTypeChanged = (event, index, sectionRenderType) => {
+        this.setState({ sectionRenderType });
+    };
+
+    getTranslation = key =>
+        this.context.d2.i18n.getTranslation(key);
 
     openDialog = () => {
         this.setState({ dialogOpen: true });
@@ -39,12 +58,19 @@ class AddNewSection extends Component {
 
     confirmAddNewSection = () => {
         this.closeDialog();
-        this.props.onSectionAdded(this.state.sectionName);
+        this.props.onSectionAdded({
+            name: this.state.sectionName,
+            description: this.state.sectionDescription,
+            renderType: {
+                MOBILE: {
+                    type: this.state.sectionRenderType,
+                },
+                DESKTOP: {
+                    type: this.state.sectionRenderType,
+                },
+            },
+        });
         this.clearName();
-    };
-
-    onNameChanged = (event, sectionName) => {
-        this.setState({ sectionName });
     };
 
     focusOnSectionName = (input) => {
@@ -52,6 +78,24 @@ class AddNewSection extends Component {
             setTimeout(() => { input.focus(); }, 20);
         }
     };
+
+    renderSelectField() {
+        return (
+            <SelectField
+                floatingLabelText={this.getTranslation('render_type')}
+                value={this.state.sectionRenderType}
+                onChange={this.onRenderTypeChanged}
+            >
+                {PROGRAM_STAGE_SECTION_RENDER_TYPES.map(renderType => (
+                    <MenuItem
+                        key={renderType}
+                        value={renderType}
+                        primaryText={renderType.toLowerCase()}
+                    />
+                ))}
+            </SelectField>
+        );
+    }
 
     render = () => {
         const actions = [
@@ -83,7 +127,17 @@ class AddNewSection extends Component {
                         ref={this.focusOnSectionName}
                         hintText={this.getTranslation('name')}
                         onChange={this.onNameChanged}
+                        fullWidth
                     />
+                    <TextField
+                        hintText={this.getTranslation('description')}
+                        onChange={this.onDescriptionChanged}
+                        fullWidth
+                        multiLine
+                        rows={2}
+                        rowsMax={4}
+                    />
+                    {this.renderSelectField()}
                 </Dialog>
             </div>
         );

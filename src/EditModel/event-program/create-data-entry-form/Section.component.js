@@ -138,6 +138,7 @@ class Section extends Component {
     };
 
     render() {
+        console.log('SECTION: ', this.props, this.state);
         const removalDialogActions = [
             <FlatButton
                 primary
