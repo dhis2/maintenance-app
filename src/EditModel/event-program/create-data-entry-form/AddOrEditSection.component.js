@@ -73,6 +73,7 @@ class AddOrEditSection extends Component {
     };
 
     closeDialog = () => {
+        this.props.clearEditingSection();
         this.setState({ ...initialState });
     };
 

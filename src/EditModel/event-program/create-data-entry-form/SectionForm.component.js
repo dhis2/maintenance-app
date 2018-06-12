@@ -66,6 +66,10 @@ class SectionForm extends Component {
     getTranslation = key =>
         this.context.d2.i18n.getTranslation(key);
 
+    clearEditingSection = () => {
+        this.setState({ editingSection: null });
+    }
+
     openSection = (sectionId) => {
         this.setState({
             collapsedSections: pull(sectionId, this.state.collapsedSections),
@@ -117,9 +121,7 @@ class SectionForm extends Component {
 
     onSectionUpdated = (sectionId, newSectionData) => {
         this.props.onSectionUpdated(sectionId, newSectionData);
-        this.setState({
-            editingSection: null,
-        });
+        this.clearEditingSection();
     };
 
     onSortEnd = ({ oldIndex, newIndex }) => {
@@ -193,6 +195,7 @@ class SectionForm extends Component {
                         onSectionAdded={this.props.onSectionAdded}
                         onSectionUpdated={this.onSectionUpdated}
                         editingSection={this.state.editingSection}
+                        clearEditingSection={this.clearEditingSection}
                     />
                 </div>
                 <div style={{ flex: 1 }}>
