@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
@@ -160,6 +160,7 @@ class ProgramStageList extends Component {
             open={!!this.state.sharing.id}
             onRequestClose={this.closeSharing}
             bodyStyle={styles.sharingDialogBody}
+            d2={this.context.d2}
         />
     );
 
@@ -243,6 +244,10 @@ ProgramStageList.propTypes = {
 
 ProgramStageList.defaultProps = {
     tableColumns: ['name', 'lastUpdated'],
+};
+
+ProgramStageList.contextTypes = {
+    d2: PropTypes.object.isRequired,
 };
 
 export default connect(null, dispatch =>

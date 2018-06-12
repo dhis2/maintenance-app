@@ -7,7 +7,7 @@ import isIterable from 'd2-utilizr/lib/isIterable';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 
@@ -573,6 +573,7 @@ class List extends Component {
                         open={this.state.sharing.model && this.state.sharing.open}
                         onRequestClose={this.closeSharingDialog}
                         bodyStyle={{ minHeight: '400px' }}
+                        d2={this.context.d2}
                     />}
                 {!!this.state.translation.model &&
                     <TranslationDialog
