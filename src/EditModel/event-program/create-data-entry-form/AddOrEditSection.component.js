@@ -9,12 +9,19 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import {
     PROGRAM_STAGE_SECTION_RENDER_TYPES,
     DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
+    MOBILE, DESKTOP,
 } from './render-types';
 
 const styles = {
     container: {
         textAlign: 'right',
         width: '100%',
+    },
+    selectField: {
+        [DESKTOP]: {
+            marginRight: '1rem',
+        },
+        [MOBILE]: {},
     },
 };
 
@@ -24,9 +31,24 @@ const initialState = {
         id: null,
         name: '',
         description: '',
-        renderType: DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
-    }
+        renderType: {
+            MOBILE: {
+                type: DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
+            },
+            DESKTOP: {
+                type: DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
+            },
+        },
+    },
 };
+
+const rendertypeMenuItems = PROGRAM_STAGE_SECTION_RENDER_TYPES.map(type => (
+    <MenuItem
+        key={type}
+        value={type}
+        primaryText={type.toLowerCase()}
+    />
+));
 
 class AddOrEditSection extends Component {
     constructor(props) {
@@ -48,34 +70,22 @@ class AddOrEditSection extends Component {
         this.setState({ section: { ...this.state.section, description: sectionDescription } });
     };
 
-    onRenderTypeChanged = (event, index, sectionRenderType) => {
-        this.setState({ sectionRenderType });
-        this.setState({ section: { ...this.state.section, renderType: sectionRenderType } });
+    onRenderTypeChanged = (deviceType, sectionRenderType) => {
+        this.setState({
+            section: {
+                ...this.state.section,
+                renderType: {
+                    ...this.state.section.renderType,
+                    [deviceType]: {
+                        type: sectionRenderType,
+                    },
+                },
+            },
+        });
     };
 
     getTranslation = key =>
         this.context.d2.i18n.getTranslation(key);
-
-    showDialogForEditingModel(editingSection) {
-        this.setState({
-            dialogOpen: true,
-            section: {
-                id: editingSection.id,
-                name: editingSection.name,
-                description: editingSection.description,
-                renderType: editingSection.renderType.MOBILE.type,
-            },
-        });
-    }
-
-    openDialog = () => {
-        this.setState({ dialogOpen: true });
-    };
-
-    closeDialog = () => {
-        this.props.clearEditingSection();
-        this.setState({ ...initialState });
-    };
 
     getSaveData() {
         const { section } = this.state;
@@ -92,15 +102,44 @@ class AddOrEditSection extends Component {
         };
     }
 
+    showDialogForEditingModel(editingSection) {
+        const { id, name, description, renderType } = editingSection;
+        this.setState({
+            dialogOpen: true,
+            section: {
+                id,
+                name,
+                description,
+                renderType: {
+                    MOBILE: {
+                        type: renderType ? renderType.MOBILE.type : DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
+                    },
+                    DESKTOP: {
+                        type: renderType ? renderType.DESKTOP.type : DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
+                    },
+                },
+            },
+        });
+    }
+
+    closeDialog = () => {
+        this.props.clearEditingSection();
+        this.setState({ ...initialState });
+    };
+
+    openDialog = () => {
+        this.setState({ dialogOpen: true });
+    };
+
     confirmAddNewSection = () => {
         this.closeDialog();
-        this.props.onSectionAdded(this.getSaveData());
+        this.props.onSectionAdded(this.state.section);
     };
 
     confirmUpdateSection = () => {
-        const { section: { id } } = this.state;
+        const { section } = this.state;
         this.closeDialog();
-        this.props.onSectionUpdated(id, this.getSaveData());
+        this.props.onSectionUpdated(section.id, section);
     }
 
     focusOnSectionName = (input) => {
@@ -109,26 +148,22 @@ class AddOrEditSection extends Component {
         }
     };
 
-    renderSelectField(renderType) {
+    renderSelectField(deviceType) {
+        const translationKey = `render_type_${deviceType.toLowerCase()}`;
         return (
             <SelectField
-                floatingLabelText={this.getTranslation('render_type')}
-                value={renderType}
-                onChange={this.onRenderTypeChanged}
+                floatingLabelText={this.getTranslation(translationKey)}
+                value={this.state.section.renderType[deviceType].type}
+                onChange={(event, index, sectionRenderType) => this.onRenderTypeChanged(deviceType, sectionRenderType)}
+                style={styles.selectField[deviceType]}
             >
-                {PROGRAM_STAGE_SECTION_RENDER_TYPES.map(renderType => (
-                    <MenuItem
-                        key={renderType}
-                        value={renderType}
-                        primaryText={renderType.toLowerCase()}
-                    />
-                ))}
+                { rendertypeMenuItems }
             </SelectField>
         );
     }
 
     render = () => {
-        const { id, name, description, renderType } = this.state.section;
+        const { id, name, description } = this.state.section;
 
         let titleTxt;
         let confirmHandler;
@@ -184,7 +219,8 @@ class AddOrEditSection extends Component {
                         rows={2}
                         rowsMax={4}
                     />
-                    {this.renderSelectField(renderType)}
+                    {this.renderSelectField(DESKTOP)}
+                    {this.renderSelectField(MOBILE)}
                 </Dialog>
             </div>
         );
@@ -195,6 +231,11 @@ AddOrEditSection.propTypes = {
     onSectionAdded: PropTypes.func.isRequired,
     onSectionUpdated: PropTypes.func.isRequired,
     editingSection: PropTypes.object,
+    clearEditingSection: PropTypes.func.isRequired,
+};
+
+AddOrEditSection.defaultProps = {
+    editingSection: null,
 };
 
 AddOrEditSection.contextTypes = {

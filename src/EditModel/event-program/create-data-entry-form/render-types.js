@@ -40,3 +40,6 @@ export const DATA_ELEMENT_AND_TRACKED_ENTITY_ATTRIBUTE_RENDER_TYPES = [
     SLIDER,
     LINEAR_SCALE,
 ];
+
+export const MOBILE = 'MOBILE';
+export const DESKTOP = 'DESKTOP';
