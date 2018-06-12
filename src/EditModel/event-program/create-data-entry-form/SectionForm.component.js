@@ -12,7 +12,7 @@ import Snackbar from 'material-ui/Snackbar';
 import Section from './Section.component';
 import SectionList from './SectionList.component';
 import SortableSectionDataList from './SortableSectionDataList.component';
-import AddNewSection from './AddNewSection.component';
+import AddOrEditSection from './AddOrEditSection.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import DataElementPicker from './DataElementPicker.component';
 import { grey300, grey800 } from 'material-ui/styles/colors';
@@ -37,7 +37,7 @@ class SectionForm extends Component {
             collapsedSections: [],
             activeDataElements: getActiveDataElements(this.props.programStageSections),
             selectedSectionId: getOr(-1, 'programStageSections[0].id', this.props.programStageSections),
-            editingSectionId: null,
+            editingSection: null,
             showNoSelectionSectionMessage: false,
         };
     }
@@ -55,9 +55,16 @@ class SectionForm extends Component {
         }
     }
 
-    getTranslation = key => {
-        return this.context.d2.i18n.getTranslation(key);
+    onToggleEditing = (section) => {
+        this.setState({
+            editingSection: this.state.editingSection && isEqual(section.id, this.state.editingSection.id)
+                ? null
+                : section,
+        });
     };
+
+    getTranslation = key =>
+        this.context.d2.i18n.getTranslation(key);
 
     openSection = (sectionId) => {
         this.setState({
@@ -76,14 +83,6 @@ class SectionForm extends Component {
     selectSection = (sectionId) => {
         this.setState({
             selectedSectionId: sectionId,
-        });
-    };
-
-    onToggleEditing = (sectionId) => {
-        this.setState({
-            editingSectionId: isEqual(sectionId, this.state.editingSectionId)
-                ? null
-                : sectionId,
         });
     };
 
@@ -116,8 +115,8 @@ class SectionForm extends Component {
         this.selectSection(sectionId);
     };
 
-    onSectionNameChanged = (sectionId, newName) => {
-        this.props.onSectionNameChanged(sectionId, newName);
+    onSectionUpdated = (sectionId, newSectionData) => {
+        this.props.onSectionUpdated(sectionId, newSectionData);
     };
 
     onSortEnd = ({ oldIndex, newIndex }) => {
@@ -169,48 +168,50 @@ class SectionForm extends Component {
         this.props.onSectionOrderChanged(sections);
     };
 
-    render = () => (
-        <div style={styles.sectionForm}>
-            <div style={{ flex: 2 }}>
-                <SectionList
-                    useDragHandle
-                    distance={4}
-                    sections={this.props.programStageSections}
-                    selectedSectionId={this.state.selectedSectionId}
-                    editingSectionId={this.state.editingSectionId}
-                    collapsedSections={this.state.collapsedSections}
-                    onToggleSection={this.onToggleSection}
-                    onToggleEditing={this.onToggleEditing}
-                    onSelectSection={this.onSelectSection}
-                    onSectionNameChanged={this.onSectionNameChanged}
-                    onSectionRemoved={this.props.onSectionRemoved}
-                    onDataElementRemoved={this.removeDataElementFromSection}
-                    onSortEnd={this.onSortEnd}
-                    sortItems={this.sortItems}
-                />
-                <AddNewSection
-                    onSectionAdded={this.props.onSectionAdded}
+    render = () => {
+        return (
+            <div style={styles.sectionForm}>
+                <div style={{ flex: 2 }}>
+                    <SectionList
+                        useDragHandle
+                        distance={4}
+                        sections={this.props.programStageSections}
+                        selectedSectionId={this.state.selectedSectionId}
+                        collapsedSections={this.state.collapsedSections}
+                        onToggleSection={this.onToggleSection}
+                        onToggleEditing={this.onToggleEditing}
+                        onSelectSection={this.onSelectSection}
+                        onSectionRemoved={this.props.onSectionRemoved}
+                        onDataElementRemoved={this.removeDataElementFromSection}
+                        onSortEnd={this.onSortEnd}
+                        sortItems={this.sortItems}
+                    />
+                    <AddOrEditSection
+                        onSectionAdded={this.props.onSectionAdded}
+                        onSectionUpdated={this.onSectionUpdated}
+                        editingSection={this.state.editingSection}
+                    />
+                </div>
+                <div style={{ flex: 1 }}>
+                    <DataElementPicker
+                        availableDataElements={sortBy(['displayName'], this.props.availableDataElements)}
+                        activeDataElements={this.state.activeDataElements}
+                        onElementPicked={this.onDataElementPicked}
+                    />
+                </div>
+                <Snackbar
+                    open={this.state.showNoSelectionSectionMessage}
+                    message={this.getTranslation('no_section_selected_error')}
+                    autoHideDuration={3000}
+                    onRequestClose={this.closeNoSelectionSectionMessage}
                 />
             </div>
-            <div style={{ flex: 1 }}>
-                <DataElementPicker
-                    availableDataElements={sortBy(['displayName'], this.props.availableDataElements)}
-                    activeDataElements={this.state.activeDataElements}
-                    onElementPicked={this.onDataElementPicked}
-                />
-            </div>
-            <Snackbar
-                open={this.state.showNoSelectionSectionMessage}
-                message={this.getTranslation('no_section_selected_error')}
-                autoHideDuration={3000}
-                onRequestClose={this.closeNoSelectionSectionMessage}
-            />
-        </div>
-    );
+        )
+    };
 }
 
 SectionForm.PropTypes = {
-    onSectionNameChanged: PropTypes.func.isRequired,
+    onSectionUpdated: PropTypes.func.isRequired,
     onSectionOrderChanged: PropTypes.func.isRequired,
     onSectionAdded: PropTypes.func.isRequired,
     onSectionRemoved: PropTypes.func.isRequired,

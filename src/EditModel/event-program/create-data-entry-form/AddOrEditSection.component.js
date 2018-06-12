@@ -18,60 +18,89 @@ const styles = {
     },
 };
 
-class AddNewSection extends Component {
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            dialogOpen: false,
-            sectionName: '',
-            sectionDescription: '',
-            sectionRenderType: DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
-        };
+const initialState = {
+    dialogOpen: false,
+    section: {
+        id: null,
+        name: '',
+        description: '',
+        renderType: DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
+    }
+};
+
+class AddOrEditSection extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { ...initialState };
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.editingSection && !prevProps.editingSection) {
+            this.showDialogForEditingModel(this.props.editingSection);
+        }
     }
 
     onNameChanged = (event, sectionName) => {
-        this.setState({ sectionName });
+        this.setState({ section: { ...this.state.section, name: sectionName } });
     };
 
     onDescriptionChanged = (event, sectionDescription) => {
-        this.setState({ sectionDescription });
+        this.setState({ section: { ...this.state.section, description: sectionDescription } });
     };
 
     onRenderTypeChanged = (event, index, sectionRenderType) => {
         this.setState({ sectionRenderType });
+        this.setState({ section: { ...this.state.section, renderType: sectionRenderType } });
     };
 
     getTranslation = key =>
         this.context.d2.i18n.getTranslation(key);
+
+    showDialogForEditingModel(editingSection) {
+        this.setState({
+            dialogOpen: true,
+            section: {
+                id: editingSection.id,
+                name: editingSection.name,
+                description: editingSection.description,
+                renderType: editingSection.renderType.MOBILE.type,
+            },
+        });
+    }
 
     openDialog = () => {
         this.setState({ dialogOpen: true });
     };
 
     closeDialog = () => {
-        this.setState({ dialogOpen: false });
+        this.setState({ ...initialState });
     };
 
-    clearName = () => {
-        this.setState({ sectionName: '' });
-    };
+    getSaveData() {
+        const { section } = this.state;
+        return {
+            ...section,
+            renderType: {
+                MOBILE: {
+                    type: section.renderType,
+                },
+                DESKTOP: {
+                    type: section.renderType,
+                },
+            },
+        };
+    }
 
     confirmAddNewSection = () => {
         this.closeDialog();
-        this.props.onSectionAdded({
-            name: this.state.sectionName,
-            description: this.state.sectionDescription,
-            renderType: {
-                MOBILE: {
-                    type: this.state.sectionRenderType,
-                },
-                DESKTOP: {
-                    type: this.state.sectionRenderType,
-                },
-            },
-        });
-        this.clearName();
+        this.props.onSectionAdded(this.getSaveData());
     };
+
+    confirmUpdateSection = () => {
+        const { section: { id } } = this.state;
+        this.closeDialog();
+        this.props.onSectionUpdated(id, this.getSaveData());
+    }
 
     focusOnSectionName = (input) => {
         if (input) {
@@ -79,11 +108,11 @@ class AddNewSection extends Component {
         }
     };
 
-    renderSelectField() {
+    renderSelectField(renderType) {
         return (
             <SelectField
                 floatingLabelText={this.getTranslation('render_type')}
-                value={this.state.sectionRenderType}
+                value={renderType}
                 onChange={this.onRenderTypeChanged}
             >
                 {PROGRAM_STAGE_SECTION_RENDER_TYPES.map(renderType => (
@@ -98,6 +127,21 @@ class AddNewSection extends Component {
     }
 
     render = () => {
+        const { id, name, description, renderType } = this.state.section;
+
+        let titleTxt;
+        let confirmHandler;
+        let confirmTxt;
+        if (id) {
+            titleTxt = this.getTranslation('update_program_stage_section');
+            confirmHandler = this.confirmUpdateSection;
+            confirmTxt = this.getTranslation('update');
+        } else {
+            titleTxt = this.getTranslation('add_new_program_stage_section');
+            confirmHandler = this.confirmAddNewSection;
+            confirmTxt = this.getTranslation('add');
+        }
+
         const actions = [
             <FlatButton
                 primary
@@ -106,9 +150,9 @@ class AddNewSection extends Component {
             />,
             <FlatButton
                 primary
-                label={this.getTranslation('add')}
-                disabled={!this.state.sectionName}
-                onTouchTap={this.confirmAddNewSection}
+                label={confirmTxt}
+                disabled={!name}
+                onTouchTap={confirmHandler}
             />,
         ];
 
@@ -118,7 +162,7 @@ class AddNewSection extends Component {
                     <ContentAdd />
                 </FloatingActionButton>
                 <Dialog
-                    title={this.getTranslation('add_new_program_stage_section')}
+                    title={titleTxt}
                     actions={actions}
                     open={this.state.dialogOpen}
                     onRequestClose={this.closeDialog}
@@ -127,29 +171,33 @@ class AddNewSection extends Component {
                         ref={this.focusOnSectionName}
                         hintText={this.getTranslation('name')}
                         onChange={this.onNameChanged}
+                        value={name}
                         fullWidth
                     />
                     <TextField
                         hintText={this.getTranslation('description')}
                         onChange={this.onDescriptionChanged}
+                        value={description}
                         fullWidth
                         multiLine
                         rows={2}
                         rowsMax={4}
                     />
-                    {this.renderSelectField()}
+                    {this.renderSelectField(renderType)}
                 </Dialog>
             </div>
         );
     }
 }
 
-AddNewSection.propTypes = {
+AddOrEditSection.propTypes = {
     onSectionAdded: PropTypes.func.isRequired,
+    onSectionUpdated: PropTypes.func.isRequired,
+    editingSection: PropTypes.object,
 };
 
-AddNewSection.contextTypes = {
+AddOrEditSection.contextTypes = {
     d2: PropTypes.object,
 };
 
-export default AddNewSection;
+export default AddOrEditSection;
