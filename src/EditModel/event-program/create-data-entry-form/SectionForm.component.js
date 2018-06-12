@@ -117,6 +117,9 @@ class SectionForm extends Component {
 
     onSectionUpdated = (sectionId, newSectionData) => {
         this.props.onSectionUpdated(sectionId, newSectionData);
+        this.setState({
+            editingSection: null,
+        });
     };
 
     onSortEnd = ({ oldIndex, newIndex }) => {
