@@ -9,6 +9,7 @@ import TextField from '../../../forms/form-fields/text-field';
 import programRuleActionTypes from './programRuleActionTypes';
 import ProgramRuleConditionField from './programRuleConditionField.component';
 import snackActions from '../../../Snackbar/snack.actions';
+import RefreshMask from '../../../forms/form-fields/helpers/RefreshMask.component';
 
 function toDisplay (element) {
     return {
@@ -18,12 +19,40 @@ function toDisplay (element) {
     }
 }
 
+function shouldLoadOptions(ruleAction) {
+    const actionTypesWithOptionSetFilter = ['HIDEOPTION'];
+    return ruleAction && ruleAction.programRuleActionType && actionTypesWithOptionSetFilter.includes(ruleAction.programRuleActionType);
+}
+
+function shouldLoadOptionGroups(ruleAction) {
+    const actionTypesWithOptionSetFilter = ['SHOWOPTIONGROUP', 'HIDEOPTIONGROUP'];
+    return ruleAction && ruleAction.programRuleActionType && actionTypesWithOptionSetFilter.includes(ruleAction.programRuleActionType);
+}
+
+//helper to know if dataElements/teas needs to be filtered on being related to an optionSet
+function shouldFilterOnOptionSet(ruleAction) {
+    const actionTypesWithOptionSetFilter = ['HIDEOPTION', 'SHOWOPTIONGROUP', 'HIDEOPTIONGROUP'];
+    return ruleAction && ruleAction.programRuleActionType && actionTypesWithOptionSetFilter.includes(ruleAction.programRuleActionType);
+}
+
+const DropdownWithLoading = ({loading, ...props}) => {
+    //only pass display none
+    const style = {
+        display: props.style.display === 'none' ? 'none' : undefined
+    }
+    return <div style={{style}} >
+        {loading && <RefreshMask />}
+        <DropDown {...props} />
+    </div>
+}
+
 class ProgramRuleActionDialog extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
             programRuleAction: this.props.ruleActionModel,
+            loading: true,
         };
 
         this.d2 = context.d2;
@@ -34,25 +63,29 @@ class ProgramRuleActionDialog extends React.Component {
 
     componentDidMount() {
         if (this.props.program && this.props.program.id) {
+            const afterLoaders = [
+                this.state.programRuleAction.option ? this.optionsDropdownGetter : null,
+                this.state.programRuleAction.optionGroup ? this.optionGroupDropdownGetter : null,
+            ].filter(loader => loader);
             Promise.all([
                 this.d2.models.programs.get(this.props.program.id, {
                     fields: [
                         'programStages[id,displayName',
                         'programStageSections[id,displayName]',
                         'notificationTemplates[id,displayName]',
-                        'programStageDataElements[id,dataElement[id,displayName]]]',
+                        'programStageDataElements[id,dataElement[id,displayName,optionSet]]]',
                         'notificationTemplates[displayName,id]'
                     ].join(','),
                 }),
                 this.d2.models.programs.get(this.props.program.id, {
-                    fields: 'programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName]]',
+                    fields: 'programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,optionSet]]',
                 }),
                 this.d2.models.programRuleVariables.list({
                     filter: `program.id:eq:${this.props.program.id}`,
                     fields: 'id,displayName,programRuleVariableSourceType',
                     paging: false,
                 }),
-            ]).then(([wrappedUpDataElements, wrappedUpTrackedEntityAttributes, programVariables]) => {
+            ]).then(([wrappedUpDataElements, wrappedUpTrackedEntityAttributes, programVariables, opts]) => {
                 const programDataElements =
                     Object.values(wrappedUpDataElements.programStages.toArray()
                         .map(stage => stage.programStageDataElements.map(psde => psde.dataElement))
@@ -100,7 +133,7 @@ class ProgramRuleActionDialog extends React.Component {
                 };
 
                 notificationTemplates = dedupe(notificationTemplates);
-
+               
                 this.setState({
                     programStages,
                     programSections,
@@ -114,8 +147,14 @@ class ProgramRuleActionDialog extends React.Component {
                         };
                     }),
                     notificationTemplates,
-                });
-            }).catch((err) => {
+                    options: [],
+                    optionGroups: [],
+                    loading: afterLoaders.length > 0 || false,
+                    programRuleAction: this.state.programRuleAction,
+                })
+            })
+            .then(() => Promise.all(afterLoaders.map(func => func())))
+            .catch((err) => {
                 this.props.onRequestClose();
                 snackActions.show({ message: `Error: ${err}`, action: 'ok' });
             });
@@ -139,7 +178,9 @@ class ProgramRuleActionDialog extends React.Component {
             trackedEntityAttribute: this.state.programTrackedEntityAttributes,
             programStage: this.state.programStages,
             programStageSection: this.state.programSections,
-            programNotificationTemplate: this.state.notificationTemplates
+            programNotificationTemplate: this.state.notificationTemplates,
+            option: this.state.options,
+            optionGroup: this.state.optionGroups,
         };
 
         Object.keys(fieldRefs).forEach((field) => {
@@ -170,10 +211,86 @@ class ProgramRuleActionDialog extends React.Component {
 
     update(fieldName, value) {
         this.state.programRuleAction[fieldName] = value;
+        const ruleAction = this.state.programRuleAction;
+        //Fetch options for dataElement and trackedEntityAttribute
+        if (shouldFilterOnOptionSet(ruleAction) && ['dataElement', 'trackedEntityAttribute'].includes(fieldName)) {
+            if(shouldLoadOptions(ruleAction)) {
+                this.optionsDropdownGetter();
+            }
+            if(shouldLoadOptionGroups(ruleAction)) {
+                this.optionGroupDropdownGetter();
+            }
+        }
 
         this.setState({
             programRuleAction: this.state.programRuleAction,
         });
+    }
+
+
+
+    getRelatedOptionSetFromSelected = () => {
+        const ruleAction = this.state.programRuleAction;
+        const selectedDEId = ruleAction.dataElement;
+        const seleactedTeaId = ruleAction.trackedEntityAttribute;
+     
+        if ((!selectedDEId && !seleactedTeaId) || ((selectedDEId && !selectedDEId.model) && (seleactedTeaId && !seleactedTeaId.model))) {
+            return null;
+        }
+        let relatedOptionSet;
+        //Get the optionSet that is related to either dataElement or trackedEntityAttribute
+        if (ruleAction.dataElement) {
+            const relatedToOptionSetID = ruleAction.dataElement;
+            const dataElement = this.state.programDataElements.find(d => d.model.id === relatedToOptionSetID);
+            relatedOptionSet = dataElement.model.optionSet;
+        } else if (ruleAction.trackedEntityAttribute) {
+            const relatedToOptionSetID = ruleAction.trackedEntityAttribute;
+            const teaObj = this.state.programTrackedEntityAttributes.find(d => d.model.id === relatedToOptionSetID);
+            relatedOptionSet = teaObj.model.optionSet;
+        }
+        return relatedOptionSet;
+    }
+
+    optionsDropdownGetter = async () => {
+        
+        let relatedOptionSet = this.getRelatedOptionSetFromSelected();
+        if(!relatedOptionSet) return null;
+        //load options related to optionSet
+        this.setState({loading: true})
+        const options = await this.d2.models.options.list({
+            fields: 'id,displayName',
+            filter: `optionSet.id:eq:${relatedOptionSet.id}`,
+            paging: false,
+        });
+        const withDisplay = options.toArray().map(toDisplay);
+        this.setState({ options: withDisplay, loading: false });
+        return withDisplay;
+    }
+
+    optionGroupDropdownGetter = async () => {
+        let relatedOptionSet = this.getRelatedOptionSetFromSelected();
+        if(!relatedOptionSet) return null;
+        //load options related to optionSet
+        this.setState({loading: true})
+        const optionGroups = await this.d2.models.optionGroup.list({
+            fields: 'id,displayName,options[id,optionSet]',
+            filter: `options.optionSet.id:eq:${relatedOptionSet.id}`,
+            paging: false,
+        });
+        const withDisplay = optionGroups.toArray().map(toDisplay);
+        this.setState({ optionGroups: withDisplay, loading: false });
+        return withDisplay;
+    }
+
+    getFilteredByOptionSetOrAll(models) {
+        if(!models) return [];
+        const ruleAction = this.state.programRuleAction;
+        if (shouldFilterOnOptionSet(ruleAction)) {
+            const filtered = models.filter(elem =>
+                elem.model && elem.model.optionSet);
+                return filtered;
+        }
+        return models;
     }
 
     render() {
@@ -214,9 +331,10 @@ class ProgramRuleActionDialog extends React.Component {
                 component: DropDown,
                 props: {
                     labelText: this.getTranslation('data_element'),
-                    options: this.state && this.state.programDataElements || [],
+                    options: this.state && this.getFilteredByOptionSetOrAll(this.state.programDataElements) || [],
                     value: ruleActionModel.dataElement,
                     fullWidth: true,
+                    disabled: shouldFilterOnOptionSet(ruleActionModel) && !!ruleActionModel.trackedEntityAttribute,
                 },
             },
             {
@@ -224,10 +342,11 @@ class ProgramRuleActionDialog extends React.Component {
                 component: DropDown,
                 props: {
                     labelText: this.getTranslation('tracked_entity_attribute'),
-                    options: this.state && this.state.programTrackedEntityAttributes || [],
+                    options: this.state && this.getFilteredByOptionSetOrAll(this.state.programTrackedEntityAttributes) || [],
                     value: ruleActionModel.trackedEntityAttribute,
                     style: { display: ruleActionModel.trackedEntityAttribute ? 'inline-block' : 'none' },
                     fullWidth: true,
+                    disabled: shouldFilterOnOptionSet(ruleActionModel) && !!ruleActionModel.dataElement,
                 },
             },
             {
@@ -283,7 +402,31 @@ class ProgramRuleActionDialog extends React.Component {
                     value: ruleActionModel.programNotificationTemplate,
                     disabled: !this.state.notificationTemplates || this.state.notificationTemplates === 0,
                     fullWidth: true,
-                }
+                },
+            },
+            {
+                name: 'option',
+                component: DropdownWithLoading,
+                props: {
+                    labelText: this.getTranslation('option_to_hide'),
+                    fullWidth: true,
+                    value: ruleActionModel.option,
+                    options: this.state.options,
+                    disabled: !this.state.options,
+                    loading: this.state.loading,
+                },
+            },
+            {
+                name: 'optionGroup',
+                component: DropdownWithLoading,
+                props: {
+                    labelText: this.getTranslation('option_group'),
+                    fullWidth: true,
+                    value: ruleActionModel.optionGroup,
+                    options: this.state.optionGroups,
+                    disabled: !this.state.optionGroups,
+                    loading: this.state.loading,
+                },
             },
         ].map((field) => {
             if (field.name !== 'programRuleActionType') {

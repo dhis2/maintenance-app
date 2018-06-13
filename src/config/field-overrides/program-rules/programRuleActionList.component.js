@@ -121,6 +121,40 @@ class ProgramRuleActionsList extends React.Component {
 
                 break;
 
+                case 'HIDEOPTION':
+                    field = [
+                        action.dataElement && `"${action.dataElement.displayName}"`,
+                        action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
+                    ].filter(s => s).map(s => s.trim()).join(', ');
+                    const option = action.option && action.option.displayName;
+                    field = field ? `"${option}" ${this.getTranslation('on')} ${field}` : '';
+                    actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                        field}`;
+                    break;
+                case 'SHOWOPTIONGROUP': {
+                    field = [
+                        action.dataElement && `"${action.dataElement.displayName}"`,
+                        action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
+                    ].filter(s => s).map(s => s.trim()).join(', ');
+                    const optionGrp = action.optionGroup && action.optionGroup.displayName;
+                    field = field ? `"${optionGrp}" ${this.getTranslation('on')} ${field}` : '';
+                    actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                        field}`;
+                    break;
+                }
+
+                case 'HIDEOPTIONGROUP': {
+                    field = [
+                        action.dataElement && `"${action.dataElement.displayName}"`,
+                        action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
+                    ].filter(s => s).map(s => s.trim()).join(', ');
+                    const optionGrp = action.optionGroup && action.optionGroup.displayName;
+                    field = field ? `"${optionGrp}" ${this.getTranslation('on')} ${field}` : '';
+                    actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                        field}`;
+                    break;
+                }
+
             default:
                 actionDetails = action.programRuleActionType;
             }
@@ -142,6 +176,8 @@ class ProgramRuleActionsList extends React.Component {
                     programStage: model.programStage && model.programStage.id || undefined,
                     programStageSection: model.programStageSection && model.programStageSection.id || undefined,
                     programNotificationTemplate: model.programNotificationTemplate && model.programNotificationTemplate.id || undefined,
+                    option: model.option && model.option.id || undefined,
+                    optionGroup: model.option && model.optionGroup.id || undefined,
                 }),
             });
         };
