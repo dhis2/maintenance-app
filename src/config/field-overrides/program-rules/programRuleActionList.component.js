@@ -177,7 +177,7 @@ class ProgramRuleActionsList extends React.Component {
                     programStageSection: model.programStageSection && model.programStageSection.id || undefined,
                     programNotificationTemplate: model.programNotificationTemplate && model.programNotificationTemplate.id || undefined,
                     option: model.option && model.option.id || undefined,
-                    optionGroup: model.option && model.optionGroup.id || undefined,
+                    optionGroup: model.optionGroup && model.optionGroup.id || undefined,
                 }),
             });
         };

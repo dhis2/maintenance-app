@@ -10,6 +10,7 @@ import programRuleActionTypes from './programRuleActionTypes';
 import ProgramRuleConditionField from './programRuleConditionField.component';
 import snackActions from '../../../Snackbar/snack.actions';
 import RefreshMask from '../../../forms/form-fields/helpers/RefreshMask.component';
+import sortBy from 'lodash/fp/sortBy';
 
 function toDisplay (element) {
     return {
@@ -40,7 +41,7 @@ const DropdownWithLoading = ({loading, ...props}) => {
     const style = {
         display: props.style.display === 'none' ? 'none' : undefined
     }
-    return <div style={{style}} >
+    return <div style={style} >
         {loading && <RefreshMask />}
         <DropDown {...props} />
     </div>
@@ -306,9 +307,9 @@ class ProgramRuleActionDialog extends React.Component {
                 props: {
                     labelText: `${this.getTranslation('action')} (*)`,
                     fullWidth: true,
-                    options: modelDefinition.modelProperties.programRuleActionType.constants
+                    options: sortBy('text', modelDefinition.modelProperties.programRuleActionType.constants
                         .filter(o => programRuleActionTypes[o] && (o !== 'CREATEEVENT' || (ruleActionModel.id !== undefined && ruleActionModel.programRuleActionType === 'CREATEEVENT')))
-                        .map(o => ({ text: this.getTranslation(programRuleActionTypes[o].label), value: o })),
+                        .map(o => ({ text: this.getTranslation(programRuleActionTypes[o].label), value: o }))),
                     value: ruleActionModel.programRuleActionType,
                     isRequired: true,
                 },
