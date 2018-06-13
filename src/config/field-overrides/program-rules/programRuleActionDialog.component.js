@@ -86,7 +86,7 @@ class ProgramRuleActionDialog extends React.Component {
                     fields: 'id,displayName,programRuleVariableSourceType',
                     paging: false,
                 }),
-            ]).then(([wrappedUpDataElements, wrappedUpTrackedEntityAttributes, programVariables, opts]) => {
+            ]).then(([wrappedUpDataElements, wrappedUpTrackedEntityAttributes, programVariables]) => {
                 const programDataElements =
                     Object.values(wrappedUpDataElements.programStages.toArray()
                         .map(stage => stage.programStageDataElements.map(psde => psde.dataElement))
@@ -271,7 +271,7 @@ class ProgramRuleActionDialog extends React.Component {
     optionGroupDropdownGetter = async () => {
         let relatedOptionSet = this.getRelatedOptionSetFromSelected();
         if(!relatedOptionSet) return null;
-        //load options related to optionSet
+        //load optiongroups related to optionSet
         this.setState({loading: true})
         const optionGroups = await this.d2.models.optionGroup.list({
             fields: 'id,displayName,options[id,optionSet]',

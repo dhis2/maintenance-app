@@ -44,7 +44,7 @@ const actionTypeFieldMapping = {
         label: 'hide_option',
         optional: ['dataElement', 'trackedEntityAttribute', 'option'],
         labelOverrides: {
-            optionGroup: 'option_group',
+            option: 'option_to_hide',
         }
     },
     HIDEOPTIONGROUP: {
