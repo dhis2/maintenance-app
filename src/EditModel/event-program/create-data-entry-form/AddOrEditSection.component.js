@@ -10,7 +10,7 @@ import {
     PROGRAM_STAGE_SECTION_RENDER_TYPES,
     DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
     MOBILE, DESKTOP,
-} from './render-types';
+} from '../render-types';
 
 const styles = {
     container: {
