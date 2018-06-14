@@ -2,11 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import {
+import RenderTypeSelectField, {
     PROGRAM_STAGE_SECTION_RENDER_TYPES,
     DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
     MOBILE, DESKTOP,
@@ -16,12 +14,6 @@ const styles = {
     container: {
         textAlign: 'right',
         width: '100%',
-    },
-    selectField: {
-        [DESKTOP]: {
-            marginRight: '1rem',
-        },
-        [MOBILE]: {},
     },
 };
 
@@ -41,14 +33,6 @@ const initialState = {
         },
     },
 };
-
-const rendertypeMenuItems = PROGRAM_STAGE_SECTION_RENDER_TYPES.map(type => (
-    <MenuItem
-        key={type}
-        value={type}
-        primaryText={type.toLowerCase()}
-    />
-));
 
 class AddOrEditSection extends Component {
     constructor(props) {
@@ -70,18 +54,8 @@ class AddOrEditSection extends Component {
         this.setState({ section: { ...this.state.section, description: sectionDescription } });
     };
 
-    onRenderTypeChanged = (deviceType, sectionRenderType) => {
-        this.setState({
-            section: {
-                ...this.state.section,
-                renderType: {
-                    ...this.state.section.renderType,
-                    [deviceType]: {
-                        type: sectionRenderType,
-                    },
-                },
-            },
-        });
+    onRenderTypeChanged = (newSectionState) => {
+        this.setState({ section: newSectionState });
     };
 
     getTranslation = key =>
@@ -148,20 +122,6 @@ class AddOrEditSection extends Component {
         }
     };
 
-    renderSelectField(deviceType) {
-        const translationKey = `render_type_${deviceType.toLowerCase()}`;
-        return (
-            <SelectField
-                floatingLabelText={this.getTranslation(translationKey)}
-                value={this.state.section.renderType[deviceType].type}
-                onChange={(event, index, sectionRenderType) => this.onRenderTypeChanged(deviceType, sectionRenderType)}
-                style={styles.selectField[deviceType]}
-            >
-                { rendertypeMenuItems }
-            </SelectField>
-        );
-    }
-
     render = () => {
         const { id, name, description } = this.state.section;
 
@@ -219,8 +179,20 @@ class AddOrEditSection extends Component {
                         rows={2}
                         rowsMax={4}
                     />
-                    {this.renderSelectField(DESKTOP)}
-                    {this.renderSelectField(MOBILE)}
+                    <RenderTypeSelectField
+                        device={MOBILE}
+                        target={this.state.section}
+                        options={PROGRAM_STAGE_SECTION_RENDER_TYPES}
+                        inDialog
+                        changeHandler={this.onRenderTypeChanged}
+                    />
+                    <RenderTypeSelectField
+                        device={DESKTOP}
+                        target={this.state.section}
+                        options={PROGRAM_STAGE_SECTION_RENDER_TYPES}
+                        inDialog
+                        changeHandler={this.onRenderTypeChanged}
+                    />
                 </Dialog>
             </div>
         );

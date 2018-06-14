@@ -79,23 +79,18 @@ const createRenderTypeChangeHandler = (device, target, changeHandler) => (_event
     changeHandler(newState);
 };
 
-const dropDownMenuProps = {
-    autoWidth: true,
-};
-
-const RenderTypeSelectField = ({ device, target, options, changeHandler, withLabel }, { d2 }) => {
-    const value = getOr(DEFAULT, `renderType.${device}.type`, target);
-    const labelText = withLabel ? d2.i18n.getTranslation(`render_type_${device.toLowerCase()}`) : ' ';
-    const renderTypeChangeHandler = createRenderTypeChangeHandler(device, target, changeHandler);
+const RenderTypeSelectField = ({ device, target, options, changeHandler, inDialog }, { d2 }) => {
+    const props = {
+        floatingLabelText: inDialog ? d2.i18n.getTranslation(`render_type_${device.toLowerCase()}`) : ' ',
+        value: getOr(DEFAULT, `renderType.${device}.type`, target),
+        onChange: createRenderTypeChangeHandler(device, target, changeHandler),
+        fullWidth: !inDialog,
+        style: inDialog && device === MOBILE ? { marginRight: '1rem' } : {},
+        dropDownMenuProps: inDialog ? {} : { autoWidth: true },
+    };
 
     return (
-        <SelectField
-            floatingLabelText={labelText}
-            value={value}
-            onChange={renderTypeChangeHandler}
-            fullWidth
-            dropDownMenuProps={dropDownMenuProps}
-        >
+        <SelectField {...props}>
             { options.map(option => (
                 <MenuItem
                     key={option}
@@ -103,7 +98,8 @@ const RenderTypeSelectField = ({ device, target, options, changeHandler, withLab
                     primaryText={capitalize(option).replace(/_/g, ' ')}
                 />
             )) }
-        </SelectField>);
+        </SelectField>
+    );
 };
 
 RenderTypeSelectField.propTypes = {
@@ -111,7 +107,7 @@ RenderTypeSelectField.propTypes = {
     target: PropTypes.object.isRequired,
     options: PropTypes.array.isRequired,
     changeHandler: PropTypes.func.isRequired,
-    withLabel: PropTypes.bool,
+    inDialog: PropTypes.bool,
 };
 
 RenderTypeSelectField.contextTypes = {
@@ -119,7 +115,7 @@ RenderTypeSelectField.contextTypes = {
 };
 
 RenderTypeSelectField.defaultProps = {
-    withLabel: false,
+    inDialog: false,
 };
 
 export default RenderTypeSelectField;
