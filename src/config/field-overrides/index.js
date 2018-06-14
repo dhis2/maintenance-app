@@ -25,7 +25,7 @@ import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
 import dataApprovalWorkflow from './dataApprovalWorkflow';
 import programStage from './programStage';
-
+import optionGroup from './optionGroup';
 const overridesByType = {
     attribute,
     categoryCombo,
@@ -55,6 +55,7 @@ const overridesByType = {
     trackedEntityType,
     trackerProgram,
     enrollment,
+    optionGroup,
 };
 
 export default {
