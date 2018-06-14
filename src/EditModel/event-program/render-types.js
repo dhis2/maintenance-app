@@ -79,13 +79,28 @@ const createRenderTypeChangeHandler = (device, target, changeHandler) => (_event
     changeHandler(newState);
 };
 
+const getComputedStyle = (device, inDialog) => {
+    if (inDialog && device === MOBILE) {
+        return { marginRight: '1rem' };
+    }
+
+    if (inDialog && device === DESKTOP) {
+        return {};
+    }
+    // Not very elegant, but it does reduce the amount by which the SelectField increases the table rows
+    return {
+        marginTop: '-20px',
+        marginBottom: '-20px',
+    };
+};
+
 const RenderTypeSelectField = ({ device, target, options, changeHandler, inDialog }, { d2 }) => {
     const props = {
         floatingLabelText: inDialog ? d2.i18n.getTranslation(`render_type_${device.toLowerCase()}`) : ' ',
         value: getOr(DEFAULT, `renderType.${device}.type`, target),
         onChange: createRenderTypeChangeHandler(device, target, changeHandler),
         fullWidth: !inDialog,
-        style: inDialog && device === MOBILE ? { marginRight: '1rem' } : {},
+        style: getComputedStyle(device, inDialog),
         dropDownMenuProps: inDialog ? {} : { autoWidth: true },
     };
 
