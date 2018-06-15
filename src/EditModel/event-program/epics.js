@@ -5,7 +5,6 @@ import {
     EVENT_PROGRAM_SAVE_SUCCESS,
     EVENT_PROGRAM_SAVE_ERROR,
     loadEventProgramSuccess,
-    notifyUser,
     saveEventProgramError,
     saveEventProgramSuccess,
 } from './actions';
@@ -48,11 +47,6 @@ import {
 
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
-import { Observable } from 'rxjs';
-import { combineEpics } from 'redux-observable';
-import { get, getOr, first, map, compose, values, flatten } from 'lodash/fp';
-
-import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
 
 import { getImportStatus } from './metadataimport-helpers';
 import { goToAndScrollUp } from '../../router-utils';
@@ -67,7 +61,6 @@ import { createModelToEditEpic, createModelToEditProgramStageEpic } from '../epi
 
 import showSnackBarMessageEpic from '../../Snackbar/epics';
 import { notifyUser } from '../actions';
-import { PROGRAM_STAGE_FIELD_EDIT } from './tracker-program/program-stages/actions';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
