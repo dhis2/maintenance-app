@@ -43,7 +43,7 @@ function isIntegerValidator(value) {
 }
 isIntegerValidator.message = 'number_should_not_have_decimals';
 
-function createValidatorFromValidatorFunction(validatorFn) {
+export function createValidatorFromValidatorFunction(validatorFn) {
     return {
         validator: validatorFn,
         message: validatorFn.message,

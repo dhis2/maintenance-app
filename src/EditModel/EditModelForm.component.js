@@ -256,7 +256,7 @@ export default React.createClass({
         const invalidFieldMessage = getFirstInvalidFieldMessage(this.state.fieldConfigs, this.formRef);
         if (invalidFieldMessage) {
             snackActions.show({
-                message: `${this.getTranslation('missing_required_property_field')} ${invalidFieldMessage}`,
+                message: invalidFieldMessage,
                 action: 'ok',
             });
             return;
