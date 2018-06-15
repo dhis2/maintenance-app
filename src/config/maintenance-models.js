@@ -184,7 +184,7 @@ const typeDetails = {
         columns: ['displayName', 'valueType', 'mandatory', 'unique', 'publicAccess', 'lastUpdated'],
     },
     optionSet: {
-        columns: ['displayName', 'valueType', 'lastUpdated'],
+        columns: ['displayName', 'valueType', 'publicAccess', 'lastUpdated'],
     },
     predictor: {
         columns: ['displayName', 'output[displayName]', 'periodType', 'lastUpdated'],
