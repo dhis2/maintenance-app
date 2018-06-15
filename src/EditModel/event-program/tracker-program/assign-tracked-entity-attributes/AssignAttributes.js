@@ -32,6 +32,10 @@ import {
     editProgramAttributes,
     setAttributesOrder
 } from './actions';
+import { 
+    getRenderTypeOptions,
+    TRACKED_ENTITY_ATTRIBUTE_CLAZZ,
+} from '../../render-types';
 
 const styles = {
     groupEditor: {
@@ -47,6 +51,10 @@ const program$ = eventProgramStore.map(get('program'));
 
 const availableAttributes$ = eventProgramStore
     .map(get('availableAttributes'))
+    .take(1);
+
+const renderingOptions$ = eventProgramStore
+    .map(get('renderingOptions'))
     .take(1);
 
 const mapDispatchToProps = dispatch =>
@@ -97,9 +105,11 @@ const enhance = compose(
         props$.combineLatest(
             program$,
             availableAttributes$,
-            (props, program, availableAttributes) => ({
+            renderingOptions$,
+            (props, program, availableAttributes, renderingOptions) => ({
                 ...props,
                 availableAttributes,
+                renderingOptions,
                 model: program,
                 assignedAttributes: program.programTrackedEntityAttributes,
             })
@@ -133,12 +143,13 @@ const enhance = compose(
     })
 );
 
-function addDisplayProperties(attributes) {
-    return ({ trackedEntityAttribute, ...other }) => {
+function addDisplayProperties(attributes, renderingOptions) {
+    return (assignedAttribute) => {
+        const { trackedEntityAttribute, ...other } = assignedAttribute;
         const { displayName, valueType, optionSet, unique } = attributes.find(
             ({ id }) => id === trackedEntityAttribute.id
         );
-
+        const renderTypeOptions = getRenderTypeOptions(assignedAttribute, TRACKED_ENTITY_ATTRIBUTE_CLAZZ, renderingOptions);
         return {
             ...other,
             trackedEntityAttribute: {
@@ -147,6 +158,7 @@ function addDisplayProperties(attributes) {
                 valueType,
                 optionSet,
                 unique,
+                renderTypeOptions,
             },
         };
     };
@@ -176,7 +188,7 @@ function AssignAttributes(props, { d2 }) {
 
     // Create edit-able rows for assigned attributes
     const tableRows = props.assignedAttributes
-        .map(addDisplayProperties(props.availableAttributes))
+        .map(addDisplayProperties(props.availableAttributes, props.renderingOptions))
         .map(programAttribute =>
             <ProgramAttributeRow
                 key={programAttribute.id}
@@ -191,6 +203,9 @@ function AssignAttributes(props, { d2 }) {
                 isUnique={programAttribute.trackedEntityAttribute.unique}
                 hasOptionSet={
                     !!programAttribute.trackedEntityAttribute.optionSet
+                }
+                renderTypeOptions={
+                    programAttribute.trackedEntityAttribute.renderTypeOptions    
                 }
             />
         );
@@ -237,10 +252,13 @@ function AssignAttributes(props, { d2 }) {
                             {d2.i18n.getTranslation('date_in_future')}
                         </TableHeaderColumn>
                         <TableHeaderColumn>
-                            {d2.i18n.getTranslation('render_options_as_radio')}
+                            {d2.i18n.getTranslation('searchable')}
                         </TableHeaderColumn>
                         <TableHeaderColumn>
-                            {d2.i18n.getTranslation('searchable')}
+                            {d2.i18n.getTranslation('render_type_mobile')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('render_type_desktop')}
                         </TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
