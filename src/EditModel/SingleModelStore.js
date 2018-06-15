@@ -74,6 +74,8 @@ export const requestParams = new Map([
             ':all',
             'programRuleActions[:all',
             'dataElement[id,displayName]',
+            'option[id,displayName]',
+            'optionGroup[id,displayName]',
             'trackedEntityAttribute[id,displayName]',
             'programStage[id,displayName]',
             'programNotificationTemplate[id,displayName]',
