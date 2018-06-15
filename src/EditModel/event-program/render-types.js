@@ -87,7 +87,8 @@ const getComputedStyle = (device, inDialog) => {
     if (inDialog && device === DESKTOP) {
         return {};
     }
-    // Not very elegant, but it does reduce the amount by which the SelectField increases the table rows
+    // Not very elegant, but it does reduce the amount by which the SelectField
+    // increases the table row height
     return {
         marginTop: '-20px',
         marginBottom: '-20px',
