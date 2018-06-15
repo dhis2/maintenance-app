@@ -141,6 +141,7 @@ function isValidState(state) {
         'programStageNotifications',
         'availableDataElements',
         'availableAttributes',
+        'renderingOptions',
         'dataEntryFormForProgramStage',
         //'programStageSectionsExtracted' //FIX ME REMOVE
     ];
@@ -181,10 +182,11 @@ const eventProgramStore = Store.create();
 
 if (process.env.NODE_ENV === "development") {
     eventProgramStore.subscribe(state => {
-        console.log('=====================');
-        console.info('new store state');
-        console.log(state);
-        console.log('=====================');
+        console.log(
+            '=====================\nnew store state\n',
+            state,
+            '\n====================='
+        );
     });
 }
 
