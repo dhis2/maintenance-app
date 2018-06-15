@@ -8,6 +8,7 @@ import organisationUnitGroup from './organisationUnitGroup';
 import categoryCombo from './categoryCombo';
 import categoryOption from './categoryOption';
 import legendSet from './legendSet';
+import locale from './locale';
 import trackedEntityAttribute from './trackedEntityAttribute';
 import trackedEntityType from './trackedEntityType';
 import predictor from './predictor';
@@ -25,6 +26,7 @@ import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
 import dataApprovalWorkflow from './dataApprovalWorkflow';
 import programStage from './programStage';
+import sqlView from './sqlView';
 
 const overridesByType = {
     attribute,
@@ -38,6 +40,7 @@ const overridesByType = {
     externalMapLayer,
     indicator,
     legendSet,
+    locale,
     organisationUnit,
     organisationUnitGroup,
     pushAnalysis,
@@ -55,6 +58,7 @@ const overridesByType = {
     trackedEntityType,
     trackerProgram,
     enrollment,
+    sqlView,
 };
 
 export default {

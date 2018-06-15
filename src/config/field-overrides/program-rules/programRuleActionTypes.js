@@ -40,6 +40,20 @@ const actionTypeFieldMapping = {
             programStage: 'program_stage_to_hide',
         },
     },
+    HIDEOPTION: {
+        label: 'hide_option',
+        optional: ['dataElement', 'trackedEntityAttribute', 'option'],
+        labelOverrides: {
+            option: 'option_to_hide',
+        }
+    },
+    HIDEOPTIONGROUP: {
+        label: 'hide_option_group',
+        optional: ['dataElement', 'trackedEntityAttribute', 'optionGroup'],
+        labelOverrides: {
+            optionGroup: 'option_group_to_hide',
+        }
+    },
     ASSIGN: {
         label: 'assign_value',
         required: ['data'],
@@ -115,6 +129,20 @@ const actionTypeFieldMapping = {
             data: 'date_to_send_message'
         }
     },
+    SCHEDULEMESSAGE: {
+        label: 'schedule_message',
+        required: ['programNotificationTemplate', 'data'],
+        labelOverrides: {
+            data: 'date_to_send_message',
+        }
+    },
+    SHOWOPTIONGROUP: {
+        label: 'show_option_group',
+        optional: ['dataElement', 'trackedEntityAttribute', 'optionGroup'],
+        labelOverrides: {
+            optionGroup: 'option_group_to_show',
+        }
+    }
 };
 
 export default actionTypeFieldMapping;

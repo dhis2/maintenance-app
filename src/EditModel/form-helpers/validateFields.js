@@ -1,7 +1,7 @@
 import { get } from 'lodash/fp';
 
 /* *
- * The result coming from FormBuilder validateField will contain an error message on fail and 
+ * The result coming from FormBuilder validateField will contain an error message on fail and
  * a boolean true if it succeeds.
  */
 const isInvalidField = validatedResult => validatedResult !== true;
@@ -24,7 +24,7 @@ const validateField = (field, formRef, formRefStateClone) => {
 
 /* *
  * Constructs the error message to present to the snackBar.
- * Adds the step the field can be found on if present.
+ * Adds the step that the field can be found on (if present).
  */
 const getErrorMessage = (field) => {
     const fieldStep = field.step ? `On step ${field.step}` : '';
@@ -36,7 +36,7 @@ const getErrorMessage = (field) => {
  * Will first filter out all the fields that are invalid. 
  * This includes fields that are:
  * - Required.
- * - Field with a filled out value.
+ * - Fields that are dirty.
  * Then it will validate the fields using a reference to the formBuilder.
  * Lastly it will fetch the first field with a failing validator.
  */
@@ -53,8 +53,8 @@ const getFirstInvalidField = (fieldConfigs, formRef, formRefStateClone) =>
  * 
  * If any the fields are not valid, it will create a message string 
  * of the first invalid field.
- * 
- * @returns {string} 
+ *
+ * @returns {string}
  * The name and step/group of the invalid field.
  * If no invalid field, it will return an empty string.
  */
