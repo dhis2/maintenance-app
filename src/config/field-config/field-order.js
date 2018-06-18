@@ -153,7 +153,7 @@ const fieldOrderByName = new Map([
         'phoneNumber',
         'coordinates',
         'dataSets',
-        'programs'
+        'programs',
 
     ]],
     ['organisationUnitGroup', [
@@ -241,6 +241,7 @@ const fieldOrderByName = new Map([
         'workflow',
         'displayFrontPageList',
         'useFirstStageDuringRegistration',
+        'allowAuditLog',
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
@@ -458,6 +459,17 @@ const fieldOrderByName = new Map([
         'dataDimension',
         'optionGroups',
     ]],
+    ['locale', [
+        'name',
+        'locale',
+    ]],
+    ['sqlView', [
+        'name',
+        'description',
+        'cacheStrategy',
+        'type',
+        'sqlQuery',
+    ]],
 ]);
 
 export default {
@@ -470,9 +482,9 @@ export default {
      *
      * @example
      * ```
-     * import fieldOverrides from 'field-overrides';
+     * import fieldOrder from 'field-order';
      *
-     * let dataElementOverrides = fieldOverrides.for('dataElement');
+     * let dataElementFields = fieldOrder.for('dataElement');
      * ```
      */
     for(schemaName) {

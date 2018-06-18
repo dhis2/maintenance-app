@@ -4,10 +4,20 @@
         "browser": true,
         "jest": true
     },
+    "rules": {
+        "no-param-reassign": [2, { "props": false }],
+        "import/no-extraneous-dependencies": 0
+    },
     "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true
         }
+    },
+    "rules": {
+        "no-unused-expressions": ["error", {
+            "allowTernary": true,
+            "allowShortCircuit": true
+        }]
     }
 }

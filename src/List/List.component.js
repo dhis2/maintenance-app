@@ -275,13 +275,12 @@ class List extends Component {
         // Switch action for special cases
         switch (action) {
         case 'edit':
-            return model.access.write;
+            return model.modelDefinition.name !== 'locale' && model.access.write;
         case 'clone':
-            return model.modelDefinition.name !== 'dataSet' &&
-                model.modelDefinition.name !== 'program' &&
+            return !['dataSet', 'program', 'locale', 'sqlView'].includes(model.modelDefinition.name) &&
                 model.access.write;
         case 'translate':
-            return model.access.read && model.modelDefinition.identifiableObject;
+            return model.access.read && model.modelDefinition.identifiableObject && model.modelDefinition.name !== 'sqlView';
         case 'details':
             return model.access.read;
         case 'share':
@@ -298,6 +297,12 @@ class List extends Component {
             return model.modelDefinition.name === 'pushAnalysis' && model.access.write;
         case 'preview':
             return model.modelDefinition.name === 'pushAnalysis' && model.access.write;
+        case 'executeQuery':
+            return model.modelDefinition.name === 'sqlView' && model.access.read && ['MATERIALIZED_VIEW', 'VIEW'].includes(model.type);
+        case 'refresh':
+            return model.modelDefinition.name === 'sqlView' && model.access.read && model.type === 'MATERIALIZED_VIEW';
+        case 'showSqlView':
+            return model.modelDefinition.name === 'sqlView' && model.access.read;
         default:
             return true;
         }
@@ -441,6 +446,9 @@ class List extends Component {
             compulsoryDataElements: 'border_color',
             runNow: 'queue_play_next',
             preview: 'dashboard',
+            executeQuery: 'playlist_play',
+            refresh: 'refresh',
+            showSqlView: 'view_module',
         };
 
         // For table columns like 'a___b', flatten values to b being a child of a
@@ -504,12 +512,16 @@ class List extends Component {
         };
 
         const primaryAction = (model) => {
-            if (model.access.write) {
+            if (model.access.write && model.modelDefinition.name !== 'locale') {
                 availableActions.edit(model);
             } else {
                 // TODO: The no access message should be replaced with the read-only mode described in DHIS2-1773
+                const msg = model.modelDefinition.name === 'locale' ?
+                    'locales_can_only_be_created_and_deleted' :
+                    'you_do_not_have_permissions_to_edit_this_object';
+
                 snackActions.show({
-                    message: 'you_do_not_have_permissions_to_edit_this_object',
+                    message: msg,
                     translate: true,
                     action: 'dismiss',
                 });

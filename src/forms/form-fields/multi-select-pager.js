@@ -14,20 +14,32 @@ import Paper from 'material-ui/Paper/Paper';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import MultiSelectSimple from './MultiSelectSimple';
-
+import { Observable, Subject } from 'rxjs';
+//import debounce from 'lodash/fp/debounce';
+import throttle from 'lodash/fp/throttle';
+import {  debounce } from 'lodash';
 export const multiSelectActions = Action.createActionsFromNames([
     'addItemsToModelCollection',
     'removeItemsFromModelCollection',
 ]);
 
 function unique(values) {
+    console.log("UNIQUE", values);
     return Array.from(new Set(values).values());
 }
 
 function filterModelsMapOnItemIds(map, items) {
-    return Array.from(map.values()).filter(
+    return Array.from(map.values()).map(item => item && item.model).filter(
         model => items.indexOf(model.id) !== -1
     );
+}
+
+function modelToDisplayValue(model) {
+    return ({
+        value: model.id,
+        text: model.displayName || model.name,
+        model: model,
+    });
 }
 
 multiSelectActions.addItemsToModelCollection.subscribe(
@@ -85,7 +97,12 @@ class MultiSelectPager extends React.Component {
             React.PropTypes.arrayOf(React.PropTypes.func),
             React.PropTypes.array,
         ]),
+        pageSize: React.PropTypes.number
     };
+
+    static defaultProps = {
+        pageSize: 100
+    }
 
     constructor(props, context) {
         super(props, context);
@@ -101,9 +118,18 @@ class MultiSelectPager extends React.Component {
             filterText: '',
             isRefreshing: false,
             canCreate: false,
+            totalItems: 0,
+            pager: null,
         };
 
-        this.getTranslation = this.context.d2.i18n.getTranslation;
+        this.getTranslation = context.d2.i18n.getTranslation.bind(
+            context.d2.i18n
+        );
+
+        //  this.loadNextPage = throttle(1000,this.loadNextPage);
+        this.lastCall = null;
+        this.cache = new Set();
+        this.loadNextPage$ = new Subject();
     }
 
     componentWillMount() {
@@ -111,11 +137,35 @@ class MultiSelectPager extends React.Component {
             return;
         }
 
+        this.subscription = this.loadNextPage$
+            .throttleTime(500)
+            .concatMap((index) => {
+                console.log(index)
+                const pager = this.state.pager;
+                if (!pager ||  index >= pager.query.total) return;
+    
+
+                const collection = Observable.from(pager.getNextPage());
+
+
+                return collection.map(col => [col, index]);
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            .subscribe(([collection, index]) => {
+                console.log(collection)
+                this.populateItemStore(collection, true, index);
+            });
         getInstance()
             .then(this.checkCreateAuthority)
             .then(this.loadAvailableItems)
             .then(this.populateItemStore)
             .then(this.populateAssignedStore);
+    }
+
+    componentWillUnmount() {
+        this.subscription && this.subscription.unsubscribe();
     }
 
     componentWillReceiveProps(newProps) {
@@ -129,68 +179,11 @@ class MultiSelectPager extends React.Component {
         }
     }
 
-    renderGroupEditor() {
-        return (
-            <MultiSelectSimple
-                items={this.state.itemsStore.state}
-                selected={this.state.assignedItemStore.state}
-            />
-        );
+    handleItemsEnd = (index) => {
+        this.loadNextPage$.next(index);
     }
 
-    render() {
-        const styles = {
-            labelStyle: {
-                float: 'left',
-                position: 'relative',
-                display: 'block',
-                width: 'calc(100% - 60px)',
-                lineHeight: '24px',
-                color: 'rgba(0,0,0,0.5)',
-                marginTop: '1rem',
-                fontSize: 16,
-                fontWeight: 500,
-            },
-
-            labelWrap: {
-                display: 'flex',
-                marginTop: 24,
-                height: 36,
-            },
-            fieldWrap: {
-                position: 'relative',
-            },
-        };
-
-        return (
-            <div style={{ ...styles.fieldWrap, ...this.props.style }}>
-                {this.state.isRefreshing ? <RefreshMask /> : null}
-                <div style={styles.labelWrap}>
-                    <label style={styles.labelStyle}>
-                        {this.props.labelText || ''}
-                    </label>
-                    {this.state.canCreate ? (
-                        <QuickAddLink
-                            referenceType={this.props.referenceType}
-                            onRefreshClick={this.reloadAvailableItems}
-                        />
-                    ) : null}
-                </div>
-                <TextField
-                    fullWidth
-                    hintText={this.getTranslation(
-                        'search_available_selected_items'
-                    )}
-                    defaultValue={this.state.filterText}
-                    onChange={this._setFilterText}
-                />
-                {this.renderGroupEditor()}
-                <div style={{ clear: 'both', height: '2rem', width: '100%' }} />
-            </div>
-        );
-    }
-
-    _orderChanged(newOrder) {
+    _orderChanged = newOrder => {
         const itemList = this.state.itemStore.getState();
 
         // TODO: Move the following mutation to an `Action`
@@ -212,9 +205,9 @@ class MultiSelectPager extends React.Component {
                 .toArray()
                 .map(value => value.id)
         );
-    }
+    };
 
-    _assignItems(items) {
+    _assignItems = items => {
         if (
             isOrganisationUnitLevelReference(
                 this.props.referenceProperty,
@@ -243,17 +236,17 @@ class MultiSelectPager extends React.Component {
                 this.state.itemStore.state,
                 items
             );
-
+            console.log(modelsToAdd);
             multiSelectActions
                 .addItemsToModelCollection(
-                    modelsToAdd,
-                    this.props.referenceProperty,
-                    this.props.model
+                modelsToAdd,
+                this.props.referenceProperty,
+                this.props.model
                 )
                 .subscribe(() => {
                     const newAssignedItems = []
                         .concat(this.state.assignedItemStore.getState())
-                        .concat(items)
+                        .concat(modelsToAdd.map(modelToDisplayValue))
                         .filter(value => value);
 
                     this.state.assignedItemStore.setState(
@@ -263,7 +256,7 @@ class MultiSelectPager extends React.Component {
                     this.props.onChange({
                         target: {
                             value: this.props.model[
-                                this.props.referenceProperty
+                            this.props.referenceProperty
                             ],
                         },
                     });
@@ -271,9 +264,9 @@ class MultiSelectPager extends React.Component {
                     resolve();
                 }, reject);
         });
-    }
+    };
 
-    _removeItems(items) {
+    _removeItems = items => {
         if (
             isOrganisationUnitLevelReference(
                 this.props.referenceProperty,
@@ -305,9 +298,9 @@ class MultiSelectPager extends React.Component {
 
             multiSelectActions
                 .removeItemsFromModelCollection(
-                    modelsToRemove,
-                    this.props.referenceProperty,
-                    this.props.model
+                modelsToRemove,
+                this.props.referenceProperty,
+                this.props.model
                 )
                 .subscribe(() => {
                     const newAssignedItems = []
@@ -319,15 +312,17 @@ class MultiSelectPager extends React.Component {
                     resolve();
                 }, reject);
         });
-    }
+    };
 
-    _setFilterText(event) {
+    _setFilterText = event => {
         this.setState({
             filterText: event.target.value,
         });
-    }
 
-    updateForm(newAssignedItems) {
+        this.loadFilteredItems()
+    };
+
+    updateForm = newAssignedItems => {
         this.state.assignedItemStore.setState(
             unique([].concat(newAssignedItems))
         );
@@ -337,9 +332,9 @@ class MultiSelectPager extends React.Component {
                 value: this.props.model[this.props.referenceProperty],
             },
         });
-    }
+    };
 
-    reloadAvailableItems() {
+    reloadAvailableItems = () => {
         this.setState({
             isRefreshing: true,
         });
@@ -352,17 +347,17 @@ class MultiSelectPager extends React.Component {
                     isRefreshing: false,
                 });
             });
-    }
+    };
 
-    checkCreateAuthority(d2) {
+    checkCreateAuthority = d2 => {
         const key = this.props.referenceType;
         if (d2.currentUser.canCreate(d2.models[key])) {
             this.setState({ canCreate: true });
         }
         return d2;
-    }
+    };
 
-    loadAvailableItems(d2) {
+    loadAvailableItems = d2 => {
         if (d2.models[this.props.referenceType]) {
             const multiSelectSourceModelDefinition =
                 d2.models[this.props.referenceType];
@@ -376,48 +371,155 @@ class MultiSelectPager extends React.Component {
                 .filter(f => f);
 
             return multiSelectSourceModelDefinition.list({
-                paging: false,
+                paging: true,
+                pageSize: this.props.pageSize,
                 fields: 'displayName|rename(name),id,level',
                 filter: filters,
-            });
+            })
         }
         return Promise.reject(
             `${this.props.referenceType} is not a model on d2.models`
         );
-    }
+    };
 
-    populateItemStore(availableItems) {
-        if (
-            isOrganisationUnitLevelReference(
-                this.props.referenceProperty,
-                this.props.model.modelDefinition
-            )
-        ) {
-            this.state.itemStore.setState(
-                Array.from(availableItems.values()).map(model => ({
-                    value: model.level,
-                    text: model.displayName || model.name,
-                }))
-            );
-            return;
+    loadFilteredItems = debounce(() => {
+        const d2 = this.context.d2;
+        const multiSelectSourceModelDefinition =
+            d2.models[this.props.referenceType];
+
+        const searchFilter = this.state.filterText && `name:token:${this.state.filterText}`;
+        const filters = [
+            'name:ne:default',
+            searchFilter,
+        ]
+            .concat(this.props.queryParamFilter)
+            .filter(f => f);
+
+        return multiSelectSourceModelDefinition.list({
+            paging: true,
+            pageSize: this.props.pageSize,
+            fields: 'displayName|rename(name),id,level',
+            filter: filters,
+        }).then((items) => this.populateItemStore(items, false));
+    }, 500);
+
+    populateItemStore = (availableItems, concat, fromInd) => {
+        console.log(availableItems)
+
+        // TODO ADD INDEX HERE
+        const displayValues = Array.from(availableItems.values()).map(modelToDisplayValue);
+
+        const old = [...this.state.itemStore.state];
+        let newArr = displayValues;
+        console.log("POPULATE, ind", fromInd, "len", displayValues.length)
+        if (concat) {
+            if (fromInd) {
+                let from = fromInd;
+                for (var i = 0; i < displayValues.length; i++) {
+                    old[from++] = displayValues[i];
+                }
+                newArr = old;
+            } else {
+                newArr = old.concat(displayValues);
+            }
         }
+        this.state.itemStore.setState(
+            unique(newArr)
+        );
+        const searchFilter = this.state.filterText && `name:token:${this.state.filterText}`;
+        const filters = [
+            'name:ne:default',
+            searchFilter,
+        ]
+            .concat(this.props.queryParamFilter)
+            .filter(f => f);
+        availableItems.pager.query.filters = filters;
+        this.setState({ itemStore: this.state.itemStore, pager: availableItems.pager });
+        //  this.state.itemStore.setState(availableItems);
+    };
 
-        this.state.itemStore.setState(availableItems);
-    }
-
-    populateAssignedStore() {
+    populateAssignedStore = () => {
         if (!this.props.value) {
             return this.state.assignedItemStore.setState([]);
         }
+        console.log(this.props.value.values())
+        const displayValues = Array.from(this.props.value.values()).map(modelToDisplayValue);
 
         if (Array.isArray(this.props.value)) {
             this.state.assignedItemStore.setState(Array.from(this.props.value));
         } else {
             this.state.assignedItemStore.setState(
-                Array.from(this.props.value.values()).map(value => value.id)
-            );
+                Array.from(this.props.value.values()).map(modelToDisplayValue))
         }
+        this.setState({ assignedItemStore: this.state.assignedItemStore })
+    };
+
+
+    renderGroupEditor = () => {
+        console.log(this.state.assignedItemStore.state)
+        return (
+            <MultiSelectSimple
+                items={this.state.itemStore.state}
+                selected={this.state.assignedItemStore.state}
+                itemsLength={this.state.pager && this.state.pager.total}
+                onItemsEnd={this.handleItemsEnd}
+                onAssign={this._assignItems}
+                onRemove={this._removeItems}
+            />
+        );
+    };
+
+    render() {
+        const styles = {
+            labelStyle: {
+                float: 'left',
+                position: 'relative',
+                display: 'block',
+                width: 'calc(100% - 60px)',
+                lineHeight: '24px',
+                color: 'rgba(0,0,0,0.5)',
+                marginTop: '1rem',
+                fontSize: 16,
+                fontWeight: 500,
+            },
+
+            labelWrap: {
+                display: 'flex',
+                marginTop: 24,
+                height: 36,
+            },
+            fieldWrap: {
+                position: 'relative',
+            },
+        };
+        return (
+            <div style={{ ...styles.fieldWrap, ...this.props.style }}>
+                {this.state.isRefreshing ? <RefreshMask /> : null}
+                <div style={styles.labelWrap}>
+                    <label style={styles.labelStyle}>
+                        {this.props.labelText || ''}
+                    </label>
+                    {this.state.canCreate ? (
+                        <QuickAddLink
+                            referenceType={this.props.referenceType}
+                            onRefreshClick={this.reloadAvailableItems}
+                        />
+                    ) : null}
+                </div>
+                <TextField
+                    fullWidth
+                    hintText={this.getTranslation(
+                        'search_available_selected_items'
+                    )}
+                    defaultValue={this.state.filterText}
+                    onChange={this._setFilterText}
+                />
+                {this.renderGroupEditor()}
+                <div style={{ clear: 'both', height: '2rem', width: '100%' }} />
+            </div>
+        );
     }
+
 }
 
 export default withD2Context(MultiSelectPager);

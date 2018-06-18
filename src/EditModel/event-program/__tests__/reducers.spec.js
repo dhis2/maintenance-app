@@ -1,10 +1,8 @@
-import reducer from '../reducers';
+import reducer, { initialState as stepperInitialState } from '../reducers';
 import * as actions from '../actions';
-import { STEPPER_RESET_ACTIVE_STEP } from '../../actions';
-import { PROGRAM_STEPPER_SET_DISABLE } from "../actions";
+import { STEPPER_RESET_ACTIVE_STEP } from '../../stepper/stepper.actions';
 import * as iterator from '../../stepper/stepIterator';
-import { initialState as notificationsInitialState } from "../notifications/reducers";
-import { initialState as stepperInitialState} from "../reducers";
+import { initialState as notificationsInitialState } from '../notifications/reducers';
 
 describe('Event Program', () => {
     beforeAll(() => {
@@ -33,8 +31,8 @@ describe('Event Program', () => {
                 stageNotifications: notificationsInitialState,
                 programStageStepper: {
                     activeStep: stepKey,
-                    stageId: null
-                }
+                    stageId: null,
+                },
             };
 
             expect(actualState).toEqual(expectedState);
@@ -111,7 +109,7 @@ describe('Event Program', () => {
 
                 const expectedState = {
                     activeStep: expectedStepKey,
-                    isLoading: true
+                    isLoading: true,
                 };
 
                 const actualState = reducer(initialState, { type: STEPPER_RESET_ACTIVE_STEP });
@@ -122,29 +120,26 @@ describe('Event Program', () => {
             });
 
             test('should handle PROGRAM_STEPPER_SET_DISABLE action', () => {
-
                 const expectedState = {
                     activeStep: initialState.step.activeStep,
-                    disabled: true
-                }
+                    disabled: true,
+                };
                 const actualStateTrue = reducer(initialState, {
-                    type: PROGRAM_STEPPER_SET_DISABLE,
+                    type: actions.PROGRAM_STEPPER_SET_DISABLE,
                     payload: {
-                        disabled: true
-                    }
+                        disabled: true,
+                    },
                 });
                 expect(actualStateTrue.step).toEqual(expectedState);
 
                 const actualStateFalse = reducer(initialState, {
-                    type: PROGRAM_STEPPER_SET_DISABLE,
+                    type: actions.PROGRAM_STEPPER_SET_DISABLE,
                     payload: {
-                        disabled: false
-                    }
+                        disabled: false,
+                    },
                 });
-                expect(actualStateFalse.step).toEqual({...expectedState, disabled: false})
-            })
-
-
+                expect(actualStateFalse.step).toEqual({ ...expectedState, disabled: false });
+            });
         });
     });
 });

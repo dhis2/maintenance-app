@@ -4,6 +4,7 @@ import Paper from 'material-ui/Paper/Paper';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import ReactList from 'react-list';
+import {  pullAllBy } from 'lodash/fp';
 const styles = {
     container: {
         display: 'flex',
@@ -25,15 +26,16 @@ const styles = {
     paper: {
         width: '100%',
         height: '100%',
+        overflow: 'scroll',
     },
     select: {
         width: '100%',
-        minHeight: '50px',
-        height: `15px`,
+        height: '235px',
         border: 'none',
         fontFamily: 'Roboto',
         fontSize: 13,
         outline: 'none',
+        overflow: 'unset',
     },
     options: {
         padding: '.25rem .5rem',
@@ -67,315 +69,331 @@ const styles = {
     },
 };
 
-class SimpleMultiSelect extends React.Componenet {
+class LazyItem extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    handleAssign = event => {
-        const values = [...event.target.options]
-            .filter(o => o.selected)
-            .map(o => o.value);
+    render() {
+        const { itemKey, item, handleAssign } = this.props;
+        return (
+            this.props.loading ? <option key={itemKey}>Loading...</option> :
+                <option
+                    key={itemKey}
+                    value={item.value}
+                    onDoubleClick={this.props.onDoubleClick}
+                    style={styles.options}
+                >
+                {item.text}
+                </option>
+        );
+    }
+}
 
-        this.props.onAssign(values);
+class SimpleMultiSelect extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            selectedValues: [],
+            indexMapToRemovedArr: [],
+            availableItems: pullAllBy('value', props.selected, props.items)
+        };
+
+        this.cache = new Set();
+        this.getTranslation = t => t;
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const props = this.props;
+        if (nextProps.items !== props.items ||  nextProps.selected !== props.selected) {
+            console.log("UPDATE AVAILABLE ITEMS")
+            this.setState({
+                availableItems: this.getAvailableItems(nextProps),
+            })
+        } else {
+            console.log("NO SET STATE", nextProps.items.length, props.items.length )
+        }
+
+    }
+
+    handleAssign = event => {
+
+        this.props.onAssign(this.state.selectedValues);
     };
 
     handleRemove = event => {
-        const values = [...event.target.options]
-            .filter(o => o.selected)
-            .map(o => o.value);
-        this.props.onRemove(values);
+  
+        this.props.onRemove(this.state.selectedValues);
     };
 
     handleAssignAll = event => {
         this.props.handleAssignAll(event);
     };
 
+    handleSelect = event => {
+        const values = [...event.target.options]
+            .filter(o => o.selected)
+            .map(o => o.value);
+
+        console.log(values);
+
+        this.setState({
+            selectedValues: values,
+        });
+
+        this.props.handleSelect && this.props.handleSelect(values);
+    };
+
+    getAvailableItems = (props = this.props) => {
+        const selected = props.selected;
+        const items = pullAllBy('value', props.selected, props.items);
+        /*
+               const filtered = this.props.items.filter(item => {
+        
+                   
+                    const selectedIndex = selected.findIndex((s =>
+                       s.value === item.value
+                    ));
+                    const isSelected = selectedIndex > -1;
+                    if(isSelected) {
+                        
+                    }
+                    return !isSelected;
+                }); */
+
+        return items;
+    }
+
     getUnfilteredCount = () => {
         const availableLength = this.props.itemsLength
-            ? this.props.ItemsLength
-            : items.length;
+            ? this.props.itemsLength
+            : this.props.items.length;
 
         return availableLength - this.props.selected.length;
     };
 
+    getFilteredCount = () => {
+
+    }
+
     getTotalItemsCount = () => {
-        return this.props.itemsLength ? this.props.ItemsLength : items.length;
+        return this.props.itemsLength
+            ? this.props.itemsLength
+            : this.props.items.length;
     };
+
+    getAvailableItemsCount = () => {
+        return this.state.availableItems.length;
+    }
 
     getAvailableItemsFilterCount = () => {
         return this.getTotalItemsCount() - this.props.selected.length;
     };
+
+    getAvailableItemsUnfilteredCount() {
+        return this.getAvailableItemsCount() - this.getAvailableItemsFilterCount();
+    }
 
     getHiddenItemsLabel = itemCount => {
         return `HIDDEN by filters${itemCount}`;
         // return (this.getTotalItemsCount() > 0 && this.getFilterText().length > 0 ? `${itemCount} ${this.getTranslation('hidden_by_filters')}` : '');
     };
 
+    getItemIsSelected(item) {
+        const isSelected = this.props.selected.find(s => s.value === item.value);
+        return !!isSelected;
+    }
+
+    getRenderItem = index => {
+        const items = this.props.items;
+        let item = items[index];
+        var nextIndex = index++;
+        while (item && this.getItemIsSelected(item)) {
+
+            if (this.state.loadingCalled.has(nextIndex)) {
+                //loadingCalled.set(nextIndex, true);
+                nextIndex++;
+            }
+            item = items[nextIndex];
+        }
+        return { item, nextIndex };
+
+    }
+
     renderLeftItem = (index, key) => {
-        return;
-        this.props.renderItem ? (
+        const item = this.state.availableItems[index];
+        //   const itemsNotSelected = this.getAvailableItems();
+        //  const { item, nextIndex} = this.getRenderItem(index);
+        if (!item) {
+            if (!this.cache.has(index)) {
+                this.cache.add(index);
+                this.props.onItemsEnd(index);
+            }
+            //return null;
+            return <LazyItem item={item} index={index} key={key} loading={!item} />;
+        }
+        //const val = items[index].value;
+
+
+        return this.props.renderItem ? (
             this.props.renderLeftItem(index, key)
         ) : (
+                <option
+                    key={key}
+                    value={item.value}
+                    onDoubleClick={this.handleAssign}
+                    style={styles.options}
+                >
+                    {item.text}
+                </option>
+            );
+    };
+
+    renderRightItem = (index, key) => {
+        return this.props.renderRightItem ? (
+            this.props.renderRightItem(index, key)
+        ) : (
+                <option
+                    key={key}
+                    value={this.props.selected[index].value}
+                    onDoubleClick={this.handleRemove}
+                    style={styles.options}
+                >
+                    {this.props.selected[index].text}
+                </option>
+            );
+    };
+    renderMiddle = () => {
+        return (
+            <div style={styles.middle}>
+                <div style={styles.selected}>
+                    {this.props.selected.length > 0
+                        ? this.props.selected.length
+                        : ''}
+                </div>
+                <RaisedButton
+                    label="&rarr;"
+                    secondary
+                    onClick={this.handleAssign}
+                    style={styles.buttons}
+                    disabled={
+                        this.props.loading ||
+                        this.getAvailableItemsFilterCount() === 0
+                    }
+                />
+                <RaisedButton
+                    label="&larr;"
+                    secondary
+                    onClick={this.onRemoveItems}
+                    style={styles.buttons}
+                    disabled={
+                        this.props.loading || this.props.selected.length === 0
+                    }
+                />
+                <div style={styles.status}>
+                    {this.props.loading ? (
+                        <CircularProgress
+                            small
+                            style={{ width: 60, height: 60 }}
+                        />
+                    ) : (
+                            undefined
+                        )}
+                </div>
+            </div>
+        );
+    };
+    renderLeft = () => {
+        const availLength = this.state.availableItems.length;
+        const totalCount = this.getTotalItemsCount();
+        return (
+            <div style={styles.left}>
+                <Paper style={styles.paper} ref={ref => (this.paperRef = ref)}>
+                    <ReactList
+                        type="simple"
+                        itemRenderer={this.renderLeftItem}
+                        itemsRenderer={this.itemsRenderer}
+                        length={availLength < totalCount ? availLength + 1 : totalCount}
+                        ref="left"
+                        items={this.state.availableItems}
+                    />
+                </Paper>
+                <RaisedButton
+                    label={`${this.getTranslation('assign_all')} ${
+                        this.getTotalItemsCount() === 0
+                            ? ''
+                            : this.getAvailableItemsCount()
+                        } \u2192`}
+                    disabled={
+                        this.props.loading || this.getUnfilteredCount() === 0
+                    }
+                    onClick={this.handleAssignAll}
+                    style={{ marginTop: '1rem' }}
+                    secondary
+                />
+            </div>
+        );
+    };
+
+    itemsRenderer = (items, ref) => (
+        <select
+            multiple
+            style={styles.select}
+            //onChange={onChangeLeft}
+            ref={ref}
+            onChange={this.handleSelect}
+        >
+            {items}
+        </select>
+    );
+
+    renderRight = () => {
+        const ItemsRenderer = (items, ref) => (
             <select
                 multiple
                 style={styles.select}
                 //onChange={onChangeLeft}
-                ref={r => {
-                    this.leftSelect = r;
-                }}
-            >
-                <option
-                    key={key}
-                    value={this.props.items[index].value}
-                    onDoubleClick={this.handleAssign}
-                    style={styles.options}
-                >
-                    {this.props.items[index].text}
-                </option>
-            </select>
+                ref={ref}
+            />
         );
-    };
-
-    renderRightItem = (index, key) => {
-        return;
-        this.props.renderItem ? (
-            this.props.renderLeftItem(index, key)
-        ) : (
-            <select
-                multiple
-                style={styles.select}
-               // onChange={onChangeLeft}
-                ref={r => {
-                    this.leftSelect = r;
-                }}
-            >
-                <option
-                    key={key}
-                    value={this.props.items[index].value}
-                    onDoubleClick={this.handleAssign}
-                    style={styles.options}
-                >
-                    {this.props.items[index].text}
-                </option>
-            </select>
+        return (
+            <div style={styles.right}>
+                <Paper style={styles.paper}>
+                    <div style={styles.hidden}>
+                        {this.getHiddenItemsLabel(this.getTotalItemsCount())}
+                    </div>
+                    <ReactList
+                        type="uniform"
+                        itemRenderer={this.renderRightItem}
+                        itemsRenderer={this.itemsRenderer}
+                        length={this.props.selected.length}
+                    />
+                </Paper>
+                <RaisedButton
+                    label={`\u2190 ${this.getTranslation('remove_all')} ${
+                        this.getUnfilteredCount() > 0
+                            ? this.getUnfilteredCount()
+                            : ''
+                        }`}
+                    style={{ float: 'right', marginTop: '1rem' }}
+                    disabled={
+                        this.props.loading || this.getUnfilteredCount() === 0
+                    }
+                    onClick={this.onRemoveAll}
+                    secondary
+                />
+            </div>
         );
-    };
-    renderMiddle = () => {
-        <div style={styles.middle}>
-            <div style={styles.selected}>
-                {this.props.selected.length > 0
-                    ? this.props.selected.lenght
-                    : ''}
-            </div>
-            <RaisedButton
-                label="&rarr;"
-                secondary
-                onClick={this.onAssignItems}
-                style={styles.buttons}
-                disabled={
-                    this.props.loading ||
-                    this.props.getAvailableItemsFilterCount() === 0
-                }
-            />
-            <RaisedButton
-                label="&larr;"
-                secondary
-                onClick={this.onRemoveItems}
-                style={styles.buttons}
-                disabled={this.state.loading || this.state.selectedRight === 0}
-            />
-            <div style={styles.status}>
-                {this.props.loading ? (
-                    <CircularProgress small style={{ width: 60, height: 60 }} />
-                ) : (
-                    undefined
-                )}
-            </div>
-        </div>;
-    };
-    renderLeft = () => {
-        <div style={styles.left}>
-            <Paper style={styles.paper}>
-                <div style={styles.hidden}>
-                    {this.getHiddenItemsLabel(
-                        this.getAvailableItemsFilterCount()
-                    )}
-                </div>
-                <ReactList
-                    type="uniform"
-                    itemRenderer={this.renderLeftItem}
-                    length={this.getTotalItemsCount()}
-                />
-            </Paper>
-            <RaisedButton
-                label={`${this.getTranslation('assign_all')} ${
-                    this.getUnfilteredCount() === 0
-                        ? ''
-                        : this.getUnfilteredCount()
-                } \u2192`}
-                disabled={
-                    this.state.loading ||
-                    this.getUnfilteredCount() === 0
-                }
-                onClick={this.handleAssignAll}
-                style={{ marginTop: '1rem' }}
-                secondary
-            />
-        </div>;
-    };
-
-    renderRight = () => {
-        <div style={styles.right}>
-            <Paper style={styles.paper}>
-                <div style={styles.hidden}>
-                    {this.getHiddenItemsLabel(
-                        this.getAssignedItemsFilterCount()
-                    )}
-                </div>
-                <ReactList
-                    type="uniform"
-                    itemRenderer={this.renderRightItem}
-                    length={this.getTotalItemsCount()}
-                />
-            </Paper>
-            <RaisedButton
-                label={`\u2190 ${this.getTranslation('remove_all')} ${
-                    this.getAssignedItemsUnfilteredCount() > 0
-                        ? this.getAssignedItemsUnfilteredCount()
-                        : ''
-                }`}
-                style={{ float: 'right', marginTop: '1rem' }}
-                disabled={
-                    this.state.loading ||
-                    this.getAssignedItemsUnfilteredCount() === 0
-                }
-                onClick={this.onRemoveAll}
-                secondary
-            />
-        </div>;
     };
 
     render() {
         return (
             <div style={styles.container}>
-                <div style={styles.left}>
-                    <Paper style={styles.paper}>
-                        <div style={styles.hidden}>
-                            {this.getHiddenItemsLabel(
-                                this.getAvailableItemsFilterCount()
-                            )}
-                        </div>
-                        <select
-                            multiple
-                            style={styles.select}
-                            onChange={onChangeLeft}
-                            ref={r => {
-                                this.leftSelect = r;
-                            }}
-                        >
-                            {this.getAvailableItemsFiltered().map(item => (
-                                <option
-                                    key={item.value}
-                                    value={item.value}
-                                    onDoubleClick={this.onAssignItems}
-                                    style={styles.options}
-                                >
-                                    {item.text}
-                                </option>
-                            ))}
-                        </select>
-                    </Paper>
-                    <RaisedButton
-                        label={`${this.getTranslation('assign_all')} ${
-                            this.getAvailableItemsUnfilteredCount() === 0
-                                ? ''
-                                : this.getAvailableItemsUnfilteredCount()
-                        } \u2192 `}
-                        disabled={
-                            this.state.loading ||
-                            this.getAvailableItemsUnfilteredCount() === 0
-                        }
-                        onClick={this.onAssignAll}
-                        style={{ marginTop: '1rem' }}
-                        secondary
-                    />
-                </div>
-                <div style={styles.middle}>
-                    <div style={styles.selected}>{selectedLabel()}</div>
-                    <RaisedButton
-                        label="&rarr;"
-                        secondary
-                        onClick={this.onAssignItems}
-                        style={styles.buttons}
-                        disabled={
-                            this.state.loading || this.state.selectedLeft === 0
-                        }
-                    />
-                    <RaisedButton
-                        label="&larr;"
-                        secondary
-                        onClick={this.onRemoveItems}
-                        style={styles.buttons}
-                        disabled={
-                            this.state.loading || this.state.selectedRight === 0
-                        }
-                    />
-                    <div style={styles.status}>
-                        {this.state.loading ? (
-                            <CircularProgress
-                                small
-                                style={{ width: 60, height: 60 }}
-                            />
-                        ) : (
-                            undefined
-                        )}
-                    </div>
-                </div>
-                <div style={styles.right}>
-                    <Paper style={styles.paper}>
-                        <div style={styles.hidden}>
-                            {this.getHiddenItemsLabel(
-                                this.getAssignedItemsFilterCount()
-                            )}
-                        </div>
-                        <select
-                            multiple
-                            style={styles.select}
-                            onChange={onChangeRight}
-                            ref={r => {
-                                this.rightSelect = r;
-                            }}
-                        >
-                            {this.getAssignedItemsFiltered()
-                                .sort(this.byAssignedItemsOrder)
-                                .map(item => (
-                                    <option
-                                        key={item.value}
-                                        value={item.value}
-                                        onDoubleClick={this.onRemoveItems}
-                                        style={styles.options}
-                                    >
-                                        {item.text}
-                                    </option>
-                                ))}
-                        </select>
-                    </Paper>
-                    <RaisedButton
-                        label={`\u2190 ${this.getTranslation('remove_all')} ${
-                            this.getAssignedItemsUnfilteredCount() > 0
-                                ? this.getAssignedItemsUnfilteredCount()
-                                : ''
-                        }`}
-                        style={{ float: 'right', marginTop: '1rem' }}
-                        disabled={
-                            this.state.loading ||
-                            this.getAssignedItemsUnfilteredCount() === 0
-                        }
-                        onClick={this.onRemoveAll}
-                        secondary
-                    />
-                </div>
+                {this.renderLeft()}
+                {this.renderMiddle()}
+                {this.renderRight()}
             </div>
         );
     }
@@ -389,3 +407,5 @@ SimpleMultiSelect.PropTypes = {
 SimpleMultiSelect.defaultProps = {
     selectLabel: 'Selected',
 };
+
+export default SimpleMultiSelect;

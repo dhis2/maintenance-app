@@ -13,9 +13,9 @@ import { initAppState, default as appState } from './App/appStateStore';
 import App from './App/App.component';
 import listStore from './List/list.store';
 import store from './store';
-import { resetActiveStep } from './EditModel/actions';
+import { resetActiveStep } from './EditModel/stepper/stepper.actions';
 import { loadEventProgram } from './EditModel/event-program/actions';
-import { loadProgramIndicator } from './EditModel/program-indicator/actions';
+import { loadProgramIndicator } from './EditModel/program-indicator/programIndicator.actions';
 import LoadableComponent, { LoadableWithLoaders } from './utils/LoadableComponent';
 
 function initState({ params }) {
@@ -253,7 +253,7 @@ const routes = (
                 />
                 <Route
                     path="programIndicator/:modelId"
-                    component={LoadableComponent({ oader: () => import('./EditModel/program-indicator/EditProgramIndicator') })}
+                    component={LoadableComponent({ loader: () => import('./EditModel/program-indicator/EditProgramIndicator') })}
                     onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator, resetActiveStep)}
                     hideSidebar
                     disableTabs
@@ -295,6 +295,12 @@ const routes = (
                 path="organisationUnitSection/hierarchy"
                 component={LoadableComponent({ loader: () => import('./OrganisationUnitHierarchy') })}
                 onEnter={initStateOuHierarchy}
+            />
+            <Route
+                path="sqlViews/:modelId"
+                component={LoadableComponent({ loader: () => import('./SqlView') })}
+                hideSidebar
+                disableTabs
             />
         </Route>
     </Router>

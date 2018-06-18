@@ -80,6 +80,13 @@ export const requestParams = new Map([
             'programStageSection[id,displayName]]',
         ].join(','),
     }],
+    ['optionGroup', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'options[id,name,displayName]'
+        ].join(','),
+    }],
 ]);
 
 /**
@@ -97,6 +104,7 @@ export const requestParams = new Map([
  * @returns {*} the model after its's processed by a special case or the original model.
  */
 function cloneHandlerByObjectType(objectType, model) {
+    console.log(model)
     switch(objectType) {
         case'programIndicator': {
             //Clear analyticsPeriodBoundaries ids, let server generate them
@@ -145,7 +153,12 @@ const singleModelStoreConfig = {
     },
 
     save() {
-        const importResultPromise = this.state.save(true)
+        // Save new locale entries via the extended ModelDefinition, not the model directly
+        const importResultPromise = this.state.modelDefinition.name === 'locale' ?
+            this.state.modelDefinition.save(this.state) :
+            this.state.save(true);
+        
+        importResultPromise
             .then(response => response)
             .catch((response) => {
                 if (isString(response)) {

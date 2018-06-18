@@ -10,7 +10,6 @@ import programRuleActionTypes from './programRuleActionTypes';
 import ProgramRuleConditionField from './programRuleConditionField.component';
 import snackActions from '../../../Snackbar/snack.actions';
 
-
 function toDisplay (element) {
     return {
         value: element.id,
@@ -191,7 +190,7 @@ class ProgramRuleActionDialog extends React.Component {
                     labelText: `${this.getTranslation('action')} (*)`,
                     fullWidth: true,
                     options: modelDefinition.modelProperties.programRuleActionType.constants
-                        .filter(o => o !== 'CREATEEVENT' || (ruleActionModel.id !== undefined && ruleActionModel.programRuleActionType === 'CREATEEVENT'))
+                        .filter(o => programRuleActionTypes[o] && (o !== 'CREATEEVENT' || (ruleActionModel.id !== undefined && ruleActionModel.programRuleActionType === 'CREATEEVENT')))
                         .map(o => ({ text: this.getTranslation(programRuleActionTypes[o].label), value: o })),
                     value: ruleActionModel.programRuleActionType,
                     isRequired: true,
