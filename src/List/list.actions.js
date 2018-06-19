@@ -8,7 +8,12 @@ import { getInstance } from 'd2/lib/d2';
 import listStore from './list.store';
 import detailsStore from './details.store';
 import appState from '../App/appStateStore';
-import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForType } from '../config/maintenance-models';
+import {
+    getDefaultFiltersForType,
+    getFilterFieldsForType,
+    getTableColumnsForType,
+    getDetailBoxFieldsForType
+} from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = [
     'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
@@ -77,7 +82,11 @@ function getOrderingForSchema(modelName) {
 
 function getQueryForSchema(modelName) {
     return {
-        fields: `${fieldFilteringForQuery},${getTableColumnsForType(modelName, true)}`,
+        fields: [
+            fieldFilteringForQuery,
+            getTableColumnsForType(modelName, true),
+            getDetailBoxFieldsForType(modelName),
+        ].join(),
         order: getOrderingForSchema(modelName),
     };
 }
