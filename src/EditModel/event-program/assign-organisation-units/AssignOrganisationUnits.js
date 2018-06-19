@@ -8,6 +8,9 @@ const styles = {
     paper: {
         padding: '3rem',
     },
+    padding: {
+        paddingTop: '3rem',
+    }
 };
 
 export default function AssignOrganisationUnits({ modelToEdit }) {
@@ -22,7 +25,7 @@ export default function AssignOrganisationUnits({ modelToEdit }) {
                 model={modelToEdit}
                 modelDefinition={modelToEdit.modelDefinition}
             />
-            <Heading>Roles and access</Heading>
+            <Heading style={styles.padding}>Roles and access</Heading>
             <ProgramAccessControl
                 model={modelToEdit}
             />
