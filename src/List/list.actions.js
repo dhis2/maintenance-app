@@ -12,12 +12,12 @@ import {
     getDefaultFiltersForType,
     getFilterFieldsForType,
     getTableColumnsForType,
-    getDetailBoxFieldsForType
+    getAdditionalFieldsForType
 } from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = [
     'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
-    'code', 'publicAccess', 'access', 'href', 'level', 'type',
+    'code', 'publicAccess', 'access', 'href', 'level',
 ].join(',');
 
 const listActions = Action.createActionsFromNames([
@@ -85,7 +85,7 @@ function getQueryForSchema(modelName) {
         fields: [
             fieldFilteringForQuery,
             getTableColumnsForType(modelName, true),
-            getDetailBoxFieldsForType(modelName),
+            getAdditionalFieldsForType(modelName),
         ].join(),
         order: getOrderingForSchema(modelName),
     };

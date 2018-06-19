@@ -223,8 +223,9 @@ const typeDetails = {
         columns: [
             'displayName',
         ],
-        detailBoxFields: [
+        additionalFields: [
             'name',
+            'type',
         ]
     },
 };
@@ -270,11 +271,11 @@ export function getDefaultFiltersForType(modelType) {
     return [];
 }
 
-export function getDetailBoxFieldsForType(modelType) {
+export function getAdditionalFieldsForType(modelType) {
     if (typeDetails.hasOwnProperty(modelType) && 
-        typeDetails[modelType].hasOwnProperty('detailBoxFields')
+        typeDetails[modelType].hasOwnProperty('additionalFields')
     ) {
-        return typeDetails[modelType].detailBoxFields;
+        return typeDetails[modelType].additionalFields;
     }
     return [];
 }
