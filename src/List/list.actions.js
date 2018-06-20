@@ -8,11 +8,16 @@ import { getInstance } from 'd2/lib/d2';
 import listStore from './list.store';
 import detailsStore from './details.store';
 import appState from '../App/appStateStore';
-import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForType } from '../config/maintenance-models';
+import {
+    getDefaultFiltersForType,
+    getFilterFieldsForType,
+    getTableColumnsForType,
+    getAdditionalFieldsForType
+} from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = [
     'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
-    'code', 'publicAccess', 'access', 'href', 'level', 'type',
+    'code', 'publicAccess', 'access', 'href', 'level',
 ].join(',');
 
 const listActions = Action.createActionsFromNames([
@@ -77,7 +82,11 @@ function getOrderingForSchema(modelName) {
 
 function getQueryForSchema(modelName) {
     return {
-        fields: `${fieldFilteringForQuery},${getTableColumnsForType(modelName, true)}`,
+        fields: [
+            fieldFilteringForQuery,
+            getTableColumnsForType(modelName, true),
+            getAdditionalFieldsForType(modelName),
+        ].join(),
         order: getOrderingForSchema(modelName),
     };
 }
