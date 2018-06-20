@@ -47,7 +47,7 @@ class SqlView extends Component {
     openFileLink(file) {
         const { params: { modelId } } = this.props;
         this.closeDownloadMenu();
-        window.location.href = `../api/sqlViews/${modelId}/${file}`;
+        window.open(`../api/sqlViews/${modelId}/${file}`, '_blank');
     }
 
     openDownloadMenu = (event) => {
