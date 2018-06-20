@@ -2,7 +2,8 @@ import React from 'react';
 import Paper from 'material-ui/Paper/Paper';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import OrganisationUnitTreeMultiSelect from '../../../forms/form-fields/orgunit-tree-multi-select';
-import ProgramAccessControl from '../program-access-control/ProgramAccessControl';
+import ProgramStagesAccess from './ProgramStagesAccess';
+import { branch, renderComponent } from 'recompose';
 
 const styles = {
     paper: {
@@ -13,7 +14,16 @@ const styles = {
     }
 };
 
-export default function AssignOrganisationUnits({ modelToEdit }) {
+const ProgramNotSavedMessage = () => (
+    <div>Save the program in order to access sharing settings</div>
+);
+
+const ProgramStagesAccessHOC = branch(
+    props => !props.model.dataValues.publicAccess,
+    renderComponent(ProgramNotSavedMessage)
+)(ProgramStagesAccess);
+
+export default function ProgramAccess({ modelToEdit }) {
     if (!modelToEdit) {
         return null;
     }
@@ -26,7 +36,7 @@ export default function AssignOrganisationUnits({ modelToEdit }) {
                 modelDefinition={modelToEdit.modelDefinition}
             />
             <Heading style={styles.padding}>Roles and access</Heading>
-            <ProgramAccessControl
+            <ProgramStagesAccessHOC
                 model={modelToEdit}
             />
         </Paper>

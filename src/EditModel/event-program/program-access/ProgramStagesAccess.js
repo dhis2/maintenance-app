@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { editFieldChanged } from '../actions';
 import { editProgramStageField } from '../tracker-program/program-stages/actions';
-import { compose, branch, renderComponent } from 'recompose';
 import Toolbar from './Toolbar';
 import {
     areSharingPropertiesSimilar,
@@ -21,7 +20,7 @@ import {
     areAllItemsTrue,
     areAllItemsFalse,
 } from './utils';
-import { yellow300 } from 'material-ui/styles/colors';
+import { yellow800 } from 'material-ui/styles/colors';
 
 const styles = {
     container: {
@@ -59,7 +58,7 @@ const styles = {
     },
 };
 
-class ProgramAccessControl extends React.Component {
+class ProgramStagesAccess extends React.Component {
     state = {
         sharingDialogOpen: false,
     };
@@ -248,7 +247,7 @@ class ProgramAccessControl extends React.Component {
                                             >
                                                 <WarningIcon
                                                     style={styles.warningIcon}
-                                                    color={yellow300}
+                                                    color={yellow800}
                                                 />
                                             </IconButton>
                                         )
@@ -287,7 +286,7 @@ class ProgramAccessControl extends React.Component {
     };
 }
 
-ProgramAccessControl.contextTypes = {
+ProgramStagesAccess.contextTypes = {
     d2: PropTypes.object,
 };
 
@@ -300,17 +299,8 @@ const mapDispatchToProps = dispatch =>
         },
         dispatch,
     );
-
-const ProgramNotSavedMessage = () => (
-    <div>Save the program in order to access sharing settings</div>
-);
-
-const enhance = compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    ),
-    branch(props => !props.model.dataValues.publicAccess, renderComponent(ProgramNotSavedMessage)),
-);
-
-export default enhance(ProgramAccessControl);
+    
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,  
+)(ProgramStagesAccess);
