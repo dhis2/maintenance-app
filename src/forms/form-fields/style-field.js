@@ -9,6 +9,14 @@ const LoadablePicker = LoadableComponent({
     loader: () => import('react-color/lib/components/swatches/Swatches'),
 });
 
+// const getLoadablePicker = modelDefinitionType => {
+//     const importSuffix = modelDefinitionType === 'option' ? 'chrome/Chrome' : 'swatches/Swatches';
+
+//     return LoadableComponent({
+//         loader: () => import(`react-color/lib/components/${importSuffix}`),
+//     });
+// };
+
 const colors = [
     [ '#ffcdd2', '#e57373', '#d32f2f', '#f06292', '#c2185b', '#880e4f', '#f50057' ], 
     [ '#e1bee7', '#ba68c8', '#8e24aa', '#aa00ff', '#7e57c2', '#4527a0', '#7c4dff', '#6200ea' ],
@@ -84,6 +92,8 @@ export default class StyleFields extends Component {
             icon: '',
         };
 
+        // this.LoadablePicker = getLoadablePicker(props.modelDefinition.type);
+
         // TODO: Read from props.modelDefinition what type you are dealing with and render a different colorpicker for 'option'
 
         console.log(props, context)
@@ -137,6 +147,7 @@ export default class StyleFields extends Component {
     renderColorPicker = () => {
         const { color } = this.state.style;
         const isDark = isColorDark(color);
+        // const LoadablePicker = this.LoadablePicker;
 
         const mergedStyles = {
             ...styles,
