@@ -269,7 +269,6 @@ const routes = (
                     path=":modelType/:modelId/dataEntryForm"
                     component={LoadableWithLoaders({ loader: () => import('./EditModel/EditDataEntryForm.component') },
                         loadObject)}
-                    onEnter={loadObject}
                     hideSidebar
                     disableTabs
                 />
