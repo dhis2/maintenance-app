@@ -88,11 +88,6 @@ export default class StyleFields extends Component {
             icon: '',
         };
 
-        // this.LoadablePicker = getLoadablePicker(props.modelDefinition.type);
-
-        // TODO: Read from props.modelDefinition what type you are dealing with and render a different colorpicker for 'option'
-
-        console.log(props, context)
         const orgStyle = props.value;
 
         this.state = {
@@ -143,8 +138,8 @@ export default class StyleFields extends Component {
     renderColorPicker = () => {
         const { color } = this.state.style;
         const isDark = isColorDark(color);
-        const modelType = this.props.modelDefinition.type;
-        const LoadablePicker = modelType === 'option' ? LoadableChromePicker : LoadableSwatchesPicker;
+        const isColorPickerForOption = this.props.modelDefinition.name === 'option';
+        const LoadablePicker = isColorPickerForOption ? LoadableChromePicker : LoadableSwatchesPicker;
         const mergedStyles = {
             ...styles,
             buttonColor: {
@@ -153,6 +148,14 @@ export default class StyleFields extends Component {
                 color: isDark ? '#fff' : '#000',
             },
         };
+        const pickerProps = {
+            color: this.state.style.color,
+            onChangeComplete: this.handleColorChange,
+        };
+
+        if (!isColorPickerForOption) {
+            pickerProps.colors = colors;
+        }
 
         return (
             <div style={mergedStyles.wrapper}>
@@ -170,11 +173,7 @@ export default class StyleFields extends Component {
                             onClick={this.handleCloseColor}
                         />
                         <div style={mergedStyles.picker}>
-                            <LoadablePicker
-                                colors={colors}
-                                color={this.state.style.color}
-                                onChangeComplete={this.handleColorChange}
-                            />
+                            <LoadablePicker {...pickerProps} />
                         </div>
                     </div>
                 )}
