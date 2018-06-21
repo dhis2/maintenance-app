@@ -62,11 +62,7 @@ const styles = {
 const sharingFields = ['publicAccess', 'userAccesses', 'userGroupAccesses'];
 
 class ProgramStagesAccess extends React.Component {
-    state = {
-        sharingDialogOpen: false,
-    };
-
-    constructor(props, context) {
+    constructor(props) {
         super(props);
 
         // Get (supersets of) sharing structures
@@ -95,63 +91,6 @@ class ProgramStagesAccess extends React.Component {
     }
 
     translate = s => this.context.d2.i18n.getTranslation(s);
-
-    updateInternalState = () => {
-        const stagesWithSimilarAccessAsProgram = this.state.stagesSharing
-            .filter(stage => areSharingPropertiesSimilar(this.state.programSharing, stage))
-            .map(stage => stage.id);
-
-        this.setState({
-            stagesWithSimilarAccessAsProgram,
-        });
-    };
-
-    storeProgramChanges = (program) => {
-        sharingFields.forEach(property => {
-            this.props.editFieldChanged(
-                property,
-                program[property],
-            )
-        })
-    }
-
-    storeStageChanges = (stageId, sharingProperties) => {
-        sharingFields.forEach(property => {
-            this.props.editProgramStageField(
-                stageId,
-                property,
-                sharingProperties[property],
-            );
-        });
-    }
-
-    propagateAccess = event => {
-        event.stopPropagation();
-
-        // Propagate sharing properties from program to program stages
-        this.state.stagesSharing.forEach(stage => {
-            if (this.state.selectedStages.includes(stage.id)) {
-                this.storeStageChanges(stage.id, this.state.programSharing);
-            }
-        });
-
-        const propagateIfSelected = stage => {
-            if (this.state.selectedStages.includes(stage.id)) {
-                return {
-                    ...this.state.programSharing,
-                    id: stage.id,
-                    displayName: stage.displayName,
-                };
-            } else return stage;
-        };
-
-        this.setState(
-            {
-                stagesSharing: this.state.stagesSharing.map(propagateIfSelected),
-            },
-            this.updateInternalState,
-        );
-    };
 
     toggleStageSelection = id => (_, isChecked) => {
         this.setState(
@@ -223,26 +162,88 @@ class ProgramStagesAccess extends React.Component {
         if (!updatedSharing.userAccesses) updatedSharing.userAccesses = [];
         if (!updatedSharing.userGroupAccesses) updatedSharing.userGroupAccesses = [];
 
-        // If dialog updated program sharing
         if (updatedSharing.id === this.state.programSharing.id) {
-            this.storeProgramChanges(updatedSharing);
-            this.setState({
-                programSharing: updatedSharing,
-            }, this.updateInternalState);
-        
-        } else { // If dialog updated stage sharing
-            this.storeStageChanges(updatedSharing.id, updatedSharing);
-            this.setState({
-                stagesSharing: this.state.stagesSharing.map((stage, index) =>
-                    updatedSharing.id === stage.id
-                        ? updatedSharing
-                        : stage
-                ),
-            }, this.updateInternalState);
+            this.updateProgramAccess(updatedSharing)
+        } else {
+            this.updateStageAccess(updatedSharing)
         }
 
         this.closeSharingDialog();
     }
+
+    updateProgramAccess = updatedSharing => {
+        this.storeProgramChanges(updatedSharing);
+            this.setState({
+                programSharing: updatedSharing,
+            }, this.updateInternalState);
+    }
+
+    updateStageAccess = updatedSharing => {
+        this.storeStageChanges(updatedSharing.id, updatedSharing);
+        this.setState({
+            stagesSharing: this.state.stagesSharing.map(stage =>
+                updatedSharing.id === stage.id
+                    ? updatedSharing
+                    : stage
+            ),
+        }, this.updateInternalState);
+    }
+
+    storeProgramChanges = (program) => {
+        sharingFields.forEach(property => {
+            this.props.editFieldChanged(
+                property,
+                program[property],
+            )
+        })
+    }
+
+    storeStageChanges = (stageId, sharingProperties) => {
+        sharingFields.forEach(property => {
+            this.props.editProgramStageField(
+                stageId,
+                property,
+                sharingProperties[property],
+            );
+        });
+    }
+
+    propagateAccess = event => {
+        event.stopPropagation();
+
+        this.state.stagesSharing.forEach(stage => {
+            if (this.state.selectedStages.includes(stage.id)) {
+                this.storeStageChanges(stage.id, this.state.programSharing);
+            }
+        });
+
+        const propagateIfSelected = stage => {
+            if (this.state.selectedStages.includes(stage.id)) {
+                return {
+                    ...this.state.programSharing,
+                    id: stage.id,
+                    displayName: stage.displayName,
+                };
+            } else return stage;
+        };
+
+        this.setState(
+            {
+                stagesSharing: this.state.stagesSharing.map(propagateIfSelected),
+            },
+            this.updateInternalState,
+        );
+    };
+
+    updateInternalState = () => {
+        const stagesWithSimilarAccessAsProgram = this.state.stagesSharing
+            .filter(stage => areSharingPropertiesSimilar(this.state.programSharing, stage))
+            .map(stage => stage.id);
+
+        this.setState({
+            stagesWithSimilarAccessAsProgram,
+        });
+    };
 
     render = () => {
         const stageSharingList = this.state.stagesSharing.map(stage => {
