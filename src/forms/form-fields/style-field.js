@@ -5,17 +5,13 @@ import Button from 'd2-ui/lib/button/Button';
 import LoadableComponent from '../../utils/LoadableComponent';
 import FieldWrapper from './helpers/FieldWrapper';
 
-const LoadablePicker = LoadableComponent({
+const LoadableSwatchesPicker = LoadableComponent({
     loader: () => import('react-color/lib/components/swatches/Swatches'),
 });
 
-// const getLoadablePicker = modelDefinitionType => {
-//     const importSuffix = modelDefinitionType === 'option' ? 'chrome/Chrome' : 'swatches/Swatches';
-
-//     return LoadableComponent({
-//         loader: () => import(`react-color/lib/components/${importSuffix}`),
-//     });
-// };
+const LoadableChromePicker = LoadableComponent({
+    loader: () => import('react-color/lib/components/chrome/Chrome'),
+});
 
 const colors = [
     [ '#ffcdd2', '#e57373', '#d32f2f', '#f06292', '#c2185b', '#880e4f', '#f50057' ], 
@@ -147,8 +143,8 @@ export default class StyleFields extends Component {
     renderColorPicker = () => {
         const { color } = this.state.style;
         const isDark = isColorDark(color);
-        // const LoadablePicker = this.LoadablePicker;
-
+        const modelType = this.props.modelDefinition.type;
+        const LoadablePicker = modelType === 'option' ? LoadableChromePicker : LoadableSwatchesPicker;
         const mergedStyles = {
             ...styles,
             buttonColor: {
@@ -175,7 +171,6 @@ export default class StyleFields extends Component {
                         />
                         <div style={mergedStyles.picker}>
                             <LoadablePicker
-                                className="swatches"
                                 colors={colors}
                                 color={this.state.style.color}
                                 onChangeComplete={this.handleColorChange}
