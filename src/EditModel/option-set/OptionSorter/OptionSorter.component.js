@@ -15,81 +15,80 @@ import { optionsForOptionSetStore } from '../stores';
 import modelToEditStore from '../../modelToEditStore';
 
 class OptionSorter extends Component {
-    constructor(props, context) {
-        super(props, context);
+    state = {
+        sortedASC: {
+            displayName: false,
+            code: false,
+        },
+    };
 
-        this.state = {
-            sortedASC: {
-                displayName: false,
-                code: false,
-            },
-        };
+    onSetIsSorting = (propertyName) => {
+        const optionsToSort = modelToEditStore.getState().options.toArray();
+        const sortOrder = this.state.sortedASC[propertyName]
+            ? 'DESC'
+            : 'ASC';
 
-        this.getTranslation = this.context.d2.i18n.getTranslation.bind(this.context.d2.i18n);
-    }
+        optionSorter(optionsToSort, propertyName, sortOrder)
+            .flatMap(this.addSortedOptionsToStore)
+            .concatAll()
+            .map(this.addSortedOptionsToModel)
+            .concatAll()
+            .subscribe(
+                () => this.onSortingSuccess(propertyName),
+                () => this.showMessage('options_not_sorted', true, 'ok'),
+            );
+    };
 
     onSortBy = (propertyName) => {
+        this.setState(
+            { isSorting: true },
+            this.onSetIsSorting(propertyName),
+        );
+    }
+
+    onSortingSuccess = (propertyName) => {
         this.setState({
-            isSorting: true,
-        }, () => {
-            optionSorter(
-                modelToEditStore.getState().options.toArray(),
-                propertyName,
-                this.state.sortedASC[propertyName] ? 'DESC' : 'ASC',
-            )
-                .flatMap(async (options) => {
-                    const d2 = await getInstance();
-
-                    return modelToEditStore
-                        .take(1)
-                        .map(modelToEdit => ({
-                            options: options.map(optionData => d2.models.option.create(optionData)),
-                            modelToEdit,
-                        }));
-                })
-                .concatAll()
-                .map(({ options, modelToEdit }) => {
-                    modelToEdit.options.clear();
-                    options.forEach((option) => {
-                        modelToEdit.options.add(option);
-                    });
-
-                    modelToEditStore.setState(modelToEdit);
-                    optionsForOptionSetStore.setState({
-                        ...optionsForOptionSetStore.getState(),
-                        options,
-                    });
-                    options.map(v => v.displayName);
-
-                    snackActions.show({
-                        message: 'options_sorted_locally_saving_to_server',
-                        translate: true,
-                    });
-
-                    return Observable.fromPromise(modelToEdit.save());
-                })
-                .concatAll()
-                .subscribe(
-                    () => {
-                        this.setState({
-                            sortedASC: {
-                                ...this.state.sortedASC,
-                                [propertyName]: !this.state.sortedASC[propertyName],
-                            },
-                            isSorting: false,
-                        });
-                        snackActions.show({
-                            message: 'options_sorted_and_saved',
-                            translate: true,
-                        });
-                    },
-                    () => snackActions.show({
-                        message: 'options_not_sorted',
-                        action: 'ok',
-                        translate: true,
-                    }),
-                );
+            sortedASC: {
+                ...this.state.sortedASC,
+                [propertyName]: !this.state.sortedASC[propertyName],
+            },
+            isSorting: false,
         });
+        this.showMessage('options_sorted_and_saved', true);
+    }
+
+    getTranslation = message => this.context.d2.i18n.getTranslation(message);
+
+    addSortedOptionsToModel = ({ options, modelToEdit }) => {
+        modelToEdit.options.clear();
+        options.forEach(option => modelToEdit.options.add(option));
+
+        modelToEditStore.setState(modelToEdit);
+        optionsForOptionSetStore.setState({
+            ...optionsForOptionSetStore.getState(),
+            options,
+        });
+        options.map(v => v.displayName);
+
+        this.showMessage('options_sorted_locally_saving_to_server', true);
+        return Observable.fromPromise(modelToEdit.save());
+    }
+
+    addSortedOptionsToStore = async (options) => {
+        const d2 = await getInstance();
+        const newOptions = options.map(optionData =>
+            d2.models.option.create(optionData));
+
+        return modelToEditStore
+            .take(1)
+            .map(modelToEdit => ({
+                options: newOptions,
+                modelToEdit,
+            }));
+    }
+
+    showMessage = (message, translate = false, action = undefined) => {
+        snackActions.show({ message, action, translate });
     }
 
     render() {
