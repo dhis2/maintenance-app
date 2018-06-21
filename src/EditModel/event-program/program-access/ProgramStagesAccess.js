@@ -17,8 +17,6 @@ import {
     areSharingPropertiesSimilar,
     extractDisplayName,
     generateSharingDescription,
-    areAllItemsTrue,
-    areAllItemsFalse,
 } from './utils';
 import { yellow800 } from 'material-ui/styles/colors';
 
@@ -56,7 +54,12 @@ const styles = {
         height: '32px',
         width: '32px',
     },
+    stageSharingItem: {
+        height: '80px',
+    },
 };
+
+const sharingFields = ['publicAccess', 'userAccesses', 'userGroupAccesses'];
 
 class ProgramStagesAccess extends React.Component {
     state = {
@@ -73,14 +76,12 @@ class ProgramStagesAccess extends React.Component {
         ).map(stage => stage[1]);
 
         // Pre-select stages with similar sharing settings as program
-        const selectedStages = {};
+        const selectedStages = [];
         const stagesWithSimilarAccessAsProgram = [];
         stagesSharing.forEach(stage => {
             if (areSharingPropertiesSimilar(programSharing, stage)) {
                 stagesWithSimilarAccessAsProgram.push(stage.id);
-                selectedStages[stage.id] = true;
-            } else {
-                selectedStages[stage.id] = false;
+                selectedStages.push(stage.id);
             }
         });
 
@@ -103,24 +104,37 @@ class ProgramStagesAccess extends React.Component {
         });
     };
 
+    storeProgramChanges = (program) => {
+        sharingFields.forEach(property => {
+            this.props.editFieldChanged(
+                property,
+                program[property],
+            )
+        })
+    }
+
+    storeStageChanges = (stageId, sharingProperties) => {
+        sharingFields.forEach(property => {
+            this.props.editProgramStageField(
+                stageId,
+                property,
+                sharingProperties[property],
+            );
+        });
+    }
+
     propagateAccess = event => {
         event.stopPropagation();
 
         // Propagate sharing properties from program to program stages
         this.state.stagesSharing.forEach(stage => {
-            if (this.state.selectedStages[stage.id]) {
-                ['publicAccess', 'userAccesses', 'userGroupAccesses'].forEach(property => {
-                    this.props.editProgramStageField(
-                        stage.id,
-                        property,
-                        this.state.programSharing[property],
-                    );
-                });
+            if (this.state.selectedStages.includes(stage.id)) {
+                this.storeStageChanges(stage.id, this.state.programSharing);
             }
         });
 
         const propagateIfSelected = stage => {
-            if (this.state.selectedStages[stage.id]) {
+            if (this.state.selectedStages.includes(stage.id)) {
                 return {
                     ...this.state.programSharing,
                     id: stage.id,
@@ -137,82 +151,151 @@ class ProgramStagesAccess extends React.Component {
         );
     };
 
-    selectStage = id => (_, isChecked) => {
+    toggleStageSelection = id => (_, isChecked) => {
         this.setState(
             {
-                selectedStages: {
-                    ...this.state.selectedStages,
-                    [id]: isChecked,
-                },
+                selectedStages: isChecked
+                    ? [...this.state.selectedStages, id]
+                    : this.state.selectedStages.filter(stage => stage !== id),
             },
             this.updateInternalState,
         );
     };
 
-    selectAllStages = () => {
-        const selectedStages = {};
-        Object.keys(this.state.selectedStages).forEach(key => {
-            selectedStages[key] = true;
+    selectSimilarStages = () => {
+        const selectedStages = [];
+        this.state.stagesSharing.forEach(stage => {
+            if (areSharingPropertiesSimilar(stage, this.state.programSharing)) {
+                selectedStages.push(stage.id);
+            }
         });
 
         this.setState({
             selectedStages,
+        });
+    };
+
+    selectAllStages = () => {
+        this.setState({
+            selectedStages: this.state.stagesSharing.map(stage => stage.id),
         });
     };
 
     deselectAllStages = () => {
-        const selectedStages = {};
-        Object.keys(this.state.selectedStages).forEach(key => {
-            selectedStages[key] = false;
-        });
-
         this.setState({
-            selectedStages,
+            selectedStages: [],
         });
     };
 
-    openSharingDialog = (sharingId, sharingType) => {
+    openSharingDialog = (model, sharingType) => {
+        const objectToShare = {
+            meta: {
+                allowPublicAccess: true,
+                allowExternalAccess: false,
+            },
+            object: {
+                user: model.user,
+                displayName: model.displayName,
+                userAccesses: model.userAccesses,
+                userGroupAccesses: model.userGroupAccesses,
+                publicAccess: model.publicAccess,
+                externalAccess: false,
+            }
+        };
+
         this.setState({
             sharingDialogOpen: true,
-            sharingId,
             sharingType,
+            sharingId: model.id,
+            objectToShare,
         });
     };
 
-    closeSharingDialog = updatedSharing => {
+    closeSharingDialog = () => {
+        this.setState({
+            sharingDialogOpen: false,
+        });
+    };
+
+    confirmAndCloseSharingDialog = updatedSharing => {
         if (!updatedSharing.userAccesses) updatedSharing.userAccesses = [];
         if (!updatedSharing.userGroupAccesses) updatedSharing.userGroupAccesses = [];
 
-        const stateUpdate = {
-            sharingDialogOpen: false,
-        };
-
+        // If dialog updated program sharing
         if (updatedSharing.id === this.state.programSharing.id) {
-            stateUpdate.programSharing = updatedSharing;
-        } else {
-            const stageIndex = this.state.stagesSharing.findIndex(
-                stage => stage.id === updatedSharing.id,
-            );
-            stateUpdate.stagesSharing = this.state.stagesSharing;
-            stateUpdate.stagesSharing[stageIndex] = updatedSharing;
+            this.storeProgramChanges(updatedSharing);
+            this.setState({
+                programSharing: updatedSharing,
+            }, this.updateInternalState);
+        
+        } else { // If dialog updated stage sharing
+            this.storeStageChanges(updatedSharing.id, updatedSharing);
+            this.setState({
+                stagesSharing: this.state.stagesSharing.map((stage, index) =>
+                    updatedSharing.id === stage.id
+                        ? updatedSharing
+                        : stage
+                ),
+            }, this.updateInternalState);
         }
 
-        this.setState(stateUpdate, this.updateInternalState);
-    };
+        this.closeSharingDialog();
+    }
 
     render = () => {
+        const stageSharingList = this.state.stagesSharing.map(stage => {
+            const leftAvatar =
+                this.state.stagesWithSimilarAccessAsProgram.includes(stage.id)
+                    ? (<div />)
+                    : (
+                        <IconButton
+                            style={{ pointer: 'default' }}
+                            tooltip="Differs from program"
+                        >
+                            <WarningIcon
+                                style={styles.warningIcon}
+                                color={yellow800}
+                            />
+                        </IconButton>
+                    )
+
+            return (
+                <ListItem
+                    style={styles.stageSharingItem}
+                    onClick={() => this.openSharingDialog(stage, 'programStage')}
+                    leftAvatar={leftAvatar}
+                    key={stage.id}
+                    primaryText={stage.displayName}
+                    secondaryText={generateSharingDescription(stage)}
+                />
+            );
+        });
+
+        const checkBoxList = this.state.stagesSharing.map(stage => (
+            <Checkbox
+                key={stage.id}
+                style={{
+                    height: '80px',
+                    paddingTop: '24px',
+                    paddingLeft: '32px',
+                }}
+                onCheck={this.toggleStageSelection(stage.id)}
+                checked={this.state.selectedStages.includes(stage.id)}
+            />
+        ));
+
         return (
             <div style={styles.container}>
                 <ListItem
                     onClick={() =>
-                        this.openSharingDialog(this.props.model.dataValues.id, 'program')
+                        this.openSharingDialog(this.props.model, 'program')
                     }
                     primaryText={extractDisplayName(this.props.model)}
                     secondaryText={generateSharingDescription(this.state.programSharing)}
                     rightIconButton={
                         <FlatButton
                             primary
-                            disabled={areAllItemsFalse(Object.values(this.state.selectedStages))}
+                            disabled={this.state.selectedStages.length === 0}
                             style={{ height: 45 }}
                             icon={<ArrowDownwardIcon />}
                             label="Apply to selected stages"
@@ -225,60 +308,26 @@ class ProgramStagesAccess extends React.Component {
                 <Toolbar
                     selectAll={this.selectAllStages}
                     deselectAll={this.deselectAllStages}
-                    areAllSelected={areAllItemsTrue(Object.values(this.state.selectedStages))}
-                    areNoneSelected={areAllItemsFalse(Object.values(this.state.selectedStages))}
+                    selectSimilar={this.selectSimilarStages}
+                    areNoneSelected={this.state.selectedStages.length === 0}
+                    areAllSelected={
+                        this.state.selectedStages.length === this.state.stagesSharing.length
+                    }
                 />
                 {this.state.stagesSharing.length !== 0 && (
                     <div style={styles.programStageList}>
-                        <div style={{ flex: 1 }}>
-                            {this.state.stagesSharing.map(stage => (
-                                <ListItem
-                                    style={{ height: '80px' }}
-                                    onClick={() => this.openSharingDialog(stage.id, 'programStage')}
-                                    leftAvatar={
-                                        this.state.stagesWithSimilarAccessAsProgram.includes(
-                                            stage.id,
-                                        ) ? (
-                                            <div />
-                                        ) : (
-                                            <IconButton 
-                                                style={{ pointer: 'default' }}
-                                                tooltip="Differs from program"
-                                            >
-                                                <WarningIcon
-                                                    style={styles.warningIcon}
-                                                    color={yellow800}
-                                                />
-                                            </IconButton>
-                                        )
-                                    }
-                                    key={stage.id}
-                                    primaryText={stage.displayName}
-                                    secondaryText={generateSharingDescription(stage)}
-                                />
-                            ))}
-                        </div>
-                        <div>
-                            {this.state.stagesSharing.map(stage => (
-                                <Checkbox
-                                    key={stage.id}
-                                    style={{
-                                        height: '80px',
-                                        paddingTop: '24px',
-                                        paddingLeft: '32px',
-                                    }}
-                                    onCheck={this.selectStage(stage.id)}
-                                    checked={this.state.selectedStages[stage.id]}
-                                />
-                            ))}
-                        </div>
+                        <div style={{ flex: 1 }}>{stageSharingList}</div>
+                        <div>{checkBoxList}</div>
                     </div>
                 )}
                 <SharingDialog
+                    doNotPost
+                    sharedObject={this.state.objectToShare}
                     open={this.state.sharingDialogOpen}
                     id={this.state.sharingId}
                     type={this.state.sharingType}
                     onRequestClose={this.closeSharingDialog}
+                    onConfirm={this.confirmAndCloseSharingDialog}
                     d2={this.context.d2}
                 />
             </div>
@@ -299,8 +348,8 @@ const mapDispatchToProps = dispatch =>
         },
         dispatch,
     );
-    
+
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,  
+    mapDispatchToProps,
 )(ProgramStagesAccess);

@@ -1,22 +1,22 @@
 import { isEqual } from 'lodash/fp';
 
 export const areSharingPropertiesSimilar = (a, b) => {
-    if (!isEqual(a.publicAccess, b.publicAccess)) return false;
-    if (!isEqual(a.externalAccess, b.externalAccess)) return false;
+    if (a.publicAccess !== b.publicAccess) return false;
+    if (!!a.externalAccess !== !!b.externalAccess) return false;
 
     const compareFunction = (a, b) => a.id < b.id;
     if (
         !isEqual(
-            Array.sort(a.userAccesses, compareFunction),
-            Array.sort(b.userAccesses, compareFunction),
+            Array.sort(a.userAccesses || [], compareFunction),
+            Array.sort(b.userAccesses || [], compareFunction),
         )
     ) {
         return false;
     }
 
     return isEqual(
-        Array.sort(a.userGroupAccesses, compareFunction),
-        Array.sort(b.userGroupAccesses, compareFunction),
+        Array.sort(a.userGroupAccesses || [], compareFunction),
+        Array.sort(b.userGroupAccesses || [], compareFunction),
     );
 };
 
@@ -74,6 +74,3 @@ export const generateSharingDescription = ({ publicAccess, userGroupAccesses, us
 
     return description;
 };
-
-export const areAllItemsTrue = arr => arr.every(a => a);
-export const areAllItemsFalse = arr => arr.every(a => !a);
