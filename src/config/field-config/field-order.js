@@ -204,6 +204,11 @@ const fieldOrderByName = new Map([
         'description',
         'valueType',
     ]],
+    ['option', [
+        'name',
+        'code',
+        'style',
+    ]],
     ['legendSet', [
         'name',
         'code',

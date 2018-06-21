@@ -22,7 +22,7 @@ export const requestParams = new Map([
         fields: [
             ':all',
             'attributeValues[:all,attribute[id,name,displayName]]',
-            'options[id,name,displayName,code]',
+            'options[id,name,displayName,code,style]',
         ].join(','),
     }],
     ['dataSet', {
