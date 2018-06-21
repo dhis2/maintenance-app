@@ -94,6 +94,8 @@ class ProgramStagesAccess extends React.Component {
         };
     }
 
+    translate = s => this.context.d2.i18n.getTranslation(s);
+
     updateInternalState = () => {
         const stagesWithSimilarAccessAsProgram = this.state.stagesSharing
             .filter(stage => areSharingPropertiesSimilar(this.state.programSharing, stage))
@@ -250,7 +252,7 @@ class ProgramStagesAccess extends React.Component {
                     : (
                         <IconButton
                             style={{ pointer: 'default' }}
-                            tooltip="Differs from program"
+                            tooltip={this.translate("differs_from_program")}
                         >
                             <WarningIcon
                                 style={styles.warningIcon}
@@ -298,7 +300,7 @@ class ProgramStagesAccess extends React.Component {
                             disabled={this.state.selectedStages.length === 0}
                             style={{ height: 45 }}
                             icon={<ArrowDownwardIcon />}
-                            label="Apply to selected stages"
+                            label={this.translate("apply_to_selected_stages")}
                             labelPosition="before"
                             onClick={this.propagateAccess}
                         />
