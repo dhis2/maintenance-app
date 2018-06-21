@@ -7,7 +7,14 @@
 }
 
 .sql-view__content {
-    overflow-x: scroll;
+    overflow: scroll;
+    // 12rem (container):
+    //  - main padding top: 8rem
+    //  - main>div margin-bottom: 4rem
+    // 83px (header):
+    //  - .sql-view__header height: 69px
+    //  - .sql-view__header margin-bottom: 14px
+    max-height: calc(100vh - 12rem - 83px);
 }
 
 .sql-view__dropdown-button {

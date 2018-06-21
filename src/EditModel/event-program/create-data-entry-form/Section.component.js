@@ -55,6 +55,14 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
     },
+    sectionName: {
+        textAlign: 'left',
+        color: 'black',
+        fontSize: '1.7rem',
+        fontWeight: '400',
+        wordWrap: 'break-word',
+        width: '100%',
+    },
 };
 
 const ActionButton = ({ onClick, icon }) => {
@@ -79,50 +87,14 @@ class Section extends Component {
         super(props, context);
         this.state = {
             showRemovalDialog: false,
-            newName: '',
         };
     }
-
-    onNameChanged = (event, newValue) => {
-        this.setState({
-            newName: newValue,
-        });
-    };
 
     onSortEnd = (oldIndex, newIndex) => {
         this.props.sortItems(oldIndex, newIndex);
     };
 
     getTranslation = key => this.context.d2.i18n.getTranslation(key);
-
-    getSectionNameStyle = editing => ({
-        textAlign: 'left',
-        color: editing ? 'gray' : 'black',
-        fontSize: '1.7rem',
-        fontWeight: editing ? '300' : '400',
-        wordWrap: 'break-word',
-        width: '100%',
-    });
-
-    startEditingName = () => {
-        this.props.onToggleEdit();
-        this.setState({
-            newName: '',
-        });
-    };
-
-    focusTitleInputField = (titleInput) => {
-        if (titleInput) {
-            setTimeout(() => { titleInput.focus(); }, 20);
-        }
-    };
-
-    stopEditingName = () => {
-        this.props.onToggleEdit();
-        if (this.state.newName && this.state.newName !== '') {
-            this.props.onNameChanged(this.state.newName);
-        }
-    };
 
     openRemovalDialog = () => {
         this.setState({ showRemovalDialog: true });
@@ -174,27 +146,8 @@ class Section extends Component {
                 <div onClick={this.props.onSelect} style={styles.sectionHeader}>
                     <div style={{ ...styles.row, width: '100%' }}>
                         <DragHandle />
-
-                        { this.props.editing
-                            ? <ActionButton onClick={this.stopEditingName} icon="done" />
-                            : <ActionButton onClick={this.startEditingName} icon="mode_edit" />
-                        }
-
-                        { this.props.editing
-                            ? <TextField
-                                ref={this.focusTitleInputField}
-                                inputStyle={{ transition: 'none' }}
-                                textareaStyle={{ flex: 1 }}
-                                style={this.getSectionNameStyle(true)}
-                                underlineShow={false}
-                                onClick={(e) => e.stopPropagation()}
-                                hintText={this.getTranslation('name')}
-                                defaultValue={this.props.section.displayName}
-                                onChange={this.onNameChanged}
-                                maxLength={maxNameLength}
-                            />
-                            : <div style={this.getSectionNameStyle(false)}>{this.props.section.displayName}</div>
-                        }
+                        <ActionButton onClick={this.props.onToggleEdit} icon="mode_edit" />
+                        <div style={styles.sectionName}>{this.props.section.displayName}</div>
                     </div>
                     <div style={styles.row}>
                         <ActionButton
@@ -224,8 +177,6 @@ Section.propTypes = {
     section: PropTypes.object.isRequired,
     selected: PropTypes.bool.isRequired,
     collapsed: PropTypes.bool.isRequired,
-    editing: PropTypes.bool.isRequired,
-    onNameChanged: PropTypes.func.isRequired,
     onSectionRemoved: PropTypes.func.isRequired,
     onDataElementRemoved: PropTypes.func.isRequired,
     onToggleEdit: PropTypes.func.isRequired,

@@ -4,10 +4,15 @@ import compose from 'recompose/compose';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Paper from 'material-ui/Paper/Paper';
 import mapPropsStream from 'recompose/mapPropsStream';
-import programStore from '../eventProgramStore';
 import { get, noop, first, getOr, __ } from 'lodash/fp';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import withHandlers from 'recompose/withHandlers';
+import Visibility from 'material-ui/svg-icons/action/visibility';
+import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
+import TextField from 'material-ui/TextField/TextField';
+import pure from 'recompose/pure';
+import withState from 'recompose/withState';
 import {
     Table,
     TableBody,
@@ -23,21 +28,18 @@ import {
     removeDataElementsFromStage,
     editProgramStageDataElement,
 } from './actions';
-import withHandlers from 'recompose/withHandlers';
-import Visibility from 'material-ui/svg-icons/action/visibility';
-import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
-import TextField from 'material-ui/TextField/TextField';
-import pure from 'recompose/pure';
-import withState from 'recompose/withState';
+
+import programStore from '../eventProgramStore';
 import { withProgramStageFromProgramStage$ } from '../tracker-program/program-stages/utils';
 import { withRouter } from 'react-router';
 import { getProgramStage$ById } from '../tracker-program/program-stages/utils';
+import RenderTypeSelectField, { getRenderTypeOptions, DATA_ELEMENT_CLAZZ, MOBILE, DESKTOP } from '../render-types';
 
 const getFirstProgramStage = compose(first, get('programStages'));
 
 const firstProgramStage$ = programStore.map(getFirstProgramStage);
 
-//Use programStage$ prop if present, else use first programStage
+// Use programStage$ prop if present, else use first programStage
 const programStage$ = props$ =>
     props$
         .take(1)
@@ -50,6 +52,10 @@ const programStage$ = props$ =>
 
 const availableTrackerDataElements$ = programStore
     .map(get('availableDataElements'))
+    .take(1);
+
+const renderingOptions$ = programStore
+    .map(get('renderingOptions'))
     .take(1);
 
 const mapDispatchToProps = dispatch =>
@@ -75,16 +81,18 @@ const enhance = compose(
         props$.combineLatest(
             programStage$(props$),
             availableTrackerDataElements$,
-            (props, programStage, trackerDataElements) => ({
+            renderingOptions$,
+            (props, programStage, trackerDataElements, renderingOptions) => ({
                 ...props,
                 trackerDataElements,
+                renderingOptions,
                 model: programStage,
                 items: programStage.programStageDataElements,
             })
         )
     ),
     withHandlers({
-        onAssignItems: props => dataElements => {
+        onAssignItems: props => (dataElements) => {
             const { model, addDataElementsToStage } = props;
             addDataElementsToStage({ programStage: model.id, dataElements });
             return Promise.resolve();
@@ -92,7 +100,7 @@ const enhance = compose(
         onRemoveItems: ({
             model,
             removeDataElementsFromStage,
-        }) => dataElements => {
+        }) => (dataElements) => {
             removeDataElementsFromStage({
                 programStage: model.id,
                 dataElements,
@@ -121,10 +129,9 @@ const ProgramStageDataElement = pure(
     ({ programStageDataElement, onEditProgramStageDataElement }) => {
         const isDateValue =
             programStageDataElement.dataElement.valueType === 'DATE';
-        const hasOptionSet = !!programStageDataElement.dataElement.optionSet;
         const onChangeFlipBooleanForProperty = propertyName => () =>
             onEditProgramStageDataElement(
-                flipBooleanPropertyOn(programStageDataElement, propertyName)
+                flipBooleanPropertyOn(programStageDataElement, propertyName),
             );
         const isCheckedForProp = getOr(false, __, programStageDataElement);
 
@@ -160,33 +167,41 @@ const ProgramStageDataElement = pure(
                 <TableRowColumn>
                     {isDateValue
                         ? <Checkbox
-                              checked={isCheckedForProp('allowFutureDate')}
-                              onClick={onChangeFlipBooleanForProperty(
-                                  'allowFutureDate'
-                              )}
-                          />
+                            checked={isCheckedForProp('allowFutureDate')}
+                            onClick={onChangeFlipBooleanForProperty(
+                                'allowFutureDate',
+                            )}
+                        />
                         : null}
                 </TableRowColumn>
                 <TableRowColumn>
-                    {hasOptionSet
-                        ? <Checkbox
-                              checked={isCheckedForProp('renderOptionsAsRadio')}
-                              onClick={onChangeFlipBooleanForProperty(
-                                  'renderOptionsAsRadio'
-                              )}
-                          />
-                        : null}
+                    <RenderTypeSelectField
+                        device={MOBILE}
+                        target={programStageDataElement}
+                        options={programStageDataElement.dataElement.renderTypeOptions}
+                        changeHandler={onEditProgramStageDataElement}
+                    />
+                </TableRowColumn>
+                <TableRowColumn>
+                    <RenderTypeSelectField
+                        device={DESKTOP}
+                        target={programStageDataElement}
+                        options={programStageDataElement.dataElement.renderTypeOptions}
+                        changeHandler={onEditProgramStageDataElement}
+                    />
                 </TableRowColumn>
             </TableRow>
         );
-    }
+    },
 );
 
-function addDisplayProperties(dataElements) {
+function addDisplayProperties(dataElements, renderingOptions) {
     return ({ dataElement, ...other }) => {
         const { displayName, valueType, optionSet } = dataElements.find(
-            ({ id }) => id === dataElement.id
+            ({ id }) => id === dataElement.id,
         );
+
+        const renderTypeOptions = getRenderTypeOptions(dataElement, DATA_ELEMENT_CLAZZ, renderingOptions);
 
         return {
             ...other,
@@ -195,6 +210,7 @@ function addDisplayProperties(dataElements) {
                 displayName,
                 valueType,
                 optionSet,
+                renderTypeOptions,
             },
         };
     };
@@ -217,7 +233,7 @@ function AssignDataElements(props, { d2 }) {
     );
 
     const tableRows = props.model.programStageDataElements
-        .map(addDisplayProperties(props.trackerDataElements))
+        .map(addDisplayProperties(props.trackerDataElements, props.renderingOptions))
         .map((programStageDataElement, index) => {
             return (
                 <ProgramStageDataElement
@@ -256,17 +272,26 @@ function AssignDataElements(props, { d2 }) {
             <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn>Name</TableHeaderColumn>
-                        <TableHeaderColumn>Compulsory</TableHeaderColumn>
                         <TableHeaderColumn>
-                            Allow provided elsewhere
+                            {d2.i18n.getTranslation('name')}
                         </TableHeaderColumn>
                         <TableHeaderColumn>
-                            Display in reports
+                            {d2.i18n.getTranslation('compulsory')}
                         </TableHeaderColumn>
-                        <TableHeaderColumn>Date in future</TableHeaderColumn>
                         <TableHeaderColumn>
-                            Render options as radio
+                            {d2.i18n.getTranslation('allow_provided_elsewhere')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('display_in_reports')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('date_in_future')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('render_type_mobile')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
+                            {d2.i18n.getTranslation('render_type_desktop')}
                         </TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
