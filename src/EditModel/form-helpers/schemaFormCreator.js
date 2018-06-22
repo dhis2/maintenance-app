@@ -17,7 +17,7 @@ const convertValueUsingFieldConverter = (fieldConfigs, onChangeCallback) => (fie
 
 /**
  * Create a formBuilder for a schema
- * @param source$ - An observable source, such as a store 
+ * @param source$ - An observable source, such as a store
  * @param schemaName - Schema to create configs for
  * @param fieldNames - Fields to use
  * @param shouldIncludeAttributes - Whether to include attributes

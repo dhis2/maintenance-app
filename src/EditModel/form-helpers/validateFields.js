@@ -32,8 +32,8 @@ const getErrorMessage = (field) => {
     return errorMessage;
 };
 
-/** 
- * Will first filter out all the fields that are invalid. 
+/**
+ * Will first filter out all the fields that are invalid.
  * This includes fields that are:
  * - Required.
  * - Fields that are dirty.
@@ -50,8 +50,8 @@ const getFirstInvalidField = (fieldConfigs, formRef, formRefStateClone) =>
  * Validate checks all the fields that are required or has a invalid value in the form.
  * The validation will set the fields as invalid in the formbuilder and set
  * the new state of the form.
- * 
- * If any the fields are not valid, it will create a message string 
+ *
+ * If any the fields are not valid, it will create a message string
  * of the first invalid field.
  *
  * @returns {string}
