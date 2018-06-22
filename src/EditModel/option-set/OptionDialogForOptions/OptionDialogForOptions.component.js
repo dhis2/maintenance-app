@@ -5,9 +5,8 @@ import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import { getInstance } from 'd2/lib/d2';
 
 import AddOptionDialog from './AddOptionDialog.component';
-
 import { createFieldConfigForModelTypes, isAttribute } from '../../formHelpers';
-import { optionDialogStore } from '../stores';
+import { optionDialogStore, optionsForOptionSetStore } from '../stores';
 import modelToEditStore from '../../modelToEditStore';
 import {
     typeToFieldMap,
@@ -18,22 +17,24 @@ import {
 
 /*
  * Since this is custom for option sets, the validator is created here rather than in
- * forms/fields. 
+ * forms/fields.
  */
-function createValidatorForUniqueNames(nameFieldConfig, modelToEdit, d2) {
-    const optionNames = Array.from(modelToEdit.options.values())
-        .map(option => option.name);
+async function createValidatorForUniqueNames(nameFieldConfig, d2) {
+    optionsForOptionSetStore.subscribe((state) => {
+        if (!state.isLoading) {
+            const optionNames = state.options.map(option => option.name);
+            const uniqueNameValidator = (name) => {
+                if (optionNames.includes(name)) {
+                    return false;
+                }
+                return true;
+            };
+            uniqueNameValidator.message = d2.i18n.getTranslation('option_name_must_be_unique');
 
-    const uniqueNameValidator = (name) => {
-        if (optionNames.includes(name)) {
-            return false;
+            nameFieldConfig.validators
+                .push(createValidatorFromValidatorFunction(uniqueNameValidator));
         }
-        return true;
-    };
-    uniqueNameValidator.message = d2.i18n.getTranslation('option_name_must_be_unique');
-
-    nameFieldConfig.validators
-        .push(createValidatorFromValidatorFunction(uniqueNameValidator));
+    });
 }
 
 const optionForm$ = Observable
@@ -59,7 +60,7 @@ const optionForm$ = Observable
                         });
                 }
                 if (fieldConfig.name === 'name') {
-                    createValidatorForUniqueNames(fieldConfig, modelToEdit, d2);
+                    createValidatorForUniqueNames(fieldConfig, d2);
                 }
                 // For the code field we replace the fieldConfig with a config that matches the type of the optionSet
                 return fieldConfig;

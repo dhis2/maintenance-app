@@ -23,45 +23,57 @@ class AddOptionDialog extends Component {
         actions.updateModel(this.props.model, field, value);
     }
 
+    onSaveSuccess = () => {
+        this.showSuccessMessage();
+        this.setState({ isSaving: false });
+        this.props.onRequestClose();
+        // After the save was successful we request the options from the server to get the updated list
+        actions.getOptionsFor(this.props.parentModel);
+    }
+
+    onSaveError = ({ message, translate }) => {
+        this.showErrorMessage(message, translate);
+        this.setState({ isSaving: false });
+    }
+
     onSaveOption = () => {
         const invalidFieldMessage = getFirstInvalidFieldMessage(this.props.fieldConfigs, this.formRef);
         if (invalidFieldMessage) {
-            snackActions.show({
-                message: invalidFieldMessage,
-                action: 'ok',
-            });
-            return;
+            this.showFirstValidationErrorMessage(invalidFieldMessage);
+        } else {
+            this.setState({ isSaving: true });
+
+            actions
+                .saveOption(this.props.model, this.props.parentModel)
+                .subscribe(this.onSaveSuccess, this.onSaveError);
         }
-
-        this.setState({ isSaving: true });
-        actions.saveOption(this.props.model, this.props.parentModel)
-            .subscribe(
-                () => {
-                    snackActions.show({
-                        message: 'option_saved',
-                        translate: true,
-                    });
-
-                    this.setState({ isSaving: false });
-
-                    this.props.onRequestClose();
-
-                    // After the save was successful we request the options from the server to get the updated list
-                    actions.getOptionsFor(this.props.parentModel);
-                },
-                ({ message, translate }) => {
-                    snackActions.show({
-                        message,
-                        action: 'ok',
-                        translate,
-                    });
-
-                    this.setState({ isSaving: false });
-                },
-            );
     }
 
-    setFormRef = form => this.formRef = form;
+    setFormRef = (form) => {
+        this.formRef = form;
+    }
+
+    showFirstValidationErrorMessage = (invalidFieldMessage) => {
+        snackActions.show({
+            message: invalidFieldMessage,
+            action: 'ok',
+        });
+    }
+
+    showSuccessMessage = () => {
+        snackActions.show({
+            message: 'option_saved',
+            translate: true,
+        });
+    }
+
+    showErrorMessage = (message, translate) => {
+        snackActions.show({
+            message,
+            action: 'ok',
+            translate,
+        });
+    }
 
     translate = message => this.context.d2.i18n.getTranslation(message);
 
