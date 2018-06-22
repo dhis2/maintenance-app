@@ -65,10 +65,10 @@ function setRequiredFieldsLabelText(fieldConfig, d2) {
     );
 }
 
-/* 
- * If the modelType are grouped in field-groups.js, the step number and group/step name 
+/*
+ * If the modelType are grouped in field-groups.js, the step number and group/step name
  * will be added to the fieldConfig. This string can later be used for the validating
- * step in EditModelForm.isRequiredFieldsValid to tell the user which step to find the 
+ * step in EditModelForm.isRequiredFieldsValid to tell the user which step to find the
  * non-valid required field.
  */
 function setRequiredFieldsStepName(fieldConfig, modelType, d2) {
@@ -81,7 +81,7 @@ function setRequiredFieldsStepName(fieldConfig, modelType, d2) {
 }
 
 /*
- * For the fields that needs *custom* components (not normal componets from form-fields) 
+ * For the fields that needs *custom* components (not normal componets from form-fields)
  * these need to be added to the fieldConfig.
  */
 function addFieldOverrides(customFieldOrderName, modelType, formFieldsManager) {

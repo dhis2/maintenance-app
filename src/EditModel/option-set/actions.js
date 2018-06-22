@@ -5,9 +5,9 @@ import { getInstance } from 'd2/lib/d2';
 import { has } from 'lodash/fp';
 
 import snackActions from '../../Snackbar/snack.actions';
-import { isAttribute } from '../formHelpers';
 import modelToEditStore from '../modelToEditStore';
 import { optionDialogStore, optionsForOptionSetStore } from './stores';
+import { isAttribute } from '../form-helpers/fieldChecks';
 
 const actions = Action.createActionsFromNames([
     'saveOption',
