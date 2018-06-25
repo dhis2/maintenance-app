@@ -78,6 +78,12 @@ const optionFormData$ = Observable.combineLatest(
     }))
     .flatMap(async ({ fieldConfigs, model, isAdd, ...other }) => {
         const d2 = await getInstance();
+
+        // Add modelId to fieldConfig so it can be accessed in the validator
+        fieldConfigs.forEach((fieldConfig) => {
+            fieldConfig.modelId = model.id;
+        });
+
         return Promise.resolve({
             fieldConfigs,
             model,
