@@ -175,6 +175,14 @@ const ProgramStageDataElement = pure(
                         : null}
                 </TableRowColumn>
                 <TableRowColumn>
+                        <Checkbox
+                            checked={isCheckedForProp('skipSynchronization')}
+                            onClick={onChangeFlipBooleanForProperty(
+                                'skipSynchronization',
+                            )}
+                        />
+                </TableRowColumn>
+                <TableRowColumn>
                     <RenderTypeSelectField
                         device={MOBILE}
                         target={programStageDataElement}
@@ -288,11 +296,15 @@ function AssignDataElements(props, { d2 }) {
                             {d2.i18n.getTranslation('date_in_future')}
                         </TableHeaderColumn>
                         <TableHeaderColumn>
+                            {d2.i18n.getTranslation('skip_synchronization')}
+                        </TableHeaderColumn>
+                        <TableHeaderColumn>
                             {d2.i18n.getTranslation('render_type_mobile')}
                         </TableHeaderColumn>
                         <TableHeaderColumn>
                             {d2.i18n.getTranslation('render_type_desktop')}
                         </TableHeaderColumn>
+                        
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
