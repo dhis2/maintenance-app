@@ -56,6 +56,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
     if (programId === 'add') {
         const programUid = generateUid();
         const programStageUid = generateUid();
+        const publicAccess = "rw------";
 
         // A api format payload that contains a program and a programStage
         const programStages =
@@ -63,6 +64,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 ? []
                 : [{
                     id: programStageUid,
+                    publicAccess,
                     programStageDataElements: [],
                     notificationTemplates: [],
                     programStageSections: [],
@@ -71,6 +73,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             programs: [
                 {
                     id: programUid,
+                    publicAccess,
                     programStages,
                     programTrackedEntityAttributes: [],
                     organisationUnits: [],
@@ -135,6 +138,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 return state;
             });
     }
+
     const programFields = [
         ':owner,displayName',
         'attributeValues[:all,attribute[id,name,displayName]]',

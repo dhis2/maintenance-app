@@ -24,7 +24,7 @@ const ProgramStagesAccessHOC = branch(
     renderComponent(ProgramNotSavedMessage)
 )(ProgramStagesAccess);
 
-export default function ProgramAccess({ modelToEdit }, { d2 }) {
+const ProgramAccess = ({ modelToEdit }, { d2 }) => {
     if (!modelToEdit) {
         return null;
     }
@@ -48,3 +48,5 @@ export default function ProgramAccess({ modelToEdit }, { d2 }) {
 ProgramAccess.contextTypes = {
     d2: PropTypes.object,
 };
+
+export default ProgramAccess;

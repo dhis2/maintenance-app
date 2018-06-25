@@ -136,7 +136,7 @@ class ProgramStagesAccess extends React.Component {
             },
             object: {
                 user: model.user,
-                displayName: model.displayName,
+                displayName: model.displayName || model.name,
                 userAccesses: model.userAccesses,
                 userGroupAccesses: model.userGroupAccesses,
                 publicAccess: model.publicAccess,
@@ -222,7 +222,7 @@ class ProgramStagesAccess extends React.Component {
                 return {
                     ...this.state.programSharing,
                     id: stage.id,
-                    displayName: stage.displayName,
+                    displayName: stage.displayName || stage.name,
                 };
             } else return stage;
         };
@@ -268,7 +268,7 @@ class ProgramStagesAccess extends React.Component {
                     onClick={() => this.openSharingDialog(stage, 'programStage')}
                     leftAvatar={leftAvatar}
                     key={stage.id}
-                    primaryText={stage.displayName}
+                    primaryText={stage.displayName || stage.name}
                     secondaryText={generateSharingDescription(stage)}
                 />
             );
@@ -293,7 +293,7 @@ class ProgramStagesAccess extends React.Component {
                     onClick={() =>
                         this.openSharingDialog(this.props.model, 'program')
                     }
-                    primaryText={extractDisplayName(this.props.model)}
+                    primaryText={this.props.model.displayName || this.props.model.name}
                     secondaryText={generateSharingDescription(this.state.programSharing)}
                     rightIconButton={
                         <FlatButton
