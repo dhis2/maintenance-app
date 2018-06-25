@@ -53,7 +53,7 @@ async function setupFieldConfigs([fieldConfigs, modelToEdit, optionDialogState])
         if (isFieldCode(fieldConfig) && valueTypeExist(modelToEdit)) {
             handleFieldConfigForCode(fieldConfig, modelToEdit, d2, isAdd);
         }
-        addValidatorForUniqueField(fieldConfig, d2);
+        addValidatorForUniqueField(fieldConfig, model.id, d2);
         addAttributeStatusToFieldConfig(fieldConfig, model);
         return fieldConfig;
     });
@@ -78,11 +78,6 @@ const optionFormData$ = Observable.combineLatest(
     }))
     .flatMap(async ({ fieldConfigs, model, isAdd, ...other }) => {
         const d2 = await getInstance();
-
-        // Add modelId to fieldConfig so it can be accessed in the validator
-        fieldConfigs.forEach((fieldConfig) => {
-            fieldConfig.modelId = model.id;
-        });
 
         return Promise.resolve({
             fieldConfigs,

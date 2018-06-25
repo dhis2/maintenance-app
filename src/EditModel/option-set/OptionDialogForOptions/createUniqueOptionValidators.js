@@ -2,10 +2,10 @@ import { optionsForOptionSetStore } from '../stores';
 import { createValidatorFromValidatorFunction } from '../../../forms/fields';
 import { isFieldCode, isFieldName } from '../../form-helpers/fieldChecks';
 
-const createUniqueValueValidator = (fieldName, fieldConfig, allOptions) => fieldValue =>
+const createUniqueValueValidator = (fieldName, modelId, allOptions) => fieldValue =>
     !allOptions.find(option =>
         // Only allow value to be identical to the value of the model that is being edited
-        option[fieldName] === fieldValue && option.id !== fieldConfig.modelId,
+        option[fieldName] === fieldValue && option.id !== modelId,
     );
 
 /*
@@ -13,16 +13,16 @@ const createUniqueValueValidator = (fieldName, fieldConfig, allOptions) => field
  * the validator for unique fields is created here rather than in
  * forms/fields.
  */
-const getValidatorForField = (state, fieldName, fieldConfig, d2) => {
-    const uniqueValueValidator = createUniqueValueValidator(fieldName, fieldConfig, state.options);
+const getValidatorForField = (state, fieldName, modelId, d2) => {
+    const uniqueValueValidator = createUniqueValueValidator(fieldName, modelId, state.options);
     uniqueValueValidator.message = d2.i18n.getTranslation(`option_${fieldName}_must_be_unique`);
     return uniqueValueValidator;
 };
 
-async function addUniqueValidator(fieldConfig, d2, fieldName) {
+async function addUniqueValidator(fieldConfig, modelId, d2, fieldName) {
     optionsForOptionSetStore.subscribe((state) => {
         if (!state.isLoading) {
-            const uniqueValueValidator = getValidatorForField(state, fieldName, fieldConfig, d2);
+            const uniqueValueValidator = getValidatorForField(state, fieldName, modelId, d2);
 
             fieldConfig.validators
                 .push(createValidatorFromValidatorFunction(uniqueValueValidator));
@@ -31,8 +31,9 @@ async function addUniqueValidator(fieldConfig, d2, fieldName) {
 }
 
 /* Add fields that should be unique within an option here */
-export default function addValidatorForUniqueField(fieldConfig, d2) {
+export default function addValidatorForUniqueField(fieldConfig, modelId, d2) {
+    console.log(modelId)
     if (isFieldCode(fieldConfig) || isFieldName(fieldConfig)) {
-        addUniqueValidator(fieldConfig, d2, fieldConfig.name);
+        addUniqueValidator(fieldConfig, modelId, d2, fieldConfig.name);
     }
 }
