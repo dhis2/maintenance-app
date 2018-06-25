@@ -11,14 +11,6 @@ import {
 
 import {
     PROGRAM_STAGE_FIELD_EDIT,
-    PROGRAM_STAGE_EDIT_RESET,
-    PROGRAM_STAGE_EDIT_CANCEL,
-    PROGRAM_STAGE_EDIT_SAVE,
-    PROGRAM_STAGE_DELETE,
-    editProgramStageReset,
-    PROGRAM_STAGE_ADD,
-    PROGRAM_STAGE_EDIT,
-    editProgramStage,
 } from './tracker-program/program-stages/actions';
 
 import eventProgramStore, {
@@ -32,15 +24,9 @@ import { combineEpics } from 'redux-observable';
 import {
     get,
     getOr,
-    set,
     first,
     map,
     compose,
-    groupBy,
-    isEqual,
-    keyBy,
-    find,
-    memoize,
     values,
     flatten,
 } from 'lodash/fp';
@@ -70,6 +56,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
     if (programId === 'add') {
         const programUid = generateUid();
         const programStageUid = generateUid();
+        const publicAccess = "rw------";
 
         // A api format payload that contains a program and a programStage
         const programStages =
@@ -77,6 +64,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 ? []
                 : [{
                     id: programStageUid,
+                    publicAccess,
                     programStageDataElements: [],
                     notificationTemplates: [],
                     programStageSections: [],
@@ -85,6 +73,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             programs: [
                 {
                     id: programUid,
+                    publicAccess,
                     programStages,
                     programTrackedEntityAttributes: [],
                     organisationUnits: [],
@@ -149,6 +138,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 return state;
             });
     }
+
     const programFields = [
         ':owner,displayName',
         'attributeValues[:all,attribute[id,name,displayName]]',
@@ -156,6 +146,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         'dataEntryForm[:owner]',
         'notificationTemplates[:owner]',
         'programTrackedEntityAttributes',
+        'user[id,name]',
     ].join(',');
 
     return api$
@@ -166,7 +157,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                         'metadata',
                         '?fields=:owner,displayName',
                         `&programs:filter=id:eq:${programId}`,
-                        `&programs:fields=${programFields},programStages[:owner,displayName,programStageDataElements[:owner,renderType,dataElement[id,displayName,valueType,optionSet]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
+                        `&programs:fields=${programFields},programStages[:owner,user[id,name],displayName,programStageDataElements[:owner,renderType,dataElement[id,displayName,valueType,optionSet]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
                         '&dataElements:fields=id,displayName,valueType,optionSet',
                         '&dataElements:filter=domainType:eq:TRACKER',
                         '&trackedEntityAttributes:fields=id,displayName,valueType,optionSet,unique',
@@ -329,6 +320,10 @@ export const programStageModelEdit = createModelToEditProgramStageEpic(
 );
 
 const setEventPSStage = (state) => {
+    if (state.program.programType === "WITH_REGISTRATION") {
+        return state;
+    }
+
     const ps = first(state.programStages);
     ps.name = state.program.name || state.program.id;
     return {

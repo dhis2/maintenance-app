@@ -63,6 +63,7 @@ export const newTrackerProgramStage = action$ =>
             const programStageUid = generateUid();
             const programStageModel = d2.models.programStages.create({
                 id: programStageUid,
+                publicAccess: "rw------",
                 programStageDataElements: [],
                 notificationTemplates: [],
                 programStageSections: [],
