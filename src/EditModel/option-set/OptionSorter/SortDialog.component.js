@@ -1,16 +1,20 @@
-import React, { Component, PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
-import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
-import modelToEditStore from '../../modelToEditStore';
-import Dialog from 'material-ui/Dialog/Dialog';
-import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
-import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
-import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
-import Heading from 'd2-ui/lib/headings/Heading.component';
-import OptionValue from './OptionValue.component';
-import { sortDialogStore, optionsForOptionSetStore } from '../stores';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Observable } from 'rxjs';
+import { findDOMNode } from 'react-dom';
+import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
+import HTML5Backend from 'react-dnd-html5-backend';
+
+import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
+import Dialog from 'material-ui/Dialog/Dialog';
+import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import Heading from 'd2-ui/lib/headings/Heading.component';
+
+import OptionValue from './OptionValue.component';
+
+import modelToEditStore from '../../modelToEditStore';
+import { sortDialogStore, optionsForOptionSetStore } from '../stores';
 import snackActions from '../../../Snackbar/snack.actions';
 
 export function setSortDialogOpenTo(status) {
@@ -266,6 +270,7 @@ class SortDialog extends Component {
         setSortDialogOpenTo(false);
     }
 }
+
 SortDialog.contextTypes = {
     d2: PropTypes.object,
 };

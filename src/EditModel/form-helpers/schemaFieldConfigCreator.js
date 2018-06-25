@@ -4,6 +4,7 @@ import { identity } from 'lodash/fp';
 
 import { createFieldConfigForModelTypes } from './modelFieldConfigCreator';
 import { applyRulesToFieldConfigs, getRulesForModelType } from '../form-rules';
+import { isAttribute } from './fieldChecks';
 
 const transformValuesUsingConverters = (fieldConfig) => {
     if (fieldConfig.beforePassToFieldConverter) {
@@ -20,10 +21,6 @@ const addModelToFieldConfigProps = model => fieldConfig => ({
     ...fieldConfig,
     props: { ...fieldConfig.props, model },
 });
-
-export function isAttribute(model, fieldConfig) {
-    return model.attributes && new Set(Object.keys(model.attributes)).has(fieldConfig.name);
-}
 
 export function addValuesToFieldConfigs(fieldConfigs, model) {
     return fieldConfigs
