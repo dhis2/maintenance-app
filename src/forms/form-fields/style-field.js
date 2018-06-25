@@ -5,9 +5,30 @@ import Button from 'd2-ui/lib/button/Button';
 import LoadableComponent from '../../utils/LoadableComponent';
 import FieldWrapper from './helpers/FieldWrapper';
 
-const LoadablePicker = LoadableComponent({
-    loader: () => import('react-color/lib/components/twitter/Twitter'),
+const LoadableSwatchesPicker = LoadableComponent({
+    loader: () => import('react-color/lib/components/swatches/Swatches'),
 });
+
+const LoadableChromePicker = LoadableComponent({
+    loader: () => import('react-color/lib/components/chrome/Chrome'),
+});
+
+const colors = [
+    [ '#ffcdd2', '#e57373', '#d32f2f', '#f06292', '#c2185b', '#880e4f', '#f50057' ], 
+    [ '#e1bee7', '#ba68c8', '#8e24aa', '#aa00ff', '#7e57c2', '#4527a0', '#7c4dff', '#6200ea' ],
+    [ '#c5cae9', '#7986cb', '#3949ab', '#304ffe' ],
+    [ '#e3f2fd', '#64b5f6', '#1976d2', '#0288d1' ],
+    [ '#40c4ff', '#00b0ff', '#80deea' ],
+    [ '#00acc1', '#00838f', '#006064' ], 
+    [ '#e0f2f1', '#80cbc4', '#00695c', '#64ffda' ],
+    [ '#c8e6c9', '#66bb6a', '#2e7d32', '#1b5e20' ],
+    [ '#00e676', '#aed581', '#689f38', '#33691e' ],
+    [ '#76ff03', '#64dd17', '#cddc39', '#9e9d24', '#827717' ],
+    [ '#fff9c4', '#fbc02d', '#f57f17', '#ffff00', '#ffcc80', '#ffccbc', '#ffab91' ],
+    [ '#bcaaa4', '#8d6e63', '#4e342e' ],
+    [ '#fafafa', '#bdbdbd', '#757575', '#424242' ],
+    [ '#cfd8dc', '#b0bec5', '#607d8b', '#37474f' ]
+];
 
 const styles = {
     wrapper: {
@@ -67,7 +88,7 @@ export default class StyleFields extends Component {
             icon: '',
         };
 
-        const orgStyle = props.model.style;
+        const orgStyle = props.value;
 
         this.state = {
             style: {
@@ -117,7 +138,8 @@ export default class StyleFields extends Component {
     renderColorPicker = () => {
         const { color } = this.state.style;
         const isDark = isColorDark(color);
-
+        const isColorPickerForOption = this.props.modelDefinition.name === 'option';
+        const LoadablePicker = isColorPickerForOption ? LoadableChromePicker : LoadableSwatchesPicker;
         const mergedStyles = {
             ...styles,
             buttonColor: {
@@ -126,6 +148,14 @@ export default class StyleFields extends Component {
                 color: isDark ? '#fff' : '#000',
             },
         };
+        const pickerProps = {
+            color: this.state.style.color,
+            onChangeComplete: this.handleColorChange,
+        };
+
+        if (!isColorPickerForOption) {
+            pickerProps.colors = colors;
+        }
 
         return (
             <div style={mergedStyles.wrapper}>
@@ -143,10 +173,7 @@ export default class StyleFields extends Component {
                             onClick={this.handleCloseColor}
                         />
                         <div style={mergedStyles.picker}>
-                            <LoadablePicker
-                                color={this.state.style.color}
-                                onChangeComplete={this.handleColorChange}
-                            />
+                            <LoadablePicker {...pickerProps} />
                         </div>
                     </div>
                 )}
