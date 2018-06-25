@@ -32,7 +32,6 @@ async function addUniqueValidator(fieldConfig, modelId, d2, fieldName) {
 
 /* Add fields that should be unique within an option here */
 export default function addValidatorForUniqueField(fieldConfig, modelId, d2) {
-    console.log(modelId)
     if (isFieldCode(fieldConfig) || isFieldName(fieldConfig)) {
         addUniqueValidator(fieldConfig, modelId, d2, fieldConfig.name);
     }
