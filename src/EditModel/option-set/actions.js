@@ -101,6 +101,15 @@ actions.saveOption
     .subscribe(({ data: [model, parentModel], complete, error }) => {
         const isAdd = !model.id;
 
+        // Options must have a sortOrder and an optionSet, otherwise saving might not happen correctly
+        // For example, prior to adding this, the `optionSet` would be not be saved correctly if a `style` was also in the payload.
+        if (isAdd) {
+            model.sortOrder = (parentModel && parentModel.options.size + 1) || 1;
+            model.optionSet = {
+                id: parentModel.id,
+            };
+        }
+
         model.save()
             .then(() => {
                 if (isAdd) {
