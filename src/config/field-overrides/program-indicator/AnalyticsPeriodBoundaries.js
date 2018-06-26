@@ -138,7 +138,7 @@ function AnalyticsPeriodBoundary(props) {
     );
 }
 
-function updateSubField(element, model, onChange, idx, e, fieldName, fieldVal) {
+function updateSubField(element, model, onChange, idx, e, fieldName) {
     const changeToVal = e.target.value;
 
     const list = model.analyticsPeriodBoundaries;
