@@ -14,7 +14,7 @@ export default async function searchForOrganisationUnitsWithinHierarchy(searchVa
 
     const organisationUnitsThatMatchQuery = await d2.models.organisationUnits
         .list({
-            fields: 'id,displayName,path,children::isNotEmpty',
+            fields: 'id,parent[id,displayName,path,children],displayName,path,children::isNotEmpty',
             query: searchValue,
             withinUserHierarchy: true,
             pageSize: limit,
