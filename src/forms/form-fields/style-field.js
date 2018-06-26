@@ -2,7 +2,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FieldWrapper from './helpers/FieldWrapper';
+import IconPickerDialog from './helpers/IconPickerDialog';
 import ColorPicker from './helpers/ColorPicker';
+
+const modelsWithColor = new Set(['option']);
+const modelsWithIcons = new Set(['option']);
 
 export default class StyleFields extends Component {
     constructor(props, context) {
@@ -40,14 +44,32 @@ export default class StyleFields extends Component {
     };
 
     render() {
+        const { name: modelName } = this.props.modelDefinition;
+        const showColorPicker = modelsWithColor.has(modelName);
+        const showIconPicker = modelsWithIcons.has(modelName);
         return (
-            <FieldWrapper label="Color">
-                <ColorPicker
-                    updateStyleState={this.updateStyleState}
-                    color={this.state.style.color}
-                    modelDefinition={this.props.modelDefinition}
-                />
-            </FieldWrapper>
+            <div>
+                { showColorPicker &&
+                    <FieldWrapper
+                        key="colorpicker"
+                        label="Color"
+                    >
+                        <ColorPicker
+                            updateStyleState={this.updateStyleState}
+                            color={this.state.style.color}
+                            modelName={modelName}
+                        />
+                    </FieldWrapper>
+                }
+                { showIconPicker &&
+                    <FieldWrapper
+                        key="iconpicker"
+                        label="Icon"
+                    >
+                        <IconPickerDialog />
+                    </FieldWrapper>
+                }
+            </div>
         );
     }
 }

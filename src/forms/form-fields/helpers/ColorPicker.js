@@ -92,7 +92,7 @@ export default class ColorPicker extends Component {
     getColorPickerProps = () => {
         const { color } = this.props;
         const isDark = isColorDark(color);
-        const canChooseAnyColor = this.props.modelDefinition.name === 'option';
+        const canChooseAnyColor = this.props.modelName === 'option';
         const LoadablePicker = canChooseAnyColor ? LoadableChromePicker : LoadableSwatchesPicker;
         const mergedStyles = {
             ...styles,
@@ -159,7 +159,7 @@ export default class ColorPicker extends Component {
 ColorPicker.propTypes = {
     color: PropTypes.string.isRequired,
     updateStyleState: PropTypes.func.isRequired,
-    modelDefinition: PropTypes.object.isRequired,
+    modelName: PropTypes.string.isRequired,
 };
 
 ColorPicker.contextTypes = {
