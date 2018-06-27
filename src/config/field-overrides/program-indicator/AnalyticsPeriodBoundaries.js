@@ -37,6 +37,9 @@ const boundaryTargets = [
     }
 ];
 
+// boundary type definitions mapped to java enum
+// dhis2-core/dhis-2/dhis-api/src/main/java/org/hisp/dhis/program/AnalyticsPeriodBoundaryType.java#L37-L40
+// as they are not exposed over the API
 const boundaryTypes = [
     {
         text: 'report_period_before_start',
@@ -60,8 +63,7 @@ function AnalyticsPeriodBoundary(props) {
     const getTranslation = props.d2.i18n.getTranslation.bind(props.d2.i18n);
 
     const filteredBoundaryTargets = boundaryTargets
-        .filter(e => e.value !== CUSTOM)
-        .filter(e => e.value === props.boundaryTarget)
+        .filter(e => e.value !== CUSTOM && e.value === props.boundaryTarget)
         .length
 
     const renderCustom = () => props.boundaryTarget !== null && filteredBoundaryTargets === 0;
