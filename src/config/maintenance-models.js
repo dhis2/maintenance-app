@@ -77,6 +77,7 @@ export function getSideBarConfig() {
                 'optionSet',
                 'legendSet',
                 'predictor',
+                'predictorGroup',
                 'pushAnalysis',
                 'externalMapLayer',
                 'dataApprovalLevel',
@@ -188,6 +189,9 @@ const typeDetails = {
     },
     predictor: {
         columns: ['displayName', 'output[displayName]', 'periodType', 'lastUpdated'],
+    },
+    predictorGroup: {
+        columns: ['displayName', 'code', 'lastUpdated'],
     },
     pushAnalysis: {
         columns: ['displayName', 'dashboard[displayName]', 'lastUpdated'],
