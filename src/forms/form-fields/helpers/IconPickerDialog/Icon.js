@@ -1,36 +1,39 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-const styles = {
-    icon: {
-        border: '3px solid transparent',
-        width: 40,
-        height: 40,
-        cursor: 'pointer',
-        margin: 4,
-    },
-    iconSelected: {
-        border: '3px solid #64acf5',
-    },
-};
-
 export default class Icon extends Component {
+    constructor(props) {
+        super(props);
+        this.img = null;
+
+        this.setImgRef = (element) => {
+            this.img = element;
+        };
+    }
+
+    componentDidMount() {
+        this.img.onload = () => {
+            this.img.removeAttribute('data-loading');
+        };
+    }
+
     handleClick = () => {
         this.props.handleClick(this.props.icon.key);
     }
 
     render() {
         const { icon: { href, key, description }, selectedIconKey } = this.props;
+        const classSuffix = key === selectedIconKey ? ' icon-picker__icon--selected' : '';
+        const title = description || key.replace(/_/g, ' ');
         /* eslint-disable */
         return (
             <img
+                ref={this.setImgRef}
                 src={href}
-                alt={description || key}
-                style={
-                    key === selectedIconKey ?
-                        { ...styles.icon, ...styles.iconSelected } :
-                        styles.icon
-                }
+                alt={title}
+                title={title}
+                data-loading
+                className={`icon-picker__icon${classSuffix}`}
                 onClick={this.handleClick}
             />
         );

@@ -2,8 +2,6 @@
     &__content {
         width: 80vw !important;
         max-width: 1200px !important;
-        height: 80vh !important;
-        max-height: 1200px !important;
     }
     
     &__title {
@@ -18,6 +16,16 @@
     
     &__actions {
         border-top: 1px solid #bdbdbd !important;
+        text-align: left !important;
+        padding: 1rem 24px 24px 24px !important;
+
+        > div {
+            width: 10rem !important;
+
+            &:first-child {
+                margin-right: 1rem;
+            }
+        }
     }
     
     &__icon-button-image {
@@ -39,26 +47,43 @@
     }
 
     &__scroll-box {
-        height: 80vh;
+        // This takes into account the primary and secundary header, 
+        // footer and space above and below the dialog
+        height: calc(100vh - 320px);
         max-height: 1200px;
         overflow-y: auto;
+        overflow-x: hidden;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    &__list-loader {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     &__icon-list {
-        height: 100%;
-        overflow-y: visible;
         display: flex;
         flex-flow: wrap;
-        max-width: 100%;
-        margin-top: 0;
+    }
 
-        &--loading {
-            display: block;
-            text-align: center;
+    &__icon {
+        opacity: 1;
+        transition: opacity 0.3s ease-in;
+        border: 3px solid transparent;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+        margin: 4px;
 
-            div {
+        &[data-loading] {
+            opacity: 0;
+        }
 
-            }
+        &--selected {
+            border: 3px solid #64acf5;
         }
     }
 }
