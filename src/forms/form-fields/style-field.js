@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FieldWrapper from './helpers/FieldWrapper';
-import IconPickerDialog from './helpers/IconPickerDialog';
+import IconPickerDialog from './helpers/IconPickerDialog/IconPickerDialog';
 import ColorPicker from './helpers/ColorPicker';
 
 const modelsWithColor = new Set(['option']);
@@ -50,10 +50,7 @@ export default class StyleFields extends Component {
         return (
             <div>
                 { showColorPicker &&
-                    <FieldWrapper
-                        key="colorpicker"
-                        label="Color"
-                    >
+                    <FieldWrapper label="Color">
                         <ColorPicker
                             updateStyleState={this.updateStyleState}
                             color={this.state.style.color}
@@ -62,11 +59,12 @@ export default class StyleFields extends Component {
                     </FieldWrapper>
                 }
                 { showIconPicker &&
-                    <FieldWrapper
-                        key="iconpicker"
-                        label="Icon"
-                    >
-                        <IconPickerDialog />
+                    <FieldWrapper label="Icon">
+                        <IconPickerDialog
+                            updateStyleState={this.updateStyleState}
+                            iconKey={'provider_fst_positive'}
+                            modelName={modelName}
+                        />
                     </FieldWrapper>
                 }
             </div>
