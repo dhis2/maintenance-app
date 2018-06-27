@@ -77,6 +77,7 @@ export function getSideBarConfig() {
                 'optionSet',
                 'legendSet',
                 'predictor',
+                'predictorGroup',
                 'pushAnalysis',
                 'externalMapLayer',
                 'dataApprovalLevel',

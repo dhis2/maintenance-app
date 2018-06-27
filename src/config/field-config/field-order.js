@@ -392,6 +392,12 @@ const fieldOrderByName = new Map([
         'annualSampleCount',
         'sequentialSkipCount',
     ]],
+    ['predictorGroup', [
+        'name',
+        'code',
+        'description',
+        'predictors',
+    ]],
     ['pushAnalysis', [
         'name',
         'code',
