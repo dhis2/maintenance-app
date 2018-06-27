@@ -15,6 +15,7 @@ import {
     INCIDENT_DATE,
     EVENT_DATE,
     ENROLLMENT_DATE,
+    CUSTOM,
 } from './enums';
 
 const boundaryTargets = [
@@ -30,8 +31,15 @@ const boundaryTargets = [
         text: 'boundary_target_enrollment_date',
         value: ENROLLMENT_DATE,
     },
+    {
+        text: 'boundary_target_custom',
+        value: CUSTOM,
+    }
 ];
 
+// boundary type definitions mapped to java enum
+// dhis2-core/dhis-2/dhis-api/src/main/java/org/hisp/dhis/program/AnalyticsPeriodBoundaryType.java#L37-L40
+// as they are not exposed over the API
 const boundaryTypes = [
     {
         text: 'report_period_before_start',
@@ -51,29 +59,51 @@ const boundaryTypes = [
     },
 ];
 
-// boundary type definitions mapped to java enum
-// dhis2-core/dhis-2/dhis-api/src/main/java/org/hisp/dhis/program/AnalyticsPeriodBoundaryType.java#L37-L40
-// as they are not exposed over the API
 function AnalyticsPeriodBoundary(props) {
     const getTranslation = props.d2.i18n.getTranslation.bind(props.d2.i18n);
+
+    const filteredBoundaryTargets = boundaryTargets
+        .filter(e => e.value !== CUSTOM && e.value === props.boundaryTarget)
+        .length
+
+    const renderCustom = () => props.boundaryTarget !== null && filteredBoundaryTargets === 0;
+
     return (
         <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            justifyContent: '',
-            alignItems: 'top' }}
+            justifyContent: 'flex-start',
+            alignItems: 'top',
+            marginBottom: '16px',
+            paddingLeft: '8px',
+            paddingRight: '8px',
+            borderStyle: 'none none none solid',
+            borderWidth: '1px',
+            borderColor: 'rgb(189, 189, 189)',
+        }}
         >
-            <div style={{ flex: '0 1 240px', marginRight: '14px' }}>
+            <div style={{ flex: '0 1 200px', marginRight: '14px' }}>
                 <DropDown
                     labelText={getTranslation('analytics_boundary_target')}
                     translateOptions
                     options={boundaryTargets}
                     onChange={e => props.onChange(e, 'boundaryTarget')}
-                    value={props.boundaryTarget}
+                    value={renderCustom() ? CUSTOM : props.boundaryTarget}
                 />
             </div>
 
-            <div style={{ flex: '0 1 300px', marginRight: '14px' }}>
+            {renderCustom() &&
+            <div style={{ flex: '0 1 200px', marginRight: '14px' }}>
+                <TextField
+                    value={props.boundaryTarget === CUSTOM ? '' : props.boundaryTarget}
+                    name={props.id + '_custom'}
+                    labelText={getTranslation('boundary_target_custom_text')}
+                    onChange={e => props.onChange(e, 'boundaryTarget')}
+                />
+            </div>
+            }
+
+            <div style={{ flex: '0 1 200px', marginRight: '14px' }}>
                 <DropDown
                     labelText={getTranslation('analytics_period_boundary_type')}
                     translateOptions
@@ -92,7 +122,7 @@ function AnalyticsPeriodBoundary(props) {
                 />
             </div>
 
-            <div style={{ flex: '0 1 256px', marginRight: '14px' }}>
+            <div style={{ flex: '0 1 200px', marginRight: '14px' }}>
                 <PeriodTypeDropDown
                     labelText={getTranslation('period_offset')}
                     onChange={e => props.onChange(e, 'offsetPeriodType')}
@@ -103,7 +133,7 @@ function AnalyticsPeriodBoundary(props) {
             <div style={{ flex: '0 1 auto', marginRight: '14px', paddingTop: '21px' }}>
                 <RaisedButton
                     label={getTranslation('remove_singular')}
-                    onClick={e => props.onClick(e)} 
+                    onClick={e => props.onClick(e)}
                 />
             </div>
         </div>

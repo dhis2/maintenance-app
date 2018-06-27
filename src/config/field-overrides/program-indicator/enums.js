@@ -8,6 +8,9 @@
  * The enums can be found in `dhis2-core`:
  * - AnalyticsPeriodBoundary.java
  * - AnalyticsPeriodBoundaryType.java
+ *
+ * In addition to this, now users can use custom free-text boundary
+ * targets.
  */
 
 export const BEFORE_START_OF_REPORTING_PERIOD = 'BEFORE_START_OF_REPORTING_PERIOD';
@@ -17,3 +20,4 @@ export const AFTER_END_OF_REPORTING_PERIOD = 'AFTER_END_OF_REPORTING_PERIOD';
 export const INCIDENT_DATE = 'INCIDENT_DATE';
 export const EVENT_DATE = 'EVENT_DATE';
 export const ENROLLMENT_DATE = 'ENROLLMENT_DATE';
+export const CUSTOM= 'CUSTOM';
