@@ -69,13 +69,16 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
     }
 
     const d2 = await getInstance();
-    const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits({ paging: false });
+    const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits({
+        fields: ':all,access,displayName,path,children[id,displayName,path,children::isNotEmpty,access]',
+        paging: false
+    });
 
     if (d2.currentUser.authorities.has('ALL') && !organisationUnitsCollection.size) {
         const rootLevelOrgUnits = await d2.models.organisationUnits.list({
             level: 1,
             paging: false,
-            fields: 'id,displayName,path,publicAccess,lastUpdated,children[id,displayName,path,children::isNotEmpty]',
+            fields: 'id,displayName,path,publicAccess,access,lastUpdated,children[id,displayName,publicAccess,access,path,children::isNotEmpty]',
         });
 
         getCurrentUserOrganisationUnits.currentUserOrganisationUnits = rootLevelOrgUnits;
