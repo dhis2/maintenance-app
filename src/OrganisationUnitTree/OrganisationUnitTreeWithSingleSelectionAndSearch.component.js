@@ -33,6 +33,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                             id: treeRoot.parent.id,
                             path: treeRoot.parent.path,
                             displayName: treeRoot.parent.displayName,
+                            access: treeRoot.parent.access,
                             children: [root]
                         });
                     }
