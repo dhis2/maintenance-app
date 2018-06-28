@@ -30,9 +30,7 @@ export default class IconPickerDialog extends Component {
     }
 
     fetchIconLibrary = () => {
-        const contextPath = this.context.d2.system.systemInfo.contextPath;
-        // TODO: This should be changed to this.context.d2.Api.getApi().get('/icons')
-        this.context.d2.Api.getApi().request('GET', `${contextPath}/api/icons`)
+        this.context.d2.Api.getApi().get('/icons')
             .then((icons) => {
                 const sortedIcons = sortBy('key', icons).map((icon) => {
                     // The '_positive', '_negative' and '_outline' suffixes are stripped for the searchKeys
@@ -96,11 +94,7 @@ export default class IconPickerDialog extends Component {
         const altText = this.context.d2.i18n.getTranslation('current_icon');
         return (
             <img
-                /*
-                    TODO: This path will change and become the following:
-                    `${contextPath}/api/icons/${iconKey}/icon.svg`
-                */
-                src={`${contextPath}/SVGs/${iconKey}.svg`}
+                src={`${contextPath}/api/icons/${iconKey}/icon.svg`}
                 alt={altText}
                 className="icon-picker__icon-button-image"
             />
