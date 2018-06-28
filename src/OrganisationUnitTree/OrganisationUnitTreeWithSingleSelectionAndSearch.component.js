@@ -27,20 +27,10 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
             {Array.isArray(props.roots) && props.roots.length > 0 ? props.roots
                 .map(root =>
                 {
-                    let treeRoot = root;
-                    if (treeRoot.parent) {
-                        treeRoot = context.d2.models.organisationUnits.create({
-                            id: treeRoot.parent.id,
-                            path: treeRoot.parent.path,
-                            displayName: treeRoot.parent.displayName,
-                            access: treeRoot.parent.access,
-                            children: [root]
-                        });
-                    }
                     return (
                         <OrganisationUnitTree
                             key={root.id}
-                            root={treeRoot}
+                            root={root}
                             selected={props.selected}
                             initiallyExpanded={props.initiallyExpanded}
                             labelStyle={styles.labelStyle}
