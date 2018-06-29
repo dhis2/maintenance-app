@@ -753,4 +753,32 @@ export default new Map([
             }]
         }
      ]],
+     ['sqlView', [
+        {
+            field: 'name',
+            when: {
+                field: 'id',
+                operator: 'HAS_VALUE',
+            },
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+        {
+            field: 'type',
+            when: {
+                field: 'id',
+                operator: 'HAS_VALUE',
+            },
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+    ]],
 ]);

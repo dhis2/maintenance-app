@@ -79,6 +79,7 @@ export function getSideBarConfig() {
                 'optionGroupSet',
                 'legendSet',
                 'predictor',
+                'predictorGroup',
                 'pushAnalysis',
                 'externalMapLayer',
                 'dataApprovalLevel',
@@ -186,7 +187,7 @@ const typeDetails = {
         columns: ['displayName', 'valueType', 'mandatory', 'unique', 'publicAccess', 'lastUpdated'],
     },
     optionSet: {
-        columns: ['displayName', 'valueType', 'lastUpdated'],
+        columns: ['displayName', 'valueType', 'publicAccess', 'lastUpdated'],
     },
     predictor: {
         columns: ['displayName', 'output[displayName]', 'periodType', 'lastUpdated'],
@@ -225,6 +226,10 @@ const typeDetails = {
         columns: [
             'displayName',
         ],
+        additionalFields: [
+            'name',
+            'type',
+        ]
     },
 };
 
@@ -266,6 +271,15 @@ export function getDefaultFiltersForType(modelType) {
         return typeDetails[modelType].defaultFilters;
     }
 
+    return [];
+}
+
+export function getAdditionalFieldsForType(modelType) {
+    if (typeDetails.hasOwnProperty(modelType) && 
+        typeDetails[modelType].hasOwnProperty('additionalFields')
+    ) {
+        return typeDetails[modelType].additionalFields;
+    }
     return [];
 }
 

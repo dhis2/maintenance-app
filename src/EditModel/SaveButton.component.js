@@ -12,9 +12,8 @@ function SaveButton(props, { d2 }) {
         ...rest
     } = props;
     const buttonText = isSaving ? d2.i18n.getTranslation('saving') : d2.i18n.getTranslation('save');
-
     return (
-        <RaisedButton {...rest} primary onClick={onClick} label={buttonText} disabled={isSaving || !isValid} />
+        <RaisedButton {...rest} primary onClick={onClick} label={buttonText} disabled={isSaving} />
     );
 }
 

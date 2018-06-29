@@ -15,6 +15,13 @@ const backToList = () => {
     goToRoute('list/otherSection/sqlView');
 };
 
+const styles = {
+    menuItem: {
+        paddingLeft: '1.5rem',
+        paddingRight: '1.5rem',
+    }
+}
+
 class SqlView extends Component {
     constructor(props, context) {
         super(props, context);
@@ -47,7 +54,7 @@ class SqlView extends Component {
     openFileLink(file) {
         const { params: { modelId } } = this.props;
         this.closeDownloadMenu();
-        window.location.href = `../api/sqlViews/${modelId}/${file}`;
+        window.open(`../api/sqlViews/${modelId}/${file}`, '_blank');
     }
 
     openDownloadMenu = (event) => {
@@ -121,6 +128,7 @@ class SqlView extends Component {
         ].map(({ label, file }) => (
             <MenuItem
                 key={label}
+                style={styles.menuItem}
                 primaryText={d2.i18n.getTranslation(label)}
                 onClick={() => this.openFileLink(file)} // eslint-disable-line react/jsx-no-bind
             />

@@ -1,0 +1,20 @@
+.swatches-picker > div > div:last-child > div > div {
+    display: flex;
+    flex-direction: column;
+  
+    > div {
+      width: 320px !important;
+  
+      > span {
+        display: block;
+        height: 100%;
+  
+        > div {
+          float: left;
+        }
+      }
+    }
+  }
+  .chrome-picker {
+    margin-top: -276px;
+  }

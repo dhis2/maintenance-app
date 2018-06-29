@@ -15,9 +15,9 @@ const steps = [
         componentName: 'EditDataEntryForm',
     },
     {
-        key: 'assign_organisation_units',
-        name: 'assign_organisation_units',
-        componentName: 'AssignOrganisationUnits',
+        key: 'access',
+        name: 'access',
+        componentName: 'ProgramAccess',
     },
     {
         key: 'notifications',

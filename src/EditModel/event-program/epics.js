@@ -1,10 +1,38 @@
-import { getInstance } from 'd2/lib/d2';
-import { generateUid } from 'd2/lib/uid';
+import {
+    MODEL_TO_EDIT_FIELD_CHANGED,
+    EVENT_PROGRAM_LOAD,
+    EVENT_PROGRAM_SAVE,
+    EVENT_PROGRAM_SAVE_SUCCESS,
+    EVENT_PROGRAM_SAVE_ERROR,
+    loadEventProgramSuccess,
+    saveEventProgramError,
+    saveEventProgramSuccess,
+} from './actions';
+
+import {
+    PROGRAM_STAGE_FIELD_EDIT,
+} from './tracker-program/program-stages/actions';
+
+import eventProgramStore, {
+    isStoreStateDirty,
+    getMetaDataToSend,
+} from './eventProgramStore';
+
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { get, getOr, first, map, compose, values, flatten } from 'lodash/fp';
 
-import eventProgramStore, { isStoreStateDirty, getMetaDataToSend } from './eventProgramStore';
+import {
+    get,
+    getOr,
+    first,
+    map,
+    compose,
+    values,
+    flatten,
+} from 'lodash/fp';
+
+import { getInstance } from 'd2/lib/d2';
+import { generateUid } from 'd2/lib/uid';
 
 import { getImportStatus } from './metadataimport-helpers';
 import { goToAndScrollUp } from '../../router-utils';
@@ -19,17 +47,6 @@ import { createModelToEditEpic, createModelToEditProgramStageEpic } from '../epi
 
 import showSnackBarMessageEpic from '../../Snackbar/epics';
 import { notifyUser } from '../actions';
-import { PROGRAM_STAGE_FIELD_EDIT } from './tracker-program/program-stages/actions';
-import {
-    MODEL_TO_EDIT_FIELD_CHANGED,
-    EVENT_PROGRAM_LOAD,
-    EVENT_PROGRAM_SAVE,
-    EVENT_PROGRAM_SAVE_SUCCESS,
-    EVENT_PROGRAM_SAVE_ERROR,
-    loadEventProgramSuccess,
-    saveEventProgramError,
-    saveEventProgramSuccess,
-} from './actions';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
@@ -39,6 +56,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
     if (programId === 'add') {
         const programUid = generateUid();
         const programStageUid = generateUid();
+        const publicAccess = "rw------";
 
         // A api format payload that contains a program and a programStage
         const programStages =
@@ -46,6 +64,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 ? []
                 : [{
                     id: programStageUid,
+                    publicAccess,
                     programStageDataElements: [],
                     notificationTemplates: [],
                     programStageSections: [],
@@ -54,6 +73,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             programs: [
                 {
                     id: programUid,
+                    publicAccess,
                     programStages,
                     programTrackedEntityAttributes: [],
                     organisationUnits: [],
@@ -75,13 +95,18 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                     .list({ paging: false })
                     .then(attributes => attributes.toArray()),
             );
+            const renderingOptions$ = Observable.fromPromise(
+                d2.Api.getApi().get('staticConfiguration/renderingOptions'),
+            );
 
             return Observable.combineLatest(
                 dataElements$,
                 trackedEntityAttributes$,
-                (elements, attributes) => ({
+                renderingOptions$,
+                (elements, attributes, renderingOptions) => ({
                     elements,
                     attributes,
+                    renderingOptions,
                 }),
             );
         });
@@ -94,15 +119,17 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 ...metadata,
                 dataElements: available.elements,
                 trackedEntityAttributes: available.attributes,
+                renderingOptions: available.renderingOptions,
             }),
         )
             .flatMap(createEventProgramStoreStateFromMetadataResponse)
             .map((state) => {
                 // Set some eventProgram defaults
                 // Set programType to router-query type
-                const programType = programPayload.query.type;
+                // fallback to event program
+                const programType = programPayload.query.type || "WITHOUT_REGISTRATION";
 
-                state.program.programType = programPayload.query.type;
+                state.program.programType = programType;
                 if (state.programStages.length > 0) {
                     const programStage = first(state.programStages);
                     programStage.name = state.program.id;
@@ -111,6 +138,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
                 return state;
             });
     }
+
     const programFields = [
         ':owner,displayName',
         'attributeValues[:all,attribute[id,name,displayName]]',
@@ -118,24 +146,36 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         'dataEntryForm[:owner]',
         'notificationTemplates[:owner]',
         'programTrackedEntityAttributes',
+        'user[id,name]',
     ].join(',');
 
     return api$
-        .flatMap(api =>
-            Observable.fromPromise(
+        .flatMap((api) => {
+            const metadata$ = Observable.fromPromise(
                 api.get(
                     [
                         'metadata',
                         '?fields=:owner,displayName',
                         `&programs:filter=id:eq:${programId}`,
-                        `&programs:fields=${programFields},programStages[:owner,displayName,programStageDataElements[:owner,dataElement[id,displayName]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
+                        `&programs:fields=${programFields},programStages[:owner,user[id,name],displayName,programStageDataElements[:owner,renderType,dataElement[id,displayName,valueType,optionSet]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
                         '&dataElements:fields=id,displayName,valueType,optionSet',
                         '&dataElements:filter=domainType:eq:TRACKER',
                         '&trackedEntityAttributes:fields=id,displayName,valueType,optionSet,unique',
                     ].join(''),
                 ),
-            ),
-        )
+            );
+            const renderingOptions$ = Observable.fromPromise(
+                api.get('staticConfiguration/renderingOptions'),
+            );
+            return Observable.combineLatest(
+                metadata$,
+                renderingOptions$,
+                (metadata, renderingOptions) => ({
+                    ...metadata,
+                    renderingOptions,
+                }),
+            );
+        })
         .flatMap(createEventProgramStoreStateFromMetadataResponse);
 }
 
@@ -146,7 +186,9 @@ function createEventProgramStoreStateFromMetadataResponse(
         programs = [],
         dataElements = [],
         trackedEntityAttributes = [],
+        renderingOptions = [],
     } = eventProgramMetadata;
+
     const programStages = getOr([], 'programStages', first(programs));
 
     const storeState = getInstance().then((d2) => {
@@ -216,7 +258,7 @@ function createEventProgramStoreStateFromMetadataResponse(
             );
 
         const program = createProgramModel(programs);
-        program.dataEntryForm = program.dataEntryForm ? createDataEntryFormModel(getOr({}, 'dataEntryForm', program)) : undefined
+        program.dataEntryForm = program.dataEntryForm ? createDataEntryFormModel(getOr({}, 'dataEntryForm', program)) : undefined;
 
         return {
             program,
@@ -227,6 +269,7 @@ function createEventProgramStoreStateFromMetadataResponse(
             programStageSections: extractProgramStageSections(programStages),
             availableDataElements: dataElements,
             availableAttributes: trackedEntityAttributes,
+            renderingOptions,
             dataEntryFormForProgramStage: extractDataEntryForms(programStages),
         };
     });
@@ -277,6 +320,10 @@ export const programStageModelEdit = createModelToEditProgramStageEpic(
 );
 
 const setEventPSStage = (state) => {
+    if (state.program.programType === "WITH_REGISTRATION") {
+        return state;
+    }
+
     const ps = first(state.programStages);
     ps.name = state.program.name || state.program.id;
     return {

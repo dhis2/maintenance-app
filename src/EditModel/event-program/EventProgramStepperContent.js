@@ -8,7 +8,7 @@ import eventProgramStore from './eventProgramStore';
 import steps from './event-program-steps';
 import AssignDataElements from './assign-data-elements/AssignDataElements';
 import EditDataEntryForm from './create-data-entry-form/CreateDataEntryForm.component';
-import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
+import ProgramAccess from './program-access/ProgramAccess';
 import EventProgramNotifications from './notifications/EventProgramNotifications';
 import { createFieldConfigsFor } from '../formHelpers';
 import { editFieldChanged } from './actions';
@@ -52,7 +52,7 @@ const stepperConfig = () => {
         EditProgramDetailsForm: EditProgramDetailsForm,
         AssignDataElements,
         EditDataEntryForm,
-        AssignOrganisationUnits,
+        ProgramAccess,
         EventProgramNotifications,
     };
 

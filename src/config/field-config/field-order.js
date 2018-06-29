@@ -204,6 +204,11 @@ const fieldOrderByName = new Map([
         'description',
         'valueType',
     ]],
+    ['option', [
+        'name',
+        'code',
+        'style',
+    ]],
     ['legendSet', [
         'name',
         'code',
@@ -241,7 +246,7 @@ const fieldOrderByName = new Map([
         'workflow',
         'displayFrontPageList',
         'useFirstStageDuringRegistration',
-        'allowAuditLog',
+        'accessLevel',
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
@@ -386,6 +391,12 @@ const fieldOrderByName = new Map([
         'sequentialSampleCount',
         'annualSampleCount',
         'sequentialSkipCount',
+    ]],
+    ['predictorGroup', [
+        'name',
+        'code',
+        'description',
+        'predictors',
     ]],
     ['pushAnalysis', [
         'name',
