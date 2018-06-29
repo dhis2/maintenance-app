@@ -248,7 +248,8 @@ const List = React.createClass({
         case 'edit':
             return model.access.write;
         case 'clone':
-            return model.modelDefinition.name !== 'dataSet' && model.modelDefinition.name !== 'program' && model.access.write;
+            return !['dataSet', 'program', 'optionSet'].includes(model.modelDefinition.name) &&
+                model.access.write;
         case 'translate':
             return model.access.read && model.modelDefinition.identifiableObject;
         case 'details':
