@@ -229,7 +229,7 @@ const fieldOrderByName = new Map([
     ]],
     ['eventProgramStage', [
         'blockEntryForm',
-        'captureCoordinates',
+        'featureType',
         'validCompleteOnly',
         'preGenerateUID',
         'executionDateLabel',
@@ -286,7 +286,7 @@ const fieldOrderByName = new Map([
         'allowGenerateNextVisit',
         'generatedByEnrollmentDate',
         'hideDueDate',
-        'captureCoordinates',
+        'featureType',
         'validCompleteOnly',
         'preGenerateUID',
         'executionDateLabel',
