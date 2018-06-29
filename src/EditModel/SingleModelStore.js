@@ -104,7 +104,6 @@ export const requestParams = new Map([
  * @returns {*} the model after its's processed by a special case or the original model.
  */
 function cloneHandlerByObjectType(objectType, model) {
-    console.log(model)
     switch(objectType) {
         case'programIndicator': {
             //Clear analyticsPeriodBoundaries ids, let server generate them
