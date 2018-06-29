@@ -449,6 +449,7 @@ const fieldOrderByName = new Map([
         'shortName',
         'code',
         'description',
+        'optionSet',
         'options',
     ]],
     ['optionGroupSet', [
