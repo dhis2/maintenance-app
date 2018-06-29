@@ -20,6 +20,7 @@ import programIndicator from './programIndicator';
 import programNotificationTemplate, {
     programStageNotificationTemplate,
 } from './programNotificationTemplate';
+import relationshipType from './relationshipType';
 import { eventProgram, trackerProgram, enrollment } from './program';
 import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
@@ -52,6 +53,7 @@ const overridesByType = {
     programRule,
     programRuleVariable,
     predictor,
+    relationshipType,
     validationRule,
     validationNotificationTemplate,
     trackedEntityAttribute,

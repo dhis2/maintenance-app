@@ -320,8 +320,9 @@ const fieldOrderByName = new Map([
     ['relationshipType', [
         'name',
         'code',
-        'aIsToB',
-        'bIsToA',
+        'description',
+        'fromConstraint',
+        'toConstraint',
     ]],
     ['trackedEntityType', [
         'name',
