@@ -75,6 +75,8 @@ export function getSideBarConfig() {
                 'constant',
                 'attribute',
                 'optionSet',
+                'optionGroup',
+                'optionGroupSet',
                 'legendSet',
                 'predictor',
                 'predictorGroup',

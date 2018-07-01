@@ -455,6 +455,22 @@ const fieldOrderByName = new Map([
         'periodType',
         'dataApprovalLevels',
     ]],
+    ['optionGroup', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'optionSet',
+        'options',
+    ]],
+    ['optionGroupSet', [
+        'name',
+        'code',
+        'description',
+        'optionSet',
+        'dataDimension',
+        'optionGroups',
+    ]],
     ['locale', [
         'name',
         'locale',

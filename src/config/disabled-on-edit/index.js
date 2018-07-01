@@ -5,6 +5,8 @@ import categoryOptionGroup from './categoryOptionGroup';
 import categoryOptionGroupSet from './categoryOptionGroupSet';
 import optionSet from './optionSet';
 import programRule from './programRule';
+import optionGroup from './optionGroup';
+import optionGroupSet from './optionGroupSet';
 
 const disabledByType = {
     category,
@@ -14,6 +16,8 @@ const disabledByType = {
     categoryOptionGroupSet,
     optionSet,
     programRule,
+    optionGroup,
+    optionGroupSet,
 };
 
 export default {

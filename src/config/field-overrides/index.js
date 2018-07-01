@@ -26,6 +26,7 @@ import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
 import dataApprovalWorkflow from './dataApprovalWorkflow';
 import programStage from './programStage';
+import optionGroup from './optionGroup';
 import sqlView from './sqlView';
 
 const overridesByType = {
@@ -58,6 +59,7 @@ const overridesByType = {
     trackedEntityType,
     trackerProgram,
     enrollment,
+    optionGroup,
     sqlView,
 };
 

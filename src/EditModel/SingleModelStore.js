@@ -82,6 +82,13 @@ export const requestParams = new Map([
             'programStageSection[id,displayName]]',
         ].join(','),
     }],
+    ['optionGroup', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'options[id,name,displayName]'
+        ].join(','),
+    }],
 ]);
 
 /**
