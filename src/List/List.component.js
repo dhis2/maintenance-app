@@ -277,8 +277,7 @@ class List extends Component {
         case 'edit':
             return model.access.write;
         case 'clone':
-            return model.modelDefinition.name !== 'dataSet' &&
-                model.modelDefinition.name !== 'program' &&
+            return !['dataSet', 'program', 'optionSet'].includes(model.modelDefinition.name) &&
                 model.access.write;
         case 'translate':
             return model.access.read && model.modelDefinition.identifiableObject;
