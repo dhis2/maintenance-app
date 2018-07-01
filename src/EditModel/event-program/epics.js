@@ -126,9 +126,10 @@ function loadEventProgramMetadataByProgramId(programPayload) {
             .map((state) => {
                 // Set some eventProgram defaults
                 // Set programType to router-query type
-                const programType = programPayload.query.type;
+                // fallback to event program
+                const programType = programPayload.query.type || "WITHOUT_REGISTRATION";
 
-                state.program.programType = programPayload.query.type;
+                state.program.programType = programType;
                 if (state.programStages.length > 0) {
                     const programStage = first(state.programStages);
                     programStage.name = state.program.id;
