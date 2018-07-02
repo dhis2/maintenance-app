@@ -229,7 +229,7 @@ const fieldOrderByName = new Map([
     ]],
     ['eventProgramStage', [
         'blockEntryForm',
-        'captureCoordinates',
+        'featureType',
         'validCompleteOnly',
         'preGenerateUID',
         'executionDateLabel',
@@ -286,7 +286,7 @@ const fieldOrderByName = new Map([
         'allowGenerateNextVisit',
         'generatedByEnrollmentDate',
         'hideDueDate',
-        'captureCoordinates',
+        'featureType',
         'validCompleteOnly',
         'preGenerateUID',
         'executionDateLabel',
@@ -393,6 +393,12 @@ const fieldOrderByName = new Map([
         'annualSampleCount',
         'sequentialSkipCount',
     ]],
+    ['predictorGroup', [
+        'name',
+        'code',
+        'description',
+        'predictors',
+    ]],
     ['pushAnalysis', [
         'name',
         'code',
@@ -449,6 +455,22 @@ const fieldOrderByName = new Map([
         'name',
         'periodType',
         'dataApprovalLevels',
+    ]],
+    ['optionGroup', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'optionSet',
+        'options',
+    ]],
+    ['optionGroupSet', [
+        'name',
+        'code',
+        'description',
+        'optionSet',
+        'dataDimension',
+        'optionGroups',
     ]],
     ['locale', [
         'name',

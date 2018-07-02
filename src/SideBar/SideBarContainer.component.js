@@ -59,6 +59,7 @@ class SideBarContainer extends React.Component {
                 };
 
                 const orgUnitSearchHits = appState.getState().sideBar.organisationUnits;
+
                 const roots = Array.isArray(orgUnitSearchHits)
                     ? orgUnitSearchHits
                     : this.state.userOrganisationUnits.toArray().map((ou) => {
@@ -71,6 +72,8 @@ class SideBarContainer extends React.Component {
 
                 const initiallyExpanded = this.getExpandedItems(orgUnitSearchHits);
 
+                const idsToReload = orgUnitSearchHits ? orgUnitSearchHits.reduce((x, y) => x.concat(y.id), []) : [];
+
                 return (
                     <div style={styles.wrapperStyle}>
                         <OrganisationUnitTreeWithSingleSelectionAndSearch
@@ -81,7 +84,7 @@ class SideBarContainer extends React.Component {
                             selected={this.state.selectedOrganisationUnit ? [this.state.selectedOrganisationUnit.path] : []}
                             initiallyExpanded={initiallyExpanded}
                             onSelectClick={this._onChangeSelectedOrgUnit.bind(this)}
-                            idsThatShouldBeReloaded={orgUnitSearchHits || this.state.organisationUnitsToReload}
+                            idsThatShouldBeReloaded={idsToReload || this.state.organisationUnitsToReload}
                             noHitsLabel={this.context.d2.i18n.getTranslation('no_matching_organisation_units')}
                             hideMemberCount
                             hideCheckboxes
