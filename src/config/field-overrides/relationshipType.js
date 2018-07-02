@@ -40,7 +40,7 @@ class Constraint extends Component {
         this.state = {
             searchResults: [],
             relationshipEntity,
-            searchLabel: label,
+            selectLabel: label,
             embeddedValue,
         };
     }
@@ -59,11 +59,11 @@ class Constraint extends Component {
     };
 
     selectRelationshipEntity = (_, __, value) => {
-        const searchLabel = this.getRelationshipEntityLabel(value);
+        const selectLabel = this.getRelationshipEntityLabel(value);
 
         this.setState({
             relationshipEntity: value,
-            searchLabel,
+            selectLabel,
         });
     };
 
@@ -106,7 +106,7 @@ class Constraint extends Component {
                 {this.state.relationshipEntity && (
                     <DropdownAsync
                         {...this.props}
-                        labelText={`${this.translate('select')} ${this.state.searchLabel}`}
+                        labelText={`${this.translate('select')} ${this.state.selectLabel}`}
                         value={this.state.embeddedValue}
                         referenceType={constraintToObjectType[this.state.relationshipEntity]}
                         onChange={this.handleEmbeddedValueSelect}
