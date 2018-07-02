@@ -67,6 +67,7 @@
     "node-pre-gyp": "^0.6.30",
     "node-sass": "4.9.0",
     "precommit-hook": "^3.0.0",
+    "prettier": "^1.13.7",
     "recompose": "^0.23.1",
     "redux-logger": "^3.0.6",
     "sass-loader": "^6.0.5",
