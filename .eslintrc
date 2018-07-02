@@ -14,6 +14,7 @@
     },
     "rules": {
         "no-param-reassign": "off",
+        "no-fallthrough": "off",
         "array-callback-return": "off",
         "import/no-extraneous-dependencies": 0,
         "no-unused-expressions": ["error", {
