@@ -35,6 +35,11 @@ class DropDownAsync extends Component {
                 },
             });
         }
+
+        //referenceType updated, reload
+        if (this.props.referenceType !== newProps.referenceType) {
+            this.onRefreshClick();
+        }
     }
 
     componentWillUnmount() {

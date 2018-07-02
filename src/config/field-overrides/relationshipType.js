@@ -1,154 +1,120 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import AutoComplete from 'material-ui/AutoComplete';
-import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import DropdownAsync from '../../forms/form-fields/drop-down-async';
 
-const TRACKED_ENTITY_INSTANCE = "TRACKED_ENTITY_INSTANCE";
-const PROGRAM_INSTANCE = "PROGRAM_INSTANCE";
-const PROGRAM_STAGE_INSTANCE = "PROGRAM_STAGE_INSTANCE";
+const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
+const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
+const PROGRAM_STAGE_INSTANCE = 'PROGRAM_STAGE_INSTANCE';
 
-const constraintOptions = [
-    TRACKED_ENTITY_INSTANCE,
-    PROGRAM_INSTANCE,
-    PROGRAM_STAGE_INSTANCE,
-];
+const constraintOptions = [TRACKED_ENTITY_INSTANCE, PROGRAM_INSTANCE, PROGRAM_STAGE_INSTANCE];
+
+// Map of the different names of the embedded objects, according to selected constraint-type
+const constraintToObjectType = {
+    TRACKED_ENTITY_INSTANCE: 'trackedEntityType',
+    PROGRAM_INSTANCE: 'program',
+    PROGRAM_STAGE_INSTANCE: 'programStage',
+};
 
 const resolveToTrue = () => true;
 
 class Constraint extends Component {
-    constructor(props) {
+    constructor(props, context) {
         super(props);
+        this.translate = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+
+        let embeddedValue = null;
+        let relationshipEntity = null;
+
+        if (props.value) {
+            relationshipEntity = props.value.relationshipEntity;
+            if (relationshipEntity) {
+                const objectName = constraintToObjectType[relationshipEntity];
+                embeddedValue = props.value[objectName];
+            }
+        }
+
+        const label = this.getRelationshipEntityLabel(relationshipEntity);
 
         this.state = {
             searchResults: [],
+            relationshipEntity,
+            searchLabel: label,
+            embeddedValue,
         };
     }
 
-    translate = s => this.context.d2.i18n.getTranslation(s);
-
-    selectConstraint = (_, __, value) => {
-        let searchLabel;
-
-        switch(value) {
-            case TRACKED_ENTITY_INSTANCE: searchLabel = this.translate("tracked_entity_type"); break;
-            case PROGRAM_INSTANCE: searchLabel = this.translate("program"); break;
-            case PROGRAM_STAGE_INSTANCE: searchLabel = this.translate("program_stage"); break;
+    getRelationshipEntityLabel = relationshipEntity => {
+        switch (relationshipEntity) {
+            case TRACKED_ENTITY_INSTANCE:
+                return this.translate('tracked_entity_type');
+            case PROGRAM_INSTANCE:
+                return this.translate('program');
+            case PROGRAM_STAGE_INSTANCE:
+                return this.translate('program_stage');
         }
+
+        return null;
+    };
+
+    selectRelationshipEntity = (_, __, value) => {
+        const searchLabel = this.getRelationshipEntityLabel(value);
 
         this.setState({
-            constraint: value,
+            relationshipEntity: value,
             searchLabel,
         });
-    }
+    };
 
-    updateSearchInput = (searchText) => {
-        switch(this.state.constraint) {
-            case TRACKED_ENTITY_INSTANCE: {
-                this.searchTrackedEntityTypes(searchText);
-                break;
-            }
-
-            case PROGRAM_INSTANCE: {
-                this.searchPrograms(searchText);
-                break;
-            }
-
-            case PROGRAM_STAGE_INSTANCE: {
-                this.searchProgramStages(searchText);
-                break;
-            }
-        }
-    }
-
-    searchWithD2 = options => {
-        this.handleSearch(options);
-    }
-
-    handleSearch = ({ resource, fields, filter, handler }) => {
-        this.context.d2.Api.getApi().get(resource, {
-            fields,
-            filter,
-            paging: false,
-        }).then(result => {
-            console.warn('Got result:', result[resource]);
-            handler(result[resource]);
-        });
-    }
-
-    searchTrackedEntityTypes = (searchText) => {
-        console.warn('Searching tracked entity types:', searchText);
-        this.searchWithD2({
-            resource: 'trackedEntityTypes',
-            fields: 'id,displayName',
-            filter: `name:startsWith:${searchText}`,
-            handler: (searchResults) => {
-                this.setState({
-                    searchResults,
-                });
+    handleEmbeddedValueSelect = ({ target: { value } }) => {
+        const objType = constraintToObjectType[this.state.relationshipEntity];
+        const relationshipConstraint = {
+            relationshipEntity: this.state.relationshipEntity,
+            [objType]: {
+                id: (value && value.id) || null,
+            },
+        };
+        this.props.onChange({
+            target: {
+                value: relationshipConstraint,
             },
         });
-    }
 
-    searchPrograms = (searchText) => {
-        console.warn('Loading programs:', searchText);
+        this.setState({
+            embeddedValue: relationshipConstraint[objType],
+        });
+    };
 
-        this.searchWithD2({
-            resource: 'programs',
-            fields: 'id,displayName',
-            filter: `name:startsWith:${searchText}`,
-            handler: (searchResults) => {
-                this.setState({
-                    searchResults,
-                });
-            },
-        })
-    }
-
-    searchProgramStages = (searchText) => {
-        console.warn('Loading program stages:', searchText);
-
-        this.searchWithD2({
-            resource: 'programStages',
-            fields: 'id,displayName',
-            filter: `name:startsWith:${searchText}`,
-            handler: (searchResults) => {
-                this.setState({
-                    searchResults,
-                });
-            },
-        })
-    }
-
-    render = () => (
-        <div>
-            <SelectField
-                fullWidth
-                value={this.state.constraint}
-                onChange={this.selectConstraint}
-                floatingLabelText={this.translate("from_constraint")}
-            >
-                {constraintOptions.map(constraint => (
-                    <MenuItem
-                        key={constraint}
-                        value={constraint}
-                        primaryText={this.translate(constraint)}
-                    />
-                ))}
-            </SelectField>
-            { this.state.constraint && (
-                <AutoComplete
+    render = () => {
+        return (
+            <div>
+                <SelectField
                     fullWidth
-                    hintText="Search ..."
-                    filter={resolveToTrue}
-                    dataSourceConfig={{ text: 'displayName', value: 'id' }}
-                    floatingLabelText={`${this.translate("select")} ${this.state.searchLabel}`}
-                    dataSource={this.state.searchResults}
-                    onUpdateInput={this.updateSearchInput}
-                />
-            )}
-        </div>
-    );
+                    value={this.state.relationshipEntity}
+                    onChange={this.selectRelationshipEntity}
+                    floatingLabelText={this.translate('from_constraint')}
+                >
+                    {constraintOptions.map(constraint => (
+                        <MenuItem
+                            key={constraint}
+                            value={constraint}
+                            primaryText={this.translate(constraint)}
+                        />
+                    ))}
+                </SelectField>
+                {this.state.relationshipEntity && (
+                    <DropdownAsync
+                        {...this.props}
+                        labelText={`${this.translate('select')} ${this.state.searchLabel}`}
+                        value={this.state.embeddedValue}
+                        referenceType={constraintToObjectType[this.state.relationshipEntity]}
+                        onChange={this.handleEmbeddedValueSelect}
+                    />
+                )}
+            </div>
+        );
+    };
 }
 
 Constraint.contextTypes = {
@@ -156,12 +122,20 @@ Constraint.contextTypes = {
 };
 
 export default new Map([
-    ['fromConstraint', {
-        component: Constraint,
-        required: false,
-    }],
-    ['toConstraint', {
-        component: Constraint,
-        required: false,
-    }]
+    [
+        'fromConstraint',
+        {
+            component: Constraint,
+            required: true,
+            unique: false,
+        },
+    ],
+    [
+        'toConstraint',
+        {
+            component: Constraint,
+            required: true,
+            unique: false,
+        },
+    ],
 ]);
