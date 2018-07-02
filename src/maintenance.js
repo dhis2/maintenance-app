@@ -1,7 +1,3 @@
-const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
-
-Error.stackTraceLimit = Infinity;
-
 import React from 'react';
 import { render } from 'react-dom';
 import { init, config, getUserSettings, getManifest } from 'd2/lib/d2';
@@ -17,6 +13,10 @@ import systemSettingsStore from './App/systemSettingsStore';
 import rxjsconfig from 'recompose/rxjsObservableConfig';
 import setObservableConfig from 'recompose/setObservableConfig';
 import periodTypeStore from './App/periodTypeStore';
+
+const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
+
+Error.stackTraceLimit = Infinity;
 setObservableConfig(rxjsconfig);
 
 if (process.env.NODE_ENV !== 'production') {

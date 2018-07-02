@@ -14,10 +14,10 @@ import NotificationDeleteDialog from './NotificationDeleteDialog';
 import { removeStageNotification, removeProgramNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
 import eventProgramStore from '../eventProgramStore';
-const programStageTabIndex = 0;
 
 import { getProgramStageById } from '../tracker-program/program-stages/selectors';
 import TrackerNotificationAddButton from './TrackerNotificationAddButton';
+const programStageTabIndex = 0;
 const programStages$ = eventProgramStore.map(getProgramStages);
 const stageNotifications$ = eventProgramStore.map(
     get('programStageNotifications')
