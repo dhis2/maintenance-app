@@ -45,7 +45,6 @@
     "d3-scale": "^1.0.3",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-15": "^1.0.0",
-    "eslint-config-dhis2": "3.0.7",
     "eslint-config-prettier": "^2.9.0",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.49.3",
