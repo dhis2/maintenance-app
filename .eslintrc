@@ -13,7 +13,8 @@
         "jest": true
     },
     "rules": {
-        "no-param-reassign": [2, { "props": false }],
+        "no-param-reassign": "off",
+        "array-callback-return": "off",
         "import/no-extraneous-dependencies": 0,
         "no-unused-expressions": ["error", {
             "allowTernary": true,
