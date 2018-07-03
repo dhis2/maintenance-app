@@ -19,6 +19,7 @@ function CancelButton(
         if (!shouldConfirm) {
             onClick(...params);
         } else if (
+            // eslint-disable-next-line no-restricted-globals
             confirm(context.d2.i18n.getTranslation('abandon_unsaved_changes'))
         ) {
             onClick(...params);

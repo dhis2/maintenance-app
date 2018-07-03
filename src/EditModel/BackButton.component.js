@@ -10,7 +10,10 @@ function BackButton(props, context) {
 
         if (!isDirty) {
             onClick(...params);
-        } else if (confirm(context.d2.i18n.getTranslation('abandon_unsaved_changes'))) {
+        } else if (
+            // eslint-disable-next-line no-restricted-globals
+            confirm(context.d2.i18n.getTranslation('abandon_unsaved_changes'))
+        ) {
             onClick(...params);
         }
     };
