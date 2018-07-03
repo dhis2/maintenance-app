@@ -115,8 +115,9 @@ function cloneHandlerByObjectType(objectType, model) {
             }))
             break;
         }
+        default: 
+            return model;
     }
-    return model;
 }
 
 function loadModelFromD2(objectType, objectId) {
