@@ -241,7 +241,8 @@ contextActions.preview
             })
             .then(actionComplete)
             .catch((err) => {
-                snackActions.show({ message: d2.i18n.getTranslation('failed_to_open_report_preview'), action: 'ok' });
+                // Using fixed text because d2 is not in scope here so message cannot be translated
+                snackActions.show({ message: 'Failed to open report preview', action: 'ok' });
                 actionFailed(err);
             });
     });
