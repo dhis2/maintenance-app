@@ -1,6 +1,4 @@
-import eventProgramStore from '../../eventProgramStore';
 import { createActionCreator } from '../../../actions';
-import { generateUid } from 'd2/lib/uid';
 
 export const PROGRAM_STAGE_STEP_CHANGE = 'PROGRAM_STAGE_STEP_CHANGE';
 export const PROGRAM_STAGE_STEP_NEXT = 'PROGRAM_STAGE_STEP_NEXT';

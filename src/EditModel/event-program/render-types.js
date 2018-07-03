@@ -1,5 +1,5 @@
 import React from 'react';
-import { getOr, capitalize, __ } from 'lodash/fp';
+import { getOr, capitalize, } from 'lodash/fp';
 import PropTypes from 'prop-types';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';

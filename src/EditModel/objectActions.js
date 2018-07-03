@@ -7,7 +7,7 @@ import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
 import { Observable } from 'rxjs';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
-import { map, pick, get, filter, flatten, compose, identity, head } from 'lodash/fp';
+import { map, get, filter, flatten, compose, identity, head } from 'lodash/fp';
 import snackActions from '../Snackbar/snack.actions';
 
 const extractErrorMessagesFromResponse = compose(filter(identity), map(get('message')), flatten, map('errorReports'), flatten, map('objectReports'), get('typeReports'));
@@ -138,13 +138,6 @@ objectActions.saveObject
     }, (e) => {
         log.error(e);
     });
-
-function on(property, func, object) {
-    return {
-        ...object,
-        [property]: func(object[property]),
-    };
-}
 
 // Since the relationship between organisation unit and data set is owned by the data set object,
 // organisationUnit.dataSets is not included when the model is saved or when isDirty() is called. In order to enable

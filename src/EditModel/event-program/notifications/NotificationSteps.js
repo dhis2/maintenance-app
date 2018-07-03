@@ -1,6 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { get } from 'lodash/fp';
 import compose from 'recompose/compose';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import { modelToEditSelector } from './selectors';
@@ -126,7 +125,7 @@ const stepToFormBuilder = ({
     //Remove PROGRAM_ATTRIBUTE options when it's an event-program
     if(!isTracker && !isProgram) {
         fieldsToUse = fieldsToUse.map(field => {
-            if(field.name == 'notificationRecipient') {
+            if(field.name === 'notificationRecipient') {
                 const removedOptions = field.props.options.filter(opt => opt.value !== "PROGRAM_ATTRIBUTE");
                 const propsWithRemovedRecipient = {...field.props, options: removedOptions}
                 return { ...field, props: { ...propsWithRemovedRecipient} }

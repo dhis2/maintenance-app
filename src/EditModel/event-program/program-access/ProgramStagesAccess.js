@@ -15,7 +15,6 @@ import { editProgramStageField } from '../tracker-program/program-stages/actions
 import Toolbar from './Toolbar';
 import {
     areSharingPropertiesSimilar,
-    extractDisplayName,
     generateSharingDescription,
 } from './utils';
 import { yellow800 } from 'material-ui/styles/colors';

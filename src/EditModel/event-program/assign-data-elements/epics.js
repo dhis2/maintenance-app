@@ -9,7 +9,6 @@ import { combineEpics } from 'redux-observable';
 import {
     getOr,
     get,
-    set,
     map,
     find,
     compose,
@@ -20,7 +19,6 @@ import {
     __,
 } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
-import programStore from '../eventProgramStore';
 
 // getProgramStageToModify :: String -> ProgramStage[] -> ProgramStage
 export const getProgramStageToModify = (
@@ -43,7 +41,6 @@ const addDataElementsToStage = store => action$ =>
     action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_ADD)
         .map(action => {
-            const state = store.getState();
             const programStageToEdit = getProgramStageByIdFromAction(
                 store,
                 action
@@ -84,7 +81,6 @@ const removeDataElementFromStage = store => action$ =>
     action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_REMOVE)
         .map(action => {
-            const state = store.getState();
             const programStageToEdit = getProgramStageByIdFromAction(
                 store,
                 action

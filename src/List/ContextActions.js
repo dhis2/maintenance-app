@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import log from 'loglevel';
 
-import { config, getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2/lib/d2';
 import Action from 'd2-ui/lib/action/Action';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
@@ -34,13 +34,6 @@ const contextActions = Action.createActionsFromNames([
     'refresh',
     'showSqlView',
 ]);
-
-const confirm = message => new Promise((resolve, reject) => {
-    if (window.confirm(message)) {
-        resolve();
-    }
-    reject();
-});
 
 // TODO: The action assumes that the appState actually has state
 contextActions.edit

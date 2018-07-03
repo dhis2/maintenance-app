@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { map, compose } from 'lodash/fp';
-
 import Row from 'd2-ui/lib/layout/Row.component';
 import Column from 'd2-ui/lib/layout/Column.component';
 import Divider from 'material-ui/Divider';

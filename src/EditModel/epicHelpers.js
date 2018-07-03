@@ -98,7 +98,7 @@ export function createModelToEditProgramStageEpic(actionType, store, storeProp) 
             .take(1)
             .map(storePropGetter)
             .map((programStages) => {
-                const index = programStages.findIndex(stage => stage.id == stageId);
+                const index = programStages.findIndex(stage => stage.id === stageId);
                 const model = programStages[index];
                 const storePropSetter = set(`${storeProp}[${index}]`);
                 // Apply the new value to the model

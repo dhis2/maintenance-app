@@ -3,9 +3,7 @@ import { afterDeleteHook$ } from '../../../../List/ContextActions';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import { getInstance } from 'd2/lib/d2';
 import log from 'loglevel';
-import { set } from 'lodash/fp';
 import { deleteProgramStageFromState } from '../epics';
-import { Observable } from 'rxjs';
 
 export async function deleteProgramStageWithSnackbar(model) {
     const d2 = await getInstance();

@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import mapPropsStream from 'recompose/mapPropsStream';
 import { get, compose } from 'lodash/fp';
 import {createFormFor} from "../../formHelpers";
 import {flattenRouterProps, wrapInPaper} from "../../componentHelpers";

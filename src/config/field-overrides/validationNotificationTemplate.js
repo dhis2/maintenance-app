@@ -1,4 +1,3 @@
-import React, { PropTypes } from 'react';
 import withProps from 'recompose/withProps';
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
@@ -21,7 +20,6 @@ const VALIDATION_RULE_VARIABLES = [
 ];
 
 const toVariableType = name => ['V', name];
-const toAttributeType = name => ['A', name];
 
 const ValidationNotificationSubjectAndMessageTemplateFields = compose(
     withProps({

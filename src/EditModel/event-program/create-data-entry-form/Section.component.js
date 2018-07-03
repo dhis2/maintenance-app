@@ -4,15 +4,12 @@ import { SortableElement } from 'react-sortable-hoc';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 
 import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 
 import DragHandle from './DragHandle.component';
 import SortableSectionDataList from './SortableSectionDataList.component';
-
-const maxNameLength = 230;
 
 const styles = {
     sectionContainer: {

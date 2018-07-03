@@ -1,4 +1,3 @@
-import { SELECT } from '../../forms/fields';
 import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
 import Store from 'd2-ui/lib/store/Store';
 import Action from 'd2-ui/lib/action/Action';

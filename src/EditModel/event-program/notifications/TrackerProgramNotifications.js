@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { __, first, get, noop, pick } from 'lodash/fp';
+import { get, pick } from 'lodash/fp';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';

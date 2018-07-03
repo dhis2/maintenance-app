@@ -7,7 +7,6 @@ import getContext from 'recompose/getContext';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';
-import { has } from 'lodash/fp';
 
 const relativeScheduledDaysStyle = {
     display: 'flex',
