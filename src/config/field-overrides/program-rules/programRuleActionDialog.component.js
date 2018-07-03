@@ -211,8 +211,9 @@ class ProgramRuleActionDialog extends React.Component {
     }
 
     update(fieldName, value) {
-        this.state.programRuleAction[fieldName] = value;
         const ruleAction = this.state.programRuleAction;
+        ruleAction[fieldName] = value;
+
         //Fetch options for dataElement and trackedEntityAttribute
         if (shouldFilterOnOptionSet(ruleAction) && ['dataElement', 'trackedEntityAttribute'].includes(fieldName)) {
             if(shouldLoadOptions(ruleAction)) {
@@ -224,7 +225,7 @@ class ProgramRuleActionDialog extends React.Component {
         }
 
         this.setState({
-            programRuleAction: this.state.programRuleAction,
+            programRuleAction: ruleAction,
         });
     }
 
