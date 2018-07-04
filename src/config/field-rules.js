@@ -693,6 +693,30 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }],
         },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
     ]],
     ['programNotificationTemplate', [
         {
@@ -746,6 +770,18 @@ export default new Map([
             }],
             operations: [{
                 field: 'notifyUsersInHierarchyOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
                 type: 'HIDE_FIELD',
             }],
         },

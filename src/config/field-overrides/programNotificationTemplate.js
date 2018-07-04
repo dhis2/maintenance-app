@@ -1,10 +1,9 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withProps from 'recompose/withProps';
 import compose from 'recompose/compose';
 import { map } from 'lodash/fp';
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 
 import RelativeScheduledDays from './program-notification-template/RelativeScheduledDays';
 import DeliveryChannels from './program-notification-template/DeliveryChannels';
@@ -124,19 +123,6 @@ const DataElementDropDown = compose(
     );
 });
 
-const MessageToParentRadios = (props, context) => {
-    const t = context.d2.i18n.getTranslation;
-    return <RadioButtonGroup name="parentNotification" onChange={(event, value) => {
-        console.log(event);
-    }}>
-        <RadioButton labelText={t('notify_users_in_hierarchy_only')} value={props.model.notifyUsersInHierarchyOnly} />
-        <RadioButton labelText={t('notify_parent_organisation_unit_only')} value={props.model.notifyParentOrganisationUnitOnly} />
-    </RadioButtonGroup>
-};
-MessageToParentRadios.contextTypes = {
-    d2: PropTypes.object
-}
-
 /**
  * programNotificationTemplate are shared for both program notification and
  * programStage notifications. We use a customFieldOrder name to differentiate
@@ -182,12 +168,6 @@ const sharedOverrides = [
         {
             component: props =>
                 <NotificationSubjectAndMessageTemplateFields {...props} />,
-        },
-    ],
-    [
-        'notifyUsersInHierarchyOnly',
-        {
-            component: MessageToParentRadios,
         },
     ],
 ];
