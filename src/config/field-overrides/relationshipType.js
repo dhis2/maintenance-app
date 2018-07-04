@@ -17,8 +17,6 @@ const constraintToObjectType = {
     PROGRAM_STAGE_INSTANCE: 'programStage',
 };
 
-const resolveToTrue = () => true;
-
 class Constraint extends Component {
     constructor(props, context) {
         super(props);
@@ -93,7 +91,7 @@ class Constraint extends Component {
                     fullWidth
                     value={this.state.relationshipEntity}
                     onChange={this.selectRelationshipEntity}
-                    floatingLabelText={this.translate('from_constraint')}
+                    floatingLabelText={this.props.labelText}
                 >
                     {constraintOptions.map(constraint => (
                         <MenuItem
