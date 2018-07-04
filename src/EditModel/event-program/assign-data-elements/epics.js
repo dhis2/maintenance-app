@@ -59,11 +59,13 @@ const addDataElementsToStage = store => action$ =>
                 'payload.dataElements',
                 action
             );
+            console.log('ACTION ', action);
+            console.log('STATE', state)
             const programStageDataElementsToAdd = map(
                 id => ({
                     id: generateUid(),
                     dataElement: {
-                        id,
+                        ...state.availableDataElements.find(dataElement => dataElement.id === id),
                     },
                 }),
                 dataElementIdsToAdd

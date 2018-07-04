@@ -19,12 +19,21 @@ const addAttributeToProgram = store => action$ => action$
         const program = getOr([], 'program', state);
         const programAttributes = getOr([], 'programTrackedEntityAttributes', program);
         const attributesIdsToAdd = getOr([], 'payload.attributes', action);
-        const attributesToAdd = map(id => ({
-            id: generateUid(),
-            trackedEntityAttribute: {
-                id,
-            },
-        }), attributesIdsToAdd);
+        let sortOrder = programAttributes.length;
+        const attributesToAdd = map(id => {
+            sortOrder++;
+            const { optionSet, valueType } = state.availableAttributes.find(attribute => attribute.id === id);
+            return {
+                id: generateUid(),
+                trackedEntityAttribute: {
+                    id,
+                },
+                optionSet,
+                valueType,
+                sortOrder,
+            };
+        }, attributesIdsToAdd);
+        console.log('HIERZO', programAttributes, attributesToAdd);
 
         program.programTrackedEntityAttributes = programAttributes.concat(attributesToAdd);
         store.setState({
