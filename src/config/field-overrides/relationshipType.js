@@ -3,6 +3,7 @@ import SelectField from 'material-ui/SelectField';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
@@ -10,11 +11,11 @@ const PROGRAM_STAGE_INSTANCE = 'PROGRAM_STAGE_INSTANCE';
 
 const constraintOptions = [TRACKED_ENTITY_INSTANCE, PROGRAM_INSTANCE, PROGRAM_STAGE_INSTANCE];
 
-// Map of the different names of the embedded objects, according to selected constraint-type
-const constraintToObjectType = {
-    TRACKED_ENTITY_INSTANCE: 'trackedEntityType',
-    PROGRAM_INSTANCE: 'program',
-    PROGRAM_STAGE_INSTANCE: 'programStage',
+// Map of the different valid selection of the embedded objects, according to selected constraint-type
+const objectTypesForRelationshipEntity = {
+    TRACKED_ENTITY_INSTANCE: ['trackedEntityType', 'program'],
+    PROGRAM_INSTANCE: ['program'],
+    PROGRAM_STAGE_INSTANCE: ['program', 'programStage'],
 };
 
 class Constraint extends Component {
@@ -28,48 +29,34 @@ class Constraint extends Component {
         if (props.value) {
             relationshipEntity = props.value.relationshipEntity;
             if (relationshipEntity) {
-                const objectName = constraintToObjectType[relationshipEntity];
-                embeddedValue = props.value[objectName];
+                const objectTypes = objectTypesForRelationshipEntity[relationshipEntity];
+                embeddedValue = {};
+                objectTypes.forEach(objType => {
+                    if(props.value[objType]) {
+                        embeddedValue[objType] = props.value[objType];
+                    }
+                })
             }
         }
 
-        const label = this.getRelationshipEntityLabel(relationshipEntity);
-
+        console.log(embeddedValue)
         this.state = {
-            searchResults: [],
             relationshipEntity,
-            selectLabel: label,
             embeddedValue,
         };
     }
 
-    getRelationshipEntityLabel = relationshipEntity => {
-        switch (relationshipEntity) {
-            case TRACKED_ENTITY_INSTANCE:
-                return this.translate('tracked_entity_type');
-            case PROGRAM_INSTANCE:
-                return this.translate('program');
-            case PROGRAM_STAGE_INSTANCE:
-                return this.translate('program_stage');
-        }
-
-        return null;
-    };
-
     selectRelationshipEntity = (_, __, value) => {
-        const selectLabel = this.getRelationshipEntityLabel(value);
-
         this.setState({
             relationshipEntity: value,
-            selectLabel,
         });
     };
 
-    handleEmbeddedValueSelect = ({ target: { value } }) => {
-        const objType = constraintToObjectType[this.state.relationshipEntity];
+    handleEmbeddedValueSelect = (objectType, { target: { value } }) => {
         const relationshipConstraint = {
+            ...this.state.embeddedValue,
             relationshipEntity: this.state.relationshipEntity,
-            [objType]: {
+            [objectType]: {
                 id: (value && value.id) || null,
             },
         };
@@ -80,8 +67,23 @@ class Constraint extends Component {
         });
 
         this.setState({
-            embeddedValue: relationshipConstraint[objType],
+            embeddedValue: relationshipConstraint,
         });
+    };
+
+    renderObjectSelect = () => {
+        const entity = this.state.relationshipEntity;
+        const objectTypes = objectTypesForRelationshipEntity[entity];
+        return (
+            objectTypes.map(objType => (<DropdownAsync
+                {...this.props}
+                labelText={`${this.translate('select')} ${this.translate(camelCaseToUnderscores(objType))}`}
+                value={this.state.embeddedValue[objType]}
+                key={objType}
+                referenceType={objType}
+                onChange={this.handleEmbeddedValueSelect.bind(this, objType)}
+            />))
+        );
     };
 
     render = () => {
@@ -101,7 +103,13 @@ class Constraint extends Component {
                         />
                     ))}
                 </SelectField>
-                {this.state.relationshipEntity && (
+                {this.state.relationshipEntity && this.renderObjectSelect() }
+            </div>
+        );
+    };
+}
+
+/* (
                     <DropdownAsync
                         {...this.props}
                         labelText={`${this.translate('select')} ${this.state.selectLabel}`}
@@ -109,11 +117,7 @@ class Constraint extends Component {
                         referenceType={constraintToObjectType[this.state.relationshipEntity]}
                         onChange={this.handleEmbeddedValueSelect}
                     />
-                )}
-            </div>
-        );
-    };
-}
+                )*/
 
 Constraint.contextTypes = {
     d2: PropTypes.object,
