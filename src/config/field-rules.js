@@ -717,6 +717,36 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }],
         },
+        {
+            field: 'notifyUsersInHierarchyOnly',
+            when: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                operator: 'EQUALS',
+                value: true,
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+        {
+            field: 'notifyParentOrganisationUnitOnly',
+            when: [{
+                field: 'notifyUsersInHierarchyOnly',
+                operator: 'EQUALS',
+                value: true,
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
     ]],
     ['programNotificationTemplate', [
         {
