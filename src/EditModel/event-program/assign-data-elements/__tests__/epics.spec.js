@@ -88,7 +88,11 @@ describe('Assign data elements epics', () => {
                         const newlyAddedDataElement = store.getState().programStages[0].programStageDataElements[2];
 
                         expect(isValidUid(newlyAddedDataElement.id)).toBe(true);
-                        expect(newlyAddedDataElement.dataElement).toEqual(availableDataElementA);
+                        expect(newlyAddedDataElement.dataElement).toEqual({
+                            id: availableDataElementA.id,
+                            optionSet: availableDataElementA.optionSet,
+                            valueType: availableDataElementA.valueType,
+                        });
                         done();
                     },
                     done);
@@ -113,8 +117,16 @@ describe('Assign data elements epics', () => {
                         expect(isValidUid(newlyAddedDataElementOne.id)).toBe(true);
                         expect(isValidUid(newlyAddedDataElementTwo.id)).toBe(true);
 
-                        expect(newlyAddedDataElementOne.dataElement).toEqual(availableDataElementA);
-                        expect(newlyAddedDataElementTwo.dataElement).toEqual(availableDataElementB);
+                        expect(newlyAddedDataElementOne.dataElement).toEqual({
+                            id: availableDataElementA.id,
+                            optionSet: availableDataElementA.optionSet,
+                            valueType: availableDataElementA.valueType,
+                        });
+                        expect(newlyAddedDataElementTwo.dataElement).toEqual({
+                            id: availableDataElementB.id,
+                            optionSet: availableDataElementB.optionSet,
+                            valueType: availableDataElementB.valueType,
+                        });
                         done();
                     },
                     done

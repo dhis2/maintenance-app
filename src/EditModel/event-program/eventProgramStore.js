@@ -66,27 +66,13 @@ export const isStoreStateDirty = compose(
     value => func => func(value)
 );
 
-const sanitizeProgramTrackedEntityAttributes = (program) => {
-    if (program.programTrackedEntityAttributes) {
-        program.programTrackedEntityAttributes.forEach(programAttribute => {
-            // Make sure the trackedEntityAttribute only has the ID property, nothing else
-            programAttribute.trackedEntityAttribute = {
-                id: programAttribute.trackedEntityAttribute.id,
-            }
-        })
-    }
-    return program;
-}
-
-
 // getMetaDataToSend :: StoreState -> SaveState
 export const getMetaDataToSend = (state) => {
     const payload = {};
 
     if (isProgramDirty(state)) {
         payload.programs = [programSelector(state)]
-            .map(modelToJson)
-            .map(sanitizeProgramTrackedEntityAttributes);
+            .map(modelToJson);
 
         //For custom-form
         const programDataEntryForm = state.program.dataEntryForm;
