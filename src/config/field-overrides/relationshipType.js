@@ -4,7 +4,6 @@ import SelectField from 'material-ui/SelectField';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
-import Divider from 'material-ui/Divider';
 
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
