@@ -4,6 +4,7 @@ import SelectField from 'material-ui/SelectField';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
+import Divider from 'material-ui/Divider';
 
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
@@ -41,6 +42,25 @@ const modelTypesForRelationshipEntity = {
             required: true,
         },
     ],
+};
+
+const styles = {
+    modelTypeWrapper: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start',
+        alignItems: 'top',
+        marginBottom: '16px',
+        paddingLeft: '8px',
+        paddingRight: '8px',
+        borderStyle: 'none none none solid',
+        borderWidth: '1px',
+        borderColor: 'rgb(189, 189, 189)',
+    },
+    modelTypeSelectField: {
+        flex: '1 1 300px',
+        marginRight: '14px',
+    },
 };
 
 class Constraint extends Component {
@@ -103,25 +123,29 @@ class Constraint extends Component {
         });
     };
 
-    renderObjectSelect = () => {
+    renderModelTypeSelect = () => {
         const entity = this.state.relationshipEntity;
         const modelTypes = modelTypesForRelationshipEntity[entity];
-        return modelTypes.map(objOpts => {
+        const modelDropdowns = modelTypes.map(objOpts => {
             const modelType = objOpts.modelType;
             return (
-                <DropdownAsync
-                    {...this.props}
-                    isRequired={objOpts.required}
-                    labelText={`${this.translate('select')} ${this.translate(
-                        camelCaseToUnderscores(modelType),
-                    )}`}
-                    value={this.state.embeddedValue[modelType]}
-                    key={modelType}
-                    referenceType={modelType}
-                    onChange={this.handleEmbeddedValueSelect.bind(this, modelType)}
-                />
+                <div style={styles.modelTypeSelectField}>
+                    <DropdownAsync
+                        {...this.props}
+                        isRequired={objOpts.required}
+                        labelText={`${this.translate(camelCaseToUnderscores(modelType))} ${
+                            objOpts.required ? ' *' : ''
+                        }`}
+                        value={this.state.embeddedValue[modelType]}
+                        key={modelType}
+                        referenceType={modelType}
+                        onChange={this.handleEmbeddedValueSelect.bind(this, modelType)}
+                    />
+                </div>
             );
         });
+
+        return <div style={styles.modelTypeWrapper}>{modelDropdowns}</div>;
     };
 
     render = () => {
@@ -141,7 +165,7 @@ class Constraint extends Component {
                         />
                     ))}
                 </SelectField>
-                {this.state.relationshipEntity && this.renderObjectSelect()}
+                {this.state.relationshipEntity && this.renderModelTypeSelect()}
             </div>
         );
     };
