@@ -19,13 +19,28 @@ const addAttributeToProgram = store => action$ => action$
         const program = getOr([], 'program', state);
         const programAttributes = getOr([], 'programTrackedEntityAttributes', program);
         const attributesIdsToAdd = getOr([], 'payload.attributes', action);
-        const attributesToAdd = map(id => ({
-            id: generateUid(),
-            trackedEntityAttribute: {
-                id,
-            },
-        }), attributesIdsToAdd);
 
+        // TODO: Simplify this once JIRA issue DHIS2-4207 is done
+        // Currently simple saving failed for programAttributes that have a renderType
+        // Saving in this case only works when a program.id and trackedEntityAttribute.id are provided
+        let sortOrder = programAttributes.length;
+        const attributesToAdd = map((id) => {
+            sortOrder += 1;
+            const { optionSet, valueType, displayName } = state.availableAttributes.find(attribute => attribute.id === id);
+            return {
+                id: generateUid(),
+                trackedEntityAttribute: {
+                    id,
+                },
+                program: {
+                    id: program.id,
+                },
+                displayName: `${program.displayName} ${displayName}`,
+                optionSet,
+                valueType,
+                sortOrder,
+            };
+        }, attributesIdsToAdd);
         program.programTrackedEntityAttributes = programAttributes.concat(attributesToAdd);
         store.setState({
             ...store.getState(),
