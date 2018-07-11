@@ -7,7 +7,6 @@ import getContext from 'recompose/getContext';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';
-import { has } from 'lodash/fp';
 
 const relativeScheduledDaysStyle = {
     display: 'flex',
@@ -39,7 +38,7 @@ function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDay
     const t = d2.i18n.getTranslation.bind(d2.i18n);
 
     /* Because of bad alignment of material ui textfield and selectfield, the compoents becomes skewed when
-       using the hide method EditModelForm.component (setting the display to none/block). The component 
+       using the hide method EditModelForm.component (setting the display to none/block). The component
        must instead chose to return on display:'none'
     */
     if (style && (style.display === 'none')) {
