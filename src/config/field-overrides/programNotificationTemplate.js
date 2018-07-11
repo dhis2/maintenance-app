@@ -35,8 +35,8 @@ const toVariableType = name => ['V', name];
 const toAttributeType = name => ['A', name]; // Used for program attributes
 const toDataElementType = name => ['#', name];
 
-const dataElementsTypeMap = dataElements =>
-    map(toDataElementType, dataElements);
+const variablesTypeMap = variables => map(toVariableType, variables);
+const dataElementsTypeMap = dataElements => map(toDataElementType, dataElements);
 const attributesToTypeMap = attributes => map(toAttributeType, attributes);
 
 const boundOnUpdate = dispatch =>
@@ -51,18 +51,21 @@ const boundOnUpdate = dispatch =>
 const NotificationSubjectAndMessageTemplateFields = compose(
     connect(undefined, boundOnUpdate),
     withProps(({ dataElements, attributes, isProgram }) => {
-        let constantVariables = PROGRAM_STAGE_VARIABLES;
-        let variables = dataElementsTypeMap(dataElements);
-
         if (isProgram) {
-            constantVariables = PROGRAM_VARIABLES;
-            variables = attributesToTypeMap(attributes);
+            return {
+                variableTypes: [
+                    ...variablesTypeMap(PROGRAM_VARIABLES),
+                    ...attributesToTypeMap(attributes),
+                ],
+            };
         }
 
         return {
-            variableTypes: map(toVariableType, constantVariables).concat(
-                variables,
-            ),
+            variableTypes: [
+                ...variablesTypeMap(PROGRAM_STAGE_VARIABLES),
+                ...attributesToTypeMap(attributes),
+                ...dataElementsTypeMap(dataElements),
+            ],
         };
     }),
 )(SubjectAndMessageTemplateFields);
