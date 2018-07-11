@@ -3,10 +3,10 @@ import fieldOrder from './field-order';
 
 /*
     The stepper sets the style of the fields of the not active step to "display: none"
-    to hide them from view. For this to work the component of the field needs to recieve 
+    to hide them from view. For this to work the component of the field needs to recieve
     the style from props. If the fields are not hidden when changing the active step
-    then check if the component of the corresponding fields are receiving and using the 
-    style from props in its outer div. 
+    then check if the component of the corresponding fields are receiving and using the
+    style from props in its outer div.
 */
 
 const fieldGroupsForModelType = new Map([
