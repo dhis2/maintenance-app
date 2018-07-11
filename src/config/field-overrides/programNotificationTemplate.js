@@ -70,7 +70,7 @@ const NotificationSubjectAndMessageTemplateFields = compose(
 // Using dropdownasync-getter due to support for references
 const ProgramAttributeDropDown = compose(connect(undefined, boundOnUpdate))((props) => {
     const attributesOpts = props.attributes
-        .filter(attr => attr.valueType === 'PHONE_NUMBER')
+        .filter(attr => ['PHONE_NUMBER', 'EMAIL'].includes(attr.valueType))
         .map(attr => ({
             text: attr.displayName,
             value: attr.trackedEntityAttribute.id,
