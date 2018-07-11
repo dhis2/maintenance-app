@@ -27,6 +27,7 @@ import snackActions from '../Snackbar/snack.actions';
 import appState from '../App/appStateStore';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
+import extractFirstErrorMessageFromServer from './form-helpers/extractFirstErrorMessageFromServer';
 import { getStepFields, createStepper } from './stepper/stepper';
 import getFirstInvalidFieldMessage from './form-helpers/validateFields';
 
@@ -284,10 +285,9 @@ export default React.createClass({
 
                         return this.props.onSaveSuccess(this.state.modelToEdit);
                     }
-                    const errorMessage = isString(error)
-                        ? error
-                        : get('response.errorReports[0].message', error);
-                    snackActions.show({ message: errorMessage, action: 'ok' });
+
+                    const firstErrorMessage = extractFirstErrorMessageFromServer(error);
+                    snackActions.show({ message: firstErrorMessage, action: 'ok' });
                     log.error(error);
 
                     this.setState({ isSaving: false });
