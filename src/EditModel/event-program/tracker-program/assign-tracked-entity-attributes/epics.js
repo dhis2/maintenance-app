@@ -25,7 +25,7 @@ const addAttributeToProgram = store => action$ => action$
         let sortOrder = programAttributes.length;
         const attributesToAdd = map((id) => {
             sortOrder += 1;
-            const { optionSet, valueType } = state.availableAttributes.find(attribute => attribute.id === id);
+            const { optionSet, valueType, displayName } = state.availableAttributes.find(attribute => attribute.id === id);
             return {
                 id: generateUid(),
                 trackedEntityAttribute: {
@@ -34,6 +34,7 @@ const addAttributeToProgram = store => action$ => action$
                 program: {
                     id: program.id,
                 },
+                displayName: `${program.displayName} ${displayName}`,
                 optionSet,
                 valueType,
                 sortOrder,
