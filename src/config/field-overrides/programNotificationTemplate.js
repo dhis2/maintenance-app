@@ -51,6 +51,8 @@ const boundOnUpdate = dispatch =>
 const NotificationSubjectAndMessageTemplateFields = compose(
     connect(undefined, boundOnUpdate),
     withProps(({ dataElements, attributes, isProgram }) => {
+        // TODO: FIX here once desired logic has been clarified:
+        // https://jira.dhis2.org/browse/DHIS2-4252?focusedCommentId=17771&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-17771
         let constantVariables = PROGRAM_STAGE_VARIABLES;
         let variables = dataElementsTypeMap(dataElements);
 
