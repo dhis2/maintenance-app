@@ -59,6 +59,7 @@ export const LoadableWithLoaders = (loadableOpts, loaders, loaderOpts = {}) => {
             // Start loading the component instead of waiting for loaders to resolve
             LoadedComponent.preload();
             if (typeof loaders === 'function') {
+                // eslint-disable-next-line no-param-reassign
                 loaders = [loaders];
             }
         }

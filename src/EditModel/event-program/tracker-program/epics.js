@@ -23,11 +23,11 @@ import {
 const d2$ = Observable.fromPromise(getInstance());
 
 const getProgramStageById = curry((stageId, store) =>
-    store.programStages.find(stage => stage.id == stageId),
+    store.programStages.find(stage => stage.id === stageId),
 );
 
 const getProgramStageIndexById = curry((stageId, store) =>
-    store.programStages.findIndex(stage => stage.id == stageId),
+    store.programStages.findIndex(stage => stage.id === stageId),
 );
 
 /**
@@ -75,9 +75,7 @@ export const newTrackerProgramStage = action$ =>
                 autoGenerateEvent: true,
             });
             try {
-                const newProgramStage = programStages.push(
-                    programStageModel,
-                );
+                programStages.push(programStageModel);
 
                 const newProgramStageCollection = store.program.programStages.add(
                     programStageModel,
@@ -112,10 +110,8 @@ export const editTrackerProgramStage = action$ =>
                 .map(get('programStages'))
                 .map((programStages) => {
                     const index = programStages.findIndex(
-                        stage => stage.id == stageId,
+                        stage => stage.id === stageId,
                     );
-                    const programStage = programStages[index];
-
                     const model = programStages[index].clone();
                     const setter = set(
                         'programStageToEditCopy',
@@ -135,7 +131,7 @@ export const saveTrackerProgramStage = action$ =>
             programStore.take(1).map((store) => {
                 const stageId = store.programStageToEditCopy.id;
                 const index = store.programStages.findIndex(
-                    stage => stage.id == stageId,
+                    stage => stage.id === stageId,
                 );
 
                 if (index < 0) {
@@ -174,9 +170,6 @@ export const cancelProgramStageEdit = action$ =>
                     );
                     // If the programstage is new, remove it when cancelling
                     if (model.name === undefined) {
-                        const removedFromProgramStages = store.programStages.filter(
-                            (p, i) => i !== index,
-                        );
                         programStageSetter = deleteProgramStageFromState(
                             stageId,
                             false,
@@ -199,10 +192,6 @@ const deleteProgramStage = action$ =>
         .flatMap(action =>
             programStore.take(1).map((store) => {
                 try {
-                    const ind = store.programStages.findIndex(
-                        stage => stage.id == action.stageId,
-                    );
-
                     const index = getProgramStageIndexById(action.stageId)(
                         store,
                     );

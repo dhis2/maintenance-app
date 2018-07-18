@@ -115,8 +115,9 @@ function cloneHandlerByObjectType(objectType, model) {
             }))
             break;
         }
+        default: 
+            return model;
     }
-    return model;
 }
 
 function loadModelFromD2(objectType, objectId) {
@@ -146,6 +147,7 @@ const singleModelStoreConfig = {
                 model.uuid = undefined;
                 //let server handle created date
                 model.created = undefined;
+                // eslint-disable-next-line no-param-reassign
                 model = cloneHandlerByObjectType(objectType, model);
                 this.setState(model);
             });

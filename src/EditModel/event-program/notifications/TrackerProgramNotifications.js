@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { __, first, get, noop, pick } from 'lodash/fp';
+import { get, pick } from 'lodash/fp';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';
@@ -14,10 +14,10 @@ import NotificationDeleteDialog from './NotificationDeleteDialog';
 import { removeStageNotification, removeProgramNotification, setEditModel, setAddModel } from './actions';
 import NotificationDialog from './NotificationDialog';
 import eventProgramStore from '../eventProgramStore';
-const programStageTabIndex = 0;
 
 import { getProgramStageById } from '../tracker-program/program-stages/selectors';
 import TrackerNotificationAddButton from './TrackerNotificationAddButton';
+const programStageTabIndex = 0;
 const programStages$ = eventProgramStore.map(getProgramStages);
 const stageNotifications$ = eventProgramStore.map(
     get('programStageNotifications')

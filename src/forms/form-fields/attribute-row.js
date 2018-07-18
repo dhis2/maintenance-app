@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import pure from 'recompose/pure';
-import { get, getOr, __ } from 'lodash/fp';
+import { getOr, __ } from 'lodash/fp';
 
 import { TableRow, TableRowColumn, Checkbox } from 'material-ui';
 import RenderTypeSelectField, {

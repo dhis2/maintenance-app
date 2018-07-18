@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { uniq, includes, curry, get, isUndefined, range } from 'lodash/fp';
+import { uniq, get, range } from 'lodash/fp';
 
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
@@ -11,7 +11,7 @@ import Row from 'd2-ui/lib/layout/Row.component';
 import TextField from 'material-ui/TextField/TextField';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import log from 'loglevel';
 import componentFromStream from 'recompose/componentFromStream';
 

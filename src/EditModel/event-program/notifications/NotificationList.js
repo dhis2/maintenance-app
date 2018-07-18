@@ -5,7 +5,6 @@ import AddIcon from 'material-ui/svg-icons/content/add';
 import getContext from 'recompose/getContext';
 import compose from 'recompose/compose';
 import branch from 'recompose/branch';
-import withContext from 'recompose/withContext';
 import renderNothing from 'recompose/renderNothing';
 
 function AddButton({ onAddClick }) {

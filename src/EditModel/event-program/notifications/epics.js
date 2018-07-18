@@ -6,10 +6,10 @@ import {
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import { getInstance } from 'd2/lib/d2';
-import { getStageNotifications, getStageNotificationsForProgramStageId } from './selectors';
+import { getStageNotificationsForProgramStageId } from './selectors';
 import { getProgramStageById } from "../tracker-program/program-stages/selectors";
 import eventProgramStore from '../eventProgramStore';
-import { equals, first, negate, some, get, compose, find, identity, map, __, pick } from 'lodash/fp';
+import { equals, first, negate, find, pick } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
 import snackActions from "../../../Snackbar/snack.actions";
 
@@ -55,7 +55,6 @@ const saveProgramStageNotification = (action$, store) => action$
         eventProgramStore
             .take(1)
             .flatMap((eventProgramState) => {
-                const { programStages, programStageNotifications } = eventProgramState;
                 const programStage = getProgramStageFromModel(eventProgramState, model);
 
                 let stageNotifications = getStageNotificationsForProgramStageId(eventProgramState, programStage.id)
@@ -89,7 +88,7 @@ const setProgramStageNotificationAddModel = (action$, store) => action$
         // Set default values
         model.id = generateUid();
         model.lastUpdated = new Date().toISOString();
-        if(notificationType == 'PROGRAM_NOTIFICATION') {
+        if(notificationType === 'PROGRAM_NOTIFICATION') {
             return setEditModel(model, 'PROGRAM_NOTIFICATION');
         }
         if(psStore.programStages.length < 1) {
@@ -118,7 +117,7 @@ const saveProgramNotification = (action$, store) => action$
         eventProgramStore
             .take(1)
             .flatMap((eventProgramState) => {
-                const { program, programNotifications } = eventProgramState;
+                const { program } = eventProgramState;
 
                 // If we're dealing with a new model we have to add it to the notification lists
                 if (negate(find(equals(model)))(program)) {

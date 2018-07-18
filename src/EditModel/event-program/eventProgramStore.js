@@ -1,11 +1,9 @@
 import Store from 'd2-ui/lib/store/Store';
-import { equals, first, negate, some, get, compose, find, identity, map, __, concat, includes, reduce, findIndex, isObject, keys, values, flatten } from 'lodash/fp';
+import { equals, some, get, compose, identity, map, __, concat, isObject, values, flatten } from 'lodash/fp';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 
 // ___ programSelector :: StoreState -> Model<Program>
 const programSelector = get('program');
-
-const progamDataEntrySelector = get('program.dataEntryForm');
 
 // ___ programStagesSelector :: StoreState -> Array<Model<ProgramStage>>
 const programStagesSelector = get('programStages');
@@ -29,9 +27,6 @@ const modelToJson = getOwnedPropertyJSON;
 
 // ___ isProgramStageDirty :: Object<StoreState> -> Object<{programStages}> -> Boolean
 const isProgramStageDirty = compose(some(checkIfDirty), programStagesSelector);
-
-// ___ getIdForFirstProgramStage : Object<StoreState> -> Object<{programStages}> -> String
-const getIdForFirstProgramStage = compose(get('id'), first, programStagesSelector);
 
 // ___ hasDirtyProgramStageSections :: Object<StoreState> -> Boolean
 //const hasDirtyProgramStageSections = compose(some(checkIfDirty), programStageSectionsSelector);

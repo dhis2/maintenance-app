@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import Paper from 'material-ui/Paper/Paper';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { get, noop, first, getOr, __ } from 'lodash/fp';
+import { get, first, getOr, __ } from 'lodash/fp';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import withHandlers from 'recompose/withHandlers';
@@ -30,14 +30,10 @@ import {
 } from './actions';
 
 import programStore from '../eventProgramStore';
-import { withProgramStageFromProgramStage$ } from '../tracker-program/program-stages/utils';
 import { withRouter } from 'react-router';
-import { getProgramStage$ById } from '../tracker-program/program-stages/utils';
 import RenderTypeSelectField, { getRenderTypeOptions, DATA_ELEMENT_CLAZZ, MOBILE, DESKTOP } from '../render-types';
 
 const getFirstProgramStage = compose(first, get('programStages'));
-
-const firstProgramStage$ = programStore.map(getFirstProgramStage);
 
 // Use programStage$ prop if present, else use first programStage
 const programStage$ = props$ =>

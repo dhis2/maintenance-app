@@ -1,5 +1,4 @@
 import noop from 'd2-utilizr/lib/noop';
-import log from 'loglevel';
 import { negate } from 'lodash/fp';
 import isArray from 'd2-utilizr/lib/isArray';
 

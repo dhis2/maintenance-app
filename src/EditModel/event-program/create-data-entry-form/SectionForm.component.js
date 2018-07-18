@@ -1,23 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import FontIcon from 'material-ui/FontIcon';
-import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
-import { concat, sortBy, find, isEqual, get, getOr, pull, without, flatten, filter, findIndex, negate, difference } from 'lodash/fp';
-import DragHandle from './DragHandle.component';
-import IconButton from 'material-ui/IconButton';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
+import { arrayMove } from 'react-sortable-hoc';
+import { sortBy, find, isEqual, getOr, pull, flatten, filter, findIndex, negate, difference } from 'lodash/fp';
 import Snackbar from 'material-ui/Snackbar';
 
-import Section from './Section.component';
 import SectionList from './SectionList.component';
-import SortableSectionDataList from './SortableSectionDataList.component';
 import AddOrEditSection from './AddOrEditSection.component';
-import Heading from 'd2-ui/lib/headings/Heading.component';
 import DataElementPicker from './DataElementPicker.component';
-import { grey300, grey800 } from 'material-ui/styles/colors';
-
-const maxNameLength = 230;
 
 const styles = {
     sectionForm: {

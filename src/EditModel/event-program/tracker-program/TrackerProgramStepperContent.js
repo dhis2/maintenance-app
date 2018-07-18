@@ -28,7 +28,6 @@ const stepperConfig = () => {
         connect(null, mapDispatchToProps),
     );
     const trackerDetailsFields = fieldOrder.for('trackerProgram');
-    const enrollmentFields = fieldOrder.for('enrollment');
 
     const stepComponents = {
         EditProgramDetailsForm: connectEditForm(

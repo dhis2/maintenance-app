@@ -12,7 +12,6 @@ import FormButtons from '../EditModel/FormButtons.component';
 import snackActions from '../Snackbar/snack.actions';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
-import AccessDenied from '../App/AccessDenied.component';
 
 function saveOrganisationUnitLevels(i18n) {
     actions.saveOrganisationUnitLevels()
