@@ -108,6 +108,7 @@
   },
   "pre-commit": [
     "validate",
+    "lint",
     "test"
   ],
   "manifest.webapp": {
