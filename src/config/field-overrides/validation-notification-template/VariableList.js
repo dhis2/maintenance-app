@@ -19,7 +19,12 @@ const styles = {
 
 const VariableList = ({ onItemSelected, variableTypes }, { d2 }) => {
     const renderListItem = ([type, name]) => {
-        const varName = name.id ? name.id : name;
+        const varName = name.id
+            ? type === 'A'
+                ? name.trackedEntityAttribute.id
+                : name.id
+            : name;
+
         const label = name.displayName
             ? name.displayName
             : d2.i18n.getTranslation(name);

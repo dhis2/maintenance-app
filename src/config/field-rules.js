@@ -650,6 +650,60 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }],
         },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notifyUsersInHierarchyOnly',
+            when: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                operator: 'EQUALS',
+                value: true,
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+        {
+            field: 'notifyParentOrganisationUnitOnly',
+            when: [{
+                field: 'notifyUsersInHierarchyOnly',
+                operator: 'EQUALS',
+                value: true,
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
     ]],
     ['programNotificationTemplate', [
         {
@@ -692,8 +746,32 @@ export default new Map([
             operations: [{
                 field: 'recipientProgramAttribute',
                 type: 'HIDE_FIELD',
-            }]
-        }
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
     ]],
     ['categoryCombo', [
         {

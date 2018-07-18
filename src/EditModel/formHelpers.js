@@ -203,7 +203,6 @@ export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = i
                 const fieldConfigsToUse = runRules ? applyRulesToFieldConfigs(getRulesForModelType(customFieldOrderName || schema),
                     filterFieldConfigs(fieldConfigsWithValues), props.model)
                     : fieldConfigsWithValues;
-
                 return {
                     ...props,
                     fieldConfigs: fieldConfigsToUse,

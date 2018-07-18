@@ -38,7 +38,7 @@ function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDay
     const t = d2.i18n.getTranslation.bind(d2.i18n);
 
     /* Because of bad alignment of material ui textfield and selectfield, the compoents becomes skewed when
-       using the hide method EditModelForm.component (setting the display to none/block). The component 
+       using the hide method EditModelForm.component (setting the display to none/block). The component
        must instead chose to return on display:'none'
     */
     if (style && (style.display === 'none')) {

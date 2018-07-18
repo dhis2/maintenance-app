@@ -3,7 +3,6 @@ import log from 'loglevel';
 import { Observable } from 'rxjs';
 
 import { getInstance } from 'd2/lib/d2';
-import { isString } from 'd2-utilizr';
 
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
@@ -26,6 +25,7 @@ import snackActions from '../Snackbar/snack.actions';
 import appState from '../App/appStateStore';
 import { createFieldConfigForModelTypes, addUniqueValidatorWhenUnique } from './formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from './form-rules';
+import extractFirstErrorMessageFromServer from './form-helpers/extractFirstErrorMessageFromServer';
 import { getStepFields, createStepper } from './stepper/stepper';
 import getFirstInvalidFieldMessage from './form-helpers/validateFields';
 
@@ -145,6 +145,91 @@ export default React.createClass({
         this.subscription && this.subscription.unsubscribe();
     },
 
+
+    /*
+     *  Sets the style of the fields that are not part of the active steps to 'none'
+     *  so that they are "hidden". For this to work, the components needs to have
+     *  an outer div that receives the props.style.
+     */
+    setActiveStep(step) {
+        this.setState({
+            activeStep: step,
+            fieldConfigs: getStepFields(
+                step,
+                this.state.fieldConfigs,
+                this.props.modelType,
+            ),
+        });
+    },
+
+    setFormRef(form) {
+        this.formRef = form;
+    },
+
+    _onUpdateField(fieldName, value) {
+        const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name === fieldName);
+        if (fieldConfig && fieldConfig.beforeUpdateConverter) {
+            return objectActions.update({
+                fieldName,
+                value: fieldConfig.beforeUpdateConverter(value),
+            });
+        }
+        return objectActions.update({ fieldName, value });
+    },
+
+    _onUpdateFormStatus(formState) {
+        this.setState({
+            formState,
+        });
+    },
+
+    saveSuccess(message) {
+        snackActions.show({ message, translate: true });
+        this.props.onSaveSuccess(this.state.modelToEdit);
+    },
+
+    saveFail(error) {
+        // TODO: d2 queries require a JSON body on 200 OK, an empty body is not valid JSON
+        if (error.httpStatusCode === 200) {
+            log.warn('Save errored due to empty 200 OK body');
+
+            snackActions.show({ message: 'success', action: 'ok', translate: true });
+
+            this.props.onSaveSuccess(this.state.modelToEdit);
+        } else {
+            const firstErrorMessage = extractFirstErrorMessageFromServer(error);
+            snackActions.show({ message: firstErrorMessage, action: 'ok' });
+            log.error(error);
+        }
+    },
+
+    _saveAction(event) {
+        event.preventDefault();
+
+        const invalidFieldMessage = getFirstInvalidFieldMessage(this.state.fieldConfigs, this.formRef);
+        if (invalidFieldMessage) {
+            snackActions.show({
+                message: invalidFieldMessage,
+                action: 'ok',
+            });
+            return;
+        }
+        // Set state to saving so forms actions are being prevented
+        this.setState({ isSaving: true });
+        objectActions.saveObject({ id: this.props.modelId, modelType: this.props.modelType })
+            .subscribe(
+                this.saveSuccess,
+                this.saveFail,
+                this.setState({ isSaving: false }),
+            );
+    },
+
+    _closeAction(event) {
+        event.preventDefault();
+
+        this.props.onCancel();
+    },
+
     renderSharingNotification() {
         const formPaperStyle = {
             width: '100%',
@@ -211,96 +296,5 @@ export default React.createClass({
             return (<div>Loading data....</div>);
         }
         return this.renderForm();
-    },
-
-    /*
-     *  Sets the style of the fields that are not part of the active steps to 'none'
-     *  so that they are "hidden". For this to work, the components needs to have
-     *  an outer div that receives the props.style. 
-     */
-    setActiveStep(step) {
-        this.setState({
-            activeStep: step,
-            fieldConfigs: getStepFields(
-                step,
-                this.state.fieldConfigs,
-                this.props.modelType,
-            ),
-        });
-    },
-
-    setFormRef(form) {
-        this.formRef = form;
-    },
-
-    _onUpdateField(fieldName, value) {
-        const fieldConfig = this.state.fieldConfigs.find(fieldConfig => fieldConfig.name === fieldName);
-        if (fieldConfig && fieldConfig.beforeUpdateConverter) {
-            return objectActions.update({
-                fieldName,
-                value: fieldConfig.beforeUpdateConverter(value),
-            });
-        }
-        return objectActions.update({ fieldName, value });
-    },
-
-    _onUpdateFormStatus(formState) {
-        this.setState({
-            formState,
-        });
-    },
-
-    _saveAction(event) {
-        event.preventDefault();
-
-        const invalidFieldMessage = getFirstInvalidFieldMessage(this.state.fieldConfigs, this.formRef);
-        if (invalidFieldMessage) {
-            snackActions.show({
-                message: invalidFieldMessage,
-                action: 'ok',
-            });
-            return;
-        }
-
-        // Set state to saving so forms actions are being prevented
-        this.setState({ isSaving: true });
-
-        objectActions.saveObject({ id: this.props.modelId, modelType: this.props.modelType })
-            .subscribe(
-                (message) => {
-                    this.setState({ isSaving: false });
-
-                    snackActions.show({ message, translate: true });
-
-                    this.props.onSaveSuccess(this.state.modelToEdit);
-                },
-                (errorMessage) => {
-                    // TODO: d2 queries require a JSON body on 200 OK, an empty body is not valid JSON
-                    if (errorMessage.httpStatusCode === 200) {
-                        log.warn('Save errored due to empty 200 OK body');
-
-                        snackActions.show({ message: 'success', action: 'ok', translate: true });
-
-                        return this.props.onSaveSuccess(this.state.modelToEdit);
-                    }
-
-                    log.error(errorMessage);
-
-                    this.setState({ isSaving: false });
-
-                    if (isString(errorMessage)) {
-                        log.debug(errorMessage);
-                        snackActions.show({ message: errorMessage, action: 'ok' });
-                    }
-
-                    this.props.onSaveError(errorMessage);
-                },
-            );
-    },
-
-    _closeAction(event) {
-        event.preventDefault();
-
-        this.props.onCancel();
     },
 });

@@ -122,7 +122,6 @@ export const getMetaDataToSend = (state) => {
         payload.dataEntryForms = payload.dataEntryForms ?
             payload.dataEntryForms.concat(programStageDataEntryForms) : programStageDataEntryForms;
     }
-
     return payload;
 };
 

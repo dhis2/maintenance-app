@@ -15,7 +15,6 @@ import listStore from './List/list.store';
 import store from './store';
 import { resetActiveStep } from './EditModel/stepper/stepper.actions';
 import { loadEventProgram } from './EditModel/event-program/actions';
-import { loadProgramIndicator } from './EditModel/program-indicator/programIndicator.actions';
 import LoadableComponent, { LoadableWithLoaders } from './utils/LoadableComponent';
 
 function initState({ params }) {
@@ -105,7 +104,7 @@ function loadObject({ params, router: { replace } }) {
                         replace(`/list/${params.modelType}`);
                         snackActions.show({ message: errorMessage, action: 'ok' });
                         reject(errorMessage);
-                    }
+                    },
                 );
         }
     });
@@ -159,7 +158,9 @@ function loadList({ params }, replace) {
         return;
     }
     initState({ params });
-    return listActions.loadList(params.modelType)
+
+    return listActions
+        .loadList(params.modelType)
         .take(1)
         .subscribe(
             noop,
@@ -181,15 +182,16 @@ function loadList({ params }, replace) {
 function cloneObject({ params, router: { replace } }) {
     initState({ params });
     return new Promise((resolve, reject) => {
-        objectActions.getObjectOfTypeByIdAndClone({ objectType: params.modelType, objectId: params.modelId })
-        .subscribe(
-            resolve,
-            (errorMessage) => {
-                replace(`/list/${params.modelType}`);
-                snackActions.show({ message: errorMessage, action: 'ok' });
-                reject(errorMessage);
-            }
-        )
+        objectActions
+            .getObjectOfTypeByIdAndClone({ objectType: params.modelType, objectId: params.modelId })
+            .subscribe(
+                resolve,
+                (errorMessage) => {
+                    replace(`/list/${params.modelType}`);
+                    snackActions.show({ message: errorMessage, action: 'ok' });
+                    reject(errorMessage);
+                },
+            );
     });
 }
 
@@ -248,13 +250,6 @@ const routes = (
                     path="program/:modelId"
                     component={LoadableComponent({ loader: () => import('./EditModel/event-program/EditProgram.component') })}
                     onEnter={createLoaderForSchema('program', loadEventProgram, resetActiveStep)}
-                    hideSidebar
-                    disableTabs
-                />
-                <Route
-                    path="programIndicator/:modelId"
-                    component={LoadableComponent({ loader: () => import('./EditModel/program-indicator/EditProgramIndicator') })}
-                    onEnter={createLoaderForSchema('programIndicator', loadProgramIndicator, resetActiveStep)}
                     hideSidebar
                     disableTabs
                 />

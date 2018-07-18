@@ -123,7 +123,7 @@ const stepToFormBuilder = ({
 
     //TODO cleanup this
     //Remove PROGRAM_ATTRIBUTE options when it's an event-program
-    if(!isTracker && !isProgram) {
+    if(!isTracker) {
         fieldsToUse = fieldsToUse.map(field => {
             if(field.name === 'notificationRecipient') {
                 const removedOptions = field.props.options.filter(opt => opt.value !== "PROGRAM_ATTRIBUTE");

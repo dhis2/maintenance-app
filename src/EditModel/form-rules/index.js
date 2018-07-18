@@ -43,6 +43,9 @@ function changeValue(fieldConfig, operationParams, ruleResult, model) {
 }
 
 function setProp(fieldConfig, operationParams, ruleResult) {
+    if (!fieldConfig) {
+        return;
+    }
     if (ruleResult) {
         return fieldConfig.props[operationParams.propName] = operationParams.thenValue;
     }
