@@ -13,7 +13,7 @@
         "jest": true
     },
     "rules": {
-        "no-param-reassign": "off",
+        "no-param-reassign": [2, { "props": false }],
         "no-fallthrough": "off",
         "array-callback-return": "off",
         "import/no-extraneous-dependencies": 0,

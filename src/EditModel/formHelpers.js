@@ -192,6 +192,7 @@ function addValuesToFieldConfigs(fieldConfigs, model) {
  * Ie. programNotificationTemplate, which are used in program Notification and programStage notifications.
  */
 export function createFieldConfigsFor(schema, fieldNames, filterFieldConfigs = identity, includeAttributes, runRules = true, customFieldOrderName) {
+    // eslint-disable-next-line no-param-reassign
     filterFieldConfigs = filterFieldConfigs || identity;
     return mapPropsStream(props$ => props$
         .filter(({ model }) => model)
