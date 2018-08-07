@@ -199,15 +199,33 @@ const ProgramStageDataElement = pure(
     },
 );
 
-function addRenderingOptions(renderingOptions) {
-    return (psde) => {
-        const { dataElement, ...other } = psde;
+function addDisplayProperties(dataElements, renderingOptions) {
+    return ({ dataElement, ...other }) => {
+        const deDisplayProps = dataElements.find(
+            ({ id }) => id === dataElement.id,
+        );
+        
         const renderTypeOptions = getRenderTypeOptions(dataElement, DATA_ELEMENT_CLAZZ, renderingOptions);
+        if(!deDisplayProps) {
+            console.warn("Could not find tracker-element with id", dataElement.id);
+            //fallback to info that is already contained, and add renderType
+            return {
+                ...other,
+                dataElement: {
+                    ...dataElement,
+                    renderTypeOptions,
+                },
+            };
+        }
+        const { displayName, valueType, optionSet } = deDisplayProps;
 
         return {
             ...other,
             dataElement: {
                 ...dataElement,
+                displayName,
+                valueType,
+                optionSet,
                 renderTypeOptions,
             },
         };
@@ -245,9 +263,9 @@ function AssignDataElements(props, { d2 }) {
     assignedItemStore.setState(
         props.model.programStageDataElements.map(v => v.dataElement.id)
     );
+
     const tableRows = props.model.programStageDataElements
-        .map(
-            addRenderingOptions(props.renderingOptions))
+        .map(addDisplayProperties(props.trackerDataElements, props.renderingOptions))
         .map((programStageDataElement, index) => {
             return (
                 <ProgramStageDataElement
