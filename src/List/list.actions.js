@@ -8,6 +8,7 @@ import { getInstance } from 'd2/lib/d2';
 import listStore from './list.store';
 import detailsStore from './details.store';
 import appState from '../App/appStateStore';
+import { goToRoute } from '../router-utils';
 import {
     getDefaultFiltersForType,
     getFilterFieldsForType,
@@ -102,12 +103,6 @@ listActions.loadList
     .filter(({ data }) => data !== 'organisationUnit')
     .combineLatest(Observable.fromPromise(getInstance()), (action, d2) => ({ ...action, d2 }))
     .flatMap(({ data: modelName, complete, error, d2 }) => {
-        // We can not search for non existing models
-        if (isUndefined(d2.models[modelName])) {
-            error(`${modelName} is not a valid schema name`);
-            throw new Error(`${modelName} is not a valid schema name`);
-        }
-
         //Remember the searchString if its the same model
         const searchString = listStore.state && listStore.state.modelType
             && listStore.state.modelType === modelName ?
@@ -123,12 +118,19 @@ listActions.loadList
         });
     })
     .subscribe(async ({ schema, query, complete, error, d2 }) => {
-        const listResultsCollection = await getSchemaWithFilters(d2.models, schema.name)
-            .list(Object.assign(query, getQueryForSchema(schema.name)));
-
-        listActions.setListSource(listResultsCollection);
-
-        complete(`${schema.name} list loading`);
+        if (schema) {
+            const listResultsCollection = await getSchemaWithFilters(d2.models, schema.name)
+                .list(Object.assign(query, getQueryForSchema(schema.name)));
+    
+            listActions.setListSource(listResultsCollection);
+            complete(`${schema.name} list loading`);
+        } else {
+            // If schema is not available is is not possible to fetch a list
+            // and we redirect to the main list page. 
+            // This is likely to happen if an invalid URL is entered in the address bar.
+            goToRoute('list/all');
+            complete('Schema not found');
+        }
     }, log.error.bind(log));
 
 
