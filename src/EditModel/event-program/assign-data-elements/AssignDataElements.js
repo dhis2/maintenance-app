@@ -240,17 +240,14 @@ function AssignDataElements(props, { d2 }) {
     //This is due to a database inconsistency. This fix makes it possible to show and be able to remove these
     //elements from the UI
     const otherElems = props.model.programStageDataElements
-    .filter(v => {
-        const { dataElement } = v;
-        return dataElement.domainType && dataElement.domainType !== "TRACKER";
-    })
-    .map(v => {
-        const dataElement = v.dataElement;
-        return {
+        .filter(({ dataElement }) => (
+            dataElement.domainType !== "TRACKER"
+        ))
+        .map(({ dataElement }) => ({
             id: dataElement.id,
             text: dataElement.displayName,
             value: dataElement.id,
-        }});
+        }));
 
     itemStore.setState(
         props.trackerDataElements.map(dataElement => ({
