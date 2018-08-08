@@ -125,7 +125,7 @@ listActions.loadList
             listActions.setListSource(listResultsCollection);
             complete(`${schema.name} list loading`);
         } else {
-            // If schema is not available is is not possible to fetch a list
+            // If schema is not available it is not possible to fetch a list
             // and we redirect to the main list page. 
             // This is likely to happen if an invalid URL is entered in the address bar.
             goToRoute('list/all');
