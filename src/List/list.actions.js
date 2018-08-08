@@ -1,6 +1,5 @@
 import Action from 'd2-ui/lib/action/Action';
 import { Observable } from 'rxjs';
-import { isUndefined } from 'lodash/fp';
 import log from 'loglevel';
 
 import { getInstance } from 'd2/lib/d2';
