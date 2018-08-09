@@ -303,7 +303,8 @@ async function loadAdditionalTrackerMetadata(loadedMetadata) {
  * Checks the program for elements that have programStageDataElements with
  * domainType=AGGREGATE, and gives the user a notification and the ability
  * to remove these automatically.
- * This should be done server side, ho
+ * There should be a restriction server side, but this is helpful for 
+ * already affected instances.
  * @param {*} state the state of the eventProgram store
  */
 function aggregatePSDENotification(state) {
