@@ -133,7 +133,7 @@ const ProgramStageDataElement = pure(
 
         return (
             <TableRow>
-                <TableRowColumn>
+                <TableRowColumn title={programStageDataElement.dataElement.displayName}>
                     {programStageDataElement.dataElement.displayName}
                 </TableRowColumn>
                 <TableRowColumn>
@@ -201,11 +201,23 @@ const ProgramStageDataElement = pure(
 
 function addDisplayProperties(dataElements, renderingOptions) {
     return ({ dataElement, ...other }) => {
-        const { displayName, valueType, optionSet } = dataElements.find(
+        const deDisplayProps = dataElements.find(
             ({ id }) => id === dataElement.id,
         );
-
+        
         const renderTypeOptions = getRenderTypeOptions(dataElement, DATA_ELEMENT_CLAZZ, renderingOptions);
+        if(!deDisplayProps) {
+            console.warn("Could not find tracker-element with id", dataElement.id);
+            //fallback to info that is already contained, and add renderType
+            return {
+                ...other,
+                dataElement: {
+                    ...dataElement,
+                    renderTypeOptions,
+                },
+            };
+        }
+        const { displayName, valueType, optionSet } = deDisplayProps;
 
         return {
             ...other,
@@ -224,12 +236,25 @@ function AssignDataElements(props, { d2 }) {
     const itemStore = Store.create();
     const assignedItemStore = Store.create();
 
+    //Fix for DHIS2-4369 where some program stages may contain other dataelements than TRACKER
+    //This is due to a database inconsistency. This fix makes it possible to show and be able to remove these
+    //elements from the UI
+    const otherElems = props.model.programStageDataElements
+        .filter(({ dataElement }) => (
+            dataElement.domainType !== "TRACKER"
+        ))
+        .map(({ dataElement }) => ({
+            id: dataElement.id,
+            text: dataElement.displayName,
+            value: dataElement.id,
+        }));
+
     itemStore.setState(
         props.trackerDataElements.map(dataElement => ({
             id: dataElement.id,
             text: dataElement.displayName,
             value: dataElement.id,
-        }))
+        })).concat(otherElems)
     );
 
     assignedItemStore.setState(
