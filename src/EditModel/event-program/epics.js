@@ -47,7 +47,8 @@ import { createModelToEditEpic, createModelToEditProgramStageEpic } from '../epi
 
 import showSnackBarMessageEpic from '../../Snackbar/epics';
 import { notifyUser } from '../actions';
-
+import snackActions from '../../Snackbar/snack.actions';
+import { removeDataElementsFromStage} from './assign-data-elements/actions';
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
 
@@ -298,14 +299,61 @@ async function loadAdditionalTrackerMetadata(loadedMetadata) {
     return loadedMetadata;
 }
 
-export const programModel = action$ =>
+/**
+ * Checks the program for elements that have programStageDataElements with
+ * domainType=AGGREGATE, and gives the user a notification and the ability
+ * to remove these automatically.
+ * This should be done server side, ho
+ * @param {*} state the state of the eventProgram store
+ */
+function aggregatePSDENotification(state) {
+
+    const removeOffendingElements = (programStageIDs, dataElements) => {
+        const actions = programStageIDs.map(psID => removeDataElementsFromStage({ programStage: psID, dataElements }));
+        snackActions.hide();
+        return actions;
+    }
+    const offendingElementIDs = [];
+    const offendingPSIDs = [];
+
+    state.programStages.forEach(ps => {
+        ps.programStageDataElements.forEach(psde => {
+            const { dataElement } = psde;
+            if (dataElement && dataElement.domainType && dataElement.domainType !== "TRACKER") {
+                const message = `Program stage '${ps.displayName}' contains a program stage data element with domainType '${dataElement.domainType}'.
+This is not allowed. Offending dataElement is '${dataElement.displayName}' with ID '${dataElement.id}'`;
+                console.warn(message);
+                offendingElementIDs.push(dataElement.id);
+                offendingPSIDs.push(ps.id);
+            }
+        })
+    });
+    if (offendingPSIDs.length > 0) {
+        const prom = new Promise((resolve, reject) => {
+            snackActions.show({
+                message: `The following program stages: '${offendingPSIDs.join(', ')}' contain program stage data elements with domainType=AGGREGATE. This is not allowed.
+    Click the REMOVE button to clean up, or click anywhere on the page to ignore this issue. See the log for more details.`,
+                action: 'remove',
+                onActionTouchTap: (e) => resolve(removeOffendingElements(offendingPSIDs, offendingElementIDs))
+            });
+        });
+        return Observable.from(prom).mergeAll();
+    }
+    return Observable.never();
+}
+
+export const programModel = (action$) =>
     action$
         .ofType(EVENT_PROGRAM_LOAD)
         .map(get('payload'))
         .flatMap(loadEventProgramMetadataByProgramId)
         .flatMap(loadAdditionalTrackerMetadata)
         .do(storeState => eventProgramStore.setState(storeState))
-        .mapTo(loadEventProgramSuccess());
+        .flatMap(state =>
+            aggregatePSDENotification(state).merge(
+                Observable.of(loadEventProgramSuccess())
+            )
+        );
 
 export const programModelEdit = createModelToEditEpic(
     MODEL_TO_EDIT_FIELD_CHANGED,
