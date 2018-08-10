@@ -2,7 +2,6 @@
   "name": "maintenance-app",
   "version": "31.0.0",
   "description": "DHIS2 Maintenance app",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dhis2/maintenance-app.git"
@@ -125,5 +124,8 @@
         "href": ".."
       }
     }
-  }
+  },
+  "files": [
+    "build/"
+  ]
 }
