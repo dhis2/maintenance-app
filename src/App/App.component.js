@@ -1,6 +1,4 @@
 import React from 'react';
-import HeaderBarComponent from 'd2-ui/lib/app-header/HeaderBar';
-import headerBarStore$ from 'd2-ui/lib/app-header/headerBar.store';
 import MainContent from 'd2-ui/lib/layout/main-content/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
@@ -16,8 +14,7 @@ import { goToRoute } from '../router-utils';
 import appState, { setAppState } from './appStateStore';
 import { Provider } from 'react-redux';
 import store from '../store';
-
-const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
+import HeaderBar from "@dhis2/d2-ui-header-bar";
 
 const sections$ = appState
     .map(state => ({
@@ -80,7 +77,7 @@ class App extends AppWithD2 {
         return (
             <Provider store={store}>
                 <div>
-                    <HeaderBar />
+                    <HeaderBar d2={this.state.d2} />
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
                         <TwoPanelLayout>
