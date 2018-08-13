@@ -113,7 +113,7 @@ objectActions.saveObject
     .subscribe((action) => {
         const errorHandler = (message) => {
             if (message === 'Response was not a WebMessage with the expected format') {
-                action.error('Failed to save: Failed to provide proper error message: Everything is broken');
+                action.error('Failed to save: Failed to provide proper error message.');
                 return;
             }
             action.error(message);
