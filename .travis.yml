@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '6'
+- '8'
 cache:
   yarn: true
   directories:
@@ -9,9 +9,8 @@ script:
 - npm rebuild node-sass
 - npm run build
 after_success:
-- if ( [ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG"
-  == "dhis2/maintenance-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ];then mvn
-  clean deploy --settings deploy/settings.xml && exit 0; fi
+- if ([ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG"
+  == "dhis2/maintenance-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ]; npm publish && exit 0; fi
 notifications:
   slack:
     secure: ebgMYULQtJ8znNboQgD46c0SFriyfMVFujDBrq9vOdJiMC2PEX3numNDHSCyfQz2L3/lsRhDQ1ex687pMh2m+wQR1937z1jvOANsLnBuhVRKAwFu3L9YSLqhzJ/Nyz+uE8g6QBdYBPoN7DvntClr0tiWXxj+Zg3e2lN2PLrRvnp9Opp9h71b43fXbMPDqISoU8q/EmkzLnGoO6u7t3QgE7FQezdq9JUrTL+5UKQwyv7C3psEr1ytXGpyMxT0K2aikbyF8TF/2hIlrD8ibQt6iuuf7CSpzUq8VGVUffBJLOPiu8N0/GgAq/39UvOgq/Ic+uPoXmFLg2lfCnGaKoYhye4J0iiMdkU04UdQdnqcvoEFgHsVYgT2exUtdOLzxxkmq7NgHrBq3hpKC9ay6ENUsBVo4rj2Lev9KQPLZIILzX8rFAqfG1jsVi89R8yaepMvWQeqAI0VHPHpm7uyf5BjP9dEHIH/ms3+voptx6wbQ5KfU4LqcOeMKj+EAD3vCsxcE6DkC6lwx/9BwGTjShcByc60c519qc1Ft56fDU28W1szYPAurPzmLsPDenT5xTcr7Xmv6v7HMslblHH4n7bQpHoi9haJlKGbvZXOqsUK4fFI35+vTsjams8oyYMTwpF4cXnb6EmPPO9742xgSFtmbaqxMgAEAuTsHNEbyyRmZ+U=
