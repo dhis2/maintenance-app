@@ -276,7 +276,6 @@ const fieldOrderByName = new Map([
         'minDaysFromStart',
         'repeatable',
         'periodType',
-        'validation',
         'displayGenerateEventBox',
         'standardInterval',
         'autoGenerateEvent',
