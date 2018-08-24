@@ -22,3 +22,6 @@ export const getStageSectionsById = curry((state, id) => {
 
     return get(id, programStageSections);
 });
+
+
+export const getMaxSortOrder = (store) => (store.programStages.reduce((max, curr) => Math.max(max, curr.sortOrder), 0));
