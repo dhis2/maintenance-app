@@ -19,6 +19,7 @@ import {
     deleteProgramStageSuccess,
     deleteProgramStageError,
 } from './program-stages/actions';
+import { getMaxSortOrder } from './program-stages/selectors';
 
 const d2$ = Observable.fromPromise(getInstance());
 
@@ -61,6 +62,7 @@ export const newTrackerProgramStage = action$ =>
             const programStages = store.programStages;
             const program = store.program;
             const programStageUid = generateUid();
+            const maxSortOrder = getMaxSortOrder(store);
             const programStageModel = d2.models.programStages.create({
                 id: programStageUid,
                 publicAccess: "rw------",
@@ -73,6 +75,7 @@ export const newTrackerProgramStage = action$ =>
                 lastUpdated: new Date().toISOString(),
                 displayGenerateEventBox: true,
                 autoGenerateEvent: true,
+                sortOrder: maxSortOrder+1,
             });
             try {
                 programStages.push(programStageModel);
