@@ -18,11 +18,12 @@
     "postbuild": "cp -r src/i18n icon.png ./build/",
     "validate": "npm ls --depth 0",
     "manifest": "d2-manifest package.json build/manifest.webapp",
-    "prepare": "npm run build",
     "lint": "eslint ./src",
-    "profile": "npm run start -- --profile"
+    "profile": "npm run start -- --profile",
+    "deploy": "deploy-build"
   },
   "devDependencies": {
+    "@dhis2/deploy-build": "^1.0.4",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
