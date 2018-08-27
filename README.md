@@ -1,6 +1,6 @@
 # maintenance-app
 
-[![Build Status](https://travis-ci.org/dhis2/maintenance-app.svg?branch=master)](https://travis-ci.org/dhis2/maintenance-app)
+[![Build Status](https://travis-ci.org/dhis2/maintenance-app.svg?branch=master)](https://travis-ci.org/dhis2/maintenance-app) [![Greenkeeper badge](https://badges.greenkeeper.io/dhis2/maintenance-app.svg)](https://greenkeeper.io/)
 
 
 ## App config
