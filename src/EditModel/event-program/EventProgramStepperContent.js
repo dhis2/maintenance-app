@@ -26,7 +26,7 @@ let ProgramForm = props => (
         onUpdateField={props.editFieldChanged}>
     </FormBuilder>)
 
-ProgramForm = createFieldConfigsFor('program', eventProgramFields, undefined, null, true, 'eventProgram')(ProgramForm);
+ProgramForm = createFieldConfigsFor('program', eventProgramFields, undefined, true, true, 'eventProgram')(ProgramForm);
 
 let ProgramStageForm = props => (
     <FormBuilder
