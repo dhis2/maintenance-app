@@ -59,15 +59,16 @@ const addDataElementsToStage = store => action$ =>
                 'payload.dataElements',
                 action
             );
-            const programStageDataElementsToAdd = map(
-                id => ({
+            let sortOrder = programStageDataElements.length;
+            const programStageDataElementsToAdd = map((id) => {
+                return {
                     id: generateUid(),
                     dataElement: {
                         id,
                     },
-                }),
-                dataElementIdsToAdd
-            );
+                    sortOrder: sortOrder++
+                };
+            }, dataElementIdsToAdd);
 
             programStageToEdit.programStageDataElements = programStageDataElements.concat(
                 programStageDataElementsToAdd
