@@ -70,6 +70,7 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
 
     const d2 = await getInstance();
     const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits({
+        fields: ':all,displayName,path,publicAccess,access,children[id,displayName,path,children::isNotEmpty,publicAccess,access]',
         paging: false
     });
 
@@ -79,7 +80,7 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
             paging: false,
             fields: [
                 'id,displayName,path,publicAccess,access,lastUpdated',
-                'children[id,displayName,path,children::isNotEmpty]',
+                'children[id,displayName,publicAccess,access,path,children::isNotEmpty]',
             ].join(','),
         });
 
