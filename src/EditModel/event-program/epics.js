@@ -157,6 +157,9 @@ export const programModel = action$ => action$
 export const programModelEdit = createModelToEditEpic(MODEL_TO_EDIT_FIELD_CHANGED, eventProgramStore, 'program');
 
 const setEventPSStage = (state) => {
+    if (state.program.programType === "WITH_REGISTRATION") {
+        return state;
+    }
     const ps = first(state.programStages);
     ps.name = state.program.name || state.program.id;
     return {
