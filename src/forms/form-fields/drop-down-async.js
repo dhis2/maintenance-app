@@ -37,8 +37,8 @@ class DropDownAsync extends Component {
         }
 
         //referenceType updated, reload
-        if (this.props.referenceType !== newProps.referenceType) {
-            this.onRefreshClick();
+        if (this.props.referenceType !== newProps.referenceType || this.props.queryParamFilter !== newProps.queryParamFilter) {
+            this.onRefreshClick(null, newProps);
         }
     }
 
@@ -46,12 +46,12 @@ class DropDownAsync extends Component {
         this.omgLikeJustStop = true;
     }
 
-    onRefreshClick = () => {
+    onRefreshClick = (e, props) => {
         this.setState({
             isRefreshing: true,
         });
 
-        this.loadOptions()
+        this.loadOptions(props)
             .then(() => this.setState({ isRefreshing: false }));
     }
 
@@ -75,16 +75,16 @@ class DropDownAsync extends Component {
         }
     }
 
-    loadOptions() {
+    loadOptions(props = this.props) {
         let fieldsForReferenceType = 'id,displayName,name';
 
         // The valueType is required for optionSet so we can set the model valueType to the optionSet.valueType
-        if (this.props.referenceType === 'optionSet') {
+        if (props.referenceType === 'optionSet') {
             fieldsForReferenceType = 'id,displayName,name,valueType';
         }
 
         // program.programType is required for programIndicators to be able to determine if it is a tracker or event program
-        if (this.props.referenceType === 'program') {
+        if (props.referenceType === 'program') {
             /*
              * DHIS-2444: program.programTrackedEntity is needed for the
              * attributeselector to work when changing programs.
@@ -93,19 +93,19 @@ class DropDownAsync extends Component {
             fieldsForReferenceType = 'id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]]';
         }
         // Need trackedEntityAttribute-ids for trackerProgram to assign programTrackedEntityAttributes
-        if (this.props.referenceType === 'trackedEntityType') {
+        if (props.referenceType === 'trackedEntityType') {
             fieldsForReferenceType = fieldsForReferenceType
                 .concat(',trackedEntityTypeAttributes[trackedEntityAttribute]');
         }
 
-        const filter = this.props.queryParamFilter;
+        const filter = props.queryParamFilter;
         let d2i = {};
 
         return getInstance()
             .then((d2) => {
                 d2i = d2;
-                if (d2.models.hasOwnProperty(this.props.referenceType)) {
-                    return d2.models[this.props.referenceType].list(Object.assign(
+                if (d2.models.hasOwnProperty(props.referenceType)) {
+                    return d2.models[props.referenceType].list(Object.assign(
                         {
                             fields: fieldsForReferenceType,
                             paging: false,
@@ -115,9 +115,9 @@ class DropDownAsync extends Component {
                             ? { rootJunction: 'OR' }
                             : {},
                     ));
-                } else if (this.props.referenceType.indexOf('.') !== -1) {
-                    const modelName = this.props.referenceType.substr(0, this.props.referenceType.indexOf('.'));
-                    const modelProp = this.props.referenceType.substr(modelName.length + 1);
+                } else if (props.referenceType.indexOf('.') !== -1) {
+                    const modelName = props.referenceType.substr(0, props.referenceType.indexOf('.'));
+                    const modelProp = props.referenceType.substr(modelName.length + 1);
                     return d2.models[modelName].modelProperties[modelProp].constants
                         .map(v => ({ displayName: d2.i18n.getTranslation(v.toLowerCase()), id: v }));
                 }

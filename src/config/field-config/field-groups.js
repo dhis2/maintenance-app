@@ -15,7 +15,7 @@ const fieldGroupsForModelType = new Map([
         [
             {
                 label: 'enter_program_rule_details',
-                fields: ['program', 'name', 'description', 'priority'],
+                fields: ['program', 'programStage', 'name', 'description', 'priority'],
             },
             {
                 label: 'enter_program_rule_expression',
