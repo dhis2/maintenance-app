@@ -34,6 +34,10 @@ import { getFilterFieldsForType } from '../config/maintenance-models';
 import { withAuth } from '../utils/Auth';
 import CompulsoryDataElementOperandDialog from './compulsory-data-elements-dialog/CompulsoryDataElementOperandDialog.component';
 import './listValueRenderers';
+import IconButton from 'material-ui/IconButton/IconButton';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
+import { connect } from 'react-redux';
+import { openColumnsDialog } from './columns/actions';
 
 const styles = {
     dataTableWrap: {
@@ -400,6 +404,9 @@ class List extends Component {
                         </div>
                     );
                 })}
+                 <IconButton onClick={() => this.props.openColumnsDialog(this.props.params.modelType)}>
+                     <FontIcon color="gray" className="material-icons">settings</FontIcon>
+                </IconButton>
             </div>
         );
     }
@@ -620,4 +627,8 @@ List.contextTypes = {
     d2: PropTypes.object.isRequired,
 };
 
-export default withAuth(List);
+const mapDispatchToProps = {
+    openColumnsDialog
+}
+
+export default connect(null, mapDispatchToProps)(withAuth(List));
