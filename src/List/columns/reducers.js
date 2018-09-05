@@ -163,6 +163,7 @@ const dialogReducer = (state = {open: false}, action) => {
             }
         }
 
+        case 'SET_COLUMNS_FOR_MODEL_SUCCESS':
         case "CONFIGURABLE_COLUMNS_DIALOG_CLOSE": {
             return {
                 ...state,

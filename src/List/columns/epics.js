@@ -1,7 +1,9 @@
 import { Observable } from 'rxjs';
 import { configurableColumnsLoadTypes, setColumnsTypes  } from './actions';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from '../../../../d2/lib/d2';
 import { combineEpics } from "redux-observable";
+import listStore from '../list.store';
+import listActions from '../list.actions';
 
 const d2$ = Observable.fromPromise(getInstance());
 const DATASTORE_NAMESPACE = 'MAINTENANCE_CONFIGURABLE_COLUMNS';
@@ -37,14 +39,15 @@ const setColumnsForModel = action$ =>
         .switchMap(async ([action, d2]) => {
             const { modelType, columns } = action.payload;
 
-            const namespace = await d2.currentUser.dataStore.get(
+            /*const namespace = await d2.currentUser.dataStore.get(
                 DATASTORE_NAMESPACE
             );
 
-            const ret = await namespace.set(modelType, columns);
-            console.log(ret);
-
-            return {type: setColumnsForModel.success, payload: action.payload}
+            const ret = await namespace.set(modelType, columns); */
+           // console.log(ret);
+            listStore.setState({...listStore.state, tableColumns: columns})
+            listActions.loadList(modelType);
+            return {type: setColumnsTypes.success, payload: action.payload}
         });
 
 

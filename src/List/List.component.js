@@ -38,6 +38,7 @@ import IconButton from 'material-ui/IconButton/IconButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { connect } from 'react-redux';
 import { openColumnsDialog } from './columns/actions';
+import ColumnConfigDialog from './columns/ColumnConfigDialog';
 
 const styles = {
     dataTableWrap: {
@@ -611,6 +612,7 @@ class List extends Component {
                     onRequestClose={this.closeDataElementOperandDialog}
                 />
                 {this.state.predictorDialog && <PredictorDialog />}
+                <ColumnConfigDialog modelType={this.props.params.modelType} />
             </div>
         );
     }
