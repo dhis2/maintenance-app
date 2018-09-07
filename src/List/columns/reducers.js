@@ -1,4 +1,4 @@
-import { setColumnsTypes, loadColumnsForModel } from './actions';
+import { setColumnsTypes, loadColumnsForModel, configurableColumnsLoadTypes } from './actions';
 import { combineReducers } from 'redux';
 const typeDetails = {
     category: {
@@ -136,7 +136,7 @@ function createReducer(initialState, handlers) {
     }
   }
 
-const setColumnsForModel = (state, action) => {
+export const setColumnsForModel = (state, action) => {
     const { modelType, columns} = action.payload;
 
     const model = state[modelType];
@@ -150,8 +150,15 @@ const setColumnsForModel = (state, action) => {
     }
 }
 
+const setColumns = (state, action) => {
+    return {
+        ...action.payload.modelTypes
+    }
+}
+
 const byModelTypeReducer = createReducer(typeDetails, {
-    'SET_COLUMNS_FOR_MODEL': setColumnsForModel
+    'SET_COLUMNS_FOR_MODEL_SUCCESS': setColumnsForModel,
+    [configurableColumnsLoadTypes.success]: setColumns
 });
 
 const dialogReducer = (state = {open: false}, action) => {

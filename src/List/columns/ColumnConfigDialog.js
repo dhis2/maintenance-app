@@ -41,7 +41,7 @@ function getAvailableColumnsForType(model, defaultColumns) {
 
     const validations = model.modelValidations;
 
-    let availableColumns = [];
+    let availableColumns = ['user[name]'];
     for (let fieldName in validations) {
         let field = validations[fieldName];
 
@@ -69,6 +69,7 @@ const AvailableColumnsList = ({ columns, onClick, selectedColumns }) => {
                         dataElement={toDataElement}
                         pickDataElement={() => onClick(column)}
                         active={!!active}
+                        key={column.value}
                     />
                 );
             })}
@@ -79,33 +80,35 @@ export class ColumnConfigDialog extends Component {
     constructor(props, context) {
         super(props, context);
         console.log(context);
+        console.log(props.columns)
         this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
-        //this.t = (v) => v;
 
-        const defaultColumns = getTableColumnsForType(props.modelType);
+        const defaultColumns = getTableColumnsForType(props.modelType, true, true).map(this.withDisplay);
         const allAvailableColumns = getAvailableColumnsForType(
             context.d2.models[props.modelType],
             defaultColumns
         );
-        const selectedColumns = defaultColumns;
+
         const availableColumns = allAvailableColumns
-            .filter((val, ind, self) => self.indexOf(val) === ind)
-            .map(this.withTranslation)
+            .filter((val, ind, self) => self.indexOf(val) === ind) //remove duplicates
+            .map(this.withDisplay)
             .sort();
 
-        const selectedColumnsWithDisplay = selectedColumns.map(
-            this.withTranslation
+        const selectedColumnsWithDisplay = props.columns.map(
+            this.withDisplay
         );
+        console.log(selectedColumnsWithDisplay.length < 1)
+        console.log(defaultColumns)
         this.state = {
-            default: defaultColumns,
-            selectedColumns: selectedColumnsWithDisplay,
+            defaultColumns: selectedColumnsWithDisplay,
+            selectedColumns: selectedColumnsWithDisplay.length < 1 ? defaultColumns : selectedColumnsWithDisplay,
             availableColumns,
         };
     }
 
-    withTranslation = value => ({
+    withDisplay = value => ({
         value: value,
-        displayValue: this.t(camelCaseToUnderScores(value)),
+        displayValue: this.t(camelCaseToUnderScores(value.replace(/(\w*)\[(\w*)]/, '$1___$2'))),
     });
 
     addSelection = (selectedColumns, newSelection) => {
@@ -144,6 +147,14 @@ export class ColumnConfigDialog extends Component {
         if (this.props.modelType !== newProps.modelType) {
             this.props.loadColumnsForModel(this.props.modelType);
         }
+        if(this.props.columns !== newProps.columns) {
+            const selectedColumnsWithDisplay = newProps.columns.map(
+                this.withDisplay
+            );
+            this.setState({
+                selectedColumns: selectedColumnsWithDisplay,
+            });
+        }
     }
 
     handleSaveOrder = () => {
@@ -167,6 +178,10 @@ export class ColumnConfigDialog extends Component {
         }));
     };
 
+    handleResetToDefault = () => {
+        this.setState(state => ({ selectedColumns: state.defaultColumns }));
+    };
+
     render() {
         const actions = [
             <FlatButton
@@ -187,6 +202,7 @@ export class ColumnConfigDialog extends Component {
                 open={this.props.open}
                 onRequestClose={this.props.closeColumnsDialog}
                 actions={actions}
+                autoScrollBodyContent
                 title={this.t('manage_columns')}
             >
                 <h3>{this.t('selected_columns')}</h3>
@@ -194,6 +210,11 @@ export class ColumnConfigDialog extends Component {
                     items={this.state.selectedColumns}
                     onSortEnd={this.onSortEnd}
                     onRemoveItem={this.handleRemoveItem}
+                />
+                <FlatButton
+                    label={this.t('reset_to_default')}
+                    onClick={this.handleResetToDefault}
+                    secondary
                 />
                 <Divider />
                 <h3>{this.t('available_columns')}</h3>
@@ -209,7 +230,7 @@ export class ColumnConfigDialog extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     open: getDialogOpen(state),
-    columns: getColumnsForModelType(state, ownProps.modelType).columns,
+    columns: getColumnsForModelType(state, ownProps.modelType),
 });
 
 const mapDispatchToProps = dispatch => ({

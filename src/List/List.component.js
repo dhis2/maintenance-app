@@ -168,6 +168,9 @@ class List extends Component {
         const sourceStoreDisposable = listStore
             .subscribe((listStoreValue) => {
                 if (!isIterable(listStoreValue.list) || listStoreValue.modelType !== this.props.params.modelType) {
+                    this.setState({
+                        isLoading: true,
+                    })
                     return; // Received value is not iterable or not correct model, keep waiting
                 }
                 listActions.hideDetailsBox();

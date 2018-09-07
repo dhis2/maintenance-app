@@ -1,3 +1,6 @@
+import store from '../store';
+import { getColumnsForModelType } from '../List/columns/selectors';
+
 export function getSideBarConfig() {
     return {
         all: {
@@ -254,7 +257,21 @@ export function getFiltersForType(modelType) {
     return [];
 }
 
-export function getTableColumnsForType(modelType, preservePropNames = false) {
+export function getTableColumnsForType(modelType, preservePropNames = false, defaultOnly = false) {
+    const defaultColumns = getDefaultTableColumnsForType(modelType, preservePropNames);
+    if(defaultOnly) {
+        return defaultColumns;
+    }
+    console.log("default", defaultColumns)
+    const userSelected = getUserSelectedTableColumnsForType(modelType, preservePropNames);
+    if(!userSelected || userSelected.length < 1) {
+        return defaultColumns;
+    }
+    console.log("user selected", userSelected)
+    return userSelected;
+}
+
+export function getDefaultTableColumnsForType(modelType, preservePropNames = false) {
     if (typeDetails.hasOwnProperty(modelType) && typeDetails[modelType].hasOwnProperty('columns')) {
         return typeDetails[modelType].columns
             .map(col => (preservePropNames ? col : col.replace(/(\w*)\[(\w*)]/, '$1___$2'))); //replaces a[b] with a__b
@@ -263,6 +280,10 @@ export function getTableColumnsForType(modelType, preservePropNames = false) {
     return ['displayName', 'publicAccess', 'lastUpdated'];
 }
 
+export function getUserSelectedTableColumnsForType(modelType, preservePropNames) {
+    const cols = getColumnsForModelType(store.getState(), modelType);
+    return cols.map(col => (preservePropNames ? col : col.replace(/(\w*)\[(\w*)]/, '$1___$2'))); //replaces a[b] with a__b
+};
 export function getDefaultFiltersForType(modelType) {
     if (typeDetails.hasOwnProperty(modelType) &&
         typeDetails[modelType].hasOwnProperty('defaultFilters') &&
