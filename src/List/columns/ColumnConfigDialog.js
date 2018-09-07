@@ -16,21 +16,23 @@ import { grey100, grey200 } from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
 import ColumnsList from './DraggableColumns';
 import camelCaseToUnderScores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import { magicallyUnwrapChildValues } from '../List.component';
 import { compose, pullAll, sortedUniq } from 'lodash/fp';
 import FlatButton from 'material-ui/FlatButton';
-
+import { AvailableDataElement } from '../../EditModel/event-program/create-data-entry-form/DataElementPicker.component';
 const styles = {
     dataElement: {
         padding: '1rem 1rem',
         backgroundColor: grey200,
         marginBottom: '4px',
         borderRadius: '8px',
+        userSelect: 'none',
+        cursor: 'pointer',
     },
     availableColumnsContainer: {
         display: 'flex',
         flexWrap: 'wrap',
     },
+    disabledElement: {},
     availableColumnsItem: {},
 };
 
@@ -50,19 +52,29 @@ function getAvailableColumnsForType(model, defaultColumns) {
     return availableColumns;
 }
 
-const AvailableColumnsList = ({ columns, onClick }) => (
-    <div style={styles.availableColumnsContainer}>
-        {columns.map(column => (
-            <div
-                key={column.value}
-                style={styles.dataElement}
-                onClick={() => onClick(column)}
-            >
-                {column.displayValue}
-            </div>
-        ))}
-    </div>
-);
+const AvailableColumnsList = ({ columns, onClick, selectedColumns }) => {
+    return (
+        <div style={styles.availableColumnsContainer}>
+            {columns.map(column => {
+                //adhere to availabledataelement api
+                const toDataElement = {
+                    id: column.value,
+                    displayName: column.displayValue,
+                };
+                const active = selectedColumns.find(
+                    col => col.value === column.value
+                );
+                return (
+                    <AvailableDataElement
+                        dataElement={toDataElement}
+                        pickDataElement={() => onClick(column)}
+                        active={!!active}
+                    />
+                );
+            })}
+        </div>
+    );
+};
 export class ColumnConfigDialog extends Component {
     constructor(props, context) {
         super(props, context);
@@ -76,11 +88,10 @@ export class ColumnConfigDialog extends Component {
             defaultColumns
         );
         const selectedColumns = defaultColumns;
-        const availableColumns = pullAll(selectedColumns, allAvailableColumns)
+        const availableColumns = allAvailableColumns
             .filter((val, ind, self) => self.indexOf(val) === ind)
             .map(this.withTranslation)
-            .sort()
-            
+            .sort();
 
         const selectedColumnsWithDisplay = selectedColumns.map(
             this.withTranslation
@@ -144,6 +155,16 @@ export class ColumnConfigDialog extends Component {
 
     handleRemoveItem = (index, modelType) => {
         console.log(index, modelType);
+        const selected = this.state.selectedColumns;
+        const itemToRemove = selected[index];
+        const newSelected = [
+            ...selected.slice(0, index),
+            ...selected.slice(index + 1),
+        ];
+
+        this.setState(state => ({
+            selectedColumns: newSelected,
+        }));
     };
 
     render() {
@@ -179,6 +200,7 @@ export class ColumnConfigDialog extends Component {
                 <AvailableColumnsList
                     columns={this.state.availableColumns}
                     onClick={this.onAddAvailableColumn}
+                    selectedColumns={this.state.selectedColumns}
                 />
             </Dialog>
         );

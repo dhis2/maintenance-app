@@ -10,18 +10,19 @@ import { grey100, grey200 } from 'material-ui/styles/colors';
 import ActionButton from '../../EditModel/event-program/create-data-entry-form/ActionButton.component';
 const styles = {
     dataElement: {
-        padding: '1rem 1rem',
         backgroundColor: grey200,
         marginBottom: '4px',
         margin: '0 5px 5px 0px',
         display: 'flex',
-        flex: '1',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '5px 5px',
+        flex: 1,
     },
 
-    row: {
+    elementValue: {
         userSelect: 'none',
-        display: 'flex',
-        alignItems: 'center',
+        textAlign: 'center'
     },
 
     horizontalSpace: {
@@ -31,20 +32,30 @@ const styles = {
         display: 'flex',
         flexWrap: 'wrap',
     },
+    removeButton: {
+        width: '24px',
+        height: '24px',
+        padding: 0,
+    },
 };
 
 const DataElement = ({ value, onRemoveItem }) => (
     <div style={styles.dataElement}>
-        <div style={styles.row}>
-            <DragHandle />
-            <div style={styles.horizontalSpace} />
-            {value.displayValue}
-        </div>
+        <DragHandle />
+        <div style={styles.elementValue}>{value.displayValue}</div>
+        <ActionButton
+            style={styles.removeButton}
+            onClick={onRemoveItem}
+            icon="clear"
+        />
     </div>
 );
 
 DataElement.propTypes = {
-    value: PropTypes.string,
+    value: PropTypes.shape({
+        value: PropTypes.any,
+        displayvalue: PropTypes.string
+    })
 };
 
 const SortableItem = SortableElement(DataElement);
@@ -83,7 +94,7 @@ class ColumnList extends Component {
 ColumnList.PropTypes = {
     items: PropTypes.shape({
         value: PropTypes.any,
-        displayValue: PropTypes.string
+        displayValue: PropTypes.string,
     }),
     columns: PropTypes.array,
 };
