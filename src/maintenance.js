@@ -13,6 +13,7 @@ import systemSettingsStore from './App/systemSettingsStore';
 import rxjsconfig from 'recompose/rxjsObservableConfig';
 import setObservableConfig from 'recompose/setObservableConfig';
 import periodTypeStore from './App/periodTypeStore';
+import store from './store';
 
 const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
 
@@ -71,6 +72,10 @@ function getSystemSettings(d2) {
     });
 }
 
+function loadConfigurableColumns() {
+    const action = {type: "CONFIGURABLE_COLUMNS_LOAD_REQUEST"};
+    store.dispatch(action);
+}
 function startApp() {
     render(
         <MuiThemeProvider muiTheme={appTheme}>
@@ -101,5 +106,6 @@ getManifest('./manifest.webapp')
     .then(init)
     .then(addCustomModels)
     .then(getSystemSettings)
+    .then(loadConfigurableColumns)
     .then(startApp)
     .catch(log.error.bind(log));

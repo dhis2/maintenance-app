@@ -12,7 +12,7 @@ import SinglePanelLayout from 'd2-ui/lib/layout/SinglePanel.component';
 import TwoPanelLayout from 'd2-ui/lib/layout/TwoPanel.component';
 import { goToRoute } from '../router-utils';
 import appState, { setAppState } from './appStateStore';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import store from '../store';
 import HeaderBar from "@dhis2/d2-ui-header-bar";
 
@@ -70,12 +70,11 @@ class App extends AppWithD2 {
     }
 
     render() {
-        if (!this.state.d2) {
+        if (!this.state.d2 || this.props.userColumnsLoading) {
             return (<LoadingMask />);
         }
 
         return (
-            <Provider store={store}>
                 <div>
                     <HeaderBar d2={this.state.d2} />
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
@@ -94,12 +93,16 @@ class App extends AppWithD2 {
                     )}
                     <SnackbarContainer />
                 </div>
-            </Provider>
         );
     }
 }
 App.defaultProps = {
     d2: getInstance(),
 };
+App = connect(state => ({userColumnsLoading: state.configurableColumns.loading}))(App);
 
-export default App;
+export default props => (
+    <Provider store={store} >
+        <App {...props} />
+    </Provider>
+)

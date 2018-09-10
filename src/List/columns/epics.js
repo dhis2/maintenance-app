@@ -28,6 +28,7 @@ export const loadColumnsForAllModeltypes = action$ =>
                 }
             } catch (e) {
                 //We do not actually do anything here, as we just let it be empty
+                //if it does not exist. Set when editing columns
                 logger.debug(e);
             }
             return {
@@ -44,7 +45,6 @@ const editColumnsForModel = (action$, store) =>
         .combineLatest(d2$)
         .switchMap(async ([action, d2]) => {
             const { modelType, columns } = action.payload;
-
             let namespace;
             try {
                 namespace = await d2.currentUser.dataStore.get(
