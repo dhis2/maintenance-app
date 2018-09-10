@@ -139,15 +139,7 @@ export class ColumnConfigDialog extends Component {
         });
     };
 
-    componentDidMount() {
-        console.log(listStore.state);
-        this.props.loadColumnsForModel(this.props.modelType);
-    }
-
     componentWillReceiveProps(newProps) {
-        if (this.props.modelType !== newProps.modelType) {
-            this.props.loadColumnsForModel(this.props.modelType);
-        }
         if(this.props.columns !== newProps.columns) {
             if(newProps.columns.length < 1) return;
             const selectedColumnsWithDisplay = newProps.columns.map(
