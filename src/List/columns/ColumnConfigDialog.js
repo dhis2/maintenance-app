@@ -36,9 +36,8 @@ const styles = {
     availableColumnsItem: {},
 };
 
-function getAvailableColumnsForType(model, defaultColumns) {
+function getAvailableColumnsForModel(model) {
     const ignoreFieldTypes = ['COLLECTION', 'REFERENCE', 'COMPLEX'];
-
     const validations = model.modelValidations;
 
     let availableColumns = ['user[name]'];
@@ -76,54 +75,55 @@ const AvailableColumnsList = ({ columns, onClick, selectedColumns }) => {
         </div>
     );
 };
+
 export class ColumnConfigDialog extends Component {
     constructor(props, context) {
         super(props, context);
-        console.log(context);
-        console.log(props.columns)
+
+        const loadedColumns = this.props.userSelectedColumns;
         this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
 
-        const defaultColumns = getTableColumnsForType(props.modelType, true, true).map(this.withDisplay);
-        const allAvailableColumns = getAvailableColumnsForType(
-            context.d2.models[props.modelType],
-            defaultColumns
+        const defaultColumns = getTableColumnsForType(
+            props.modelType,
+            true,
+            true
+        );
+        const allAvailableColumns = getAvailableColumnsForModel(
+            context.d2.models[props.modelType]
         );
 
-        const availableColumns = allAvailableColumns
-            .filter((val, ind, self) => self.indexOf(val) === ind) //remove duplicates
+        //use default if columns are not specified by user
+        const selectedColumns =
+            loadedColumns.length < 1 ? defaultColumns : loadedColumns;
+
+        const availableColumns = pullAll(selectedColumns, allAvailableColumns)
+            // .filter((val, ind, self) => self.indexOf(val) === ind) //remove duplicates
             .sort()
-            .map(this.withDisplay)
-            
+            .map(this.withDisplayProps);
 
-        const selectedColumnsWithDisplay = props.columns.map(
-            this.withDisplay
-        );
-        console.log(selectedColumnsWithDisplay.length < 1 ? defaultColumns : selectedColumnsWithDisplay)
-        console.log(defaultColumns)
         this.state = {
-            defaultColumns: defaultColumns,
-            selectedColumns: selectedColumnsWithDisplay.length < 1 ? defaultColumns : selectedColumnsWithDisplay,
+            defaultColumns: defaultColumns.map(this.withDisplayProps),
+            selectedColumns: selectedColumns.map(this.withDisplayProps),
             availableColumns,
+            error: null,
         };
     }
 
-    withDisplay = value => ({
+    withDisplayProps = value => ({
         value: value,
-        displayValue: this.t(camelCaseToUnderScores(value.replace(/(\w*)\[(\w*)]/, '$1___$2'))),
+        displayValue: this.t(
+            camelCaseToUnderScores(value.replace(/(\w*)\[(\w*)]/, '$1___$2'))
+        ),
     });
 
-    addSelection = (selectedColumns, newSelection) => {
-        //TODO remove selection from available
-        //add to selected
-    };
-
-    onAddAvailableColumn = column => {
+    handleAddColumn = column => {
         this.setState({
             selectedColumns: this.state.selectedColumns.concat(column),
+            error: null,
         });
     };
 
-    onSortEnd = ({ oldIndex, newIndex }) => {
+    handleOnSortEnd = ({ oldIndex, newIndex }) => {
         this.setState({
             selectedColumns: arrayMove(
                 this.state.selectedColumns,
@@ -133,23 +133,12 @@ export class ColumnConfigDialog extends Component {
         });
     };
 
-    resetToDefault = () => {
+    handleResetToDefault = () => {
         this.setState({
             selectedColumns: this.state.default,
+            error: null,
         });
     };
-
-    componentWillReceiveProps(newProps) {
-        if(this.props.columns !== newProps.columns) {
-            if(newProps.columns.length < 1) return;
-            const selectedColumnsWithDisplay = newProps.columns.map(
-                this.withDisplay
-            );
-            this.setState({
-                selectedColumns: selectedColumnsWithDisplay,
-            });
-        }
-    }
 
     handleSaveOrder = () => {
         const selectedColumns = this.state.selectedColumns.map(
@@ -159,8 +148,13 @@ export class ColumnConfigDialog extends Component {
     };
 
     handleRemoveItem = (index, modelType) => {
-        console.log(index, modelType);
         const selected = this.state.selectedColumns;
+        if (selected.length < 2) {
+            //showError
+            return this.setState({
+                error: 'Must have atleast one column selected.',
+            });
+        }
         const itemToRemove = selected[index];
         const newSelected = [
             ...selected.slice(0, index),
@@ -186,7 +180,6 @@ export class ColumnConfigDialog extends Component {
             <FlatButton
                 label={this.t('save')}
                 primary={true}
-                keyboardFocused={true}
                 onClick={this.handleSaveOrder}
             />,
         ];
@@ -202,19 +195,23 @@ export class ColumnConfigDialog extends Component {
                 <h3>{this.t('selected_columns')}</h3>
                 <ColumnsList
                     items={this.state.selectedColumns}
-                    onSortEnd={this.onSortEnd}
+                    onSortEnd={this.handleOnSortEnd}
                     onRemoveItem={this.handleRemoveItem}
                 />
                 <FlatButton
                     label={this.t('reset_to_default')}
                     onClick={this.handleResetToDefault}
                     secondary
+                    disabled={
+                        this.state.selectedColumns === this.state.defaultColumns
+                    }
                 />
+                {this.state.error && this.state.error}
                 <Divider />
                 <h3>{this.t('available_columns')}</h3>
                 <AvailableColumnsList
                     columns={this.state.availableColumns}
-                    onClick={this.onAddAvailableColumn}
+                    onClick={this.handleAddColumn}
                     selectedColumns={this.state.selectedColumns}
                 />
             </Dialog>
@@ -224,7 +221,7 @@ export class ColumnConfigDialog extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     open: getDialogOpen(state),
-    columns: getColumnsForModelType(state, ownProps.modelType),
+    userSelectedColumns: getColumnsForModelType(state, ownProps.modelType),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -262,12 +262,10 @@ export function getTableColumnsForType(modelType, preservePropNames = false, def
     if(defaultOnly) {
         return defaultColumns;
     }
-    console.log("default", defaultColumns)
     const userSelected = getUserSelectedTableColumnsForType(modelType, preservePropNames);
     if(!userSelected || userSelected.length < 1) {
         return defaultColumns;
     }
-    console.log("user selected", userSelected)
     return userSelected;
 }
 
@@ -284,6 +282,7 @@ export function getUserSelectedTableColumnsForType(modelType, preservePropNames)
     const cols = getColumnsForModelType(store.getState(), modelType);
     return cols.map(col => (preservePropNames ? col : col.replace(/(\w*)\[(\w*)]/, '$1___$2'))); //replaces a[b] with a__b
 };
+
 export function getDefaultFiltersForType(modelType) {
     if (typeDetails.hasOwnProperty(modelType) &&
         typeDetails[modelType].hasOwnProperty('defaultFilters') &&

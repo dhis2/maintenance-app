@@ -28,7 +28,7 @@ export const loadColumnsForAllModeltypes = action$ =>
                 }
             } catch (e) {
                 //We do not actually do anything here, as we just let it be empty
-                //if it does not exist. Set when editing columns
+                //if it does not exist. namespace is set when editing columns (for the first time)
                 logger.debug(e);
             }
             return {
@@ -52,15 +52,18 @@ const editColumnsForModel = (action$, store) =>
                 );
             } catch (e) {
                 if (e.httpStatusCode === 404) {
+                    //this is fine, we just need to create it
                     try {
                         namespace = await d2.currentUser.dataStore.create(
                             DATASTORE_NAMESPACE
                         );
                     } catch (e) {
+                        //actual error
                         logger.error('Failed to create new namespace!', e);
                         return notifyUser({ message: 'Failed to save' });
                     }
                 }
+                //Some other actual error
                 logger.error(e);
                 return notifyUser({ message: 'Failed to save' });
             }
