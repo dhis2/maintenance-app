@@ -91,16 +91,17 @@ export class ColumnConfigDialog extends Component {
 
         const availableColumns = allAvailableColumns
             .filter((val, ind, self) => self.indexOf(val) === ind) //remove duplicates
+            .sort()
             .map(this.withDisplay)
-            .sort();
+            
 
         const selectedColumnsWithDisplay = props.columns.map(
             this.withDisplay
         );
-        console.log(selectedColumnsWithDisplay.length < 1)
+        console.log(selectedColumnsWithDisplay.length < 1 ? defaultColumns : selectedColumnsWithDisplay)
         console.log(defaultColumns)
         this.state = {
-            defaultColumns: selectedColumnsWithDisplay,
+            defaultColumns: defaultColumns,
             selectedColumns: selectedColumnsWithDisplay.length < 1 ? defaultColumns : selectedColumnsWithDisplay,
             availableColumns,
         };
@@ -148,6 +149,7 @@ export class ColumnConfigDialog extends Component {
             this.props.loadColumnsForModel(this.props.modelType);
         }
         if(this.props.columns !== newProps.columns) {
+            if(newProps.columns.length < 1) return;
             const selectedColumnsWithDisplay = newProps.columns.map(
                 this.withDisplay
             );

@@ -140,7 +140,7 @@ export const setColumnsForModel = (state, action) => {
     const { modelType, columns} = action.payload;
 
     const model = state[modelType];
-    if(!model) return state;
+
     return {
         ...state,
         [modelType]: {
@@ -161,6 +161,9 @@ const byModelTypeReducer = createReducer(typeDetails, {
     [configurableColumnsLoadTypes.success]: setColumns
 });
 
+const loadingReducer = createReducer(true, {
+    [configurableColumnsLoadTypes.success]: () => false
+})
 const dialogReducer = (state = {open: false}, action) => {
     switch(action.type) {
         case "CONFIGURABLE_COLUMNS_DIALOG_OPEN": {
@@ -185,7 +188,8 @@ const dialogReducer = (state = {open: false}, action) => {
 
 export const configurableColumnsReducer = combineReducers({
     modelTypes: byModelTypeReducer,
-    dialog: dialogReducer
+    dialog: dialogReducer,
+    loading: loadingReducer
 })
 
 export default configurableColumnsReducer;
