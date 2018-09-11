@@ -14,9 +14,9 @@ import { getTableColumnsForType } from '../../config/maintenance-models';
 import { arrayMove } from 'react-sortable-hoc';
 import { grey100, grey200 } from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
-import ColumnsList from './DraggableColumns';
+import ColumnsList from './SortableColumns';
 import camelCaseToUnderScores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import { compose, pullAll, sortedUniq } from 'lodash/fp';
+import { compose, pullAllBy, sortedUniq } from 'lodash/fp';
 import FlatButton from 'material-ui/FlatButton';
 import { AvailableDataElement } from '../../EditModel/event-program/create-data-entry-form/DataElementPicker.component';
 const styles = {
@@ -38,13 +38,14 @@ const styles = {
 
 function getAvailableColumnsForModel(model) {
     const ignoreFieldTypes = ['COLLECTION', 'REFERENCE', 'COMPLEX'];
+    const ignoreFieldNames= ['name'];
     const validations = model.modelValidations;
 
     let availableColumns = ['user[name]'];
     for (let fieldName in validations) {
         let field = validations[fieldName];
 
-        if (!ignoreFieldTypes.includes(field.type)) {
+        if (!ignoreFieldTypes.includes(field.type) && !ignoreFieldNames.includes(fieldName)) {
             availableColumns.push(fieldName);
         }
     }
@@ -87,23 +88,30 @@ export class ColumnConfigDialog extends Component {
             props.modelType,
             true,
             true
-        );
+        ).map(this.withDisplayProps);
+
         const allAvailableColumns = getAvailableColumnsForModel(
             context.d2.models[props.modelType]
-        );
+        ).map(this.withDisplayProps).concat(defaultColumns);
 
         //use default if columns are not specified by user
         const selectedColumns =
-            loadedColumns.length < 1 ? defaultColumns : loadedColumns;
+            loadedColumns.length < 1
+                ? defaultColumns
+                : loadedColumns.map(this.withDisplayProps);
 
-        const availableColumns = pullAll(selectedColumns, allAvailableColumns)
+        const availableColumns = pullAllBy(
+            'value',
+            selectedColumns,
+            allAvailableColumns
+        )
             // .filter((val, ind, self) => self.indexOf(val) === ind) //remove duplicates
-            .sort()
-            .map(this.withDisplayProps);
+            .sort();
+        console.log(availableColumns)
 
         this.state = {
-            defaultColumns: defaultColumns.map(this.withDisplayProps),
-            selectedColumns: selectedColumns.map(this.withDisplayProps),
+            defaultColumns: defaultColumns,
+            selectedColumns: selectedColumns,
             availableColumns,
             error: null,
         };
