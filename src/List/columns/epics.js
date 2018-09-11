@@ -13,6 +13,11 @@ const d2$ = Observable.fromPromise(getInstance());
 const DATASTORE_NAMESPACE = 'maintenance';
 const COLUMN_KEY = 'configurableColumns';
 
+const genericErrorMessage = notifyUser({
+    message: 'failed_to_save',
+    translate: true,
+});
+
 export const loadColumnsForAllModeltypes = action$ =>
     action$
         .ofType(configurableColumnsLoadTypes.request)
@@ -44,7 +49,6 @@ const editColumnsForModel = (action$, store) =>
         .ofType(setColumnsTypes.request)
         .combineLatest(d2$)
         .switchMap(async ([action, d2]) => {
-            const { modelType, columns } = action.payload;
             let namespace;
             try {
                 namespace = await d2.currentUser.dataStore.get(
@@ -60,12 +64,12 @@ const editColumnsForModel = (action$, store) =>
                     } catch (e) {
                         //actual error
                         logger.error('Failed to create new namespace!', e);
-                        return notifyUser({ message: 'Failed to save' });
+                        return genericErrorMessage;
                     }
                 }
                 //Some other actual error
                 logger.error(e);
-                return notifyUser({ message: 'Failed to save' });
+                return genericErrorMessage;
             }
             try {
                 const cols = getAllModelTypes(store.getState());
@@ -78,24 +82,21 @@ const editColumnsForModel = (action$, store) =>
                 };
             } catch (e) {
                 logger.error(e);
-                return notifyUser({ message: 'Failed to save' });
+                return genericErrorMessage;
             }
         });
 
 const updateListState = action$ =>
-    action$
-        .ofType(setColumnsTypes.success)
-        .combineLatest(d2$)
-        .switchMap(([action, d2]) => {
-            const { modelType, columns } = action.payload;
-            listStore.setState({
-                ...listStore.state,
-                list: null,
-                tableColumns: columns,
-            });
-            listActions.loadList(modelType);
-            return [{ type: 'LIST_LOAD', payload: action.payload }];
+    action$.ofType(setColumnsTypes.success).switchMap(action => {
+        const { modelType, columns } = action.payload;
+        listStore.setState({
+            ...listStore.state,
+            list: null,
+            tableColumns: columns,
         });
+        listActions.loadList(modelType);
+        return [{ type: 'LIST_LOAD', payload: action.payload }];
+    });
 
 export default combineEpics(
     loadColumnsForAllModeltypes,

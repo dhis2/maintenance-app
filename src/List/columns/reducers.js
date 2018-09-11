@@ -24,7 +24,7 @@ export const setColumnsForModel = (state, action) => {
         ...state,
         [modelType]: {
             ...model,
-            columns,
+            columns: Array.isArray(columns) ? columns : [],
         },
     };
 };

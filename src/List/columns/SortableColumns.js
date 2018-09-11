@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-    SortableContainer,
-    SortableElement,
-    arrayMove,
-} from 'react-sortable-hoc';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import DragHandle from '../../EditModel/event-program/create-data-entry-form/DragHandle.component';
 import { grey100, grey200 } from 'material-ui/styles/colors';
 import ActionButton from '../../EditModel/event-program/create-data-entry-form/ActionButton.component';
+
 const styles = {
     dataElement: {
         backgroundColor: grey200,
@@ -17,20 +14,19 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '5px 5px',
-        flex: 1,
+        flex: '1 0 21%',
+        minHeight: '50px',
+        maxWidth: '175px',
     },
 
     elementValue: {
         userSelect: 'none',
-        textAlign: 'center'
-    },
-
-    horizontalSpace: {
-        paddingLeft: '1rem',
+        textAlign: 'center',
     },
     selectedColumnsContainer: {
         display: 'flex',
         flexWrap: 'wrap',
+        wordBreak: 'break-word',
     },
     removeButton: {
         width: '24px',
@@ -39,7 +35,7 @@ const styles = {
     },
 };
 
-const DataElement = ({ value, onRemoveItem }) => (
+const Element = ({ value, onRemoveItem }) => (
     <div style={styles.dataElement}>
         <DragHandle />
         <div style={styles.elementValue}>{value.displayValue}</div>
@@ -51,14 +47,14 @@ const DataElement = ({ value, onRemoveItem }) => (
     </div>
 );
 
-DataElement.propTypes = {
+Element.propTypes = {
     value: PropTypes.shape({
         value: PropTypes.any,
-        displayvalue: PropTypes.string
-    })
+        displayvalue: PropTypes.string,
+    }),
 };
 
-const SortableItem = SortableElement(DataElement);
+const SortableItem = SortableElement(Element);
 const SortableDataList = SortableContainer(
     ({ items, isSortingIndex, onRemoveItem }) => (
         <div style={styles.selectedColumnsContainer}>

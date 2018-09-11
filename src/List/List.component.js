@@ -408,9 +408,6 @@ class List extends Component {
                         </div>
                     );
                 })}
-                 <IconButton onClick={() => this.props.openColumnsDialog(this.props.params.modelType)}>
-                     <FontIcon color="gray" className="material-icons">settings</FontIcon>
-                </IconButton>
             </div>
         );
     }
@@ -538,6 +535,13 @@ class List extends Component {
                 });
             }
         };
+
+        const ConfigureColumnButton = <IconButton onClick={() => this.props.openColumnsDialog(this.props.params.modelType)}>
+                <FontIcon color="gray" className="material-icons">
+                    settings
+                </FontIcon>
+            </IconButton>;
+
         return (
             <div>
                 <div>
@@ -573,6 +577,7 @@ class List extends Component {
                                         contextMenuIcons={contextMenuIcons}
                                         primaryAction={primaryAction}
                                         isContextActionAllowed={this.isContextActionAllowed}
+                                        contextMenuHeader={ConfigureColumnButton}
                                     />)
                                     : <div>{this.getTranslation('no_results_found')}</div>}
                             </div>
