@@ -18,6 +18,30 @@ const genericErrorMessage = notifyUser({
     translate: true,
 });
 
+//We need this as a promise, as the app needs to wait for this
+//to be fetched before loading
+export const loadAllColumnsPromise = async (d2) => {
+    let modelTypes = {};
+    try {
+        const ns = await d2.currentUser.dataStore.get(
+            DATASTORE_NAMESPACE
+        );
+        if (ns.keys.includes(COLUMN_KEY)) {
+            modelTypes = await ns.get(COLUMN_KEY);
+        }
+    } catch (e) {
+        //We do not actually do anything here, as we just let it be empty
+        //if it does not exist. namespace is set when editing columns (for the first time)
+        logger.debug(e);
+    }
+    return {
+        type: configurableColumnsLoadTypes.success,
+        payload: {
+            modelTypes,
+        },
+    };
+}
+
 export const loadColumnsForAllModeltypes = action$ =>
     action$
         .ofType(configurableColumnsLoadTypes.request)

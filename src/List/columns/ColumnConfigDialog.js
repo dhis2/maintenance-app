@@ -115,6 +115,22 @@ export class ColumnConfigDialog extends Component {
         };
     }
 
+    componentWillReceiveProps(newProps) {
+        if (this.props.userSelectedColumns !== newProps.userSelectedColumns) {
+            if (newProps.userSelectedColumns.length < 1) {
+                return this.setState(state => ({
+                    selectedColumns: state.defaultColumns,
+                }));
+            }
+            const selectedColumnsWithDisplay = newProps.userSelectedColumns.map(
+                this.withDisplayProps
+            );
+            this.setState({
+                selectedColumns: selectedColumnsWithDisplay,
+            });
+        }
+    }
+
     withDisplayProps = value => ({
         value: value,
         displayValue: this.t(
