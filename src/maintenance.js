@@ -75,10 +75,6 @@ function getSystemSettings(d2) {
     });
 }
 
-function loadConfigurableColumns(d2) {
-    console.log(d2);
-    return loadAllColumnsPromise(d2);
-}
 function startApp() {
     render(
         <MuiThemeProvider muiTheme={appTheme}>

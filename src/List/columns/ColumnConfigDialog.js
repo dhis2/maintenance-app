@@ -39,7 +39,6 @@ const styles = {
  */
 function getAvailableColumnsForModel(model) {
     const validations = model.modelValidations;
-    console.log(model);
     const ignoreFieldTypes = new Set(['COLLECTION', 'REFERENCE', 'COMPLEX']);
     const ignoreFieldNames = new Set([
         'dimensionItem',
