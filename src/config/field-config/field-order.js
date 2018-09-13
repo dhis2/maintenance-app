@@ -431,7 +431,7 @@ const fieldOrderByName = new Map([
     ]],
     ['programRule', [
         // Step 1
-        'program', 'name', 'description', 'priority',
+        'program', 'programStage', 'name', 'description', 'priority',
         // Step 2
         'condition',
         // Step 3

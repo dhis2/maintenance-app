@@ -235,26 +235,34 @@ function addDisplayProperties(dataElements, renderingOptions) {
 function AssignDataElements(props, { d2 }) {
     const itemStore = Store.create();
     const assignedItemStore = Store.create();
+    const dataElementIds = new Set();
 
-    //Fix for DHIS2-4369 where some program stages may contain other dataelements than TRACKER
-    //This is due to a database inconsistency. This fix makes it possible to show and be able to remove these
-    //elements from the UI
+    const dataElements = props.trackerDataElements.map(dataElement => {
+        dataElementIds.add(dataElement.id);
+        return {
+            id: dataElement.id,
+            text: dataElement.displayName,
+            value: dataElement.id,
+        }
+    })
+
+    /* Fix for DHIS2-4369 where some program stages may contain other dataelements than TRACKER
+    This is due to a database inconsistency. This fix makes it possible to show and be able to remove these
+    elements from the UI.
+    itemStore needs to be a superset of all assigned items, so we add the items that are assigned,
+    but may not be in prop.trackerDataElements  */
     const otherElems = props.model.programStageDataElements
         .filter(({ dataElement }) => (
-            dataElement.domainType !== "TRACKER"
+            dataElement.domainType !== "TRACKER" && !dataElementIds.has(dataElement.id)
         ))
         .map(({ dataElement }) => ({
             id: dataElement.id,
             text: dataElement.displayName,
             value: dataElement.id,
-        }));
+        }));   
 
     itemStore.setState(
-        props.trackerDataElements.map(dataElement => ({
-            id: dataElement.id,
-            text: dataElement.displayName,
-            value: dataElement.id,
-        })).concat(otherElems)
+        dataElements.concat(otherElems)
     );
 
     assignedItemStore.setState(
