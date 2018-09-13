@@ -31,24 +31,50 @@ const styles = {
     availableColumnsItem: {},
 };
 
+/**
+ * Gets the columns that should be shown for the model
+ * We try to show most "simple" columns, ie bools, text, etc.
+ * Ignore some that are internal, no easy way to filter these without a blacklist
+ *
+ */
 function getAvailableColumnsForModel(model) {
-    const ignoreFieldTypes = ['COLLECTION', 'REFERENCE', 'COMPLEX'];
-    const ignoreFieldNames = ['name'];
     const validations = model.modelValidations;
-    const translateableFields = {
-        name: 'displayName',
-    };
-    let availableColumns = ['user[name]'];
+    console.log(model);
+    const ignoreFieldTypes = new Set(['COLLECTION', 'REFERENCE', 'COMPLEX']);
+    const ignoreFieldNames = new Set([
+        'dimensionItem',
+        'dimensionItemType',
+        'dimension',
+        'allItems',
+        'optionSetValue',
+        'ignoreApproval',
+        'leaf',
+        'memberCount',
+        'path',
+        'registration',
+    ]);
+    // These should have translated fields from the server, ie displayName.
+    // In some cases the translated property does not exist on the model, and we should probably show
+    // the original ones instead, for now just ignore these.
+    const translatedValues = new Set([
+        'name',
+        'description',
+        'shortName',
+        'formName',
+    ]);
+    let availableColumns = ['user[name]', 'lastUpdatedBy[name]'];
+
     for (let fieldName in validations) {
         let field = validations[fieldName];
-        if (fieldName.startsWith('display'))
-            if (
-                !ignoreFieldTypes.includes(field.type) &&
-                !ignoreFieldNames.includes(fieldName)
-            ) {
-                availableColumns.push(fieldName);
-            }
+        if (
+            !ignoreFieldTypes.has(field.type) &&
+            !ignoreFieldNames.has(fieldName) &&
+            !translatedValues.has(fieldName)
+        ) {
+            availableColumns.push(fieldName);
+        }
     }
+
     return availableColumns;
 }
 
@@ -101,7 +127,7 @@ export class ColumnConfigDialog extends Component {
     }
 
     getUpdatedColumnState = (props = this.props) => {
-        const userSelectedColumns = this.props.userSelectedColumns;
+        const userSelectedColumns = props.userSelectedColumns;
         const defaultColumns = getTableColumnsForType(
             props.modelType,
             true,
