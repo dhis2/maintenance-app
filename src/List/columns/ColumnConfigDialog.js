@@ -11,7 +11,6 @@ import {
 import { getColumnsForModelType, getDialogOpen } from './selectors';
 import { getTableColumnsForType } from '../../config/maintenance-models';
 import { arrayMove } from 'react-sortable-hoc';
-import { grey100, grey200 } from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
 import SortableColumnsList from './SortableColumns';
 import camelCaseToUnderScores from 'd2-utilizr/lib/camelCaseToUnderscores';
@@ -36,17 +35,19 @@ function getAvailableColumnsForModel(model) {
     const ignoreFieldTypes = ['COLLECTION', 'REFERENCE', 'COMPLEX'];
     const ignoreFieldNames = ['name'];
     const validations = model.modelValidations;
-
+    const translateableFields = {
+        name: 'displayName',
+    };
     let availableColumns = ['user[name]'];
     for (let fieldName in validations) {
         let field = validations[fieldName];
-
-        if (
-            !ignoreFieldTypes.includes(field.type) &&
-            !ignoreFieldNames.includes(fieldName)
-        ) {
-            availableColumns.push(fieldName);
-        }
+        if (fieldName.startsWith('display'))
+            if (
+                !ignoreFieldTypes.includes(field.type) &&
+                !ignoreFieldNames.includes(fieldName)
+            ) {
+                availableColumns.push(fieldName);
+            }
     }
     return availableColumns;
 }
@@ -64,7 +65,10 @@ const AvailableColumnsList = ({ columns, onClick, selectedColumns }) => {
                     col => col.value === column.value
                 );
                 return (
-                    <div style={styles.availableColumnElement}>
+                    <div
+                        key={column.value}
+                        style={styles.availableColumnElement}
+                    >
                         <AvailableColumn
                             dataElement={toDataElement}
                             pickDataElement={() => onClick(column)}
@@ -81,9 +85,23 @@ const AvailableColumnsList = ({ columns, onClick, selectedColumns }) => {
 export class ColumnConfigDialog extends Component {
     constructor(props, context) {
         super(props, context);
-        const loadedColumns = this.props.userSelectedColumns;
         this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
 
+        this.state = {
+            ...this.getUpdatedColumnState(),
+            error: null,
+        };
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (this.props.modelType !== newProps.modelType) {
+            const newState = this.getUpdatedColumnState(newProps);
+            this.setState({ ...newState });
+        }
+    }
+
+    getUpdatedColumnState = (props = this.props) => {
+        const userSelectedColumns = this.props.userSelectedColumns;
         const defaultColumns = getTableColumnsForType(
             props.modelType,
             true,
@@ -91,7 +109,7 @@ export class ColumnConfigDialog extends Component {
         ).map(this.withDisplayProps);
 
         const availableColumns = getAvailableColumnsForModel(
-            context.d2.models[props.modelType]
+            this.context.d2.models[props.modelType]
         )
             .map(this.withDisplayProps)
             .concat(defaultColumns)
@@ -103,33 +121,16 @@ export class ColumnConfigDialog extends Component {
 
         //use default if columns are not specified by user
         const selectedColumns =
-            loadedColumns.length < 1
+            userSelectedColumns.length < 1
                 ? defaultColumns
-                : loadedColumns.map(this.withDisplayProps);
+                : userSelectedColumns.map(this.withDisplayProps);
 
-        this.state = {
+        return {
             defaultColumns: defaultColumns,
             selectedColumns: selectedColumns,
             availableColumns,
-            error: null,
         };
-    }
-
-    componentWillReceiveProps(newProps) {
-        if (this.props.userSelectedColumns !== newProps.userSelectedColumns) {
-            if (newProps.userSelectedColumns.length < 1) {
-                return this.setState(state => ({
-                    selectedColumns: state.defaultColumns,
-                }));
-            }
-            const selectedColumnsWithDisplay = newProps.userSelectedColumns.map(
-                this.withDisplayProps
-            );
-            this.setState({
-                selectedColumns: selectedColumnsWithDisplay,
-            });
-        }
-    }
+    };
 
     withDisplayProps = value => ({
         value: value,
@@ -163,6 +164,7 @@ export class ColumnConfigDialog extends Component {
     };
 
     handleSaveOrder = () => {
+        this.setState({ error: null });
         if (this.state.selectedColumns === this.state.defaultColumns) {
             this.props.setColumnsForModel(this.props.modelType, []);
             return;

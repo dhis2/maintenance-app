@@ -263,7 +263,6 @@ export function getTableColumnsForType(modelType, preservePropNames = false, def
         return defaultColumns;
     }
     const userSelected = getUserSelectedTableColumnsForType(modelType, preservePropNames);
-    console.log(userSelected);
     if(!userSelected || userSelected.length < 1) {
         return defaultColumns;
     }

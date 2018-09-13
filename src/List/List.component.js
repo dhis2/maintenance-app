@@ -541,7 +541,6 @@ class List extends Component {
                     settings
                 </FontIcon>
             </IconButton>;
-    console.log("USING COLUMNS", this.state.tableColumns)
         return (
             <div>
                 <div>

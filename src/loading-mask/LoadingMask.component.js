@@ -8,8 +8,7 @@ export default React.createClass({
             position: 'fixed',
             top: '45%',
         };
-        console.log(this.props);
-
+        
         return (
             <div style={loadingStatusMask}>
                 <CircularProgress />

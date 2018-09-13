@@ -20,12 +20,10 @@ const genericErrorMessage = notifyUser({
 
 //We need this as a promise, as the app needs to wait for this
 //to be fetched before loading
-export const loadAllColumnsPromise = async (d2) => {
+export const loadAllColumnsPromise = async d2 => {
     let modelTypes = {};
     try {
-        const ns = await d2.currentUser.dataStore.get(
-            DATASTORE_NAMESPACE
-        );
+        const ns = await d2.currentUser.dataStore.get(DATASTORE_NAMESPACE);
         if (ns.keys.includes(COLUMN_KEY)) {
             modelTypes = await ns.get(COLUMN_KEY);
         }
@@ -40,33 +38,13 @@ export const loadAllColumnsPromise = async (d2) => {
             modelTypes,
         },
     };
-}
+};
 
 export const loadColumnsForAllModeltypes = action$ =>
     action$
         .ofType(configurableColumnsLoadTypes.request)
         .combineLatest(d2$)
-        .switchMap(async ([action, d2]) => {
-            let modelTypes = {};
-            try {
-                const ns = await d2.currentUser.dataStore.get(
-                    DATASTORE_NAMESPACE
-                );
-                if (ns.keys.includes(COLUMN_KEY)) {
-                    modelTypes = await ns.get(COLUMN_KEY);
-                }
-            } catch (e) {
-                //We do not actually do anything here, as we just let it be empty
-                //if it does not exist. namespace is set when editing columns (for the first time)
-                logger.debug(e);
-            }
-            return {
-                type: configurableColumnsLoadTypes.success,
-                payload: {
-                    modelTypes,
-                },
-            };
-        });
+        .switchMap(([action, d2]) => loadAllColumnsPromise(d2));
 
 const editColumnsForModel = (action$, store) =>
     action$
@@ -90,10 +68,11 @@ const editColumnsForModel = (action$, store) =>
                         logger.error('Failed to create new namespace!', e);
                         return genericErrorMessage;
                     }
+                } else {
+                    //Some other actual error
+                    logger.error(e);
+                    return genericErrorMessage;
                 }
-                //Some other actual error
-                logger.error(e);
-                return genericErrorMessage;
             }
             try {
                 const cols = getAllModelTypes(store.getState());
@@ -115,7 +94,7 @@ const updateListState = action$ =>
         const { modelType, columns } = action.payload;
         listStore.setState({
             ...listStore.state,
-            list: null,
+            list: null, //clear to set loading state in list
             tableColumns: columns,
         });
         listActions.loadList(modelType);
