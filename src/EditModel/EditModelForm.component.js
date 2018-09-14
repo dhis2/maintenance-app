@@ -108,7 +108,7 @@ export default React.createClass({
         modelId: React.PropTypes.string.isRequired,
         modelType: React.PropTypes.string.isRequired,
         onSaveSuccess: React.PropTypes.func.isRequired,
-        onSaveError: React.PropTypes.func.isRequired,
+        onSaveError: React.PropTypes.func,
         onCancel: React.PropTypes.func.isRequired,
     },
 
@@ -201,6 +201,7 @@ export default React.createClass({
         } else {
             const firstErrorMessage = extractFirstErrorMessageFromServer(error);
             snackActions.show({ message: firstErrorMessage, action: 'ok' });
+            this.props.onSaveError && this.props.onSaveError(error);
             log.error(error);
         }
     },
