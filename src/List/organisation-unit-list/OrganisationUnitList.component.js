@@ -6,6 +6,27 @@ import listActions, { fieldFilteringForQuery } from '../list.actions';
 import log from 'loglevel';
 import ModelCollection from 'd2/lib/model/ModelCollection';
 
+//create a monkey-patch to handle paging with prepended-orgunit
+const createPagerForOrgunit = (pager, selectedOrganisationUnit, d2) => {
+    const monkeyPage = async pageNr => {
+        if (pageNr < 1) {
+            throw new Error('PageNr can not be less than 1');
+        }
+        if (pageNr > this.pageCount) {
+            throw new Error(`PageNr can not be larger than the total page count of ${this.pageCount}`);
+        }
+        const orgList = await pager.pagingHandler.list(Object.assign({}, pager.query, { page: pageNr }));
+        let orgListPager = orgList.pager;
+        const orgListArr = orgList.toArray();
+        orgListArr.unshift(selectedOrganisationUnit);
+        let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, orgListArr, orgListPager);
+        
+        prependedOrgUnitList.pager.goToPage = monkeyPage;
+        console.log(prependedOrgUnitList)
+        return prependedOrgUnitList;
+    }
+    return monkeyPage;
+}
 export default class OrganisationUnitList extends React.Component {
     componentDidMount() {
         this.subscription = appState
@@ -39,9 +60,11 @@ export default class OrganisationUnitList extends React.Component {
                     // avoid having to select the parent node to edit
                     // the selected node...
                     let filteredOrgUnits = organisationUnitList.toArray();
+                    console.log(organisationUnitList)
+                 
                     filteredOrgUnits.unshift(selectedOrganisationUnit);
-                    let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, filteredOrgUnits);
-
+                    let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, filteredOrgUnits,organisationUnitList.pager);
+                    prependedOrgUnitList.pager.goToPage = createPagerForOrgunit(organisationUnitList.pager, selectedOrganisationUnit, d2)
                     listActions.setListSource(prependedOrgUnitList);
                 },
                 error => log.error(error)
