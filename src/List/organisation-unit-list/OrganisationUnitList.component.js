@@ -22,7 +22,6 @@ const createPagerForOrgunit = (pager, selectedOrganisationUnit, d2) => {
         let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, orgListArr, orgListPager);
         
         prependedOrgUnitList.pager.goToPage = monkeyPage;
-        console.log(prependedOrgUnitList)
         return prependedOrgUnitList;
     }
     return monkeyPage;
@@ -60,7 +59,6 @@ export default class OrganisationUnitList extends React.Component {
                     // avoid having to select the parent node to edit
                     // the selected node...
                     let filteredOrgUnits = organisationUnitList.toArray();
-                    console.log(organisationUnitList)
                  
                     filteredOrgUnits.unshift(selectedOrganisationUnit);
                     let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, filteredOrgUnits,organisationUnitList.pager);
