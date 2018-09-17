@@ -1,9 +1,8 @@
 import {
     setColumnsTypes,
-    loadColumnsForModel,
     configurableColumnsLoadTypes,
     CONFIGURABLE_COLUMNS_DIALOG_CLOSE,
-    CONFIGURABLE_COLUMNS_DIALOG_OPEN
+    CONFIGURABLE_COLUMNS_DIALOG_OPEN,
 } from './actions';
 import { combineReducers } from 'redux';
 
@@ -43,10 +42,6 @@ const byModelTypeReducer = createReducer(
     }
 );
 
-const loadingReducer = createReducer(true, {
-    [configurableColumnsLoadTypes.success]: () => false,
-});
-
 const dialogReducer = (state = { open: false }, action) => {
     switch (action.type) {
         case CONFIGURABLE_COLUMNS_DIALOG_OPEN: {
@@ -72,7 +67,6 @@ const dialogReducer = (state = { open: false }, action) => {
 export const configurableColumnsReducer = combineReducers({
     modelTypes: byModelTypeReducer,
     dialog: dialogReducer,
-    loading: loadingReducer,
 });
 
 export default configurableColumnsReducer;
