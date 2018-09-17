@@ -68,7 +68,10 @@ const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, is
                         options={renderTypeOptions}
                         changeHandler={onEditAttribute}
                     />
-                </TableRowColumn>,
+                </TableRowColumn>
+            )}
+
+            {renderTypeOptions && (
                 <TableRowColumn>
                     <RenderTypeSelectField
                         device={DESKTOP}
