@@ -59,23 +59,25 @@ const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, is
                     title={d2.i18n.getTranslation('unique_attributes_always_searchable')}
                 />
             </TableRowColumn>}
-
-            <TableRowColumn>
-                <RenderTypeSelectField
-                    device={MOBILE}
-                    target={attribute}
-                    options={renderTypeOptions}
-                    changeHandler={onEditAttribute}
-                />
-            </TableRowColumn>
-            <TableRowColumn>
-                <RenderTypeSelectField
-                    device={DESKTOP}
-                    target={attribute}
-                    options={renderTypeOptions}
-                    changeHandler={onEditAttribute}
-                />
-            </TableRowColumn>
+            
+            {renderTypeOptions && (
+                <TableRowColumn>
+                    <RenderTypeSelectField
+                        device={MOBILE}
+                        target={attribute}
+                        options={renderTypeOptions}
+                        changeHandler={onEditAttribute}
+                    />
+                </TableRowColumn>,
+                <TableRowColumn>
+                    <RenderTypeSelectField
+                        device={DESKTOP}
+                        target={attribute}
+                        options={renderTypeOptions}
+                        changeHandler={onEditAttribute}
+                    />
+                </TableRowColumn>
+            )}
         </TableRow>);
 };
 
