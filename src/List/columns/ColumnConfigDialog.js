@@ -181,16 +181,6 @@ export class ColumnConfigDialog extends Component {
     }
 }
 
-ColumnConfigDialog.contextTypes = {
-    d2: PropTypes.object,
-};
-
-ColumnConfigDialog.propTypes = {
-    open: PropTypes.bool,
-    columns: PropTypes.array,
-    modelType: PropTypes.string,
-};
-
 /**
  * Gets the columns that should be shown for the model
  * We try to show most "simple" columns, ie bools, text, etc.
@@ -236,6 +226,19 @@ function getAvailableColumnsForModel(model) {
 
     return availableColumns;
 }
+
+ColumnConfigDialog.contextTypes = {
+    d2: PropTypes.object,
+};
+
+ColumnConfigDialog.propTypes = {
+    open: PropTypes.bool,
+    columns: PropTypes.array,
+    modelType: PropTypes.string,
+    loadColumnsForModel: PropTypes.func,
+    closeColumnsDialog: PropTypes.func,
+    setColumnsForModel: PropTypes.func,
+};
 
 const mapStateToProps = (state, ownProps) => ({
     open: getDialogOpen(state),
