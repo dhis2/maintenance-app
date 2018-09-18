@@ -11,7 +11,7 @@ import appState from '../App/appStateStore';
 import { getDefaultFiltersForType, getFilterFieldsForType, getTableColumnsForType } from '../config/maintenance-models';
 
 export const fieldFilteringForQuery = [
-    'displayName', 'name', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
+    'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
     'code', 'publicAccess', 'access', 'href', 'level',
 ].join(',');
 
@@ -24,7 +24,7 @@ const listActions = Action.createActionsFromNames([
     'loadList',
     'setListSource',
     'searchByName',
-    'searchByIdentifiers',
+    'searchWithFilters',
     'setFilterValue',
     'getNextPage',
     'getPreviousPage',
@@ -33,34 +33,18 @@ const listActions = Action.createActionsFromNames([
 
 /**
  * Filters the modelDefinition on displayname, shortName, id and code
- *
+ * Identifiable is a special field to combine the search of identifiers,
+ * so it's possible to use it with conjunction of other filters.
  * @param searchString to filter on
  * @param modelDefinition to filter
  * @returns {ModelDefinition} the modelDefinition with applied filters.
  */
 function applySearchFilter(searchString, modelDefinition) {
-    //map of what property to filter on the modelDefinition, and what operator to use
-    const filterProps = {
-        'shortName': 'token',
-        'id': 'equals',
-        'code': 'ilike'
-    }
-    //search by name, short name, code, uid
-    const filters = modelDefinition.filter().logicMode('OR');
-    Object.keys(filterProps).map((key) => {
-        const filterFuncName = filterProps[key];
-        if(modelDefinition.modelProperties[key]) { //apply only if model has the prop
-            filters.on(key)[filterFuncName](searchString);
-        }
-    })
-    //always use displayName
-    const filtered = filters.on('displayName').token(searchString);
-
-    return filtered;
+    return modelDefinition.filter().on('identifiable').operator('ilike', searchString) 
 }
 
 function applySearchByNameFilter(searchString, modelDefinition) {
-    modelDefinition.filter().on('displayName').ilike(listStore.state.searchString)
+    return modelDefinition.filter().on('displayName').ilike(listStore.state.searchString)
 }
 
 // Apply current property and name filters
@@ -80,13 +64,13 @@ function applyCurrentFilters(modelDefinitions, modelName) {
                 const filterValue = filter.id || filter;
                 return out.filter().on(filterField).equals(filterValue);
             }, modelDefinition);
-
+        const searchString = listStore.state.searchString.trim();
         // Apply name search string, if any
         /*return listStore.state.searchString.trim().length > 0
             ? filterModelDefinition.filter().on('displayName').ilike(listStore.state.searchString)
             : filterModelDefinition; */
-        return listStore.state.searchString.trim().length > 0
-            ? applySearchFilter(listStore.state.searchString, filterModelDefinition)
+        return searchString.length > 0
+            ? applySearchFilter(searchString, filterModelDefinition)
             : filterModelDefinition;
     }
 
@@ -138,7 +122,6 @@ function getQueryForSchema(modelName) {
 
 listActions.setListSource.subscribe((action) => {
     //FIXME: Decide if we should filter dem out
-    removeDefaultNamesFromCollection(action.data);
     listStore.listSourceSubject.next(Observable.of(action.data));
 });
 
