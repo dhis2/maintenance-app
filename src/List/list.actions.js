@@ -29,7 +29,6 @@ const listActions = Action.createActionsFromNames([
     'loadList',
     'setListSource',
     'searchByName',
-    'searchWithFilters',
     'setFilterValue',
     'getNextPage',
     'getPreviousPage',
@@ -70,10 +69,7 @@ function applyCurrentFilters(modelDefinitions, modelName) {
                 return out.filter().on(filterField).equals(filterValue);
             }, modelDefinition);
         const searchString = listStore.state.searchString.trim();
-        // Apply name search string, if any
-        /*return listStore.state.searchString.trim().length > 0
-            ? filterModelDefinition.filter().on('displayName').ilike(listStore.state.searchString)
-            : filterModelDefinition; */
+
         return searchString.length > 0
             ? applySearchFilter(searchString, filterModelDefinition)
             : filterModelDefinition;
@@ -83,27 +79,10 @@ function applyCurrentFilters(modelDefinitions, modelName) {
 }
 
 function getSchemaWithFilters(modelDefinitions, modelName) {
-    return applyCurrentFilters(modelDefinitions, modelName);
-}
-
-/**
- * As we cannot have both OR and AND. We need to filter out default
- * names on the client side.
- * This is done by removing any entries with name equal 'default'
- * @param modelCollection to remove default names from
- * @returns {*} the modelCollection with removed names
- */
-
-function removeDefaultNamesFromCollection(modelCollection) {
-    if (!schemasThatShouldHaveDefaultInTheList.has(modelCollection.modelDefinition.name)) {
-        for(let [key, value] of modelCollection.entries()) {
-            if(value.name && value.name === 'default') {
-                log.debug("DELETED KEY", key, "with value ", value)
-                modelCollection.delete(key);
-            }
-        }
+    if (!schemasThatShouldHaveDefaultInTheList.has(modelName)) {
+        return applyCurrentFilters(modelDefinitions, modelName).filter().on('name').notEqual('default');
     }
-    return modelCollection;
+    return applyCurrentFilters(modelDefinitions, modelName);
 }
 
 function getOrderingForSchema(modelName) {
@@ -130,7 +109,6 @@ function getQueryForSchema(modelName) {
 }
 
 listActions.setListSource.subscribe((action) => {
-    //FIXME: Decide if we should filter dem out
     listStore.listSourceSubject.next(Observable.of(action.data));
 });
 
@@ -198,7 +176,6 @@ listActions.searchByName
     }, log.error.bind(log));
 
 const nonDefaultSearchSchemas = new Set(['organisationUnit']);
-
 
 // ~
 // ~ Filter current list by name (except OrganisationUnit - see above)
