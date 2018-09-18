@@ -9,7 +9,6 @@ import { combineEpics } from 'redux-observable';
 import {
     getOr,
     get,
-    set,
     map,
     find,
     compose,
@@ -20,7 +19,6 @@ import {
     __,
 } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
-import programStore from '../eventProgramStore';
 
 // getProgramStageToModify :: String -> ProgramStage[] -> ProgramStage
 export const getProgramStageToModify = (
@@ -42,35 +40,47 @@ const getProgramStageByIdFromAction = (store, action) => {
 const addDataElementsToStage = store => action$ =>
     action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_ADD)
-        .map(action => {
+        .map((action) => {
             const state = store.getState();
             const programStageToEdit = getProgramStageByIdFromAction(
                 store,
-                action
+                action,
             );
 
             const programStageDataElements = getOr(
                 [],
                 'programStageDataElements',
-                programStageToEdit
+                programStageToEdit,
             );
             const dataElementIdsToAdd = getOr(
                 [],
                 'payload.dataElements',
-                action
+                action,
             );
-            const programStageDataElementsToAdd = map(
-                id => ({
+            // TODO: Simplify this once JIRA issue DHIS2-4207 is done
+            // Currently simple saving failed for programStageDataElements that have a renderType
+            // Saving in this case only works when a programStage.id and dataElement.id are provided
+            let sortOrder = programStageDataElements.length;
+            const programStageDataElementsToAdd = map((id) => {
+                sortOrder += 1;
+                const { optionSet, valueType } = state.availableDataElements.find(dataElement => dataElement.id === id);
+                return {
                     id: generateUid(),
                     dataElement: {
                         id,
+                        optionSet,
+                        valueType,
                     },
-                }),
-                dataElementIdsToAdd
+                    programStage: {
+                        id: programStageToEdit.id,
+                    },
+                    sortOrder,
+                };
+            }, dataElementIdsToAdd,
             );
 
             programStageToEdit.programStageDataElements = programStageDataElements.concat(
-                programStageDataElementsToAdd
+                programStageDataElementsToAdd,
             );
             const programStages = getOr([], 'programStages', store.getState());
             store.setState({
@@ -84,7 +94,6 @@ const removeDataElementFromStage = store => action$ =>
     action$
         .ofType(PROGRAM_STAGE_DATA_ELEMENTS_REMOVE)
         .map(action => {
-            const state = store.getState();
             const programStageToEdit = getProgramStageByIdFromAction(
                 store,
                 action

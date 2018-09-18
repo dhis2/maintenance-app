@@ -4,7 +4,6 @@ import {
     EVENT_PROGRAM_STEP_NEXT,
     EVENT_PROGRAM_STEP_PREVIOUS,
     EVENT_PROGRAM_LOAD_SUCCESS,
-    EVENT_PROGRAM_LOAD_ERROR,
     PROGRAM_STEPPER_SET_DISABLE,
     EVENT_PROGRAM_SAVE,
     EVENT_PROGRAM_SAVE_SUCCESS,
@@ -12,7 +11,7 @@ import {
     TRACKER_PROGRAM_STEP_NEXT,
     TRACKER_PROGRAM_STEP_PREVIOUS,
 } from './actions';
-import { STEPPER_RESET_ACTIVE_STEP } from '../actions';
+import { STEPPER_RESET_ACTIVE_STEP } from '../stepper/stepper.actions';
 import { stageNotificationsReducer } from './notifications/reducers';
 import { programStageStepperReducer } from './tracker-program/program-stages/reducer';
 import eventSteps from './event-program-steps';

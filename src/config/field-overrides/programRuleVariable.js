@@ -1,5 +1,3 @@
-import React from 'react';
-import { getInstance } from 'd2/lib/d2';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 
 
@@ -77,7 +75,7 @@ export default new Map([
         validators: [{
             message: 'this_field_can_only_contain_letters_numbers_space_dash_dot_and_underscore',
             validator(value) {
-                return /^[\w _.\-]+$/gim.test(value);
+                return /^[\w _.-]+$/gim.test(value);
             },
         }],
     }],

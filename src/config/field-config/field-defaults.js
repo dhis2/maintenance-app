@@ -1,10 +1,8 @@
 import { isEqual } from 'lodash/fp';
 
 import {
-    BEFORE_START_OF_REPORTING_PERIOD,
     BEFORE_END_OF_REPORTING_PERIOD,
     AFTER_START_OF_REPORTING_PERIOD,
-    AFTER_END_OF_REPORTING_PERIOD,
     EVENT_DATE,
     ENROLLMENT_DATE,
 } from '../field-overrides/program-indicator/enums';

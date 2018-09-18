@@ -7,7 +7,6 @@ import getContext from 'recompose/getContext';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';
 import withHandlers from 'recompose/withHandlers';
-import { has } from 'lodash/fp';
 
 const relativeScheduledDaysStyle = {
     display: 'flex',
@@ -19,7 +18,7 @@ const relativeScheduledDaysStyle = {
 
 const enhance = compose(
     getContext({ d2: PropTypes.object }),
-    withState('beforeOrAfter', 'setBeforeOrAfter', ({ value }) => value >= 0 ? 'after' : 'before'),
+    withState('beforeOrAfter', 'setBeforeOrAfter', ({ value }) => (value >= 0 ? 'after' : 'before')),
     withHandlers({
         onChangeBeforeAfter: ({ onChange, setBeforeOrAfter, value }) => (event, index, beforeOrAfter) => {
             const days = beforeOrAfter === 'after' ? Number(value) : -1 * Number(value);
@@ -32,14 +31,14 @@ const enhance = compose(
                 onChange({ target: { value: days } });
             }
         },
-    })
+    }),
 );
 
 function RelativeScheduledDays({ onChangeBeforeAfter, beforeOrAfter, onChangeDays, d2, value, style }) {
     const t = d2.i18n.getTranslation.bind(d2.i18n);
 
     /* Because of bad alignment of material ui textfield and selectfield, the compoents becomes skewed when
-       using the hide method EditModelForm.component (setting the display to none/block). The component 
+       using the hide method EditModelForm.component (setting the display to none/block). The component
        must instead chose to return on display:'none'
     */
     if (style && (style.display === 'none')) {

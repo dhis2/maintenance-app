@@ -2,16 +2,15 @@ import React from 'react';
 import ObservedEvents from '../utils/ObservedEvents.mixin';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/TextField/TextField';
-import { config } from 'd2/lib/d2';
 import { currentSubSection$ } from '../App/appStateStore';
+import { withRouter } from 'react-router';
 
-const unsearchableSections = [
-    'organisationUnit',
-];
+const unsearchableSections = ['organisationUnit'];
 
 const SearchBox = React.createClass({
     propTypes: {
         searchObserverHandler: React.PropTypes.func.isRequired,
+        initialValue: React.PropTypes.string,
     },
 
     mixins: [ObservedEvents, Translate],
@@ -19,7 +18,7 @@ const SearchBox = React.createClass({
     getInitialState() {
         return {
             showSearchField: false,
-            value: '',
+            value: this.props.initialValue || '',
         };
     },
 
@@ -27,23 +26,40 @@ const SearchBox = React.createClass({
         this.searchBoxCb = this.createEventObserver('searchBox');
     },
 
+    componentWillReceiveProps(nextProps) {
+        // Searchbox is not remounted when switching sections,
+        // Clear the value when this happens
+        if (this.props.params.modelType !== nextProps.params.modelType) {
+            this.setState({
+                value: '',
+            });
+        }
+    },
+
     componentDidMount() {
         const searchObserver = this.events.searchBox
             .debounceTime(400)
-            .map(event => event && event.target && event.target.value ? event.target.value : '')
+            .map(
+                event =>
+                    event && event.target && event.target.value
+                        ? event.target.value
+                        : ''
+            )
             .distinctUntilChanged();
 
         this.props.searchObserverHandler(searchObserver);
-
-        this.subscription = currentSubSection$
-            .subscribe(currentSection => this.setState({
-                value: '',
+        this.subscription = currentSubSection$.subscribe(currentSection =>
+            this.setState({
+                ...this.state,
                 showSearchField: !unsearchableSections.includes(currentSection),
-            }));
+            })
+        );
     },
 
     componentWillUnmount() {
-        this.subscription && this.subscription.unsubscribe && this.subscription.unsubscribe();
+        this.subscription &&
+            this.subscription.unsubscribe &&
+            this.subscription.unsubscribe();
     },
 
     render() {
@@ -75,4 +91,4 @@ const SearchBox = React.createClass({
     },
 });
 
-export default SearchBox;
+export default withRouter(SearchBox);

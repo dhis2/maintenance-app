@@ -1,7 +1,3 @@
-const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
-
-Error.stackTraceLimit = Infinity;
-
 import React from 'react';
 import { render } from 'react-dom';
 import { init, config, getUserSettings, getManifest } from 'd2/lib/d2';
@@ -12,10 +8,15 @@ import '../scss/maintenance.scss';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './translationRegistration';
 import appTheme from './App/app.theme';
+import customModelDefinitions from './config/custom-models';
 import systemSettingsStore from './App/systemSettingsStore';
 import rxjsconfig from 'recompose/rxjsObservableConfig';
 import setObservableConfig from 'recompose/setObservableConfig';
 import periodTypeStore from './App/periodTypeStore';
+
+const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
+
+Error.stackTraceLimit = Infinity;
 setObservableConfig(rxjsconfig);
 
 if (process.env.NODE_ENV !== 'production') {
@@ -48,6 +49,13 @@ function configI18n(userSettings) {
 
     // Others
     config.i18n.strings.add('version');
+}
+
+function addCustomModels(d2) {
+    customModelDefinitions.forEach((customModel) => {
+        d2.models.add(customModel);
+    });
+    return d2;
 }
 
 function getSystemSettings(d2) {
@@ -91,6 +99,7 @@ getManifest('./manifest.webapp')
     .then(getUserSettings)
     .then(configI18n)
     .then(init)
+    .then(addCustomModels)
     .then(getSystemSettings)
     .then(startApp)
     .catch(log.error.bind(log));

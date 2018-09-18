@@ -8,7 +8,7 @@ import { activeStepSelector } from '../selectors';
 import programStore from '../eventProgramStore';
 import steps from './tracker-program-steps';
 import EditDataEntryForm from '../create-data-entry-form/CreateDataEntryForm.component';
-import AssignOrganisationUnits from '../assign-organisation-units/AssignOrganisationUnits';
+import ProgramAccess from '../program-access/ProgramAccess';
 import TrackerProgramNotifications from '../notifications/TrackerProgramNotifications';
 import { createFormFor } from '../../formHelpers';
 import { editFieldChanged } from '../actions';
@@ -16,7 +16,7 @@ import { flattenRouterProps, wrapInPaper } from '../../componentHelpers';
 import fieldOrder from '../../../config/field-config/field-order';
 import AssignAttributes from './assign-tracked-entity-attributes/AssignAttributes';
 import ProgramStage from './program-stages/ProgramStage';
-
+import EnrollmentDetails from './EnrollmentStep';
 const stepperConfig = () => {
     const program$ = programStore.map(get('program'));
 
@@ -28,7 +28,6 @@ const stepperConfig = () => {
         connect(null, mapDispatchToProps),
     );
     const trackerDetailsFields = fieldOrder.for('trackerProgram');
-    const enrollmentFields = fieldOrder.for('enrollment');
 
     const stepComponents = {
         EditProgramDetailsForm: connectEditForm(
@@ -36,13 +35,13 @@ const stepperConfig = () => {
                 createFormFor(program$, 'program', trackerDetailsFields, true, 'trackerProgram'),
             ),
         ),
-        Enrollment: connectEditForm(
+        Enrollment: EnrollmentDetails,/*connectEditForm(
             wrapInPaper(createFormFor(program$, 'program', enrollmentFields, true, 'enrollment')),
-        ),
+        ), */
         AssignAttributes,
         ProgramStage,
         EditDataEntryForm,
-        AssignOrganisationUnits,
+        ProgramAccess,
         TrackerProgramNotifications,
     };
 

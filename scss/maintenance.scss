@@ -1,10 +1,12 @@
 // Component stylesheets from dependencies
 @import '../node_modules/d2-ui/lib/css/DataTable';
 @import '../node_modules/d2-ui/lib/css/Pagination';
-@import '../node_modules/d2-ui/lib/css/HeaderBar';
 
 @import '../scss/List/DetailsBox';
 @import '../scss/List/List';
+@import '../scss/SqlView/SqlView';
+@import '../scss/ColorPickers/ColorPickers';
+@import '../scss/IconPicker/IconPicker';
 
 $html-background-color: #F3F3F3;
 $data-table--background-color: #FFF;

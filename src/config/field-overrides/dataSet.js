@@ -1,5 +1,3 @@
-import React from 'react';
-
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
 import DataSetElementField from './data-set/DataSetElementField.component';
 import DataInputPeriods from './data-set/DataInputPeriods.component';

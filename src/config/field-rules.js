@@ -347,6 +347,17 @@ export default new Map([
             }],
         },
         {
+            field: 'programs',
+            when: [{
+                operator: 'SYSTEM_SETTING_IS_FALSE',
+                value: 'keyAllowObjectAssignment',
+            }],
+            operations: [{
+                field: 'programs',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
             field: 'featureType',
             when: [{
                 field: 'coordinates',
@@ -553,49 +564,6 @@ export default new Map([
         },
     ]],
     ['enrollment', [
-        {
-            field: 'relationshipType',
-            when: [{
-                field: 'relationshipType',
-                operator: 'HAS_NO_VALUE',
-            }],
-            operations: [{
-                field: 'relationshipFromA',
-                type: 'HIDE_FIELD',
-            }, {
-                field: 'relationshipText',
-                type: 'HIDE_FIELD',
-            }, {
-                field: 'relatedProgram',
-                type: 'HIDE_FIELD',
-            }],
-        },
-        {
-            field: 'relationshipFromA',
-            when: [{
-                field: 'relationshipType',
-                operator: 'HAS_VALUE',
-            }],
-            operations: [{
-                field: 'relatedProgram',
-                type: 'SET_PROP',
-                propName: 'isRequired',
-                thenValue: true,
-                elseValue: false,
-            }, {
-                field: 'relationshipFromA',
-                type: 'SET_PROP',
-                propName: 'isRequired',
-                thenValue: true,
-                elseValue: false,
-            }, {
-                field: 'relationshipText',
-                type: 'SET_PROP',
-                propName: 'required',
-                thenValue: true,
-                elseValue: false,
-            }],
-        },
     ]],
     ['programIndicator', [{
         field: 'analyticsPeriodBoundaries',
@@ -682,6 +650,60 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }],
         },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notifyUsersInHierarchyOnly',
+            when: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                operator: 'EQUALS',
+                value: true,
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+        {
+            field: 'notifyParentOrganisationUnitOnly',
+            when: [{
+                field: 'notifyUsersInHierarchyOnly',
+                operator: 'EQUALS',
+                value: true,
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
     ]],
     ['programNotificationTemplate', [
         {
@@ -724,8 +746,32 @@ export default new Map([
             operations: [{
                 field: 'recipientProgramAttribute',
                 type: 'HIDE_FIELD',
-            }]
-        }
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyUsersInHierarchyOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'NOT_EQUALS',
+                value: 'USER_GROUP',
+            }],
+            operations: [{
+                field: 'notifyParentOrganisationUnitOnly',
+                type: 'HIDE_FIELD',
+            }],
+        },
     ]],
     ['categoryCombo', [
         {
@@ -742,4 +788,32 @@ export default new Map([
             }]
         }
      ]],
+     ['sqlView', [
+        {
+            field: 'name',
+            when: {
+                field: 'id',
+                operator: 'HAS_VALUE',
+            },
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+        {
+            field: 'type',
+            when: {
+                field: 'id',
+                operator: 'HAS_VALUE',
+            },
+            operations: [{
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }],
+        },
+    ]],
 ]);

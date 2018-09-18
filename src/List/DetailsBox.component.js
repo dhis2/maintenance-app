@@ -49,7 +49,7 @@ class DetailsBox extends Component {
 
     // Suffix the url with the .json extension to always get the json representation of the api resource
     getJsonApiResource = value =>
-        <a style={{ wordBreak: 'break-all' }} href={`${value}.json`} target="_blank">{value}</a>;
+        <a style={{ wordBreak: 'break-all' }} href={`${value}.json`} rel="noopener noreferrer" target="_blank" >{value}</a>;
 
     getValueToRender = (fieldName, value) => {
         if (Array.isArray(value) && value.length) {
@@ -100,6 +100,7 @@ DetailsBox.defaultProps = {
     source: PropTypes.object,
     fields: [
         'name',
+        'locale',
         'shortName',
         'code',
         'displayDescription',

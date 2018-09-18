@@ -1,14 +1,15 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { first, get, compose } from 'lodash/fp';
+import { first, compose } from 'lodash/fp';
 import { createStepperContentFromConfig } from '../stepper/stepper';
 import { activeStepSelector } from './selectors';
 import eventProgramStore from './eventProgramStore';
 import steps from './event-program-steps';
 import AssignDataElements from './assign-data-elements/AssignDataElements';
 import EditDataEntryForm from './create-data-entry-form/CreateDataEntryForm.component';
-import AssignOrganisationUnits from './assign-organisation-units/AssignOrganisationUnits';
+import ProgramAccess from './program-access/ProgramAccess';
 import EventProgramNotifications from './notifications/EventProgramNotifications';
 import { createFieldConfigsFor } from '../formHelpers';
 import { editFieldChanged } from './actions';
@@ -25,7 +26,7 @@ let ProgramForm = props => (
         onUpdateField={props.editFieldChanged}>
     </FormBuilder>)
 
-ProgramForm = createFieldConfigsFor('program', eventProgramFields, undefined, null, true, 'eventProgram')(ProgramForm);
+ProgramForm = createFieldConfigsFor('program', eventProgramFields, undefined, true, true, 'eventProgram')(ProgramForm);
 
 let ProgramStageForm = props => (
     <FormBuilder
@@ -52,7 +53,7 @@ const stepperConfig = () => {
         EditProgramDetailsForm: EditProgramDetailsForm,
         AssignDataElements,
         EditDataEntryForm,
-        AssignOrganisationUnits,
+        ProgramAccess,
         EventProgramNotifications,
     };
 

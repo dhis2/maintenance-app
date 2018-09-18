@@ -1,11 +1,12 @@
+import { findIndex } from 'lodash/fp';
 import fieldOrder from './field-order';
 
 /*
     The stepper sets the style of the fields of the not active step to "display: none"
-    to hide them from view. For this to work the component of the field needs to recieve 
+    to hide them from view. For this to work the component of the field needs to recieve
     the style from props. If the fields are not hidden when changing the active step
-    then check if the component of the corresponding fields are receiving and using the 
-    style from props in its outer div. 
+    then check if the component of the corresponding fields are receiving and using the
+    style from props in its outer div.
 */
 
 const fieldGroupsForModelType = new Map([
@@ -14,7 +15,7 @@ const fieldGroupsForModelType = new Map([
         [
             {
                 label: 'enter_program_rule_details',
-                fields: ['program', 'name', 'description', 'priority'],
+                fields: ['program', 'programStage', 'name', 'description', 'priority'],
             },
             {
                 label: 'enter_program_rule_expression',
@@ -69,6 +70,8 @@ const fieldGroupsForModelType = new Map([
                     'recipientUserGroup',
                     'deliveryChannels',
                     'recipientProgramAttribute',
+                    'notifyUsersInHierarchyOnly',
+                    'notifyParentOrganisationUnitOnly',
                 ],
             },
         ],
@@ -92,6 +95,41 @@ const fieldGroupsForModelType = new Map([
                     'deliveryChannels',
                     'recipientDataElement',
                     'recipientProgramAttribute',
+                    'notifyUsersInHierarchyOnly',
+                    'notifyParentOrganisationUnitOnly',
+                ],
+            },
+        ],
+    ],
+    [
+        'programIndicator',
+        [
+            {
+                label: 'program_indicator__details',
+                fields: [
+                    'program',
+                    'name',
+                    'shortName',
+                    'code',
+                    'description',
+                    'decimals',
+                    'aggregationType',
+                    'analyticsType',
+                    'analyticsPeriodBoundaries',
+                    'displayInForm',
+                    'legendSets',
+                    'aggregateExportCategoryOptionCombo',
+                    'aggregateExportAttributeOptionCombo',
+                ],
+            },
+            {
+                label: 'program_indicator__edit_expression',
+                fields: ['expression'],
+            },
+            {
+                label: 'program_indicator__edit_filter',
+                fields: [
+                    'filter',
                 ],
             },
         ],
@@ -100,7 +138,7 @@ const fieldGroupsForModelType = new Map([
 
 export default {
     for(modelType) {
-        if (modelType && fieldGroupsForModelType.has(modelType)) {
+        if (this.isGroupedFields(modelType)) {
             return fieldGroupsForModelType.get(modelType);
         }
 
@@ -112,14 +150,42 @@ export default {
         ];
     },
 
+    isGroupedFields(modelType) {
+        return modelType && fieldGroupsForModelType.has(modelType);
+    },
+
+    getStepLength(modelType) {
+        if (this.isGroupedFields(modelType)) {
+            const modelGroup = fieldGroupsForModelType.get(modelType);
+            return modelGroup.length;
+        }
+        return 0;
+    },
+
+    groupNoByName(fieldName, modelType) {
+        if (this.isGroupedFields(modelType)) {
+            const modelGroup = fieldGroupsForModelType.get(modelType);
+            return findIndex((group => group.fields.includes(fieldName)), modelGroup);
+        }
+        return 0;
+    },
+
+    groupNameByStep(stepNo, modelType) {
+        if (this.isGroupedFields(modelType)) {
+            const modelGroup = fieldGroupsForModelType.get(modelType);
+            return modelGroup[stepNo].label;
+        }
+        return '';
+    },
+
     groupsByField(modelType) {
-        if (modelType && fieldGroupsForModelType.has(modelType)) {
+        if (this.isGroupedFields(modelType)) {
             return fieldGroupsForModelType
                 .get(modelType)
-                .map(g => g.fields)
-                .reduce((o, f, s) => {
-                    f.forEach(x => (o[x] = s));
-                    return o;
+                .map(group => group.fields)
+                .reduce((fieldsWithStep, groupFields, stepNo) => {
+                    groupFields.map(field => fieldsWithStep[field] = stepNo);
+                    return fieldsWithStep;
                 }, {});
         }
     },

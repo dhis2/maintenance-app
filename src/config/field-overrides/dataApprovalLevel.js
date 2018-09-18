@@ -1,4 +1,3 @@
-import { getInstance } from 'd2/lib/d2';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
 
 async function getOrgUnitLevels(model, d2) {
@@ -10,10 +9,6 @@ async function getOrgUnitLevels(model, d2) {
         text: level.displayName,
         value: level.level,
     }));
-}
-
-function Fn(props) {
-    return <DropDownAsyncGetter {...props} />;
 }
 
 export default new Map([

@@ -35,13 +35,14 @@ export default class OrganisationUnitList extends React.Component {
                         .filter().on('parent.id').equals(selectedOrganisationUnit.id)
                         .list({ fields: fieldFilteringForQuery });
 
-                    // When a root organisation unit is selected we also add the root organisation unit to the list
-                    // of available organisation units to pick from
-                    if (userOrganisationUnitIds.indexOf(selectedOrganisationUnit.id) >= 0) {
-                        organisationUnitList.add(selectedOrganisationUnit);
-                    }
+                    // DHIS2-2160 Add the selected node to the list to
+                    // avoid having to select the parent node to edit
+                    // the selected node...
+                    let filteredOrgUnits = organisationUnitList.toArray();
+                    filteredOrgUnits.unshift(selectedOrganisationUnit);
+                    let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, filteredOrgUnits);
 
-                    listActions.setListSource(organisationUnitList);
+                    listActions.setListSource(prependedOrgUnitList);
                 },
                 error => log.error(error)
             );

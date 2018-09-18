@@ -21,7 +21,7 @@ import {
     changeProgramStageSectionOrder,
     addProgramStageSection,
     removeProgramStageSection,
-    editProgramStageSectionName,
+    updateProgramStageSection,
 } from './actions';
 import { getStageSectionsById } from "../tracker-program/program-stages/selectors";
 
@@ -80,8 +80,8 @@ class CreateDataEntryForm extends Component {
                             programStageSections={
                                 this.props.programStageSections
                             }
-                            onSectionNameChanged={
-                                this.props.onSectionNameChanged
+                            onSectionUpdated={
+                                this.props.onSectionUpdated
                             }
                             onSectionOrderChanged={
                                 this.props.onSectionOrderChanged
@@ -93,7 +93,7 @@ class CreateDataEntryForm extends Component {
 
                     {this.renderTab(
                         this.getTranslation('custom'),
-                        <CustomForm />
+                        <CustomForm programStage={this.props.programStage} />
                     )}
                 </Tabs>
             </Paper>
@@ -117,7 +117,7 @@ HelpText.contextTypes = {
 CreateDataEntryForm.propTypes = {
     onChangeDefaultOrder: PropTypes.func.isRequired,
     onSectionOrderChanged: PropTypes.func.isRequired,
-    onSectionNameChanged: PropTypes.func.isRequired,
+    onSectionUpdated: PropTypes.func.isRequired,
     onSectionAdded: PropTypes.func.isRequired,
     onSectionRemoved: PropTypes.func.isRequired,
     programStageSections: PropTypes.arrayOf(
@@ -146,7 +146,7 @@ const mapDispatchToProps = dispatch =>
             changeProgramStageSectionOrder,
             addProgramStageSection,
             removeProgramStageSection,
-            editProgramStageSectionName,
+            updateProgramStageSection,
         },
         dispatch
     );
@@ -233,14 +233,14 @@ const enhance = compose(
                 newDataElementOrder,
             });
         },
-        onSectionNameChanged: ({
+        onSectionUpdated: ({
             programStage,
-            editProgramStageSectionName,
-        }) => (sectionId, newName) => {
-            editProgramStageSectionName({
+            updateProgramStageSection,
+        }) => (sectionId, newSectionData) => {
+            updateProgramStageSection({
                 programStage: programStage.id,
                 programStageSectionId: sectionId,
-                newProgramStageSectionName: newName,
+                newProgramStageSectionData: newSectionData,
             });
         },
         onSectionOrderChanged: ({
@@ -252,10 +252,10 @@ const enhance = compose(
                 programStageSections
             });
         },
-        onSectionAdded: ({ programStage, addProgramStageSection }) => newSectionName => {
+        onSectionAdded: ({ programStage, addProgramStageSection }) => (newSectionData) => {
             addProgramStageSection({
                 programStage: programStage.id,
-                newSectionName
+                newSectionData,
             });
         },
         onSectionRemoved: ({

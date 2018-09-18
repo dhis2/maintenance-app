@@ -128,8 +128,6 @@ function onClickLeft(event, model) {
         );
 }
 
-const operationsCompleted = Action.create('operationsCompleted', 'Hierarchy');
-
 async function getOrganisationUnitByIds(ids) {
     const d2 = await getInstance();
 

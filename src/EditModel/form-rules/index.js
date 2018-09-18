@@ -1,5 +1,4 @@
 import noop from 'd2-utilizr/lib/noop';
-import log from 'loglevel';
 import { negate } from 'lodash/fp';
 import isArray from 'd2-utilizr/lib/isArray';
 
@@ -44,6 +43,9 @@ function changeValue(fieldConfig, operationParams, ruleResult, model) {
 }
 
 function setProp(fieldConfig, operationParams, ruleResult) {
+    if (!fieldConfig) {
+        return;
+    }
     if (ruleResult) {
         return fieldConfig.props[operationParams.propName] = operationParams.thenValue;
     }
@@ -140,9 +142,9 @@ function ruleRunner({ whenFieldName, operatorFn, whenValue }, fieldConfig, model
 
 function rulesRunner(rules, rule, modelToEdit, fieldConfigs) {
     return rules.map((whenRule, index) => {
-        log.debug(`For field ${rule.field} run the when-rule where field ` +
-            ` ${whenRule.field || rule.field} ${getWhenOperator(whenRule.operator).name}` +
-            ` ${whenRule.value || ''} ${rule.field} ${rules.length > (index + 1) && 'then run'}`);
+        // log.debug(`For field ${rule.field} run the when-rule where field ` +
+        //     ` ${whenRule.field || rule.field} ${getWhenOperator(whenRule.operator).name}` +
+        //     ` ${whenRule.value || ''} ${rule.field} ${rules.length > (index + 1) && 'then run'}`);
 
         const fieldConfigForRule = fieldConfigs.find(fieldConfig =>
             fieldConfig.name === (whenRule.field || rule.field));
@@ -160,7 +162,7 @@ export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
         const rules = isArray(rule.when) ? rule.when : [rule.when];
         const rulePassed = rulesRunner(rules, rule, modelToEdit, fieldConfigs).some(result => result === true);
 
-        log.debug('And the result is', rulePassed);
+        // log.debug('And the result is', rulePassed);
 
         (rule.operations || [rule.operation])
             .forEach((operation) => {
@@ -173,9 +175,9 @@ export function applyRulesToFieldConfigs(rules, fieldConfigs, modelToEdit) {
                     ...operationParams
                 } = operation;
 
-                log.debug(`---- For field ${field || rule.field} 
-                        execute ${getOperation(type).name} 
-                        with`, operationParams);
+                // log.debug(`---- For field ${field || rule.field} 
+                //         execute ${getOperation(type).name} 
+                //         with`, operationParams);
 
                 getOperation(type)(fieldConfigForOperation, operationParams, rulePassed, modelToEdit);
             });

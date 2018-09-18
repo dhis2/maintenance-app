@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withProps from 'recompose/withProps';
@@ -35,8 +35,8 @@ const toVariableType = name => ['V', name];
 const toAttributeType = name => ['A', name]; // Used for program attributes
 const toDataElementType = name => ['#', name];
 
-const dataElementsTypeMap = dataElements =>
-    map(toDataElementType, dataElements);
+const variablesTypeMap = variables => map(toVariableType, variables);
+const dataElementsTypeMap = dataElements => map(toDataElementType, dataElements);
 const attributesToTypeMap = attributes => map(toAttributeType, attributes);
 
 const boundOnUpdate = dispatch =>
@@ -51,18 +51,21 @@ const boundOnUpdate = dispatch =>
 const NotificationSubjectAndMessageTemplateFields = compose(
     connect(undefined, boundOnUpdate),
     withProps(({ dataElements, attributes, isProgram }) => {
-        let constantVariables = PROGRAM_STAGE_VARIABLES;
-        let variables = dataElementsTypeMap(dataElements);
-
         if (isProgram) {
-            constantVariables = PROGRAM_VARIABLES;
-            variables = attributesToTypeMap(attributes);
+            return {
+                variableTypes: [
+                    ...variablesTypeMap(PROGRAM_VARIABLES),
+                    ...attributesToTypeMap(attributes),
+                ],
+            };
         }
 
         return {
-            variableTypes: map(toVariableType, constantVariables).concat(
-                variables,
-            ),
+            variableTypes: [
+                ...variablesTypeMap(PROGRAM_STAGE_VARIABLES),
+                ...attributesToTypeMap(attributes),
+                ...dataElementsTypeMap(dataElements),
+            ],
         };
     }),
 )(SubjectAndMessageTemplateFields);
@@ -70,7 +73,7 @@ const NotificationSubjectAndMessageTemplateFields = compose(
 // Using dropdownasync-getter due to support for references
 const ProgramAttributeDropDown = compose(connect(undefined, boundOnUpdate))((props) => {
     const attributesOpts = props.attributes
-        .filter(attr => attr.valueType === 'PHONE_NUMBER')
+        .filter(attr => ['PHONE_NUMBER', 'EMAIL'].includes(attr.valueType))
         .map(attr => ({
             text: attr.displayName,
             value: attr.trackedEntityAttribute.id,
@@ -99,7 +102,7 @@ const DataElementDropDown = compose(
     connect(undefined, boundOnUpdate),
 )((props) => {
     const dataElementOpts = props.dataElements
-        .filter(de => de.valueType == 'PHONE_NUMBER')
+        .filter(de => de.valueType === 'PHONE_NUMBER')
         .map(de => ({
             text: de.displayName,
             value: de.id,

@@ -45,7 +45,8 @@ export function stageNotificationsReducer(
                 modelToEdit: model,
             }
         }
-    }
 
-    return state;
+        default:
+            return state;
+    }
 }

@@ -7,7 +7,7 @@ import HelpLink from '../List/HelpLink.component';
 import BackButton from './BackButton.component';
 import { goToAndScrollUp } from '../router-utils';
 
-function FormHeading({ level, schema, children, groupName, isDirtyHandler, ...props }, context) {
+function FormHeading({ level, schema, children, groupName, isDirtyHandler, skipTranslation, ...props }, context) {
     return (
         <Heading {...props} level={level}>
             <BackButton
@@ -15,7 +15,7 @@ function FormHeading({ level, schema, children, groupName, isDirtyHandler, ...pr
                 iconStyle={{ top: 3 }}
                 isDirtyHandler={isDirtyHandler}
             />
-            {context.d2.i18n.getTranslation(children)}
+            {skipTranslation ? children : context.d2.i18n.getTranslation(children)}
             {schema && (<HelpLink schema={schema} />)}
         </Heading>
     );
@@ -30,12 +30,14 @@ FormHeading.propTypes = {
     isDirtyHandler: PropTypes.func,
     schema: PropTypes.string.isRequired,
     groupName: PropTypes.string.isRequired,
+    skipTranslation: PropTypes.bool,
 };
 
 FormHeading.defaultProps = {
     isDirtyHandler: () => {},
     level: 2,
     children: '',
+    skipTranslation: false,
 };
 
 export default addD2Context(FormHeading);

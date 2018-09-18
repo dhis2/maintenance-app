@@ -24,19 +24,23 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                 dataSource={props.autoCompleteDataSource}
                 filter={AutoComplete.noFilter}
             />
-            {Array.isArray(props.roots) && props.roots.length > 0 ? props.roots.map(root => (
-                <OrganisationUnitTree
-                    key={root.id}
-                    root={root}
-                    selected={props.selected}
-                    initiallyExpanded={props.initiallyExpanded}
-                    labelStyle={styles.labelStyle}
-                    onSelectClick={props.onSelectClick}
-                    idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
-                    hideCheckboxes={props.hideCheckboxes}
-                    hideMemberCount={props.hideMemberCount}
-                />
-            )) : <div style={styles.noHitsLabel}>{props.noHitsLabel}</div>}
+            {Array.isArray(props.roots) && props.roots.length > 0 ? props.roots
+                .map(root =>
+                {
+                    return (
+                        <OrganisationUnitTree
+                            key={root.id}
+                            root={root}
+                            selected={props.selected}
+                            initiallyExpanded={props.initiallyExpanded}
+                            labelStyle={styles.labelStyle}
+                            onSelectClick={props.onSelectClick}
+                            idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
+                            hideCheckboxes={props.hideCheckboxes}
+                            hideMemberCount={props.hideMemberCount}
+                        />
+                    )
+                }) : <div style={styles.noHitsLabel}>{props.noHitsLabel}</div>}
         </div>
     );
 }

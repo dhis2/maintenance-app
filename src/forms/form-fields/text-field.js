@@ -70,6 +70,7 @@ export default class TextFormField extends Component {
             labelText,
             multiLine,
             style,
+            errorStyle,
             ...rest
         } = this.props;
 
@@ -77,18 +78,19 @@ export default class TextFormField extends Component {
 
         const styles = {
             errorStyle: {
+                position: 'absolute',
                 lineHeight: multiLine ? '48px' : '12px',
                 marginTop: multiLine ? -16 : -12,
+                bottom: '-0.9em',
             },
             fieldWrap: {
                 position: 'relative',
             },
         };
-
         return (
             <div style={{ ...styles.fieldWrap, ...style }}>
                 <TextField
-                    errorStyle={styles.errorStyle}
+                    errorStyle={{ ...styles.errorStyle, ...errorStyle }}
                     label={label}
                     multiLine={multiLine}
                     {...restProps}
@@ -109,6 +111,7 @@ TextFormField.propTypes = {
     onChange: React.PropTypes.func,
     multiLine: React.PropTypes.bool,
     style: React.PropTypes.any,
+    errorStyle: React.PropTypes.object,
 };
 
 TextFormField.defaultProps = {
@@ -118,4 +121,5 @@ TextFormField.defaultProps = {
     label: '',
     onChange: () => {},
     multiLine: false,
+    errorStyle: {},
 };

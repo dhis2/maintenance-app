@@ -1,5 +1,6 @@
 import ProgramRuleActionList from './program-rules/programRuleActionList.component';
 import ProgramRuleConditionField from './program-rules/programRuleConditionField.component';
+import ProgramStageField from './program-rules/programRuleProgramStage';
 
 export default new Map([
     ['condition', {
@@ -7,5 +8,8 @@ export default new Map([
     }],
     ['programRuleActions', {
         component: ProgramRuleActionList,
+    }],
+    ['programStage', {
+        component: ProgramStageField,
     }],
 ]);

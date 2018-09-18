@@ -33,6 +33,18 @@ class SideBarContainer extends React.Component {
         }
     }
 
+    getExpandedItems(orgUnitSearchHits) {
+        if (orgUnitSearchHits && orgUnitSearchHits.length) {
+            return [];
+        }
+
+        if (this.state.selectedOrganisationUnit) {
+            return [this.state.selectedOrganisationUnit.path];
+        }
+
+        return this.state.userOrganisationUnits.toArray().map(v => v.path).concat(this.state.initiallyExpanded || []);
+    }
+
     renderSidebarItems() {
         if (this.state.currentSubSection === 'organisationUnit' && !/#\/edit\//.test(document.location.hash)) {
             if (this.state.userOrganisationUnits && this.state.selectedOrganisationUnit) {
@@ -47,6 +59,7 @@ class SideBarContainer extends React.Component {
                 };
 
                 const orgUnitSearchHits = appState.getState().sideBar.organisationUnits;
+
                 const roots = Array.isArray(orgUnitSearchHits)
                     ? orgUnitSearchHits
                     : this.state.userOrganisationUnits.toArray().map((ou) => {
@@ -57,9 +70,7 @@ class SideBarContainer extends React.Component {
                         return ou;
                     });
 
-                const initiallyExpanded = orgUnitSearchHits && orgUnitSearchHits.length
-                    ? []
-                    : this.state.userOrganisationUnits.toArray().map(v => v.path).concat(this.state.initiallyExpanded || []);
+                const initiallyExpanded = this.getExpandedItems(orgUnitSearchHits);
 
                 return (
                     <div style={styles.wrapperStyle}>

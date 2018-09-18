@@ -3,7 +3,7 @@ import { getInstance } from 'd2/lib/d2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import isObject from 'd2-utilizr/lib/isObject';
 import snackActions from '../Snackbar/snack.actions';
-import { curry, map, contains, __, compose, get, filter, uniq, keys } from 'lodash/fp';
+import { curry, map, contains, __, uniq, keys } from 'lodash/fp';
 import maintenanceModels from '../config/maintenance-models';
 import systemSettingsStore from './systemSettingsStore';
 
@@ -69,7 +69,10 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
     }
 
     const d2 = await getInstance();
-    const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits({ paging: false });
+    const organisationUnitsCollection = await d2.currentUser.getOrganisationUnits({
+        fields: ':all,displayName,path,publicAccess,access,children[id,displayName,path,children::isNotEmpty,publicAccess,access]',
+        paging: false
+    });
 
     if (d2.currentUser.authorities.has('ALL') && !organisationUnitsCollection.size) {
         const rootLevelOrgUnits = await d2.models.organisationUnits.list({
@@ -77,7 +80,7 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
             paging: false,
             fields: [
                 'id,displayName,path,publicAccess,access,lastUpdated',
-                'children[id,displayName,path,children::isNotEmpty]',
+                'children[id,displayName,publicAccess,access,path,children::isNotEmpty]',
             ].join(','),
         });
 
@@ -99,7 +102,7 @@ async function getCurrentUserOrganisationUnits(disableCache = false) {
 }
 
 async function loadSelectedOrganisationUnitState() {
-    if (appState.state && appState.state.selectedOrganisationUnit && appState.state.selectedOrganisationUnit.length) {
+    if (appState.state && appState.state.selectedOrganisationUnit) {
         return appState.state.selectedOrganisationUnit;
     }
 

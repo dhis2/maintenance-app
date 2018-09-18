@@ -4,11 +4,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
+
+import DetailsBoxWithScroll from '../../../../List/DetailsBoxWithScroll.component';
 
 import { getTableColumnsForType } from '../../../../config/maintenance-models';
 import { getTranslatablePropertiesForModelType } from '../../../../List/List.component';
@@ -19,53 +21,56 @@ import {
     deleteProgramStage,
 } from './actions';
 
-const FAB = (props) => {
-    const cssStyles = {
+const styles = {
+    fab: {
         textAlign: 'right',
         marginTop: '1rem',
         bottom: '1.5rem',
         right: '1.5rem',
         position: 'fixed',
         zIndex: 10,
-    };
-
-    return (
-        <div style={cssStyles}>
-            <FloatingActionButton onClick={props.handleNewProgramStage}>
-                <FontIcon className="material-icons">add</FontIcon>
-            </FloatingActionButton>
-        </div>
-    );
-};
-
-FAB.propTypes = {
-    handleNewProgramStage: PropTypes.func.isRequired,
+    },
+    detailsBox: {
+        flex: 1,
+        marginLeft: '1rem',
+        marginRight: '1rem',
+        opacity: 1,
+        flexGrow: 0,
+        paddingLeft: '1rem',
+    },
+    detailsBoxWrap: {
+        paddingLeft: '1rem',
+    },
+    listWrap: {
+        flex: 1,
+        display: 'flex',
+        flexOrientation: 'row',
+    },
+    sharingDialogBody: {
+        minHeight: '400px',
+    },
 };
 
 class ProgramStageList extends Component {
-    constructor(props) {
-        super(props);
-        const modelType = 'programStage';
-
-        this.state = {
-            stages: this.props.programStages,
-            modelType,
-            sharing: {
-                id: null,
-            },
-            translate: {
-                model: null,
-            },
-            tableColumns: getTableColumnsForType(modelType),
-        };
-    }
+    state = {
+        stages: this.props.programStages,
+        modelType: 'programStage',
+        detailsObject: null,
+        sharing: {
+            id: null,
+        },
+        translate: {
+            model: null,
+        },
+        tableColumns: getTableColumnsForType('programStage'),
+    };
 
     componentWillReceiveProps(nextProps) {
-        if(this.props.stages != nextProps.programStages && this.props.programStages != nextProps.programStages) {
+        if (this.state.stages !== nextProps.programStages && this.props.programStages !== nextProps.programStages) {
             this.setState({
                 ...this.state,
-                stages: nextProps.programStages
-            })
+                stages: nextProps.programStages,
+            });
         }
     }
 
@@ -88,6 +93,11 @@ class ProgramStageList extends Component {
             },
         });
     };
+
+    openDetails = model => this.setState({ detailsObject: model });
+
+    closeDetails = () => this.setState({ detailsObject: null });
+
     openTranslate = (model) => {
         this.setState({
             ...this.state,
@@ -108,8 +118,8 @@ class ProgramStageList extends Component {
     swapStages = (stageA, stageB) => {
         this.setState((state) => {
             const swapOrder = stageA.sortOrder;
-            stageA.sortOrder = stageB.sortOrder; // eslint-disable-line
-            stageB.sortOrder = swapOrder; // eslint-disable-line
+            stageA.sortOrder = stageB.sortOrder;
+            stageB.sortOrder = swapOrder;
             return {
                 sections: state.stages.sort((a, b) => a.sortOrder - b.sortOrder),
             };
@@ -141,17 +151,19 @@ class ProgramStageList extends Component {
         }
     }
 
-    renderSharing = () => (!!this.state.sharing.id
-        && <SharingDialog
+    renderSharing = () => (!!this.state.sharing.id &&
+        <SharingDialog
             id={this.state.sharing.id}
             type={this.state.modelType}
             open={!!this.state.sharing.id}
             onRequestClose={this.closeSharing}
-            bodyStyle={{ minHeight: '400px' }}
-        />);
+            bodyStyle={styles.sharingDialogBody}
+            d2={this.context.d2}
+        />
+    );
 
-    renderTranslate = () => (!!this.state.translate.model
-        && <TranslationDialog
+    renderTranslate = () => (!!this.state.translate.model &&
+        <TranslationDialog
             objectToTranslate={this.state.translate.model}
             objectTypeToTranslate={
                 this.state.translate.model.modelDefinition
@@ -163,13 +175,33 @@ class ProgramStageList extends Component {
             fieldsToTranslate={getTranslatablePropertiesForModelType(
                 this.state.modelType,
             )}
-        />);
+        />
+    );
+
+    renderDetails = () => (!!this.state.detailsObject &&
+        <div style={styles.detailsBoxWrap}>
+            <DetailsBoxWithScroll
+                detailsObject={this.state.detailsObject}
+                onClose={this.closeDetails}
+                styles={styles.detailsBox}
+            />
+        </div>
+    );
+
+    renderFAB = () => (
+        <div style={styles.fab}>
+            <FloatingActionButton onClick={this.props.handleNewProgramStage}>
+                <FontIcon className="material-icons">add</FontIcon>
+            </FloatingActionButton>
+        </div>
+    );
 
     render() {
         const contextActions = {
             edit: this.props.handleEditProgramStage,
             share: this.openSharing,
             delete: this.props.handleDeleteProgramStage,
+            details: this.openDetails,
             translate: this.openTranslate,
             move_up: this.moveStageUp,
             move_down: this.moveStageDown,
@@ -181,9 +213,8 @@ class ProgramStageList extends Component {
             move_up: 'arrow_upward',
             move_down: 'arrow_downward',
         };
-
         return (
-            <div>
+            <div style={styles.listWrap}>
                 <DataTable
                     rows={this.state.stages}
                     columns={this.props.tableColumns}
@@ -192,9 +223,10 @@ class ProgramStageList extends Component {
                     contextMenuIcons={contextMenuIcons}
                     isContextActionAllowed={this.contextActionChecker}
                 />
-                <FAB {...this.props} />
+                {this.renderDetails()}
                 {this.renderSharing()}
                 {this.renderTranslate()}
+                {this.renderFAB()}
             </div>
         );
     }
@@ -203,12 +235,17 @@ class ProgramStageList extends Component {
 ProgramStageList.propTypes = {
     programStages: PropTypes.array.isRequired,
     tableColumns: PropTypes.array,
+    handleNewProgramStage: PropTypes.func.isRequired,
     handleEditProgramStage: PropTypes.func.isRequired,
     handleDeleteProgramStage: PropTypes.func.isRequired,
 };
 
 ProgramStageList.defaultProps = {
     tableColumns: ['name', 'lastUpdated'],
+};
+
+ProgramStageList.contextTypes = {
+    d2: PropTypes.object.isRequired,
 };
 
 export default connect(null, dispatch =>
