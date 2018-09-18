@@ -9,17 +9,10 @@ import ModelCollection from 'd2/lib/model/ModelCollection';
 //create a monkey-patch to handle paging with prepended-orgunit
 const createPagerForOrgunit = (pager, selectedOrganisationUnit, d2) => {
     const monkeyPage = async pageNr => {
-        if (pageNr < 1) {
-            throw new Error('PageNr can not be less than 1');
-        }
-        if (pageNr > this.pageCount) {
-            throw new Error(`PageNr can not be larger than the total page count of ${this.pageCount}`);
-        }
-        const orgList = await pager.pagingHandler.list(Object.assign({}, pager.query, { page: pageNr }));
-        let orgListPager = orgList.pager;
+        const orgList = await pager.goToPage(pageNr);
         const orgListArr = orgList.toArray();
         orgListArr.unshift(selectedOrganisationUnit);
-        let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, orgListArr, orgListPager);
+        let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, orgListArr, orgList.pager);
         
         prependedOrgUnitList.pager.goToPage = monkeyPage;
         return prependedOrgUnitList;
