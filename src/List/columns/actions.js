@@ -32,7 +32,7 @@ export const setColumnsForModel = (modelType, columns) => ({
     type: setColumnsTypes.request,
     payload: {
         modelType,
-        columns
+        columns: Array.isArray(columns) ? columns: [],
     }
 })
 

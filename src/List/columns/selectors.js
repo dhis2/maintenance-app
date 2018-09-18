@@ -1,9 +1,6 @@
 export const getColumnsForModelType = (state, modelType) => {
     const m = state.configurableColumns.modelTypes[modelType];
-    if (m && m.columns) {
-        return Array.isArray(m.columns) ? m.columns : [];
-    }
-    return [];
+    return m && m.columns || [];
 };
 
 export const getAllModelTypes = state => state.configurableColumns.modelTypes;

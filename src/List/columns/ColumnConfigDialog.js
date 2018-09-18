@@ -15,97 +15,7 @@ import Divider from 'material-ui/Divider';
 import SortableColumnsList from './SortableColumns';
 import camelCaseToUnderScores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import FlatButton from 'material-ui/FlatButton';
-import { AvailableDataElement as AvailableColumn } from '../../EditModel/event-program/create-data-entry-form/DataElementPicker.component';
-
-const styles = {
-    availableColumnElement: {
-        flex: '1 0 25%',
-        margin: '0 5px 0 0',
-        maxWidth: '235px',
-    },
-    availableColumnsContainer: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    disabledElement: {},
-    availableColumnsItem: {},
-};
-
-/**
- * Gets the columns that should be shown for the model
- * We try to show most "simple" columns, ie bools, text, etc.
- * Ignore some that are internal, no easy way to filter these without a blacklist
- *
- */
-function getAvailableColumnsForModel(model) {
-    const validations = model.modelValidations;
-    const ignoreFieldTypes = new Set(['COLLECTION', 'REFERENCE', 'COMPLEX']);
-    const ignoreFieldNames = new Set([
-        'dimensionItem',
-        'dimensionItemType',
-        'dimension',
-        'allItems',
-        'optionSetValue',
-        'ignoreApproval',
-        'leaf',
-        'memberCount',
-        'path',
-        'registration',
-    ]);
-    // These should have translated fields from the server, ie displayName.
-    // In some cases the translated property does not exist on the model, and we should probably show
-    // the original ones instead, for now just ignore these.
-    const translatedValues = new Set([
-        'name',
-        'description',
-        'shortName',
-        'formName',
-    ]);
-    let availableColumns = ['user[name]', 'lastUpdatedBy[name]'];
-
-    for (let fieldName in validations) {
-        let field = validations[fieldName];
-        if (
-            !ignoreFieldTypes.has(field.type) &&
-            !ignoreFieldNames.has(fieldName) &&
-            !translatedValues.has(fieldName)
-        ) {
-            availableColumns.push(fieldName);
-        }
-    }
-
-    return availableColumns;
-}
-
-const AvailableColumnsList = ({ columns, onClick, selectedColumns }) => {
-    return (
-        <div style={styles.availableColumnsContainer}>
-            {columns.map(column => {
-                //adhere to availabledataelement api
-                const toDataElement = {
-                    id: column.value,
-                    displayName: column.displayValue,
-                };
-                const active = selectedColumns.find(
-                    col => col.value === column.value
-                );
-                return (
-                    <div
-                        key={column.value}
-                        style={styles.availableColumnElement}
-                    >
-                        <AvailableColumn
-                            dataElement={toDataElement}
-                            pickDataElement={() => onClick(column)}
-                            active={!!active}
-                            key={column.value}
-                        />
-                    </div>
-                );
-            })}
-        </div>
-    );
-};
+import AvailableColumnsList from './AvailableColumnsList';
 
 export class ColumnConfigDialog extends Component {
     constructor(props, context) {
@@ -271,6 +181,62 @@ export class ColumnConfigDialog extends Component {
     }
 }
 
+ColumnConfigDialog.contextTypes = {
+    d2: PropTypes.object,
+};
+
+ColumnConfigDialog.propTypes = {
+    open: PropTypes.bool,
+    columns: PropTypes.array,
+    modelType: PropTypes.string,
+};
+
+/**
+ * Gets the columns that should be shown for the model
+ * We try to show most "simple" columns, ie bools, text, etc.
+ * Ignore some that are internal, no easy way to filter these without a blacklist
+ *
+ */
+function getAvailableColumnsForModel(model) {
+    const validations = model.modelValidations;
+    const ignoreFieldTypes = new Set(['COLLECTION', 'REFERENCE', 'COMPLEX']);
+    const ignoreFieldNames = new Set([
+        'dimensionItem',
+        'dimensionItemType',
+        'dimension',
+        'allItems',
+        'optionSetValue',
+        'ignoreApproval',
+        'leaf',
+        'memberCount',
+        'path',
+        'registration',
+    ]);
+    // These should have translated fields from the server, ie displayName.
+    // In some cases the translated property does not exist on the model, and we should probably show
+    // the original ones instead, for now just ignore these.
+    const translatedValues = new Set([
+        'name',
+        'description',
+        'shortName',
+        'formName',
+    ]);
+    let availableColumns = ['user[name]', 'lastUpdatedBy[name]'];
+
+    for (let fieldName in validations) {
+        let field = validations[fieldName];
+        if (
+            !ignoreFieldTypes.has(field.type) &&
+            !ignoreFieldNames.has(fieldName) &&
+            !translatedValues.has(fieldName)
+        ) {
+            availableColumns.push(fieldName);
+        }
+    }
+
+    return availableColumns;
+}
+
 const mapStateToProps = (state, ownProps) => ({
     open: getDialogOpen(state),
     userSelectedColumns: getColumnsForModelType(state, ownProps.modelType),
@@ -289,15 +255,6 @@ const mapDispatchToProps = dispatch => ({
     },
 });
 
-ColumnConfigDialog.contextTypes = {
-    d2: PropTypes.object,
-};
-
-ColumnConfigDialog.propTypes = {
-    open: PropTypes.bool,
-    columns: PropTypes.array,
-    modelType: PropTypes.string,
-};
 const ColumnConfigDialogConnected = connect(
     mapStateToProps,
     mapDispatchToProps
