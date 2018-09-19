@@ -43,7 +43,7 @@ const listActions = Action.createActionsFromNames([
  * @param modelDefinition to filter
  * @returns {ModelDefinition} the modelDefinition with applied filters.
  */
-function applySearchFilter(searchString, modelDefinition) {
+function applySearchByIdentifiersFilter(searchString, modelDefinition) {
     return modelDefinition.filter().on('identifiable').operator('ilike', searchString) 
 }
 
@@ -71,7 +71,7 @@ function applyCurrentFilters(modelDefinitions, modelName) {
         const searchString = listStore.state.searchString.trim();
 
         return searchString.length > 0
-            ? applySearchFilter(searchString, filterModelDefinition)
+            ? applySearchByIdentifiersFilter(searchString, filterModelDefinition)
             : filterModelDefinition;
     }
 
