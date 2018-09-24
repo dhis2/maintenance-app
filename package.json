@@ -21,7 +21,8 @@
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "deploy": "npm run build && mvn clean deploy",
     "lint": "eslint ./src",
-    "profile": "yarn start -- --profile"
+    "profile": "yarn start -- --profile",
+    "sonar": "sonar-scanner"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -71,6 +72,7 @@
     "recompose": "^0.23.1",
     "redux-logger": "^3.0.6",
     "sass-loader": "^6.0.5",
+    "sonar-scanner": "^3.1.0",
     "style-loader": "^0.16.1",
     "webpack": "^2.5.1",
     "webpack-bundle-analyzer": "^2.7.0",
