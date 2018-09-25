@@ -11,6 +11,7 @@ import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import AlertIcon from 'material-ui/svg-icons/alert/warning';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 
 import OptionSorter from './OptionSorter/OptionSorter.component';
 import OptionDialogForOptions from './OptionDialogForOptions/OptionDialogForOptions.component';
@@ -65,6 +66,7 @@ class OptionManagement extends Component {
             nameSortedASC: false,
             isSorting: false,
             modelToTranslate: null,
+            modelToShare: null,
         };
 
         this.i18n = context.d2.i18n;
@@ -143,9 +145,25 @@ class OptionManagement extends Component {
         return <Pagination {...paginationProps} />;
     }
 
+    renderSharingDialog = () => (
+        <SharingDialog
+            d2={this.context.d2}
+            id={this.state.modelToShare.id}
+            type={'option'}
+            open={!!this.state.modelToShare}
+            onRequestClose={() => this.setState({modelToShare: null})}
+            bodyStyle={{ minHeight: '400px' }}
+        />
+    )
+
     render() {
         const contextActions = {
             edit: this.onEditOption,
+            share: (modelToShare) => {
+                this.setState({
+                    modelToShare
+                })
+            },
             delete: modelToDelete => actions.deleteOption(modelToDelete, this.props.model),
             translate: (modelToTranslate) => {
                 this.setState({
@@ -187,6 +205,7 @@ class OptionManagement extends Component {
                     onRequestClose={() => this.setState({ modelToTranslate: null })}
                     fieldsToTranslate={['name']}
                 />}
+                {this.state.modelToShare && this.renderSharingDialog()}
                 <div>
                     <RaisedButton
                         label={this.i18n.getTranslation('add_option')}
