@@ -44,8 +44,9 @@ const addAttributeStatusToFieldConfig = (fieldConfig, model) => {
     }
 };
 
-async function setupFieldConfigs([fieldConfigs, modelToEdit, optionDialogState]) {
+async function setupFieldConfigs([modelToEdit, optionDialogState]) {
     const d2 = await getInstance();
+    const fieldConfigs = await createFieldConfigForModelTypes('option');
     const isAdd = !optionDialogState.model.id;
     const model = optionDialogState.model;
 
@@ -61,10 +62,8 @@ async function setupFieldConfigs([fieldConfigs, modelToEdit, optionDialogState])
 
 const optionForm$ = Observable
     .combineLatest(
-        Observable.fromPromise(createFieldConfigForModelTypes('option')),
-        modelToEditStore,
-        optionDialogStore,
-    )
+        modelToEditStore, //This is the optionSet model. optionDialogStore.model contains option model
+        optionDialogStore)
     .flatMap(setupFieldConfigs);
 
 const optionFormData$ = Observable.combineLatest(
@@ -78,14 +77,13 @@ const optionFormData$ = Observable.combineLatest(
     }))
     .flatMap(async ({ fieldConfigs, model, isAdd, ...other }) => {
         const d2 = await getInstance();
-
-        return Promise.resolve({
+        return {
             fieldConfigs,
             model,
             isAdd,
             title: d2.i18n.getTranslation(isAdd ? 'option_add' : 'option_edit'),
             ...other,
-        });
+        };
     })
     .filter(({ fieldConfigs }) => fieldConfigs.length);
 
