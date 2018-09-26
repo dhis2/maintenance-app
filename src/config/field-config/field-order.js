@@ -106,6 +106,7 @@ const fieldOrderByName = new Map([
         'name',
         'shortName',
         'code',
+        'style',
         'description',
         'expiryDays',
         'openFuturePeriods',
