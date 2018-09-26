@@ -122,6 +122,22 @@ class OptionManagement extends Component {
         );
     }
 
+    isContextActionAllowed = (model, action) => {
+        if (!model || !model.access) {
+            return false;
+        }
+        if (model.access.hasOwnProperty(action)) {
+            return model.access[action];
+        }
+        switch (action) {
+            case 'edit':
+                return model.access.write;
+            case 'share':
+                return model.modelDefinition.isShareable === true && model.access.write;
+            default:
+                return true;
+        }
+    }
     renderPagination() {
         if (!this.props.pager) {
             return null;
@@ -188,6 +204,7 @@ class OptionManagement extends Component {
                         columns={this.props.columns}
                         primaryAction={this.onEditOption}
                         contextMenuActions={contextActions}
+                        isContextActionAllowed={this.isContextActionAllowed}
                     />
                 </div>
                 <OptionDialogForOptions
