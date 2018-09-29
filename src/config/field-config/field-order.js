@@ -264,7 +264,7 @@ const fieldOrderByName = new Map([
         'incidentDateLabel',
         'enrollmentDateLabel',
         'ignoreOverdueEvents',
-        'captureCoordinates',
+        'featureType',
         'relationshipType',
         'relationshipText',
         'relationshipFromA',
