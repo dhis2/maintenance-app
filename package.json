@@ -14,7 +14,7 @@
     "coverage": "npm test -- --coverage",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
-    "prebuild": "yarn test",
+    "prebuild": "yarn coverage",
     "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest",
     "postbuild": "cp -r src/i18n icon.png ./build/",
     "validate": "npm ls --depth 0 || yarn list",
