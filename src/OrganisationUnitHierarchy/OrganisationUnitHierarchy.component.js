@@ -179,15 +179,22 @@ function moveOrganisationUnit() {
         .subscribe(
             (message) => {
                 snackActions.show({ message, translate: false });
-
-                const hierarchy = Object.assign({}, appState.state.hierarchy);
+            },
+            (e) => {
+                setHierarchyProcessingStatus(appState.state.hierarchy, false);
+            },
+            () => {
                 setAppState({
                     hierarchy: {
-                        ...hierarchy,
+                        ...appState.state.hierarchy,
+                        selectedLeft: [],
+                        selectedRight: [],
+                        initiallySelected: [],
                         isProcessing: false,
+                        // reload: ['ImspTQPwCqd']
                         reload: []
-                            .concat(hierarchy.selectedRight.map(model => model.id))
-                            .concat(hierarchy.selectedLeft.map((model) => {
+                            .concat(appState.state.hierarchy.selectedRight.map(model => model.id))
+                            .concat(appState.state.hierarchy.selectedLeft.map((model) => {
                                 if (model.parent && model.parent.id) {
                                     return model.parent.id;
                                 }
@@ -195,24 +202,8 @@ function moveOrganisationUnit() {
                                     .concat(appState.state.hierarchy.rightRoots)
                                     .map(value => value.id)
                                     .filter(rootId => new RegExp(rootId).test(model.path))
-                                    .reduce(value => value);
+                                    .reduce(value => value)
                             })),
-                    },
-                });
-            },
-            (e) => {
-                setHierarchyProcessingStatus(appState.state.hierarchy, false);
-            },
-            () => {
-                const hierarchy = Object.assign({}, appState.state.hierarchy);
-
-                hierarchy.selectedLeft = [];
-                hierarchy.selectedRight = [];
-                hierarchy.initiallySelected = [];
-                setAppState({
-                    hierarchy: {
-                        ...hierarchy,
-                        isProcessing: false,
                     },
                 });
             }
