@@ -126,7 +126,6 @@ class Constraint extends Component {
                    loading: false
                 }));
             }).catch(e => {
-                console.error(e.message);
                 this.setState({
                     error: e
                 });
@@ -148,7 +147,7 @@ class Constraint extends Component {
 
     fetchProgramForProgramStage = async (programStageId) => {
         const program = await this.d2.models.program.filter()
-            .on('programStage.id').equals(programStageId)
+            .on('programStages.id').equals(programStageId)
             .list({paging: false, fields: ['id,name,programType']});
         return program.toArray()[0]; 
     }
@@ -238,7 +237,7 @@ class Constraint extends Component {
         }
         if(this.state.error) {
             return <div style={styles.modelTypeSelectField}>
-                Failed to load program for programStage. See logs for more details.
+                Failed to load program for program stage.
             </div>
         }
     }

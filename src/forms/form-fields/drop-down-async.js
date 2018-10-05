@@ -189,7 +189,6 @@ class DropDownAsync extends Component {
         if (style && style.display && style.display === 'none') {
             return null;
         }
-        console.log(this.props.referenceType +" :" + this.props.value)
         return (
             <div style={wrapStyles}>
                 {this.state.isRefreshing && <RefreshMask horizontal />}
