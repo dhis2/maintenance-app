@@ -4,12 +4,20 @@ import SelectField from 'material-ui/SelectField';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
+import LoadingMask from '../../loading-mask/LoadingMask.component';
+import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
 const PROGRAM_STAGE_INSTANCE = 'PROGRAM_STAGE_INSTANCE';
 
-const constraintOptions = [TRACKED_ENTITY_INSTANCE, PROGRAM_INSTANCE, PROGRAM_STAGE_INSTANCE];
+const relationshipEntities = {
+    [TRACKED_ENTITY_INSTANCE]: 'tracked_entity_instance',
+    [PROGRAM_INSTANCE]: 'enrollment_in_program',
+    [PROGRAM_STAGE_INSTANCE]: 'event_in_program_stage_or_single_event_program',
+};
+//PROGRAMSTAGE INSTANCE: Event in program stage
+//Program instance: Enrollment in program
 
 // Map of the different valid selection of the embedded objects, according to selected constraint-type
 const modelTypesForRelationshipEntity = {
@@ -18,15 +26,12 @@ const modelTypesForRelationshipEntity = {
             modelType: 'trackedEntityType',
             required: true,
         },
-        {
-            modelType: 'program',
-            required: false,
-        },
     ],
     PROGRAM_INSTANCE: [
         {
             modelType: 'program',
             required: true,
+            filter: ['programType:eq:WITH_REGISTRATION'],
         },
     ],
     PROGRAM_STAGE_INSTANCE: [
@@ -36,9 +41,12 @@ const modelTypesForRelationshipEntity = {
             required: true,
         },
         {
-            modelType: 'programStage',
+            modelType: 'programStage', //This is only used for Tracker-programs
             mutex: 'program',
             required: true,
+            filter: (props, state) => {
+                return [`program.id:eq:${state.selected.program.id}`];
+            },
         },
     ],
 };
@@ -59,54 +67,128 @@ const styles = {
     modelTypeSelectField: {
         flex: '1 1 300px',
         marginRight: '14px',
+        position: 'relative',
     },
 };
 
 class Constraint extends Component {
     constructor(props, context) {
         super(props);
-        this.translate = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+        this.d2 = context.d2;
+        this.translate = this.d2.i18n.getTranslation.bind(context.d2.i18n);
 
-        let embeddedValue = null;
-        let relationshipEntity = null;
+        /* The value that should be posted to the API. Has a relationShipEntity (the selected) constraint.
+            "TRACKED_ENTITY_INSTANCE" constraint has the following structure
+                program: { id },
+                relationshipEntity: "TRACKED_ENTITY_INSTANCE",
+                trackedEntityType: { id }
 
-        if (props.value) {
-            relationshipEntity = props.value.relationshipEntity;
-            if (relationshipEntity) {
-                const modelTypes = modelTypesForRelationshipEntity[relationshipEntity];
-                embeddedValue = {};
-                modelTypes.forEach(objOpts => {
-                    const modelType = objOpts.modelType;
-                    if (props.value[modelType]) {
-                        embeddedValue[modelType] = props.value[modelType];
-                    }
-                });
-            }
+        When Program Stage Instance is selected, we need to know the programType for selected programs, so we keep a reference to the model.
+        We use the program-dropdown as a 'filter' (for trackerprograms) to only show programStages for the selected program,
+        however we cannot post this value to the server together with a programStage, as that results in an error.
+        We post just the programStageID for Tracker-programs, and just the programID for event-programs
+        Therefore we save the selected values in the state. */
+
+        let selected = null;
+        let relationshipEntity = props.value.relationshipEntity;
+        if (props.value && relationshipEntity) {
+            const modelTypes =
+                modelTypesForRelationshipEntity[relationshipEntity];
+            selected = {};
+            modelTypes.forEach(objOpts => {
+                const modelType = objOpts.modelType;
+                if (props.value[modelType]) {
+                    selected[modelType] = props.value[modelType];
+                }
+            });
         }
 
         this.state = {
-            relationshipEntity,
-            embeddedValue,
+            selected,
+            loading: true,
+            error: false,
         };
     }
 
-    selectRelationshipEntity = (_, __, value) => {
+    componentDidMount() {
+        /* Since we cannot get the programId from the same request as when loading the model,
+            (due to the nature of the dynamic structure of the relationShipConstraint object)
+            we need to grab the programStage with another request, as we need this to show the
+            program that the selected program stage belongs to. */
+        const selectedPS = this.state.selected && this.state.selected.programStage;
+        if(selectedPS) {
+            this.fetchProgramForProgramStage(selectedPS.id).then(programModel => {
+                this.setState(state => ({
+                    selected: {
+                        ...state.selected,
+                        program: programModel,
+                   },
+                   loading: false
+                }));
+            }).catch(e => {
+                console.error(e.message);
+                this.setState({
+                    error: e
+                });
+            });
+        }
+        this.setState({loading: false});
+    }
+
+    getSelectedRelationshipEntity = () => {
+        const props = this.props;
+        return (props.value && props.value.relationshipEntity) || null;
+    };
+
+    getSelectedIDForModelType = modelType => {
+        // We use state here, since program and programStage cannot be selected
+        // at the same time (for the actual posted value). See constructor comment
+        return (this.state.selected && this.state.selected[modelType]) || null;
+    };
+
+    fetchProgramForProgramStage = async (programStageId) => {
+        const program = await this.d2.models.program.filter()
+            .on('programStage.id').equals(programStageId)
+            .list({paging: false, fields: ['id,name,programType']});
+        return program.toArray()[0]; 
+    }
+
+    getFilterForModelType(entityModelProps) {
+        const filter = entityModelProps.filter;
+        if (typeof filter === 'function') {
+            return filter(this.props, this.state);
+        } else if (Array.isArray(filter)) {
+            return filter;
+        }
+        return null;
+    }
+
+    handleSelectRelationshipEntity = (_, __, value) => {
         this.setState({
-            relationshipEntity: value,
-            embeddedValue: {},
+            error: false,
+            selected: null,
+        });
+        this.props.onChange({
+            target: {
+                value: {
+                    relationshipEntity: value,
+                },
+            },
         });
     };
 
-    handleEmbeddedValueSelect = (modelType, { target: { value } }) => {
-        const objOptions = modelTypesForRelationshipEntity[this.state.relationshipEntity].find(
-            obj => obj.modelType === modelType,
-        );
+    handleSelectValue = (modelType, { target: { value } }) => {
+        const selectedRelationshipEntity = this.getSelectedRelationshipEntity();
+        const objOptions = modelTypesForRelationshipEntity[
+            selectedRelationshipEntity
+        ].find(obj => obj.modelType === modelType);
 
         // Clear values if mutually exclusive
-        const prevState = objOptions.mutex ? {} : this.state.embeddedValue;
+        // Note that we keep it in state regardless
+        const prevState = objOptions.mutex ? {} : this.props.value;
         const relationshipConstraint = {
             ...prevState,
-            relationshipEntity: this.state.relationshipEntity,
+            relationshipEntity: this.props.value.relationshipEntity,
             [modelType]: {
                 id: (value && value.id) || null,
             },
@@ -117,28 +199,83 @@ class Constraint extends Component {
             },
         });
 
-        this.setState({
-            embeddedValue: relationshipConstraint,
-        });
+        this.setState(state => ({
+            selected: {
+                // Keep reference in state to check for selected programType etc
+                ...state.selected,
+                [modelType]: value,
+            },
+        }));
     };
 
-    renderModelTypeSelect = () => {
-        const entity = this.state.relationshipEntity;
+    hasSelectedTrackerProgram = () =>
+        !!this.state.selected &&
+        !!this.state.selected.program &&
+        this.state.selected.program.programType === 'WITH_REGISTRATION';
+
+    handleOptionsLoaded = (modelType, options) => {
+        // get reference to already selected constraint
+        // ie when a saved model is edited, so we can check for programType
+        if(!this.state.selected) return;
+        const selectedModelID =
+            this.state.selected[modelType] && this.state.selected[modelType].id;
+        const option = options.find(opt => opt.value == selectedModelID);
+        if (option) {
+            this.setState(state => ({
+                selected: {
+                    ...state.selected,
+                    [modelType]: option.model,
+                },
+            }));
+        }
+    };
+
+    renderErrorOrLoading = () => {
+        if(this.state.loading) {
+            return <div style={{height: '72px'}}>
+                <CircularProgress />
+            </div>
+        }
+        if(this.state.error) {
+            return <div style={styles.modelTypeSelectField}>
+                Failed to load program for programStage. See logs for more details.
+            </div>
+        }
+    }
+    renderModelTypeSelectFields = () => {
+        if(this.state.loading || this.state.error) {
+            return this.renderErrorOrLoading();
+        };
+        const entity = this.getSelectedRelationshipEntity();
         const modelTypes = modelTypesForRelationshipEntity[entity];
+
+        // Create fields for the selected relationshipEntity
         const modelDropdowns = modelTypes.map(objOpts => {
             const modelType = objOpts.modelType;
+            let value = this.getSelectedIDForModelType(modelType);
+            if (entity === PROGRAM_STAGE_INSTANCE) {
+                if (
+                    modelType === 'programStage' &&
+                    !this.hasSelectedTrackerProgram()
+                ) {
+                    return null;
+                }
+            }
+            const filter = this.getFilterForModelType(objOpts);
+
             return (
-                <div style={styles.modelTypeSelectField}>
+                <div style={styles.modelTypeSelectField} key={modelType}>
                     <DropdownAsync
-                        {...this.props}
                         isRequired={objOpts.required}
-                        labelText={`${this.translate(camelCaseToUnderscores(modelType))} ${
-                            objOpts.required ? ' *' : ''
-                        }`}
-                        value={this.state.embeddedValue[modelType]}
-                        key={modelType}
+                        labelText={`${this.translate(
+                            camelCaseToUnderscores(modelType)
+                        )} ${objOpts.required ? ' *' : ''}`}
+                        value={value}
                         referenceType={modelType}
-                        onChange={this.handleEmbeddedValueSelect.bind(this, modelType)}
+                        onChange={this.handleSelectValue.bind(this, modelType)}
+                        onOptionsLoaded={this.handleOptionsLoaded}
+                        queryParamFilter={filter}
+                        orFilter={false}
                     />
                 </div>
             );
@@ -152,19 +289,22 @@ class Constraint extends Component {
             <div>
                 <SelectField
                     fullWidth
-                    value={this.state.relationshipEntity}
-                    onChange={this.selectRelationshipEntity}
+                    value={this.getSelectedRelationshipEntity()}
+                    onChange={this.handleSelectRelationshipEntity}
                     floatingLabelText={this.props.labelText}
                 >
-                    {constraintOptions.map(constraint => (
+                    {Object.keys(relationshipEntities).map(entity => (
                         <MenuItem
-                            key={constraint}
-                            value={constraint}
-                            primaryText={this.translate(constraint)}
+                            key={entity}
+                            value={entity}
+                            primaryText={this.translate(
+                                relationshipEntities[entity]
+                            )}
                         />
                     ))}
                 </SelectField>
-                {this.state.relationshipEntity && this.renderModelTypeSelect()}
+                {this.getSelectedRelationshipEntity() &&
+                    this.renderModelTypeSelectFields()}
             </div>
         );
     };
