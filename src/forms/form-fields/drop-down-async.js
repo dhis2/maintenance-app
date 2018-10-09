@@ -57,7 +57,6 @@ class DropDownAsync extends Component {
         this.loadOptions(props)
             .then((opts) => {
                 this.setState({ isRefreshing: false })
-                this.props.onOptionsLoaded && this.props.onOptionsLoaded(this.props.referenceType,opts)
             });
     }
 
@@ -156,6 +155,9 @@ class DropDownAsync extends Component {
                     return renamedOpts;
                 }
                 return options;
+            }).then(opts => {
+                this.props.onOptionsLoaded && this.props.onOptionsLoaded(this.props.referenceType, opts)
+                return opts;
             });
     }
 
