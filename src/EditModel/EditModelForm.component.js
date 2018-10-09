@@ -108,7 +108,7 @@ export default React.createClass({
         modelId: React.PropTypes.string.isRequired,
         modelType: React.PropTypes.string.isRequired,
         onSaveSuccess: React.PropTypes.func.isRequired,
-        onSaveError: React.PropTypes.func.isRequired,
+        onSaveError: React.PropTypes.func,
         onCancel: React.PropTypes.func.isRequired,
     },
 
@@ -143,6 +143,7 @@ export default React.createClass({
 
     componentWillUnmount() {
         this.subscription && this.subscription.unsubscribe();
+        this.saveSubscription && this.saveSubscription.unsubscribe();
     },
 
 
@@ -190,6 +191,7 @@ export default React.createClass({
 
     saveFail(error) {
         // TODO: d2 queries require a JSON body on 200 OK, an empty body is not valid JSON
+        this.setState({isSaving: false})
         if (error.httpStatusCode === 200) {
             log.warn('Save errored due to empty 200 OK body');
 
@@ -199,13 +201,13 @@ export default React.createClass({
         } else {
             const firstErrorMessage = extractFirstErrorMessageFromServer(error);
             snackActions.show({ message: firstErrorMessage, action: 'ok' });
+            this.props.onSaveError && this.props.onSaveError(error);
             log.error(error);
         }
     },
 
     _saveAction(event) {
         event.preventDefault();
-
         const invalidFieldMessage = getFirstInvalidFieldMessage(this.state.fieldConfigs, this.formRef);
         if (invalidFieldMessage) {
             snackActions.show({
@@ -216,11 +218,11 @@ export default React.createClass({
         }
         // Set state to saving so forms actions are being prevented
         this.setState({ isSaving: true });
-        objectActions.saveObject({ id: this.props.modelId, modelType: this.props.modelType })
+        this.saveSubscription = objectActions.saveObject({ id: this.props.modelId, modelType: this.props.modelType })
             .subscribe(
                 this.saveSuccess,
                 this.saveFail,
-                this.setState({ isSaving: false }),
+                () => this.setState({ isSaving: false })
             );
     },
 
