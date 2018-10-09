@@ -56,7 +56,7 @@ DataElementPicker.contextTypes = {
     d2: PropTypes.object,
 };
 
-class AvailableDataElement extends Component {
+export class AvailableDataElement extends Component {
     constructor(props) {
         super(props);
         this.state = {

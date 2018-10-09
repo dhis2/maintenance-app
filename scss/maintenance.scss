@@ -57,3 +57,7 @@ html {
 .data-table__headers__header {
   white-space: nowrap;
 }
+
+.sortableModalHelper {
+  z-index: 2000;
+}

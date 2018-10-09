@@ -13,6 +13,8 @@ import systemSettingsStore from './App/systemSettingsStore';
 import rxjsconfig from 'recompose/rxjsObservableConfig';
 import setObservableConfig from 'recompose/setObservableConfig';
 import periodTypeStore from './App/periodTypeStore';
+import store from './store';
+import { loadAllColumnsPromise } from './List/columns/epics';
 
 const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
 
@@ -62,12 +64,14 @@ function getSystemSettings(d2) {
     return Promise.all([
         d2.system.settings.all(),
         d2.Api.getApi().get('periodTypes'),
-    ]).then(([settings, periodTypeDefs]) => {
+        loadAllColumnsPromise(d2)
+    ]).then(([settings, periodTypeDefs, userConfiguredColumnsAction]) => {
         systemSettingsStore.setState(settings);
         periodTypeStore.setState(periodTypeDefs.periodTypes.map(p => ({
             text: d2.i18n.getTranslation(p.name.toLocaleLowerCase()),
             value: p.name,
         })));
+        store.dispatch(userConfiguredColumnsAction);
     });
 }
 

@@ -77,7 +77,10 @@ export const LoadableWithLoaders = (loadableOpts, loaders, loaderOpts = {}) => {
         runLoaders = (propsToUse = this.props) => {
             Promise.all(loaders.map(loader => loader(propsToUse)))
                 .then(() => this.setState({ loading: false }))
-                .catch(error => this.setState({ error }));
+                .catch(error => {
+                    console.error(error);
+                    this.setState({ error });
+                });
         };
 
         render() {
