@@ -26,45 +26,7 @@ class EditOptionSet extends Component {
 
         this.state = {
             tabsValue: props.params.activeView || '',
-            loading: true,
         };
-    }
-
-    async componentDidMount() {
-        const api = this.context.d2.Api.getApi();
-
-        try {
-            const { attributes } = await api.get('attributes', { fields: ':all,optionSet[:all,options[:all]]', paging: false });
-
-            this.reloadAttributes('optionSet', attributes);
-            this.reloadAttributes('option', attributes);
-
-        } catch (error) {
-            console.error(error);
-
-        } finally {
-            this.setState({ loading: false });
-        }
-    }
-
-    reloadAttributes(modelDefinitionName, attributes) {
-            const modelDefinition = this.context.d2.models[modelDefinitionName];
-            const schemaAttributes = attributes.filter((attributeDescriptor) => {
-                return attributeDescriptor[`${modelDefinitionName}Attribute`] === true;
-            });
-
-            // clear without reassigning 
-            for (const key in modelDefinition.attributeProperties) {
-                if (modelDefinition.attributeProperties.hasOwnProperty(key)) {
-                    delete modelDefinition.attributeProperties[key];
-                }
-            }
-
-            // Attach fresh attributes
-            for (const attribute of schemaAttributes) {
-                modelDefinition.attributeProperties[attribute.name] = attribute;
-            }
-        
     }
 
     render() {
@@ -103,10 +65,6 @@ class EditOptionSet extends Component {
                 goToRoute(`/list/${params.groupName}/${params.modelType}`);
             }
         };
-
-        if (this.state.loading) {
-            return <LoadingMask />
-        }
 
         return (
             <div>
