@@ -12,7 +12,6 @@ import EditModelForm from './EditModelForm.component';
 import OptionManagement from './option-set/OptionManagement.component';
 import FormHeading from './FormHeading';
 import { goToRoute } from '../router-utils';
-import LoadingMask from '../loading-mask/LoadingMask.component';
 
 function onSaveError(errorMessage, props) {
     if (errorMessage === 'No changes to be saved') {
