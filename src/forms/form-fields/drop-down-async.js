@@ -5,6 +5,7 @@ import { getInstance } from 'd2/lib/d2';
 import DropDown from './drop-down';
 import QuickAddLink from './helpers/QuickAddLink.component';
 import RefreshMask from './helpers/RefreshMask.component';
+import isEqual from 'lodash/fp/isEqual';
 
 const wrapStyles = {
     display: 'flex',
@@ -36,8 +37,10 @@ class DropDownAsync extends Component {
             });
         }
 
-        //referenceType updated, reload
-        if (this.props.referenceType !== newProps.referenceType || this.props.queryParamFilter !== newProps.queryParamFilter) {
+        // referenceType updated, reload
+        // Deep equal queryParamFilter, as this may have a new reference each render.
+        // Should not have that many elems.
+        if (this.props.referenceType !== newProps.referenceType || !isEqual(newProps.queryParamFilter, this.props.queryParamFilter)) {
             this.onRefreshClick(null, newProps);
         }
     }
@@ -46,13 +49,15 @@ class DropDownAsync extends Component {
         this.omgLikeJustStop = true;
     }
 
-    onRefreshClick = (e, props) => {
+    onRefreshClick = (e, props = this.props) => {
         this.setState({
             isRefreshing: true,
         });
 
         this.loadOptions(props)
-            .then(() => this.setState({ isRefreshing: false }));
+            .then((opts) => {
+                this.setState({ isRefreshing: false })
+            });
     }
 
     onChange = (event) => {
@@ -100,7 +105,6 @@ class DropDownAsync extends Component {
 
         const filter = props.queryParamFilter;
         let d2i = {};
-
         return getInstance()
             .then((d2) => {
                 d2i = d2;
@@ -111,7 +115,7 @@ class DropDownAsync extends Component {
                             paging: false,
                             filter,
                         },
-                        filter && filter.length > 1
+                        filter && props.orFilter && filter.length > 1
                             ? { rootJunction: 'OR' }
                             : {},
                     ));
@@ -135,19 +139,25 @@ class DropDownAsync extends Component {
             .then((options) => {
                 // Behold the mother of all hacks
                 if (!this.omgLikeJustStop) {
+                 // Behold the very special hack for renaming the very special 'default' cat combo to 'None'
+                    const renamedOpts = options.map(option => Object.assign(
+                        option,
+                        option.model &&
+                        option.model.modelDefinition &&
+                        option.model.modelDefinition.name === 'categoryCombo' &&
+                        option.text === 'default'
+                            ? { text: d2i.i18n.getTranslation('none') }
+                            : {},
+                    ));
                     this.setState({
-                        // Behold the very special hack for renaming the very special 'default' cat combo to 'None'
-                        options: options.map(option => Object.assign(
-                            option,
-                            option.model &&
-                            option.model.modelDefinition &&
-                            option.model.modelDefinition.name === 'categoryCombo' &&
-                            option.text === 'default'
-                                ? { text: d2i.i18n.getTranslation('none') }
-                                : {},
-                        )),
+                        options: renamedOpts
                     });
+                    return renamedOpts;
                 }
+                return options;
+            }).then(opts => {
+                this.props.onOptionsLoaded && this.props.onOptionsLoaded(this.props.referenceType, opts)
+                return opts;
             });
     }
 
@@ -169,6 +179,8 @@ class DropDownAsync extends Component {
             quickAddLink,
             preventAutoDefault,
             style,
+            orFilter,
+            onOptionsLoaded,
             ...other
         } = this.props;
 
@@ -179,7 +191,6 @@ class DropDownAsync extends Component {
         if (style && style.display && style.display === 'none') {
             return null;
         }
-
         return (
             <div style={wrapStyles}>
                 {this.state.isRefreshing && <RefreshMask horizontal />}
@@ -208,6 +219,7 @@ DropDownAsync.propTypes = {
     }),
     referenceType: PropTypes.string.isRequired,
     queryParamFilter: PropTypes.array,
+    orFilter: PropTypes.bool,
     errorText: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     translateOptions: PropTypes.bool,
@@ -223,10 +235,12 @@ DropDownAsync.propTypes = {
     models: PropTypes.object,
     model: PropTypes.object,
     options: PropTypes.array,
+    onOptionsLoaded: PropTypes.func,
 };
 
 DropDownAsync.defaultProps = {
     queryParamFilter: undefined,
+    orFilter: true,
     value: undefined,
     translateOptions: false,
     fullWidth: true,
