@@ -2,7 +2,7 @@ import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 
-const ActionButton = ({ onClick, icon }) => {
+const ActionButton = ({ onClick, icon, style }) => {
     const noTransition = {
         transition: 'none',
     };
@@ -13,7 +13,7 @@ const ActionButton = ({ onClick, icon }) => {
     }
 
     return (
-        <IconButton style={noTransition} iconStyle={noTransition} onClick={onIconClick}>
+        <IconButton style={{noTransition, ...style}} iconStyle={noTransition} onClick={onIconClick}>
             <FontIcon color="gray" className="material-icons">{icon}</FontIcon>
         </IconButton>
     );

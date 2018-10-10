@@ -4,12 +4,15 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable';
 
 import eventProgramReducer from './EditModel/event-program/reducers';
 import eventProgramEpics from './EditModel/event-program/epics';
+import configurableColumnsEpics from './List/columns/epics';
+import configurableColumnsReducer from './List/columns/reducers';
 
-const epics = combineEpics(eventProgramEpics);
+const epics = combineEpics(eventProgramEpics, configurableColumnsEpics);
 const middlewares = [createEpicMiddleware(epics)];
 
 const appReducers = combineReducers({
     eventProgram: eventProgramReducer,
+    configurableColumns: configurableColumnsReducer
 });
 
 if (process.env.NODE_ENV === 'development') {
