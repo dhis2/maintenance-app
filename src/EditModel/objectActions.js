@@ -84,7 +84,44 @@ const afterSaveHacks = {
 
         return Observable.fromPromise(Promise.all([removePromises, savePromises]));
     },
+    attribute: function attributeAfterSave() {
+        // When an attribute is added/edited/deleted, the attributes of all d2 modelDefinitions
+        // need to be updated manually, because d2 treats these as static properties
+        const d2Promise = getInstance();
+        const attributePromise = d2Promise.then(d2 => {
+            const api = d2.Api.getApi();
+            const queryParams = { fields: ':all,optionSet[:all,options[:all]]', paging: false };
+            return api.get('attributes', queryParams);
+        })
+
+        return Observable.fromPromise(Promise.all([d2Promise, attributePromise])
+            .then(([d2, { attributes }]) => {
+                for (const key in d2.models) {
+                    reloadAttributesForModelDefinition(d2.models[key], attributes);
+                }
+                return Promise.resolve();
+            })
+        );
+    },
 };
+
+function reloadAttributesForModelDefinition(modelDefinition, attributes) {
+    const schemaAttributes = attributes.filter((attributeDescriptor) => {
+        return attributeDescriptor[`${modelDefinition.name}Attribute`] === true;
+    });
+
+    // clear without reassigning 
+    for (const key in modelDefinition.attributeProperties) {
+        if (modelDefinition.attributeProperties.hasOwnProperty(key)) {
+            delete modelDefinition.attributeProperties[key];
+        }
+    }
+
+    // Attach fresh attributes
+    for (const attribute of schemaAttributes) {
+        modelDefinition.attributeProperties[attribute.name] = attribute;
+    }
+}
 
 function hasAfterSave(model) {
     if (!model || !model.modelDefinition) {
