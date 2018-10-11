@@ -38,7 +38,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                             idsThatShouldBeReloaded={props.idsThatShouldBeReloaded}
                             hideCheckboxes={props.hideCheckboxes}
                             hideMemberCount={props.hideMemberCount}
-                            foreceReloadChildren={props.foreceReloadChildren}
+                            forceReloadChildren={props.forceReloadChildren}
                         />
                     )
                 }) : <div style={styles.noHitsLabel}>{props.noHitsLabel}</div>}
