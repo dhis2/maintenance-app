@@ -93,6 +93,7 @@ const organisationUnitHierarchy$ = appState
         leftRoots: hierarchy.leftRoots,
         rightRoots: hierarchy.rightRoots,
         initiallyExpanded: userOrganisationUnits.toArray().map(model => model.path),
+        moveTargetPath: hierarchy.moveTargetPath || null,
         selectedLeft: hierarchy.selectedLeft || [],
         selectedRight: hierarchy.selectedRight || [],
         isProcessing: hierarchy.isProcessing,
@@ -190,8 +191,7 @@ function moveOrganisationUnit() {
                         selectedLeft: [],
                         selectedRight: [],
                         initiallySelected: [],
-                        isProcessing: false,
-                        // reload: ['ImspTQPwCqd']
+                        moveTargetPath: appState.state.hierarchy.selectedRight[0].path,
                         reload: []
                             .concat(appState.state.hierarchy.selectedRight.map(model => model.id))
                             .concat(appState.state.hierarchy.selectedLeft.map((model) => {
@@ -206,6 +206,12 @@ function moveOrganisationUnit() {
                             })),
                     },
                 });
+
+                // Wait till stack clears before setting isProcessing to false and triggering a rerender
+                // Without this the UI represents a stale state
+                setTimeout(() => {
+                    setHierarchyProcessingStatus(appState.state.hierarchy, false)
+                }, 0);
             }
         );
 }
@@ -219,6 +225,7 @@ function onClickRight(event, model) {
                     ...hierarchy,
                     reload: [],
                     selectedRight: [model],
+                    moveTargetPath: null,
                 },
             })
         );
@@ -349,6 +356,8 @@ function OrganisationUnitHierarchy(props, context) {
     const buttonLabel = context.d2.i18n.getTranslation('move_$$ouCount$$_organisation_units', { ouCount: (props.selectedLeft && props.selectedLeft.length) || 0 });
     const headingTitle = context.d2.i18n.getTranslation('hierarchy_operations');
     const warningForMovingWithinSubtree = context.d2.i18n.getTranslation('you_can_not_move_higher_level_organisation_units_to_its_descendants');
+    const initiallyExpandedRight = props.moveTargetPath ? [...props.initiallyExpanded, props.moveTargetPath] : props.initiallyExpanded;
+
     return (
         <div>
             <Heading>{headingTitle}</Heading>
@@ -362,19 +371,21 @@ function OrganisationUnitHierarchy(props, context) {
                         onUpdateInput={value => leftTreeSearch(value)}
                         idsThatShouldBeReloaded={props.reload}
                         noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
+                        forceReloadChildren
                     />
                 </Paper>
                 <Paper style={styles.ouTreeRight}>
                     <OrganisationUnitTreeWithSingleSelectionAndSearch
                         roots={props.rightRoots}
                         selected={props.selectedRight.map(model => model.path)}
-                        initiallyExpanded={props.initiallyExpanded}
+                        initiallyExpanded={initiallyExpandedRight}
                         onSelectClick={onClickRight}
                         onUpdateInput={value => rightTreeSearch(value)}
                         idsThatShouldBeReloaded={props.reload}
                         noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
                         hideCheckboxes
                         hideMemberCount
+                        forceReloadChildren
                     />
                 </Paper>
             </div>
