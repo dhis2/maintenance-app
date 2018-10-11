@@ -34,6 +34,11 @@ import { getFilterFieldsForType } from '../config/maintenance-models';
 import { withAuth } from '../utils/Auth';
 import CompulsoryDataElementOperandDialog from './compulsory-data-elements-dialog/CompulsoryDataElementOperandDialog.component';
 import './listValueRenderers';
+import IconButton from 'material-ui/IconButton/IconButton';
+import FontIcon from 'material-ui/FontIcon/FontIcon';
+import { connect } from 'react-redux';
+import { openColumnsDialog } from './columns/actions';
+import ColumnConfigDialog from './columns/ColumnConfigDialog';
 
 const styles = {
     dataTableWrap: {
@@ -163,6 +168,9 @@ class List extends Component {
         const sourceStoreDisposable = listStore
             .subscribe((listStoreValue) => {
                 if (!isIterable(listStoreValue.list) || listStoreValue.modelType !== this.props.params.modelType) {
+                    this.setState({
+                        isLoading: true,
+                    })
                     return; // Received value is not iterable or not correct model, keep waiting
                 }
                 listActions.hideDetailsBox();
@@ -527,6 +535,12 @@ class List extends Component {
                 });
             }
         };
+
+        const ConfigureColumnButton = <IconButton onClick={() => this.props.openColumnsDialog(this.props.params.modelType)}>
+                <FontIcon color="gray" className="material-icons">
+                    settings
+                </FontIcon>
+            </IconButton>;
         return (
             <div>
                 <div>
@@ -562,6 +576,7 @@ class List extends Component {
                                         contextMenuIcons={contextMenuIcons}
                                         primaryAction={primaryAction}
                                         isContextActionAllowed={this.isContextActionAllowed}
+                                        contextMenuHeader={ConfigureColumnButton}
                                     />)
                                     : <div>{this.getTranslation('no_results_found')}</div>}
                             </div>
@@ -604,6 +619,7 @@ class List extends Component {
                     onRequestClose={this.closeDataElementOperandDialog}
                 />
                 {this.state.predictorDialog && <PredictorDialog />}
+                <ColumnConfigDialog modelType={this.props.params.modelType} />
             </div>
         );
     }
@@ -620,4 +636,8 @@ List.contextTypes = {
     d2: PropTypes.object.isRequired,
 };
 
-export default withAuth(List);
+const mapDispatchToProps = {
+    openColumnsDialog
+}
+
+export default connect(null, mapDispatchToProps)(withAuth(List));

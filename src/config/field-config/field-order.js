@@ -265,9 +265,6 @@ const fieldOrderByName = new Map([
         'enrollmentDateLabel',
         'ignoreOverdueEvents',
         'featureType',
-        'relationshipType',
-        'relationshipText',
-        'relationshipFromA',
         'relatedProgram',
     ]],
     ['programStage', [
