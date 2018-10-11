@@ -371,7 +371,7 @@ function OrganisationUnitHierarchy(props, context) {
                         onUpdateInput={value => leftTreeSearch(value)}
                         idsThatShouldBeReloaded={props.reload}
                         noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
-                        foreceReloadChildren
+                        forceReloadChildren
                     />
                 </Paper>
                 <Paper style={styles.ouTreeRight}>
@@ -385,7 +385,7 @@ function OrganisationUnitHierarchy(props, context) {
                         noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
                         hideCheckboxes
                         hideMemberCount
-                        foreceReloadChildren
+                        forceReloadChildren
                     />
                 </Paper>
             </div>
