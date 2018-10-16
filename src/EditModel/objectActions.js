@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 import { map, pick, get, filter, flatten, compose, identity, head } from 'lodash/fp';
 import snackActions from '../Snackbar/snack.actions';
+import { afterDeleteHook$ } from '../List/ContextActions';
 
 const extractErrorMessagesFromResponse = compose(filter(identity), map(get('message')), flatten, map('errorReports'), flatten, map('objectReports'), get('typeReports'));
 
@@ -87,7 +88,7 @@ const afterSaveHacks = {
 
         return Observable.fromPromise(Promise.all([d2Promise, attributePromise])
             .then(([d2, { attributes }]) => {
-                for (const key in d2.models) {
+                for (const key of Object.keys(d2.models)) {
                     reloadAttributesForModelDefinition(d2.models[key], attributes);
                 }
                 return Promise.resolve();
@@ -96,16 +97,20 @@ const afterSaveHacks = {
     },
 };
 
+afterDeleteHook$.subscribe(data => {
+    if (data.modelType && data.modelType === 'attribute') {
+        afterSaveHacks.attribute();
+    }
+});
+
 function reloadAttributesForModelDefinition(modelDefinition, attributes) {
     const schemaAttributes = attributes.filter((attributeDescriptor) => {
         return attributeDescriptor[`${modelDefinition.name}Attribute`] === true;
     });
 
     // clear without reassigning 
-    for (const key in modelDefinition.attributeProperties) {
-        if (modelDefinition.attributeProperties.hasOwnProperty(key)) {
-            delete modelDefinition.attributeProperties[key];
-        }
+    for (const key of Object.keys(modelDefinition.attributeProperties)) {
+        delete modelDefinition.attributeProperties[key];
     }
 
     // Attach fresh attributes
