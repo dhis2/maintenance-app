@@ -36,12 +36,11 @@ const optionList$ = Observable.combineLatest(
 );
 
 const optionForm$ = Observable.combineLatest(
-    Observable.fromPromise(createFieldConfigForModelTypes('option')),
     modelToEditStore,
 )
-    .flatMap(async ([fieldConfigs, modelToEdit]) => {
+    .flatMap(async ([modelToEdit]) => {
         const d2 = await getInstance();
-
+        const fieldConfigs = await createFieldConfigForModelTypes('option');
         return fieldConfigs
             .map((fieldConfig) => {
                 // Adjust the code when dealing with a different
