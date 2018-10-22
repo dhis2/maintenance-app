@@ -286,7 +286,6 @@ class Constraint extends Component {
 
     shouldRenderModelType = modelType => {
         const entity = this.getSelectedRelationshipEntity();
-        debugger;
         if (
             entity === PROGRAM_STAGE_INSTANCE &&
             modelType === 'programStage' &&
