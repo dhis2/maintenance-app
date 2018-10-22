@@ -329,6 +329,7 @@ const fieldOrderByName = new Map([
         'allowAuditLog',
         'minAttributesRequiredToSearch',
         'maxTeiCountToReturn',
+        'featureType',
         'trackedEntityTypeAttributes',
     ]],
     ['programIndicator', [
