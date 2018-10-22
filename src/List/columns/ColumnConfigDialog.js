@@ -201,6 +201,12 @@ function getAvailableColumnsForModel(model) {
         'memberCount',
         'path',
         'registration',
+        'fieldMask',
+        'orgunitScope',
+        'programScope',
+        'sortOrderInListNoProgram',
+        'sortOrderInVisitSchedule',
+        'displayOnVisitSchedule'
     ]);
     // These should have translated fields from the server, ie displayName.
     // In some cases the translated property does not exist on the model, and we should probably show
