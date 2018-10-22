@@ -2,7 +2,6 @@
   "name": "maintenance-app",
   "version": "30.0.2",
   "description": "DHIS2 Maintenance app",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dhis2/maintenance-app.git"
@@ -13,15 +12,14 @@
     "start": "webpack-dev-server",
     "coverage": "npm test -- --coverage",
     "test": "jest",
-    "test:watch": "yarn test -- --watch",
-    "prebuild": "yarn test",
-    "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest",
+    "test:watch": "npm test -- --watch",
+    "prebuild": "npm test",
+    "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest && cp package.json build/package.json",
     "postbuild": "cp -r src/i18n icon.png ./build/",
-    "validate": "npm ls --depth 0 || yarn list",
+    "validate": "npm ls --depth 0",
     "manifest": "d2-manifest package.json build/manifest.webapp",
-    "deploy": "npm run build && mvn clean deploy",
     "lint": "eslint ./src",
-    "profile": "yarn start -- --profile"
+    "profile": "npm run start -- --profile"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -108,8 +106,6 @@
     "rxjs": "^5.2.0"
   },
   "pre-commit": [
-    "validate",
-    "lint",
     "test"
   ],
   "manifest.webapp": {
