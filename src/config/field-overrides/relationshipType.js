@@ -26,6 +26,10 @@ const modelTypesForRelationshipEntity = {
             modelType: 'trackedEntityType',
             required: true,
         },
+        {
+            modelType: 'program',
+            required: false,
+        },
     ],
     PROGRAM_INSTANCE: [
         {
