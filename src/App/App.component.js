@@ -15,6 +15,7 @@ import appState, { setAppState } from './appStateStore';
 import { Provider } from 'react-redux';
 import store from '../store';
 import HeaderBar from "@dhis2/d2-ui-header-bar";
+import SessionExpiredModal from '../Session/SessionExpiredModal';
 
 const sections$ = appState
     .map(state => ({
@@ -93,6 +94,7 @@ class App extends AppWithD2 {
                         </SinglePanelLayout>
                     )}
                     <SnackbarContainer />
+                    <SessionExpiredModal />
                 </div>
             </Provider>
         );

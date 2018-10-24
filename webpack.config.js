@@ -30,11 +30,12 @@ try {
 // console.log(JSON.stringify(dhisConfig, null, 2), '\n');
 
 function bypass(req, res, opt) {
-    req.headers.Authorization = dhisConfig.authorization;
+    //req.headers.Authorization = dhisConfig.authorization;
+   // console.log(opt.auth)
     console.log('[PROXY]'.cyan.bold, req.method.green.bold, req.url.magenta, '=>'.dim, opt.target.dim);
 }
 
-const scriptPrefix = (isDevBuild ? dhisConfig.baseUrl : '..');
+const scriptPrefix = ('..');
 
 const webpackConfig = {
     context: __dirname,
@@ -159,6 +160,7 @@ const webpackConfig = {
                     '/images/**',
                 ],
                 target: dhisConfig.baseUrl,
+                auth: dhisConfig.authorization,
                 changeOrigin: true,
                 bypass,
             },

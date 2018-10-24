@@ -4,6 +4,8 @@ import { init, config, getUserSettings, getManifest } from 'd2/lib/d2';
 import log from 'loglevel';
 import LoadingMask from './loading-mask/LoadingMask.component';
 import routes from './router';
+import { Provider } from 'react-redux';
+
 import '../scss/maintenance.scss';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './translationRegistration';
@@ -14,7 +16,10 @@ import rxjsconfig from 'recompose/rxjsObservableConfig';
 import setObservableConfig from 'recompose/setObservableConfig';
 import periodTypeStore from './App/periodTypeStore';
 import store from './store';
+import AppLoad from './AppLoad/AppLoading';
 import { loadAllColumnsPromise } from './List/columns/epics';
+import { setSessionExpired } from './Session/actions';
+import { setAppLoadError } from './AppLoad/actions';
 
 const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
 
@@ -53,6 +58,16 @@ function configI18n(userSettings) {
     config.i18n.strings.add('version');
 }
 
+function boundSessionExpired() {
+    store.dispatch(setSessionExpired());
+}
+
+function d2InitConfig() {
+    return {
+        unauthorizedCb: boundSessionExpired,
+    }
+}
+
 function addCustomModels(d2) {
     customModelDefinitions.forEach((customModel) => {
         d2.models.add(customModel);
@@ -72,6 +87,9 @@ function getSystemSettings(d2) {
             value: p.name,
         })));
         store.dispatch(userConfiguredColumnsAction);
+    }).catch(error => {
+        console.log(error)
+        store.dispatch(setAppLoadError(error));
     });
 }
 
@@ -87,9 +105,11 @@ function startApp() {
 }
 
 render(
-    <MuiThemeProvider muiTheme={appTheme}>
-        <LoadingMask />
-    </MuiThemeProvider>,
+    <Provider store={store}>
+        <MuiThemeProvider muiTheme={appTheme}>
+            <AppLoad />
+        </MuiThemeProvider>
+    </Provider>,
     document.getElementById('app')
 );
 
@@ -102,8 +122,13 @@ getManifest('./manifest.webapp')
     })
     .then(getUserSettings)
     .then(configI18n)
+    .then(d2InitConfig)
     .then(init)
     .then(addCustomModels)
     .then(getSystemSettings)
     .then(startApp)
-    .catch(log.error.bind(log));
+    .catch(err => {
+        log.error.bind(log)
+        log.error(err);
+        store.dispatch(setAppLoadError(err))
+    });
