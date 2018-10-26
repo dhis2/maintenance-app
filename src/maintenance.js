@@ -58,7 +58,7 @@ function configI18n(userSettings) {
     config.i18n.strings.add('version');
 }
 
-function boundSessionExpired() {
+function boundSessionExpired(req, text) {
     store.dispatch(setSessionExpired());
 }
 
@@ -87,10 +87,7 @@ function getSystemSettings(d2) {
             value: p.name,
         })));
         store.dispatch(userConfiguredColumnsAction);
-    }).catch(error => {
-        console.log(error)
-        store.dispatch(setAppLoadError(error));
-    });
+    })
 }
 
 function startApp() {

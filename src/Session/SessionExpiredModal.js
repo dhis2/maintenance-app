@@ -8,6 +8,11 @@ import FlatButton from 'material-ui/FlatButton';
 export class SessionExpiredModal extends Component {
     static propTypes = {};
 
+    constructor(props, context) {
+        super(props, context);
+        this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+    }
+
     handleOk = () => {
         //Let server handle redirect
         window.location.reload();
@@ -26,7 +31,7 @@ export class SessionExpiredModal extends Component {
                     modal={true}
                     open={this.props.expired}
                 >
-                    Your session has expired. Click OK to log in again.
+                    {`${this.t('your_session_has_expired')}. ${this.t('click_ok_to_log_in_again')}`}
                 </Dialog>
             </div>
         );
