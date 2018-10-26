@@ -44,7 +44,7 @@ const listActions = Action.createActionsFromNames([
  * @returns {ModelDefinition} the modelDefinition with applied filters.
  */
 function applySearchByIdentifiersFilter(searchString, modelDefinition) {
-    return modelDefinition.filter().on('identifiable').operator('ilike', searchString) 
+    return modelDefinition.filter().on('identifiable').operator('token', searchString) 
 }
 
 function applySearchByNameFilter(searchString, modelDefinition) {
