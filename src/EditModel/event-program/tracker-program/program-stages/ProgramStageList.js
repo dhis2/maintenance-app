@@ -18,7 +18,7 @@ import { translationSaved, translationError } from './contextActions';
 import {
     editProgramStage,
     addProgramStage,
-    deleteProgramStage,
+    confirmDeleteProgramStage
 } from './actions';
 
 const styles = {
@@ -253,7 +253,7 @@ export default connect(null, dispatch =>
         {
             handleEditProgramStage: model => editProgramStage(model.id),
             handleNewProgramStage: () => addProgramStage(),
-            handleDeleteProgramStage: model => deleteProgramStage(model.id),
+            handleDeleteProgramStage: model => confirmDeleteProgramStage(model.id),
         },
         dispatch,
     ),

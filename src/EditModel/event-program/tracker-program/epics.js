@@ -18,6 +18,7 @@ import {
     PROGRAM_STAGE_EDIT_SAVE,
     deleteProgramStageSuccess,
     deleteProgramStageError,
+    CONFIRM_PROGRAM_STAGE_DELETE,
 } from './program-stages/actions';
 import { getMaxSortOrder } from './program-stages/selectors';
 
@@ -188,25 +189,46 @@ export const cancelProgramStageEdit = action$ =>
         )
         .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
 
+const confirmDeleteProgramStage = action$ =>
+    action$
+        .ofType(CONFIRM_PROGRAM_STAGE_DELETE)
+        .map(action => action.payload)
+        .combineLatest(programStore.take(1))
+        .flatMap(([action, store]) => {
+            const index = getProgramStageIndexById(action.stageId)(
+                store,
+            );
+            if(index < 0) return deleteProgramStageError();
+
+            const model = store.programStages[index];
+
+            //This shows the snackbar with confirm actions that dispatches an action
+            //dispatching actions inside an epic is kind of an anti-pattern
+            //but this is gray-zone as its an callback that is created by the epic
+            deleteProgramStageWithSnackbar(model);
+            return { type: "CONFIRM_DELETE_PROGRAM_STAGE_PENDING" };
+        });
+
 const deleteProgramStage = action$ =>
     action$
         .ofType(PROGRAM_STAGE_DELETE)
         .map(action => action.payload)
-        .flatMap(action =>
-            programStore.take(1).map((store) => {
-                try {
-                    const index = getProgramStageIndexById(action.stageId)(
-                        store,
-                    );
-                    const model = store.programStages[index];
+        .combineLatest(programStore.take(1))
+        .flatMap(([action, store]) => {
+            const index = getProgramStageIndexById(action.stageId)(store);
+            const model = store.programStages[index];
 
-                    deleteProgramStageWithSnackbar(model);
+            return model
+                .delete()
+                .then(res => {
+                    deleteProgramStageFromState(model.id);
                     return deleteProgramStageSuccess();
-                } catch (e) {
-                    return deleteProgramStageError();
-                }
-            }),
-        );
+                })
+                .catch(e => {
+                    log.error(e);
+                    return deleteProgramStageError(e);
+                });
+        });
 
 export default combineEpics(
     newTrackerProgramStage,
@@ -214,4 +236,5 @@ export default combineEpics(
     saveTrackerProgramStage,
     cancelProgramStageEdit,
     deleteProgramStage,
+    confirmDeleteProgramStage
 );
