@@ -20,10 +20,9 @@ const styles = {
     },
 };
 
-let OptionSelection = (props, context) => {
+let MultiSelectWithOptionSetFilter = (props, context) => {
     const selectedOptionSet = props.model.optionSet;
     const t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
-    const optionsLabel = t('options');
 
     const selecedOptionSetId = selectedOptionSet ? selectedOptionSet.id : null;
     const selectedOptionSetFilter =
@@ -38,7 +37,7 @@ let OptionSelection = (props, context) => {
                 />
             ) : (
                 <div>
-                    <div style={styles.label}>{optionsLabel}</div>
+                    <div style={styles.label}>{props.labelText}</div>
                     <p style={styles.text}>{t('please_select_option_set')}</p>
                 </div>
             )}
@@ -46,13 +45,14 @@ let OptionSelection = (props, context) => {
     );
 };
 
-OptionSelection = addD2Context(OptionSelection);
+MultiSelectWithOptionSetFilter = addD2Context(MultiSelectWithOptionSetFilter);
 
+export { MultiSelectWithOptionSetFilter };
 export default new Map([
     [
         'options',
         {
-            component: OptionSelection,
+            component: MultiSelectWithOptionSetFilter,
         },
     ],
 ]);

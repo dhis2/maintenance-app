@@ -29,6 +29,7 @@ import dataApprovalWorkflow from './dataApprovalWorkflow';
 import programStage from './programStage';
 import optionGroup from './optionGroup';
 import sqlView from './sqlView';
+import optionGroupSet from './optionGroupSet';
 
 const overridesByType = {
     attribute,
@@ -62,6 +63,7 @@ const overridesByType = {
     trackerProgram,
     enrollment,
     optionGroup,
+    optionGroupSet,
     sqlView,
 };
 
