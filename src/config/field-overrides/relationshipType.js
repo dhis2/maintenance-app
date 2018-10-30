@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
 import LoadingMask from '../../loading-mask/LoadingMask.component';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
+import has from 'lodash/fp/has';
 
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
@@ -25,6 +26,19 @@ const modelTypesForRelationshipEntity = {
         {
             modelType: 'trackedEntityType',
             required: true,
+            mutex: true, // Used to clear program when selected
+        },
+        {
+            modelType: 'program',
+            required: false,
+            filter: (props, state) => {
+                return [
+                    'programType:eq:WITH_REGISTRATION',
+                    `trackedEntityType.id:eq:${
+                        state.selected.trackedEntityType.id
+                    }`,
+                ];
+            },
         },
     ],
     PROGRAM_INSTANCE: [
@@ -218,19 +232,22 @@ class Constraint extends Component {
             },
         });
 
+        // Keep reference in state to check for selected programType etc
+        // Clear state when program changes
+        const clearState =
+            modelType === 'program' &&
+            selectedRelationshipEntity === PROGRAM_STAGE_INSTANCE;
+
         this.setState(state => ({
             selected: {
-                // Keep reference in state to check for selected programType etc
-                // Clear state when program changes
-                ...(modelType !== 'program' && { ...state.selected }),
+                ...(!clearState && { ...state.selected }),
                 [modelType]: value,
             },
         }));
     };
 
     hasSelectedTrackerProgram = () =>
-        this.state.selected &&
-        this.state.selected.program &&
+        has('selected.program', this.state) &&
         this.state.selected.program.programType === 'WITH_REGISTRATION';
 
     handleOptionsLoaded = (modelType, options) => {
@@ -266,6 +283,27 @@ class Constraint extends Component {
             );
         }
     };
+
+    shouldRenderModelType = modelType => {
+        const entity = this.getSelectedRelationshipEntity();
+        if (
+            entity === PROGRAM_STAGE_INSTANCE &&
+            modelType === 'programStage' &&
+            !this.hasSelectedTrackerProgram()
+        ) {
+            //Hide programStage selector when Tracker Program is not selected
+            return false;
+        } else if (
+            entity === TRACKED_ENTITY_INSTANCE &&
+            modelType === 'program' &&
+            !has('selected.trackedEntityType.id', this.state)
+        ) {
+            //Hide program when tet is not selected
+            return false;
+        }
+        return true;
+    };
+
     renderModelTypeSelectFields = () => {
         if (this.state.loading || this.state.error) {
             return this.renderErrorOrLoading();
@@ -278,14 +316,8 @@ class Constraint extends Component {
             const modelType = objOpts.modelType;
             let value = this.getSelectedIDForModelType(modelType);
 
-            if (entity === PROGRAM_STAGE_INSTANCE) {
-                if (
-                    modelType === 'programStage' &&
-                    !this.hasSelectedTrackerProgram()
-                ) {
-                    //Hide programStage selector when Tracker Program is not selected
-                    return null;
-                }
+            if (!this.shouldRenderModelType(modelType)) {
+                return null;
             }
             const filter = this.getFilterForModelType(objOpts);
 
