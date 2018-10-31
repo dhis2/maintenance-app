@@ -201,7 +201,7 @@ const confirmDeleteProgramStage = action$ =>
             const index = getProgramStageIndexById(action.stageId)(
                 store,
             );
-            if(index < 0) return deleteProgramStageError();
+            if(index < 0) return Observable.of(deleteProgramStageError());
 
             const model = store.programStages[index];
 
@@ -209,7 +209,7 @@ const confirmDeleteProgramStage = action$ =>
             //dispatching actions inside an epic is kind of an anti-pattern
             //but this is gray-zone as its an callback that is created by the epic
             deleteProgramStageWithSnackbar(model);
-            return { type: "CONFIRM_DELETE_PROGRAM_STAGE_PENDING" };
+            return Observable.of({ type: "CONFIRM_DELETE_PROGRAM_STAGE_PENDING" });
         });
 
 const deleteProgramStage = action$ =>
