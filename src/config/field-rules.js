@@ -1,4 +1,4 @@
-import { defaultAnalyticsPeriodBoundaries } from './field-config/field-defaults';
+import { defaultAnalyticsPeriodBoundaries, createDefaultRuleForField } from './field-config/field-defaults';
 
 /**
  * Rule functions in EditModel/form-rules
@@ -563,7 +563,8 @@ export default new Map([
             }],
         },
     ]],
-    ['enrollment', [
+    ['eventProgramStage', [
+        createDefaultRuleForField('validationStrategy', "ON_COMPLETE"),
     ]],
     ['programIndicator', [{
         field: 'analyticsPeriodBoundaries',
