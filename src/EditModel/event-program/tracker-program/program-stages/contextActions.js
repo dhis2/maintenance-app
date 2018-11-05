@@ -3,13 +3,14 @@ import { afterDeleteHook$ } from '../../../../List/ContextActions';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import { getInstance } from 'd2/lib/d2';
 import log from 'loglevel';
-import { set } from 'lodash/fp';
-import { deleteProgramStageFromState } from '../epics';
-import { Observable } from 'rxjs';
+import { deleteProgramStage } from './actions';
+
+import store from '../../../../store';
 
 export async function deleteProgramStageWithSnackbar(model) {
     const d2 = await getInstance();
-    snackActions.show({
+
+        snackActions.show({
         message: [
             d2.i18n.getTranslation(
                 `confirm_delete_${camelCaseToUnderscores(
@@ -21,7 +22,7 @@ export async function deleteProgramStageWithSnackbar(model) {
         action: 'confirm',
 
         onActionTouchTap: () => {
-            deleteProgramStageFromState(model.id);
+            store.dispatch(deleteProgramStage(model.id));
 
             // Fire the afterDeleteHook
             afterDeleteHook$.next({
