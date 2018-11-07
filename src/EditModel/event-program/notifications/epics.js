@@ -72,15 +72,14 @@ const saveProgramStageNotification = (action$, store) => action$
                 }
 
                 // If a notification template is attached to another program stage, it needs to be removed from the old stage too
-                const updatedStageNotifications = updatedProgramStage.notificationTemplates.toArray();
-                const updatedStageNotificationIds = new Set(updatedStageNotifications.map(notification => notification.id));
+                const updatedStageNotifications = updatedProgramStage.notificationTemplates;
                 eventProgramState.programStages.forEach(stage => {
                     if (stage.id !== updatedProgramStage.id) {
                         updatedStageNotifications.forEach(model => {
                             stage.notificationTemplates.remove(model)
                         })
                         programStageNotifications[stage.id] = programStageNotifications[stage.id].filter(notification => {
-                            return !updatedStageNotificationIds.has(notification.id);
+                            return !updatedStageNotifications.has(notification.id);
                         })
                     }
                 });
