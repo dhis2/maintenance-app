@@ -78,9 +78,9 @@ const saveProgramStageNotification = (action$, store) => action$
                         updatedStageNotifications.forEach(model => {
                             stage.notificationTemplates.remove(model)
                         })
-                        programStageNotifications[stage.id] = programStageNotifications[stage.id].filter(notification => {
-                            return !updatedStageNotifications.has(notification.id);
-                        })
+                        programStageNotifications[stage.id] = programStageNotifications[stage.id].filter(notification =>
+                            !updatedStageNotifications.has(notification.id)
+                        )
                     }
                 });
 
