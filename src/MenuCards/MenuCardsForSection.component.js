@@ -1,4 +1,3 @@
-import React from 'react';
 import MenuCards from './MenuCards.component';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import menuCardsStore from './menuCardsStore';

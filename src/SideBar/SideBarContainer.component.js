@@ -59,6 +59,7 @@ class SideBarContainer extends React.Component {
                 };
 
                 const orgUnitSearchHits = appState.getState().sideBar.organisationUnits;
+
                 const roots = Array.isArray(orgUnitSearchHits)
                     ? orgUnitSearchHits
                     : this.state.userOrganisationUnits.toArray().map((ou) => {

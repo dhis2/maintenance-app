@@ -3,6 +3,7 @@ const fieldOrderByName = new Map([
         'name',
         'shortName',
         'code',
+        'style',
         'description',
         'formName',
         'domainType',
@@ -105,6 +106,7 @@ const fieldOrderByName = new Map([
         'name',
         'shortName',
         'code',
+        'style',
         'description',
         'expiryDays',
         'openFuturePeriods',
@@ -152,7 +154,7 @@ const fieldOrderByName = new Map([
         'phoneNumber',
         'coordinates',
         'dataSets',
-        'programs'
+        'programs',
 
     ]],
     ['organisationUnitGroup', [
@@ -203,6 +205,11 @@ const fieldOrderByName = new Map([
         'description',
         'valueType',
     ]],
+    ['option', [
+        'name',
+        'code',
+        'style',
+    ]],
     ['legendSet', [
         'name',
         'code',
@@ -210,6 +217,7 @@ const fieldOrderByName = new Map([
     ]],
     ['eventProgram', [
         'name',
+        'style',
         'shortName',
         'code',
         'description',
@@ -222,15 +230,16 @@ const fieldOrderByName = new Map([
     ]],
     ['eventProgramStage', [
         'blockEntryForm',
-        'captureCoordinates',
-        'validCompleteOnly',
+        'featureType',
+        'validationStrategy',
         'preGenerateUID',
-        'executionDateLabel'
+        'executionDateLabel',
     ]],
     ['trackerProgram', [
         'name',
         'shortName',
         'code',
+        'style',
         'description',
         'version',
         'trackedEntityType',
@@ -238,6 +247,7 @@ const fieldOrderByName = new Map([
         'workflow',
         'displayFrontPageList',
         'useFirstStageDuringRegistration',
+        'accessLevel',
         'completeEventsExpiryDays',
         'expiryPeriodType',
         'expiryDays',
@@ -254,14 +264,12 @@ const fieldOrderByName = new Map([
         'incidentDateLabel',
         'enrollmentDateLabel',
         'ignoreOverdueEvents',
-        'captureCoordinates',
-        'relationshipType',
-        'relationshipText',
-        'relationshipFromA',
+        'featureType',
         'relatedProgram',
     ]],
     ['programStage', [
         'name',
+        'style',
         'description',
         'minDaysFromStart',
         'repeatable',
@@ -276,8 +284,7 @@ const fieldOrderByName = new Map([
         'allowGenerateNextVisit',
         'generatedByEnrollmentDate',
         'hideDueDate',
-        'captureCoordinates',
-        'validCompleteOnly',
+        'featureType',
         'preGenerateUID',
         'executionDateLabel',
         'dueDateLabel',
@@ -297,6 +304,7 @@ const fieldOrderByName = new Map([
         'inherit',
         'confidential',
         'displayInListNoProgram',
+        'skipSynchronization',
         'legendSets',
     ]],
     ['trackedEntityAttributeGroup', [
@@ -309,14 +317,18 @@ const fieldOrderByName = new Map([
     ['relationshipType', [
         'name',
         'code',
-        'aIsToB',
-        'bIsToA',
+        'description',
+        'fromConstraint',
+        'toConstraint',
     ]],
     ['trackedEntityType', [
         'name',
+        'style',
         'description',
+        'allowAuditLog',
         'minAttributesRequiredToSearch',
         'maxTeiCountToReturn',
+        'featureType',
         'trackedEntityTypeAttributes',
     ]],
     ['programIndicator', [
@@ -379,6 +391,12 @@ const fieldOrderByName = new Map([
         'annualSampleCount',
         'sequentialSkipCount',
     ]],
+    ['predictorGroup', [
+        'name',
+        'code',
+        'description',
+        'predictors',
+    ]],
     ['pushAnalysis', [
         'name',
         'code',
@@ -411,7 +429,7 @@ const fieldOrderByName = new Map([
     ]],
     ['programRule', [
         // Step 1
-        'program', 'name', 'description', 'priority',
+        'program', 'programStage', 'name', 'description', 'priority',
         // Step 2
         'condition',
         // Step 3
@@ -436,6 +454,33 @@ const fieldOrderByName = new Map([
         'periodType',
         'dataApprovalLevels',
     ]],
+    ['optionGroup', [
+        'name',
+        'shortName',
+        'code',
+        'description',
+        'optionSet',
+        'options',
+    ]],
+    ['optionGroupSet', [
+        'name',
+        'code',
+        'description',
+        'optionSet',
+        'dataDimension',
+        'optionGroups',
+    ]],
+    ['locale', [
+        'name',
+        'locale',
+    ]],
+    ['sqlView', [
+        'name',
+        'description',
+        'cacheStrategy',
+        'type',
+        'sqlQuery',
+    ]],
 ]);
 
 export default {
@@ -448,9 +493,9 @@ export default {
      *
      * @example
      * ```
-     * import fieldOverrides from 'field-overrides';
+     * import fieldOrder from 'field-order';
      *
-     * let dataElementOverrides = fieldOverrides.for('dataElement');
+     * let dataElementFields = fieldOrder.for('dataElement');
      * ```
      */
     for(schemaName) {

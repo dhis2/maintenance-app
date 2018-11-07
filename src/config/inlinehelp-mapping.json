@@ -55,6 +55,15 @@
     "/edit/otherSection/externalMapLayer": "/en/user/html/manage_external_maplayer.html#create_external_map_layer",
     "/list/otherSection/externalMapLayer": "/en/user/html/manage_external_maplayer.html",
 
+    "/edit/otherSection/predictorGroup": "/en/user/html/manage_predictor.html#create_predictor_group",
+    "/list/otherSection/predictorGroup": "/en/user/html/manage_predictor.html",
+
+    "/edit/otherSection/optionGroupSet": "/en/user/html/manage_option_set.html#create_option_group_set",
+    "/list/otherSection/optionGroupSet": "/en/user/html/manage_option_set.html#create_option_group_set",
+
+    "/edit/otherSection/optionGroup": "/en/user/html/manage_option_set.html#create_option_group",
+    "/list/otherSection/optionGroup": "/en/user/html/manage_option_set.html#create_option_group",
+
     "/edit/otherSection/${objectType}": "/en/user/html/manage_${objectType}.html#create_${objectType}",
     "/list/otherSection/${objectType}": "/en/user/html/manage_${objectType}.html"
 }

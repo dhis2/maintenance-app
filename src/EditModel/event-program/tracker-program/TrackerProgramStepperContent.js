@@ -8,7 +8,7 @@ import { activeStepSelector } from '../selectors';
 import programStore from '../eventProgramStore';
 import steps from './tracker-program-steps';
 import EditDataEntryForm from '../create-data-entry-form/CreateDataEntryForm.component';
-import AssignOrganisationUnits from '../assign-organisation-units/AssignOrganisationUnits';
+import ProgramAccess from '../program-access/ProgramAccess';
 import TrackerProgramNotifications from '../notifications/TrackerProgramNotifications';
 import { createFormFor } from '../../formHelpers';
 import { editFieldChanged } from '../actions';
@@ -28,7 +28,6 @@ const stepperConfig = () => {
         connect(null, mapDispatchToProps),
     );
     const trackerDetailsFields = fieldOrder.for('trackerProgram');
-    const enrollmentFields = fieldOrder.for('enrollment');
 
     const stepComponents = {
         EditProgramDetailsForm: connectEditForm(
@@ -42,7 +41,7 @@ const stepperConfig = () => {
         AssignAttributes,
         ProgramStage,
         EditDataEntryForm,
-        AssignOrganisationUnits,
+        ProgramAccess,
         TrackerProgramNotifications,
     };
 

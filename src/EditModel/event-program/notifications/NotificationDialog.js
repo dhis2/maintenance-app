@@ -1,7 +1,6 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { get } from 'lodash/fp';
 import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';
 import { modelToEditSelector } from './selectors';

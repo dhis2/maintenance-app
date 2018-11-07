@@ -18,16 +18,18 @@ import {
     PROGRAM_STAGE_EDIT_SAVE,
     deleteProgramStageSuccess,
     deleteProgramStageError,
+    CONFIRM_PROGRAM_STAGE_DELETE,
 } from './program-stages/actions';
+import { getMaxSortOrder } from './program-stages/selectors';
 
 const d2$ = Observable.fromPromise(getInstance());
 
 const getProgramStageById = curry((stageId, store) =>
-    store.programStages.find(stage => stage.id == stageId),
+    store.programStages.find(stage => stage.id === stageId),
 );
 
 const getProgramStageIndexById = curry((stageId, store) =>
-    store.programStages.findIndex(stage => stage.id == stageId),
+    store.programStages.findIndex(stage => stage.id === stageId),
 );
 
 /**
@@ -61,8 +63,10 @@ export const newTrackerProgramStage = action$ =>
             const programStages = store.programStages;
             const program = store.program;
             const programStageUid = generateUid();
+            const maxSortOrder = getMaxSortOrder(store);
             const programStageModel = d2.models.programStages.create({
                 id: programStageUid,
+                publicAccess: "rw------",
                 programStageDataElements: [],
                 notificationTemplates: [],
                 programStageSections: [],
@@ -72,11 +76,10 @@ export const newTrackerProgramStage = action$ =>
                 lastUpdated: new Date().toISOString(),
                 displayGenerateEventBox: true,
                 autoGenerateEvent: true,
+                sortOrder: maxSortOrder+1,
             });
             try {
-                const newProgramStage = programStages.push(
-                    programStageModel,
-                );
+                programStages.push(programStageModel);
 
                 const newProgramStageCollection = store.program.programStages.add(
                     programStageModel,
@@ -111,10 +114,8 @@ export const editTrackerProgramStage = action$ =>
                 .map(get('programStages'))
                 .map((programStages) => {
                     const index = programStages.findIndex(
-                        stage => stage.id == stageId,
+                        stage => stage.id === stageId,
                     );
-                    const programStage = programStages[index];
-
                     const model = programStages[index].clone();
                     const setter = set(
                         'programStageToEditCopy',
@@ -134,7 +135,7 @@ export const saveTrackerProgramStage = action$ =>
             programStore.take(1).map((store) => {
                 const stageId = store.programStageToEditCopy.id;
                 const index = store.programStages.findIndex(
-                    stage => stage.id == stageId,
+                    stage => stage.id === stageId,
                 );
 
                 if (index < 0) {
@@ -173,9 +174,6 @@ export const cancelProgramStageEdit = action$ =>
                     );
                     // If the programstage is new, remove it when cancelling
                     if (model.name === undefined) {
-                        const removedFromProgramStages = store.programStages.filter(
-                            (p, i) => i !== index,
-                        );
                         programStageSetter = deleteProgramStageFromState(
                             stageId,
                             false,
@@ -191,29 +189,46 @@ export const cancelProgramStageEdit = action$ =>
         )
         .flatMapTo(Observable.of({ type: PROGRAM_STAGE_EDIT_RESET }));
 
+const confirmDeleteProgramStage = action$ =>
+    action$
+        .ofType(CONFIRM_PROGRAM_STAGE_DELETE)
+        .map(action => action.payload)
+        .combineLatest(programStore.take(1))
+        .flatMap(([action, store]) => {
+            const index = getProgramStageIndexById(action.stageId)(
+                store,
+            );
+            if(index < 0) return Observable.of(deleteProgramStageError());
+
+            const model = store.programStages[index];
+
+            //This shows the snackbar with confirm actions that dispatches an action
+            //dispatching actions inside an epic is kind of an anti-pattern
+            //but this is gray-zone as its an callback that is created by the epic
+            deleteProgramStageWithSnackbar(model);
+            return Observable.of({ type: "CONFIRM_DELETE_PROGRAM_STAGE_PENDING" });
+        });
+
 const deleteProgramStage = action$ =>
     action$
         .ofType(PROGRAM_STAGE_DELETE)
         .map(action => action.payload)
-        .flatMap(action =>
-            programStore.take(1).map((store) => {
-                try {
-                    const ind = store.programStages.findIndex(
-                        stage => stage.id == action.stageId,
-                    );
+        .combineLatest(programStore.take(1))
+        .flatMap(([action, store]) => {
+            const index = getProgramStageIndexById(action.stageId)(store);
+            const model = store.programStages[index];
 
-                    const index = getProgramStageIndexById(action.stageId)(
-                        store,
-                    );
-                    const model = store.programStages[index];
-
-                    deleteProgramStageWithSnackbar(model);
+            return model
+                .delete()
+                .then(res => {
+                    deleteProgramStageFromState(model.id);
                     return deleteProgramStageSuccess();
-                } catch (e) {
-                    return deleteProgramStageError();
-                }
-            }),
-        );
+                })
+                .catch(e => {
+                    log.error(e);
+                    return deleteProgramStageError(e);
+                });
+        });
 
 export default combineEpics(
     newTrackerProgramStage,
@@ -221,4 +236,5 @@ export default combineEpics(
     saveTrackerProgramStage,
     cancelProgramStageEdit,
     deleteProgramStage,
+    confirmDeleteProgramStage
 );

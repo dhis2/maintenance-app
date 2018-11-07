@@ -1,13 +1,6 @@
 import * as utils from '../dataEntryFormUtils';
 
 describe('dataEntryFormUtils', () => {
-    let editor = {
-        insertHtml: jest.fn(),
-        getSelection: jest.fn(() => ({getRanges: jest.fn(() => ([{
-            moveToElementEditablePosition: jest.fn(),
-            endContainer: {}
-        }]))}))
-    }
     let elements;
     const initialHTML =
         '<p><input id="ZzYYXq4fJie-FqlgKAG8HOu-val" name="entryfield" title="MCH Measles dose" value="[ MCH Measles dose ]"/><input id="ZzYYXq4fJie-hDZbpskhqDd-val" name="entryfield" title="MCH HIV Test Type" value="[ MCH HIV Test Type ]"/><input id="ZzYYXq4fJie-BeynU4L6VCQ-val" name="entryfield" title="MCH Results given to caretaker" value="[ MCH Results given to caretaker ]"/></p>';
@@ -33,7 +26,7 @@ describe('dataEntryFormUtils', () => {
     describe('processForm()', () => {
         test('it should work with empty formData', () => {
             const dataEntryForm = initialHTML;
-            const { usedIds, outHtml } = utils.processFormData(
+            const { outHtml } = utils.processFormData(
                 dataEntryForm,
                 elements,
                 utils.elementPatterns.combinedIdPattern

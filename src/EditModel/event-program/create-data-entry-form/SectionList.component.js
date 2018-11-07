@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
 import { isEqual } from 'lodash/fp';
 
@@ -7,12 +7,10 @@ import Section from './Section.component';
 const SectionList = ({
     sections,
     selectedSectionId,
-    editingSectionId,
     onToggleEditing,
     collapsedSections,
     onToggleSection,
     onSelectSection,
-    onSectionNameChanged,
     onSectionRemoved,
     onDataElementRemoved,
     sortItems,
@@ -25,11 +23,9 @@ const SectionList = ({
                 section={section}
                 selected={isEqual(section.id, selectedSectionId)}
                 collapsed={collapsedSections.includes(section.id)}
-                editing={isEqual(section.id, editingSectionId)}
-                onToggleEdit={() => { onToggleEditing(section.id); }}
+                onToggleEdit={() => { onToggleEditing(section); }}
                 onToggleOpen={() => { onToggleSection(section.id); }}
                 onSelect={() => { onSelectSection(section.id); }}
-                onNameChanged={(newName) => { onSectionNameChanged(section.id, newName); }}
                 onSectionRemoved={() => { onSectionRemoved(section); }}
                 onDataElementRemoved={(dataElementId) => { onDataElementRemoved(dataElementId, section.id); }}
                 sortItems={({ oldIndex, newIndex }) => { sortItems(index, oldIndex, newIndex); }}
@@ -38,4 +34,4 @@ const SectionList = ({
     </div>
 );
 
-export default SortableContainer(SectionList);;
+export default SortableContainer(SectionList);

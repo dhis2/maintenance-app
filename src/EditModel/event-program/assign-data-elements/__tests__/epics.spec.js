@@ -8,6 +8,9 @@ import {
 } from '../actions';
 import createEpicsForStore from '../epics';
 
+const availableDataElementA = { id: "eMyVanycQSC", displayName: "First available element", valueType: "INTEGER" };
+const availableDataElementB = { id: "d68jOejl9FI", displayName: "Second available element", valueType: "FILE_RESOURCE" };
+
 describe('Assign data elements epics', () => {
     const createActionStreamFor = action => ActionsObservable.of(action);
 
@@ -61,6 +64,10 @@ describe('Assign data elements epics', () => {
                     }],
                 },
             ],
+            availableDataElements: [
+                { ...availableDataElementA },
+                { ...availableDataElementB },
+            ]
         });
     });
 
@@ -82,7 +89,9 @@ describe('Assign data elements epics', () => {
 
                         expect(isValidUid(newlyAddedDataElement.id)).toBe(true);
                         expect(newlyAddedDataElement.dataElement).toEqual({
-                            id: 'eMyVanycQSC',
+                            id: availableDataElementA.id,
+                            optionSet: availableDataElementA.optionSet,
+                            valueType: availableDataElementA.valueType,
                         });
                         done();
                     },
@@ -109,10 +118,14 @@ describe('Assign data elements epics', () => {
                         expect(isValidUid(newlyAddedDataElementTwo.id)).toBe(true);
 
                         expect(newlyAddedDataElementOne.dataElement).toEqual({
-                            id: 'eMyVanycQSC',
+                            id: availableDataElementA.id,
+                            optionSet: availableDataElementA.optionSet,
+                            valueType: availableDataElementA.valueType,
                         });
                         expect(newlyAddedDataElementTwo.dataElement).toEqual({
-                            id: 'd68jOejl9FI',
+                            id: availableDataElementB.id,
+                            optionSet: availableDataElementB.optionSet,
+                            valueType: availableDataElementB.valueType,
                         });
                         done();
                     },

@@ -19,3 +19,7 @@ export const previous = (steps, activeStep) => {
 };
 
 export const first = steps => steps[0].key;
+
+export const nextStep = (step, stepLength) => (step + 1 < stepLength ? (step + 1) : step);
+
+export const prevStep = step => (step > 0 ? (step - 1) : step);

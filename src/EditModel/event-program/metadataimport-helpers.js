@@ -1,4 +1,4 @@
-import { get, getOr, first, map, compose, groupBy, concat, reduce, flatten, filter, identity } from 'lodash/fp';
+import { get, getOr, first, map, compose, groupBy, flatten, filter } from 'lodash/fp';
 
 const importStatus = {
     OK: 'OK',

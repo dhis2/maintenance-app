@@ -109,14 +109,14 @@ describe('Stepper utility functions', () => {
 
         test('should log a warning when no active step has been passed', () => {
             const ContentStepper = createStepperContentFromConfig(stepperConfig);
-            const renderedStepper = shallow(<ContentStepper />);
+            shallow(<ContentStepper />);
 
             expect(log.warn).toBeCalledWith('The `activeStep` prop is undefined, therefore the component created by `createStepperContentFromConfig` will render null');
         });
 
         test('should log a warning when the step does not have a component', () => {
             const ContentStepper = createStepperContentFromConfig(stepperConfig);
-            const renderedStepper = shallow(<ContentStepper activeStep="first" />);
+            shallow(<ContentStepper activeStep="first" />);
 
             expect(log.warn).toBeCalledWith('Could not find a content component for a step with key (first) in', stepperConfig);
         });

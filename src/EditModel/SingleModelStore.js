@@ -22,7 +22,7 @@ export const requestParams = new Map([
         fields: [
             ':all',
             'attributeValues[:all,attribute[id,name,displayName]]',
-            'options[id,name,displayName,code]',
+            'options[id,name,displayName,code,style]',
         ].join(','),
     }],
     ['dataSet', {
@@ -74,10 +74,19 @@ export const requestParams = new Map([
             ':all',
             'programRuleActions[:all',
             'dataElement[id,displayName]',
+            'option[id,displayName]',
+            'optionGroup[id,displayName]',
             'trackedEntityAttribute[id,displayName]',
             'programStage[id,displayName]',
             'programNotificationTemplate[id,displayName]',
             'programStageSection[id,displayName]]',
+        ].join(','),
+    }],
+    ['optionGroup', {
+        fields: [
+            ':all',
+            'attributeValues[:all,attribute[id,name,displayName]]',
+            'options[id,name,displayName]'
         ].join(','),
     }],
 ]);
@@ -106,8 +115,9 @@ function cloneHandlerByObjectType(objectType, model) {
             }))
             break;
         }
+        default: 
+            return model;
     }
-    return model;
 }
 
 function loadModelFromD2(objectType, objectId) {
@@ -135,6 +145,9 @@ const singleModelStoreConfig = {
                 model.id = undefined;
                 // Some objects also have a uuid property that should be cleared
                 model.uuid = undefined;
+                //let server handle created date
+                model.created = undefined;
+                // eslint-disable-next-line no-param-reassign
                 model = cloneHandlerByObjectType(objectType, model);
                 this.setState(model);
             });
@@ -143,7 +156,12 @@ const singleModelStoreConfig = {
     },
 
     save() {
-        const importResultPromise = this.state.save(true)
+        // Save new locale entries via the extended ModelDefinition, not the model directly
+        const importResultPromise = this.state.modelDefinition.name === 'locale' ?
+            this.state.modelDefinition.save(this.state) :
+            this.state.save(true);
+        
+        importResultPromise
             .then(response => response)
             .catch((response) => {
                 if (isString(response)) {

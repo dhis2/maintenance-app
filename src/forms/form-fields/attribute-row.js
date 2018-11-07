@@ -2,16 +2,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import pure from 'recompose/pure';
-import { get, getOr, __ } from 'lodash/fp';
+import { getOr, __ } from 'lodash/fp';
 
 import { TableRow, TableRowColumn, Checkbox } from 'material-ui';
+import RenderTypeSelectField, {
+    MOBILE,
+    DESKTOP,
+} from '../../EditModel/event-program/render-types';
 
 const flipBooleanPropertyOn = (object, key) => ({
     ...object,
     [key]: !object[key],
 });
 
-const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, isUnique, hasOptionSet, columns }, { d2 }) => {
+const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, isUnique, hasOptionSet, columns, renderTypeOptions }, { d2 }) => {
     const onChangeFlipBooleanForProperty = propertyName => () => onEditAttribute(
         flipBooleanPropertyOn(attribute, propertyName),
     );
@@ -46,14 +50,6 @@ const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, is
                 />}
             </TableRowColumn>}
 
-            {columns.includes('renderOptionsAsRadio') &&
-            <TableRowColumn>
-                {hasOptionSet && <Checkbox
-                    checked={isCheckedForProp('renderOptionsAsRadio')}
-                    onClick={onChangeFlipBooleanForProperty('renderOptionsAsRadio')}
-                />}
-            </TableRowColumn>}
-
             {columns.includes('searchable') &&
             <TableRowColumn>
                 <Checkbox
@@ -63,6 +59,28 @@ const AttributeRow = ({ attribute, onEditAttribute, isDateValue, displayName, is
                     title={d2.i18n.getTranslation('unique_attributes_always_searchable')}
                 />
             </TableRowColumn>}
+            
+            {renderTypeOptions && (
+                <TableRowColumn>
+                    <RenderTypeSelectField
+                        device={MOBILE}
+                        target={attribute}
+                        options={renderTypeOptions}
+                        changeHandler={onEditAttribute}
+                    />
+                </TableRowColumn>
+            )}
+
+            {renderTypeOptions && (
+                <TableRowColumn>
+                    <RenderTypeSelectField
+                        device={DESKTOP}
+                        target={attribute}
+                        options={renderTypeOptions}
+                        changeHandler={onEditAttribute}
+                    />
+                </TableRowColumn>
+            )}
         </TableRow>);
 };
 

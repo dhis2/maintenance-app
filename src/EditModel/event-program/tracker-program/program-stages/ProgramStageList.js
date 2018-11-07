@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
-import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
+import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
@@ -18,7 +18,7 @@ import { translationSaved, translationError } from './contextActions';
 import {
     editProgramStage,
     addProgramStage,
-    deleteProgramStage,
+    confirmDeleteProgramStage
 } from './actions';
 
 const styles = {
@@ -66,9 +66,7 @@ class ProgramStageList extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        // shouldnt this be this.state.stages? 
-        // Also any reason for the != instead of !==?
-        if (this.props.stages != nextProps.programStages && this.props.programStages != nextProps.programStages) {
+        if (this.state.stages !== nextProps.programStages && this.props.programStages !== nextProps.programStages) {
             this.setState({
                 ...this.state,
                 stages: nextProps.programStages,
@@ -160,6 +158,7 @@ class ProgramStageList extends Component {
             open={!!this.state.sharing.id}
             onRequestClose={this.closeSharing}
             bodyStyle={styles.sharingDialogBody}
+            d2={this.context.d2}
         />
     );
 
@@ -245,12 +244,16 @@ ProgramStageList.defaultProps = {
     tableColumns: ['name', 'lastUpdated'],
 };
 
+ProgramStageList.contextTypes = {
+    d2: PropTypes.object.isRequired,
+};
+
 export default connect(null, dispatch =>
     bindActionCreators(
         {
             handleEditProgramStage: model => editProgramStage(model.id),
             handleNewProgramStage: () => addProgramStage(),
-            handleDeleteProgramStage: model => deleteProgramStage(model.id),
+            handleDeleteProgramStage: model => confirmDeleteProgramStage(model.id),
         },
         dispatch,
     ),

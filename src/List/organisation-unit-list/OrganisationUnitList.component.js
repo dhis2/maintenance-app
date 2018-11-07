@@ -1,10 +1,37 @@
-import React from 'react';
-import List from '../List.component';
-import appState from '../../App/appStateStore';
 import { getInstance } from 'd2/lib/d2';
-import listActions, { fieldFilteringForQuery } from '../list.actions';
-import log from 'loglevel';
 import ModelCollection from 'd2/lib/model/ModelCollection';
+import log from 'loglevel';
+import React from 'react';
+import appState from '../../App/appStateStore';
+import listActions, { fieldFilteringForQuery } from '../list.actions';
+import List from '../List.component';
+
+/**
+ * Create a monkey-patch to handle paging with prepended-orgunit
+ * @param pager the orginial Pager-instance of the list to monkey-patch
+ * @return the monkey-patched goToPage function that will add the selectedOrganisation unit
+ * to the result of the paged-list
+ */
+const createGoToPagerForOrgunit = (pager, selectedOrganisationUnit, d2) => {
+    const monkeyPage = async pageNr => {
+        const orgList = await pager.goToPage(pageNr);
+        return createPrependedOrgUnitList(selectedOrganisationUnit, orgList, d2);
+    }
+    return monkeyPage;
+}
+
+/**
+ * Returns a ModelCollection with given organisationUnitList prepended by
+ * selectedOrganisationUnit.
+ */
+const createPrependedOrgUnitList = (selectedOrganisationUnit, organisationUnitList, d2 ) => {
+    let filteredOrgUnits = organisationUnitList.toArray();
+    filteredOrgUnits.unshift(selectedOrganisationUnit);
+    let prependedOrgUnitList = ModelCollection.create(d2.models.organisationUnit, filteredOrgUnits,organisationUnitList.pager);
+    prependedOrgUnitList.pager.goToPage = createGoToPagerForOrgunit(organisationUnitList.pager, selectedOrganisationUnit, d2)
+
+    return prependedOrgUnitList;
+}
 
 export default class OrganisationUnitList extends React.Component {
     componentDidMount() {
@@ -35,13 +62,11 @@ export default class OrganisationUnitList extends React.Component {
                         .filter().on('parent.id').equals(selectedOrganisationUnit.id)
                         .list({ fields: fieldFilteringForQuery });
 
-                    // When a root organisation unit is selected we also add the root organisation unit to the list
-                    // of available organisation units to pick from
-                    if (userOrganisationUnitIds.indexOf(selectedOrganisationUnit.id) >= 0) {
-                        organisationUnitList.add(selectedOrganisationUnit);
-                    }
-
-                    listActions.setListSource(organisationUnitList);
+                    // DHIS2-2160 Add the selected node to the list to
+                    // avoid having to select the parent node to edit
+                    // the selected node...
+                    let prependedOrgUnitList = createPrependedOrgUnitList(selectedOrganisationUnit, organisationUnitList, d2);
+                    listActions.setListSource(prependedOrgUnitList);
                 },
                 error => log.error(error)
             );

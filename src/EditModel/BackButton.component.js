@@ -1,7 +1,6 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton/IconButton';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-import { config } from 'd2/lib/d2';
 import modelToEditStore from '../EditModel/modelToEditStore';
 
 function BackButton(props, context) {
@@ -11,7 +10,10 @@ function BackButton(props, context) {
 
         if (!isDirty) {
             onClick(...params);
-        } else if (confirm(context.d2.i18n.getTranslation('abandon_unsaved_changes'))) {
+        } else if (
+            // eslint-disable-next-line no-restricted-globals
+            confirm(context.d2.i18n.getTranslation('abandon_unsaved_changes'))
+        ) {
             onClick(...params);
         }
     };

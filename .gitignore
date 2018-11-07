@@ -1,5 +1,6 @@
 *.iml
 .idea/*
+.vscode/*
 
 node_modules*
 .sass-cache
@@ -21,3 +22,7 @@ npm-debug.log
 yarn-error.log
 stats.json
 package-lock.json
+
+.classpath
+.project
+.settings/

@@ -1,3 +1,6 @@
+import store from '../store';
+import { getColumnsForModelType } from '../List/columns/selectors';
+
 export function getSideBarConfig() {
     return {
         all: {
@@ -75,12 +78,17 @@ export function getSideBarConfig() {
                 'constant',
                 'attribute',
                 'optionSet',
+                'optionGroup',
+                'optionGroupSet',
                 'legendSet',
                 'predictor',
+                'predictorGroup',
                 'pushAnalysis',
                 'externalMapLayer',
                 'dataApprovalLevel',
                 'dataApprovalWorkflow',
+                'locale',
+                'sqlView',
             ],
         },
     };
@@ -182,7 +190,7 @@ const typeDetails = {
         columns: ['displayName', 'valueType', 'mandatory', 'unique', 'publicAccess', 'lastUpdated'],
     },
     optionSet: {
-        columns: ['displayName', 'valueType', 'lastUpdated'],
+        columns: ['displayName', 'valueType', 'publicAccess', 'lastUpdated'],
     },
     predictor: {
         columns: ['displayName', 'output[displayName]', 'periodType', 'lastUpdated'],
@@ -211,6 +219,21 @@ const typeDetails = {
             'lastUpdated',
         ],
     },
+    locale: {
+        columns: [
+            'name',
+            'locale',
+        ],
+    },
+    sqlView: {
+        columns: [
+            'displayName',
+        ],
+        additionalFields: [
+            'name',
+            'type',
+        ]
+    },
 };
 
 export function getFilterFieldsForType(modelType) {
@@ -234,14 +257,31 @@ export function getFiltersForType(modelType) {
     return [];
 }
 
-export function getTableColumnsForType(modelType, preservePropNames = false) {
+export function getTableColumnsForType(modelType, preservePropNames = false, defaultOnly = false) {
+    const defaultColumns = getDefaultTableColumnsForType(modelType, preservePropNames);
+    if(defaultOnly) {
+        return defaultColumns;
+    }
+    const userSelected = getUserSelectedTableColumnsForType(modelType, preservePropNames);
+    if(!userSelected || userSelected.length < 1) {
+        return defaultColumns;
+    }
+    return userSelected;
+}
+
+export function getDefaultTableColumnsForType(modelType, preservePropNames = false) {
     if (typeDetails.hasOwnProperty(modelType) && typeDetails[modelType].hasOwnProperty('columns')) {
         return typeDetails[modelType].columns
-            .map(col => (preservePropNames ? col : col.replace(/(\w*)\[(\w*)]/, '$1___$2')));
+            .map(col => (preservePropNames ? col : col.replace(/(\w*)\[(\w*)]/, '$1___$2'))); //replaces a[b] with a__b
     }
     // Default columns:
     return ['displayName', 'publicAccess', 'lastUpdated'];
 }
+
+export function getUserSelectedTableColumnsForType(modelType, preservePropNames) {
+    const cols = getColumnsForModelType(store.getState(), modelType);
+    return cols.map(col => (preservePropNames ? col : col.replace(/(\w*)\[(\w*)]/, '$1___$2'))); //replaces a[b] with a__b
+};
 
 export function getDefaultFiltersForType(modelType) {
     if (typeDetails.hasOwnProperty(modelType) &&
@@ -251,6 +291,15 @@ export function getDefaultFiltersForType(modelType) {
         return typeDetails[modelType].defaultFilters;
     }
 
+    return [];
+}
+
+export function getAdditionalFieldsForType(modelType) {
+    if (typeDetails.hasOwnProperty(modelType) && 
+        typeDetails[modelType].hasOwnProperty('additionalFields')
+    ) {
+        return typeDetails[modelType].additionalFields;
+    }
     return [];
 }
 

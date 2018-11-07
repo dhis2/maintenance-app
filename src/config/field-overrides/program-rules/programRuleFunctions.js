@@ -22,6 +22,7 @@ const programRuleFunctions = [
     'd2:substring( <text>, <number>, <number> )',
     'd2:split( <text>, <text>, <number> )',
     'd2:length( <text> )',
+    'd2:inOrgUnitGroup( <orgunit_group_code> )',
 ];
 
 export default programRuleFunctions;

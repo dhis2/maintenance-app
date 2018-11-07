@@ -20,9 +20,9 @@ const steps = [
         componentName: 'ProgramStage',
     },
     {
-        key: 'assign_organisation_units',
-        name: 'organisation_units',
-        componentName: 'AssignOrganisationUnits',
+        key: 'access',
+        name: 'access',
+        componentName: 'ProgramAccess',
     },
     {
         key: 'notifications',

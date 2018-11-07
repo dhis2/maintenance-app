@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { get, getOr, compose, isEqual, find, findIndex, maxBy, filter, entries, sortBy, map } from 'lodash/fp';
+import { get, getOr, compose, isEqual, findIndex, maxBy, filter, sortBy } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
 import { getInstance } from 'd2/lib/d2';
 import { getProgramStageToModify } from '../assign-data-elements/epics';
@@ -9,7 +9,7 @@ import {
     PROGRAM_STAGE_SECTIONS_ORDER_CHANGE,
     PROGRAM_STAGE_SECTIONS_ADD,
     PROGRAM_STAGE_SECTIONS_REMOVE,
-    PROGRAM_STAGE_SECTION_NAME_EDIT,
+    PROGRAM_STAGE_SECTION_UPDATE,
     PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE_COMPLETE,
 } from './actions';
 import { getStageSectionsById, getProgramStageById } from "../tracker-program/program-stages/selectors";
@@ -38,21 +38,22 @@ const changeProgramStageDataElementOrder = store => action$ => action$
         })
         .mapTo({ type: PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE_COMPLETE });
 
-const changeProgramStageSectionName = store => action$ => action$
-        .ofType(PROGRAM_STAGE_SECTION_NAME_EDIT)
+const updateProgramStageSection = store => action$ => action$
+        .ofType(PROGRAM_STAGE_SECTION_UPDATE)
         .map((action) => {
             const state = store.getState();
             const programStageId = get('payload.programStage', action);
-
             const programStageSectionId = get('payload.programStageSectionId', action);
-            const newProgramStageSectionName = get('payload.newProgramStageSectionName', action);
+            const newProgramStageSectionData = get('payload.newProgramStageSectionData', action);
 
             const programStageSections = getStageSectionsById(state, programStageId)
             state.programStageSections[programStageId] = programStageSections.map((section) => {
                     // Modify the original Model instance
                     if (isEqual(section.id, programStageSectionId)) {
-                        section.name = newProgramStageSectionName;
-                        section.displayName = newProgramStageSectionName;
+                        section.name = newProgramStageSectionData.name;
+                        section.displayName = newProgramStageSectionData.name;
+                        section.description = newProgramStageSectionData.description;
+                        section.renderType = newProgramStageSectionData.renderType;
                     }
 
                     return section;
@@ -92,7 +93,9 @@ const addProgramStageSection = store => action$ => action$
         .combineLatest(d2$, (action, d2) => ([d2, action]))
         .map(([d2, action]) => {
             const state = store.getState();
-            const newSectionName = get('payload.newSectionName', action);
+
+            const newSectionData = get('payload.newSectionData', action);
+            // const newSectionName = get('payload.newSectionName', action);
             const programStageId = get('payload.programStage', action);
             const programStage = getProgramStageById(state, programStageId);
 
@@ -101,9 +104,13 @@ const addProgramStageSection = store => action$ => action$
 
             // Create new section model and set the properties we can
             const newSection = d2.models.programStageSection.create({ id: generateUid(), dataElements: [] });
-            newSection.name = newSectionName;
-            newSection.displayName = newSectionName;
+            newSection.name = newSectionData.name;
+            newSection.displayName = newSectionData.name;
+            newSection.description = newSectionData.description;
+            newSection.renderType = newSectionData.renderType;
             newSection.sortOrder = sortOrder;
+
+            console.log(newSection);
 
             // Add the section to the programStage, otherwise the section won't be associated with the programStage
             newSection.programStage = programStage;
@@ -147,7 +154,7 @@ const removeProgramStageSection = store => action$ => action$
 export default function createEpicsForStore(store) {
     return combineEpics(
         changeProgramStageDataElementOrder(store),
-        changeProgramStageSectionName(store),
+        updateProgramStageSection(store),
         changeProgramStageSectionOrder(store),
         addProgramStageSection(store),
         removeProgramStageSection(store),

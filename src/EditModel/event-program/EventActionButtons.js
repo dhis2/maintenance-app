@@ -1,4 +1,3 @@
-import React from 'react';
 import { bindActionCreators } from 'redux';
 import { saveEventProgram } from './actions';
 import { createConnectedFormActionButtonsForSchema } from '../FormActionButtons';

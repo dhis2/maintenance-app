@@ -1,16 +1,26 @@
+import { map, get, filter, flatten, compose, identity, head } from 'lodash/fp';
 import Action from 'd2-ui/lib/action/Action';
-import modelToEditStore from './modelToEditStore';
 import log from 'loglevel';
+import { Observable } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
 import { generateUid } from 'd2/lib/uid';
+import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
+
 import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
-import { Observable } from 'rxjs';
-import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
-import { map, pick, get, filter, flatten, compose, identity, head } from 'lodash/fp';
+import modelToEditStore from './modelToEditStore';
 import snackActions from '../Snackbar/snack.actions';
+import { afterDeleteHook$ } from '../List/ContextActions';
 
-const extractErrorMessagesFromResponse = compose(filter(identity), map(get('message')), flatten, map('errorReports'), flatten, map('objectReports'), get('typeReports'));
+const extractErrorMessagesFromResponse = compose(
+    filter(identity),
+    map(get('message')),
+    flatten,
+    map('errorReports'),
+    flatten,
+    map('objectReports'),
+    get('typeReports'),
+);
 
 const objectActions = Action.createActionsFromNames([
     'getObjectOfTypeById',
@@ -75,7 +85,48 @@ const afterSaveHacks = {
 
         return Observable.fromPromise(Promise.all([removePromises, savePromises]));
     },
+    attribute: function attributeAfterSave() {
+        // When an attribute is added/edited/deleted, the attributes of all d2 modelDefinitions
+        // need to be updated manually, because d2 treats these as static properties
+        const d2Promise = getInstance();
+        const attributePromise = d2Promise.then(d2 => {
+            const api = d2.Api.getApi();
+            const queryParams = { fields: ':all,optionSet[:all,options[:all]]', paging: false };
+            return api.get('attributes', queryParams);
+        })
+
+        return Observable.fromPromise(Promise.all([d2Promise, attributePromise])
+            .then(([d2, { attributes }]) => {
+                for (const key of Object.keys(d2.models)) {
+                    reloadAttributesForModelDefinition(d2.models[key], attributes);
+                }
+                return Promise.resolve();
+            })
+        );
+    },
 };
+
+afterDeleteHook$.subscribe(data => {
+    if (data.modelType && data.modelType === 'attribute') {
+        afterSaveHacks.attribute();
+    }
+});
+
+function reloadAttributesForModelDefinition(modelDefinition, attributes) {
+    const schemaAttributes = attributes.filter((attributeDescriptor) => {
+        return attributeDescriptor[`${modelDefinition.name}Attribute`] === true;
+    });
+
+    // clear without reassigning 
+    for (const key of Object.keys(modelDefinition.attributeProperties)) {
+        delete modelDefinition.attributeProperties[key];
+    }
+
+    // Attach fresh attributes
+    for (const attribute of schemaAttributes) {
+        modelDefinition.attributeProperties[attribute.name] = attribute;
+    }
+}
 
 function hasAfterSave(model) {
     if (!model || !model.modelDefinition) {
@@ -111,21 +162,25 @@ const specialSaveHandlers = ['legendSet', 'dataSet', 'organisationUnit', 'progra
 objectActions.saveObject
     .filter(({ data }) => !specialSaveHandlers.includes(data.modelType))
     .subscribe((action) => {
+        const isDirty = modelToEditStore.getState().isDirty();
+
         const errorHandler = (message) => {
             if (message === 'Response was not a WebMessage with the expected format') {
-                action.error('Failed to save: Failed to provide proper error message: Everything is broken');
+                action.error('Failed to save: Failed to provide proper error message.');
                 return;
             }
             action.error(message);
         };
 
-        const successHandler = (response) => {
-            if (hasAfterSave(modelToEditStore.state)) {
+        const successHandler = () => {
+            if (!isDirty) {
+                action.complete('no_changes_to_be_saved');
+            } else if (hasAfterSave(modelToEditStore.state)) {
                 log.debug('Handling after save');
                 getAfterSave(modelToEditStore.state, modelToEditStore.state.id)
                     .subscribe(
                         () => action.complete('success'),
-                        errorHandler
+                        errorHandler,
                     );
             } else {
                 action.complete('success');
@@ -139,13 +194,6 @@ objectActions.saveObject
         log.error(e);
     });
 
-function on(property, func, object) {
-    return {
-        ...object,
-        [property]: func(object[property]),
-    };
-}
-
 // Since the relationship between organisation unit and data set is owned by the data set object,
 // organisationUnit.dataSets is not included when the model is saved or when isDirty() is called. In order to enable
 // saving this from the organisation unit side, we manually call save() on organisationUnit.dataSets here
@@ -155,21 +203,30 @@ objectActions.saveObject
         const d2 = await getInstance();
         const organisationUnit = modelToEditStore.getState();
 
-        if (!organisationUnit.isDirty() && !organisationUnit.dataSets.isDirty() && !organisationUnit.programs.isDirty()) {
+        if (!organisationUnit.isDirty() &&
+            !organisationUnit.dataSets.isDirty() &&
+            !organisationUnit.programs.isDirty()
+        ) {
             completeAction('no_changes_to_be_saved');
         } else {
             // The orgunit has to be saved before it can be linked to datasets so these operations are done sequentially
             organisationUnit.save()
-                .then(() => Promise.all([organisationUnit.dataSets.save(), organisationUnit.programs.save()]), (error) => {
-                    log.error(error);
-                    snackActions.show({
-                        message: Array.isArray(error.messages)
-                            ? error.messages[0].message
-                            : d2.i18n.getTranslation('failed_to_save_organisation_unit'),
-                        action: 'ok',
-                    });
-                    failAction(error);
-                })
+                .then(
+                    () => Promise.all([
+                        organisationUnit.dataSets.save(),
+                        organisationUnit.programs.save(),
+                    ]),
+                    (error) => {
+                        log.error(error);
+                        snackActions.show({
+                            message: Array.isArray(error.messages)
+                                ? error.messages[0].message
+                                : d2.i18n.getTranslation('failed_to_save_organisation_unit'),
+                            action: 'ok',
+                        });
+                        failAction(error);
+                    },
+                )
                 .then(() => completeAction('success'), error => failAction(error));
         }
     }, (e) => {
@@ -196,7 +253,10 @@ objectActions.saveObject
             } else {
                 const errorMessages = extractErrorMessagesFromResponse(response);
 
-                error(d2.i18n.getTranslation('could_not_save_legend_set_($$message$$)', { message: head(errorMessages) || 'Unknown error!' }));
+                error(d2.i18n.getTranslation(
+                    'could_not_save_legend_set_($$message$$)',
+                    { message: head(errorMessages) || 'Unknown error!' },
+                ));
             }
         } catch (e) {
             error(d2.i18n.getTranslation('could_not_save_legend_set'));
@@ -243,7 +303,10 @@ objectActions.saveObject
             } else {
                 const errorMessages = extractErrorMessagesFromResponse(response);
 
-                error(d2.i18n.getTranslation('could_not_save_data_set_($$message$$)', { message: head(errorMessages) || 'Unknown error!' }));
+                error(d2.i18n.getTranslation(
+                    'could_not_save_data_set_($$message$$)',
+                    { message: head(errorMessages) || 'Unknown error!' },
+                ));
             }
         } catch (e) {
             error(d2.i18n.getTranslation('could_not_save_data_set'));
@@ -263,7 +326,8 @@ objectActions.saveObject
             return;
         }
 
-        const programRuleId = modelToEditStore.getState().id || (await api.get('/system/id')).codes[0];
+        const programRuleId = modelToEditStore.getState().id ||
+            (await api.get('/system/id')).codes[0];
 
         // DHIS2-2342: The client should not need to generate a
         // new for the programRuleAction here to avoid highjacking the
@@ -276,14 +340,14 @@ objectActions.saveObject
             .map(action => Object.assign(action, {
                 programRule: { id: programRuleId },
                 id: generateUid(),
-                href: '<strip from clone>'
+                href: '<strip from clone>',
             }));
 
         const metadataPayload = {
             programRules: [Object.assign(getOwnedPropertyJSON(modelToEditStore.getState()), {
                 program: { id: modelToEditStore.getState().program.id },
                 id: programRuleId,
-                programRuleActions: programRulesActionsWithNewUid
+                programRuleActions: programRulesActionsWithNewUid,
             })],
             programRuleActions:
                 programRulesActionsWithNewUid.map(getOwnedPropertyJSON),
@@ -297,7 +361,10 @@ objectActions.saveObject
             } else {
                 const errorMessages = extractErrorMessagesFromResponse(response);
 
-                error(d2.i18n.getTranslation('could_not_save_program_rule_($$message$$)', { message: head(errorMessages) || 'Unknown error!' }));
+                error(d2.i18n.getTranslation(
+                    'could_not_save_program_rule_($$message$$)',
+                    { message: head(errorMessages) || 'Unknown error!' },
+                ));
             }
         } catch (e) {
             error(d2.i18n.getTranslation('could_not_save_program_rule'));
@@ -322,7 +389,9 @@ objectActions.saveObject
                 program: { id: editModel.program.id },
                 programStage: editModel.programStage ? { id: editModel.programStage.id } : undefined,
                 dataElement: editModel.dataElement ? { id: editModel.dataElement.id } : undefined,
-                trackedEntityAttribute: editModel.trackedEntityAttribute ? { id: editModel.trackedEntityAttribute.id } : undefined,
+                trackedEntityAttribute: editModel.trackedEntityAttribute
+                    ? { id: editModel.trackedEntityAttribute.id }
+                    : undefined,
             });
 
         model.save()
@@ -347,7 +416,10 @@ objectActions.update.subscribe((action) => {
             return action.complete();
         }
 
-        if (!(modelToEdit[fieldName] && modelToEdit[fieldName].constructor && modelToEdit[fieldName].constructor.name === 'ModelCollectionProperty')) {
+        if (!(modelToEdit[fieldName] &&
+            modelToEdit[fieldName].constructor &&
+            modelToEdit[fieldName].constructor.name === 'ModelCollectionProperty')
+        ) {
             log.debug(`Change ${fieldName} to ${value}`);
             modelToEdit[fieldName] = value;
             log.debug(`Value is now: ${modelToEdit.dataValues[fieldName]}`);

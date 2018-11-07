@@ -110,6 +110,7 @@ class Dropdown extends Component {
             <SelectField
                 value={this.state.value}
                 fullWidth={this.props.fullWidth}
+                errorText={this.props.errorText}
                 {...other}
                 onChange={this.onChange}
                 floatingLabelText={this.props.labelText}
@@ -228,6 +229,7 @@ Dropdown.propTypes = {
         PropTypes.string,
     ]),
     labelText: PropTypes.string,
+    errorText: PropTypes.string,
     translateLabel: PropTypes.bool,
     referenceProperty: PropTypes.string,
     modelDefinition: PropTypes.object,
@@ -250,6 +252,7 @@ Dropdown.defaultProps = {
     style: undefined,
     value: '',
     labelText: '',
+    errorText: '',
     translateLabel: false,
     referenceProperty: '',
     modelDefinition: {},

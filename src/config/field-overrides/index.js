@@ -8,6 +8,7 @@ import organisationUnitGroup from './organisationUnitGroup';
 import categoryCombo from './categoryCombo';
 import categoryOption from './categoryOption';
 import legendSet from './legendSet';
+import locale from './locale';
 import trackedEntityAttribute from './trackedEntityAttribute';
 import trackedEntityType from './trackedEntityType';
 import predictor from './predictor';
@@ -19,12 +20,17 @@ import programIndicator from './programIndicator';
 import programNotificationTemplate, {
     programStageNotificationTemplate,
 } from './programNotificationTemplate';
+import relationshipType from './relationshipType';
 import { eventProgram, trackerProgram, enrollment } from './program';
 import programRule from './programRule';
 import programRuleVariable from './programRuleVariable';
 import dataApprovalLevel from './dataApprovalLevel';
 import dataApprovalWorkflow from './dataApprovalWorkflow';
 import programStage from './programStage';
+import optionGroup from './optionGroup';
+import sqlView from './sqlView';
+import optionGroupSet from './optionGroupSet';
+import eventProgramStage from './eventProgramStage';
 
 const overridesByType = {
     attribute,
@@ -38,10 +44,12 @@ const overridesByType = {
     externalMapLayer,
     indicator,
     legendSet,
+    locale,
     organisationUnit,
     organisationUnitGroup,
     pushAnalysis,
     eventProgram,
+    eventProgramStage,
     programStage,
     programIndicator,
     programNotificationTemplate,
@@ -49,12 +57,16 @@ const overridesByType = {
     programRule,
     programRuleVariable,
     predictor,
+    relationshipType,
     validationRule,
     validationNotificationTemplate,
     trackedEntityAttribute,
     trackedEntityType,
     trackerProgram,
     enrollment,
+    optionGroup,
+    optionGroupSet,
+    sqlView,
 };
 
 export default {

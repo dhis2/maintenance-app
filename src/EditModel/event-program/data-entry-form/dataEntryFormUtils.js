@@ -1,5 +1,3 @@
-import log from 'loglevel';
-
 const inputPattern = /<input.*?\/>/gi;
 
 /* AttributeIdPattern is used in tracker-programs Custom registration forms
