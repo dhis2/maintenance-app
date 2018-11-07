@@ -32,6 +32,24 @@ export function stageNotificationsReducer(
                 modelToEdit: action.payload.model,
             };
         }
+        case NOTIFICATION_STAGE_SET_PROGRAM_STAGE: {
+            // Mutating `state.modelToEdit` directly and returning that in the new state object
+            // does not work reliably. The old programStage will persist in the state. 
+            // Creating a fresh model instance, updating that, and then returning that as modelToEdit
+            // does update the state correctly.
+            const modelJSON = state.modelToEdit.toJSON();
+            const newModelInstance = state.modelToEdit.modelDefinition.create(modelJSON);
+
+            newModelInstance.programStage = {
+                displayName: action.payload.stage.displayName,
+                id: action.payload.stage.id,
+            };
+
+            return {
+                ...state,
+                modelToEdit: newModelInstance
+            };
+        }
         case NOTIFICATION_STAGE_SAVE_ERROR:
             // TODO: Notify user of the error
             console.error(action.payload);

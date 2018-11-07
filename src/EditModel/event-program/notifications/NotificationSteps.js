@@ -22,8 +22,8 @@ const mapDispatchToProps = dispatch => ({
     onUpdateField(fieldName, value) {
         dispatch(setStageNotificationValue(fieldName, value));
     },
-    handleProgramStageSelect(stageId) {
-        dispatch(setSelectedProgramStage(stageId));
+    handleProgramStageSelect(stage) {
+        dispatch(setSelectedProgramStage(stage));
     },
 });
 
@@ -44,11 +44,12 @@ class WhatToSendStep extends Component {
 
     handleProgramStage = event => {
         const sId = event.target.value;
+        const selectedStage = this.props.programStages.find(stage => stage.id === sId);
         this.setState({
             ...this.state,
             programStageId: sId,
         });
-        this.props.handleProgramStageSelect(sId);
+        this.props.handleProgramStageSelect(selectedStage);
     };
 
     createProgramStageDropdown = () => {
@@ -98,8 +99,8 @@ WhatToSendStep = compose(
             onUpdateField(fieldName, value) {
                 dispatch(setStageNotificationValue(fieldName, value));
             },
-            handleProgramStageSelect(stageId) {
-                dispatch(setSelectedProgramStage(stageId));
+            handleProgramStageSelect(stage) {
+                dispatch(setSelectedProgramStage(stage));
             },
         }),
         undefined,
