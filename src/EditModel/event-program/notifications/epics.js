@@ -55,19 +55,34 @@ const saveProgramStageNotification = (action$, store) => action$
         eventProgramStore
             .take(1)
             .flatMap((eventProgramState) => {
-                const programStage = getProgramStageFromModel(eventProgramState, model);
+                const { programStages, programStageNotifications } = eventProgramState;
+                const updatedProgramStage = getProgramStageFromModel(eventProgramState, model);
+                
+                let stageNotifications = getStageNotificationsForProgramStageId(eventProgramState, updatedProgramStage.id)
 
-                let stageNotifications = getStageNotificationsForProgramStageId(eventProgramState, programStage.id)
                 // If we're dealing with a new model we have to add it to the notification lists
                 // Both on the notification list on the programStage and on the eventStore
                 if (negate(find(equals(model)))(stageNotifications)) {
-                    programStage.notificationTemplates.add(model);
+                    updatedProgramStage.notificationTemplates.add(model);
                     //Add empty stageNotifications if its a new programStage
                     if(!stageNotifications) {
-                        stageNotifications = eventProgramState.programStageNotifications[programStage.id] = [];
+                        stageNotifications = eventProgramState.programStageNotifications[updatedProgramStage.id] = [];
                     }
                     stageNotifications.push(model);
                 }
+
+                // If a notification template is attached to another program stage, it needs to be removed from the old stage too
+                const updatedStageNotifications = updatedProgramStage.notificationTemplates;
+                eventProgramState.programStages.forEach(stage => {
+                    if (stage.id !== updatedProgramStage.id) {
+                        updatedStageNotifications.forEach(model => {
+                            stage.notificationTemplates.remove(model)
+                        })
+                        programStageNotifications[stage.id] = programStageNotifications[stage.id].filter(notification =>
+                            !updatedStageNotifications.has(notification.id)
+                        )
+                    }
+                });
 
                 return Observable.of(eventProgramState);
             })
