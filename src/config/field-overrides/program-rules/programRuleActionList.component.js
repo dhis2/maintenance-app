@@ -21,6 +21,27 @@ class ProgramRuleActionsList extends React.Component {
             currentRuleActionModel: {},
         };
     }
+    componentDidMount() {
+        this.loadProgramRuleActionTemplate();
+    }
+
+    loadProgramRuleActionTemplate() {
+        const programRuleActions = this.props.model[this.props.referenceProperty].toArray();
+
+        if(programRuleActions.length > -1 ) {
+            programRuleActions.forEach(action => {
+                if(action.templateUid) {
+                    this.d2.models.programNotificationTemplates.get(action.templateUid).then(notificationTemplate => {
+                        action.programNotificationTemplate = {
+                            id: notificationTemplate.id,
+                            displayName: notificationTemplate.displayName,
+                        }
+                        this.setState({});
+                    })
+                }
+            })
+        }
+    }
 
     addProgramRuleAction() {
         this.setState({

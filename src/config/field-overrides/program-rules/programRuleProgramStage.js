@@ -29,7 +29,10 @@ class ProgramStageField extends React.Component {
     render() {
         const props = this.props;
         const disabled = !this.state.programId;
-        
+
+        // Do not load, to prevent loading without filter before the program is selected
+        if(disabled) return null;
+
         return (
             <DropdownAsync
                 {...props}

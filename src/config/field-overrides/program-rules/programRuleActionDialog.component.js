@@ -179,15 +179,22 @@ class ProgramRuleActionDialog extends React.Component {
             trackedEntityAttribute: this.state.programTrackedEntityAttributes,
             programStage: this.state.programStages,
             programStageSection: this.state.programSections,
-            programNotificationTemplate: this.state.notificationTemplates,
+            templateUid: this.state.notificationTemplates,
             option: this.state.options,
             optionGroup: this.state.optionGroups,
         };
-
         Object.keys(fieldRefs).forEach((field) => {
             if (programRuleAction[field]) {
-                const ref = fieldRefs[field].filter(v => v.value === programRuleAction[field])[0];
-                programRuleAction[field] = { id: ref.value, displayName: ref.text };
+                const ref = fieldRefs[field].find(v => v.value === programRuleAction[field]);
+                if(ref) {
+                    if(field === 'templateUid') {
+                        // just use the id, instead of object reference and update
+                        // programNotificationTemplate to be used in the list (instead of fetching again... not sent to server)
+                        programRuleAction.programNotificationTemplate = { id: ref.value, displayName: ref.text };
+                    } else {
+                        programRuleAction[field] = { id: ref.value, displayName: ref.text };
+                    }
+                }
             } else {
                 programRuleAction[field] = undefined;
             }
@@ -396,12 +403,12 @@ class ProgramRuleActionDialog extends React.Component {
                 },
             },
             {
-                name: 'programNotificationTemplate',
+                name: 'templateUid',
                 component: DropDown,
                 props: {
                     labelText: this.getTranslation('program_notification_template'),
                     options: this.state && this.state.notificationTemplates || [],
-                    value: ruleActionModel.programNotificationTemplate,
+                    value: ruleActionModel.templateUid,
                     disabled: !this.state.notificationTemplates || this.state.notificationTemplates === 0,
                     fullWidth: true,
                 },
