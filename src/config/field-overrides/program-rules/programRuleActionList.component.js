@@ -36,7 +36,6 @@ class ProgramRuleActionsList extends React.Component {
                             id: notificationTemplate.id,
                             displayName: notificationTemplate.displayName,
                         }
-                        this.setState({});
                     })
                 }
             })
@@ -130,6 +129,7 @@ class ProgramRuleActionsList extends React.Component {
                     field}`;
                 break;
 
+            case 'SCHEDULEMESSAGE':
             case 'SENDMESSAGE':
                 const withDateString = action.data ? `${this.getTranslation('at_date')} "${action.data}"` : ''
                 const displayName = action.programNotificationTemplate
@@ -142,38 +142,39 @@ class ProgramRuleActionsList extends React.Component {
 
                 break;
 
-                case 'HIDEOPTION':
-                    field = [
-                        action.dataElement && `"${action.dataElement.displayName}"`,
-                        action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
-                    ].filter(s => s).map(s => s.trim()).join(', ');
-                    const option = action.option && action.option.displayName;
-                    field = field ? `"${option}" ${this.getTranslation('on')} ${field}` : '';
-                    actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
-                        field}`;
-                    break;
-                case 'SHOWOPTIONGROUP': {
-                    field = [
-                        action.dataElement && `"${action.dataElement.displayName}"`,
-                        action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
-                    ].filter(s => s).map(s => s.trim()).join(', ');
-                    const optionGrp = action.optionGroup && action.optionGroup.displayName;
-                    field = field ? `"${optionGrp}" ${this.getTranslation('on')} ${field}` : '';
-                    actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
-                        field}`;
-                    break;
-                }
+            case 'HIDEOPTION':
+                field = [
+                    action.dataElement && `"${action.dataElement.displayName}"`,
+                    action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
+                ].filter(s => s).map(s => s.trim()).join(', ');
+                const option = action.option && action.option.displayName;
+                field = field ? `"${option}" ${this.getTranslation('on')} ${field}` : '';
+                actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                    field}`;
+                break;
 
-                case 'HIDEOPTIONGROUP': {
-                    field = [
-                        action.dataElement && `"${action.dataElement.displayName}"`,
-                        action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
-                    ].filter(s => s).map(s => s.trim()).join(', ');
-                    const optionGrp = action.optionGroup && action.optionGroup.displayName;
-                    field = field ? `"${optionGrp}" ${this.getTranslation('on')} ${field}` : '';
-                    actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
-                        field}`;
-                    break;
+            case 'SHOWOPTIONGROUP': {
+                field = [
+                    action.dataElement && `"${action.dataElement.displayName}"`,
+                    action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
+                ].filter(s => s).map(s => s.trim()).join(', ');
+                const optionGrp = action.optionGroup && action.optionGroup.displayName;
+                field = field ? `"${optionGrp}" ${this.getTranslation('on')} ${field}` : '';
+                actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                    field}`;
+                break;
+            }
+
+            case 'HIDEOPTIONGROUP': {
+                field = [
+                    action.dataElement && `"${action.dataElement.displayName}"`,
+                    action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
+                ].filter(s => s).map(s => s.trim()).join(', ');
+                const optionGrp = action.optionGroup && action.optionGroup.displayName;
+                field = field ? `"${optionGrp}" ${this.getTranslation('on')} ${field}` : '';
+                actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                    field}`;
+                break;
                 }
 
             default:
