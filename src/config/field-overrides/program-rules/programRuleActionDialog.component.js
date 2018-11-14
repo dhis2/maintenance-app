@@ -189,8 +189,8 @@ class ProgramRuleActionDialog extends React.Component {
                 if(ref) {
                     if(field === 'templateUid') {
                         // just use the id, instead of object reference and update
-                        // programNotificationTemplate to be used in the list (instead of fetching again... not sent to server)
-                        programRuleAction.programNotificationTemplate = { id: ref.value, displayName: ref.text };
+                        // notificationTemplate in the programRuleActionList
+                        programRuleAction.notificationTemplate = { id: ref.value, displayName: ref.text };
                     } else {
                         programRuleAction[field] = { id: ref.value, displayName: ref.text };
                     }
@@ -206,12 +206,13 @@ class ProgramRuleActionDialog extends React.Component {
             this.props.parentModel.programRuleActions.set(programRuleAction.id, programRuleAction);
             this.props.parentModel.programRuleActions.dirty = true;
             // </hack>
-
+            this.props.onUpdateRuleActionModel(programRuleAction);
             this.props.onChange({ target: { value: this.props.parentModel.programRuleActions } });
             this.props.onRequestClose();
         } else {
             const newUid = await this.d2.Api.getApi().get('/system/id');
             this.props.parentModel.programRuleActions.add(Object.assign(programRuleAction, { id: newUid.codes[0] }));
+            this.props.onUpdateRuleActionModel(programRuleAction);
             this.props.onChange({ target: { value: this.props.parentModel.programRuleActions } });
             this.props.onRequestClose();
         }

@@ -19,27 +19,50 @@ class ProgramRuleActionsList extends React.Component {
         this.state = {
             dialogOpen: false,
             currentRuleActionModel: {},
+            notificationTemplates: {
+                byActionId: {},
+                loaded: false,
+            },
         };
     }
     componentDidMount() {
         this.loadProgramRuleActionTemplate();
     }
 
+    /*
+        Due to a change in the API, we cannot use field-filtering for notificationTemplates in a rule.
+        It only returns an ID-string, so we need to load these manually
+    */
     loadProgramRuleActionTemplate() {
         const programRuleActions = this.props.model[this.props.referenceProperty].toArray();
 
-        if(programRuleActions.length > -1 ) {
-            programRuleActions.forEach(action => {
-                if(action.templateUid) {
-                    this.d2.models.programNotificationTemplates.get(action.templateUid).then(notificationTemplate => {
-                        action.programNotificationTemplate = {
-                            id: notificationTemplate.id,
-                            displayName: notificationTemplate.displayName,
-                        }
-                    })
+        const promises = programRuleActions
+            .filter(action => action.templateUid)
+            .map(action =>
+                this.d2.models.programNotificationTemplates
+                .get(action.templateUid)
+                .then(notificationTemplate => ({
+                    actionId: action.id,
+                    id: notificationTemplate.id,
+                    displayName: notificationTemplate.displayName,
+                }))
+            )
+
+        // Once all rules with notificationTemplates are loaded, we consolidate the results to a state
+        Promise.all(promises).then(results => {
+            const byActionIdState = results.reduce((result, notificationTemplate) => ({
+                ...result,
+                [notificationTemplate.actionId]: {
+                    ...notificationTemplate
+                }
+            }), {});
+            this.setState({
+                notificationTemplates: {
+                    byActionId: byActionIdState,
+                    loaded: true
                 }
             })
-        }
+        });
     }
 
     addProgramRuleAction() {
@@ -50,6 +73,53 @@ class ProgramRuleActionsList extends React.Component {
                 { programRule: { id: this.props.model.id } }
             ),
         });
+    }
+
+    editAction = (model) => {
+        this.setState({
+            dialogOpen: true,
+            currentRuleActionModel: Object.assign(model.clone(), {
+                dataElement: model.dataElement && model.dataElement.id || undefined,
+                trackedEntityAttribute: model.trackedEntityAttribute && model.trackedEntityAttribute.id || undefined,
+                programStage: model.programStage && model.programStage.id || undefined,
+                programStageSection: model.programStageSection && model.programStageSection.id || undefined,
+                option: model.option && model.option.id || undefined,
+                optionGroup: model.optionGroup && model.optionGroup.id || undefined,
+            }),
+        });
+    }
+
+    deleteAction = (model) => {
+        snackActions.show({
+            message: this.getTranslation('confirm_delete_program_rule_action'),
+            action: 'confirm',
+            onActionTouchTap: () => {
+                this.props.onChange({ target: { value: this.props.model.programRuleActions.remove(model) } });
+                snackActions.show({ message: this.getTranslation('program_rule_action_deleted') });
+            },
+        });
+    }
+
+    onChangeMakeDirtyHandler = (...p) => {
+        const event = p[0];
+
+        this.props.onChange(...p);
+        this.props.model.dirty = true;
+    };
+
+    handleRuleChange = (ruleAction) => {
+        // Update the notificationTemplates with selected template
+        if(ruleAction.notificationTemplate) {
+            this.setState(state => ({
+                notificationTemplates: {
+                    ...state.notificationTemplates,
+                    byActionId: {
+                        ...state.notificationTemplates.byActionId,
+                        [ruleAction.id]: ruleAction.notificationTemplate
+                    }
+                }
+            }))
+        }
     }
 
     render() {
@@ -130,10 +200,12 @@ class ProgramRuleActionsList extends React.Component {
                 break;
 
             case 'SCHEDULEMESSAGE':
-            case 'SENDMESSAGE':
+            case 'SENDMESSAGE': {
                 const withDateString = action.data ? `${this.getTranslation('at_date')} "${action.data}"` : ''
-                const displayName = action.programNotificationTemplate
-                        ? action.programNotificationTemplate.displayName
+                const actionId = action.id;
+                const displayName = this.state.notificationTemplates.loaded &&
+                    this.state.notificationTemplates.byActionId[actionId]
+                        ? this.state.notificationTemplates.byActionId[actionId].displayName
                         : this.getTranslation('no_notification_template_specified');
 
                 actionDetails = `${this.getTranslation(
@@ -141,6 +213,7 @@ class ProgramRuleActionsList extends React.Component {
                 }: ${displayName} ${withDateString}`;
 
                 break;
+            }
 
             case 'HIDEOPTION':
                 field = [
@@ -189,32 +262,6 @@ class ProgramRuleActionsList extends React.Component {
             });
         });
 
-        const editAction = (model) => {
-            this.setState({
-                dialogOpen: true,
-                currentRuleActionModel: Object.assign(model.clone(), {
-                    dataElement: model.dataElement && model.dataElement.id || undefined,
-                    trackedEntityAttribute: model.trackedEntityAttribute && model.trackedEntityAttribute.id || undefined,
-                    programStage: model.programStage && model.programStage.id || undefined,
-                    programStageSection: model.programStageSection && model.programStageSection.id || undefined,
-                    programNotificationTemplate: model.programNotificationTemplate && model.programNotificationTemplate.id || undefined,
-                    option: model.option && model.option.id || undefined,
-                    optionGroup: model.optionGroup && model.optionGroup.id || undefined,
-                }),
-            });
-        };
-
-        const deleteAction = (model) => {
-            snackActions.show({
-                message: this.getTranslation('confirm_delete_program_rule_action'),
-                action: 'confirm',
-                onActionTouchTap: () => {
-                    this.props.onChange({ target: { value: this.props.model.programRuleActions.remove(model) } });
-                    snackActions.show({ message: this.getTranslation('program_rule_action_deleted') });
-                },
-            });
-        };
-
         const styles = {
             wrap: Object.assign({
                 marginTop: 16,
@@ -240,12 +287,6 @@ class ProgramRuleActionsList extends React.Component {
             },
         };
 
-        // TODO: Instead of hackily setting model.dirty here, this should probably be handled by D2
-        const onChangeMakeDirtyHandler = (...p) => {
-            this.props.onChange(...p);
-            this.props.model.dirty = true;
-        };
-
         return (
             <div style={styles.wrap}>
                 <div style={styles.fab}>
@@ -257,10 +298,10 @@ class ProgramRuleActionsList extends React.Component {
                     columns={['actionDetails']}
                     rows={displayActions}
                     contextMenuActions={{
-                        edit: editAction,
-                        delete: deleteAction,
+                        edit: this.editAction,
+                        delete: this.deleteAction,
                     }}
-                    primaryAction={editAction}
+                    primaryAction={this.editAction}
                 />
                 {this.state.dialogOpen &&
                     <ProgramRuleActionDialog
@@ -269,10 +310,8 @@ class ProgramRuleActionsList extends React.Component {
                         program={this.props.model.program}
                         parentModel={this.props.model}
                         onRequestClose={() => this.setState({ dialogOpen: false })}
-                        onChange={onChangeMakeDirtyHandler}
-                        onUpdateRuleActionModel={(field, value) => this.setState({
-                            programRuleAction: Object.assign(this.state.currentRuleActionModel, { [field]: value }),
-                        })}
+                        onChange={this.onChangeMakeDirtyHandler}
+                        onUpdateRuleActionModel={this.handleRuleChange}
                     />
                 }
             </div>
