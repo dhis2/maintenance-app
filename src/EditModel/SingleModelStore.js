@@ -73,12 +73,12 @@ export const requestParams = new Map([
         fields: [
             ':all',
             'programRuleActions[:all',
+            'templateUid',
             'dataElement[id,displayName]',
             'option[id,displayName]',
             'optionGroup[id,displayName]',
             'trackedEntityAttribute[id,displayName]',
             'programStage[id,displayName]',
-            'programNotificationTemplate[id,displayName]',
             'programStageSection[id,displayName]]',
         ].join(','),
     }],
