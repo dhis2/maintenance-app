@@ -5,6 +5,7 @@ import React from 'react';
 import appState from '../../App/appStateStore';
 import listActions, { fieldFilteringForQuery } from '../list.actions';
 import List from '../List.component';
+import listStore from '../list.store';
 
 /**
  * Create a monkey-patch to handle paging with prepended-orgunit
@@ -38,16 +39,19 @@ export default class OrganisationUnitList extends React.Component {
         this.subscription = appState
             // Only do this is we're actually about to show organisation units
             .filter(appState => appState.sideBar.currentSubSection === 'organisationUnit')
-            .map(({ selectedOrganisationUnit, userOrganisationUnits }) => ({
+            .combineLatest(listStore.startWith({}))
+            .map(([{ selectedOrganisationUnit, userOrganisationUnits }, reload]) => ([{
                 selectedOrganisationUnit,
                 userOrganisationUnitIds: userOrganisationUnits
                     .toArray()
                     .map(model => model.id),
-            }))
-            .filter(state => state.selectedOrganisationUnit)
-            .distinctUntilChanged(null, state => state.selectedOrganisationUnit)
-            .subscribe(
-                async ({ selectedOrganisationUnit, userOrganisationUnitIds }) => {
+            }, reload]))
+            .filter(([state]) => state.selectedOrganisationUnit)
+            // if list is null, we reload the list. distinctUntilChanged returns false and therefore emits
+            .distinctUntilChanged(([prevState, prevListState], [state, listState]) =>
+                prevState.selectedOrganisationUnit === state.selectedOrganisationUnit && listState.list !== null
+            ).subscribe(
+                async ([{ selectedOrganisationUnit, userOrganisationUnitIds }]) => {
                     const d2 = await getInstance();
 
                     if (!selectedOrganisationUnit.id) {
