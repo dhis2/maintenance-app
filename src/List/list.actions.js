@@ -97,7 +97,7 @@ function getOrderingForSchema(modelName) {
     return 'displayName:ASC';
 }
 
-function getQueryForSchema(modelName) {
+export function getQueryForSchema(modelName) {
     return {
         fields: [
             fieldFilteringForQuery,
