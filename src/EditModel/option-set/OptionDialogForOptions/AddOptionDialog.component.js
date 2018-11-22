@@ -19,21 +19,6 @@ class AddOptionDialog extends Component {
         isSaving: false,
     };
 
-    // First the component updates with the new model and dialog state open
-    // But at this stage the fieldConfigs are stale
-    // So it should not update yet - or better still - make sure all three props are set in one go
-
-    // The below at least proves that the above is correct, but is not a proper solution
-    shouldComponentUpdate(nextProps, nextState) {
-        const isOpening = this.props.isDialogOpen === false && nextProps.isDialogOpen === true;
-        const isNotFirstOpening = this.props.model.constructor.name === 'ModelBase';
-        const hasNewModel = this.props.model !== nextProps.model;
-        if (isOpening && isNotFirstOpening && hasNewModel) {
-            return false;
-        }
-        return true;
-    }
-
     onUpdateField = (field, value) => {
         actions.updateModel(this.props.model, field, value);
     }
