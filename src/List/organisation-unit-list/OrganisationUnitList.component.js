@@ -3,8 +3,9 @@ import ModelCollection from 'd2/lib/model/ModelCollection';
 import log from 'loglevel';
 import React from 'react';
 import appState from '../../App/appStateStore';
-import listActions, { fieldFilteringForQuery } from '../list.actions';
+import listActions, { fieldFilteringForQuery, getQueryForSchema } from '../list.actions';
 import List from '../List.component';
+import listStore from '../list.store';
 
 /**
  * Create a monkey-patch to handle paging with prepended-orgunit
@@ -38,34 +39,40 @@ export default class OrganisationUnitList extends React.Component {
         this.subscription = appState
             // Only do this is we're actually about to show organisation units
             .filter(appState => appState.sideBar.currentSubSection === 'organisationUnit')
-            .map(({ selectedOrganisationUnit, userOrganisationUnits }) => ({
+            .combineLatest(listStore.startWith({}))
+            .map(([{ selectedOrganisationUnit, userOrganisationUnits }, reload]) => ([{
                 selectedOrganisationUnit,
                 userOrganisationUnitIds: userOrganisationUnits
                     .toArray()
                     .map(model => model.id),
-            }))
-            .filter(state => state.selectedOrganisationUnit)
-            .distinctUntilChanged(null, state => state.selectedOrganisationUnit)
-            .subscribe(
-                async ({ selectedOrganisationUnit, userOrganisationUnitIds }) => {
+            }, reload]))
+            .filter(([state]) => state.selectedOrganisationUnit)
+            // if list is null, we reload the list. distinctUntilChanged returns false and therefore emits
+            .distinctUntilChanged(([prevState, prevListState], [state, listState]) => 
+                prevState.selectedOrganisationUnit === state.selectedOrganisationUnit && listState.list !== null
+            ).subscribe(
+                async ([{ selectedOrganisationUnit, userOrganisationUnitIds }, listState]) => {
                     const d2 = await getInstance();
 
                     if (!selectedOrganisationUnit.id) {
                         return listActions.setListSource(ModelCollection.create(d2.models.organisationUnit));
                     }
 
-                    let organisationUnitList = d2.models.organisationUnit
-                        .filter().on('name').notEqual('default');
-
-                    organisationUnitList = await organisationUnitList
+                    let filteredOrganisationUnitList = d2.models.organisationUnit
                         .filter().on('name').notEqual('default')
                         .filter().on('parent.id').equals(selectedOrganisationUnit.id)
-                        .list({ fields: fieldFilteringForQuery });
+
+                    const fieldsForOrgUnit = getQueryForSchema('organisationUnit').fields;
+                    // Load selectedOrganisationUnit again to get data for fields that may have been changed by configurable columns
+                    const [selectedOrgUnitWithFields, organisationUnitList] = await Promise.all([
+                        d2.models.organisationUnit.get(selectedOrganisationUnit.id, { field: fieldsForOrgUnit}),
+                        filteredOrganisationUnitList.list({ fields: fieldsForOrgUnit })]
+                    );
 
                     // DHIS2-2160 Add the selected node to the list to
                     // avoid having to select the parent node to edit
                     // the selected node...
-                    let prependedOrgUnitList = createPrependedOrgUnitList(selectedOrganisationUnit, organisationUnitList, d2);
+                    let prependedOrgUnitList = createPrependedOrgUnitList(selectedOrgUnitWithFields, organisationUnitList, d2);
                     listActions.setListSource(prependedOrgUnitList);
                 },
                 error => log.error(error)

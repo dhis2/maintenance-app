@@ -221,7 +221,7 @@ const typeDetails = {
     },
     locale: {
         columns: [
-            'name',
+            'displayName',
             'locale',
         ],
     },
