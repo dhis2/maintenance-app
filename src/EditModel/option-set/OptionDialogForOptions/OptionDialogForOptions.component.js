@@ -66,7 +66,7 @@ const optionForm$ = Observable
         optionDialogStore)
     .flatMap(setupFieldConfigs);
 
-const optionFormData$ = Observable.zip(
+const optionFormData$ = Observable.combineLatest(
     optionForm$,
     optionDialogStore,
     (fieldConfigs, optionDialogState) => ({
