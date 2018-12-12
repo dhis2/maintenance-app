@@ -292,6 +292,7 @@ const fieldOrderByName = new Map([
     ['trackedEntityAttribute', [
         'name',
         'shortName',
+        'formName',
         'code',
         'description',
         'optionSet',
