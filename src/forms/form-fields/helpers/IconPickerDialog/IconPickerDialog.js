@@ -15,6 +15,7 @@ export default class IconPickerDialog extends Component {
         this.state = {
             open: false,
             iconKey: props.iconKey,
+            selectedIconKey: props.iconKey,
             icons: null,
             iconTypeFilter: 'all',
             textFilter: '',
@@ -61,13 +62,21 @@ export default class IconPickerDialog extends Component {
         this.setState({ open: false });
     };
 
+    handleCancel = () => {
+        this.setState({
+            selectedIconKey: this.props.iconKey //if cancelling revert back to original icon
+        });
+        this.handleClose();
+    }
+
     handleConfirm = () => {
-        this.props.updateStyleState({ icon: this.state.iconKey });
+        this.setState({ iconKey: this.state.selectedIconKey });
+        this.props.updateStyleState({ icon: this.state.selectedIconKey });
         this.handleClose();
     }
 
     handleIconSelect = (iconKey) => {
-        this.setState({ iconKey });
+        this.setState({ selectedIconKey: iconKey });
     };
 
     handleTypeFilterClick = (type) => {
@@ -128,7 +137,7 @@ export default class IconPickerDialog extends Component {
             />,
             <FlatButton
                 label={this.context.d2.i18n.getTranslation('cancel')}
-                onClick={this.handleClose}
+                onClick={this.handleCancel}
             />,
         ]
     )
@@ -160,7 +169,7 @@ export default class IconPickerDialog extends Component {
     )
 
     renderIconLibrary = () => {
-        const { icons, iconKey } = this.state;
+        const { icons, selectedIconKey } = this.state;
         if (!icons) {
             return (
                 <div className="icon-picker__list-loader">
@@ -175,7 +184,7 @@ export default class IconPickerDialog extends Component {
                     <Icon
                         icon={icon}
                         key={icon.key}
-                        selectedIconKey={iconKey}
+                        selectedIconKey={selectedIconKey}
                         handleClick={this.handleIconSelect}
                     />
                 ))}
