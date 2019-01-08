@@ -109,11 +109,11 @@ function cloneHandlerByObjectType(objectType, model) {
     switch(objectType) {
         case'programIndicator': {
             //Clear analyticsPeriodBoundaries ids, let server generate them
-            model.analyticsPeriodBoundaries = model.analyticsPeriodBoundaries.map((a) => ({
+         model.analyticsPeriodBoundaries = model.analyticsPeriodBoundaries.map((a) => ({
                 ...a,
                 id: undefined
             }))
-            break;
+            return model;
         }
         default: 
             return model;
