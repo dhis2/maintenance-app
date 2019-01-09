@@ -113,7 +113,7 @@ function cloneHandlerByObjectType(objectType, model) {
                 ...a,
                 id: undefined
             }))
-            break;
+            return model;
         }
         default: 
             return model;
