@@ -14,10 +14,16 @@ import snackActions from '../../../Snackbar/snack.actions';
 import getFirstInvalidFieldMessage from '../../form-helpers/validateFields';
 
 class AddOptionDialog extends Component {
-    state = {
-        isFormValid: true,
-        isSaving: false,
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isFormValid: true,
+            isSaving: false,
+            changedOriginalFieldValues: {}
+        };
+
+    }
 
     componentWillReceiveProps(newProps) {
         //reset field values when model changes
@@ -31,6 +37,10 @@ class AddOptionDialog extends Component {
     }
 
     onUpdateField = (field, value) => {
+        if ( typeof this.state.changedOriginalFieldValues[field] === 'undefined' ) {
+            //store the original value so we can change it back if user cancels.
+            this.setState({changedOriginalFieldValues: {...this.state.changedOriginalFieldValues, [field]: this.props.model[field]}});
+        }
         actions.updateModel(this.props.model, field, value);
     }
 
@@ -58,6 +68,17 @@ class AddOptionDialog extends Component {
                 .saveOption(this.props.model, this.props.parentModel)
                 .subscribe(this.onSaveSuccess, this.onSaveError);
         }
+    }
+
+    handleCancel = () => {
+        const { changedOriginalFieldValues } = this.state;
+
+        //revert changed values before closing
+        Object.keys(changedOriginalFieldValues).forEach((key) => {
+            actions.updateModel(this.props.model, key, changedOriginalFieldValues[key]);
+        })
+
+        this.props.onRequestClose();
     }
 
     setFormRef = (form) => {
@@ -108,7 +129,7 @@ class AddOptionDialog extends Component {
                         onClick={this.onSaveOption}
                         isSaving={this.state.isSaving}
                     />
-                    <CancelButton onClick={this.props.onRequestClose} />
+                    <CancelButton onClick={this.handleCancel} />
                 </FormButtons>
             </Dialog>
         );
