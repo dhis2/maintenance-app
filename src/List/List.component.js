@@ -166,6 +166,7 @@ class List extends Component {
                     return; // Received value is not iterable or not correct model, keep waiting
                 }
                 listActions.hideDetailsBox();
+
                 this.setState({
                     dataRows: listStoreValue.list,
                     pager: listStoreValue.pager,
