@@ -18,7 +18,7 @@ const SearchBox = React.createClass({
     getInitialState() {
         return {
             showSearchField: false,
-            value: '',
+            value: this.props.initialValue || '',
         };
     },
 
