@@ -26,7 +26,15 @@ class ProgramStageField extends React.Component {
         }
     }
 
+    shouldRender = () => {
+        const props = this.props;
+        const isEventProgram = props.model.program && props.model.program.programType === "WITHOUT_REGISTRATION";
+        return props.model.program && !isEventProgram;
+    }
     render() {
+        if(!this.shouldRender()) {
+            return null;
+        }
         const props = this.props;
         const disabled = !this.state.programId;
         
