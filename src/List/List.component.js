@@ -111,6 +111,8 @@ export function getTranslatablePropertiesForModelType(modelType) {
         return defaultTranslatableProperties.concat(['formName']);
     case 'organisationUnitLevel':
         return ['name'];
+    case 'program':
+        return defaultTranslatableProperties.concat(['description'])
     default:
         break;
     }
