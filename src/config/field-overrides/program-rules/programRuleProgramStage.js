@@ -1,6 +1,7 @@
 import React from 'react';
 import DropdownAsync from '../../../forms/form-fields/drop-down-async';
 import PropTypes from 'prop-types';
+import objectActions from '../../../EditModel/objectActions';
 
 class ProgramStageField extends React.Component {
     constructor(props, context) {
@@ -9,34 +10,46 @@ class ProgramStageField extends React.Component {
         //Need this in state, or else the dropdown will reload all the time, since the
         //filter is a new reference
         this.state = {
-            queryParamFilter: null,
-            programId: null,
+            queryParamFilter: this.getQueryParamFilter(),
+            programId: (props.model.program && props.model.program.id) || null,
         };
+    }
+
+    getQueryParamFilter = (props = this.props) => {
+        if(!props.model.program) {
+            return null;
+        }
+        return [`program.id:eq:${props.model.program.id}`];
     }
 
     componentWillReceiveProps(newProps) {
         const selectedProgram = newProps.model.program;
         if (selectedProgram && selectedProgram.id !== this.state.programId) {
-            const queryParamFilter = [`program.id:eq:${selectedProgram.id}`];
+            const queryParamFilter = this.getQueryParamFilter(newProps);
 
             this.setState({
                 programId: selectedProgram.id,
                 queryParamFilter
             });
+            //Clear programStage when program is changed
+            objectActions.update({fieldName: 'programStage', value: null})
         }
     }
 
-    render() {
+    shouldRender = () => {
         const props = this.props;
-        const disabled = !this.state.programId;
+        const isEventProgram = props.model.program && props.model.program.programType === "WITHOUT_REGISTRATION";
+        return props.model.program && !isEventProgram;
+    }
 
-        // Do not render, to prevent loading without filter before the program is selected
-        if(disabled) return null;
-
+    render() {
+        if(!this.shouldRender()) {
+            return null;
+        }
+        
         return (
             <DropdownAsync
-                {...props}
-                disabled={disabled}
+                {...this.props}
                 queryParamFilter={this.state.queryParamFilter}
                 labelText={this.context.d2.i18n.getTranslation(
                     'trigger_rule_only_for_program_stage'
