@@ -19,6 +19,15 @@ class AddOptionDialog extends Component {
         isSaving: false,
     };
 
+    componentWillReceiveProps(newProps) {
+        //reset field values when model changes
+        if(newProps.model.id !== this.props.model.id) {
+            this.setState({
+                changedOriginalFieldValues: {},
+            })
+        }
+    }
+
     onUpdateField = (field, value) => {
         actions.updateModel(this.props.model, field, value);
     }
