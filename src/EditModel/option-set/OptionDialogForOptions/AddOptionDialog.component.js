@@ -21,6 +21,8 @@ class AddOptionDialog extends Component {
 
     componentWillReceiveProps(newProps) {
         //reset field values when model changes
+        //this is needed due to the dialog not being unmounted between option changes,
+        //and to keep the orignal-values in sync with the model
         if(newProps.model.id !== this.props.model.id) {
             this.setState({
                 changedOriginalFieldValues: {},
