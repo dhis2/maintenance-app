@@ -37,7 +37,7 @@ class AddOptionDialog extends Component {
     }
 
     onUpdateField = (field, value) => {
-        if ( typeof this.state.changedOriginalFieldValues[field] === 'undefined' ) {
+        if (!this.state.changedOriginalFieldValues.hasOwnProperty(field)) {
             //store the original value so we can change it back if user cancels.
             this.setState({changedOriginalFieldValues: {...this.state.changedOriginalFieldValues, [field]: this.props.model[field]}});
         }
