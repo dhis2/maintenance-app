@@ -58,6 +58,8 @@ export default class SubjectAndMessageTemplateFields extends Component {
         const subjectChange = (event, value) => this.props.onUpdate({ fieldName: 'subjectTemplate', value });
         const messageChange = (event, value) => this.props.onUpdate({ fieldName: 'messageTemplate', value });
         const messageLabel = d2.i18n.getTranslation('message_template');
+        const setActiveSubjectTemplateField = this.setActiveField('subjectTemplate');
+        const setActiveMessageTemplateField = this.setActiveField('messageTemplate');
 
         return (
             <div style={{ ...styles.fieldWrap, ...this.props.style }}>
@@ -72,10 +74,11 @@ export default class SubjectAndMessageTemplateFields extends Component {
                                 label="subjectTemplate"
                                 fullWidth
                                 floatingLabelText={d2.i18n.getTranslation('subject_template')}
-                                onBlur={this.setActiveField('subjectTemplate')}
                                 value={this.props.model.subjectTemplate || ''}
                                 onChange={subjectChange}
-                                onKeyUp={this.setActiveField('subjectTemplate')}
+                                onBlur={setActiveSubjectTemplateField}
+                                onClick={setActiveSubjectTemplateField}
+                                onKeyUp={setActiveSubjectTemplateField}
                             />
                         </div>
                         <div>
@@ -86,10 +89,11 @@ export default class SubjectAndMessageTemplateFields extends Component {
                                 errorText={this.props.errorText}
                                 required={this.props.isRequired}
                                 floatingLabelText={`${messageLabel} ${this.props.isRequired ? '(*)' : ''}`}
-                                onBlur={this.setActiveField('messageTemplate')}
                                 value={this.props.model.messageTemplate || ''}
                                 onChange={messageChange}
-                                onKeyUp={this.setActiveField('messageTemplate')}
+                                onBlur={setActiveMessageTemplateField}
+                                onKeyUp={setActiveMessageTemplateField}
+                                onClick={setActiveMessageTemplateField}
                             />
                         </div>
                     </Column>
