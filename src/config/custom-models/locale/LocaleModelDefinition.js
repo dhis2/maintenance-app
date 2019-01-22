@@ -52,7 +52,7 @@ export default class LocaleModelDefinition extends ModelDefinition {
     list() {
         // Read the query string manually from the filters instance because we don't want to transform 
         // it to query parameters for API calls. We will do client side filtering instead. 
-        const nameFilter = this.filters.filters.find(({ propertyName }) => propertyName === 'displayName');
+        const nameFilter = this.filters.filters.find(({ propertyName }) => propertyName === 'identifiable');
         const queryString = nameFilter && nameFilter.filterValue;
 
         return this.getLocalesAndAuthorities()

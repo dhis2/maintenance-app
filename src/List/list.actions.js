@@ -20,6 +20,11 @@ export const fieldFilteringForQuery = [
     'code', 'publicAccess', 'access', 'href', 'level',
 ].join(',');
 
+//Set over schemas that should not filter out name=default
+const schemasThatShouldHaveDefaultInTheList = new Set([
+    'categoryOptionCombo',
+]);
+
 const listActions = Action.createActionsFromNames([
     'loadList',
     'setListSource',
@@ -29,6 +34,22 @@ const listActions = Action.createActionsFromNames([
     'getPreviousPage',
     'hideDetailsBox',
 ]);
+
+/**
+ * Filters the modelDefinition on displayname, shortName, id and code
+ * Identifiable is a special field to combine the search of identifiers,
+ * so it's possible to use it with conjunction of other filters.
+ * @param searchString to filter on
+ * @param modelDefinition to filter
+ * @returns {ModelDefinition} the modelDefinition with applied filters.
+ */
+function applySearchByIdentifiersFilter(searchString, modelDefinition) {
+    return modelDefinition.filter().on('identifiable').operator('token', searchString) 
+}
+
+function applySearchByNameFilter(searchString, modelDefinition) {
+    return modelDefinition.filter().on('displayName').ilike(listStore.state.searchString)
+}
 
 // Apply current property and name filters
 function applyCurrentFilters(modelDefinitions, modelName) {
@@ -47,10 +68,10 @@ function applyCurrentFilters(modelDefinitions, modelName) {
                 const filterValue = filter.id || filter;
                 return out.filter().on(filterField).equals(filterValue);
             }, modelDefinition);
+        const searchString = listStore.state.searchString.trim();
 
-        // Apply name search string, if any
-        return listStore.state.searchString.trim().length > 0
-            ? filterModelDefinition.filter().on('displayName').ilike(listStore.state.searchString)
+        return searchString.length > 0
+            ? applySearchByIdentifiersFilter(searchString, filterModelDefinition)
             : filterModelDefinition;
     }
 
@@ -58,10 +79,6 @@ function applyCurrentFilters(modelDefinitions, modelName) {
 }
 
 function getSchemaWithFilters(modelDefinitions, modelName) {
-    const schemasThatShouldHaveDefaultInTheList = new Set([
-        'categoryOptionCombo',
-    ]);
-
     if (!schemasThatShouldHaveDefaultInTheList.has(modelName)) {
         return applyCurrentFilters(modelDefinitions, modelName).filter().on('name').notEqual('default');
     }
@@ -80,7 +97,7 @@ function getOrderingForSchema(modelName) {
     return 'displayName:ASC';
 }
 
-function getQueryForSchema(modelName) {
+export function getQueryForSchema(modelName) {
     return {
         fields: [
             fieldFilteringForQuery,
@@ -160,7 +177,6 @@ listActions.searchByName
 
 const nonDefaultSearchSchemas = new Set(['organisationUnit']);
 
-
 // ~
 // ~ Filter current list by name (except OrganisationUnit - see above)
 // ~
@@ -186,7 +202,6 @@ listActions.searchByName
 
         complete(`${data.modelType} list with search on 'displayName' for '${data.searchString}' is loading`);
     }, log.error.bind(log));
-
 
 // ~
 // ~ Filter current list by property

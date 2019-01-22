@@ -37,7 +37,7 @@ export const removeProgramNotificationSuccess = createActionCreator(NOTIFICATION
 export const setEditModel = (model, notificationType = 'PROGRAM_STAGE_NOTIFICATION') => createActionCreator(NOTIFICATION_SET_EDIT_MODEL)({model, notificationType});
 export const setAddModel = (notificationType = 'PROGRAM_STAGE_NOTIFICATION') => createActionCreator(NOTIFICATION_SET_ADD_MODEL)({notificationType});
 
-export const setSelectedProgramStage = (stageId) => createActionCreator(NOTIFICATION_STAGE_SET_PROGRAM_STAGE)({stageId});
+export const setSelectedProgramStage = (stage) => createActionCreator(NOTIFICATION_STAGE_SET_PROGRAM_STAGE)({stage});
 
 export const setStageNotificationValue = (property, value) => ({ type: NOTIFICATION_SET_VALUE, payload: { property, value } });
 export const saveStageNotification = model => ({ type: NOTIFICATION_STAGE_SAVE, payload: model });

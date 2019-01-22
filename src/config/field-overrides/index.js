@@ -29,6 +29,8 @@ import dataApprovalWorkflow from './dataApprovalWorkflow';
 import programStage from './programStage';
 import optionGroup from './optionGroup';
 import sqlView from './sqlView';
+import optionGroupSet from './optionGroupSet';
+import eventProgramStage from './eventProgramStage';
 
 const overridesByType = {
     attribute,
@@ -47,6 +49,7 @@ const overridesByType = {
     organisationUnitGroup,
     pushAnalysis,
     eventProgram,
+    eventProgramStage,
     programStage,
     programIndicator,
     programNotificationTemplate,
@@ -62,6 +65,7 @@ const overridesByType = {
     trackerProgram,
     enrollment,
     optionGroup,
+    optionGroupSet,
     sqlView,
 };
 

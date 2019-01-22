@@ -231,7 +231,7 @@ const fieldOrderByName = new Map([
     ['eventProgramStage', [
         'blockEntryForm',
         'featureType',
-        'validCompleteOnly',
+        'validationStrategy',
         'preGenerateUID',
         'executionDateLabel',
     ]],
@@ -264,10 +264,7 @@ const fieldOrderByName = new Map([
         'incidentDateLabel',
         'enrollmentDateLabel',
         'ignoreOverdueEvents',
-        'captureCoordinates',
-        'relationshipType',
-        'relationshipText',
-        'relationshipFromA',
+        'featureType',
         'relatedProgram',
     ]],
     ['programStage', [
@@ -288,7 +285,6 @@ const fieldOrderByName = new Map([
         'generatedByEnrollmentDate',
         'hideDueDate',
         'featureType',
-        'validCompleteOnly',
         'preGenerateUID',
         'executionDateLabel',
         'dueDateLabel',
@@ -296,6 +292,7 @@ const fieldOrderByName = new Map([
     ['trackedEntityAttribute', [
         'name',
         'shortName',
+        'formName',
         'code',
         'description',
         'optionSet',
@@ -332,6 +329,7 @@ const fieldOrderByName = new Map([
         'allowAuditLog',
         'minAttributesRequiredToSearch',
         'maxTeiCountToReturn',
+        'featureType',
         'trackedEntityTypeAttributes',
     ]],
     ['programIndicator', [

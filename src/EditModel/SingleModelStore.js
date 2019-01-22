@@ -72,13 +72,14 @@ export const requestParams = new Map([
     ['programRule', {
         fields: [
             ':all',
+            'program[id,displayName,programType]',
             'programRuleActions[:all',
+            'templateUid',
             'dataElement[id,displayName]',
             'option[id,displayName]',
             'optionGroup[id,displayName]',
             'trackedEntityAttribute[id,displayName]',
             'programStage[id,displayName]',
-            'programNotificationTemplate[id,displayName]',
             'programStageSection[id,displayName]]',
         ].join(','),
     }],
@@ -113,7 +114,7 @@ function cloneHandlerByObjectType(objectType, model) {
                 ...a,
                 id: undefined
             }))
-            break;
+            return model;
         }
         default: 
             return model;
