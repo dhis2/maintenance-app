@@ -25,8 +25,19 @@ class AddOptionDialog extends Component {
 
     }
 
+    componentWillReceiveProps(newProps) {
+        //reset field values when model changes
+        //this is needed due to the dialog not being unmounted between option changes,
+        //and to keep the orignal-values in sync with the model
+        if(newProps.model.id !== this.props.model.id) {
+            this.setState({
+                changedOriginalFieldValues: {},
+            })
+        }
+    }
+
     onUpdateField = (field, value) => {
-        if ( typeof this.state.changedOriginalFieldValues[field] === 'undefined' ) {
+        if (!this.state.changedOriginalFieldValues.hasOwnProperty(field)) {
             //store the original value so we can change it back if user cancels.
             this.setState({changedOriginalFieldValues: {...this.state.changedOriginalFieldValues, [field]: this.props.model[field]}});
         }
@@ -68,6 +79,17 @@ class AddOptionDialog extends Component {
                 .saveOption(this.props.model, this.props.parentModel)
                 .subscribe(this.onSaveSuccess, this.onSaveError);
         }
+    }
+
+    handleCancel = () => {
+        const { changedOriginalFieldValues } = this.state;
+
+        //revert changed values before closing
+        Object.keys(changedOriginalFieldValues).forEach((key) => {
+            actions.updateModel(this.props.model, key, changedOriginalFieldValues[key]);
+        })
+
+        this.props.onRequestClose();
     }
 
     setFormRef = (form) => {
