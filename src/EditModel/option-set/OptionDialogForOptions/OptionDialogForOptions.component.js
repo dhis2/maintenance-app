@@ -64,17 +64,14 @@ const optionForm$ = Observable
     .combineLatest(
         modelToEditStore, //This is the optionSet model. optionDialogStore.model contains option model
         optionDialogStore)
-    .flatMap(setupFieldConfigs);
-
-const optionFormData$ = Observable.zip(
-    optionForm$,
-    optionDialogStore,
-    (fieldConfigs, optionDialogState) => ({
+    .flatMap(setupFieldConfigs, ([modelToEditState, optionDialogState], fieldConfigs) => ({
         fieldConfigs,
         model: optionDialogState.model,
         isAdd: !optionDialogState.model.id,
         isDialogOpen: optionDialogState.isDialogOpen,
     }))
+
+const optionFormData$ = optionForm$
     .flatMap(async ({ fieldConfigs, model, isAdd, ...other }) => {
         const d2 = await getInstance();
         return {
