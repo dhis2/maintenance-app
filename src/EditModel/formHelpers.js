@@ -94,6 +94,18 @@ export async function createFieldConfigForModelTypes(modelType, forcedFieldOrder
         formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
     }
 
+    console.clear();
+    console.log('########################');
+    const mapValues = require('lodash/fp').mapValues;
+    console.log(
+        mapValues(
+            def => def.required,
+            formFieldsManager.getFormFieldsForModel({ modelDefinition: d2.models[modelType] }),
+        ),
+    );
+    console.log('########################');
+    debugger;
+
     return formFieldsManager
         .getFormFieldsForModel({ modelDefinition: d2.models[modelType] }, customFieldOrderName)
         .map((fieldConfig) => {

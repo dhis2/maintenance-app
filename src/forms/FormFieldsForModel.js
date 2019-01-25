@@ -1,8 +1,33 @@
+import { identity, mapValues } from 'lodash/fp';
 import log from 'loglevel';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import { typeToFieldMap, createFieldConfig } from './fields';
 
 const fieldNamesToIgnoreOnDisplay = ['id', 'publicAccess', 'created', 'lastUpdated', 'user', 'userGroupAccesses', 'attributeValues'];
+const assignToClone = (original, ...assignments) => Object.assign(
+  Object.create(original),
+  ...assignments,
+);
+
+const addNameToFieldConfig = modelValidations =>
+    Object.keys( modelValidations )
+        .map(fieldName => assignToClone(
+            modelValidations[fieldName],
+            {
+                name: fieldName,
+                fieldOptions: { labelText: camelCaseToUnderscores(fieldName) },
+
+                // @TODO: This is a horrible horrible hack that has to go... As soon as the API is fixed!
+                ...(fieldName === 'orgUnitLevel' ? { persisted: true, required: true } : {}),
+            },
+        ))
+;
+
+const shouldFieldBeDisplayed = fieldNamesToIgnoreOnDisplay => field => 
+    fieldNamesToIgnoreOnDisplay.indexOf(field.fieldName) === -1;
+const onlyUsableFieldTypes = modelValidation => typeToFieldMap.get(modelValidation.type);
+const isFieldWritable = field => field.writable;
+const isFieldPersisted = field => field.persisted;
 
 class FormFieldsForModel {
     constructor(models, FIELDS_TO_IGNORE_ON_DISPLAY = fieldNamesToIgnoreOnDisplay) {
@@ -20,11 +45,37 @@ class FormFieldsForModel {
         this.fieldOrder = fieldNames || [];
     }
 
-    getFormFieldsForModel(model, fieldOverrides = {}, customFieldOrderName) {
+    checkForInvalidModel(model) {
         if (!(model && model.modelDefinition && model.modelDefinition.modelValidations)) {
             throw new TypeError('Passed model does not seem to adhere to the d2 model structure ' +
                 '(model.modelDefinition.modelValidations is not available)');
         }
+    }
+
+    getFormFieldRulesForModel(model, fieldOverrides) {
+        this.checkForInvalidModel(model);
+
+        const fields = addNameToFieldConfig(model.modelDefinition.modelValidations)
+            .filter(isFieldWritable)
+            .filter(isFieldPersisted)
+            .filter(shouldFieldBeDisplayed(this.fieldNamesToIgnoreOnDisplay))
+            .filter(onlyUsableFieldTypes)
+            .map(mergeOverridesIntoModelValidation(this.models, model, fieldOverrides))
+            .filter(identity)
+            .reduce(
+                (collection, currentValidation) => ({
+                    ...collection,
+                    [currentValidation.name]: currentValidation,
+                }),
+                {},
+            )
+        ;
+
+        return fields;
+    }
+
+    getFormFieldsForModel(model, fieldOverrides = {}, customFieldOrderName) {
+        this.checkForInvalidModel(model);
 
         const removeFieldsThatShouldNotBeDisplayed = modelValidation => this.fieldNamesToIgnoreOnDisplay.indexOf(modelValidation.fieldName) === -1;
         const onlyUsableFieldTypes = modelValidation => typeToFieldMap.get(modelValidation.type);
@@ -84,6 +135,32 @@ class FormFieldsForModel {
             return createFieldConfig(modelValidation, modelDefinition, this.models, customFieldOrderName);
         }
     }
+}
+
+const overrideModelValidationKey = (modelValidation, overrideKey) => ({
+    ...modelValidation,
+    [overrideKey]: overrideKey === 'fieldOptions'
+        ? { ...modelValidation[overrideKey], ...overrideConfig[overrideKey] }
+        : overrideConfig[overrideKey],
+});
+
+const mergeOverridesIntoModelValidation = (models, model, fieldOverrides) => modelValidation => {
+    const overrideConfig = fieldOverrides[modelValidation.name];
+    const isOverridden = !!overrideConfig;
+    const fieldType = isOverridden && overrideConfig.type
+        ? overrideConfig.type
+        : typeToFieldMap.get(modelValidation.type);
+
+    const modelValidationWithOverrides = isOverridden
+        ? Object.keys(overrideConfig)
+            .reduce(overrideModelValidationKey, modelValidation)
+        : modelValidation
+    ;
+
+    return assignToClone(
+        modelValidationWithOverrides,
+        { type: fieldType },
+    );
 }
 
 export default FormFieldsForModel;

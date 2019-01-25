@@ -44,6 +44,7 @@ import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
 import dataEntryFormEpics from './data-entry-form/epics';
 import trackerProgramEpics from './tracker-program/epics';
 import { createModelToEditEpic, createModelToEditProgramStageEpic } from '../epicHelpers';
+import getMissingValuesForModelName from '../../forms/getMissingValuesForModelName';
 
 import showSnackBarMessageEpic from '../../Snackbar/epics';
 import { notifyUser } from '../actions';
@@ -381,6 +382,19 @@ const setEventPSStage = (state) => {
     };
 };
 
+const checkProgramForRequiredValues = ([ eventProgramStore, d2 ]) => {
+    const { program } = eventProgramStore;
+    const modelType = 'program';
+    const formFieldOrder = program.programType === 'WITH_REGISTRATION'
+        ? 'trackerProgram'
+        : 'eventProgram'
+    const missingFields = getMissingValuesForModelName(d2, modelType, formFieldOrder, program);
+
+    return missingFields.length
+        ? Promise.reject(missingFields)
+        : Promise.resolve(eventProgramStore);
+}
+
 const saveEventProgram = eventProgramStore
     .take(1)
     .filter(isStoreStateDirty)
@@ -407,33 +421,61 @@ export const programModelSave = action$ =>
     action$
         .ofType(EVENT_PROGRAM_SAVE)
         .flatMapTo(eventProgramStore.take(1))
-        .flatMap((eventProgramStore) => {
-            if (isStoreStateDirty(eventProgramStore)) {
-                return saveEventProgram;
-            }
-            const successObs = Observable.of(saveEventProgramSuccess());
-            return successObs.concat(Observable.of(notifyUser({message: 'no_changes_to_be_saved', translate: true})).do(() =>
-                goToAndScrollUp('/list/programSection/program'),
-            ));
-        }).catch(e => console.log(e));
+
+        // get missing fields
+        .combineLatest(d2$)
+        .map(checkProgramForRequiredValues)
+
+        // determine next action
+        .switchMap((eventProgramStore) => {
+            const shouldSave$ = Observable.fromPromise(eventProgramStore);
+            const nextAction$ = shouldSave$
+                .flatMap(eventProgramStore => {
+                    if (isStoreStateDirty(eventProgramStore)) {
+                        return saveEventProgram;
+                    }
+                    
+                    const success$ = Observable.of(saveEventProgramSuccess());
+                    return success$
+                        .concat(
+                            Observable.of(notifyUser({message: 'no_changes_to_be_saved', translate: true}))
+                                .do(() => goToAndScrollUp('/list/programSection/program'))
+                        )
+                    ;
+                })
+                .catch(missingFields =>
+                    Observable.of(saveEventProgramError({
+                        message: 'required_values_missing',
+                        translate: true,
+                        placeholder: {
+                            fields: missingFields.join(', '),
+                        }
+                    })))
+            ;
+
+            return nextAction$;
+        })
+
+        // handle errors
+        .catch(e => console.log(e));
 
 export const programModelSaveResponses = action$ =>
     Observable.merge(
         action$.ofType(EVENT_PROGRAM_SAVE_SUCCESS).mapTo(notifyUser({message: 'success', translate: true})),
         action$.ofType(EVENT_PROGRAM_SAVE_ERROR).map((action) => {
-            const getFirstErrorMessageFromAction = compose(
-                get('message'),
+            const getFirstErrorFromAction = compose(
                 first,
                 flatten,
                 values,
                 getOr([], 'errors'),
                 first,
             );
-            const firstErrorMessage = getFirstErrorMessageFromAction(
-                action.payload,
-            ) || action.payload.message;
 
-            return notifyUser({ message: firstErrorMessage, translate: false });
+            const firstErrorMessage = getFirstErrorFromAction(action.payload) || action.payload;
+            const message = firstErrorMessage.message;
+            const translate = firstErrorMessage.translate;
+
+            return notifyUser({ message, translate });
         }),
     );
 
