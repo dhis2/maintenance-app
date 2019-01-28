@@ -17,16 +17,6 @@ const createFieldRules = (d2, modelType, fields) => {
         formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
     }
 
-    console.clear();
-    console.log('########################');
-    const mapValues = require('lodash/fp').mapValues;
-    console.log(
-        mapValues(
-            def => def.required,
-            formFieldsManager.getFormFieldRulesForModel({ modelDefinition }),
-        ),
-    );
-    console.log('########################');
     return formFieldsManager.getFormFieldRulesForModel({ modelDefinition });
 };
 
