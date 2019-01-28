@@ -97,6 +97,7 @@ const fieldOrderByName = new Map([
     ]],
     ['indicatorGroupSet', [
         'name',
+        'code',
         'description',
         'compulsory',
         'indicatorGroups',
