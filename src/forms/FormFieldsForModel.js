@@ -137,7 +137,7 @@ class FormFieldsForModel {
     }
 }
 
-const overrideModelValidationKey = (modelValidation, overrideKey) => ({
+const overrideModelValidationKey = overrideConfig => (modelValidation, overrideKey) => ({
     ...modelValidation,
     [overrideKey]: overrideKey === 'fieldOptions'
         ? { ...modelValidation[overrideKey], ...overrideConfig[overrideKey] }
@@ -153,7 +153,7 @@ const mergeOverridesIntoModelValidation = (models, model, fieldOverrides) => mod
 
     const modelValidationWithOverrides = isOverridden
         ? Object.keys(overrideConfig)
-            .reduce(overrideModelValidationKey, modelValidation)
+            .reduce(overrideModelValidationKey(overrideConfig), modelValidation)
         : modelValidation
     ;
 

@@ -5,15 +5,16 @@ import FormFieldsForModel from './FormFieldsForModel';
 
 /**
  * @param {Object} d2
+ * @param {string} formName
  * @param {string[]} fields
  * @return {Object} Rules for the fields by name
  */
-const createFieldRules = (d2, modelType, fields) => {
+const createFieldRules = (d2, modelType, formName, fields) => {
     const modelDefinition = d2.models[modelType];
     const formFieldsManager = new FormFieldsManager(new FormFieldsForModel(d2.models));
     formFieldsManager.setFieldOrder(fields);
 
-    for (const [fieldName, overrideConfig] of fieldOverrides.for(fields)) {
+    for (const [fieldName, overrideConfig] of fieldOverrides.for(formName)) {
         formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
     }
 
@@ -42,13 +43,13 @@ const getMissingFields = (values, fields, fieldRules) => fields.reduce(
  *
  * @param {Object} d2
  * @param {string} modelType E. g. 'program'
- * @param {string} formFieldOrder Maintenance app specific, to get the displayed fields
+ * @param {string} formName Maintenance app specific
  * @param {Object} values Populated d2 model
  * @return {string[]} Missing field names
  */
-const getMissingValuesForModelName = (d2, modelType, formFieldOrder, values) => {
-    const fields = fieldOrder.for(formFieldOrder);
-    const fieldRules = createFieldRules(d2, modelType, fields);
+const getMissingValuesForModelName = (d2, modelType, formName, values) => {
+    const fields = fieldOrder.for(formName);
+    const fieldRules = createFieldRules(d2, modelType, formName, fields);
     return getMissingFields(values, fields, fieldRules);
 }
 
