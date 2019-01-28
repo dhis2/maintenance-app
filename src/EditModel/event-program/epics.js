@@ -382,19 +382,6 @@ const setEventPSStage = (state) => {
     };
 };
 
-const checkProgramForRequiredValues = ([ eventProgramStore, d2 ]) => {
-    const { program } = eventProgramStore;
-    const modelType = 'program';
-    const formFieldOrder = program.programType === 'WITH_REGISTRATION'
-        ? 'trackerProgram'
-        : 'eventProgram'
-    const missingFields = getMissingValuesForModelName(d2, modelType, formFieldOrder, program);
-
-    return missingFields.length
-        ? Promise.reject(missingFields)
-        : Promise.resolve(eventProgramStore);
-}
-
 const saveEventProgram = eventProgramStore
     .take(1)
     .filter(isStoreStateDirty)
@@ -417,6 +404,24 @@ const saveEventProgram = eventProgramStore
             .catch(err => Observable.of(saveEventProgramError(err))),
     );
 
+/**
+ * @param {Object} eventProgramStore d2-ui store
+ * @param {Object} d2 Instance of d2
+ * @return {Promise<eventProgramStore>} A promise that resolves eventProgramStore
+*/
+const checkProgramForRequiredValues = (eventProgramStore, d2) => {
+    const { program } = eventProgramStore;
+    const modelType = 'program';
+    const formFieldOrder = program.programType === 'WITH_REGISTRATION'
+        ? 'trackerProgram'
+        : 'eventProgram'
+    const missingFields = getMissingValuesForModelName(d2, modelType, formFieldOrder, program);
+
+    return missingFields.length
+        ? Promise.reject(missingFields)
+        : Promise.resolve(eventProgramStore);
+}
+
 export const programModelSave = action$ =>
     action$
         .ofType(EVENT_PROGRAM_SAVE)
@@ -424,10 +429,11 @@ export const programModelSave = action$ =>
 
         // get missing fields
         .combineLatest(d2$)
-        .map(checkProgramForRequiredValues)
+        .map(([ eventProgramStore, d2 ]) => checkProgramForRequiredValues(eventProgramStore, d2))
 
         // determine next action
         .switchMap((eventProgramStore) => {
+            // errors if there are missing fields
             const shouldSave$ = Observable.fromPromise(eventProgramStore);
             const nextAction$ = shouldSave$
                 .flatMap(eventProgramStore => {
