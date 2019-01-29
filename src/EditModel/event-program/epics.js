@@ -417,10 +417,24 @@ const checkProgramForRequiredValues = (eventProgramStore, d2) => {
         : 'eventProgram'
     const missingFields = getMissingValuesForModelName(d2, modelType, formFieldOrder, program);
 
-    return missingFields.length
-        ? Promise.reject(missingFields)
-        : Promise.resolve(eventProgramStore);
+    return { eventProgramStore, missingFields };
 }
+
+const createSaveEventProgramError$ = () => Observable.of(
+    saveEventProgramError({
+        message: 'required_values_missing',
+        translate: true,
+    }),
+);
+
+const createSaveEventProgramSuccess$ = () => Observable
+    .of(saveEventProgramSuccess())
+    .concat(
+        Observable
+            .of(notifyUser({message: 'no_changes_to_be_saved', translate: true}))
+            .do(() => goToAndScrollUp('/list/programSection/program'))
+    )
+;
 
 export const programModelSave = action$ =>
     action$
@@ -432,35 +446,15 @@ export const programModelSave = action$ =>
         .map(([ eventProgramStore, d2 ]) => checkProgramForRequiredValues(eventProgramStore, d2))
 
         // determine next action
-        .switchMap((eventProgramStore) => {
-            // errors if there are missing fields
-            const shouldSave$ = Observable.fromPromise(eventProgramStore);
-            const nextAction$ = shouldSave$
-                .flatMap(eventProgramStore => {
-                    if (isStoreStateDirty(eventProgramStore)) {
-                        return saveEventProgram;
-                    }
-                    
-                    const success$ = Observable.of(saveEventProgramSuccess());
-                    return success$
-                        .concat(
-                            Observable.of(notifyUser({message: 'no_changes_to_be_saved', translate: true}))
-                                .do(() => goToAndScrollUp('/list/programSection/program'))
-                        )
-                    ;
-                })
-                .catch(missingFields =>
-                    Observable.of(saveEventProgramError({
-                        message: 'required_values_missing',
-                        translate: true,
-                        placeholder: {
-                            fields: missingFields.join(', '),
-                        }
-                    })))
-            ;
+        .switchMap(({ eventProgramStore, missingFields }) => (
+            missingFields.length
+                ? createSaveEventProgramError$()
+            
+            : isStoreStateDirty(eventProgramStore)
+                ? saveEventProgram
 
-            return nextAction$;
-        })
+            : createSaveEventProgramSuccess$()
+        ))
 
         // handle errors
         .catch(e => console.log(e));
