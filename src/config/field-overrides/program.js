@@ -28,6 +28,10 @@ async function getRelationshipTypes(model, d2) {
  * between these two, as they have different behavior and overrides.
  */
 
+
+// The other options from the backend is not used... yet
+export const featureTypeOverride = ['NONE', 'POINT', 'POLYGON'];
+
 const sharedOverrides = new Map([
     [
         'categoryCombo',
@@ -46,6 +50,15 @@ const sharedOverrides = new Map([
             component: PeriodTypeDropDown,
         },
     ],
+    [
+        'featureType',
+        {
+            fieldOptions: {
+                options: featureTypeOverride,
+            },
+        },
+    ],
+
 ]);
 
 export const eventProgram = new Map([...sharedOverrides]);
