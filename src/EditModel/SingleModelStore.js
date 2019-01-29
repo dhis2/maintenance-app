@@ -72,6 +72,7 @@ export const requestParams = new Map([
     ['programRule', {
         fields: [
             ':all',
+            'program[id,displayName,programType]',
             'programRuleActions[:all',
             'dataElement[id,displayName]',
             'option[id,displayName]',
