@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { identity } from 'lodash/fp';
 
-import { createFieldConfigForModelTypes } from './modelFieldConfigCreator';
+import { createFieldConfigForModelTypes } from '../formHelpers';
 import { applyRulesToFieldConfigs, getRulesForModelType } from '../form-rules';
 import { isAttribute } from './fieldChecks';
 
