@@ -42,3 +42,32 @@ export function defaultAnalyticsPeriodBoundaries(type, current) {
 
     return defaultProps[type];
 }
+
+/**
+ * Helper function to create a "default"-rule for a field, that can
+ * be used in field-rules.
+ * This will set the value of the field whenever the value is undefined.
+ * When a value is set to no-value, it is null. Undefined only
+ * occurs when it is not set at all.
+ *
+ * @param field Fieldname for the field to set a default value for.
+ * @param defaultValue The default value for the field.
+ */
+export function createDefaultRuleForField(field, defaultValue) {
+    return {
+        field: field,
+        when: [{
+            operator: 'EQUALS',
+            value: undefined,
+        }],
+        operations: [{
+            type: 'CHANGE_VALUE',
+            setValue: (model, fieldConfig) => {
+                if (fieldConfig) {
+                    fieldConfig.value = defaultValue;
+                    model[fieldConfig.name] = defaultValue;
+                }
+            }
+        }]
+    }
+}
