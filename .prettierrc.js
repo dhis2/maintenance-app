@@ -1,8 +1,18 @@
 module.exports = {
+    printWidth: 80,
+    tabWidth: 4,
+    useTabs: false,
+    semi: false,
+    singleQuote: true,
+    trailingComma: 'es5',
     bracketSpacing: true,
     jsxBracketSameLine: false,
-    printWidth: 100,
-    singleQuote: true,
-    tabWidth: 4,
-    trailingComma: 'all',
-};
+    jsxSingleQuote: false,
+    arrowParens: 'avoid',
+    rangeStart: 0,
+    rangeEnd: Infinity,
+    proseWrap: 'preserve',
+    requirePragma: false,
+    insertPragma: false,
+    endOfLine: 'lf',
+}

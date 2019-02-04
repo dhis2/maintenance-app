@@ -110,8 +110,8 @@
   },
   "husky": {
     "hooks": {
-        "commit-msg": "commit-style",
-        "pre-commit": "code-style"
+      "commit-msg": "commit-style",
+      "pre-commit": "code-style"
     }
   },
   "manifest.webapp": {
