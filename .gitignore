@@ -26,3 +26,6 @@ package-lock.json
 .classpath
 .project
 .settings/
+
+# System files
+.DS_Store
