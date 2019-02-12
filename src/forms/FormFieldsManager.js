@@ -1,10 +1,15 @@
 class FormFieldsManager {
     constructor(fieldsForModelService) {
         this.fieldsForModelService = fieldsForModelService;
-
         this.fieldOverrides = {};
-
         this.headerFields = [];
+    }
+
+    getFormFieldRulesForModel(model) {
+        return this.fieldsForModelService.getFormFieldRulesForModel(
+            model,
+            this.fieldOverrides,
+        );
     }
 
     getFormFieldsForModel(model, customFieldOrderName) {
