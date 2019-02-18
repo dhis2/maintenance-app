@@ -194,7 +194,6 @@ const fieldOrderByName = new Map([
         'shortName',
         'code',
         'description',
-        'fieldMask',
         'valueType',
         'optionSet',
         'sortOrder',
