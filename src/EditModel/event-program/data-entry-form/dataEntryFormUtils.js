@@ -61,6 +61,7 @@ export function transformElementsToCustomForm(elements) {
  * @returns {*} an object with idString, id and fieldType of the element.
  */
 function getFieldInfoFromMatch(match) {
+    if(!match) return null;
     for(let patternId in matchIndexes) {
         const index = matchIndexes[patternId];
         const elemId = match[index];
@@ -100,10 +101,10 @@ export function processFormData(formData, elements) {
         const inputDisabled = /disabled/.exec(inputHtml) !== null;
 
         const allMatch = allPatterns.exec(inputHtml);
-        const { idString, id, fieldType} = getFieldInfoFromMatch(allMatch)
+        const fieldInfo = getFieldInfoFromMatch(allMatch);
 
-        if (idString && id) {
-         //   console.log(idMatch);
+        if (fieldInfo && fieldInfo.idString && fieldInfo.id) {
+            const { id, fieldType } = fieldInfo;
             usedIds.push(id);
             const label = elements && elements[id];
             const nameAttr = fieldType === "id" ? "entryfield" : null; //used for data-entry
@@ -115,7 +116,6 @@ export function processFormData(formData, elements) {
         inputElement = inputPattern.exec(inHtml);
     }
     outHtml += inHtml.substr(inPos);
-    //console.log(outHtml)
     return {
         usedIds,
         outHtml

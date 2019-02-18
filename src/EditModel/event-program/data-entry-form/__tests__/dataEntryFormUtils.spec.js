@@ -25,15 +25,34 @@ describe('dataEntryFormUtils', () => {
 
     describe('processForm()', () => {
         test('it should work with empty formData', () => {
+            const dataEntryForm = '';
+            const { usedIds, outHtml } = utils.processFormData(
+                dataEntryForm,
+                elements,
+            );
+            expect(outHtml).toBe(dataEntryForm)
+            expect(usedIds.length).toBe(0)
+        });
+
+        test('it should work with elements', () => {
             const dataEntryForm = initialHTML;
             const { outHtml } = utils.processFormData(
                 dataEntryForm,
                 elements,
                 utils.elementPatterns.combinedIdPattern
             );
-            console.log(outHtml);
             expect(outHtml).toBe(initialHTML)
+            expect(usedIds.length).toBe(3)
         });
+
+        test('it should work with input elements that do not have attribute id', () => {
+            const html = initialHTML + '<input type="button" id="a-button">'
+            const { usedIds, outHtml } = utils.processFormData(
+                html,
+                elements,
+            );
+            expect(outHtml).toBe(html)
+        })
     });
 
 });
