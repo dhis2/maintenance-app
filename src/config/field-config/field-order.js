@@ -5,6 +5,7 @@ const fieldOrderByName = new Map([
         'code',
         'style',
         'description',
+        'fieldMask',
         'formName',
         'domainType',
         'valueType',
