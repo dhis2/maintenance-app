@@ -56,6 +56,7 @@ import {
     createModelToEditProgramStageEpic,
 } from '../epicHelpers';
 import trackerProgramEpics from './tracker-program/epics';
+import getMissingValuesForModelName from '../../forms/getMissingValuesForModelName';
 
 const d2$ = Observable.fromPromise(getInstance());
 const api$ = d2$.map(d2 => d2.Api.getApi());
@@ -338,37 +339,78 @@ const saveEventProgram = eventProgramStore
             .catch(err => Observable.of(saveEventProgramError(err))),
     );
 
+/**
+ * @param {Object} eventProgramStore d2-ui store
+ * @param {Object} d2 Instance of d2
+ * @return {Promise<eventProgramStore>} A promise that resolves eventProgramStore
+*/
+const checkProgramForRequiredValues = (eventProgramStore, d2) => {
+    const { program } = eventProgramStore;
+    const modelType = 'program';
+    const formFieldOrder = program.programType === 'WITH_REGISTRATION'
+        ? 'trackerProgram'
+        : 'eventProgram'
+    const missingFields = getMissingValuesForModelName(d2, modelType, formFieldOrder, program);
+
+    return { eventProgramStore, missingFields };
+}
+
+const createSaveEventProgramError$ = () => Observable.of(
+    saveEventProgramError({
+        message: 'required_values_missing',
+        translate: true,
+    }),
+);
+
+const createSaveEventProgramSuccess$ = () => Observable
+    .of(saveEventProgramSuccess())
+    .concat(
+        Observable
+            .of(notifyUser({message: 'no_changes_to_be_saved', translate: true}))
+            .do(() => goToAndScrollUp('/list/programSection/program'))
+    )
+;
+
 export const programModelSave = action$ =>
     action$
         .ofType(EVENT_PROGRAM_SAVE)
         .flatMapTo(eventProgramStore.take(1))
-        .flatMap((eventProgramStore) => {
-            if (isStoreStateDirty(eventProgramStore)) {
-                return saveEventProgram;
-            }
-            const successObs = Observable.of(saveEventProgramSuccess());
-            return successObs.concat(Observable.of(notifyUser({message: 'no_changes_to_be_saved', translate: true})).do(() =>
-                goToAndScrollUp('/list/programSection/program'),
-            ));
-        }).catch(e => console.log(e));
+
+        // get missing fields
+        .combineLatest(d2$)
+        .map(([ eventProgramStore, d2 ]) => checkProgramForRequiredValues(eventProgramStore, d2))
+
+        // determine next action
+        .switchMap(({ eventProgramStore, missingFields }) => (
+            missingFields.length
+                ? createSaveEventProgramError$()
+
+            : isStoreStateDirty(eventProgramStore)
+                ? saveEventProgram
+
+            : createSaveEventProgramSuccess$()
+        ))
+
+        // handle errors
+        .catch(e => console.log(e));
 
 export const programModelSaveResponses = action$ =>
     Observable.merge(
         action$.ofType(EVENT_PROGRAM_SAVE_SUCCESS).mapTo(notifyUser({message: 'success', translate: true})),
         action$.ofType(EVENT_PROGRAM_SAVE_ERROR).map((action) => {
-            const getFirstErrorMessageFromAction = compose(
-                get('message'),
+			const getFirstErrorFromAction = compose(
                 first,
                 flatten,
                 values,
                 getOr([], 'errors'),
                 first,
             );
-            const firstErrorMessage = getFirstErrorMessageFromAction(
-                action.payload,
-            ) || action.payload.message;
 
-            return notifyUser({ message: firstErrorMessage, translate: false });
+			const firstErrorMessage = getFirstErrorFromAction(action.payload) || action.payload;
+            const message = firstErrorMessage.message;
+            const translate = firstErrorMessage.translate;
+
+            return notifyUser({ message, translate });
         }),
     );
 
