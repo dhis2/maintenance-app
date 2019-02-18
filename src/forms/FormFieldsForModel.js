@@ -1,17 +1,140 @@
 import log from 'loglevel';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import { typeToFieldMap, createFieldConfig } from './fields';
+import { every, identity } from 'lodash/fp';
+import {
+    typeToFieldMap,
+    createFieldConfig as createFieldConfigOrig,
+} from './fields';
 
-const fieldNamesToIgnoreOnDisplay = ['id', 'publicAccess', 'created', 'lastUpdated', 'user', 'userGroupAccesses', 'attributeValues'];
+const FIELDS_TO_IGNORE_ON_DISPLAY = ['id', 'publicAccess', 'created', 'lastUpdated', 'user', 'userGroupAccesses', 'attributeValues'];
+
+/**
+ * @param {Object} origin An obejct to be cloned with getters and setters
+ * @param {...Object} assignments
+ * @return {Object}
+ */
+const assignToClone = (original, ...assignments) =>
+    Object.assign(Object.create(original), ...assignments);
+
+/**
+ * Transforms a hash-map-like collection of fields to an array
+ * where the items have the hash-map-key as name and label text
+ *
+ * @param {Object} modelValidations
+ * @return {Object[]}
+ */
+const addNameToFieldConfig = modelValidations =>
+    Object.keys( modelValidations )
+        // needs to be cloned this way to keep getters and setters of the model
+        .map(fieldName => assignToClone(
+            modelValidations[fieldName],
+            {
+                name: fieldName,
+                fieldOptions: { labelText: camelCaseToUnderscores(fieldName) },
+
+                // @TODO: This is a horrible horrible hack that has to go... As soon as the API is fixed!
+                ...(fieldName === 'orgUnitLevel' ? { persisted: true, required: true } : {}),
+            },
+        ))
+;
+
+/**
+ * @param {Object} collection A collection to add the values to
+ * @param {{ name: string;  }[]} values An array containing objects with a name property
+ * @return {{ [name]: field }} A hash-map-like collection of the fields
+ */
+const addToNamedCollection = (collection, value) =>
+    ({ ...collection, [value.name]: value });
+
+/**
+ * @param [string[]] fieldNamesToIgnoreOnDisplay
+ * @param {{ name: string;  }} field
+ * @return {boolean}
+ */
+const shouldFieldBeDisplayed = (fieldNamesToIgnoreOnDisplay, field) =>
+    fieldNamesToIgnoreOnDisplay.indexOf(field.fieldName) === -1;
+
+/**
+ * @param {{ type: string; }} field
+ * @return {boolean}
+ */
+const onlyUsableFieldTypes = field =>
+    typeToFieldMap.get(field.type);
+
+/**
+ * @param {{ writable: boolean; }} field
+ * @return {boolean}
+ */
+const isFieldWritable = field => field.writable;
+
+/**
+ * @param {{ persisted: boolean; }} field
+ * @return {boolean}
+ */
+const isFieldPersisted = field => field.persisted;
+
+/**
+ * @param {Object} modelDefinition
+ * @param {Object} models
+ * @param {string} customFieldOrderName
+ * @return {field => Object} Contains rendering info like the react component
+ */
+const createFieldConfig = (modelDefinition, models, customFieldOrderName) =>
+    field => createFieldConfigOrig(
+        field,
+        modelDefinition,
+        this.models,
+        customFieldOrderName,
+    );
+
+/**
+ * @param {Object} overrideConfig
+ * @return {(field, string) => field} Will override a field with it's override rules
+ */
+const overrideModelValidationKey = overrideConfig =>
+    (modelValidation, overrideKey) => assignToClone(
+        modelValidation,
+        {
+            [overrideKey]: overrideKey === 'fieldOptions'
+                ? { ...modelValidation[overrideKey], ...overrideConfig[overrideKey] }
+                : overrideConfig[overrideKey],
+        },
+    );
+
+/**
+ * @param {Object} models Instance of d2.models
+ * @param {} model
+ * @param {Object} fieldOverrides Contains the overrideConfig for all fields that will be overridden
+ * @return {Object}
+ */
+const mergeOverridesIntoModelValidation = (models, fieldOverrides) =>
+    field => {
+        const overrideConfig = fieldOverrides[field.name];
+        const isOverridden = !!overrideConfig;
+        const fieldType = isOverridden && overrideConfig.type
+            ? overrideConfig.type
+            : typeToFieldMap.get(field.type);
+
+        const modelValidationWithOverrides = isOverridden
+            ? Object.keys(overrideConfig)
+                .reduce(overrideModelValidationKey(overrideConfig), field)
+            : field
+        ;
+
+        return assignToClone(
+            modelValidationWithOverrides,
+            { type: fieldType },
+        );
+    }
 
 class FormFieldsForModel {
-    constructor(models, FIELDS_TO_IGNORE_ON_DISPLAY = fieldNamesToIgnoreOnDisplay) {
+    constructor(models, fieldNamesToIgnoreOnDisplay = FIELDS_TO_IGNORE_ON_DISPLAY) {
         if (!models) {
             log.warn('Warning: `models` passed to FormFieldsForModel is undefined, therefore async select boxes ' +
                 'and references fields might not work.');
         }
 
-        this.fieldNamesToIgnoreOnDisplay = FIELDS_TO_IGNORE_ON_DISPLAY;
+        this.fieldNamesToIgnoreOnDisplay = fieldNamesToIgnoreOnDisplay;
         this.fieldOrder = [];
         this.models = models;
     }
@@ -20,69 +143,55 @@ class FormFieldsForModel {
         this.fieldOrder = fieldNames || [];
     }
 
-    getFormFieldsForModel(model, fieldOverrides = {}, customFieldOrderName) {
+    checkForInvalidModel(model) {
         if (!(model && model.modelDefinition && model.modelDefinition.modelValidations)) {
             throw new TypeError('Passed model does not seem to adhere to the d2 model structure ' +
                 '(model.modelDefinition.modelValidations is not available)');
         }
+    }
 
-        const removeFieldsThatShouldNotBeDisplayed = modelValidation => this.fieldNamesToIgnoreOnDisplay.indexOf(modelValidation.fieldName) === -1;
-        const onlyUsableFieldTypes = modelValidation => typeToFieldMap.get(modelValidation.type);
-        const onlyWritableProperties = modelValidation => modelValidation.writable;
-        const onlyPersistedProperties = modelValidation => modelValidation.persisted;
-        const toArrayOfFieldConfigurations = (fieldName) => {
-            const modelValidationForField = model.modelDefinition.modelValidations[fieldName];
-            // TODO: This is a horrible horrible hack that has to go... As soon as the API is fixed!
-            const fieldConfig = Object.create(Object.assign(modelValidationForField, fieldName === 'orgUnitLevel' ? { persisted: true, required: true } : {}));
-            // const fieldConfig = Object.create(modelValidationForField);
+    getRulesForModel(model, fieldOverrides) {
+        return addNameToFieldConfig(model.modelDefinition.modelValidations)
+            .filter(field => every(
+                [
+                    isFieldWritable(field),
+                    isFieldPersisted(field),
+                    shouldFieldBeDisplayed(this.fieldNamesToIgnoreOnDisplay, field),
+                    onlyUsableFieldTypes(field),
+                ],
+                Boolean,
+            ))
+            .map(mergeOverridesIntoModelValidation(this.models, fieldOverrides))
+        ;
+    }
 
-            fieldConfig.name = fieldName;
-            fieldConfig.fieldOptions = {
-                labelText: camelCaseToUnderscores(fieldName),
-            };
+    getFormFieldRulesForModel(model, fieldOverrides) {
+        this.checkForInvalidModel(model);
 
-            return fieldConfig;
-        };
+        return this
+            .getRulesForModel(model, fieldOverrides)
+            .filter(identity)
+            .reduce(addToNamedCollection, {})
+        ;
+    }
 
-        const fieldInstances = Object.keys(model.modelDefinition.modelValidations)
-            .map(toArrayOfFieldConfigurations)
-            .filter(onlyWritableProperties)
-            .filter(onlyPersistedProperties)
-            .filter(removeFieldsThatShouldNotBeDisplayed)
-            .filter(onlyUsableFieldTypes)
-            .map(modelValidation => getFieldClassInstance.bind(this)(modelValidation, model.modelDefinition)) // eslint-disable-line no-use-before-define
-            .filter(field => field);
+    getFormFieldsForModel(model, fieldOverrides = {}, customFieldOrderName) {
+        this.checkForInvalidModel(model);
+
+        const fieldInstances = this
+            .getRulesForModel(model, fieldOverrides)
+            .map(createFieldConfig(model.modelDefinition, this.models, customFieldOrderName))
+            .filter(identity)
+        ;
 
         if (!this.fieldOrder || !this.fieldOrder.length) {
             return fieldInstances;
         }
 
         return fieldInstances
-                .filter(field => this.fieldOrder.indexOf(field.name) !== -1)
-                .sort((left, right) => this.fieldOrder.indexOf(left.name) > this.fieldOrder.indexOf(right.name) ? 1 : -1);
-
-        function getFieldClassInstance(modelValidation, modelDefinition) {
-            const overrideConfig = fieldOverrides[modelValidation.name];
-            const isOverridden = !!overrideConfig;
-            let fieldType = typeToFieldMap.get(modelValidation.type);
-
-            if (isOverridden) {
-                if (overrideConfig.type) {
-                    fieldType = overrideConfig.type;
-                }
-
-                Object.keys(overrideConfig)
-                    .forEach((key) => {
-                        if (key === 'fieldOptions') {
-                            modelValidation[key] = Object.assign({}, modelValidation[key], overrideConfig[key]);
-                        } else {
-                            modelValidation[key] = overrideConfig[key];
-                        }
-                    });
-            }
-            modelValidation.type = fieldType;
-            return createFieldConfig(modelValidation, modelDefinition, this.models, customFieldOrderName);
-        }
+            .filter(field => this.fieldOrder.indexOf(field.name) !== -1)
+            .sort((left, right) => this.fieldOrder.indexOf(left.name) > this.fieldOrder.indexOf(right.name) ? 1 : -1)
+        ;
     }
 }
 
