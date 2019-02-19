@@ -297,6 +297,7 @@ const fieldOrderByName = new Map([
         'formName',
         'code',
         'description',
+        'fieldMask',
         'optionSet',
         'valueType',
         'aggregationType',
