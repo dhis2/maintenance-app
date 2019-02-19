@@ -20,7 +20,7 @@ const connectEditForm = compose(
 );
 
 const EnrollmentDetailsForm = connectEditForm(
-    createFormFor(program$, 'program', enrollmentFields, true, 'enrollment')
+    createFormFor(program$, 'program', enrollmentFields, false, 'enrollment')
 );
 
 const EnrollmentDetails = props => (

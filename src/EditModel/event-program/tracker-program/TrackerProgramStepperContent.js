@@ -35,9 +35,7 @@ const stepperConfig = () => {
                 createFormFor(program$, 'program', trackerDetailsFields, true, 'trackerProgram'),
             ),
         ),
-        Enrollment: EnrollmentDetails,/*connectEditForm(
-            wrapInPaper(createFormFor(program$, 'program', enrollmentFields, true, 'enrollment')),
-        ), */
+        Enrollment: EnrollmentDetails,
         AssignAttributes,
         ProgramStage,
         EditDataEntryForm,
