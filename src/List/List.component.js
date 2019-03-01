@@ -39,6 +39,10 @@ import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { connect } from 'react-redux';
 import { openColumnsDialog } from './columns/actions';
 import ColumnConfigDialog from './columns/ColumnConfigDialog';
+import ContextMenuHeader from './ContextMenuHeader'
+import ListDialogs from './ListDialogs'
+import { openDialog } from '../dialog/actions';
+import * as DIALOGTYPES from '../dialog/types';
 
 const styles = {
     dataTableWrap: {
@@ -176,6 +180,7 @@ class List extends Component {
                     return; // Received value is not iterable or not correct model, keep waiting
                 }
                 listActions.hideDetailsBox();
+                console.log(listStoreValue)
                 this.setState({
                     dataRows: listStoreValue.list,
                     pager: listStoreValue.pager,
@@ -183,6 +188,7 @@ class List extends Component {
                     filters: listStoreValue.filters,
                     isLoading: false,
                     searchString: listStoreValue.searchString,
+                    modelDefinition: listStoreValue.modelDefinition,
                 });
             });
 
@@ -413,6 +419,31 @@ class List extends Component {
             </div>
         );
     }
+
+    renderContextMenuHeader() {
+        const { modelDefinition } = this.state;
+        const modelEndpoint = modelDefinition.apiEndpoint;
+        console.log(modelEndpoint)
+        const queryParamFilters = modelDefinition.filters.getQueryFilterValues();
+        const downloadObjectProps = {
+            modelEndpoint,
+            queryParamFilters
+        }
+        const actions = [
+            {
+                title: this.getTranslation('manage_columns'),
+                icon: 'view_column',
+                action: this.props.openColumnsDialog
+            },
+            {
+                title: this.getTranslation('download'),
+                icon: 'get_app',
+                action: () => this.props.openDialog(DIALOGTYPES.DOWNLOAD_OBJECT, downloadObjectProps)
+            },
+        ]
+        return <ContextMenuHeader actions={actions} />
+    }
+
     render() {
         const currentlyShown = calculatePageValue(this.state.pager);
 
@@ -578,7 +609,7 @@ class List extends Component {
                                         contextMenuIcons={contextMenuIcons}
                                         primaryAction={primaryAction}
                                         isContextActionAllowed={this.isContextActionAllowed}
-                                        contextMenuHeader={ConfigureColumnButton}
+                                        contextMenuHeader={this.renderContextMenuHeader()}
                                     />)
                                     : <div>{this.getTranslation('no_results_found')}</div>}
                             </div>
@@ -622,6 +653,7 @@ class List extends Component {
                 />
                 {this.state.predictorDialog && <PredictorDialog />}
                 <ColumnConfigDialog modelType={this.props.params.modelType} />
+                <ListDialogs modelType={this.props.params.modelType}/>
             </div>
         );
     }
@@ -639,7 +671,8 @@ List.contextTypes = {
 };
 
 const mapDispatchToProps = {
-    openColumnsDialog
+    openColumnsDialog,
+    openDialog
 }
 
 export default connect(null, mapDispatchToProps)(withAuth(List));
