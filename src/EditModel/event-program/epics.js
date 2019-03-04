@@ -44,6 +44,7 @@ import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
 import dataEntryFormEpics from './data-entry-form/epics';
 import trackerProgramEpics from './tracker-program/epics';
 import { createModelToEditEpic, createModelToEditProgramStageEpic } from '../epicHelpers';
+import getMissingValuesForModelName from '../../forms/getMissingValuesForModelName';
 
 import showSnackBarMessageEpic from '../../Snackbar/epics';
 import { notifyUser } from '../actions';
@@ -150,20 +151,21 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         'user[id,name]',
     ].join(',');
 
+    // Tomcat 8.5 does not allow unencoded brackets in querystrings. By passing the query params
+    // as an object to d2 it will url encode all params and escape the brackets
+    const queryParams = {
+        fields: ':owner,displayName',
+        'programs:filter': `id:eq:${programId}`,
+        'programs:fields': `${programFields},programStages[:owner,user[id,name],displayName,programStageDataElements[:owner,renderType,dataElement[id,displayName,valueType,optionSet,domainType]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
+        'dataElements:fields': 'id,displayName,valueType,optionSet',
+        'dataElements:filter': 'domainType:eq:TRACKER',
+        'trackedEntityAttributes:fields': 'id,displayName,valueType,optionSet,unique'
+    }
+
     return api$
         .flatMap((api) => {
             const metadata$ = Observable.fromPromise(
-                api.get(
-                    [
-                        'metadata',
-                        '?fields=:owner,displayName',
-                        `&programs:filter=id:eq:${programId}`,
-                        `&programs:fields=${programFields},programStages[:owner,user[id,name],displayName,programStageDataElements[:owner,renderType,dataElement[id,displayName,valueType,optionSet,domainType]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
-                        '&dataElements:fields=id,displayName,valueType,optionSet',
-                        '&dataElements:filter=domainType:eq:TRACKER',
-                        '&trackedEntityAttributes:fields=id,displayName,valueType,optionSet,unique',
-                    ].join(''),
-                ),
+                api.get('metadata', queryParams),
             );
             const renderingOptions$ = Observable.fromPromise(
                 api.get('staticConfiguration/renderingOptions'),
@@ -303,7 +305,7 @@ async function loadAdditionalTrackerMetadata(loadedMetadata) {
  * Checks the program for elements that have programStageDataElements with
  * domainType=AGGREGATE, and gives the user a notification and the ability
  * to remove these automatically.
- * There should be a restriction server side, but this is helpful for 
+ * There should be a restriction server side, but this is helpful for
  * already affected instances.
  * @param {*} state the state of the eventProgram store
  */
@@ -403,38 +405,78 @@ const saveEventProgram = eventProgramStore
             .catch(err => Observable.of(saveEventProgramError(err))),
     );
 
+/**
+ * @param {Object} eventProgramStore d2-ui store
+ * @param {Object} d2 Instance of d2
+ * @return {Promise<eventProgramStore>} A promise that resolves eventProgramStore
+*/
+const checkProgramForRequiredValues = (eventProgramStore, d2) => {
+    const { program } = eventProgramStore;
+    const modelType = 'program';
+    const formFieldOrder = program.programType === 'WITH_REGISTRATION'
+        ? 'trackerProgram'
+        : 'eventProgram'
+    const missingFields = getMissingValuesForModelName(d2, modelType, formFieldOrder, program);
+
+    return { eventProgramStore, missingFields };
+}
+
+const createSaveEventProgramError$ = () => Observable.of(
+    saveEventProgramError({
+        message: 'required_values_missing',
+        translate: true,
+    }),
+);
+
+const createSaveEventProgramSuccess$ = () => Observable
+    .of(saveEventProgramSuccess())
+    .concat(
+        Observable
+            .of(notifyUser({message: 'no_changes_to_be_saved', translate: true}))
+            .do(() => goToAndScrollUp('/list/programSection/program'))
+    )
+;
+
 export const programModelSave = action$ =>
     action$
-    
         .ofType(EVENT_PROGRAM_SAVE)
         .flatMapTo(eventProgramStore.take(1))
-        .flatMap((eventProgramStore) => {
-            if (isStoreStateDirty(eventProgramStore)) {
-                return saveEventProgram;
-            }
-            const successObs = Observable.of(saveEventProgramSuccess());
-            return successObs.concat(Observable.of(notifyUser({message: 'no_changes_to_be_saved', translate: true})).do(() =>
-                goToAndScrollUp('/list/programSection/program'),
-            ));
-        }).catch(e => console.log(e));
+
+        // get missing fields
+        .combineLatest(d2$)
+        .map(([ eventProgramStore, d2 ]) => checkProgramForRequiredValues(eventProgramStore, d2))
+
+        // determine next action
+        .switchMap(({ eventProgramStore, missingFields }) => (
+            missingFields.length
+                ? createSaveEventProgramError$()
+
+            : isStoreStateDirty(eventProgramStore)
+                ? saveEventProgram
+
+            : createSaveEventProgramSuccess$()
+        ))
+
+        // handle errors
+        .catch(e => console.log(e));
 
 export const programModelSaveResponses = action$ =>
     Observable.merge(
         action$.ofType(EVENT_PROGRAM_SAVE_SUCCESS).mapTo(notifyUser({message: 'success', translate: true})),
         action$.ofType(EVENT_PROGRAM_SAVE_ERROR).map((action) => {
-            const getFirstErrorMessageFromAction = compose(
-                get('message'),
+            const getFirstErrorFromAction = compose(
                 first,
                 flatten,
                 values,
                 getOr([], 'errors'),
                 first,
             );
-            const firstErrorMessage = getFirstErrorMessageFromAction(
-                action.payload,
-            ) || action.payload.message;
 
-            return notifyUser({ message: firstErrorMessage, translate: false });
+            const firstErrorMessage = getFirstErrorFromAction(action.payload) || action.payload;
+            const message = firstErrorMessage.message;
+            const translate = firstErrorMessage.translate;
+
+            return notifyUser({ message, translate });
         }),
     );
 
