@@ -43,9 +43,7 @@ export default class DownloadObjectDialog extends Component {
         this.setState({ [prop]: value });
     };
 
-    handleChangeFormat = (evt, index, value) => {};
-
-    handleDownload = () => {
+    getDownloadUrl() {
         const { format, compression } = this.state;
         const { queryParamFilters, pluralName } = this.props;
 
@@ -58,11 +56,10 @@ export default class DownloadObjectDialog extends Component {
 
         let url = `${
             this.metadataEndpoint
-        }.${format}${compressionStr}?${pluralName}=true${filtersStr}`;
+        }.${format}${compressionStr}?download=true&${pluralName}=true${filtersStr}`;
 
-        window.location = url;
-        this.props.defaultCloseDialog();
-    };
+        return url;
+    }
 
     renderForm() {
         return (
@@ -115,11 +112,13 @@ export default class DownloadObjectDialog extends Component {
                 primary={true}
                 onClick={this.props.defaultCloseDialog}
             />,
-            <FlatButton
-                label={this.t('download')}
-                primary={true}
-                onClick={this.handleDownload}
-            />,
+            <a download="test" href={this.getDownloadUrl()}>
+                <FlatButton
+                    label={this.t('download')}
+                    primary={true}
+                    onClick={this.props.defaultCloseDialog}
+                />
+            </a>,
         ];
         return (
             <Dialog
