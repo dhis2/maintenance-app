@@ -424,8 +424,10 @@ class List extends Component {
         console.log(modelDefinition)
         const queryParamFilters = modelDefinition.filters.getQueryFilterValues();
         const downloadObjectProps = {
+            name: modelDefinition.name,
             pluralName: modelDefinition.plural,
-            queryParamFilters
+            queryParamFilters,
+            objectCount: this.state.pager.total
         }
         const actions = [
             {
@@ -567,11 +569,6 @@ class List extends Component {
             }
         };
 
-        const ConfigureColumnButton = <IconButton onClick={() => this.props.openColumnsDialog(this.props.params.modelType)}>
-                <FontIcon color="gray" className="material-icons">
-                    settings
-                </FontIcon>
-            </IconButton>;
         return (
             <div>
                 <div>
@@ -650,7 +647,6 @@ class List extends Component {
                     onRequestClose={this.closeDataElementOperandDialog}
                 />
                 {this.state.predictorDialog && <PredictorDialog />}
-                <ColumnConfigDialog modelType={this.props.params.modelType} />
             </div>
         );
     }

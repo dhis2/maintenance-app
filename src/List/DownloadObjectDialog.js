@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
 const formats = {
     json: 'JSON',
@@ -20,7 +21,7 @@ const compressions = {
 export default class DownloadObjectDialog extends Component {
     static propTypes = {
         queryParamFilters: PropTypes.array,
-        defaultCloseDialog: PropTypes.func
+        defaultCloseDialog: PropTypes.func,
     };
 
     static contextTypes = {
@@ -47,18 +48,17 @@ export default class DownloadObjectDialog extends Component {
     handleDownload = () => {
         const { format, compression } = this.state;
         const { queryParamFilters, pluralName } = this.props;
-        const paging = false;
 
         const compressionStr = compression !== 'none' ? `.${compression}` : '';
 
         const filtersStr =
             queryParamFilters.length > 0
-                ? `&filter=${queryParamFilters.join('&')}`
+                ? `&filter=${queryParamFilters.join('&filter=')}`
                 : '';
 
         let url = `${
             this.metadataEndpoint
-        }.${format}${compressionStr}?${pluralName}=true&paging=${paging}${filtersStr}`;
+        }.${format}${compressionStr}?${pluralName}=true${filtersStr}`;
 
         window.location = url;
         this.props.defaultCloseDialog();
@@ -97,6 +97,17 @@ export default class DownloadObjectDialog extends Component {
         );
     }
 
+    renderDownloadCount() {
+        const { objectCount, name, pluralName } = this.props;
+        let displayName = objectCount !== 1 ? pluralName : name;
+        const modelTypeStr = this.t(camelCaseToUnderscores(displayName));
+
+        const str = this.t('the_download_contains_$$total$$_$$modelType$$', {
+            total: objectCount,
+            modelType: modelTypeStr,
+        });
+        return <p>{str}.</p>;
+    }
     render() {
         const actions = [
             <FlatButton
@@ -118,6 +129,7 @@ export default class DownloadObjectDialog extends Component {
                 onRequestClose={this.props.defaultCloseDialog}
             >
                 {this.renderForm()}
+                {this.renderDownloadCount()}
             </Dialog>
         );
     }

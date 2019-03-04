@@ -11,7 +11,7 @@ const dialog = (state = initialState, action) => {
             return {
                 ...state,
                 dialogType: action.payload.dialogType,
-                dialogProps: action.payload.dialogprops,
+                dialogProps: action.payload.dialogProps,
             };
         }
 
