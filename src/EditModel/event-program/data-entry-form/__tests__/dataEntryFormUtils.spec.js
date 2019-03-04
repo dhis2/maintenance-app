@@ -36,7 +36,7 @@ describe('dataEntryFormUtils', () => {
 
         test('it should work with elements', () => {
             const dataEntryForm = initialHTML;
-            const { outHtml } = utils.processFormData(
+            const { usedIds, outHtml } = utils.processFormData(
                 dataEntryForm,
                 elements,
                 utils.elementPatterns.combinedIdPattern
