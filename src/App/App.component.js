@@ -94,7 +94,8 @@ class App extends AppWithD2 {
                         </SinglePanelLayout>
                     )}
                     <SnackbarContainer />
-                    <DialogRouter />
+                    <DialogRouter groupName={this.props.params.groupName}
+                        modelType={this.props.params.modelType} />
                 </div>
             </Provider>
         );

@@ -6,7 +6,7 @@ import eventProgramReducer from './EditModel/event-program/reducers';
 import eventProgramEpics from './EditModel/event-program/epics';
 import configurableColumnsEpics from './List/columns/epics';
 import configurableColumnsReducer from './List/columns/reducers';
-import dialogReducer from './dialog/reducer';
+import dialogReducer from './Dialog/reducer';
 
 const epics = combineEpics(eventProgramEpics, configurableColumnsEpics);
 const middlewares = [createEpicMiddleware(epics)];

@@ -40,6 +40,33 @@ export const loadAllColumnsPromise = async d2 => {
     };
 };
 
+const getOrCreateNamespace = async (d2) => {
+    let namespace;
+    try {
+        namespace = await d2.currentUser.dataStore.get(
+            DATASTORE_NAMESPACE
+        );
+    } catch (e) {
+        if (e.httpStatusCode === 404) {
+            //this is fine, we just need to create it
+            try {
+                namespace = await d2.currentUser.dataStore.create(
+                    DATASTORE_NAMESPACE
+                );
+            } catch (e) {
+                //actual error
+                logger.error('Failed to create new namespace!', e);
+                throw e;
+            }
+        } else {
+            //Some other actual error
+            logger.error(e);
+            throw e;
+        }
+    }
+    return namespace;
+}
+
 export const loadColumnsForAllModeltypes = action$ =>
     action$
         .ofType(configurableColumnsLoadTypes.request)
@@ -50,44 +77,18 @@ const editColumnsForModel = (action$, store) =>
     action$
         .ofType(setColumnsTypes.request)
         .combineLatest(d2$)
-        .switchMap(async ([action, d2]) => {
-            let namespace;
-            try {
-                namespace = await d2.currentUser.dataStore.get(
-                    DATASTORE_NAMESPACE
-                );
-            } catch (e) {
-                if (e.httpStatusCode === 404) {
-                    //this is fine, we just need to create it
-                    try {
-                        namespace = await d2.currentUser.dataStore.create(
-                            DATASTORE_NAMESPACE
-                        );
-                    } catch (e) {
-                        //actual error
-                        logger.error('Failed to create new namespace!', e);
-                        return genericErrorMessage;
-                    }
-                } else {
-                    //Some other actual error
-                    logger.error(e);
-                    return genericErrorMessage;
-                }
-            }
-            try {
-                const cols = getAllModelTypes(store.getState());
-                const updatedColumns = setColumnsForModel(cols, action);
-                const ret = await namespace.set(COLUMN_KEY, updatedColumns);
-
-                return {
+        .switchMap(([action, d2]) =>
+            Observable.from(getOrCreateNamespace(d2))
+                .switchMap(namespace => {
+                    const cols = getAllModelTypes(store.getState());
+                    const updatedColumns = setColumnsForModel(cols, action);
+                    return namespace.set(COLUMN_KEY, updatedColumns);
+                }).switchMap(res => [{
                     type: setColumnsTypes.success,
                     payload: action.payload,
-                };
-            } catch (e) {
-                logger.error(e);
-                return genericErrorMessage;
-            }
-        });
+                }, { type: 'DIALOG_CLOSE' }]).catch(e => [genericErrorMessage])
+        )
+
 
 const updateListState = action$ =>
     action$.ofType(setColumnsTypes.success).switchMap(action => {

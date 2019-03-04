@@ -1,4 +1,5 @@
-
+import { openDialog, closeDialog } from '../../Dialog/actions';
+import { COLUMN_CONFIG } from '../../Dialog/types';
 
 export const CONFIGURABLE_COLUMNS_LOAD = 'CONFIGURABLE_COLUMNS_LOAD';
 export const CONFIGURABLE_COLUMNS_LOAD_SUCCESS = 'CONFIGURABLE_COLUMNS_LOAD_SUCCESS';
@@ -36,13 +37,6 @@ export const setColumnsForModel = (modelType, columns) => ({
     }
 })
 
-export const openColumnsDialog = (modelType) => ({
-    type: CONFIGURABLE_COLUMNS_DIALOG_OPEN,
-    payload: {
-        modelType
-    }
-});
+export const openColumnsDialog = () => openDialog(COLUMN_CONFIG)
 
-export const closeColumnsDialog = () => ({
-    type: CONFIGURABLE_COLUMNS_DIALOG_CLOSE,
-});
+export const closeColumnsDialog = closeDialog

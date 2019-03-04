@@ -20,6 +20,7 @@ const compressions = {
 export default class DownloadObjectDialog extends Component {
     static propTypes = {
         queryParamFilters: PropTypes.array,
+        defaultCloseDialog: PropTypes.func
     };
 
     static contextTypes = {
@@ -114,6 +115,7 @@ export default class DownloadObjectDialog extends Component {
                 open={this.props.open}
                 actions={actions}
                 title={this.t('download_metadata')}
+                onRequestClose={this.props.defaultCloseDialog}
             >
                 {this.renderForm()}
             </Dialog>

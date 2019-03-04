@@ -247,7 +247,6 @@ ColumnConfigDialog.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    open: getDialogOpen(state),
     userSelectedColumns: getColumnsForModelType(state, ownProps.modelType),
 });
 

@@ -40,8 +40,8 @@ import { connect } from 'react-redux';
 import { openColumnsDialog } from './columns/actions';
 import ColumnConfigDialog from './columns/ColumnConfigDialog';
 import ContextMenuHeader from './ContextMenuHeader'
-import { openDialog } from '../dialog/actions';
-import * as DIALOGTYPES from '../dialog/types';
+import { openDialog } from '../Dialog/actions';
+import * as DIALOGTYPES from '../Dialog/types';
 
 const styles = {
     dataTableWrap: {
