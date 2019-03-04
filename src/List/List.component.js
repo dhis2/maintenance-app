@@ -40,7 +40,6 @@ import { connect } from 'react-redux';
 import { openColumnsDialog } from './columns/actions';
 import ColumnConfigDialog from './columns/ColumnConfigDialog';
 import ContextMenuHeader from './ContextMenuHeader'
-import ListDialogs from './ListDialogs'
 import { openDialog } from '../dialog/actions';
 import * as DIALOGTYPES from '../dialog/types';
 
@@ -422,11 +421,10 @@ class List extends Component {
 
     renderContextMenuHeader() {
         const { modelDefinition } = this.state;
-        const modelEndpoint = modelDefinition.apiEndpoint;
-        console.log(modelEndpoint)
+        console.log(modelDefinition)
         const queryParamFilters = modelDefinition.filters.getQueryFilterValues();
         const downloadObjectProps = {
-            modelEndpoint,
+            pluralName: modelDefinition.plural,
             queryParamFilters
         }
         const actions = [
@@ -653,7 +651,6 @@ class List extends Component {
                 />
                 {this.state.predictorDialog && <PredictorDialog />}
                 <ColumnConfigDialog modelType={this.props.params.modelType} />
-                <ListDialogs modelType={this.props.params.modelType}/>
             </div>
         );
     }

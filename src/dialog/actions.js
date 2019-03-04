@@ -10,9 +10,9 @@ export const DIALOG_CLOSE = 'DIALOG_CLOSE';
  * @return {object}             Dialog action
  */
 
-export const openDialog = (dialogType, dialogprops) =>
+export const openDialog = (dialogType, dialogProps) =>
     actionCreator(DIALOG_OPEN)({
-        dialogprops: { ...dialogprops },
+        dialogProps,
         dialogType,
     });
 

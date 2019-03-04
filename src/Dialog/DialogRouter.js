@@ -1,34 +1,29 @@
 import React, { Component } from 'react';
-import DownloadObjectDialog from './DownloadObjectDialog';
 import { connect } from 'react-redux';
-import {
-    getDialogType,
-    getDialogProps,
-    getDialogIsOpen,
-} from '../dialog/selectors';
-import { closeDialog } from '../dialog/actions';
-import * as DIALOGTYPES from '../dialog/types';
+import { getDialogType, getDialogProps, getDialogIsOpen } from './selectors';
+import { closeDialog } from './actions';
+import * as DIALOGTYPES from './types';
+import DownloadObjectDialog from '../List/DownloadObjectDialog';
+import ColumnConfigDialog from '../List/columns/ColumnConfigDialog';
 
 const DialogComponents = {
     [DIALOGTYPES.DOWNLOAD_OBJECT]: DownloadObjectDialog,
+    [DIALOGTYPES.COLUMN_CONFIG]: ColumnConfigDialog,
 };
 
-export class ListDialogs extends Component {
+export class DialogRouter extends Component {
     state = {
         openDialog: null,
     };
 
     render() {
-        const { open, dialogType, dialogProps } = this.props;
+        const { open, dialogType, dialogProps, ...rest } = this.props;
         if (!open) {
             return null;
         }
         const DialogType = DialogComponents[dialogType];
         return DialogType ? (
-            <DialogType
-                {...{ ...this.props, ...dialogProps }}
-                open={true}
-            />
+            <DialogType {...{ ...rest, ...dialogProps }} open={true} />
         ) : null;
     }
 }
@@ -46,4 +41,4 @@ const mapDispatchToProps = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ListDialogs);
+)(DialogRouter);

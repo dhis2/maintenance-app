@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import listStore from './list.store';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
@@ -20,7 +19,7 @@ const compressions = {
 
 export default class DownloadObjectDialog extends Component {
     static propTypes = {
-        modelType: PropTypes.string,
+        queryParamFilters: PropTypes.array,
     };
 
     static contextTypes = {
@@ -35,6 +34,7 @@ export default class DownloadObjectDialog extends Component {
             compression: 'zip',
         };
         this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+        this.metadataEndpoint = `${context.d2.Api.getApi().baseUrl}/metadata`;
     }
 
     handleChange = (prop, evt, index, value) => {
@@ -45,18 +45,22 @@ export default class DownloadObjectDialog extends Component {
 
     handleDownload = () => {
         const { format, compression } = this.state;
-        // TODO: dont use modelEndpoint, use /metadata
-        // Need a solid way to get correct endpoint
-        const { modelEndpoint, queryParamFilters } = this.props;
-        const compressionStr =
-            compression && format !== 'csv' ? `.${compression}` : '';
+        const { queryParamFilters, pluralName } = this.props;
+        const paging = false;
 
-        const filtersStr = queryParamFilters.length > 0 ? `&filter=${queryParamFilters.join('&')}` : '';
+        const compressionStr = compression !== 'none' ? `.${compression}` : '';
 
-        let url = `${modelEndpoint}.${format}${compressionStr}?paging=false${filtersStr}`;
+        const filtersStr =
+            queryParamFilters.length > 0
+                ? `&filter=${queryParamFilters.join('&')}`
+                : '';
+
+        let url = `${
+            this.metadataEndpoint
+        }.${format}${compressionStr}?${pluralName}=true&paging=${paging}${filtersStr}`;
 
         window.location = url;
-        this.props.defaultCloseDialog()
+        this.props.defaultCloseDialog();
     };
 
     renderForm() {
@@ -71,6 +75,7 @@ export default class DownloadObjectDialog extends Component {
                         <MenuItem
                             value={format}
                             primaryText={formats[format]}
+                            key={format}
                         />
                     ))}
                 </SelectField>
@@ -83,6 +88,7 @@ export default class DownloadObjectDialog extends Component {
                         <MenuItem
                             value={compr}
                             primaryText={compressions[compr]}
+                            key={compr}
                         />
                     ))}
                 </SelectField>
@@ -110,7 +116,6 @@ export default class DownloadObjectDialog extends Component {
                 title={this.t('download_metadata')}
             >
                 {this.renderForm()}
-                <FlatButton label="Download" onClick={this.handleDownload} />
             </Dialog>
         );
     }
