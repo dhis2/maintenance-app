@@ -179,7 +179,6 @@ class List extends Component {
                     return; // Received value is not iterable or not correct model, keep waiting
                 }
                 listActions.hideDetailsBox();
-                console.log(listStoreValue)
                 this.setState({
                     dataRows: listStoreValue.list,
                     pager: listStoreValue.pager,
@@ -421,7 +420,6 @@ class List extends Component {
 
     renderContextMenuHeader() {
         const { modelDefinition } = this.state;
-        console.log(modelDefinition)
         const queryParamFilters = modelDefinition.filters.getQueryFilterValues();
         const downloadObjectProps = {
             name: modelDefinition.name,

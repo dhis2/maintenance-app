@@ -21,7 +21,6 @@ export class DialogRouter extends Component {
         if (!open) {
             return null;
         }
-        console.log(dialogProps)
         const DialogType = DialogComponents[dialogType];
         return DialogType ? (
             <DialogType {...{ ...rest, ...dialogProps }} open={true} />
