@@ -23,7 +23,6 @@ export default Store.create({
                     searchString: this.state ? this.state.searchString : '',
                     modelType: modelCollection.modelDefinition.name,
                     modelDefinition: modelCollection.modelDefinition,
-                    modelCollection,
                 });
             });
         return this;
