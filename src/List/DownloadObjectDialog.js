@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Checkbox from 'material-ui/Checkbox';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
 const formats = {
@@ -16,6 +17,18 @@ const compressions = {
     zip: 'Zip',
     gz: 'Gzip',
     none: 'Uncompressed',
+};
+
+const styles = {
+    dialog: {
+        width: '45%',
+    },
+    checkbox: {
+        marginTop: '20px',
+    },
+    downloadCount: {
+        marginTop: 0,
+    },
 };
 
 export default class DownloadObjectDialog extends Component {
@@ -34,6 +47,7 @@ export default class DownloadObjectDialog extends Component {
         this.state = {
             format: 'json',
             compression: 'zip',
+            skipSharing: false,
         };
         this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
         this.metadataEndpoint = `${context.d2.Api.getApi().baseUrl}/metadata`;
@@ -44,7 +58,7 @@ export default class DownloadObjectDialog extends Component {
     };
 
     getDownloadUrl() {
-        const { format, compression } = this.state;
+        const { format, compression, skipSharing } = this.state;
         const { queryParamFilters, pluralName } = this.props;
 
         const compressionStr = compression !== 'none' ? `.${compression}` : '';
@@ -56,7 +70,7 @@ export default class DownloadObjectDialog extends Component {
 
         let url = `${
             this.metadataEndpoint
-        }.${format}${compressionStr}?download=true&${pluralName}=true${filtersStr}`;
+        }.${format}${compressionStr}?download=true&skipSharing=${skipSharing}&${pluralName}=true${filtersStr}`;
 
         return url;
     }
@@ -68,6 +82,7 @@ export default class DownloadObjectDialog extends Component {
                     value={this.state.format}
                     onChange={this.handleChange.bind(this, 'format')}
                     floatingLabelText={this.t('format')}
+                    fullWidth
                 >
                     {Object.keys(formats).map(format => (
                         <MenuItem
@@ -81,6 +96,7 @@ export default class DownloadObjectDialog extends Component {
                     value={this.state.compression}
                     onChange={this.handleChange.bind(this, 'compression')}
                     floatingLabelText={this.t('compression')}
+                    fullWidth
                 >
                     {Object.keys(compressions).map(compr => (
                         <MenuItem
@@ -90,6 +106,14 @@ export default class DownloadObjectDialog extends Component {
                         />
                     ))}
                 </SelectField>
+                <Checkbox
+                    label={this.t('with_sharing')}
+                    checked={!this.state.skipSharing}
+                    style={styles.checkbox}
+                    onCheck={(_, isChecked) =>
+                        this.setState({ skipSharing: !isChecked })
+                    }
+                />
             </div>
         );
     }
@@ -97,13 +121,16 @@ export default class DownloadObjectDialog extends Component {
     renderDownloadCount() {
         const { objectCount, name, pluralName } = this.props;
         let displayName = objectCount !== 1 ? pluralName : name;
-        const modelTypeStr = this.t(camelCaseToUnderscores(displayName));
+        const modelTypeStr = this.t(
+            camelCaseToUnderscores(displayName)
+        ).toLowerCase();
 
         const str = this.t('the_download_contains_$$total$$_$$modelType$$', {
             total: objectCount,
             modelType: modelTypeStr,
         });
-        return <p>{str}.</p>;
+
+        return <p style={styles.downloadCount}>{str}</p>;
     }
     render() {
         const actions = [
@@ -126,9 +153,10 @@ export default class DownloadObjectDialog extends Component {
                 actions={actions}
                 title={this.t('download_metadata')}
                 onRequestClose={this.props.defaultCloseDialog}
+                contentStyle={styles.dialog}
             >
-                {this.renderForm()}
                 {this.renderDownloadCount()}
+                {this.renderForm()}
             </Dialog>
         );
     }
