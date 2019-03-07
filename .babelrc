@@ -16,7 +16,10 @@
                 "src/*.js",
                 "src/**/*.js",
                 "config/*.js"
-            ]
+            ],
+            "plugins": [
+                "babel-plugin-dynamic-import-node"
+              ]
         }
     }
 }
