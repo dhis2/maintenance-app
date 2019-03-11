@@ -41,7 +41,7 @@ const webpackConfig = {
     performance: { hints: false },
     entry: {
         maintenance: './src/maintenance.js',
-        commons: ['material-ui', 'd2-utilizr'],
+        commons: ['babel-polyfill', 'material-ui', 'd2-utilizr'],
     },
     devtool: 'source-map',
     output: {
@@ -70,29 +70,13 @@ const webpackConfig = {
             {
                 test: /\.json$/,
                 loader: 'json-loader',
-            }
+            },
+            {
+                test: /\.(jpe|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
+                loader: 'file-loader'
+            },
         ],
     },
-
-    externals: [
-        {
-            'react': 'var React',
-            'react-dom': 'var ReactDOM',
-            'rx': 'var Rx',
-            'react-addons-transition-group': 'var React.addons.TransitionGroup',
-            'react-addons-create-fragment': 'var React.addons.createFragment',
-            'react-addons-update': 'var React.addons.update',
-            'react-addons-pure-render-mixin': 'var React.addons.PureRenderMixin',
-            'react-addons-shallow-compare': 'var React.addons.ShallowCompare',
-            'lodash': 'var _',
-            'lodash/fp': 'var fp',
-        },
-        /^react-addons/,
-        /^react-dom$/,
-        /^rx$/,
-        /^lodash$/,
-        /^lodash\/fp$/,
-    ],
 
     resolve: {
       alias: {
@@ -115,21 +99,6 @@ const webpackConfig = {
         }),
         new HTMLWebpackPlugin({
             template: './index.ejs',
-            vendorScripts: [
-                `${scriptPrefix}/dhis-web-core-resource/babel-polyfill/6.20.0/dist/polyfill${isDevBuild ? '' : '.min'}.js`,
-                `${scriptPrefix}/dhis-web-core-resource/react/15.4.2/react-with-touch-tap-plugin${isDevBuild ? '' : '.min'}.js`,
-                `${scriptPrefix}/dhis-web-core-resource/rxjs/4.1.0/rx.lite${isDevBuild ? '' : '.min'}.js`,
-                `${scriptPrefix}/dhis-web-core-resource/lodash/4.15.0/lodash${isDevBuild ? '' : '.min'}.js`,
-                `${scriptPrefix}/dhis-web-core-resource/lodash-functional/1.0.1/lodash-functional.js`,
-                [`${scriptPrefix}/dhis-web-core-resource/ckeditor/4.6.1/ckeditor.js`, 'defer async'],
-            ]
-                .map(script => {
-                    if (Array.isArray(script)) {
-                        return (`<script ${script[1]} src="${script[0]}"></script>`);
-                    }
-                    return (`<script src="${script}"></script>`);
-                })
-                .join("\n"),
         }),
         isDevBuild ? undefined : new webpack.optimize.UglifyJsPlugin({
             compress: {
@@ -148,6 +117,9 @@ const webpackConfig = {
         port: 8081,
         inline: true,
         compress: true,
+        watchOptions: {
+            aggregateTimeout: 2000,
+        },
         proxy: [
             {
                 context: [
@@ -167,15 +139,7 @@ const webpackConfig = {
                 target: 'http://localhost:8081/src',
                 bypass,
             },
-            {
-                path: '/polyfill.min.js',
-                target: 'http://localhost:8081/node_modules/babel-polyfill/dist',
-                bypass,
-            },
         ],
-        watchOptions: {
-            aggregateTimeout: 2000,
-        },
     },
 };
 

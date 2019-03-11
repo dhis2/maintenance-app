@@ -16,6 +16,9 @@ import { Provider } from 'react-redux';
 import store from '../store';
 import HeaderBar from "@dhis2/d2-ui-header-bar";
 
+import 'typeface-roboto';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+
 const sections$ = appState
     .map(state => ({
         sections: state.sideBar.mainSections,
