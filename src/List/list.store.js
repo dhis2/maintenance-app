@@ -22,6 +22,7 @@ export default Store.create({
                         : getFiltersForType(modelCollection.modelDefinition.name),
                     searchString: this.state ? this.state.searchString : '',
                     modelType: modelCollection.modelDefinition.name,
+                    modelDefinition: modelCollection.modelDefinition,
                 });
             });
         return this;

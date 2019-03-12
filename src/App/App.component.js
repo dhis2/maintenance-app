@@ -15,6 +15,7 @@ import appState, { setAppState } from './appStateStore';
 import { Provider } from 'react-redux';
 import store from '../store';
 import HeaderBar from "@dhis2/d2-ui-header-bar";
+import DialogRouter from '../Dialog/DialogRouter';
 
 import 'typeface-roboto';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
@@ -96,6 +97,8 @@ class App extends AppWithD2 {
                         </SinglePanelLayout>
                     )}
                     <SnackbarContainer />
+                    <DialogRouter groupName={this.props.params.groupName}
+                        modelType={this.props.params.modelType} />
                 </div>
             </Provider>
         );
