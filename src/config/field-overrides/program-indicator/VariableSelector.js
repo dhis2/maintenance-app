@@ -11,6 +11,8 @@ config.i18n.strings.add('tei_count');
 
 const programIndicatorVariables = [
     'event_date',
+    'creation_date',
+    'sync_date',
     'due_date',
     'incident_date',
     'current_date',
@@ -30,7 +32,7 @@ const additionalTrackerProgramsVariables = [
 
 const getProgramVariablesForProgramType = (programType) => {
     if (programType === 'WITH_REGISTRATION') {
-        return programIndicatorVariables.concat(additionalTrackerProgramsVariables);
+        return programIndicatorVariables.concat(additionalTrackerProgramsVariables).sort();
     }
 
     return programIndicatorVariables;
