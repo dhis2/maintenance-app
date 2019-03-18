@@ -56,7 +56,6 @@ const d2$ = Observable.fromPromise(getInstance());
 
 const withVariablePropsForProgramType = mapPropsStream(props$ => props$
     .mergeMap(( props ) => {
-        console.log(props)
         const variables = getProgramVariables(props);
 
         return d2$
