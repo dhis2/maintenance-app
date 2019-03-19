@@ -60,7 +60,7 @@ const styles = {
         whiteSpace: 'nowrap',
     },
 };
-function ProgramIndicatorExpression({ d2, onChange, status, model, value: formula = '', referenceProperty, style }) {
+function ProgramIndicatorExpression({ d2, onChange, status, model, value: formula = '', referenceProperty, style, type }) {
     const programType = getOr('WITHOUT_REGISTRATION', 'program.programType', model);
 
     const onFormulaChange = value => onChange({ target: { value } });
@@ -106,6 +106,9 @@ function ProgramIndicatorExpression({ d2, onChange, status, model, value: formul
                         label={d2.i18n.getTranslation('variables')}
                         programType={programType}
                         onSelect={onSelect}
+                        analyticsType={get('analyticsType', model)}
+                        aggregationType={get('aggregationType', model)}
+                        type={type}
                     />
                     <ConstantSelector
                         label={d2.i18n.getTranslation('constants')}

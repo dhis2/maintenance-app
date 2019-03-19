@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'lodash/fp';
 
@@ -41,15 +42,17 @@ const enhance = compose(
     }),
 );
 
+const EnhancedProgramIndicatorExpression = enhance(ProgramIndicatorExpression);
+
 export default new Map([
     ['analyticsPeriodBoundaries', {
         component: AnalyticsPeriodBoundaries,
     }],
     ['expression', {
-        component: enhance(ProgramIndicatorExpression),
+        component: (props) => <EnhancedProgramIndicatorExpression {...props} type="expression" />
     }],
     ['filter', {
-        component: enhance(ProgramIndicatorExpression),
+        component: (props) => <EnhancedProgramIndicatorExpression {...props} type="filter" />
     }],
     decimals,
 ]);
