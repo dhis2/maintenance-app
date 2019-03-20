@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { noop } from 'lodash/fp';
 import log from 'loglevel';
 import { Observable } from 'rxjs';
-import CKeditor from 'ckeditor';
 
 export default class CKEditor extends Component {
     constructor(props, context) {
