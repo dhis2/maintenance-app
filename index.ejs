@@ -19,7 +19,11 @@
 <body>
     <div id="app" class="app"></div>
 
+    <% if (process.env.NODE_ENV === 'production') { %>
     <script src="./vendor/ckeditor/ckeditor.js"></script>
+    <% } %> <% if (process.env.NODE_ENV !== 'production') { %>
+    <script src="./node_modules/ckeditor/ckeditor.js"></script>
+    <% } %>
     <%= htmlWebpackPlugin.options.serviceWorkerScript %>
 </body>
 </html>
