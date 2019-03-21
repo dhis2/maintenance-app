@@ -13,13 +13,14 @@
     "coverage": "npm test -- --coverage",
     "test": "jest",
     "test:watch": "npm test -- --watch",
-    "prebuild": "npm test",
-    "build": "rm -rf build && NODE_ENV=production webpack --progress && npm run manifest && cp package.json build/package.json",
-    "postbuild": "cp -r src/i18n icon.png ./build/",
+    "prebuild": "rm -rf build",
+    "build": "npm test && NODE_ENV=production webpack --progress && npm run manifest",
+    "postbuild": "cp -r src/i18n icon.png package.json ./build/ && yarn copy-ckeditor",
     "validate": "npm ls --depth 0",
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "lint": "eslint ./src",
-    "profile": "npm run start -- --profile"
+    "profile": "npm run start -- --profile",
+    "copy-ckeditor": "mkdir ./build/vendor && cp -r ./node_modules/ckeditor ./build/vendor"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -79,7 +80,7 @@
   "dependencies": {
     "@dhis2/d2-ui-header-bar": "^1.1.4",
     "@dhis2/d2-ui-sharing-dialog": "^1.0.12",
-    "ckeditor": "^4.11.3",
+    "ckeditor": "4.6.1",
     "d2": "30.0.4",
     "d2-ui": "29.0.30",
     "lodash": "^4.17.11",
