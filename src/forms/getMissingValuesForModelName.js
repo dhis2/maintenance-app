@@ -18,7 +18,15 @@ const createFieldRules = (d2, modelType, formName, fields) => {
         formFieldsManager.addFieldOverrideFor(fieldName, overrideConfig);
     }
 
-    return formFieldsManager.getFormFieldRulesForModel({ modelDefinition });
+    return formFieldsManager
+        .getFormFieldRulesForModel({ modelDefinition })
+        .map(fieldConfig => {
+            const labelTextTranslateionKey = fieldConfig.fieldOptions.labelText;
+            fieldConfig.labelText = d2.i18n.getTranslation(labelTextTranslateionKey);
+            return fieldConfig;
+        })
+        .reduce(addToNamedCollection, {})
+    ;
 };
 
 /**
@@ -30,7 +38,7 @@ const createFieldRules = (d2, modelType, formName, fields) => {
 const getMissingFields = (values, fields, fieldRules) => fields.reduce(
     (missingFields, field) =>
         !values[field] && fieldRules[field] && fieldRules[field].required
-            ? [ ...missingFields, field ]
+            ? [ ...missingFields, fieldRules[field].labelText || field ]
             : missingFields,
     [],
 );
@@ -52,6 +60,14 @@ const getMissingValuesForModelName = (d2, modelType, formName, values) => {
     const fieldRules = createFieldRules(d2, modelType, formName, fields);
     return getMissingFields(values, fields, fieldRules);
 }
+
+/**
+ * @param {Object} collection A collection to add the values to
+ * @param {{ name: string;  }[]} values An array containing objects with a name property
+ * @return {{ [name]: field }} A hash-map-like collection of the fields
+ */
+const addToNamedCollection = (collection, value) =>
+    ({ ...collection, [value.name]: value });
 
 export default getMissingValuesForModelName;
 export {
