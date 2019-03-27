@@ -21,8 +21,8 @@ const createFieldRules = (d2, modelType, formName, fields) => {
     return formFieldsManager
         .getFormFieldRulesForModel({ modelDefinition })
         .map(fieldConfig => {
-            const labelTextTranslateionKey = fieldConfig.fieldOptions.labelText;
-            fieldConfig.labelText = d2.i18n.getTranslation(labelTextTranslateionKey);
+            const labelTextTranslationKey = fieldConfig.fieldOptions.labelText;
+            fieldConfig.labelText = d2.i18n.getTranslation(labelTextTranslationKey);
             return fieldConfig;
         })
         .reduce(addToNamedCollection, {})
