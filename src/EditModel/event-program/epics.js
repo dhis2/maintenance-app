@@ -421,10 +421,16 @@ const checkProgramForRequiredValues = (eventProgramStore, d2) => {
     return { eventProgramStore, missingFields };
 }
 
-const createSaveEventProgramError$ = () => Observable.of(
+const createSaveEventProgramError$ = missingFields => Observable.of(
     saveEventProgramError({
-        message: 'required_values_missing',
+        message: missingFields.length === 1
+            ? 'required_value_missing'
+            : 'required_values_missing',
         translate: true,
+        variables: {
+            [missingFields.length > 1 ? 'FIELDS' : 'FIELD']:
+                missingFields.join(', '),
+        }
     }),
 );
 
@@ -449,7 +455,7 @@ export const programModelSave = action$ =>
         // determine next action
         .switchMap(({ eventProgramStore, missingFields }) => (
             missingFields.length
-                ? createSaveEventProgramError$()
+                ? createSaveEventProgramError$(missingFields)
 
             : isStoreStateDirty(eventProgramStore)
                 ? saveEventProgram
@@ -473,10 +479,8 @@ export const programModelSaveResponses = action$ =>
             );
 
 			const firstErrorMessage = getFirstErrorFromAction(action.payload) || action.payload;
-            const message = firstErrorMessage.message;
-            const translate = firstErrorMessage.translate;
 
-            return notifyUser({ message, translate });
+            return notifyUser(firstErrorMessage);
         }),
     );
 
