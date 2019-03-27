@@ -39,14 +39,6 @@ const addNameToFieldConfig = modelValidations =>
 ;
 
 /**
- * @param {Object} collection A collection to add the values to
- * @param {{ name: string;  }[]} values An array containing objects with a name property
- * @return {{ [name]: field }} A hash-map-like collection of the fields
- */
-const addToNamedCollection = (collection, value) =>
-    ({ ...collection, [value.name]: value });
-
-/**
  * @param [string[]] fieldNamesToIgnoreOnDisplay
  * @param {{ name: string;  }} field
  * @return {boolean}
@@ -171,7 +163,6 @@ class FormFieldsForModel {
         return this
             .getRulesForModel(model, fieldOverrides)
             .filter(identity)
-            .reduce(addToNamedCollection, {})
         ;
     }
 
