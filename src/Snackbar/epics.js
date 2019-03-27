@@ -17,7 +17,7 @@ const snackBarEpic = (action$) => {
                 .combineLatest(d2$, (payload, d2) => ({
                     ...payload,
                     translate: false,
-                    message: d2.i18n.getTranslation(payload.message),
+                    message: d2.i18n.getTranslation(payload.message, payload.variables),
                 })),
         )
         .map(payload => showSnackBarMessage(payload));

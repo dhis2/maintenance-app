@@ -11,12 +11,22 @@ const snackBarActionHandlerSelector = get('snackBar.onActionTouchTap');
 const snackBarActionTextSelector = get('snackBar.action');
 const snackBarActionAutoHideSelector = get('snackBar.autoHideDuration');
 const snackBarTranslate = get('snackBar.translate');
+const snackBarVariables = get('snackBar.variables');
 
 let SnackBar = (props, { d2 }) => (
     <Snackbar
         style={{ maxWidth: 'auto', zIndex: 5 }}
-        bodyStyle={{ maxWidth: 'auto' }}
-        message={props.translate ? d2.i18n.getTranslation(props.message) : props.message}
+        bodyStyle={{
+            maxWidth: 'auto',
+            height: 'auto',
+            lineHeight: '20px',
+            padding: '14px 24px',
+        }}
+        message={
+            props.translate 
+                ? d2.i18n.getTranslation(props.message, props.variables) 
+                : props.message
+        }
         action={props.action}
         autoHideDuration={props.autoHideDuration}
         open={!!props.message}
@@ -33,6 +43,7 @@ const mapStateToProps = state => (
         autoHideDuration: snackBarActionAutoHideSelector(state),
         actionHandler: snackBarActionHandlerSelector(state),
         translate: snackBarTranslate(state),
+        variables: snackBarVariables(state),
     }
 );
 
@@ -48,6 +59,7 @@ SnackBar.propTypes = {
     actionHandler: PropTypes.func,
     autoHideDuration: PropTypes.number,
     translate: PropTypes.bool,
+    variables: PropTypes.object,
     onRequestClose: PropTypes.func.isRequired,
 };
 

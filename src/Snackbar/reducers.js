@@ -19,6 +19,7 @@ export default function snackReducer(state = initialSnackState, action) {
             autoHideDuration,
             onActionTouchTap,
             translate,
+            variables,
         } = action.payload;
 
         return {
@@ -28,6 +29,7 @@ export default function snackReducer(state = initialSnackState, action) {
             autoHideDuration,
             onActionTouchTap,
             translate,
+            variables,
         };
     }
     case SNACK_BAR_MESSAGE_HIDE:
