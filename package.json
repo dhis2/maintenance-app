@@ -78,7 +78,7 @@
     "@dhis2/d2-ui-sharing-dialog": "^1.0.2",
     "babel-polyfill": "^6.13.0",
     "d2": "^29.1.3",
-    "d2-ui": "29.0.21",
+    "d2-ui": "29.0.31",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-15": "^1.0.0",
     "jest": "^21.2.1",
