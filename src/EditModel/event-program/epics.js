@@ -357,13 +357,15 @@ const checkProgramForRequiredValues = (eventProgramStore, d2) => {
 
 const createSaveEventProgramError$ = missingFields => Observable.of(
     saveEventProgramError({
-        message: missingFields.length === 1
-            ? 'required_value_missing'
-            : 'required_values_missing',
-        translate: true,
-        variables: {
-            [missingFields.length > 1 ? 'FIELDS' : 'FIELD']:
-                missingFields.join(', '),
+        data: {
+            message: missingFields.length === 1
+                ? 'required_value_missing'
+                : 'required_values_missing',
+            translate: true,
+            variables: {
+                [missingFields.length > 1 ? 'FIELDS' : 'FIELD']:
+                    missingFields.join(', '),
+            }
         }
     }),
 );
