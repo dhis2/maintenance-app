@@ -64,7 +64,7 @@ export default new Map([
                         const nextStart = Number(nextLegend.startValue);
 
                         // Same values are allowed, but currentEnd can not be bigger than nextStart
-                        return currentEnd < nextStart + 1;
+                        return currentEnd <= nextStart;
                     });
                 },
             },
