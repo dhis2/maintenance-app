@@ -817,4 +817,17 @@ export default new Map([
             }],
         },
     ]],
+    ['relationshipType', [
+        {
+            field: 'toFromName',
+            when: {
+                field: 'bidirectional',
+                operator: 'NOT_EQUALS',
+                value: true
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }],
+        },
+    ]],
 ]);
