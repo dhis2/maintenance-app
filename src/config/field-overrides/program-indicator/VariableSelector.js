@@ -37,6 +37,7 @@ const conditionalPIVariables = {
     enrollment_date: isEventProgram,
     enrollment_status: isEventProgram,
     event_count: overSome([isFilterType, isAggregationTypeNotCount]),
+    org_unit_count: isFilterType,
     incident_date: isEventProgram,
     program_stage_id: isAnalyticsTypeEnrollment,
     program_stage_name: isAnalyticsTypeEnrollment,
