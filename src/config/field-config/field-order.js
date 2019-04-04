@@ -231,6 +231,7 @@ const fieldOrderByName = new Map([
         'expiryDays',
     ]],
     ['eventProgramStage', [
+        'enableUserAssignment',
         'blockEntryForm',
         'featureType',
         'validationStrategy',
@@ -281,6 +282,7 @@ const fieldOrderByName = new Map([
         'autoGenerateEvent',
         'openAfterEnrollment',
         'reportDateToUse',
+        'enableUserAssignment',
         'blockEntryForm',
         'remindCompleted',
         'allowGenerateNextVisit',
