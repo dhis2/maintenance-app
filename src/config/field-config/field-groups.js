@@ -111,6 +111,7 @@ const fieldGroupsForModelType = new Map([
                     'name',
                     'shortName',
                     'code',
+                    'style',
                     'description',
                     'decimals',
                     'aggregationType',
