@@ -5,7 +5,7 @@ export default new Map([
         'validationStrategy',
         {
             required: true,
-            defaultValue: 'ON_COMPLETE',
+            defaultValue: 'ON_UPDATE_AND_INSERT',
         },
     ],
     [
