@@ -79,7 +79,7 @@
     "@dhis2/d2-ui-header-bar": "^1.1.4",
     "@dhis2/d2-ui-sharing-dialog": "^1.0.12",
     "d2": "30.0.4",
-    "d2-ui": "29.0.32",
+    "d2-ui": "29.0.33",
     "material-ui": "^0.17.0",
     "nyc": "10.1.2",
     "prop-types": "^15.6.0",

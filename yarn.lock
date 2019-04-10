@@ -2887,10 +2887,10 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@29.0.32:
-  version "29.0.32"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-29.0.32.tgz#5157c9fe6c66a5754820e12a4502445902362f1f"
-  integrity sha512-ODU7PUIPWVPjQTzy/p1baKVgMr7gTbAdFBos0f1KtzUx1r74VQEbWzFzb9soeTRexH8z4MqaPUqtDmrBVYX9Yw==
+d2-ui@29.0.33:
+  version "29.0.33"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-29.0.33.tgz#a66d9cc8c5f58bf9663f6680bd6346307b28c85b"
+  integrity sha512-sNTGr2qMBVF9vog3F50x16M8Gs2dXCljwy7YsHLjqix2oPvycZCHkMwGlUPa3hk+DlBQnpKFVFO5Qlq6dPvmaw==
 
 d2-utilizr@^0.2.15, d2-utilizr@^0.2.9:
   version "0.2.16"
