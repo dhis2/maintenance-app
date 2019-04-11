@@ -56,6 +56,11 @@ const styles = {
         boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
         cursor: 'pointer',
     },
+    unsetButton: {
+        backgroundColor: '#ccc',
+        color: 'black',
+        marginLeft: 20,
+    }
 };
 
 /**
@@ -122,6 +127,10 @@ export default class ColorPicker extends Component {
         this.props.updateStyleState({ color: val.hex });
     };
 
+    handleUnsetColor = () => {
+        this.props.updateStyleState({ color: '' })
+    }
+
     render() {
         const { mergedStyles, LoadablePicker, pickerProps } = this.getColorPickerProps();
 
@@ -133,6 +142,16 @@ export default class ColorPicker extends Component {
                 >
                     {this.props.color ||
                         this.context.d2.i18n.getTranslation('select_color')}
+                </Button>
+
+                <Button
+                    style={{
+                        ...styles.buttonColor,
+                        ...styles.unsetButton,
+                    }}
+                    onClick={this.handleUnsetColor}
+                >
+                    {this.context.d2.i18n.getTranslation('deselect_color')}
                 </Button>
                 {this.state.open && (
                     <div>
