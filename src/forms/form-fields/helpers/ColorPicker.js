@@ -80,13 +80,8 @@ function isColorDark(color) {
 }
 
 export default class ColorPicker extends Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = {
-            open: false,
-            color: props.color,
-        };
+    state = {
+        open: false,
     }
 
     getColorPickerProps = () => {
@@ -115,11 +110,11 @@ export default class ColorPicker extends Component {
     };
 
     handleOpenColor = () => {
-        this.setState({ ...this.state, open: !this.state.open });
+        this.setState({ open: !this.state.open });
     };
 
     handleCloseColor = () => {
-        this.setState({ ...this.state, open: false });
+        this.setState({ open: false });
     };
 
     handleColorChange = (val) => {
@@ -135,7 +130,7 @@ export default class ColorPicker extends Component {
                     style={mergedStyles.buttonColor}
                     onClick={this.handleOpenColor}
                 >
-                    {this.state.color ||
+                    {this.props.color ||
                         this.context.d2.i18n.getTranslation('select_color')}
                 </Button>
                 {this.state.open && (
