@@ -144,15 +144,17 @@ export default class ColorPicker extends Component {
                         this.context.d2.i18n.getTranslation('select_color')}
                 </Button>
 
-                <Button
-                    style={{
-                        ...styles.buttonColor,
-                        ...styles.unsetButton,
-                    }}
-                    onClick={this.handleUnsetColor}
-                >
-                    {this.context.d2.i18n.getTranslation('deselect_color')}
-                </Button>
+                {this.props.color &&
+                    <Button
+                        style={{
+                            ...styles.buttonColor,
+                            ...styles.unsetButton,
+                        }}
+                        onClick={this.handleUnsetColor}
+                    >
+                        {this.context.d2.i18n.getTranslation('deselect_color')}
+                    </Button>
+                }
                 {this.state.open && (
                     <div>
                         {/* eslint-disable jsx-a11y/no-static-element-interactions */}
