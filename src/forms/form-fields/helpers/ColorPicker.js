@@ -118,6 +118,7 @@ export default class ColorPicker extends Component {
     };
 
     handleColorChange = (val) => {
+        this.setState({ open: false });
         this.props.updateStyleState({ color: val.hex });
     };
 
