@@ -85,7 +85,7 @@ export default class ColorPicker extends Component {
     }
 
     getColorPickerProps = () => {
-        const { color } = this.props;
+        const color = this.props.color || '#ff9800'
         const isDark = isColorDark(color);
         const canChooseAnyColor = this.props.modelName === 'option';
         const LoadablePicker = canChooseAnyColor ? LoadableChromePicker : LoadableSwatchesPicker;
@@ -93,7 +93,7 @@ export default class ColorPicker extends Component {
             ...styles,
             buttonColor: {
                 ...styles.buttonColor,
-                backgroundColor: color || '#fffff',
+                backgroundColor: color,
                 color: isDark ? '#fff' : '#000',
             },
         };
