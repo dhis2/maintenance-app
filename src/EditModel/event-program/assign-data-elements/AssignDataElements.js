@@ -13,14 +13,6 @@ import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
 import TextField from 'material-ui/TextField/TextField';
 import pure from 'recompose/pure';
 import withState from 'recompose/withState';
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox/Checkbox';
 import Store from 'd2-ui/lib/store/Store';
 import {
@@ -28,6 +20,7 @@ import {
     removeDataElementsFromStage,
     editProgramStageDataElement,
 } from './actions';
+import { Table } from './Table';
 
 import programStore from '../eventProgramStore';
 import { withRouter } from 'react-router';
@@ -132,25 +125,31 @@ const ProgramStageDataElement = pure(
         const isCheckedForProp = getOr(false, __, programStageDataElement);
 
         return (
-            <TableRow>
-                <TableRowColumn title={programStageDataElement.dataElement.displayName}>
+            <Table.Row>
+                <Table.Cell
+                    title={programStageDataElement.dataElement.displayName}
+                    style={{
+                        maxWidth: 250,
+                        paddingLeft: 0,
+                    }}
+                >
                     {programStageDataElement.dataElement.displayName}
-                </TableRowColumn>
-                <TableRowColumn>
+                </Table.Cell>
+                <Table.Cell>
                     <Checkbox
                         checked={isCheckedForProp('compulsory')}
                         onClick={onChangeFlipBooleanForProperty('compulsory')}
                     />
-                </TableRowColumn>
-                <TableRowColumn>
+                </Table.Cell>
+                <Table.Cell>
                     <Checkbox
                         checked={isCheckedForProp('allowProvidedElsewhere')}
                         onClick={onChangeFlipBooleanForProperty(
                             'allowProvidedElsewhere'
                         )}
                     />
-                </TableRowColumn>
-                <TableRowColumn>
+                </Table.Cell>
+                <Table.Cell>
                     <Checkbox
                         checked={isCheckedForProp('displayInReports')}
                         checkedIcon={<Visibility />}
@@ -159,8 +158,8 @@ const ProgramStageDataElement = pure(
                             'displayInReports'
                         )}
                     />
-                </TableRowColumn>
-                <TableRowColumn>
+                </Table.Cell>
+                <Table.Cell>
                     {isDateValue
                         ? <Checkbox
                             checked={isCheckedForProp('allowFutureDate')}
@@ -169,32 +168,32 @@ const ProgramStageDataElement = pure(
                             )}
                         />
                         : null}
-                </TableRowColumn>
-                <TableRowColumn>
+                </Table.Cell>
+                <Table.Cell>
                         <Checkbox
                             checked={isCheckedForProp('skipSynchronization')}
                             onClick={onChangeFlipBooleanForProperty(
                                 'skipSynchronization',
                             )}
                         />
-                </TableRowColumn>
-                <TableRowColumn>
+                </Table.Cell>
+                <Table.Cell>
                     <RenderTypeSelectField
                         device={MOBILE}
                         target={programStageDataElement}
                         options={programStageDataElement.dataElement.renderTypeOptions}
                         changeHandler={onEditProgramStageDataElement}
                     />
-                </TableRowColumn>
-                <TableRowColumn>
+                </Table.Cell>
+                <Table.Cell style={{ paddingRight: 0 }}>
                     <RenderTypeSelectField
                         device={DESKTOP}
                         target={programStageDataElement}
                         options={programStageDataElement.dataElement.renderTypeOptions}
                         changeHandler={onEditProgramStageDataElement}
                     />
-                </TableRowColumn>
-            </TableRow>
+                </Table.Cell>
+            </Table.Row>
         );
     },
 );
@@ -306,39 +305,40 @@ function AssignDataElements(props, { d2 }) {
                     onRemoveItems={props.onRemoveItems}
                 />
             </div>
-            <Table>
-                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                    <TableRow>
-                        <TableHeaderColumn>
+            <Table style={{
+                borderSpacing: 0,
+            }}>
+                <Table.Head>
+                    <Table.Row>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('name')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('compulsory')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('allow_provided_elsewhere')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('display_in_reports')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('date_in_future')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('skip_synchronization')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('render_type_mobile')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('render_type_desktop')}
-                        </TableHeaderColumn>
-                        
-                    </TableRow>
-                </TableHeader>
-                <TableBody displayRowCheckbox={false}>
+                        </Table.CellHead>
+                    </Table.Row>
+                </Table.Head>
+                <Table.Body>
                     {tableRows}
-                </TableBody>
+                </Table.Body>
             </Table>
         </Paper>
     );
