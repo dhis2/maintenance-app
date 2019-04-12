@@ -20,14 +20,7 @@ import {
     removeDataElementsFromStage,
     editProgramStageDataElement,
 } from './actions';
-import {
-    Table,
-    THead,
-    TBody,
-    TRow,
-    TCellHead,
-    TCell,
-} from './Table';
+import { Table } from './Table';
 
 import programStore from '../eventProgramStore';
 import { withRouter } from 'react-router';
@@ -132,8 +125,8 @@ const ProgramStageDataElement = pure(
         const isCheckedForProp = getOr(false, __, programStageDataElement);
 
         return (
-            <TRow>
-                <TCell
+            <Table.Row>
+                <Table.Cell
                     title={programStageDataElement.dataElement.displayName}
                     style={{
                         maxWidth: 250,
@@ -141,22 +134,22 @@ const ProgramStageDataElement = pure(
                     }}
                 >
                     {programStageDataElement.dataElement.displayName}
-                </TCell>
-                <TCell>
+                </Table.Cell>
+                <Table.Cell>
                     <Checkbox
                         checked={isCheckedForProp('compulsory')}
                         onClick={onChangeFlipBooleanForProperty('compulsory')}
                     />
-                </TCell>
-                <TCell>
+                </Table.Cell>
+                <Table.Cell>
                     <Checkbox
                         checked={isCheckedForProp('allowProvidedElsewhere')}
                         onClick={onChangeFlipBooleanForProperty(
                             'allowProvidedElsewhere'
                         )}
                     />
-                </TCell>
-                <TCell>
+                </Table.Cell>
+                <Table.Cell>
                     <Checkbox
                         checked={isCheckedForProp('displayInReports')}
                         checkedIcon={<Visibility />}
@@ -165,8 +158,8 @@ const ProgramStageDataElement = pure(
                             'displayInReports'
                         )}
                     />
-                </TCell>
-                <TCell>
+                </Table.Cell>
+                <Table.Cell>
                     {isDateValue
                         ? <Checkbox
                             checked={isCheckedForProp('allowFutureDate')}
@@ -175,32 +168,32 @@ const ProgramStageDataElement = pure(
                             )}
                         />
                         : null}
-                </TCell>
-                <TCell>
+                </Table.Cell>
+                <Table.Cell>
                         <Checkbox
                             checked={isCheckedForProp('skipSynchronization')}
                             onClick={onChangeFlipBooleanForProperty(
                                 'skipSynchronization',
                             )}
                         />
-                </TCell>
-                <TCell>
+                </Table.Cell>
+                <Table.Cell>
                     <RenderTypeSelectField
                         device={MOBILE}
                         target={programStageDataElement}
                         options={programStageDataElement.dataElement.renderTypeOptions}
                         changeHandler={onEditProgramStageDataElement}
                     />
-                </TCell>
-                <TCell style={{ paddingRight: 0 }}>
+                </Table.Cell>
+                <Table.Cell style={{ paddingRight: 0 }}>
                     <RenderTypeSelectField
                         device={DESKTOP}
                         target={programStageDataElement}
                         options={programStageDataElement.dataElement.renderTypeOptions}
                         changeHandler={onEditProgramStageDataElement}
                     />
-                </TCell>
-            </TRow>
+                </Table.Cell>
+            </Table.Row>
         );
     },
 );
@@ -315,37 +308,37 @@ function AssignDataElements(props, { d2 }) {
             <Table style={{
                 borderSpacing: 0,
             }}>
-                <THead>
-                    <TRow>
-                        <TCellHead>
+                <Table.Head>
+                    <Table.Row>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('name')}
-                        </TCellHead>
-                        <TCellHead>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('compulsory')}
-                        </TCellHead>
-                        <TCellHead>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('allow_provided_elsewhere')}
-                        </TCellHead>
-                        <TCellHead>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('display_in_reports')}
-                        </TCellHead>
-                        <TCellHead>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('date_in_future')}
-                        </TCellHead>
-                        <TCellHead>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('skip_synchronization')}
-                        </TCellHead>
-                        <TCellHead>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('render_type_mobile')}
-                        </TCellHead>
-                        <TCellHead>
+                        </Table.CellHead>
+                        <Table.CellHead>
                             {d2.i18n.getTranslation('render_type_desktop')}
-                        </TCellHead>
-                    </TRow>
-                </THead>
-                <TBody>
+                        </Table.CellHead>
+                    </Table.Row>
+                </Table.Head>
+                <Table.Body>
                     {tableRows}
-                </TBody>
+                </Table.Body>
             </Table>
         </Paper>
     );

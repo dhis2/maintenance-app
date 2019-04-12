@@ -9,7 +9,7 @@ export const Table = ({ children, ...props }) => (
     </table>
 )
 
-export const THead = ({ children, ...props }) => (
+Table.Head = ({ children, ...props }) => (
     <thead {...props} style={{
         textAlign: 'left',
         verticalAlign: 'top',
@@ -18,19 +18,19 @@ export const THead = ({ children, ...props }) => (
     </thead>
 )
 
-export const TBody = ({ children, ...props }) => (
+Table.Body = ({ children, ...props }) => (
     <tbody {...props}>
         {children}
     </tbody>
 )
 
-export const TRow = ({ children, ...props }) => (
+Table.Row = ({ children, ...props }) => (
     <tr {...props}>
         {children}
     </tr>
 )
 
-export const TCellHead = ({ children, style, ...props }) => (
+Table.CellHead = ({ children, style, ...props }) => (
     <th {...props} style={{
         height: '56px',
         padding: '0 5px 10px',
@@ -39,7 +39,7 @@ export const TCellHead = ({ children, style, ...props }) => (
     </th>
 )
 
-export const TCell = ({ children, style, ...props }) => (
+Table.Cell = ({ children, style, ...props }) => (
     <td {...props} style={{
         padding: '10px 5px',
         borderTop: '1px solid #bdbdbd',
