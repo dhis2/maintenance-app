@@ -56,6 +56,11 @@ const styles = {
         boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
         cursor: 'pointer',
     },
+    unsetButton: {
+        backgroundColor: '#ccc',
+        color: 'black',
+        marginLeft: 20,
+    }
 };
 
 /**
@@ -80,17 +85,12 @@ function isColorDark(color) {
 }
 
 export default class ColorPicker extends Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = {
-            open: false,
-            color: props.color,
-        };
+    state = {
+        open: false,
     }
 
     getColorPickerProps = () => {
-        const { color } = this.props;
+        const color = this.props.color || '#ff9800'
         const isDark = isColorDark(color);
         const canChooseAnyColor = this.props.modelName === 'option';
         const LoadablePicker = canChooseAnyColor ? LoadableChromePicker : LoadableSwatchesPicker;
@@ -98,7 +98,7 @@ export default class ColorPicker extends Component {
             ...styles,
             buttonColor: {
                 ...styles.buttonColor,
-                backgroundColor: color || '#fffff',
+                backgroundColor: color,
                 color: isDark ? '#fff' : '#000',
             },
         };
@@ -115,16 +115,21 @@ export default class ColorPicker extends Component {
     };
 
     handleOpenColor = () => {
-        this.setState({ ...this.state, open: !this.state.open });
+        this.setState({ open: !this.state.open });
     };
 
     handleCloseColor = () => {
-        this.setState({ ...this.state, open: false });
+        this.setState({ open: false });
     };
 
     handleColorChange = (val) => {
+        this.setState({ open: false });
         this.props.updateStyleState({ color: val.hex });
     };
+
+    handleUnsetColor = () => {
+        this.props.updateStyleState({ color: '' })
+    }
 
     render() {
         const { mergedStyles, LoadablePicker, pickerProps } = this.getColorPickerProps();
@@ -135,9 +140,21 @@ export default class ColorPicker extends Component {
                     style={mergedStyles.buttonColor}
                     onClick={this.handleOpenColor}
                 >
-                    {this.state.color ||
+                    {this.props.color ||
                         this.context.d2.i18n.getTranslation('select_color')}
                 </Button>
+
+                {this.props.color &&
+                    <Button
+                        style={{
+                            ...styles.buttonColor,
+                            ...styles.unsetButton,
+                        }}
+                        onClick={this.handleUnsetColor}
+                    >
+                        {this.context.d2.i18n.getTranslation('deselect_color')}
+                    </Button>
+                }
                 {this.state.open && (
                     <div>
                         {/* eslint-disable jsx-a11y/no-static-element-interactions */}

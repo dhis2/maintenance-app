@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { debounce, endsWith, sortBy } from 'lodash/fp';
 import PropTypes from 'prop-types';
+import Button from 'd2-ui/lib/button/Button';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -106,26 +107,74 @@ export default class IconPickerDialog extends Component {
                 src={`${contextPath}/api/icons/${iconKey}/icon.svg`}
                 alt={altText}
                 className="icon-picker__icon-button-image"
+                style={{ backgroundColor: 'white', overflow: 'hidden' }}
             />
         );
     };
 
     renderIconButton = () => {
         const { iconKey } = this.state;
+        const buttons = [];
 
-        let conditionalProps;
+        buttons.push(
+            <Button
+                onClick={this.handleOpen}
+                style={{
+                    backgroundColor: '#ff9800',
+                    color: '#fff',
+                    textAlign: 'center',
+                    position: 'relative',
+                    minWidth: 129,
+                    height: 36,
+                    lineHeight: 2.5,
+                    marginTop: 10,
+                    boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
+                    cursor: 'pointer',
+                    textTransform: 'uppercase',
+                }}
+            >
+                {iconKey &&
+                    this.renderIconButtonImage(iconKey)
+                }
+
+                <span style={{ padding: '0 16px' }}>
+                    {iconKey
+                        ? this.context.d2.i18n.getTranslation('change_icon')
+                        : this.context.d2.i18n.getTranslation('add_icon')
+                    }
+                </span>
+            </Button>
+        );
+
         if (iconKey) {
-            conditionalProps = {
-                label: this.context.d2.i18n.getTranslation('change_icon'),
-                children: this.renderIconButtonImage(iconKey),
-            };
-        } else {
-            conditionalProps = {
-                label: this.context.d2.i18n.getTranslation('add_icon'),
-            };
+            buttons.push(
+                <Button
+                    onClick={this.handleDeselect}
+                    style={{
+                        backgroundColor: '#ccc',
+                        color: 'black',
+                        marginLeft: 20,
+                        textAlign: 'center',
+                        position: 'relative',
+                        minWidth: 129,
+                        height: 36,
+                        lineHeight: 2.5,
+                        marginTop: 10,
+                        boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
+                        cursor: 'pointer',
+                    }}
+                >
+                    {this.context.d2.i18n.getTranslation('deselect_icon')}
+                </Button>
+            )
         }
 
-        return <RaisedButton onClick={this.handleOpen} {...conditionalProps} />;
+        return buttons;
+    }
+
+    handleDeselect = () => {
+        this.setState({ iconKey: '' });
+        this.props.updateStyleState({ icon: '' });
     }
 
     renderActions = () => (
