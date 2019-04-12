@@ -13,14 +13,6 @@ import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
 import TextField from 'material-ui/TextField/TextField';
 import pure from 'recompose/pure';
 import withState from 'recompose/withState';
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox/Checkbox';
 import Store from 'd2-ui/lib/store/Store';
 import {
@@ -28,6 +20,14 @@ import {
     removeDataElementsFromStage,
     editProgramStageDataElement,
 } from './actions';
+import {
+    Table,
+    THead,
+    TBody,
+    TRow,
+    TCellHead,
+    TCell,
+} from './Table';
 
 import programStore from '../eventProgramStore';
 import { withRouter } from 'react-router';
@@ -132,25 +132,31 @@ const ProgramStageDataElement = pure(
         const isCheckedForProp = getOr(false, __, programStageDataElement);
 
         return (
-            <TableRow>
-                <TableRowColumn title={programStageDataElement.dataElement.displayName}>
+            <TRow>
+                <TCell
+                    title={programStageDataElement.dataElement.displayName}
+                    style={{
+                        maxWidth: 250,
+                        paddingLeft: 0,
+                    }}
+                >
                     {programStageDataElement.dataElement.displayName}
-                </TableRowColumn>
-                <TableRowColumn>
+                </TCell>
+                <TCell>
                     <Checkbox
                         checked={isCheckedForProp('compulsory')}
                         onClick={onChangeFlipBooleanForProperty('compulsory')}
                     />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TCell>
+                <TCell>
                     <Checkbox
                         checked={isCheckedForProp('allowProvidedElsewhere')}
                         onClick={onChangeFlipBooleanForProperty(
                             'allowProvidedElsewhere'
                         )}
                     />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TCell>
+                <TCell>
                     <Checkbox
                         checked={isCheckedForProp('displayInReports')}
                         checkedIcon={<Visibility />}
@@ -159,8 +165,8 @@ const ProgramStageDataElement = pure(
                             'displayInReports'
                         )}
                     />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TCell>
+                <TCell>
                     {isDateValue
                         ? <Checkbox
                             checked={isCheckedForProp('allowFutureDate')}
@@ -169,32 +175,32 @@ const ProgramStageDataElement = pure(
                             )}
                         />
                         : null}
-                </TableRowColumn>
-                <TableRowColumn>
+                </TCell>
+                <TCell>
                         <Checkbox
                             checked={isCheckedForProp('skipSynchronization')}
                             onClick={onChangeFlipBooleanForProperty(
                                 'skipSynchronization',
                             )}
                         />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TCell>
+                <TCell>
                     <RenderTypeSelectField
                         device={MOBILE}
                         target={programStageDataElement}
                         options={programStageDataElement.dataElement.renderTypeOptions}
                         changeHandler={onEditProgramStageDataElement}
                     />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TCell>
+                <TCell style={{ paddingRight: 0 }}>
                     <RenderTypeSelectField
                         device={DESKTOP}
                         target={programStageDataElement}
                         options={programStageDataElement.dataElement.renderTypeOptions}
                         changeHandler={onEditProgramStageDataElement}
                     />
-                </TableRowColumn>
-            </TableRow>
+                </TCell>
+            </TRow>
         );
     },
 );
@@ -306,39 +312,40 @@ function AssignDataElements(props, { d2 }) {
                     onRemoveItems={props.onRemoveItems}
                 />
             </div>
-            <Table>
-                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                    <TableRow>
-                        <TableHeaderColumn>
+            <Table style={{
+                borderSpacing: 0,
+            }}>
+                <THead>
+                    <TRow>
+                        <TCellHead>
                             {d2.i18n.getTranslation('name')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </TCellHead>
+                        <TCellHead>
                             {d2.i18n.getTranslation('compulsory')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </TCellHead>
+                        <TCellHead>
                             {d2.i18n.getTranslation('allow_provided_elsewhere')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </TCellHead>
+                        <TCellHead>
                             {d2.i18n.getTranslation('display_in_reports')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </TCellHead>
+                        <TCellHead>
                             {d2.i18n.getTranslation('date_in_future')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </TCellHead>
+                        <TCellHead>
                             {d2.i18n.getTranslation('skip_synchronization')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </TCellHead>
+                        <TCellHead>
                             {d2.i18n.getTranslation('render_type_mobile')}
-                        </TableHeaderColumn>
-                        <TableHeaderColumn>
+                        </TCellHead>
+                        <TCellHead>
                             {d2.i18n.getTranslation('render_type_desktop')}
-                        </TableHeaderColumn>
-                        
-                    </TableRow>
-                </TableHeader>
-                <TableBody displayRowCheckbox={false}>
+                        </TCellHead>
+                    </TRow>
+                </THead>
+                <TBody>
                     {tableRows}
-                </TableBody>
+                </TBody>
             </Table>
         </Paper>
     );
