@@ -30,9 +30,10 @@ class DataElementCategoryOptionCombo extends Component {
         this.context.d2.i18n
     );
 
-    // The form builder is mutating objects which causes this.props.model
-    // and prevProps.model to be equal in the componentDidUpdate hook.
-    // By keeping track of this string literal the changes are detected correctly
+    // The form builder is mutating objects which causes this.props.model.output
+    // and prevProps.model.output to be equal in the componentDidUpdate hook,
+    // after the output property was updated.
+    // By keeping track of this string literal the changes are detected correctly.
     prevOutputId = null;
 
     onChange = event => {
