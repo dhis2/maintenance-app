@@ -69,7 +69,7 @@ class DataElementCategoryOptionCombo extends Component {
         this.setState({ loading: true, loadErrorText: '' });
 
         try {
-            const response = await this.context.d2.models.dataElementssss.get(
+            const response = await this.context.d2.models.dataElements.get(
                 this.props.model.output.id,
                 { fields: ['categoryCombo[categoryOptionCombos[id,name]]'] }
             );
