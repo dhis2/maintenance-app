@@ -138,23 +138,51 @@ class DropDownAsync extends Component {
             })))
             .then((options) => {
                 // Behold the mother of all hacks
-                if (!this.omgLikeJustStop) {
-                 // Behold the very special hack for renaming the very special 'default' cat combo to 'None'
-                    const renamedOpts = options.map(option => Object.assign(
-                        option,
-                        option.model &&
-                        option.model.modelDefinition &&
-                        option.model.modelDefinition.name === 'categoryCombo' &&
-                        option.text === 'default'
-                            ? { text: d2i.i18n.getTranslation('none') }
-                            : {},
-                    ));
-                    this.setState({
-                        options: renamedOpts
-                    });
-                    return renamedOpts;
-                }
-                return options;
+                if (this.omgLikeJustStop) return options
+
+                // Behold the very special hack for renaming the very special 'default' cat combo to 'None'
+                const renamedOpts = options.map(option => Object.assign(
+                    option,
+                    option.model &&
+                    option.model.modelDefinition &&
+                    option.model.modelDefinition.name === 'categoryCombo' &&
+                    option.text === 'default'
+                        ? { 
+                            text: d2i.i18n.getTranslation('none'),
+                            meta: {
+                                original: { ...option },
+                            },
+                        }
+                        : {},
+                ));
+
+
+                this.setState(
+                    { options: renamedOpts },
+                    // Behold the hack to select the default option for categoryCombo
+                    () => {
+                        if (
+                            this.props.referenceType === 'categoryCombo'
+                            && this.props.defaultToDefaultValue
+                            && !this.props.value
+                        ) {
+                            let defaultOption;
+
+                            for (let i = 0, len = renamedOpts.length; i < len; ++i) {
+                                if (renamedOpts[i].meta && renamedOpts[i].meta.original.text === 'default') {
+                                    defaultOption = renamedOpts[i]
+                                    break;
+                                }
+                            }
+
+                            if (defaultOption) {
+                                this.props.onChange({ target: { value: { id: defaultOption.value } } })
+                            }
+                        }
+                    },
+                );
+
+                return renamedOpts;
             }).then(opts => {
                 this.props.onOptionsLoaded && this.props.onOptionsLoaded(this.props.referenceType, opts)
                 return opts;
@@ -228,6 +256,7 @@ DropDownAsync.propTypes = {
     quickAddLink: PropTypes.bool,
     multiLine: PropTypes.bool,
     fullWidth: PropTypes.bool,
+    defaultToDefaultValue: PropTypes.bool,
     style: PropTypes.object,
     errorStyle: PropTypes.object,
     referenceProperty: PropTypes.string,

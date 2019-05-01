@@ -8,6 +8,7 @@ export default new Map([
         referenceType: 'categoryCombo',
         fieldOptions: {
             queryParamFilter: ['dataDimensionType:eq:ATTRIBUTE', 'name:eq:default'],
+            defaultToDefaultValue: true,
         },
     }],
     ['periodType', {

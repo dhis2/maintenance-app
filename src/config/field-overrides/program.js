@@ -19,6 +19,7 @@ const sharedOverrides = new Map([
                     'dataDimensionType:eq:ATTRIBUTE',
                     'name:eq:default',
                 ],
+                defaultToDefaultValue: true,
             },
         },
     ],
