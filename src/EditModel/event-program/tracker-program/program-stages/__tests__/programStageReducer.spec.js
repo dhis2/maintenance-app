@@ -13,6 +13,7 @@ describe('ProgramStage Reducer', () => {
         iterator.first = jest.fn();
 
         intialState = {
+            mode: 'none',
             activeStep: iterator.first(steps),
             stageId: null,
         };
@@ -103,6 +104,7 @@ describe('ProgramStage Reducer', () => {
 
             const expectedState = {
                 ...intialState,
+                mode: 'edit',
                 stageId,
             };
             expect(
@@ -110,6 +112,26 @@ describe('ProgramStage Reducer', () => {
                     type: programActions.PROGRAM_STAGE_EDIT,
                     payload: {
                         stageId,
+                        addNewStage: false,
+                    },
+                }),
+            ).toEqual(expectedState);
+        });
+
+        test('it should handle PROGRAM_STAGE_EDIT with adding a new one', () => {
+            const stageId = 'Dos';
+
+            const expectedState = {
+                ...intialState,
+                mode: 'add',
+                stageId,
+            };
+            expect(
+                reducer(intialState, {
+                    type: programActions.PROGRAM_STAGE_EDIT,
+                    payload: {
+                        stageId,
+                        addNewStage: true,
                     },
                 }),
             ).toEqual(expectedState);

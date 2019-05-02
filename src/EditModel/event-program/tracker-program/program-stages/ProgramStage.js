@@ -26,7 +26,10 @@ class ProgramStage extends Component {
         return (
             <div>
                 {this.props.currentProgramStageId
-                    ? <EditProgramStage programStage$={programStage$} />
+                    ? <EditProgramStage
+                        programStage$={programStage$}
+                        isEditing={props.isEditing}
+                    />
                     : <ProgramStageList
                         program={props.program}
                         programStages={props.programStages}
@@ -38,6 +41,7 @@ class ProgramStage extends Component {
 
 const mapStateToProps = state => ({
     currentProgramStageId: getCurrentProgramStageId(state),
+    isEditing: state.eventProgram.programStageStepper.mode === 'edit',
 });
 
 const mapDispatchToProps = dispatch => ({
