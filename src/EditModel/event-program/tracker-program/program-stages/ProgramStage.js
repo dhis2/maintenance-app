@@ -7,7 +7,10 @@ import ProgramStageList from './ProgramStageList';
 import EditProgramStage from './EditProgramStage';
 import { editProgramStage } from './actions';
 import { getProgramStageById$, firstProgramStage$, withProgramAndStages } from './utils';
-import { getCurrentProgramStageId } from './selectors';
+import { 
+    getCurrentProgramStageId,
+    getIsStageBeingEdited,
+} from './selectors';
 
 class ProgramStage extends Component {
     shouldComponentUpdate(nextProps) {
@@ -41,7 +44,7 @@ class ProgramStage extends Component {
 
 const mapStateToProps = state => ({
     currentProgramStageId: getCurrentProgramStageId(state),
-    isEditing: state.eventProgram.programStageStepper.mode === 'edit',
+    isEditing: getIsStageBeingEdited(state),
 });
 
 const mapDispatchToProps = dispatch => ({
