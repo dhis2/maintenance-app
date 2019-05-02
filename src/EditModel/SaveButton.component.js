@@ -38,7 +38,7 @@ SaveButton.propTypes = {
 };
 
 SaveButton.defaultProps = {
-    label: undefined,
+    label: '',
     isSaving: false,
     isValid: true,
 };
