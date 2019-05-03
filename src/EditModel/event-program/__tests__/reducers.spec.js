@@ -32,6 +32,7 @@ describe('Event Program', () => {
                 programStageStepper: {
                     activeStep: stepKey,
                     stageId: null,
+                    mode: 'none',
                 },
             };
 

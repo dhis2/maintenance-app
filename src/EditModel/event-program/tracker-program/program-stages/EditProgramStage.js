@@ -1,21 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { compose, lifecycle } from 'recompose';
 
-import ProgramStageStepper from './ProgramStageStepper';
+import { getInstance } from 'd2/lib/d2';
 import { withProgramStageFromProgramStage$ } from './utils';
 import { changeStepperDisabledState } from '../../actions';
 import { saveProgramStageEdit, cancelProgramStageEdit, editProgramStageReset } from './actions';
-import FormActionButtons from '../../../FormActionButtons';
+import ProgramStageStepper from './ProgramStageStepper';
+import SaveButton from '../../../SaveButton.component';
+import CancelButton from '../../../CancelButton.component';
 
-const EditProgramStage = (props) => {
+const EditProgramStage = (props, context) => {
     const styles = {
         buttons: {
             padding: '2rem 1rem 1rem',
             marginLeft: '10px',
         },
     };
+
     return (
         <div>
             <ProgramStageStepper
@@ -23,13 +27,35 @@ const EditProgramStage = (props) => {
                 programStage={props.programStage}
             />
             <div style={styles.buttons}>
-                <FormActionButtons
-                    onSaveAction={props.saveProgramStageEdit}
-                    onCancelAction={props.cancelProgramStageEdit}
-                />
+                {props.isEditing &&
+                    <div
+                        style={{
+                            padding: '10px 0',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        {context.d2.i18n.getTranslation('stage_save_hint_text')}
+                    </div>
+                }
+
+                <div>
+                    <SaveButton
+                        onClick={props.saveProgramStageEdit}
+                        label={context.d2.i18n.getTranslation(
+                            !props.isEditing
+                                ? 'stage_add'
+                                : 'stage_update'
+                        )}
+                    />
+                    <CancelButton onClick={props.cancelProgramStageEdit} style={{ marginLeft: '1rem' }} />
+                </div>
             </div>
         </div>
     );
+}
+
+EditProgramStage.contextTypes = {
+  d2: PropTypes.object,
 };
 
 export default compose(
