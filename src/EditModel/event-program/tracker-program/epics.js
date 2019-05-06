@@ -98,7 +98,7 @@ export const newTrackerProgramStage = action$ =>
                 log.error(e);
                 throw new Error(e);
             }
-            return editProgramStage(programStageUid);
+            return editProgramStage(programStageUid, true);
         }),
     ));
 
