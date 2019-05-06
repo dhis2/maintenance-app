@@ -7,7 +7,10 @@ import ProgramStageList from './ProgramStageList';
 import EditProgramStage from './EditProgramStage';
 import { editProgramStage } from './actions';
 import { getProgramStageById$, firstProgramStage$, withProgramAndStages } from './utils';
-import { getCurrentProgramStageId } from './selectors';
+import { 
+    getCurrentProgramStageId,
+    getIsStageBeingEdited,
+} from './selectors';
 
 class ProgramStage extends Component {
     shouldComponentUpdate(nextProps) {
@@ -26,7 +29,10 @@ class ProgramStage extends Component {
         return (
             <div>
                 {this.props.currentProgramStageId
-                    ? <EditProgramStage programStage$={programStage$} />
+                    ? <EditProgramStage
+                        programStage$={programStage$}
+                        isEditing={props.isEditing}
+                    />
                     : <ProgramStageList
                         program={props.program}
                         programStages={props.programStages}
@@ -38,6 +44,7 @@ class ProgramStage extends Component {
 
 const mapStateToProps = state => ({
     currentProgramStageId: getCurrentProgramStageId(state),
+    isEditing: getIsStageBeingEdited(state),
 });
 
 const mapDispatchToProps = dispatch => ({
