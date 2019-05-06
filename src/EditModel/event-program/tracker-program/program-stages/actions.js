@@ -27,9 +27,9 @@ export const changeStep = stepKey => ({
 export const nextStep = () => ({ type: PROGRAM_STAGE_STEP_NEXT });
 export const previousStep = () => ({ type: PROGRAM_STAGE_STEP_PREVIOUS });
 
-export const editProgramStage = stageId => ({
+export const editProgramStage = (stageId, addNewStage = false) => ({
     type: PROGRAM_STAGE_EDIT,
-    payload: { stageId },
+    payload: { stageId, addNewStage },
 });
 
 export const addProgramStage = () => ({
