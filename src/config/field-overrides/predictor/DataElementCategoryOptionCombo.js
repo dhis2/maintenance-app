@@ -42,18 +42,25 @@ class DataElementCategoryOptionCombo extends Component {
     };
 
     componentDidMount() {
-        if (this.hasModelOutputId()) {
+        const currModelOutputId = this.getModelOutputId();
+
+        if (currModelOutputId) {
             this.fetchOptions();
-            this.prevOutputId = this.props.model.output.id;
+            this.prevOutputId = currModelOutputId;
         }
     }
 
     componentDidUpdate() {
-        if (
-            this.hasModelOutputId() &&
-            this.props.model.output.id !== this.prevOutputId
-        ) {
-            this.fetchOptions();
+        const currModelOutputId = this.getModelOutputId();
+
+        if (currModelOutputId !== this.prevOutputId) {
+            // Clear value of outputCombo when dataElement changes
+            this.props.onChange({ target: { value: null } });
+
+            if (currModelOutputId) {
+                // fetch options for new dataElement (model.output.id)
+                this.fetchOptions();
+            }
         }
 
         this.prevOutputId = this.props.model.output
@@ -61,9 +68,11 @@ class DataElementCategoryOptionCombo extends Component {
             : null;
     }
 
-    hasModelOutputId() {
+    getModelOutputId() {
         const model = this.props.model;
-        return !!(model && model.output && model.output.id);
+        return model && model.output && model.output.id
+            ? model.output.id
+            : null;
     }
 
     async fetchOptions() {
