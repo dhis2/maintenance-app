@@ -4,6 +4,7 @@ export const Table = ({ children, ...props }) => (
     <table {...props} style={{
         padding: '0 3rem',
         borderSpacing: 0,
+        width: '100%',
     }}>
         {children}
     </table>
