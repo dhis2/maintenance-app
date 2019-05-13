@@ -169,7 +169,6 @@ const fieldOrderByName = new Map([
     ]],
     ['organisationUnitGroupSet', [
         'name',
-        'shortName',
         'code',
         'description',
         'compulsory',
