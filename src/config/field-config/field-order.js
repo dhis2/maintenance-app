@@ -27,7 +27,6 @@ const fieldOrderByName = new Map([
     ]],
     ['dataElementGroupSet', [
         'name',
-        'shortName',
         'code',
         'description',
         'compulsory',
