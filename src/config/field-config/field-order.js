@@ -35,7 +35,6 @@ const fieldOrderByName = new Map([
     ]],
     ['category', [
         'name',
-        'shortName',
         'code',
         'description',
         'dataDimensionType',
