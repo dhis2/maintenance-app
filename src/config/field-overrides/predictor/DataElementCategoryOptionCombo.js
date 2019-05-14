@@ -36,24 +36,31 @@ class DataElementCategoryOptionCombo extends Component {
     // By keeping track of this string literal the changes are detected correctly.
     prevOutputId = null;
 
-    onChange = event => {
-        const fakeEvent = { target: { value: { id: event.target.value } } };
-        this.props.onChange(fakeEvent);
+    onChange = ({ target }) => {
+        const value = target.value ? { id: target.value } : null;
+        this.props.onChange({ target: { value } });
     };
 
     componentDidMount() {
-        if (this.hasModelOutputId()) {
+        const currModelOutputId = this.getModelOutputId();
+
+        if (currModelOutputId) {
             this.fetchOptions();
-            this.prevOutputId = this.props.model.output.id;
+            this.prevOutputId = currModelOutputId;
         }
     }
 
     componentDidUpdate() {
-        if (
-            this.hasModelOutputId() &&
-            this.props.model.output.id !== this.prevOutputId
-        ) {
-            this.fetchOptions();
+        const currModelOutputId = this.getModelOutputId();
+
+        if (currModelOutputId !== this.prevOutputId) {
+            // Clear value of outputCombo when dataElement changes
+            this.props.onChange({ target: { value: null } });
+
+            if (currModelOutputId) {
+                // fetch options for new dataElement (model.output.id)
+                this.fetchOptions();
+            }
         }
 
         this.prevOutputId = this.props.model.output
@@ -61,9 +68,11 @@ class DataElementCategoryOptionCombo extends Component {
             : null;
     }
 
-    hasModelOutputId() {
+    getModelOutputId() {
         const model = this.props.model;
-        return !!(model && model.output && model.output.id);
+        return model && model.output && model.output.id
+            ? model.output.id
+            : null;
     }
 
     async fetchOptions() {
@@ -119,7 +128,7 @@ class DataElementCategoryOptionCombo extends Component {
             <DropDown
                 labelText={this.getTranslation('output_combo')}
                 onChange={this.onChange}
-                value={this.props.value.id}
+                value={this.props.value && this.props.value.id}
                 options={this.state.options}
             />
         );
@@ -133,7 +142,7 @@ DataElementCategoryOptionCombo.propTypes = {
 };
 
 DataElementCategoryOptionCombo.defaultProps = {
-    value: { id: null },
+    value: null,
 };
 
 DataElementCategoryOptionCombo.contextTypes = {

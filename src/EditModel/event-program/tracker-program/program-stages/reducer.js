@@ -10,7 +10,12 @@ import steps from './programStageSteps';
 import { next, previous, first } from '../../../stepper/stepIterator';
 
 export function programStageStepperReducer(
-    state = { activeStep: first(steps), stageId: null },
+    state = {
+        activeStep:
+        first(steps),
+        stageId: null,
+        mode: 'none',
+    },
     action,
 ) {
     switch (action.type) {
@@ -42,6 +47,9 @@ export function programStageStepperReducer(
         return {
             ...state,
             stageId: action.payload.stageId,
+            mode: action.payload.addNewStage
+                ? 'add'
+                : 'edit',
         };
 
     case PROGRAM_STAGE_EDIT_RESET:
@@ -49,6 +57,7 @@ export function programStageStepperReducer(
             ...state,
             activeStep: first(steps),
             stageId: null,
+            mode: 'none',
         };
     default:
         break;
