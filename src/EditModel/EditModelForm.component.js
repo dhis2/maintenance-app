@@ -85,6 +85,7 @@ const modelToEditAndModelForm$ = Observable
             fieldConfigs,
             modelToEdit,
         );
+
         const fieldConfigsWithAttributeFields = [].concat(
             fieldConfigsAfterRules,
             // getAttributeFieldConfigs(d2, modelToEdit),
@@ -94,8 +95,10 @@ const modelToEditAndModelForm$ = Observable
                 return config;
             }),
         );
+
         const fieldConfigsWithAttributeFieldsAndUniqueValidators = fieldConfigsWithAttributeFields
             .map(fieldConfig => addUniqueValidatorWhenUnique(fieldConfig, modelToEdit));
+
         return {
             fieldConfigs: fieldConfigsWithAttributeFieldsAndUniqueValidators,
             modelToEdit,
