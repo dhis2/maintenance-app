@@ -27,7 +27,6 @@ const fieldOrderByName = new Map([
     ]],
     ['dataElementGroupSet', [
         'name',
-        'shortName',
         'code',
         'description',
         'compulsory',
@@ -36,7 +35,6 @@ const fieldOrderByName = new Map([
     ]],
     ['category', [
         'name',
-        'shortName',
         'code',
         'description',
         'dataDimensionType',
@@ -171,7 +169,6 @@ const fieldOrderByName = new Map([
     ]],
     ['organisationUnitGroupSet', [
         'name',
-        'shortName',
         'code',
         'description',
         'compulsory',
