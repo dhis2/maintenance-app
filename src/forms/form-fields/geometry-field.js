@@ -1,7 +1,6 @@
 import React from 'react';
 import TextField from '../../forms/form-fields/text-field';
-import { isNumber, isEmptyString } from 'd2-ui/lib/forms/Validators';
-import { featureTypeOverride } from '../../config/field-overrides/program';
+import { isNumber } from 'd2-ui/lib/forms/Validators';
 import { getOr } from 'lodash/fp';
 
 // Allows parsed numbers
@@ -12,9 +11,7 @@ function isNumeric(number) {
 function isPoint(poly) {
     return (
         Array.isArray(poly) &&
-        (poly.length === 2 &&
-            isNumeric(poly[0]) &&
-            isNumeric(poly[1]))
+        (poly.length === 2 && isNumeric(poly[0]) && isNumeric(poly[1]))
     );
 }
 
@@ -30,6 +27,9 @@ function isValidLongitude(value) {
 isValidLongitude.message =
     'a_longitude_should_be_a_number_between_-180_and_180';
 
+function isValidCoordinate(coord) {
+    return isPoint(coord) && isValidLongitude(coord[0]) && isValidLatitude(coord[1])
+}
 const featureTypes = {
     POINT: 'Point',
     POLYGON: 'Polygon',
@@ -69,12 +69,6 @@ class GeometryField extends React.Component {
                 },
             });
         }
-    }
-
-    getGlobalErrorText(value) {
-        console.log(value)
-        console.log('glob', !isNumeric(value) && this.props.errorText || null)
-        return !isNumeric(value) && this.props.errorText || null
     }
 
     handleLatitude = event => {
@@ -142,9 +136,8 @@ class GeometryField extends React.Component {
         const type = (this.props.value && this.props.value.type) || undefined;
         return (
             <div>
-                {(type === featureTypes.POINT || type === undefined) &&
-                    this.renderLatLongFields()}
-                {type === featureTypes.POLYGON && this.renderPolygonField()}
+                {(type === featureTypes.POINT || type === undefined) ?
+                    this.renderLatLongFields() : this.renderPolygonField()}
             </div>
         );
     }
@@ -159,13 +152,17 @@ GeometryField.contextTypes = { d2: React.PropTypes.object.isRequired };
 export const validators = [
     {
         validator(value) {
-            return (
-                (value &&
-                    value.type === featureTypes.POINT &&
-                    value.coordinates &&
-                    isPoint(value.coordinates)) ||
+            if (
                 value == null ||
-                (value && value.type === featureTypes.POLYGON)
+                (value && value.type !== featureTypes.POINT)
+            ) {
+                return true;
+            }
+            return (
+                value &&
+                value.type === featureTypes.POINT &&
+                value.coordinates &&
+                isValidCoordinate(value.coordinates)
             );
         },
         message: 'invalid_coordinate',
