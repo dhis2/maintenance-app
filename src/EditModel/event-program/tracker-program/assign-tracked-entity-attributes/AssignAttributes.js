@@ -117,11 +117,18 @@ const enhance = compose(
     ),
     lifecycle({
         componentDidMount() {
-            //Assign attributes for selected trackedEntityType
-            const attributes = tetAttributesNotInProgram(this.props.model).map(
-                a => a.trackedEntityAttribute.id
-            );
-            this.props.addAttributesToProgram({ attributes });
+            if (this.props.modelId === 'add') {
+                // When creating a new program we add the TET's attributes to the programTrackedEntityAttributes
+                // since this is most likely what is needed. On edit, we don't do this because:
+                // a) the UI will not reflect the reality, for example if a TET has new attributes these won't be present 
+                //    in the program's programTrackedEntityAttributes. In the UI it would look as if they were added already.
+                // b) the program might have manualy removed one of the TET's attributes and now that attribute could be
+                //    added again accidentally when clicking save
+                const attributes = tetAttributesNotInProgram(this.props.model).map(
+                    a => a.trackedEntityAttribute.id
+                );
+                this.props.addAttributesToProgram({ attributes });
+            }
         },
     }),
     withState('attributeFilter', 'setAttributeFilter', ''),
