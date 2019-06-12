@@ -74,6 +74,7 @@ class GeometryField extends React.Component {
     handleLatitude = event => {
         let lat = event.target.value;
         const long = this.getLongitude();
+        
         if (!isValidLatitude(lat)) {
             this.setState({
                 latError: this.getTranslation(isValidLatitude.message),
