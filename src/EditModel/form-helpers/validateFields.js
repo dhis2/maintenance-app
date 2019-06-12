@@ -27,8 +27,8 @@ const validateField = (field, formRef, formRefStateClone) => {
  * Adds the step that the field can be found on (if present).
  */
 const getErrorMessage = (field) => {
-    const fieldStep = field.step ? `On step ${field.step}` : '';
-    const errorMessage = `${field.message} : ${field.name}. ${fieldStep}`;
+    const fieldStep = field.step ? `: ${field.name}. On step ${field.step}` : '';
+    const errorMessage = `${field.message}${fieldStep}`;
     return errorMessage;
 };
 
