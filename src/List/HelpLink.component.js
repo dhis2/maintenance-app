@@ -102,7 +102,7 @@ export default function HelpLink({ schema }, { d2 }) {
     const path = window.location.hash
         .replace(/^#/, '') // Remove leading hash
         .replace(/\?.+?$/, ''); // Remove query param/cache breaker
-    const docsLink = `https://ci.dhis2.org/docs/${getDocsVersion(d2.system.version)}`;
+    const docsLink = `https://docs.dhis2.org/${getDocsVersion(d2.system.version)}`;
     const helpLink = findHelpLinkForPath(path, schema);
 
     if (helpLink) {
