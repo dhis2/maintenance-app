@@ -38,7 +38,7 @@ import IconButton from 'material-ui/IconButton/IconButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import { connect } from 'react-redux';
 import { openColumnsDialog } from './columns/actions';
-import ColumnConfigDialog from './columns/ColumnConfigDialog';
+import DialogRouter from '../Dialog/DialogRouter';
 import ContextMenuHeader from './ContextMenuHeader'
 import { openDialog } from '../Dialog/actions';
 import * as DIALOGTYPES from '../Dialog/types';
@@ -645,6 +645,8 @@ class List extends Component {
                     onRequestClose={this.closeDataElementOperandDialog}
                 />
                 {this.state.predictorDialog && <PredictorDialog />}
+                <DialogRouter groupName={this.props.params.groupName}
+                        modelType={this.props.params.modelType} />
             </div>
         );
     }
