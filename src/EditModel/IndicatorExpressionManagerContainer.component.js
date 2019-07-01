@@ -6,6 +6,21 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 import { Observable } from 'rxjs';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
+const actionToValidation$ = ({data}) => {
+    const url = 'indicators/expression/description';
+    const options = {headers: {'Content-Type': 'text/plain'}};
+    const request = getD2()
+        .then(d2 => d2.Api.getApi())
+        .then(api => api.post(url, data, options));
+
+    // @TODO: REMOVE before merging PR!!!!!
+    request
+        .then(console.log.bind(null, 'SUCCESS'))
+        .catch(console.log.bind(null, 'ERROR'))
+
+    return Observable.fromPromise(request);
+};
+
 const indicatorExpressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
 indicatorExpressionStatusActions.requestExpressionStatus
     .debounceTime(500)
@@ -69,6 +84,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
                 expressionStatusStore={indicatorExpressionStatusStore}
                 expressionChanged={this.props.indicatorExpressionChanged}
                 titleText={this.props.titleText}
+                validateExpression={actionToValidation$}
                 ref="expressionManager"
             />
         );
