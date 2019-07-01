@@ -1,25 +1,16 @@
-import React from 'react';
+import { Observable } from 'rxjs';
+import { getInstance as getD2 } from 'd2/lib/d2';
 import Action from 'd2-ui/lib/action/Action';
 import IndicatorExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
-import indicatorExpressionStatusStore from 'd2-ui/lib/expression-manager/ExpressionStatus.store';
-import { getInstance as getD2 } from 'd2/lib/d2';
-import { Observable } from 'rxjs';
+import React from 'react';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import indicatorExpressionStatusStore from 'd2-ui/lib/expression-manager/ExpressionStatus.store';
 
-const actionToValidation$ = ({data}) => {
-    const url = 'indicators/expression/description';
-    const options = {headers: {'Content-Type': 'text/plain'}};
-    const request = getD2()
-        .then(d2 => d2.Api.getApi())
-        .then(api => api.post(url, data, options));
+import { createActionToValidation$ } from '../utils/createActionToValidation$';
 
-    // @TODO: REMOVE before merging PR!!!!!
-    request
-        .then(console.log.bind(null, 'SUCCESS'))
-        .catch(console.log.bind(null, 'ERROR'))
-
-    return Observable.fromPromise(request);
-};
+const actionToValidation$ = createActionToValidation$(
+    'indicators/expression/description'
+)
 
 const indicatorExpressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
 indicatorExpressionStatusActions.requestExpressionStatus
