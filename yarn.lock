@@ -2917,10 +2917,10 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@29.0.33:
-  version "29.0.33"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-29.0.33.tgz#a66d9cc8c5f58bf9663f6680bd6346307b28c85b"
-  integrity sha512-sNTGr2qMBVF9vog3F50x16M8Gs2dXCljwy7YsHLjqix2oPvycZCHkMwGlUPa3hk+DlBQnpKFVFO5Qlq6dPvmaw==
+d2-ui@29.0.34:
+  version "29.0.34"
+  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-29.0.34.tgz#0592b9376c00102e37ef37c600bad524818b2237"
+  integrity sha512-dyxi/NuBjsUzwbDpnWFyWJAbTmzRe075Nn1A+gveR+2TO2wImKlglVoq6Sv6ybLFoNjQLLmE3REwkLPK0Pi1fw==
 
 d2-utilizr@^0.2.15, d2-utilizr@^0.2.9:
   version "0.2.16"
