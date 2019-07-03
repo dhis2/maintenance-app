@@ -1,10 +1,16 @@
-import React from 'react';
+import { Observable } from 'rxjs';
+import { getInstance as getD2 } from 'd2/lib/d2';
 import Action from 'd2-ui/lib/action/Action';
 import IndicatorExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
-import indicatorExpressionStatusStore from 'd2-ui/lib/expression-manager/ExpressionStatus.store';
-import { getInstance as getD2 } from 'd2/lib/d2';
-import { Observable } from 'rxjs';
+import React from 'react';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import indicatorExpressionStatusStore from 'd2-ui/lib/expression-manager/ExpressionStatus.store';
+
+import { createActionToValidation$ } from '../utils/createActionToValidation$';
+
+const actionToValidation$ = createActionToValidation$(
+    'indicators/expression/description'
+)
 
 const indicatorExpressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
 indicatorExpressionStatusActions.requestExpressionStatus
@@ -69,6 +75,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
                 expressionStatusStore={indicatorExpressionStatusStore}
                 expressionChanged={this.props.indicatorExpressionChanged}
                 titleText={this.props.titleText}
+                validateExpression={actionToValidation$}
                 ref="expressionManager"
             />
         );

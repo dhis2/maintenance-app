@@ -1,13 +1,18 @@
-import React from 'react';
-import { withState, withProps, compose } from 'recompose';
-import Store from 'd2-ui/lib/store/Store';
+import { Observable } from 'rxjs';
+import { getInstance as getD2 } from 'd2/lib/d2';
 import { result } from 'lodash/fp';
-
-import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
 import Dialog from 'material-ui/Dialog';
+import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
+import React from 'react';
+import Store from 'd2-ui/lib/store/Store';
+import Translate from 'd2-ui/lib/i18n/Translate.component';
 
+import { withState, withProps, compose } from 'recompose';
+
+import {
+  createActionToValidation$,
+} from '../../../utils/createActionToValidation$';
 import MissingValueStrategy from './MissingValueStrategy';
 import SlidingWindow from './SlidingWindow';
 
@@ -20,6 +25,10 @@ const styles = {
         maxWidth: 'none',
     },
 };
+
+const actionToValidation$ = createActionToValidation$(
+    'validationRules/expression/description'
+)
 
 function ValidationRuleExpressionDialog({ open, close, actions, expressionDetails = {}, buttonLabel, updateExpressionDetails, expressionStatusStore, onExpressionChanged, onMissingStrategyChanged, onSlidingWindowChanged }, { d2 }) {
     return (
@@ -41,6 +50,7 @@ function ValidationRuleExpressionDialog({ open, close, actions, expressionDetail
                 onChange={onSlidingWindowChanged}
             />
             <ExpressionManager
+                validateExpression={actionToValidation$}
                 descriptionLabel={d2.i18n.getTranslation('description')}
                 descriptionValue={expressionDetails.description || ''}
                 expressionStatusStore={expressionStatusStore}
