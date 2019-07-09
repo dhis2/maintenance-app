@@ -8,24 +8,12 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
+import { createActionToValidation$ } from '../../utils/createActionToValidation$';
 
 const expressionStatusStore = Store.create();
-
-const expressionStatusActions = Action.createActionsFromNames(['requestExpressionStatus']);
-expressionStatusActions.requestExpressionStatus
-    .debounceTime(500)
-    .map((action) => {
-        const encodedFormula = encodeURIComponent(action.data);
-        const url = `expressions/description?expression=${encodedFormula}`;
-        const request = getInstance()
-            .then(d2 => d2.Api.getApi().get(url));
-
-        return Observable.fromPromise(request);
-    })
-    .concatAll()
-    .subscribe((response) => {
-        expressionStatusStore.setState(response);
-    });
+const actionToValidation$ = createActionToValidation$(
+    'predictors/expression/description'
+)
 
 function ExpressionDialog({ open, handleClose, handleSaveAndClose, ...props }) {
     const customContentStyle = {
@@ -61,6 +49,7 @@ function ExpressionDialog({ open, handleClose, handleSaveAndClose, ...props }) {
                 expressionStatusStore={expressionStatusStore}
                 expressionChanged={props.indicatorExpressionChanged}
                 titleText={props.labelText}
+                validateExpression={actionToValidation$}
             />
         </Dialog>
     );
