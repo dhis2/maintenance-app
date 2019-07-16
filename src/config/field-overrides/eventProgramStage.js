@@ -9,4 +9,12 @@ export default new Map([
             },
         },
     ],
+    [
+        'featureType',
+        {
+            fieldOptions: {
+                options: featureTypeOverride,
+            },
+        },
+    ],
 ]);
