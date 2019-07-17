@@ -54,18 +54,22 @@ export default class OrganisationUnitList extends React.Component {
                         return listActions.setListSource(ModelCollection.create(d2.models.organisationUnit));
                     }
 
-                    let organisationUnitList = d2.models.organisationUnit
-                        .filter().on('name').notEqual('default');
+                    const [fullSelectedOrganisationUnit, childrenList] = await Promise.all([
+                        // The d2-ui orgUnitTree component uses d2.models.organisationUnit instances with only a few properties
+                        // We need more properties to display the item details next to the list, so we fetch a fuller version of the model instance
+                        d2.models.organisationUnit
+                            .get(selectedOrganisationUnit.id, { fields: fieldFilteringForQuery}),
 
-                    organisationUnitList = await organisationUnitList
-                        .filter().on('name').notEqual('default')
-                        .filter().on('parent.id').equals(selectedOrganisationUnit.id)
-                        .list({ fields: fieldFilteringForQuery });
+                        d2.models.organisationUnit
+                            .filter().on('name').notEqual('default')
+                            .filter().on('parent.id').equals(selectedOrganisationUnit.id)
+                            .list({ fields: fieldFilteringForQuery })
+                    ])
 
                     // DHIS2-2160 Add the selected node to the list to
                     // avoid having to select the parent node to edit
                     // the selected node...
-                    let prependedOrgUnitList = createPrependedOrgUnitList(selectedOrganisationUnit, organisationUnitList, d2);
+                    let prependedOrgUnitList = createPrependedOrgUnitList(fullSelectedOrganisationUnit, childrenList, d2);
                     listActions.setListSource(prependedOrgUnitList);
                 },
                 error => log.error(error)
