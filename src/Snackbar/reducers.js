@@ -20,7 +20,7 @@ export default function snackReducer(state = initialSnackState, action) {
             onActionTouchTap,
             translate,
             variables,
-        } = action.payload.data;
+        } = action.payload.data || action.payload;
 
         return {
             show: true,
