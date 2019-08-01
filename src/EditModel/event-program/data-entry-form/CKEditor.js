@@ -40,7 +40,23 @@ export default class CKEditor extends Component {
 
         this.editor.setData(this.props.initialContent);
 
+        // editor 'change'-event is not fired in source-mode,
+        // This results in the need to switch back to HTML-mode to save source-data
+        // Therefore we setup this observable when switching to source
+        // See https://jira.dhis2.org/browse/DHIS2-5276
+        let sourceChange$ = Observable.fromEventPattern(x => this.editor.on('mode', x))
+            .switchMap(e => {
+                if (e.editor.mode === 'source') {
+                    const editable = e.editor.editable();
+                    return Observable.fromEventPattern(x =>
+                        editable.attachListener(editable, 'input', x)
+                    );
+                }
+                return Observable.empty();
+            });
+
         const editorChangeSubscription = Observable.fromEventPattern((x) => { this.editor.on('change', x); })
+            .merge(sourceChange$)
             .debounceTime(250)
             .subscribe(() => {
                 onEditorChange(this.editor.getData());
