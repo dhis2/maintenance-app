@@ -33,6 +33,18 @@ const styles = {
 };
 
 class CreateDataEntryForm extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            curTab: sectionFormIndex
+        }
+    }
+
+    onTabChange = (_, __, tab) => {
+        const curTab = tab.props.index
+        this.setState({ curTab })
+    }
+
     programDataElementOrderChanged = ({ oldIndex, newIndex }) => {
         this.props.onChangeDefaultOrder(
             arrayMove(
@@ -60,7 +72,10 @@ class CreateDataEntryForm extends Component {
     render() {
         return (
             <Paper>
-                <Tabs initialSelectedIndex={sectionFormIndex}>
+                <Tabs
+                    initialSelectedIndex={sectionFormIndex}
+                    onChange={this.onTabChange}
+                >
                     {this.renderTab(
                         this.getTranslation('basic'),
                         <DefaultForm
@@ -91,9 +106,16 @@ class CreateDataEntryForm extends Component {
                         />
                     )}
 
+                    {/* Super hacky to use the number 2 here */ ''}
+                    {/* I just didn't see another way */ ''}
                     {this.renderTab(
                         this.getTranslation('custom'),
-                        <CustomForm programStage={this.props.programStage} />
+                        (
+                            <CustomForm
+                                isVisible={this.state.curTab === 2}
+                                programStage={this.props.programStage}
+                            />
+                        )
                     )}
                 </Tabs>
             </Paper>
