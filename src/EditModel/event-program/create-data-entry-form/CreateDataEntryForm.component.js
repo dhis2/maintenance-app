@@ -25,7 +25,11 @@ import {
 } from './actions';
 import { getStageSectionsById } from "../tracker-program/program-stages/selectors";
 
-const sectionFormIndex = 1;
+const formIndices = {
+  basic: 0,
+  section: 1,
+  custom: 2,
+}
 
 const styles = {
     tabContent: { padding: '3rem' },
@@ -33,6 +37,18 @@ const styles = {
 };
 
 class CreateDataEntryForm extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            curTab: formIndices.section
+        }
+    }
+
+    onTabChange = (_, __, tab) => {
+      const curTab = tab.props.index
+      this.setState({ curTab })
+    }
+
     programDataElementOrderChanged = ({ oldIndex, newIndex }) => {
         this.props.onChangeDefaultOrder(
             arrayMove(
@@ -60,7 +76,10 @@ class CreateDataEntryForm extends Component {
     render() {
         return (
             <Paper>
-                <Tabs initialSelectedIndex={sectionFormIndex}>
+                <Tabs
+                    initialSelectedIndex={this.state.curTab}
+                    onChange={this.onTabChange}
+                >
                     {this.renderTab(
                         this.getTranslation('basic'),
                         <DefaultForm
@@ -91,9 +110,16 @@ class CreateDataEntryForm extends Component {
                         />
                     )}
 
+                    {/* Super hacky to use the number 2 here */ ''}
+                    {/* I just didn't see another way */ ''}
                     {this.renderTab(
                         this.getTranslation('custom'),
-                        <CustomForm programStage={this.props.programStage} />
+                        (
+                            <CustomForm
+                                isVisible={this.state.curTab === formIndices.custom}
+                                programStage={this.props.programStage}
+                            />
+                        )
                     )}
                 </Tabs>
             </Paper>
