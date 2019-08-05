@@ -1,6 +1,7 @@
 import Store from 'd2-ui/lib/store/Store';
 import { equals, some, get, compose, identity, map, __, concat, isObject, values, flatten } from 'lodash/fp';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
+import { getMetaDataToSend } from './event-program-store/getMetaDataToSend'
 
 // ___ programSelector :: StoreState -> Model<Program>
 const programSelector = get('program');
@@ -60,70 +61,6 @@ export const isStoreStateDirty = compose(
     ),
     value => func => func(value)
 );
-
-// getMetaDataToSend :: StoreState -> SaveState
-export const getMetaDataToSend = (state) => {
-    const payload = {};
-
-    if (isProgramDirty(state)) {
-        payload.programs = [programSelector(state)]
-            .map(modelToJson);
-
-        //For custom-form
-        const programDataEntryForm = state.program.dataEntryForm;
-        if(programDataEntryForm && programDataEntryForm.id && programDataEntryForm.isDirty()) {
-            payload.dataEntryForms  = [programDataEntryForm].map(modelToJson);
-        }
-    }
-
-    if (isProgramStageDirty(state)) {
-        payload.programStages = programStagesSelector(state)
-            .map(modelToJson);
-    }
-
-    if (hasDirtyProgramStageSections(state)) {
-        const programStageSections = programStageSectionsSelector(state);
-        payload.programStageSections = Object
-            .keys(programStageSections)
-            .map(get(__, programStageSections))
-            .reduce(concat)
-            .filter(checkIfDirty)
-            .map(modelToJson)
-    }
-
-    if (hasDirtyNotificationTemplate(state)) {
-        const programStageNotifications = programStageNotificationsSelector(state);
-
-        payload.programNotificationTemplates = Object
-            .keys(programStageNotifications)
-            .map(get(__, programStageNotifications))
-            .reduce(concat)
-            .filter(checkIfDirty)
-            .map(modelToJson);
-    }
-
-    if(hasDirtyProgramNotifications(state)) {
-        payload.programNotificationTemplates = payload.programNotificationTemplates || [];
-
-        payload.programNotificationTemplates = payload.programNotificationTemplates.concat(
-            programNotificationsSelector(state).toArray().map(modelToJson)
-        )
-    }
-
-    //Program stage dataEntryForms
-    if (hasDirtyDataEntryForms(state)) {
-        const dataEntryForms = dataEntryFormsSelector(state);
-        const programStageDataEntryForms = Object
-            .keys(dataEntryForms)
-            .map(get(__, dataEntryForms))
-            .filter(checkIfDirty)
-            .map(modelToJson);
-
-        payload.dataEntryForms = payload.dataEntryForms ?
-            payload.dataEntryForms.concat(programStageDataEntryForms) : programStageDataEntryForms;
-    }
-    return payload;
-};
 
 // isValidState :: StoreState -> Boolean
 function isValidState(state) {
@@ -194,10 +131,12 @@ eventProgramStore.setState = (newState) => {
     if (!isValidState(newState)) {
         throw new Error('You are attempting to set an invalid state onto the eventProgramStore');
     }
+
     storeSetState({
         ...eventProgramStore.getState(),
         ...newState,
     });
 };
 
+export { getMetaDataToSend }
 export default eventProgramStore;

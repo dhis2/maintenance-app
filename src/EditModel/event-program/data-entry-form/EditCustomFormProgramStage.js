@@ -158,6 +158,11 @@ class EditDataEntryForm extends React.Component {
     }
 
     handleEditorChanged = (editorData) => {
+        // prevent changes when not active
+        if (!this.props.isActive) {
+            return;
+        }
+
         //prevent creation of new dataEntryForm when empty
         if(!editorData && !this.props.dataEntryForm) {
             return;
