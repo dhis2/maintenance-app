@@ -26,6 +26,11 @@ import {
 import { getStageSectionsById } from "../tracker-program/program-stages/selectors";
 
 const sectionFormIndex = 1;
+const formIndices = {
+  basic: 0,
+  section: 1,
+  custom: 2,
+}
 
 const styles = {
     tabContent: { padding: '3rem' },
@@ -36,7 +41,7 @@ class CreateDataEntryForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            curTab: sectionFormIndex
+            curTab: formIndices.section
         }
     }
 
@@ -73,7 +78,7 @@ class CreateDataEntryForm extends Component {
         return (
             <Paper>
                 <Tabs
-                    initialSelectedIndex={sectionFormIndex}
+                    initialSelectedIndex={this.state.curTab}
                     onChange={this.onTabChange}
                 >
                     {this.renderTab(
@@ -112,7 +117,7 @@ class CreateDataEntryForm extends Component {
                         this.getTranslation('custom'),
                         (
                             <CustomForm
-                                isVisible={this.state.curTab === 2}
+                                isVisible={this.state.curTab === formIndices.custom}
                                 programStage={this.props.programStage}
                             />
                         )
