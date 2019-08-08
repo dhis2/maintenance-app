@@ -1,6 +1,6 @@
 import { isStartDateBeforeEndDate } from 'd2-ui/lib/forms/Validators';
 import OrgUnitSelectDialogField from '../../forms/form-fields/orgunit-select-dialog-field';
-import CoordinateField from '../../forms/form-fields/coordinate-field';
+import CoordinateField, { validators as coordinateValidators } from '../../forms/form-fields/coordinate-field';
 
 export default new Map([
     [
@@ -16,6 +16,7 @@ export default new Map([
         'coordinates', {
             component: CoordinateField,
             fieldOptions: {},
+            validators: coordinateValidators,
         },
     ],
     [
