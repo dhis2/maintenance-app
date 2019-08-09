@@ -1,9 +1,10 @@
 import React from 'react';
 import TextField from '../../forms/form-fields/text-field';
 import { isNumber } from 'd2-ui/lib/forms/Validators';
+import { getOr } from 'lodash/fp';
 
 function isPoint(poly) {
-    return Array.isArray(poly) && (poly.length === 0 || (poly.length === 2 && !isNaN(poly[0]) && !isNaN(poly[1])));
+    return Array.isArray(poly) && (poly.length === 0 || (poly.length === 2));
 }
 
 function isValidLatitude(value) {
@@ -21,9 +22,8 @@ class CoordinateField extends React.Component {
         super(props, context);
 
         this.state = {
-            long: undefined,
-            lat: undefined,
-            coords: [],
+            //Use state for this, since props is a string due to API
+            coords: [undefined, undefined], //long, lat
         };
 
         if (props.value) {
@@ -32,56 +32,43 @@ class CoordinateField extends React.Component {
             } catch (e) {
                 /* Preventing unnecessary errors in the console */
             }
-
-            if (isPoint(this.state.coords)) {
-                this.state.lat = this.state.coords[1];
-                this.state.long = this.state.coords[0];
-            }
         }
-
-        this.updateLatLong = this.updateLatLong.bind(this);
-        this.updateLatitude = this.updateLatitude.bind(this);
-        this.updateLongitude = this.updateLongitude.bind(this);
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
 
+    getLongitude = () => getOr(undefined, 'coords[0]', this.state);
+
+    getLatitude = () => getOr(undefined, 'coords[1]', this.state);
+
+    getLongLat = () => [this.getLongitude(), this.getLatitude()];
+
     updateLatLong(lat, long) {
-        this.setState(state => ({
-            lat,
-            long,
-            coords: isPoint(state.coords) && lat && long ? [long, lat] : state.coords,
-        }), () => {
-            if (lat && long && isPoint(this.state.coords)) {
-                this.props.onChange({ target: { value: `[${this.state.coords[0]},${this.state.coords[1]}]` } });
-            } else {
+        this.setState({
+            coords: [long, lat]
+        }, () => {
+            if (!lat && !long) {
                 this.props.onChange({ target: { value: '' } });
+            } else {
+                this.props.onChange({ target: { value: JSON.stringify(this.getLongLat()) } });
             }
-        });
+        })
     }
 
-    updateLatitude(event) {
+    handleLatitude = (event) => {
         const lat = event.target.value.length > 0 ? event.target.value : undefined;
-        const long = this.state.long;
+        const latError = !lat || isValidLatitude(lat) ? undefined: this.getTranslation(isValidLatitude.message)
 
-        if (!isValidLatitude(lat)) {
-            this.setState({ latError: this.getTranslation(isValidLatitude.message) });
-        } else {
-            this.setState({ latError: undefined });
-            this.updateLatLong(lat, long);
-        }
+        this.setState({ latError });
+        this.updateLatLong(lat, this.getLongitude());
     }
 
-    updateLongitude(event) {
-        const lat = this.state.lat;
-        const long = event.target.value;
-
-        if (!isValidLongitude(long)) {
-            this.setState({ longError: this.getTranslation(isValidLongitude.message) });
-        } else {
-            this.setState({ longError: undefined });
-            this.updateLatLong(lat, long);
-        }
+    handleLongitude = (event) => {
+        const long = event.target.value.length > 0 ? event.target.value : undefined;
+        const longError = !long || isValidLongitude(long) ? undefined: this.getTranslation(isValidLongitude.message)
+       
+        this.setState({ longError });
+        this.updateLatLong(this.getLatitude(), long);
     }
 
     render() {
@@ -98,15 +85,15 @@ class CoordinateField extends React.Component {
                     <TextField
                         {...this.props}
                         labelText={this.getTranslation('latitude')}
-                        value={this.state.lat}
-                        onChange={this.updateLatitude}
+                        value={this.getLatitude()}
+                        onChange={this.handleLatitude}
                         errorText={this.state.latError}
                     />
                     <TextField
                         {...this.props}
                         labelText={this.getTranslation('longitude')}
-                        value={this.state.long}
-                        onChange={this.updateLongitude}
+                        value={this.getLongitude()}
+                        onChange={this.handleLongitude}
                         errorText={this.state.longError}
                     />
                 </div>
@@ -130,4 +117,24 @@ class CoordinateField extends React.Component {
 CoordinateField.propTypes = { value: React.PropTypes.string, onChange: React.PropTypes.func.isRequired };
 CoordinateField.contextTypes = { d2: React.PropTypes.object.isRequired };
 
+// Used to actually prevent saving
+export const validators = [
+    {
+        validator(value) {
+            let coords = value
+            try {
+                coords = value ? JSON.parse(value) : null
+            } catch(e) {
+                return false;
+            }
+            if (!coords) {
+                return true
+            }
+            
+            const [long, lat] = coords;
+            return isValidLongitude(long) && isValidLatitude(lat);
+        },
+        message: 'invalid_coordinate',
+    },
+];
 export default CoordinateField;
