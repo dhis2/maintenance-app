@@ -24,10 +24,10 @@ const styles = {
         color: 'rgba(0,0,0,0.3)',
     },
     leftWrap: {
-        marginRight: 320,
+        marginRight: 380,
     },
     rightWrap: {
-        width: 300,
+        width: 360,
         float: 'right',
         marginRight: 0,
         display: 'flex',
@@ -238,6 +238,7 @@ class ProgramRuleConditionField extends React.Component {
             disabled={this.props.disabled}
             onClick={this.makeTextPusher(text)}
             title={text}
+            buttonStyle={{textAlign: 'left'}}
         />
     );
 

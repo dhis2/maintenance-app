@@ -23,6 +23,10 @@ const programRuleFunctions = [
     'd2:split( <text>, <text>, <number> )',
     'd2:length( <text> )',
     'd2:inOrgUnitGroup( <orgunit_group_code> )',
+    'd2:hasUserRole( <user_role> )',
+    'd2:zScoreWFA( <ageInMonth>, <weight>, <gender> )',
+    'd2:zScoreHFA( <ageInMonth>, <height>, <gender> )',
+    'd2:zScoreWFH( <height>, <weight>, <gender> )',
 ];
 
 export default programRuleFunctions;
