@@ -116,7 +116,7 @@ class CreateDataEntryForm extends Component {
                         this.getTranslation('custom'),
                         (
                             <CustomForm
-                                isVisible={this.state.curTab === formIndices.custom}
+                                isActive={this.state.curTab === formIndices.custom}
                                 programStage={this.props.programStage}
                             />
                         )
