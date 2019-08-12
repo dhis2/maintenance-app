@@ -12,7 +12,7 @@ const steps = [
     {
         key: 'tracked_attributes',
         name: 'attributes',
-        componentName: 'AssignAttributes',
+        componentName: 'AttributesStepper',
     },
     {
         key: 'stages',
