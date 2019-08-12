@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { createStepperFromConfig } from '../../../stepper/stepper';
 import AssignAttributes from './AssignAttributes';
-//import CreateEnrollmentDataEntryForm from './data-entry-form/CreateEnrollmentDataEntryForm';
+import CreateEnrollmentDataEntryForm from './data-entry-form/CreateEnrollmentDataEntryForm';
 import { withAttributes } from './AssignAttributes';
 const steps = [
     {
@@ -18,9 +18,9 @@ const steps = [
     },
 ]
 
-function CreateEnrollmentDataEntryForm(props) {
-    return <div>hello</div>
-}
+// function CreateEnrollmentDataEntryForm(props) {
+    // return <div>hello</div>
+// }
 const stepperConfig = () => {
     const stepComponents = {
         AssignAttributes,

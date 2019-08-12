@@ -5,10 +5,10 @@ import Paper from 'material-ui/Paper/Paper';
 import { bindActionCreators } from 'redux';
 import { arrayMove } from 'react-sortable-hoc';
 
-import SectionForm from '../../../create-data-entry-form/SectionForm.component'
-import EditCustomRegistrationForm from '../../../data-entry-form/EditCustomRegistrationForm';
+import SectionForm from '../../../create-data-entry-form/SectionForm';
+import { CustomRegistrationDataEntryForm } from '../../../data-entry-form/EditCustomRegistrationForm';
 import mapPropsStream from 'recompose/mapPropsStream';
-import mapProps from 'recompose/mapProps';
+import withProps from 'recompose/withProps';
 import { sortBy, get, getOr, compose, find } from 'lodash/fp';
 import withHandlers from 'recompose/withHandlers';
 import eventProgramStore from '../../../eventProgramStore';
@@ -34,11 +34,11 @@ const styles = {
     helpText: { color: 'gray', marginBottom: '2rem' },
 };
 
-class CreateDataEntryForm extends Component {
+class CreateEnrollmentDataEntryForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            curTab: sectionFormIndex
+            curTab: 0
         }
     }
 
@@ -72,6 +72,8 @@ class CreateDataEntryForm extends Component {
     };
 
     render() {
+        console.log(this.props)
+        
         return (
             <Paper>
                 <Tabs
@@ -81,11 +83,11 @@ class CreateDataEntryForm extends Component {
                     {this.renderTab(
                         this.getTranslation('section'),
                         <SectionForm
-                            availableDataElements={
-                                this.props.availableDataElements
+                            availableElements={
+                                this.props.availableAttributes
                             }
-                            programStageSections={
-                                this.props.programStageSections
+                            sections={
+                                this.props.programSections
                             }
                             onSectionUpdated={
                                 this.props.onSectionUpdated
@@ -95,6 +97,7 @@ class CreateDataEntryForm extends Component {
                             }
                             onSectionAdded={this.props.onSectionAdded}
                             onSectionRemoved={this.props.onSectionRemoved}
+                            elementPath='attribute'
                         />
                     )}
 
@@ -103,7 +106,7 @@ class CreateDataEntryForm extends Component {
                     {this.renderTab(
                         this.getTranslation('custom'),
                         (
-                            <EditCustomRegistrationForm
+                            <CustomRegistrationDataEntryForm
                                 isVisible={this.state.curTab === 2}
                                 programStage={this.props.programStage}
                             />
@@ -115,7 +118,7 @@ class CreateDataEntryForm extends Component {
     }
 }
 
-CreateDataEntryForm.contextTypes = {
+CreateEnrollmentDataEntryForm.contextTypes = {
     d2: PropTypes.object,
 };
 
@@ -128,7 +131,7 @@ HelpText.contextTypes = {
     d2: PropTypes.object,
 };
 
-CreateDataEntryForm.propTypes = {
+CreateEnrollmentDataEntryForm.propTypes = {
     onChangeDefaultOrder: PropTypes.func.isRequired,
     onSectionOrderChanged: PropTypes.func.isRequired,
     onSectionUpdated: PropTypes.func.isRequired,
@@ -149,10 +152,6 @@ CreateDataEntryForm.propTypes = {
     ).isRequired,
 };
 
-const mapStateToProps = state => ({
-    currentProgramStageId: getCurrentProgramStage(state),
-});
-
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
@@ -165,78 +164,17 @@ const mapDispatchToProps = dispatch =>
         dispatch
     );
 
-const programStageSections$ = eventProgramStore.map(
-    getOr([], 'programStageSections')
-);
-
-const trackerDataElements$ = eventProgramStore.map(
-    getOr([], 'availableDataElements')
-);
+const sections$ = eventProgramStore.map(
+        getOr([], 'programSections')
+    );
 
 const enhance = compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    mapPropsStream(props$ =>
-        props$.combineLatest(
-            getProgramStageOrFirstFromProps$(props$),
-            programStageSections$,
-            trackerDataElements$,
-            eventProgramStore,
-            (
-                props,
-                programStage,
-                programStageSections,
-                trackerDataElements,
-                store,
-            ) => ({
-                ...props,
-                programStage,
-                programStageSections: getStageSectionsById(store, programStage.id) || [],
-                trackerDataElements,
-            })
-        )
-    ),
-    mapProps(({ trackerDataElements, ...props }) => {
-        const getDisplayNameForDataElement = dataElement =>
-            dataElement.displayName ||
-            get(
-                'displayName',
-                find(
-                    trackerDataElement =>
-                        dataElement.id === trackerDataElement.id,
-                    trackerDataElements
-                )
-            );
-
-        const availableDataElements =
-            props.programStage.programStageDataElements;
-
-        return {
-            ...props,
-            programStageSections: sortBy(
-                ['sortOrder'],
-                props.programStageSections.map(section => {
-                    section.dataElements = Array.from(
-                        section.dataElements.values()
-                    ).map(dataElement => ({
-                        id: dataElement.id,
-                        displayName: getDisplayNameForDataElement(dataElement),
-                    }));
-
-                    return section;
-                })
-            ),
-            availableDataElements: sortBy(
-                ['sortOrder'],
-                availableDataElements.map(programDataElement => ({
-                    ...programDataElement.dataElement,
-                    displayName: getDisplayNameForDataElement(
-                        programDataElement.dataElement
-                    ),
-                    sortOrder: programDataElement.sortOrder,
-                }))
-            ),
-        };
-    }),
+    connect(null, mapDispatchToProps),
+    mapPropsStream(props$ => props$.combineLatest(sections$, (props, sections) => ({
+        ...props,
+        programSections: sections,
+    }) )),
+   
     withHandlers({
         onChangeDefaultOrder: ({
             programStage,
@@ -283,4 +221,4 @@ const enhance = compose(
     })
 );
 
-export default enhance(CreateDataEntryForm);
+export default enhance(CreateEnrollmentDataEntryForm);

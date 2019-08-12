@@ -270,6 +270,7 @@ function createEventProgramStoreStateFromMetadataResponse(
                 programStages,
             ),
             programStageSections: extractProgramStageSections(programStages),
+            programSections: program.programSections.toArray(),
             availableDataElements: dataElements,
             availableAttributes: trackedEntityAttributes,
             renderingOptions,

@@ -70,6 +70,7 @@ function isValidState(state) {
         'programStageToEditCopy',
         'programStageSections',
         'programStageNotifications',
+        'programSections',
         'availableDataElements',
         'availableAttributes',
         'renderingOptions',
