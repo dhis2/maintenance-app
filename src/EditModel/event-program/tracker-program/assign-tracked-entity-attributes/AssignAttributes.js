@@ -103,7 +103,7 @@ export const withAttributes = mapPropsStream(props$ =>
             availableAttributes,
             renderingOptions,
             model: program,
-            assignedAttributes: program.programTrackedEntityAttributes,
+            assignedAttributes: program.programTrackedEntityAttributes.map(addDisplayProperties(availableAttributes, renderingOptions)),
         })
     )
 );

@@ -14,10 +14,12 @@ const SectionList = ({
     onSectionRemoved,
     onDataElementRemoved,
     sortItems,
+    elementPath
 }) => (
     <div>
-        { sections.map((section, index) => (
-            <Section
+        { sections.map((section, index) => {
+            const elements = section[elementPath];
+            return <Section
                 key={`section-${index}`}
                 index={index}
                 section={section}
@@ -29,8 +31,10 @@ const SectionList = ({
                 onSectionRemoved={() => { onSectionRemoved(section); }}
                 onDataElementRemoved={(dataElementId) => { onDataElementRemoved(dataElementId, section.id); }}
                 sortItems={({ oldIndex, newIndex }) => { sortItems(index, oldIndex, newIndex); }}
+                elements={elements}
             />
-            ))}
+            })
+        }
     </div>
 );
 

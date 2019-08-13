@@ -107,6 +107,7 @@ class Section extends Component {
     };
 
     render() {
+        const elements = this.props.elements;
         const removalDialogActions = [
             <FlatButton
                 primary
@@ -120,13 +121,13 @@ class Section extends Component {
             />,
         ];
 
-        const sectionContent = (this.props.section.dataElements.length > 0) ?
+        const sectionContent = (elements && elements.length > 0) ?
             (<div style={styles.sectionContent}>
                 <SortableSectionDataList
                     distance={4}
                     onSortEnd={this.onSortEnd}
                     onDataElementRemoved={this.props.onDataElementRemoved}
-                    sectionDataElements={this.props.section.dataElements}
+                    sectionDataElements={elements}
                 />
             </div>) :
             (<div style={styles.noDataElementsMessage}>

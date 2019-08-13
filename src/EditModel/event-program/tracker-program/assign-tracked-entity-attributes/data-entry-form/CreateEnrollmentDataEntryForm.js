@@ -77,7 +77,7 @@ class CreateEnrollmentDataEntryForm extends Component {
                     {this.renderTab(
                         this.getTranslation('section'),
                         <SectionForm
-                            availableElements={this.props.availableAttributes}
+                            availableElements={this.props.assignedAttributes}
                             sections={this.props.programSections}
                             onSectionUpdated={this.props.onSectionUpdated}
                             onSectionOrderChanged={
@@ -85,7 +85,7 @@ class CreateEnrollmentDataEntryForm extends Component {
                             }
                             onSectionAdded={this.props.onSectionAdded}
                             onSectionRemoved={this.props.onSectionRemoved}
-                            elementPath="attribute"
+                            elementPath="elements"
                         />
                     )}
 
@@ -160,7 +160,22 @@ const enhance = compose(
             programSections: sections,
         }))
     ),
-
+    withProps(({ assignedAttributes, programSections }) => {
+        // Use tea attribute name instead of ptea name (program name prefixed)
+        return {
+            assignedAttributes: assignedAttributes.map(a => ({
+                ...a,
+                displayName:
+                    a.trackedEntityAttribute.displayName || a.displayName,
+            })),
+           programSections: programSections.map(s => ({
+                ...s,   
+                elements: Array.from(s.programTrackedEntityAttribute.values()).map(ptea => ({
+                   ...ptea,
+               }))
+           }))
+        };
+    }),
     withHandlers({
         onSectionUpdated: ({ updateProgramSection }) => (
             sectionId,
@@ -178,16 +193,12 @@ const enhance = compose(
                 programSections,
             });
         },
-        onSectionAdded: ({
-            addProgramSection,
-        }) => newSectionData => {
+        onSectionAdded: ({ addProgramSection }) => newSectionData => {
             addProgramSection({
                 newSectionData,
             });
         },
-        onSectionRemoved: ({
-            removeProgramSection,
-        }) => programSection => {
+        onSectionRemoved: ({ removeProgramSection }) => programSection => {
             removeProgramSection({
                 programSection,
             });

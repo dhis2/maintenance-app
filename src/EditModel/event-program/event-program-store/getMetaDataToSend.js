@@ -133,6 +133,14 @@ const handleDirtyDataEntryForms = state => payload => {
     return payload
 }
 
+const handleProgramSections = state => payload => {
+    //TODO: CHECK DIRTY, handle model overwrite
+    return {
+        ...payload,
+        programSections: state.programSections.map(modelToJson)
+    }
+}
+
 // getMetaDataToSend :: StoreState -> SaveState
 export const getMetaDataToSend = (state) => compose(
     handleDirtyDataEntryForms(state),
@@ -141,4 +149,5 @@ export const getMetaDataToSend = (state) => compose(
     handleProgramStageSections(state),
     handleProgramStages(state),
     handleDataEntryForm(state),
+    handleProgramSections(state),
 )({});
