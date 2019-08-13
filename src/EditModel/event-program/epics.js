@@ -41,6 +41,7 @@ import notificationEpics from './notifications/epics';
 import createAssignDataElementEpics from './assign-data-elements/epics';
 import createAssignAttributeEpics from './tracker-program/assign-tracked-entity-attributes/epics';
 import createCreateDataEntryFormEpics from './create-data-entry-form/epics';
+import createEnrollmentDataEntryFormEpics from './tracker-program/assign-tracked-entity-attributes/data-entry-form/epics';
 import dataEntryFormEpics from './data-entry-form/epics';
 import trackerProgramEpics from './tracker-program/epics';
 import { createModelToEditEpic, createModelToEditProgramStageEpic } from '../epicHelpers';
@@ -495,6 +496,7 @@ export default combineEpics(
     createAssignDataElementEpics(eventProgramStore),
     createAssignAttributeEpics(eventProgramStore),
     createCreateDataEntryFormEpics(eventProgramStore),
+    createEnrollmentDataEntryFormEpics(eventProgramStore),
     dataEntryFormEpics,
     trackerProgramEpics,
     showSnackBarMessageEpic,

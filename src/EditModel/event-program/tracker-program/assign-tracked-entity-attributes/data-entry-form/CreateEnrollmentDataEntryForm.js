@@ -13,21 +13,16 @@ import { sortBy, get, getOr, compose, find } from 'lodash/fp';
 import withHandlers from 'recompose/withHandlers';
 import eventProgramStore from '../../../eventProgramStore';
 import {
-    changeProgramStageDataElementOrder,
-    changeProgramStageSectionOrder,
-    addProgramStageSection,
-    removeProgramStageSection,
-    updateProgramStageSection,
+    changeProgramSectionOrder,
+    addProgramSection,
+    removeProgramSection,
+    updateProgramSection,
 } from './actions';
 
-const sectionFormIndex = 1;
-
-const formIndex = {
-    basic: 0,
-    section: 1,
-    custom: 2,
-    
-}
+const formIndices = {
+    section: 0,
+    custom: 1,
+};
 
 const styles = {
     tabContent: { padding: '3rem' },
@@ -36,21 +31,21 @@ const styles = {
 
 class CreateEnrollmentDataEntryForm extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            curTab: 0
-        }
+            curTab: formIndices.section,
+        };
     }
 
     onTabChange = (_, __, tab) => {
-        const curTab = tab.props.index
-        this.setState({ curTab })
-    }
+        const curTab = tab.props.index;
+        this.setState({ curTab });
+    };
 
     programDataElementOrderChanged = ({ oldIndex, newIndex }) => {
         this.props.onChangeDefaultOrder(
             arrayMove(
-                this.props.availableDataElements.map(
+                this.props.availableAttributes.map(
                     dataElement => dataElement.id
                 ),
                 oldIndex,
@@ -59,58 +54,47 @@ class CreateEnrollmentDataEntryForm extends Component {
         );
     };
 
-    renderTab = (label, contentToRender) =>
+    renderTab = (label, contentToRender) => (
         <Tab style={styles.tab} label={label}>
             <div style={styles.tabContent}>
                 <HelpText />
                 {contentToRender}
             </div>
-        </Tab>;
+        </Tab>
+    );
 
     getTranslation = key => {
         return this.context.d2.i18n.getTranslation(key);
     };
 
     render() {
-        console.log(this.props)
-        
         return (
             <Paper>
                 <Tabs
-                    initialSelectedIndex={sectionFormIndex}
+                    initialSelectedIndex={formIndices.section}
                     onChange={this.onTabChange}
                 >
                     {this.renderTab(
                         this.getTranslation('section'),
                         <SectionForm
-                            availableElements={
-                                this.props.availableAttributes
-                            }
-                            sections={
-                                this.props.programSections
-                            }
-                            onSectionUpdated={
-                                this.props.onSectionUpdated
-                            }
+                            availableElements={this.props.availableAttributes}
+                            sections={this.props.programSections}
+                            onSectionUpdated={this.props.onSectionUpdated}
                             onSectionOrderChanged={
                                 this.props.onSectionOrderChanged
                             }
                             onSectionAdded={this.props.onSectionAdded}
                             onSectionRemoved={this.props.onSectionRemoved}
-                            elementPath='attribute'
+                            elementPath="attribute"
                         />
                     )}
 
-                    {/* Super hacky to use the number 2 here */ ''}
-                    {/* I just didn't see another way */ ''}
                     {this.renderTab(
                         this.getTranslation('custom'),
-                        (
-                            <CustomRegistrationDataEntryForm
-                                isVisible={this.state.curTab === 2}
-                                programStage={this.props.programStage}
-                            />
-                        )
+                        <CustomRegistrationDataEntryForm
+                            isActive={this.state.curTab === formIndices.custom}
+                            programStage={this.props.programStage}
+                        />
                     )}
                 </Tabs>
             </Paper>
@@ -122,27 +106,27 @@ CreateEnrollmentDataEntryForm.contextTypes = {
     d2: PropTypes.object,
 };
 
-const HelpText = (_, { d2 }) =>
+const HelpText = (_, { d2 }) => (
     <div style={styles.helpText}>
         {d2.i18n.getTranslation('program_forms_help_text')}
-    </div>;
+    </div>
+);
 
 HelpText.contextTypes = {
     d2: PropTypes.object,
 };
 
 CreateEnrollmentDataEntryForm.propTypes = {
-    onChangeDefaultOrder: PropTypes.func.isRequired,
     onSectionOrderChanged: PropTypes.func.isRequired,
     onSectionUpdated: PropTypes.func.isRequired,
     onSectionAdded: PropTypes.func.isRequired,
     onSectionRemoved: PropTypes.func.isRequired,
-    programStageSections: PropTypes.arrayOf(
+    programSections: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
             sortOrder: PropTypes.number.isRequired,
             displayName: PropTypes.string.isRequired,
-            dataElements: PropTypes.arrayOf(
+            attributes: PropTypes.arrayOf(
                 PropTypes.shape({
                     id: PropTypes.string.isRequired,
                     displayName: PropTypes.string.isRequired,
@@ -155,68 +139,58 @@ CreateEnrollmentDataEntryForm.propTypes = {
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
-            changeProgramStageDataElementOrder,
-            changeProgramStageSectionOrder,
-            addProgramStageSection,
-            removeProgramStageSection,
-            updateProgramStageSection,
+            changeProgramSectionOrder,
+            addProgramSection,
+            removeProgramSection,
+            updateProgramSection,
         },
         dispatch
     );
 
-const sections$ = eventProgramStore.map(
-        getOr([], 'programSections')
-    );
+const sections$ = eventProgramStore.map(getOr([], 'programSections'));
 
 const enhance = compose(
-    connect(null, mapDispatchToProps),
-    mapPropsStream(props$ => props$.combineLatest(sections$, (props, sections) => ({
-        ...props,
-        programSections: sections,
-    }) )),
-   
+    connect(
+        null,
+        mapDispatchToProps
+    ),
+    mapPropsStream(props$ =>
+        props$.combineLatest(sections$, (props, sections) => ({
+            ...props,
+            programSections: sections,
+        }))
+    ),
+
     withHandlers({
-        onChangeDefaultOrder: ({
-            programStage,
-            changeProgramStageDataElementOrder,
-        }) => newDataElementOrder => {
-            changeProgramStageDataElementOrder({
-                programStage: programStage.id,
-                newDataElementOrder,
-            });
-        },
-        onSectionUpdated: ({
-            programStage,
-            updateProgramStageSection,
-        }) => (sectionId, newSectionData) => {
-            updateProgramStageSection({
-                programStage: programStage.id,
-                programStageSectionId: sectionId,
-                newProgramStageSectionData: newSectionData,
+        onSectionUpdated: ({ updateProgramSection }) => (
+            sectionId,
+            newSectionData
+        ) => {
+            updateProgramSection({
+                programSectionId: sectionId,
+                newProgramSectionData: newSectionData,
             });
         },
         onSectionOrderChanged: ({
-            programStage,
-            changeProgramStageSectionOrder,
-        }) => programStageSections => {
-            changeProgramStageSectionOrder({
-                programStage: programStage.id,
-                programStageSections
+            changeProgramSectionOrder,
+        }) => programSections => {
+            changeProgramSectionOrder({
+                programSections,
             });
         },
-        onSectionAdded: ({ programStage, addProgramStageSection }) => (newSectionData) => {
-            addProgramStageSection({
-                programStage: programStage.id,
+        onSectionAdded: ({
+            addProgramSection,
+        }) => newSectionData => {
+            addProgramSection({
                 newSectionData,
             });
         },
         onSectionRemoved: ({
-            programStage,
-            removeProgramStageSection,
-        }) => programStageSection => {
-            removeProgramStageSection({
-                programStage: programStage.id,
-                programStageSection });
+            removeProgramSection,
+        }) => programSection => {
+            removeProgramSection({
+                programSection,
+            });
         },
     })
 );
