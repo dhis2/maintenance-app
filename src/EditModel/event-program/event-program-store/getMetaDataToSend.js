@@ -137,7 +137,11 @@ const handleProgramSections = state => payload => {
     //TODO: CHECK DIRTY, handle model overwrite
     return {
         ...payload,
-        programSections: state.programSections.map(modelToJson)
+        programSections: state.programSections.map(modelToJson).map(s => {
+            //TODO: remove this once API is fixed
+            s.attributes = state.programSections.find(sec => sec.id === s.id).attributes;
+            return s;
+        })
     }
 }
 

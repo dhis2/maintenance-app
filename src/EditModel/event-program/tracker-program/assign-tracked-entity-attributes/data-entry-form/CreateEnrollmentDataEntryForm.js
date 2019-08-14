@@ -9,7 +9,7 @@ import SectionForm from '../../../create-data-entry-form/SectionForm';
 import { CustomRegistrationDataEntryForm } from '../../../data-entry-form/EditCustomRegistrationForm';
 import mapPropsStream from 'recompose/mapPropsStream';
 import withProps from 'recompose/withProps';
-import { sortBy, get, getOr, compose, find } from 'lodash/fp';
+import { sortBy, get, getOr, compose, find, differenceBy } from 'lodash/fp';
 import withHandlers from 'recompose/withHandlers';
 import eventProgramStore from '../../../eventProgramStore';
 import {
@@ -161,19 +161,20 @@ const enhance = compose(
         }))
     ),
     withProps(({ assignedAttributes, programSections }) => {
-        // Use tea attribute name instead of ptea name (program name prefixed)
+        // We need to actually use the tea and not ptea, keep ptea sortorderr
         return {
             assignedAttributes: assignedAttributes.map(a => ({
-                ...a,
-                displayName:
-                    a.trackedEntityAttribute.displayName || a.displayName,
+                ...a.trackedEntityAttribute,
+                sortOrder: a.sortOrder,
             })),
-           programSections: programSections.map(s => ({
-                ...s,   
-                elements: Array.from(s.programTrackedEntityAttribute.values()).map(ptea => ({
+            programSections: programSections.map(s => {
+                //TODO: fix this to s.attributes only when API is fixed
+                const pteaArr = s.programTrackedEntityAttribute.toArray();
+                s.elements= pteaArr.map(ptea => ({
                    ...ptea,
-               }))
-           }))
+               })).concat(s.attributes ? differenceBy('id',s.attributes, pteaArr): [])
+               return s;
+            })
         };
     }),
     withHandlers({

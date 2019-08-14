@@ -147,6 +147,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         'attributeValues[:all,attribute[id,name,displayName]]',
         'organisationUnits[id,path]',
         'dataEntryForm[:owner]',
+        'programSections[id,name,displayName,renderType,program,programTrackedEntityAttribute[id,name,displayName,sortOrder]]',
         'notificationTemplates[:owner]',
         'programTrackedEntityAttributes',
         'user[id,name]',
