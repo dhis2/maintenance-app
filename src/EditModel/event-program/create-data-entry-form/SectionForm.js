@@ -45,7 +45,6 @@ class SectionForm extends Component {
 
     getElementsForSection = (section) => {
         const elems = section[this.props.elementPath];
-        console.log('ELEMENTS', elems)
         return elems;
     }
 

@@ -81,8 +81,6 @@ const addProgramSection = store => action$ => action$
             newSection.renderType = newSectionData.renderType;
             newSection.sortOrder = sortOrder;
 
-            console.log(newSection);
-
             // Add the section to the programStage, otherwise the section won't be associated with the programStage
             newSection.program = program;
             // Add the inverse relationship so the section gets associated correctly

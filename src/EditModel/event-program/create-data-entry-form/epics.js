@@ -80,8 +80,6 @@ const changeProgramStageSectionOrder = store => action$ => action$
             const newSections = get('payload.programStageSections', action);
 
             const sortedSections = compose(sortBy('sortOrder'), setSortOrderToIndex)(newSections);
-            console.log(sortedSections)
-            console.log(newSections)
             state.programStageSections[programStageId] = sortedSections;
 
             store.setState(
