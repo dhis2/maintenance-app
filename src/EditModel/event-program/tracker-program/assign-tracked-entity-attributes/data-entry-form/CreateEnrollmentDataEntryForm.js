@@ -17,6 +17,7 @@ import {
     addProgramSection,
     removeProgramSection,
     updateProgramSection,
+    setProgramSectionElements
 } from './actions';
 
 const formIndices = {
@@ -85,7 +86,7 @@ class CreateEnrollmentDataEntryForm extends Component {
                             }
                             onSectionAdded={this.props.onSectionAdded}
                             onSectionRemoved={this.props.onSectionRemoved}
-                            elementPath="elements"
+                            elementPath="trackedEntityAttributes"
                         />
                     )}
 
@@ -168,11 +169,7 @@ const enhance = compose(
                 sortOrder: a.sortOrder,
             })),
             programSections: programSections.map(s => {
-                //TODO: fix this to s.attributes only when API is fixed
-                const pteaArr = s.programTrackedEntityAttribute.toArray();
-                s.elements= pteaArr.map(ptea => ({
-                   ...ptea,
-               })).concat(s.attributes ? differenceBy('id',s.attributes, pteaArr): [])
+                s.trackedEntityAttributes= Array.from(s.trackedEntityAttributes.values())
                return s;
             })
         };

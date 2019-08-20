@@ -15,6 +15,7 @@ const programStageSectionsSelector = get('programStageSections');
 const programStageNotificationsSelector = get('programStageNotifications');
 const programNotificationsSelector = get('program.notificationTemplates');
 const dataEntryFormsSelector = get('dataEntryFormForProgramStage');
+const programSectionsSelector = get('programSections');
 const modelToJson = getOwnedPropertyJSON;
 
 const programSelector = get('program');
@@ -24,6 +25,7 @@ const hasDirtyProgramStageSections = compose(some(checkIfDirty), flatten, values
 const hasDirtyNotificationTemplate = compose(some(checkIfDirty), flatten, values, programStageNotificationsSelector)
 const hasDirtyProgramNotifications = state => programNotificationsSelector(state).isDirty();
 const hasDirtyDataEntryForms = compose(some(checkIfDirty), values, dataEntryFormsSelector);
+const hasDirtyProgramSections = compose(some(checkIfDirty), values, programSectionsSelector);
 
 const handleDataEntryForm = state => payload => {
     if (isProgramDirty(state)) {
@@ -134,15 +136,13 @@ const handleDirtyDataEntryForms = state => payload => {
 }
 
 const handleProgramSections = state => payload => {
-    //TODO: CHECK DIRTY, handle model overwrite
-    return {
-        ...payload,
-        programSections: state.programSections.map(modelToJson).map(s => {
-            //TODO: remove this once API is fixed
-            s.attributes = state.programSections.find(sec => sec.id === s.id).attributes;
-            return s;
-        })
+    if(hasDirtyProgramSections(state)) {
+        return {
+            ...payload,
+            programSections: state.programSections.map(modelToJson)
+        }
     }
+    return payload;
 }
 
 // getMetaDataToSend :: StoreState -> SaveState
