@@ -81,10 +81,9 @@ const addProgramSection = store => action$ => action$
             newSection.renderType = newSectionData.renderType;
             newSection.sortOrder = sortOrder;
 
-            // Add the section to the programStage, otherwise the section won't be associated with the programStage
+            // Add the section to the program, otherwise the section won't be associated with the program
             newSection.program = program;
             // Add the inverse relationship so the section gets associated correctly
-            // Using the  programStageSection -> programStage relationship is not sufficient and the programStage -> programStageSection is the required relationship.Th
             program.programSections.add(newSection);
             programSections.push(newSection);
 
@@ -96,7 +95,6 @@ const addProgramSection = store => action$ => action$
 const removeProgramSection = store => action$ => action$
         .ofType(PROGRAM_SECTIONS_REMOVE)
         .map(async (action) => {
-            // TODO: Update sortOrder? map(section => ({ ...section, sortOrder: section.sortOrder - 1 }), filter(section => section.sortOrder > sortOrderOfDeletedSection, sections));
             const state = store.getState();
             const program = state.program;
             const sectionToDelete = get('payload.programSection', action);
@@ -114,7 +112,7 @@ const removeProgramSection = store => action$ => action$
                 }
             }
            
-            // Remove section from programStage and normalized-store
+            // Remove section from program and normalized-store
             program.programSections.remove(sectionToDelete);
             state.programSections = updatedProgramStageSections;
             store.setState(

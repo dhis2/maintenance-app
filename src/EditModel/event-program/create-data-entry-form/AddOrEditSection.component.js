@@ -129,11 +129,11 @@ class AddOrEditSection extends Component {
         let confirmHandler;
         let confirmTxt;
         if (id) {
-            titleTxt = this.getTranslation('update_program_stage_section');
+            titleTxt = this.getTranslation('update_section');
             confirmHandler = this.confirmUpdateSection;
             confirmTxt = this.getTranslation('update');
         } else {
-            titleTxt = this.getTranslation('add_new_program_stage_section');
+            titleTxt = this.getTranslation('add_new_section');
             confirmHandler = this.confirmAddNewSection;
             confirmTxt = this.getTranslation('add');
         }
