@@ -32,6 +32,7 @@ const SectionList = ({
                 onDataElementRemoved={(dataElementId) => { onDataElementRemoved(dataElementId, section.id); }}
                 sortItems={({ oldIndex, newIndex }) => { sortItems(index, oldIndex, newIndex); }}
                 elements={elements}
+                elementPath={elementPath}
             />
             })
         }

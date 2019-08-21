@@ -131,7 +131,7 @@ class Section extends Component {
                 />
             </div>) :
             (<div style={styles.noDataElementsMessage}>
-                {this.getTranslation('no_data_elements')}
+                {this.props.elementPath === 'dataElements' ? this.getTranslation('no_data_elements') : this.getTranslation('no_attributes')}
             </div>);
 
         return (
