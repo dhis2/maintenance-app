@@ -18,9 +18,6 @@ const steps = [
     },
 ]
 
-// function CreateEnrollmentDataEntryForm(props) {
-    // return <div>hello</div>
-// }
 const stepperConfig = () => {
     const stepComponents = {
         AssignAttributes,

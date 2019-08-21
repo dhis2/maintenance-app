@@ -72,7 +72,7 @@ class CreateEnrollmentDataEntryForm extends Component {
         return (
             <Paper>
                 <Tabs
-                    initialSelectedIndex={formIndices.section}
+                    initialSelectedIndex={this.state.curTab}
                     onChange={this.onTabChange}
                 >
                     {this.renderTab(
@@ -162,7 +162,7 @@ const enhance = compose(
         }))
     ),
     withProps(({ assignedAttributes, programSections }) => {
-        // We need to actually use the tea and not ptea, keep ptea sortorderr
+        // We need to actually use the tea and not ptea, keep ptea sortOrder
         return {
             assignedAttributes: assignedAttributes.map(a => ({
                 ...a.trackedEntityAttribute,
