@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { get, has } from 'lodash/fp';
 
-import mapProps from 'recompose/mapProps';
+import withProps from 'recompose/withProps';
 import compose from 'recompose/compose';
 import mapPropsStream from 'recompose/mapPropsStream';
 import withState from 'recompose/withState';
@@ -93,28 +93,28 @@ export function tetAttributesNotInProgram(programModel) {
     }
     return [];
 }
+export const withAttributes = mapPropsStream(props$ =>
+    props$.combineLatest(
+        program$,
+        availableAttributes$,
+        renderingOptions$,
+        (props, program, availableAttributes, renderingOptions) => ({
+            ...props,
+            availableAttributes,
+            renderingOptions,
+            model: program,
+            assignedAttributes: program.programTrackedEntityAttributes.map(addDisplayProperties(availableAttributes, renderingOptions)),
+        })
+    )
+);
 
 const enhance = compose(
-    mapProps(props => ({
+    withProps(props => ({
         groupName: props.params.groupName,
         modelType: props.schema,
         modelId: props.params.modelId,
     })),
     connect(null, mapDispatchToProps),
-    mapPropsStream(props$ =>
-        props$.combineLatest(
-            program$,
-            availableAttributes$,
-            renderingOptions$,
-            (props, program, availableAttributes, renderingOptions) => ({
-                ...props,
-                availableAttributes,
-                renderingOptions,
-                model: program,
-                assignedAttributes: program.programTrackedEntityAttributes,
-            })
-        )
-    ),
     lifecycle({
         componentDidMount() {
             if (this.props.modelId === 'add') {

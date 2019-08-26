@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { arrayMove } from 'react-sortable-hoc';
 
 import DefaultForm from './DefaultForm.component';
-import SectionForm from './SectionForm.component';
+import SectionForm from './SectionForm';
 import CustomForm from './CustomForm.component';
 
 import { getCurrentProgramStage } from './selectors';
@@ -94,10 +94,10 @@ class CreateDataEntryForm extends Component {
                     {this.renderTab(
                         this.getTranslation('section'),
                         <SectionForm
-                            availableDataElements={
+                            availableElements={
                                 this.props.availableDataElements
                             }
-                            programStageSections={
+                            sections={
                                 this.props.programStageSections
                             }
                             onSectionUpdated={
@@ -108,6 +108,7 @@ class CreateDataEntryForm extends Component {
                             }
                             onSectionAdded={this.props.onSectionAdded}
                             onSectionRemoved={this.props.onSectionRemoved}
+                            elementPath='dataElements'
                         />
                     )}
 

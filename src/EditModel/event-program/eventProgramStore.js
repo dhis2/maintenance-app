@@ -45,6 +45,8 @@ const hasDirtyDataEntryForms = compose(some(checkIfDirty), values, dataEntryForm
 // __ isProgramDirty :: Object<{program}> -> Boolean
 const isProgramDirty = compose(checkIfDirty, programSelector);
 
+const hasDirtyProgramSections = compose(some(checkIfDirty), values, get('programSections'));
+
 // __ isStoreStateDirty :: StoreState -> Boolean
 export const isStoreStateDirty = compose(
     some(identity),
@@ -56,7 +58,8 @@ export const isStoreStateDirty = compose(
             hasDirtyProgramStageSections,
             hasDirtyNotificationTemplate,
             hasDirtyDataEntryForms,
-            hasDirtyProgramNotifications
+            hasDirtyProgramNotifications,
+            hasDirtyProgramSections
         ]
     ),
     value => func => func(value)
@@ -70,6 +73,7 @@ function isValidState(state) {
         'programStageToEditCopy',
         'programStageSections',
         'programStageNotifications',
+        'programSections',
         'availableDataElements',
         'availableAttributes',
         'renderingOptions',

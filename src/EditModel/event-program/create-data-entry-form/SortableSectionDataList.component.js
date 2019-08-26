@@ -17,6 +17,7 @@ const styles = {
 
     row: {
         userSelect: 'none',
+        MozUserSelect: 'none',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

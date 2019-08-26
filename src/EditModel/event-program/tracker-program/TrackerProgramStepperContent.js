@@ -14,7 +14,7 @@ import { createFormFor } from '../../formHelpers';
 import { editFieldChanged } from '../actions';
 import { flattenRouterProps, wrapInPaper } from '../../componentHelpers';
 import fieldOrder from '../../../config/field-config/field-order';
-import AssignAttributes from './assign-tracked-entity-attributes/AssignAttributes';
+import AttributesStepper from './assign-tracked-entity-attributes/AttributesStepper';
 import ProgramStage from './program-stages/ProgramStage';
 import EnrollmentDetails from './EnrollmentStep';
 const stepperConfig = () => {
@@ -36,7 +36,7 @@ const stepperConfig = () => {
             ),
         ),
         Enrollment: EnrollmentDetails,
-        AssignAttributes,
+        AttributesStepper,
         ProgramStage,
         EditDataEntryForm,
         ProgramAccess,

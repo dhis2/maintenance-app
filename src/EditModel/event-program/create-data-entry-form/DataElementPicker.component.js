@@ -31,9 +31,9 @@ const styles = {
     },
 };
 
-const DataElementPicker = ({ availableDataElements, activeDataElements, onElementPicked }, { d2 }) => (
+const DataElementPicker = ({ availableDataElements, activeDataElements, onElementPicked, heading }) => (
     <div style={styles.dataElementPicker}>
-        <div style={styles.header}>{`${d2.i18n.getTranslation('available_data_elements')}:`}</div>
+        <div style={styles.header}>{`${heading}:`}</div>
         <div style={styles.dataElementList}>
             { availableDataElements.map((element) => {
                 const elementIsActive = find(active =>
@@ -52,9 +52,6 @@ const DataElementPicker = ({ availableDataElements, activeDataElements, onElemen
     </div>
 );
 
-DataElementPicker.contextTypes = {
-    d2: PropTypes.object,
-};
 
 export class AvailableDataElement extends Component {
     constructor(props) {

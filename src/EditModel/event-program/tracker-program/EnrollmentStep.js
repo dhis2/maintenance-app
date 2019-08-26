@@ -7,7 +7,7 @@ import {flattenRouterProps, wrapInPaper} from "../../componentHelpers";
 import programStore from "../eventProgramStore";
 import fieldOrder from "../../../config/field-config/field-order";
 import {editFieldChanged} from "../actions";
-import CustomRegistrationForm from './CustomRegistrationForm';
+
 const program$ = programStore.map(get('program'));
 const enrollmentFields = fieldOrder.for('enrollment');
 
@@ -26,7 +26,6 @@ const EnrollmentDetailsForm = connectEditForm(
 const EnrollmentDetails = props => (
     <div>
         <EnrollmentDetailsForm {...props}/>
-        <CustomRegistrationForm {...props} />
     </div>
 )
 
