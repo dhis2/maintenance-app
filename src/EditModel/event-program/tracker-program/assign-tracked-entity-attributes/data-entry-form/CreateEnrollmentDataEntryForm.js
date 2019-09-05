@@ -70,7 +70,7 @@ class CreateEnrollmentDataEntryForm extends Component {
 
     render() {
         return (
-            <Paper>
+            <Paper style = {{marginTop: '15px'}}>
                 <Tabs
                     initialSelectedIndex={this.state.curTab}
                     onChange={this.onTabChange}
