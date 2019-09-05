@@ -5,6 +5,7 @@ import { createStepperFromConfig } from '../../../stepper/stepper';
 import AssignAttributes from './AssignAttributes';
 import CreateEnrollmentDataEntryForm from './data-entry-form/CreateEnrollmentDataEntryForm';
 import { withAttributes } from './AssignAttributes';
+
 const steps = [
     {
         key: 'assign_attributes',
@@ -12,8 +13,8 @@ const steps = [
         componentName: 'AssignAttributes',
     },
     {
-        key: 'create_data_entry_form',
-        name: 'create_data_entry_form',
+        key: 'create_registration_form',
+        name: 'create_registration_form',
         componentName: 'CreateEnrollmentDataEntryForm',
     },
 ]
