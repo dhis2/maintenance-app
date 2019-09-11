@@ -40,6 +40,7 @@ import {
 const styles = {
     groupEditor: {
         padding: '2rem 3rem 4rem',
+        marginTop: '15px'
     },
     fieldname: {
         fontSize: 16,
