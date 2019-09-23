@@ -66,7 +66,7 @@ class CoordinateField extends React.Component {
     handleLongitude = (event) => {
         const long = event.target.value.length > 0 ? event.target.value : undefined;
         const longError = !long || isValidLongitude(long) ? undefined: this.getTranslation(isValidLongitude.message)
-       
+
         this.setState({ longError });
         this.updateLatLong(this.getLatitude(), long);
     }
@@ -122,15 +122,24 @@ export const validators = [
     {
         validator(value) {
             let coords = value
+
             try {
                 coords = value ? JSON.parse(value) : null
             } catch(e) {
                 return false;
             }
+
             if (!coords) {
                 return true
             }
-            
+
+            // If true, coordinates are a polygon and can't be edited
+            // anyways. Return "valid: true" to not block editing
+            // of polygon org units
+            if (!isPoint(coords)) {
+                return true
+            }
+
             const [long, lat] = coords;
             return isValidLongitude(long) && isValidLatitude(lat);
         },
