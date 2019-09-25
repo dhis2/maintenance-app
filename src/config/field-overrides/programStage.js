@@ -25,8 +25,27 @@ const reportDateOptions = [
  *  or translateOptions through fieldOptions to the DropDown-component.
  */
 
-const ReportDateToUseDropDown = props =>
-    <DropDown {...props} options={reportDateOptions} translateOptions />;
+const ReportDateToUseDropDown = props => (
+    <DropDown {...props} options={reportDateOptions} translateOptions />
+);
+
+const NextScheduleDateField = props => {
+    const dataElementsOptions = props.model.programStageDataElements
+        .filter(psde => psde.dataElement.valueType === 'DATE')
+        .map(psde => ({
+            text: psde.dataElement.displayName,
+            value: psde.dataElement,
+        }));
+
+    let value = undefined;
+    if (props.model.nextScheduleDate) {
+        value = dataElementsOptions
+            .filter(opts => opts.value.id === props.model.nextScheduleDate.id)
+            .map(v => v.value)[0];
+    }
+
+    return <DropDown {...props} options={dataElementsOptions} value={value} />;
+};
 
 export default new Map([
     [
@@ -47,6 +66,12 @@ export default new Map([
             fieldOptions: {
                 options: featureTypeOverride,
             },
+        },
+    ],
+    [
+        'nextScheduleDate',
+        {
+            component: NextScheduleDateField,
         },
     ],
 ]);
