@@ -37,12 +37,13 @@ const NextScheduleDateField = props => {
             value: psde.dataElement,
         }));
 
-    let value = undefined;
-    if (props.model.nextScheduleDate) {
-        value = dataElementsOptions
-            .filter(opts => opts.value.id === props.model.nextScheduleDate.id)
-            .map(v => v.value)[0];
-    }
+    const selectedDEO =
+        props.model.nextScheduleDate &&
+        dataElementsOptions.find(
+            opts => opts.value.id === props.model.nextScheduleDate.id
+        );
+
+    const value = selectedDEO && selectedDEO.value;
 
     return <DropDown {...props} options={dataElementsOptions} value={value} />;
 };
