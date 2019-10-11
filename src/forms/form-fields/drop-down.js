@@ -82,7 +82,7 @@ class Dropdown extends Component {
             .map(option => (
                 <MenuItem
                     primaryText={option.text}
-                    key={option.value}
+                    key={option.text}
                     value={option.value}
                     label={option.text}
                 />
