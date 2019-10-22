@@ -158,7 +158,7 @@ function loadEventProgramMetadataByProgramId(programPayload) {
     const queryParams = {
         fields: ':owner,displayName',
         'programs:filter': `id:eq:${programId}`,
-        'programs:fields': `${programFields},programStages[:owner,user[id,name],displayName,programStageDataElements[:owner,renderType,dataElement[id,displayName,valueType,optionSet,domainType]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
+        'programs:fields': `${programFields},programStages[:owner,user[id,name],displayName,attributeValues[:all,attribute[id,name,displayName]],programStageDataElements[:owner,renderType,dataElement[id,displayName,valueType,optionSet,domainType]],notificationTemplates[:owner,displayName],dataEntryForm[:owner],programStageSections[:owner,displayName,dataElements[id,displayName]]]`,
         'dataElements:fields': 'id,displayName,valueType,optionSet',
         'dataElements:filter': 'domainType:eq:TRACKER',
         'trackedEntityAttributes:fields': 'id,displayName,valueType,optionSet,unique'
