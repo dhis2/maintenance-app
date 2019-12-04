@@ -35,6 +35,10 @@ class ExpressionField extends Component {
         });
     };
 
+    missingValueStrategyChanged = missingValueStrategy => {
+        this.setState({ value: {...this.state.value, missingValueStrategy } } )
+    }
+
     render() {
         const props = this.props;
         const styles = {
@@ -48,6 +52,15 @@ class ExpressionField extends Component {
             },
         };
 
+        // Make sure to use values from the state once the dialogue is open
+        // As these values are not propagated to the props until handleSaveAndClose is called
+        const expressionDialogProps = this.state.open && this.state.value ? { 
+            ...props, 
+            value: {
+                ...this.state.value 
+            }
+        } : props
+
         return (
             <div style={styles.fieldWrap}>
                 <RaisedButton
@@ -56,11 +69,12 @@ class ExpressionField extends Component {
                 />
                 {props.errorText ? <div style={styles.errorText}>{props.errorText}</div> : null}
                 <ExpressionDialog
-                    {...props}
+                    {...expressionDialogProps}
                     open={this.state.open}
                     handleClose={this.handleClose}
                     handleSaveAndClose={this.handleSaveAndClose}
                     indicatorExpressionChanged={this.indicatorExpressionChanged}
+                    missingValueStrategyChanged={this.missingValueStrategyChanged}
                 />
             </div>
         );
