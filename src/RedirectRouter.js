@@ -8,15 +8,6 @@ const redirectToNew = (mary, path) => {
     window.location.replace(url)
 }
 
-const __temp__redirect = async to => {
-    const d2 = await getInstance()
-    const api = d2.Api.getApi()
-    const baseUrl = d2.system.systemInfo.contextPath
-    const mary = `${baseUrl}/dhis-web-mary`
-
-    redirectToNew(mary, to)
-}
-
 const redirect = async to => {
     const d2 = await getInstance()
     const api = d2.Api.getApi()
@@ -35,23 +26,18 @@ const redirect = async to => {
         })
 }
 
+const redirectByLocation = ({ location }) => redirect(location.pathname)
+
+const createRouteForPath = path => (
+    <Route
+        key={path}
+        path={path}
+        onEnter={redirectByLocation}
+    />
+)
+
 export const RedirectRouter = () => (
     <Router history={hashHistory}>
-        {redirectToNewAppRoutes.map(path => (
-            <Route
-                key={path}
-                path={path}
-                onEnter={({ location }) => {
-                    const to = location.pathname
-
-                    // once DHIS2-7154 has been solved,
-                    // this can be changed to just use the
-                    // "redirect" function
-                    false
-                        ? redirect(to)
-                        : __temp__redirect(to)
-                }}
-            />
-        ))}
+        {redirectToNewAppRoutes.map(createRouteForPath)}
     </Router>
 )
