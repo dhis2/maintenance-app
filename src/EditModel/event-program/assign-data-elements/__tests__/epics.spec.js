@@ -90,6 +90,7 @@ describe('Assign data elements epics', () => {
                         expect(isValidUid(newlyAddedDataElement.id)).toBe(true);
                         expect(newlyAddedDataElement.dataElement).toEqual({
                             id: availableDataElementA.id,
+                            displayName: availableDataElementA.displayName,
                             optionSet: availableDataElementA.optionSet,
                             valueType: availableDataElementA.valueType,
                         });
@@ -119,11 +120,13 @@ describe('Assign data elements epics', () => {
 
                         expect(newlyAddedDataElementOne.dataElement).toEqual({
                             id: availableDataElementA.id,
+                            displayName: availableDataElementA.displayName,
                             optionSet: availableDataElementA.optionSet,
                             valueType: availableDataElementA.valueType,
                         });
                         expect(newlyAddedDataElementTwo.dataElement).toEqual({
                             id: availableDataElementB.id,
+                            displayName: availableDataElementB.displayName,
                             optionSet: availableDataElementB.optionSet,
                             valueType: availableDataElementB.valueType,
                         });

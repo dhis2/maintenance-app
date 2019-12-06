@@ -277,6 +277,7 @@ const fieldOrderByName = new Map([
         'periodType',
         'displayGenerateEventBox',
         'standardInterval',
+        'nextScheduleDate',
         'autoGenerateEvent',
         'openAfterEnrollment',
         'reportDateToUse',

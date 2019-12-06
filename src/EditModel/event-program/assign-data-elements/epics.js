@@ -63,11 +63,12 @@ const addDataElementsToStage = store => action$ =>
             let sortOrder = programStageDataElements.length;
             const programStageDataElementsToAdd = map((id) => {
                 sortOrder += 1;
-                const { optionSet, valueType } = state.availableDataElements.find(dataElement => dataElement.id === id);
+                const { optionSet, valueType, displayName } = state.availableDataElements.find(dataElement => dataElement.id === id);
                 return {
                     id: generateUid(),
                     dataElement: {
                         id,
+                        displayName,
                         optionSet,
                         valueType,
                     },
