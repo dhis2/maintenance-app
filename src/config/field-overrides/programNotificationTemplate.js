@@ -70,10 +70,13 @@ const NotificationSubjectAndMessageTemplateFields = compose(
     }),
 )(SubjectAndMessageTemplateFields);
 
+const isPhoneNumberOrEmail = ({ valueType }) =>
+    valueType === 'PHONE_NUMBER' || valueType === 'EMAIL';
+
 // Using dropdownasync-getter due to support for references
 const ProgramAttributeDropDown = compose(connect(undefined, boundOnUpdate))((props) => {
     const attributesOpts = props.attributes
-        .filter(attr => ['PHONE_NUMBER', 'EMAIL'].includes(attr.valueType))
+        .filter(isPhoneNumberOrEmail)
         .map(attr => ({
             text: attr.displayName,
             value: attr.trackedEntityAttribute.id,
@@ -102,7 +105,7 @@ const DataElementDropDown = compose(
     connect(undefined, boundOnUpdate),
 )((props) => {
     const dataElementOpts = props.dataElements
-        .filter(de => de.valueType === 'PHONE_NUMBER')
+        .filter(isPhoneNumberOrEmail)
         .map(de => ({
             text: de.displayName,
             value: de.id,
