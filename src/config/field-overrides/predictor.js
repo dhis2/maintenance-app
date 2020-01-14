@@ -7,23 +7,36 @@ import DataElementCategoryOptionCombo from './predictor/DataElementCategoryOptio
 import ExpressionField from './predictor/ExpressionField';
 import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
 
-const actionToValidation$ = createActionToValidation$(
+const actionToGeneratorValidation$ = createActionToValidation$(
     'predictors/expression/description'
 )
 
-const PredictorExpressionField = props => (
+const GeneratorExpressionField = props => (
     <ExpressionField
         {...props}
-        validateExpression={actionToValidation$}
+        validateExpression={actionToGeneratorValidation$}
     />
 )
+
+const actionToSampleSkipTestValidation$ = createActionToValidation$(
+    'predictors/skipTest/description'
+)
+
+const SampleSkipTestExpressionField = props => (
+    <ExpressionField
+        {...props}
+        validateExpression={actionToSampleSkipTestValidation$}
+    />
+)
+
+
 
 export default new Map([
     ['periodType', {
         component: PeriodTypeDropDown,
     }],
     ['generator', {
-        component: PredictorExpressionField,
+        component: GeneratorExpressionField,
         validators: [
             {
                 validator: value => Boolean(value && value.description),
@@ -36,7 +49,7 @@ export default new Map([
         ],
     }],
     ['sampleSkipTest', {
-        component: PredictorExpressionField,
+        component: SampleSkipTestExpressionField,
         validators: [
             {
                 validator: value => Boolean(value && value.description),
