@@ -152,6 +152,7 @@ export default new Map([
                 message: 'expression_is_required',
             },
         ],
+        unique: false
     }],
     ['sampleSkipTest', {
         component: ExpressionField,
@@ -165,5 +166,6 @@ export default new Map([
                 message: 'expression_is_required',
             },
         ],
+        unique: false
     }],
 ]);
