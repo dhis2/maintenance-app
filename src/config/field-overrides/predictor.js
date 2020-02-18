@@ -18,6 +18,9 @@ export default new Map([
                 message: 'expression_is_required',
             },
         ],
+        // Override unique, it was set to true on the backend for an unkown reason
+        // see https://jira.dhis2.org/browse/DHIS2-8311
+        unique: false
     }],
     ['sampleSkipTest', {
         component: ExpressionField,
@@ -31,6 +34,8 @@ export default new Map([
                 message: 'expression_is_required',
             },
         ],
+        // see https://jira.dhis2.org/browse/DHIS2-8311
+        unique: false
     }],
     ['outputCombo', {
         component: DataElementCategoryOptionCombo,
