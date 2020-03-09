@@ -92,6 +92,7 @@ class PredictorDialog extends React.Component {
                 title={this.getTranslation('run_predictor')}
                 contentStyle={{ maxWidth: 450 }}
                 bodyStyle={{ marginLeft: 64 }}
+                autoScrollBodyContent
             >
                 {this.state.running ? (
                     <div>

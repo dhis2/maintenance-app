@@ -163,6 +163,7 @@ class Section extends Component {
                     actions={removalDialogActions}
                     open={this.state.showRemovalDialog}
                     onRequestClose={this.closeRemovalDialog}
+                    autoScrollBodyContent
                 >
                     <Heading level={2}>{this.props.section.displayName}</Heading>
                 </Dialog>
