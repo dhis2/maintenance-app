@@ -162,6 +162,7 @@ class AddOrEditSection extends Component {
                     actions={actions}
                     open={this.state.dialogOpen}
                     onRequestClose={this.closeDialog}
+                    autoScrollBodyContent
                 >
                     <TextField
                         ref={this.focusOnSectionName}

@@ -27,6 +27,7 @@ const DeleteDialog = ({ onCancel, onConfirm, question, open, t }) => {
             modal={false}
             open={open}
             onRequestClose={onCancel}
+            autoScrollBodyContent
         >
             {question}
         </Dialog>
