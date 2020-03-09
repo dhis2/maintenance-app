@@ -256,6 +256,7 @@ export default class IconPickerDialog extends Component {
                     titleClassName="icon-picker__title"
                     bodyClassName="icon-picker__body"
                     actionsContainerClassName="icon-picker__actions"
+                    autoScrollBodyContent
                 >
                     <div className="icon-picker__filter-bar">
                         {this.renderTypeFilter()}
