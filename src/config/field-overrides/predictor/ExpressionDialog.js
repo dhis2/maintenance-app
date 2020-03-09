@@ -35,6 +35,7 @@ export default function ExpressionDialog({ open, handleClose, handleSaveAndClose
             contentStyle={customContentStyle}
             style={{ padding: '1rem' }}
             onRequestClose={handleClose}
+            autoScrollBodyContent
         >
             {showMissingValueStrategy && (
                 <MissingValueStrategy
