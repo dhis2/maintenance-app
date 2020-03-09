@@ -154,6 +154,7 @@ export default class DownloadObjectDialog extends Component {
                 title={this.t('download_metadata')}
                 onRequestClose={this.props.defaultCloseDialog}
                 contentStyle={styles.dialog}
+                autoScrollBodyContent
             >
                 {this.renderDownloadCount()}
                 {this.renderForm()}
