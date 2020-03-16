@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const styles = {
     availableColumnElement: {
-        flex: '1 0 25%',
+        flex: '0 0 calc(33% - 5px)',
         margin: '0 5px 0 0',
         maxWidth: '235px',
     },
@@ -30,17 +30,13 @@ const AvailableColumnsList = ({ columns, onClick, selectedColumns }) => {
                     col => col.value === column.value
                 );
                 return (
-                    <div
-                        key={column.value}
-                        style={styles.availableColumnElement}
-                    >
                         <AvailableColumn
+                            key={column.value}
+                            style={styles.availableColumnElement}
                             dataElement={toDataElement}
                             pickDataElement={() => onClick(column)}
                             active={!!active}
-                            key={column.value}
                         />
-                    </div>
                 );
             })}
         </div>

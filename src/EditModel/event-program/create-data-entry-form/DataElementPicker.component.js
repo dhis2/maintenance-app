@@ -20,11 +20,11 @@ const styles = {
     },
 
     dataElement: {
-        height: '45px',
+        minHeight: '45px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '0 0.8rem',
+        padding: '0.8rem',
         backgroundColor: grey200,
         marginBottom: '4px',
         borderRadius: '8px',
@@ -89,6 +89,7 @@ export class AvailableDataElement extends Component {
             onMouseLeave={this.onMouseLeave}
             onClick={this.pickDataElement}
             style={{
+                ...this.props.style,
                 ...styles.dataElement,
                 backgroundColor: this.getBackgroundColor(),
                 color: this.props.active ? grey500 : 'black',
