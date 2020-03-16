@@ -5,9 +5,10 @@ import PropTypes from 'prop-types';
 
 const styles = {
     availableColumnElement: {
-        flex: '0 0 calc(33% - 5px)',
-        margin: '0 5px 0 0',
-        maxWidth: '235px',
+        flex: '1 1 calc(33.333333% - 4px)',
+        margin: '0 4px 0 0',
+        maxWidth: '231px',
+        minWidth: '150px'
     },
     availableColumnsContainer: {
         display: 'flex',
