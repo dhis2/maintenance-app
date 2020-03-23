@@ -124,10 +124,7 @@ const actionTypeFieldMapping = {
     },
     SENDMESSAGE: {
         label: 'send_message',
-        optional: ['templateUid', 'data'],
-        labelOverrides: {
-            data: 'date_to_send_message'
-        }
+        optional: ['templateUid'],
     },
     SCHEDULEMESSAGE: {
         label: 'schedule_message',
