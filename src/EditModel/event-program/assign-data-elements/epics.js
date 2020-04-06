@@ -134,7 +134,12 @@ const removeDataElementFromStage = store => action$ =>
                 state.programStageSections[
                     programStageToEditId
                 ] = programStageSections.map(section => {
-                    const updatedDataElements = section.dataElements.filter(
+                    // CreateDataEntryForm mutates sections and transform their DataElements to an array (from a model)
+                    // So we need to support both regular arrays and ModelCollections, which this does
+                    const sectionDataElements = Array.from(
+                        section.dataElements.values()
+                    );
+                    const updatedDataElements = sectionDataElements.filter(
                         element => !dataElementIdsToRemove.includes(element.id)
                     );
 
