@@ -1,6 +1,6 @@
 [main]
 host = https://www.transifex.com
-lang_map = fa_AF: prs
+lang_map = fa_AF: prs, uz@Cyrl: uz_Cyrl, uz@Latn: uz_Latn
 
 [app-maintenance.i18n-module-en-properties]
 file_filter = src/i18n/i18n_module_<lang>.properties
