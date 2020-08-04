@@ -26,6 +26,15 @@ const actionTypeFieldMapping = {
             trackedEntityAttribute: 'tracked_entity_attribute_to_hide',
         },
     },
+    HIDEFIELDNODELETE: {
+        label: 'hide_field_no_delete',
+        optional: ['dataElement', 'trackedEntityAttribute', 'content'],
+        labelOverrides: {
+            content: 'custom_message_for_blanked_field',
+            dataElement: 'data_element_to_hide',
+            trackedEntityAttribute: 'tracked_entity_attribute_to_hide',
+        },
+    },
     HIDESECTION: {
         label: 'hide_section',
         required: ['programStageSection'],

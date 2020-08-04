@@ -165,6 +165,15 @@ class ProgramRuleActionsList extends React.Component {
                     field}`;
                 break;
 
+            case 'HIDEFIELDNODELETE':
+                field = [
+                    action.dataElement && `"${action.dataElement.displayName}"`,
+                    action.trackedEntityAttribute && `"${action.trackedEntityAttribute.displayName}"`,
+                ].filter(s => s).map(s => s.trim()).join(', ');
+                actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ${
+                    field}`;
+                break;
+
             case 'HIDESECTION':
                 actionDetails = `${this.getTranslation(programRuleActionTypes[action.programRuleActionType].label)}: ` +
                     `"${action.programStageSection && action.programStageSection.displayName}"`;

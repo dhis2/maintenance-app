@@ -6491,6 +6491,10 @@ msgstr ""
 msgid "Hide field"
 msgstr ""
 
+#: hide_field_no_delete
+msgid "Hide field no delete"
+msgstr ""
+
 #: assign_variable
 msgid "Assign variable"
 msgstr ""
