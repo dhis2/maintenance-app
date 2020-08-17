@@ -1,3 +1,4 @@
+import React from 'react'
 import mapProps from 'recompose/mapProps';
 import branch from 'recompose/branch';
 import NotInterestedIcon from 'material-ui/svg-icons/av/not-interested';
@@ -10,6 +11,24 @@ import { green500, red500, red50, green50, orange50, orange500 } from 'material-
 const ExpressionInvalidIcon = nest('span', mapProps(() => ({ color: red500 }))(NotInterestedIcon));
 const ExpressionValidIcon = nest('span', mapProps(() => ({ color: green500 }))(CheckCircleIcon));
 const ExpressionPendingIcon = nest('span', mapProps(() => ({ color: orange500 }))(CheckCircleIcon));
+
+const styles = {
+    status: {
+        container: status => ({
+            display: 'flex',
+            flexDirection: 'row',
+            padding: '2rem',
+            border: `1px solid ${getColorForExpressionStatus(status)}`,
+            lineHeight: '1.5rem',
+            margin: '1rem 0 2rem',
+            backgroundColor: getBackgroundColorForExpressionStatus(status),
+        }),
+    },
+    statusMessage: {
+        padding: '.25rem',
+        paddingLeft: '1rem',
+    },
+};
 
 export const ExpressionStatus = {
     VALID: 'VALID',
@@ -47,3 +66,15 @@ export function getBackgroundColorForExpressionStatus(status) {
 }
 
 export default ExpressionStatusIcon;
+
+export function ExpressionDescription(props) {
+    const { status } = props;
+
+    return (
+        <div style={styles.status.container(status.status)}>
+            <ExpressionStatusIcon status={status.status} />
+            <span style={styles.statusMessage}>
+                {status.message}
+            </span>
+        </div>)
+}

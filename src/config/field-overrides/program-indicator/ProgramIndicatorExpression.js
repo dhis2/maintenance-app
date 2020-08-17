@@ -12,10 +12,11 @@ import DataElementSelectors from './DataElementSelectors';
 import OperatorButtons from '../../../EditModel/OperatorButtons.component';
 import HelpText from './HelpText';
 
-import ExpressionStatusIcon, {
-    ExpressionStatus,
+import {
     getColorForExpressionStatus,
-    getBackgroundColorForExpressionStatus } from './ExpressionStatusIcon';
+    getBackgroundColorForExpressionStatus,
+    ExpressionDescription,
+} from './ExpressionStatusIcon';
 
 const styles = {
     programIndicatorExpression: {
@@ -60,7 +61,7 @@ const styles = {
         whiteSpace: 'nowrap',
     },
 };
-function ProgramIndicatorExpression({ d2, onChange, status, model, value: formula = '', referenceProperty, style, type }) {
+function ProgramIndicatorExpression({ d2, onChange, status, errorText, model, value: formula = '', referenceProperty, style, type }) {
     const programType = getOr('WITHOUT_REGISTRATION', 'program.programType', model);
 
     const onFormulaChange = value => onChange({ target: { value } });
@@ -82,13 +83,7 @@ function ProgramIndicatorExpression({ d2, onChange, status, model, value: formul
                     />
                     <OperatorButtons onClick={onSelect} />
 
-                    {status.status === ExpressionStatus.VALID &&
-                        <div style={styles.status.container(status.status)}>
-                            <ExpressionStatusIcon status={status.status} />
-                            <span style={styles.statusMessage}>
-                                {status.message}
-                            </span>
-                        </div>}
+                    <ExpressionDescription status={status} />
                 </Paper>
 
                 <div style={styles.programIndicatorExpression.options}>
