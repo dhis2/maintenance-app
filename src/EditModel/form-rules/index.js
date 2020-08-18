@@ -18,6 +18,7 @@ const whenOperatorMap = new Map([
     ['SYSTEM_SETTING_IS_FALSE', systemSettingIsFalseOperator],
     ['IS_VALID_POINT', isPointOperator],
     ['IS_HIDDEN_FIELD', isHiddenFieldOperator],
+    ['PREDICATE', predicateOperator]
 ]);
 
 const operationsMap = new Map([
@@ -109,6 +110,10 @@ function oneOfOperator(value, list) {
 
 function noneOfOperator(value, list) {
     return list.indexOf(value) < 0;
+}
+
+function predicateOperator(value, predicate) {
+    return predicate(value)
 }
 
 function isPointOperator(value) {
