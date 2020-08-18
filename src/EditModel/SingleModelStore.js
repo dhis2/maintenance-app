@@ -29,6 +29,7 @@ export const requestParams = new Map([
         fields: [
             ':all',
             'attributeValues[:all,attribute[id,name,displayName]]',
+            'categoryCombo[id,name]',
             'dataSetElements[id,dataSet[id],dataElement[id,displayName,categoryCombo[id,displayName]]',
             'categoryCombo[id,displayName]]',
             'indicators[id,displayName,categoryCombo[id,displayName]]',
