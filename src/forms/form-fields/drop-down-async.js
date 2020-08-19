@@ -176,7 +176,7 @@ class DropDownAsync extends Component {
                             }
 
                             if (defaultOption) {
-                                this.props.onChange({ target: { value: { id: defaultOption.value } } })
+                                this.props.onChange({ target: { value: defaultOption.model } })
                             }
                         }
                     },
