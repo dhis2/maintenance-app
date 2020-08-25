@@ -4,7 +4,7 @@ import { isEmpty, memoize } from 'lodash/fp';
 
 import { ExpressionStatus } from './ExpressionStatusIcon';
 
-export default function createExpressionValidator(property) {
+export default function createExpressionValidator(path) {
     const validation$ = new ReplaySubject(1);
 
     const status$ = validation$
@@ -27,7 +27,7 @@ export default function createExpressionValidator(property) {
                         },
                     };
 
-                    const validation$ = api.post(`programIndicators/${property}/description`, `${expression}`, requestOptions)
+                    const validation$ = api.post(path, `${expression}`, requestOptions)
                         .then(({ status, description, message }) => ({
                             status: status === 'OK' ? ExpressionStatus.VALID : ExpressionStatus.INVALID,
                             message: status === 'OK' ? description : message,

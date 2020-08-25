@@ -21,7 +21,8 @@ const enhance = compose(
     lifecycle({
         componentDidMount() {
             const { setStatus, value, referenceProperty } = this.props;
-            const { status$, validate } = createExpressionValidator(referenceProperty, setStatus);
+            const path = `programIndicators/${referenceProperty}/description`
+            const { status$, validate } = createExpressionValidator(path, setStatus);
 
             this.validate = validate;
 
