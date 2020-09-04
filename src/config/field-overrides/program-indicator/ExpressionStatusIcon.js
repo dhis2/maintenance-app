@@ -68,6 +68,9 @@ export function getBackgroundColorForExpressionStatus(status) {
 export default ExpressionStatusIcon;
 
 export function ExpressionDescription({ status }) {
+    if(!status) {
+        return null
+    }
 
     return (
         <div style={styles.status.container(status.status)}>
