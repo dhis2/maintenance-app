@@ -31,6 +31,7 @@ export default function createExpressionValidator(path) {
                         .then(({ status, description, message }) => ({
                             status: status === 'OK' ? ExpressionStatus.VALID : ExpressionStatus.INVALID,
                             message: status === 'OK' ? description : message,
+                            details: description
                         }))
                         .catch((error) => {
                             // If error contains a message and an error status we consider it to be a valid response

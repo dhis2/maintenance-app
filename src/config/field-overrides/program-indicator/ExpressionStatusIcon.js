@@ -16,6 +16,7 @@ const styles = {
     status: {
         container: status => ({
             display: 'flex',
+            flexWrap: 'wrap',
             flexDirection: 'row',
             padding: '2rem',
             border: `1px solid ${getColorForExpressionStatus(status)}`,
@@ -27,6 +28,18 @@ const styles = {
     statusMessage: {
         padding: '.25rem',
         paddingLeft: '1rem',
+        flexBasis: '90%',
+    },
+    statusDetail: {
+        overflow: 'auto',
+        maxHeight: '180px',
+        wordWrap: 'break-word',
+        display: 'block',
+        border: '1px solid rgb(0,0,0,0.4)',
+        padding: '8px',
+        backgroundColor: '#e8e8e8',
+        whiteSpace: 'pre-wrap',
+        opacity: 0.8,
     },
 };
 
@@ -68,12 +81,16 @@ export function getBackgroundColorForExpressionStatus(status) {
 export default ExpressionStatusIcon;
 
 export function ExpressionDescription({ status }) {
+    if(!status) {
+        return null
+    }
 
-    return (
-        <div style={styles.status.container(status.status)}>
+    return <div style={styles.status.container(status.status)}>
             <ExpressionStatusIcon status={status.status} />
-            <span style={styles.statusMessage}>
-                {status.message}
-            </span>
-        </div>)
+            <span style={styles.statusMessage}>{status.message}</span>
+            {status.status === ExpressionStatus.INVALID && status.details && <pre style={styles.statusDetail}
+                    >
+                        {status.details}
+                    </pre>}
+        </div>;
 }
