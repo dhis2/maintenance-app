@@ -796,4 +796,17 @@ export default new Map([
             }],
         },
     ]],
+    ['dataSet', [
+        {
+            field: 'openPeriodsAfterCoEndDate',
+            when: {
+                field: 'categoryCombo',
+                operator: 'PREDICATE',
+                value: (categoryComboField) => categoryComboField.name === 'default'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }]
+        }
+    ]]
 ]);

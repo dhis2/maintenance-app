@@ -115,6 +115,7 @@ const fieldOrderByName = new Map([
         'periodType',
         'dataInputPeriods',
         'categoryCombo',
+        'openPeriodsAfterCoEndDate',
         'notificationRecipients',
         'notifyCompletingUser',
         'workflow',
