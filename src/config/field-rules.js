@@ -802,7 +802,7 @@ export default new Map([
             when: {
                 field: 'categoryCombo',
                 operator: 'PREDICATE',
-                value: (categoryComboField) => categoryComboField.name === 'default'
+                value: (categoryComboField) => categoryComboField && categoryComboField.name === 'default'
             },
             operations: [{
                 type: 'HIDE_FIELD',
