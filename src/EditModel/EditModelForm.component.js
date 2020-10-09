@@ -202,7 +202,12 @@ export default React.createClass({
 
             this.props.onSaveSuccess(this.state.modelToEdit);
         } else {
-            const firstErrorMessage = extractFirstErrorMessageFromServer(error);
+            let firstErrorMessage
+            if(typeof error === 'string') {
+                firstErrorMessage = error
+            } else {
+                firstErrorMessage = extractFirstErrorMessageFromServer(error);
+            }
             snackActions.show({ message: firstErrorMessage, action: 'ok' });
             this.props.onSaveError && this.props.onSaveError(error);
             log.error(error);
