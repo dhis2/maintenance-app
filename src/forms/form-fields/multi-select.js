@@ -60,7 +60,7 @@ multiSelectActions.removeItemsFromModelCollection
     });
 
 function isOrganisationUnitLevelReference(referenceProperty, modelDefinition) {
-    return ['dataElement.aggregationLevels', 'validationRule.organisationUnitLevels']
+    return ['dataElement.aggregationLevels', 'validationRule.organisationUnitLevels', 'approvalValidationRule.organisationUnitLevels']
         .indexOf(`${modelDefinition.name}.${referenceProperty}`) > -1;
 }
 

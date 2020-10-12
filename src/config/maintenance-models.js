@@ -30,6 +30,7 @@ export function getSideBarConfig() {
             items: [
                 'dataSet',
                 'dataSetNotificationTemplate',
+                'dataSetByOrgUnit',
             ],
         },
 
@@ -70,6 +71,7 @@ export function getSideBarConfig() {
                 'validationRule',
                 'validationRuleGroup',
                 'validationNotificationTemplate',
+                'approvalValidationRule',
             ],
         },
 
@@ -135,6 +137,10 @@ const typeDetails = {
         columns: ['displayName', 'compulsory', 'publicAccess', 'lastUpdated'],
     },
     dataSet: {
+        filters: ['formType'],
+        columns: ['displayName', 'formType', 'periodType', 'publicAccess', 'lastUpdated'],
+    },
+    dataSetByOrgUnit: {
         filters: ['formType'],
         columns: ['displayName', 'formType', 'periodType', 'publicAccess', 'lastUpdated'],
     },
@@ -233,6 +239,9 @@ const typeDetails = {
             'name',
             'type',
         ]
+    },
+    approvalValidationRule: {
+        columns: ['displayName', 'lastUpdated'],
     },
 };
 

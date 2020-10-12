@@ -1,5 +1,6 @@
 import ModelDefinition from 'd2/lib/model/ModelDefinition';
 import locale from './locale';
+import dataSetByOrgUnit from './dataSetByOrgUnit';
 
 function createFromSchema({ schema, CustomModelDefinition }) {
     // Add current custom model to list of exceptions stored directly on the class
@@ -10,4 +11,5 @@ function createFromSchema({ schema, CustomModelDefinition }) {
 
 export default [
     createFromSchema(locale),
+    createFromSchema(dataSetByOrgUnit),
 ];

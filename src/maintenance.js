@@ -56,9 +56,30 @@ function configI18n(userSettings) {
     config.i18n.strings.add('version');
 }
 
+function copy(dest, src) {
+    var p;
+    for (p in src) {
+        if (src.hasOwnProperty(p) && !dest.hasOwnProperty(p)) {
+            dest[p] = src[p];
+        }
+    }
+    dest.__proto__ = src.__proto__;
+}
+
 function addCustomModels(d2) {
     customModelDefinitions.forEach((customModel) => {
-        d2.models.add(customModel);
+        log.info(d2.models.dataSet);
+
+        if (customModel.name === 'dataSetByOrgUnit'){
+            var tempObj = {};
+            copy(tempObj, customModel);
+            customModel = tempObj;
+            customModel.apiEndpoint = d2.models.dataSet.apiEndpoint;
+            d2.models.add(Object.freeze(customModel));
+        }else{
+            d2.models.add(customModel);
+        }
+        
     });
     return d2;
 }

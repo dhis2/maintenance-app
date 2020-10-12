@@ -278,7 +278,7 @@ class List extends Component {
         }
 
         // Shortcut for access detection where action names match to access properties
-        if (model.access.hasOwnProperty(action)) {
+        if (model.access.hasOwnProperty(action) && model.modelDefinition.name != 'dataSetByOrgUnit') {
             return model.access[action];
         }
 
@@ -290,15 +290,17 @@ class List extends Component {
         switch (action) {
         case 'edit':
             return model.modelDefinition.name !== 'locale' && model.access.write;
+        case 'delete':
+            return model.modelDefinition.name != 'dataSetByOrgUnit';
         case 'clone':
             return !['dataSet', 'program', 'locale', 'sqlView', 'optionSet'].includes(model.modelDefinition.name) &&
-                model.access.write;
+                model.access.write && model.modelDefinition.name != 'dataSetByOrgUnit';
         case 'translate':
-            return model.access.read && model.modelDefinition.identifiableObject && model.modelDefinition.name !== 'sqlView';
+            return model.access.read && model.modelDefinition.identifiableObject && model.modelDefinition.name !== 'sqlView' && model.modelDefinition.name != 'dataSetByOrgUnit';
         case 'details':
             return model.access.read;
         case 'share':
-            return model.modelDefinition.isShareable === true && model.access.write;
+            return model.modelDefinition.isShareable === true && model.access.write && model.modelDefinition.name != 'dataSetByOrgUnit';
         case 'compulsoryDataElements':
             return model.modelDefinition.name === 'dataSet' && model.access.write;
         case 'sectionForm':
@@ -524,6 +526,7 @@ class List extends Component {
             const untranslatableColumnNames = {
                 organisationUnit: ['level'],
                 dataSet: ['formType'],
+                dataSetByOrgUnit: ['formType'],
             };
 
             const isTranslatable = (modelType, columnName) => {

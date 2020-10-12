@@ -9,6 +9,7 @@ import categoryCombo from './categoryCombo';
 import categoryOption from './categoryOption';
 import legendSet from './legendSet';
 import locale from './locale';
+import dataSetByOrgUnit from './dataSetByOrgUnit';
 import trackedEntityAttribute from './trackedEntityAttribute';
 import trackedEntityType from './trackedEntityType';
 import predictor from './predictor';
@@ -31,6 +32,7 @@ import optionGroup from './optionGroup';
 import sqlView from './sqlView';
 import optionGroupSet from './optionGroupSet';
 import eventProgramStage from './eventProgramStage';
+import approvalValidationRule from './approvalValidationRule';
 
 const overridesByType = {
     attribute,
@@ -38,6 +40,7 @@ const overridesByType = {
     categoryOption,
     dataElement,
     dataSet,
+    dataSetByOrgUnit,
     dataApprovalLevel,
     dataApprovalWorkflow,
     dataSetNotificationTemplate,
@@ -67,6 +70,7 @@ const overridesByType = {
     optionGroup,
     optionGroupSet,
     sqlView,
+    approvalValidationRule,
 };
 
 export default {
