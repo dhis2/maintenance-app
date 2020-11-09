@@ -33,8 +33,10 @@ const styles = {
 class CreateEnrollmentDataEntryForm extends Component {
     constructor(props) {
         super(props);
+
+        const hasCustomForm = props.model && props.model.dataEntryForm
         this.state = {
-            curTab: formIndices.section,
+            curTab: hasCustomForm ? formIndices.custom : formIndices.section,
         };
     }
 
