@@ -40,8 +40,10 @@ const styles = {
 class CreateDataEntryForm extends Component {
     constructor(props) {
         super(props)
+
+        const hasCustomForm = this.props.programStage && this.props.programStage.dataEntryForm
         this.state = {
-            curTab: formIndices.section
+            curTab: hasCustomForm ? formIndices.custom : formIndices.section
         }
     }
 
@@ -112,8 +114,6 @@ class CreateDataEntryForm extends Component {
                         />
                     )}
 
-                    {/* Super hacky to use the number 2 here */ ''}
-                    {/* I just didn't see another way */ ''}
                     {this.renderTab(
                         this.getTranslation('custom'),
                         (

@@ -80,7 +80,7 @@ const dataEntryFormRemoveEpic = action$ =>
                     programStage.dataEntryForm = undefined;
                     dataEntryFormsForProgramStages[
                         programStageId
-                    ] = d2.models.dataEntryForm.create();
+                    ] = undefined
 
                     eventProgramStore.setState({});
 
@@ -97,7 +97,7 @@ const dataEntryFormRemoveEpic = action$ =>
                         programStage.dataEntryForm = undefined;
                         dataEntryFormsForProgramStages[
                             programStageId
-                        ] = d2.models.dataEntryForm.create();
+                        ] = undefined
 
                         eventProgramStore.setState({});
                         return Observable.empty();
