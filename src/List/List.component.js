@@ -117,7 +117,7 @@ export function getTranslatablePropertiesForModelType(modelType) {
     case 'program':
         return defaultTranslatableProperties.concat(['description'])
     case 'relationshipType':
-        return defaultTranslatableProperties.concat(['fromName', 'toName'])
+        return defaultTranslatableProperties.concat(['fromToName', 'toFromName'])
     default:
         break;
     }
