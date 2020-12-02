@@ -111,7 +111,7 @@ export function createModelToEditProgramStageEpic(actionType, store, storeProp) 
                     to the server, and upon reloading the model, the server-defined displayName will be shown */
 
                     if (field === 'name') {
-                        updateRegularValue(model, 'displayName', value);
+                        model.dataValues.displayName = value
                     }
                 }
                 // Write back the state to the store

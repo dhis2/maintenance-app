@@ -9,6 +9,8 @@ import programRuleFunctions from './programRuleFunctions';
 import TextEditor from '../../../forms/form-fields/text-editor-field';
 import modelToEditStore from '../../../EditModel/modelToEditStore';
 import OperatorButtons from '../../../EditModel/OperatorButtons.component';
+import { ExpressionDescription } from '../program-indicator/ExpressionStatusIcon';
+
 
 const styles = {
     outerWrap: {
@@ -249,9 +251,12 @@ class ProgramRuleConditionField extends React.Component {
             ...{ color: this.props.disabled ? 'rgba(0,0,0,0.3)' : 'inherit' },
         };
 
-        return (
-            <div style={Object.assign(styles.outerWrap, this.props.style)}>
-                <div style={styles.labelStyle}>{this.props.labelText}</div>
+        const { status } = this.props;
+
+        return <div style={Object.assign(styles.outerWrap, this.props.style)}>
+                <div style={styles.labelStyle}>
+                    {this.props.labelText}
+                </div>
 
                 <div style={styles.rightWrap}>
                     {this.renderBuiltInVariablesMenu()}
@@ -266,13 +271,13 @@ class ProgramRuleConditionField extends React.Component {
                         value={this.props.value}
                         onChange={this.props.onChange}
                         ref={ref}
-                        disabled={this.props.disabled}
-                    />
+                        disabled={this.props.disabled} />
                     <OperatorButtons onClick={this.pushText} />
+
+                    <ExpressionDescription status={status} />
                 </div>
                 <div style={{ clear: 'both' }} />
-            </div>
-        );
+            </div>;
     }
 }
 

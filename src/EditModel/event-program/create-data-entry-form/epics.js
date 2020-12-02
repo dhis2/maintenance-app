@@ -51,7 +51,9 @@ const updateProgramStageSection = store => action$ => action$
                     // Modify the original Model instance
                     if (isEqual(section.id, programStageSectionId)) {
                         section.name = newProgramStageSectionData.name;
-                        section.displayName = newProgramStageSectionData.name;
+                        // this is just used to show edited name immediately, not sent to serv
+                        // cannot change dispayName directly as it does not have a setter (writable: false)
+                        section.dataValues.displayName = newProgramStageSectionData.name;
                         section.description = newProgramStageSectionData.description;
                         section.renderType = newProgramStageSectionData.renderType;
                     }
@@ -103,14 +105,11 @@ const addProgramStageSection = store => action$ => action$
             const sortOrder = getOr(-1, 'sortOrder', maxBy(section => get('sortOrder', section), programStageSections)) + 1;
 
             // Create new section model and set the properties we can
-            const newSection = d2.models.programStageSection.create({ id: generateUid(), dataElements: [] });
+            const newSection = d2.models.programStageSection.create({ id: generateUid(), dataElements: [], displayName: newSectionData.name });
             newSection.name = newSectionData.name;
-            newSection.displayName = newSectionData.name;
             newSection.description = newSectionData.description;
             newSection.renderType = newSectionData.renderType;
             newSection.sortOrder = sortOrder;
-
-            console.log(newSection);
 
             // Add the section to the programStage, otherwise the section won't be associated with the programStage
             newSection.programStage = programStage;
