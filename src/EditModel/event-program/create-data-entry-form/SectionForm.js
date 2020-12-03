@@ -6,6 +6,7 @@ import Snackbar from 'material-ui/Snackbar';
 import SectionList from './SectionList.component';
 import AddOrEditSection from './AddOrEditSection.component';
 import DataElementPicker from './DataElementPicker.component';
+import { HiddenElementsText } from './Section.component';
 
 const styles = {
     sectionForm: {
@@ -33,6 +34,8 @@ class SectionForm extends Component {
             showNoSelectionSectionMessage: false,
             availableDataElementsFilter: '',
         };
+
+        this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
 
     componentWillReceiveProps(newProps) {
@@ -68,8 +71,6 @@ class SectionForm extends Component {
                     : section,
         });
     };
-
-    getTranslation = key => this.context.d2.i18n.getTranslation(key);
 
     clearEditingSection = () => {
         this.setState({ editingSection: null });
@@ -209,6 +210,9 @@ class SectionForm extends Component {
     }
 
     render = () => {
+        const filteredAvailableElements = this.getFilteredAvailableElements()
+        const numberOfHiddenElements = this.props.availableElements.length - filteredAvailableElements.length
+
         return (
             <div style={styles.sectionForm}>
                 <div style={{ flex: 2 }}>
@@ -234,11 +238,11 @@ class SectionForm extends Component {
                         clearEditingSection={this.clearEditingSection}
                     />
                 </div>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                     <DataElementPicker
                         availableDataElements={sortBy(
                             ['displayName'],
-                            this.getFilteredAvailableElements()
+                            filteredAvailableElements
                         )}
                         activeDataElements={this.state.activeElements}
                         onElementPicked={this.onElementPicked}
@@ -249,6 +253,10 @@ class SectionForm extends Component {
                                 ? this.getTranslation('available_data_elements')
                                 : this.getTranslation('available_attributes')
                         }
+                    />
+                    <HiddenElementsText
+                        numberOfHiddenElements={numberOfHiddenElements}
+                        getTranslation={this.getTranslation}
                     />
                 </div>
                 <Snackbar

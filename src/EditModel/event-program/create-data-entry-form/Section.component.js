@@ -73,6 +73,30 @@ const styles = {
     }
 };
 
+export const HiddenElementsText = ({
+    numberOfHiddenElements,
+    getTranslation,
+}) => {
+    if (numberOfHiddenElements < 1) {
+        return null;
+    }
+    return (
+        <p
+            style={{
+                margin: 0,
+                padding: '5px',
+                textAlign: 'center',
+            }}
+        >
+            {numberOfHiddenElements === 1
+                ? getTranslation('element_hidden_by_filter')
+                : getTranslation('$$total$$_elements_hidden_by_filter', {
+                      total: numberOfHiddenElements,
+                  })}
+        </p>
+    );
+};
+
 const ActionButton = ({ onClick, icon }) => {
     const noPropagation = (e) => {
         if (e) e.stopPropagation();
@@ -151,20 +175,7 @@ class Section extends Component {
 
         const sectionContent = elements && elements.length > 0 ? <div style={styles.sectionContent}>
                     <SortableSectionDataList distance={4} onSortEnd={this.onSortEnd} onDataElementRemoved={this.props.onDataElementRemoved} sectionDataElements={filteredElements} />
-                    {numberOfHiddenElements > 0 && <p
-                            style={styles.hiddenByFilter}
-                        >
-                            {numberOfHiddenElements === 1
-                                ? this.getTranslation(
-                                      'element_hidden_by_filter'
-                                  )
-                                : this.getTranslation(
-                                      '$$total$$_elements_hidden_by_filter',
-                                      {
-                                          total: numberOfHiddenElements,
-                                      }
-                                  )}
-                        </p>}
+                    <HiddenElementsText numberOfHiddenElements={numberOfHiddenElements} getTranslation={this.getTranslation} />
                 </div> : <div style={styles.noDataElementsMessage}>
                     {this.props.elementPath === 'dataElements'
                         ? this.getTranslation('no_data_elements')
