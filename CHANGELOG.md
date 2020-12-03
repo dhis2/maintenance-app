@@ -1,3 +1,10 @@
+# [32.2.0](https://github.com/dhis2/maintenance-app/compare/v32.1.2...v32.2.0) (2020-12-03)
+
+
+### Features
+
+* **relationshipType:** make fromToName and toFromName translateable ([#1635](https://github.com/dhis2/maintenance-app/issues/1635)) ([d2bfe33](https://github.com/dhis2/maintenance-app/commit/d2bfe3333b93bb294a9f12b03d3161d35c270739))
+
 ## [32.1.2](https://github.com/dhis2/maintenance-app/compare/v32.1.1...v32.1.2) (2020-12-03)
 
 
