@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import RenderTypeSelectField, {
     PROGRAM_STAGE_SECTION_RENDER_TYPES,
     DEFAULT_PROGRAM_STAGE_RENDER_TYPE,
@@ -18,7 +16,6 @@ const styles = {
 };
 
 const initialState = {
-    dialogOpen: false,
     section: {
         id: null,
         name: '',
@@ -79,7 +76,6 @@ class AddOrEditSection extends Component {
     showDialogForEditingModel(editingSection) {
         const { id, name, description, renderType } = editingSection;
         this.setState({
-            dialogOpen: true,
             section: {
                 id,
                 name,
@@ -154,13 +150,10 @@ class AddOrEditSection extends Component {
 
         return (
             <div style={styles.container}>
-                <FloatingActionButton onTouchTap={this.openDialog}>
-                    <ContentAdd />
-                </FloatingActionButton>
                 <Dialog
                     title={titleTxt}
                     actions={actions}
-                    open={this.state.dialogOpen}
+                    open={this.props.open}
                     onRequestClose={this.closeDialog}
                     autoScrollBodyContent
                 >

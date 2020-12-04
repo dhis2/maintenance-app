@@ -1,7 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import { arrayMove } from 'react-sortable-hoc';
-import { sortBy, find, isEqual, getOr, pull, flatten, filter, findIndex, negate, difference } from 'lodash/fp';
+import {
+    sortBy,
+    find,
+    isEqual,
+    getOr,
+    pull,
+    flatten,
+    filter,
+    findIndex,
+    negate,
+    difference,
+} from 'lodash/fp';
 import Snackbar from 'material-ui/Snackbar';
+import Button from 'material-ui/RaisedButton';
 
 import SectionList from './SectionList.component';
 import AddOrEditSection from './AddOrEditSection.component';
@@ -33,9 +45,12 @@ class SectionForm extends Component {
             editingSection: null,
             showNoSelectionSectionMessage: false,
             availableDataElementsFilter: '',
+            sectionEditOpen: false,
         };
 
-        this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+        this.getTranslation = context.d2.i18n.getTranslation.bind(
+            context.d2.i18n
+        );
     }
 
     componentWillReceiveProps(newProps) {
@@ -69,11 +84,13 @@ class SectionForm extends Component {
                 isEqual(section.id, this.state.editingSection.id)
                     ? null
                     : section,
+
+            sectionEditOpen: !this.state.sectionEditOpen,
         });
     };
 
     clearEditingSection = () => {
-        this.setState({ editingSection: null });
+        this.setState({ editingSection: null, sectionEditOpen: false });
     };
 
     openSection = sectionId => {
@@ -202,16 +219,19 @@ class SectionForm extends Component {
     };
 
     getFilteredAvailableElements() {
-        const filter = this.state.availableDataElementsFilter
-        return this.props.availableElements.filter(element =>
-            !filter.length ||
-            element.displayName.toLowerCase().includes(filter.toLowerCase())
+        const filter = this.state.availableDataElementsFilter;
+        return this.props.availableElements.filter(
+            element =>
+                !filter.length ||
+                element.displayName.toLowerCase().includes(filter.toLowerCase())
         );
     }
 
     render = () => {
-        const filteredAvailableElements = this.getFilteredAvailableElements()
-        const numberOfHiddenElements = this.props.availableElements.length - filteredAvailableElements.length
+        const filteredAvailableElements = this.getFilteredAvailableElements();
+        const numberOfHiddenElements =
+            this.props.availableElements.length -
+            filteredAvailableElements.length;
 
         return (
             <div style={styles.sectionForm}>
@@ -236,9 +256,17 @@ class SectionForm extends Component {
                         onSectionUpdated={this.onSectionUpdated}
                         editingSection={this.state.editingSection}
                         clearEditingSection={this.clearEditingSection}
+                        open={this.state.sectionEditOpen}
                     />
                 </div>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <div style={{ flex: 1 }}>
+                    <Button
+                        style={{ marginBottom: 15, marginLeft: '1.5rem' }}
+                        label={this.getTranslation('add_section_to_form')}
+                        primary
+                        fullWidth={false}
+                        onClick={() => this.setState({ sectionEditOpen: true })}
+                    />
                     <DataElementPicker
                         availableDataElements={sortBy(
                             ['displayName'],
@@ -276,11 +304,13 @@ SectionForm.PropTypes = {
     onSectionAdded: PropTypes.func.isRequired,
     onSectionRemoved: PropTypes.func.isRequired,
     availableElements: PropTypes.array.isRequired,
-    sections: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        sortOrder: PropTypes.number.isRequired,
-        displayName: PropTypes.string.isRequired,
-    })).isRequired,
+    sections: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            sortOrder: PropTypes.number.isRequired,
+            displayName: PropTypes.string.isRequired,
+        })
+    ).isRequired,
 };
 
 SectionForm.contextTypes = {

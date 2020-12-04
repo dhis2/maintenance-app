@@ -70,7 +70,7 @@ const styles = {
         margin: 0,
         padding: '5px',
         textAlign: 'center',
-    }
+    },
 };
 
 export const HiddenElementsText = ({
@@ -98,7 +98,7 @@ export const HiddenElementsText = ({
 };
 
 const ActionButton = ({ onClick, icon }) => {
-    const noPropagation = (e) => {
+    const noPropagation = e => {
         if (e) e.stopPropagation();
         onClick();
     };
@@ -109,7 +109,9 @@ const ActionButton = ({ onClick, icon }) => {
             iconStyle={{ transition: 'none' }}
             onClick={noPropagation}
         >
-            <FontIcon color="gray" className="material-icons">{icon}</FontIcon>
+            <FontIcon color="gray" className="material-icons">
+                {icon}
+            </FontIcon>
         </IconButton>
     );
 };
@@ -119,10 +121,12 @@ class Section extends Component {
         super(props, context);
         this.state = {
             showRemovalDialog: false,
-            filter: ''
+            filter: '',
         };
 
-        this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+        this.getTranslation = context.d2.i18n.getTranslation.bind(
+            context.d2.i18n
+        );
     }
 
     onSortEnd = (oldIndex, newIndex) => {
@@ -142,24 +146,26 @@ class Section extends Component {
         this.props.onSectionRemoved();
     };
 
-    handleFilterElemenets = (event) => {
+    handleFilterElemenets = event => {
         this.setState({
-            filter: event.target.value
-        })
-    }
+            filter: event.target.value,
+        });
+    };
 
     getFilteredElements() {
-        const filter = this.state.filter
-        return this.props.elements.filter(element =>
-            !filter.length ||
-            element.displayName.toLowerCase().includes(filter.toLowerCase())
+        const filter = this.state.filter;
+        return this.props.elements.filter(
+            element =>
+                !filter.length ||
+                element.displayName.toLowerCase().includes(filter.toLowerCase())
         );
     }
 
     render() {
         const elements = this.props.elements;
         const filteredElements = this.getFilteredElements();
-        const numberOfHiddenElements = elements.length - filteredElements.length
+        const numberOfHiddenElements =
+            elements.length - filteredElements.length;
         const removalDialogActions = [
             <FlatButton
                 primary
@@ -173,43 +179,86 @@ class Section extends Component {
             />,
         ];
 
-        const sectionContent = elements && elements.length > 0 ? <div style={styles.sectionContent}>
-                    <SortableSectionDataList distance={4} onSortEnd={this.onSortEnd} onDataElementRemoved={this.props.onDataElementRemoved} sectionDataElements={filteredElements} />
-                    <HiddenElementsText numberOfHiddenElements={numberOfHiddenElements} getTranslation={this.getTranslation} />
-                </div> : <div style={styles.noDataElementsMessage}>
+        const sectionContent =
+            elements && elements.length > 0 ? (
+                <div style={styles.sectionContent}>
+                    <SortableSectionDataList
+                        distance={4}
+                        onSortEnd={this.onSortEnd}
+                        onDataElementRemoved={this.props.onDataElementRemoved}
+                        sectionDataElements={filteredElements}
+                    />
+                    <HiddenElementsText
+                        numberOfHiddenElements={numberOfHiddenElements}
+                        getTranslation={this.getTranslation}
+                    />
+                </div>
+            ) : (
+                <div style={styles.noDataElementsMessage}>
                     {this.props.elementPath === 'dataElements'
                         ? this.getTranslation('no_data_elements')
                         : this.getTranslation('no_attributes')}
-                </div>;
+                </div>
+            );
 
-        return <div style={{ ...styles.sectionContainer, borderColor: this.props.selected ? grey800 : grey300 }}>
+        return (
+            <div
+                style={{
+                    ...styles.sectionContainer,
+                    borderColor: this.props.selected ? grey800 : grey300,
+                }}
+            >
                 <div onClick={this.props.onSelect} style={styles.sectionHeader}>
                     <div style={styles.sectionTopBar}>
                         <div style={styles.row}>
                             <DragHandle />
-                            <ActionButton onClick={this.props.onToggleEdit} icon="mode_edit" />
+                            <ActionButton
+                                onClick={this.props.onToggleEdit}
+                                icon="mode_edit"
+                            />
                             <div style={styles.sectionName}>
                                 {this.props.section.displayName}
                             </div>
                         </div>
                         <div style={styles.row}>
-                            <ActionButton onClick={this.props.onToggleOpen} icon={this.props.collapsed ? 'keyboard_arrow_down' : 'keyboard_arrow_up'} />
-                            <ActionButton onClick={this.openRemovalDialog} icon="clear" />
+                            <ActionButton
+                                onClick={this.props.onToggleOpen}
+                                icon={
+                                    this.props.collapsed
+                                        ? 'keyboard_arrow_down'
+                                        : 'keyboard_arrow_up'
+                                }
+                            />
+                            <ActionButton
+                                onClick={this.openRemovalDialog}
+                                icon="clear"
+                            />
                         </div>
                     </div>
-                    {!this.props.collapsed &&
-                            <TextField style={styles.filterField} hintText={this.getTranslation('filter_elements')} onChange={this.handleFilterElemenets} />
-                    }
+                    {!this.props.collapsed && (
+                        <TextField
+                            style={styles.filterField}
+                            hintText={this.getTranslation('filter_elements')}
+                            onChange={this.handleFilterElemenets}
+                        />
+                    )}
                 </div>
 
                 {!this.props.collapsed && sectionContent}
 
-                <Dialog title={this.getTranslation('delete_section_message')} actions={removalDialogActions} open={this.state.showRemovalDialog} onRequestClose={this.closeRemovalDialog} autoScrollBodyContent>
+                <Dialog
+                    title={this.getTranslation('delete_section_message')}
+                    actions={removalDialogActions}
+                    open={this.state.showRemovalDialog}
+                    onRequestClose={this.closeRemovalDialog}
+                    autoScrollBodyContent
+                >
                     <Heading level={2}>
                         {this.props.section.displayName}
                     </Heading>
                 </Dialog>
-            </div>;
+            </div>
+        );
     }
 }
 
