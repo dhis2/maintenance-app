@@ -20,6 +20,7 @@ import {
     addProgramStage,
     confirmDeleteProgramStage
 } from './actions';
+import withAuth from '../../../../utils/Auth'
 
 const styles = {
     fab: {
@@ -188,13 +189,25 @@ class ProgramStageList extends Component {
         </div>
     );
 
-    renderFAB = () => (
-        <div style={styles.fab}>
-            <FloatingActionButton onClick={this.props.handleNewProgramStage}>
-                <FontIcon className="material-icons">add</FontIcon>
-            </FloatingActionButton>
-        </div>
-    );
+    renderFAB = () => {
+        if (
+            !this.props
+                .getCurrentUser()
+                .canCreate(this.props.getModelDefinitionByName('programStage'))
+        ) {
+            return null;
+        }
+
+        return (
+            <div style={styles.fab}>
+                <FloatingActionButton
+                    onClick={this.props.handleNewProgramStage}
+                >
+                    <FontIcon className="material-icons">add</FontIcon>
+                </FloatingActionButton>
+            </div>
+        );
+    };
 
     render() {
         const contextActions = {
@@ -238,6 +251,8 @@ ProgramStageList.propTypes = {
     handleNewProgramStage: PropTypes.func.isRequired,
     handleEditProgramStage: PropTypes.func.isRequired,
     handleDeleteProgramStage: PropTypes.func.isRequired,
+    getCurrentUser: PropTypes.func.isRequired,
+    getModelDefinitionByName: PropTypes.func.isRequired,
 };
 
 ProgramStageList.defaultProps = {
@@ -257,4 +272,4 @@ export default connect(null, dispatch =>
         },
         dispatch,
     ),
-)(ProgramStageList);
+)(withAuth(ProgramStageList));

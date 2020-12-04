@@ -73,6 +73,14 @@ const ListActionBar = React.createClass({
             return null;
         }
 
+        if (this.props.modelType === 'program' && !this.props
+                .getCurrentUser()
+                .canCreate(
+                    this.props.getModelDefinitionByName('programStage')
+                )) {
+            return null;
+        }
+
         return (
             <div style={cssStyles}>
                 {this.props.modelType === 'program' ? <ProgramSpeedDial {...this.props} /> : (<FloatingActionButton onClick={this._addClick}>
