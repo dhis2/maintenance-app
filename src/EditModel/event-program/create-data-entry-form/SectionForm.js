@@ -1,11 +1,24 @@
 import React, { Component, PropTypes } from 'react';
 import { arrayMove } from 'react-sortable-hoc';
-import { sortBy, find, isEqual, getOr, pull, flatten, filter, findIndex, negate, difference } from 'lodash/fp';
+import {
+    sortBy,
+    find,
+    isEqual,
+    getOr,
+    pull,
+    flatten,
+    filter,
+    findIndex,
+    negate,
+    difference,
+} from 'lodash/fp';
 import Snackbar from 'material-ui/Snackbar';
+import Button from 'material-ui/RaisedButton';
 
 import SectionList from './SectionList.component';
 import AddOrEditSection from './AddOrEditSection.component';
 import DataElementPicker from './DataElementPicker.component';
+import { HiddenElementsText } from './Section.component';
 
 const styles = {
     sectionForm: {
@@ -23,53 +36,70 @@ class SectionForm extends Component {
         super(props, context);
         this.state = {
             collapsedSections: [],
-            activeElements: getActiveElements(props.sections, props.elementPath),
-            selectedSectionId: props.sections[0] && props.sections[0].id || -1,
+            activeElements: getActiveElements(
+                props.sections,
+                props.elementPath
+            ),
+            selectedSectionId:
+                (props.sections[0] && props.sections[0].id) || -1,
             editingSection: null,
             showNoSelectionSectionMessage: false,
+            availableDataElementsFilter: '',
+            sectionEditOpen: false,
         };
+
+        this.getTranslation = context.d2.i18n.getTranslation.bind(
+            context.d2.i18n
+        );
     }
 
     componentWillReceiveProps(newProps) {
         if (newProps.sections !== this.props.sections) {
             this.setState({
-                activeElements: getActiveElements(newProps.sections, this.props.elementPath),
+                activeElements: getActiveElements(
+                    newProps.sections,
+                    this.props.elementPath
+                ),
             });
 
-            const newSectionAdded = difference(newProps.sections, this.props.sections)[0];
+            const newSectionAdded = difference(
+                newProps.sections,
+                this.props.sections
+            )[0];
             if (newSectionAdded) {
                 this.selectSection(newSectionAdded.id);
             }
         }
     }
 
-    getElementsForSection = (section) => {
+    getElementsForSection = section => {
         const elems = section[this.props.elementPath];
         return elems;
-    }
+    };
 
-    onToggleEditing = (section) => {
+    onToggleEditing = section => {
         this.setState({
-            editingSection: this.state.editingSection && isEqual(section.id, this.state.editingSection.id)
-                ? null
-                : section,
+            editingSection:
+                this.state.editingSection &&
+                isEqual(section.id, this.state.editingSection.id)
+                    ? null
+                    : section,
+
+            sectionEditOpen: !this.state.sectionEditOpen,
         });
     };
 
-    getTranslation = key =>
-        this.context.d2.i18n.getTranslation(key);
-
     clearEditingSection = () => {
-        this.setState({ editingSection: null });
-    }
+        this.setState({ editingSection: null, sectionEditOpen: false });
+    };
 
-    openSection = (sectionId) => {
+    openSection = sectionId => {
         this.setState({
             collapsedSections: pull(sectionId, this.state.collapsedSections),
         });
     };
 
-    closeSection = (sectionId) => {
+    closeSection = sectionId => {
         const collapsedSections = this.state.collapsedSections;
         collapsedSections.push(sectionId);
         this.setState({
@@ -77,7 +107,7 @@ class SectionForm extends Component {
         });
     };
 
-    selectSection = (sectionId) => {
+    selectSection = sectionId => {
         this.setState({
             selectedSectionId: sectionId,
         });
@@ -95,19 +125,20 @@ class SectionForm extends Component {
         });
     };
 
-    isSectionCollapsed = sectionId => this.state.collapsedSections.includes(sectionId);
+    isSectionCollapsed = sectionId =>
+        this.state.collapsedSections.includes(sectionId);
 
-    onToggleSection = (sectionId) => {
+    onToggleSection = sectionId => {
         this.isSectionCollapsed(sectionId)
             ? this.openSection(sectionId)
             : this.closeSection(sectionId);
     };
 
-    openSectionIfClosed = (sectionId) => {
+    openSectionIfClosed = sectionId => {
         this.isSectionCollapsed(sectionId) && this.openSection(sectionId);
     };
 
-    onSelectSection = (sectionId) => {
+    onSelectSection = sectionId => {
         this.openSectionIfClosed(sectionId);
         this.selectSection(sectionId);
     };
@@ -118,40 +149,54 @@ class SectionForm extends Component {
     };
 
     onSortEnd = ({ oldIndex, newIndex }) => {
-        this.props.onSectionOrderChanged(arrayMove(this.props.sections, oldIndex, newIndex));
+        this.props.onSectionOrderChanged(
+            arrayMove(this.props.sections, oldIndex, newIndex)
+        );
     };
 
-    onElementPicked = (elementId) => {
-        const elementToAdd = find(element =>
-            isEqual(element.id, elementId), this.props.availableElements);
+    onElementPicked = elementId => {
+        const elementToAdd = find(
+            element => isEqual(element.id, elementId),
+            this.props.availableElements
+        );
         if (!elementToAdd) return;
 
-        const currentSelectedSectionIndex = findIndex(section =>
-            isEqual(this.state.selectedSectionId, section.id), this.props.sections);
+        const currentSelectedSectionIndex = findIndex(
+            section => isEqual(this.state.selectedSectionId, section.id),
+            this.props.sections
+        );
 
         if (currentSelectedSectionIndex === -1) {
             this.openNoSelectionSectionMessage();
             return;
         }
 
-        const currentSelectedSection = this.props.sections[currentSelectedSectionIndex];
-        const updatedSectionElements = this.getElementsForSection(currentSelectedSection).concat(elementToAdd)
+        const currentSelectedSection = this.props.sections[
+            currentSelectedSectionIndex
+        ];
+        const updatedSectionElements = this.getElementsForSection(
+            currentSelectedSection
+        ).concat(elementToAdd);
         const updatedSections = this.props.sections;
-     
-        currentSelectedSection[this.props.elementPath] = updatedSectionElements
+
+        currentSelectedSection[this.props.elementPath] = updatedSectionElements;
         this.props.onSectionOrderChanged(updatedSections);
 
         this.openSectionIfClosed(currentSelectedSection.id);
     };
 
     removeElementFromSection = (elementId, sectionId) => {
-        const sectionIndex = findIndex(section =>
-            isEqual(section.id, sectionId), this.props.sections);
+        const sectionIndex = findIndex(
+            section => isEqual(section.id, sectionId),
+            this.props.sections
+        );
 
         const currentSection = this.props.sections[sectionIndex];
         const elements = this.getElementsForSection(currentSection);
-        const updatedElements = filter(negate(element =>
-            isEqual(element.id, elementId)), elements);
+        const updatedElements = filter(
+            negate(element => isEqual(element.id, elementId)),
+            elements
+        );
 
         const allSections = this.props.sections;
         const currSection = this.props.sections[sectionIndex];
@@ -169,7 +214,25 @@ class SectionForm extends Component {
         this.props.onSectionOrderChanged(sections);
     };
 
+    handleFilterAvailableElements = event => {
+        this.setState({ availableDataElementsFilter: event.target.value });
+    };
+
+    getFilteredAvailableElements() {
+        const filter = this.state.availableDataElementsFilter;
+        return this.props.availableElements.filter(
+            element =>
+                !filter.length ||
+                element.displayName.toLowerCase().includes(filter.toLowerCase())
+        );
+    }
+
     render = () => {
+        const filteredAvailableElements = this.getFilteredAvailableElements();
+        const numberOfHiddenElements =
+            this.props.availableElements.length -
+            filteredAvailableElements.length;
+
         return (
             <div style={styles.sectionForm}>
                 <div style={{ flex: 2 }}>
@@ -193,14 +256,35 @@ class SectionForm extends Component {
                         onSectionUpdated={this.onSectionUpdated}
                         editingSection={this.state.editingSection}
                         clearEditingSection={this.clearEditingSection}
+                        open={this.state.sectionEditOpen}
                     />
                 </div>
                 <div style={{ flex: 1 }}>
+                    <Button
+                        style={{ marginBottom: 15, marginLeft: '1.5rem' }}
+                        label={this.getTranslation('add_section_to_form')}
+                        primary
+                        fullWidth={false}
+                        onClick={() => this.setState({ sectionEditOpen: true })}
+                    />
                     <DataElementPicker
-                        availableDataElements={sortBy(['displayName'], this.props.availableElements)}
+                        availableDataElements={sortBy(
+                            ['displayName'],
+                            filteredAvailableElements
+                        )}
                         activeDataElements={this.state.activeElements}
                         onElementPicked={this.onElementPicked}
-                        heading={this.props.elementPath === 'dataElements' ? this.getTranslation('available_data_elements') : this.getTranslation('available_attributes')}
+                        onFilter={this.handleFilterAvailableElements}
+                        filterText={this.getTranslation('filter_elements')}
+                        heading={
+                            this.props.elementPath === 'dataElements'
+                                ? this.getTranslation('available_data_elements')
+                                : this.getTranslation('available_attributes')
+                        }
+                    />
+                    <HiddenElementsText
+                        numberOfHiddenElements={numberOfHiddenElements}
+                        getTranslation={this.getTranslation}
                     />
                 </div>
                 <Snackbar
@@ -210,7 +294,7 @@ class SectionForm extends Component {
                     onRequestClose={this.closeNoSelectionSectionMessage}
                 />
             </div>
-        )
+        );
     };
 }
 
@@ -220,11 +304,13 @@ SectionForm.PropTypes = {
     onSectionAdded: PropTypes.func.isRequired,
     onSectionRemoved: PropTypes.func.isRequired,
     availableElements: PropTypes.array.isRequired,
-    sections: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        sortOrder: PropTypes.number.isRequired,
-        displayName: PropTypes.string.isRequired,
-    })).isRequired,
+    sections: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            sortOrder: PropTypes.number.isRequired,
+            displayName: PropTypes.string.isRequired,
+        })
+    ).isRequired,
 };
 
 SectionForm.contextTypes = {

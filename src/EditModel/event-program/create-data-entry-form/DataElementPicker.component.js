@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { grey100, grey200, grey300, grey500 } from 'material-ui/styles/colors';
 import { get, isEqual, find } from 'lodash/fp';
 import FontIcon from 'material-ui/FontIcon';
+import TextField from 'material-ui/TextField/TextField';
 
 const styles = {
     dataElementPicker: {
@@ -9,14 +10,13 @@ const styles = {
     },
 
     dataElementList: {
-        overflowY: 'scroll',
+        overflowY: 'auto',
         maxHeight: '500px',
     },
 
     header: {
         fontSize: '1.2rem',
         fontWeight: '500',
-        marginBottom: '16px',
     },
 
     dataElement: {
@@ -31,9 +31,14 @@ const styles = {
     },
 };
 
-const DataElementPicker = ({ availableDataElements, activeDataElements, onElementPicked, heading }) => (
+const DataElementPicker = ({ availableDataElements, activeDataElements, onElementPicked, heading, onFilter, filterText }) => (
     <div style={styles.dataElementPicker}>
-        <div style={styles.header}>{`${heading}:`}</div>
+        <div style={styles.header}>{heading}</div>
+        {onFilter && <TextField
+            hintText={filterText}
+            onChange={onFilter}
+            fullWidth
+        />}
         <div style={styles.dataElementList}>
             { availableDataElements.map((element) => {
                 const elementIsActive = find(active =>

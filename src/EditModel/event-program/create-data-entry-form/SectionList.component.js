@@ -16,7 +16,7 @@ const SectionList = ({
     sortItems,
     elementPath
 }) => (
-    <div>
+    <div style={{minHeight: 410}}>
         { sections.map((section, index) => {
             const elements = section[elementPath];
             return <Section
