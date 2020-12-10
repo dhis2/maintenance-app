@@ -1,3 +1,10 @@
+# [32.3.0](https://github.com/dhis2/maintenance-app/compare/v32.2.6...v32.3.0) (2020-12-10)
+
+
+### Features
+
+* **data-entry-form:** add filter for section elements ([#1598](https://github.com/dhis2/maintenance-app/issues/1598)) ([0754ed8](https://github.com/dhis2/maintenance-app/commit/0754ed88f0ce873d85371bea658d069f1afc8de4))
+
 ## [32.2.6](https://github.com/dhis2/maintenance-app/compare/v32.2.5...v32.2.6) (2020-12-10)
 
 
