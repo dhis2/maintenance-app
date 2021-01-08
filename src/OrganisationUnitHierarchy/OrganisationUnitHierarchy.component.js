@@ -133,7 +133,7 @@ async function getOrganisationUnitByIds(ids) {
     const d2 = await getInstance();
 
     const organisationUnits = await d2.models.organisationUnit
-        .list({ filter: [`id:in:[${ids.join(',')}]`], fields: ':owner,href,id,parent,displayName,path,children[id,displayName,path]' });
+        .list({ filter: [`id:in:[${ids.join(',')}]`], fields: ':owner,href,id,parent,displayName,path,children[id,displayName,path]', paging: false });
 
     return organisationUnits.toArray();
 }
