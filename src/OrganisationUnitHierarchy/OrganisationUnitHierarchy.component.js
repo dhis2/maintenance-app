@@ -105,17 +105,31 @@ function onClickLeft(event, model) {
         .take(1) // Only grab the current state
         .subscribe(
             (hierarchy) => {
-                let selectedLeft = [];
-                const indexOfModelInSelected = hierarchy.selectedLeft
-                    .map(model => model.id)
-                    .indexOf(model.id);
+                const selectAllChildren = event.shiftKey
 
-                if (indexOfModelInSelected >= 0) {
-                    selectedLeft = hierarchy.selectedLeft
-                       .slice(0, indexOfModelInSelected)
-                       .concat(hierarchy.selectedLeft.slice(indexOfModelInSelected + 1));
+                let selectedLeft = [];
+
+                let modelIdsToRemove = hierarchy.selectedLeft
+                    .filter(m => m.id === model.id).map(m => m.id)
+
+                const children = model.children.toArray()
+                let childrenToAdd = []
+
+                // add all children that is not already selected if shift-clicked
+                if(selectAllChildren) {
+                    childrenToAdd = children.filter(
+                        (child) => hierarchy.selectedLeft.findIndex((m) => m.id === child.id) < 0
+                    );
+                }
+
+                // remove selection if already present
+                if (modelIdsToRemove.length > 0) {
+                    if(selectAllChildren) {
+                        modelIdsToRemove.push(...children.map(child => child.id))
+                    }
+                    selectedLeft = hierarchy.selectedLeft.filter(m => modelIdsToRemove.indexOf(m.id) < 0)
                 } else {
-                    selectedLeft = hierarchy.selectedLeft.concat([model]);
+                    selectedLeft = hierarchy.selectedLeft.concat(model, ...childrenToAdd);
                 }
 
                 setAppState({
