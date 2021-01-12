@@ -1,3 +1,15 @@
+# [32.4.0](https://github.com/dhis2/maintenance-app/compare/v32.3.14...v32.4.0) (2021-01-12)
+
+
+### Bug Fixes
+
+* **hierarchy-options:** fetch all orgs ([df315b7](https://github.com/dhis2/maintenance-app/commit/df315b7fa56e31b9d37324810b8980fac40baa30))
+
+
+### Features
+
+* **hierarchy-options:** add all children when shift-clicking ([4fcede0](https://github.com/dhis2/maintenance-app/commit/4fcede0fceba45df425a0a2c5d395d96d44da227))
+
 ## [32.3.14](https://github.com/dhis2/maintenance-app/compare/v32.3.13...v32.3.14) (2021-01-08)
 
 
