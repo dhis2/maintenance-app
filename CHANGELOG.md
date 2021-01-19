@@ -1,3 +1,10 @@
+## [32.4.2](https://github.com/dhis2/maintenance-app/compare/v32.4.1...v32.4.2) (2021-01-19)
+
+
+### Bug Fixes
+
+* **programs:** use correct rendering type for attributes with optionSet ([#1784](https://github.com/dhis2/maintenance-app/issues/1784)) ([5314d44](https://github.com/dhis2/maintenance-app/commit/5314d4434ee7b24b8ab6a072727af74016335b0a))
+
 ## [32.4.1](https://github.com/dhis2/maintenance-app/compare/v32.4.0...v32.4.1) (2021-01-18)
 
 
