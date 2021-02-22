@@ -101,28 +101,16 @@ function actionsThatRequireDelete(action) {
     return false;
 }
 
-export function getTranslatablePropertiesForModelType(modelType) {
-    const fieldsForModel = fieldOrder.for(modelType);
+export function getTranslatablePropertiesForModelType(modelType, model) {
+    const fieldsForModel = new Set(fieldOrder.for(modelType));
     const defaultTranslatableProperties = ['name', 'shortName'];
 
-    if (fieldsForModel.indexOf('description') >= 0) {
-        defaultTranslatableProperties.push('description');
+    if(!model) {
+        return defaultTranslatableProperties
     }
-
-    switch (modelType) {
-    case 'dataElement':
-        return defaultTranslatableProperties.concat(['formName']);
-    case 'organisationUnitLevel':
-        return ['name'];
-    case 'program':
-        return defaultTranslatableProperties.concat(['description'])
-    case 'relationshipType':
-        return defaultTranslatableProperties.concat(['fromToName', 'toFromName'])
-    default:
-        break;
-    }
-
-    return defaultTranslatableProperties;
+    return model.modelDefinition
+        .getTranslatableProperties()
+        .filter(prop => fieldsForModel.has(prop)); // ensure translationkey is in model-form
 }
 
 const modelsThatMapToOtherDisplayName = {
@@ -638,7 +626,7 @@ class List extends Component {
                         onTranslationSaved={this.translationSaved}
                         onTranslationError={this.translationError}
                         onRequestClose={this.closeTranslationDialog}
-                        fieldsToTranslate={getTranslatablePropertiesForModelType(this.props.params.modelType)}
+                        fieldsToTranslate={getTranslatablePropertiesForModelType(this.props.params.modelType, this.state.translation.model)}
                     />}
                 <CompulsoryDataElementOperandDialog
                     model={this.state.dataElementOperand.model}
