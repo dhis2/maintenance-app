@@ -102,12 +102,18 @@ export default class IconPickerDialog extends Component {
     renderIconButtonImage = (iconKey) => {
         const contextPath = this.context.d2.system.systemInfo.contextPath;
         const altText = this.context.d2.i18n.getTranslation('current_icon');
+        const fallbackIconPath = `${contextPath}/api/icons/dhis2_logo_outline/icon.svg`
         return (
             <img
                 src={`${contextPath}/api/icons/${iconKey}/icon.svg`}
                 alt={altText}
                 className="icon-picker__icon-button-image"
                 style={{ backgroundColor: 'white', overflow: 'hidden' }}
+                onError={({ target }) => {
+                    target.onerror = "";
+                    target.src=fallbackIconPath;
+                    return true;
+                }}
             />
         );
     };
