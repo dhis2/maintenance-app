@@ -1,3 +1,10 @@
+# [32.7.0](https://github.com/dhis2/maintenance-app/compare/v32.6.0...v32.7.0) (2021-02-23)
+
+
+### Features
+
+* **icon-field:** fallback to dhis2-logo if logo does not exist ([#1684](https://github.com/dhis2/maintenance-app/issues/1684)) ([255f136](https://github.com/dhis2/maintenance-app/commit/255f13674ff0536fc61a3d8def6b637a62118a16))
+
 # [32.6.0](https://github.com/dhis2/maintenance-app/compare/v32.5.0...v32.6.0) (2021-02-23)
 
 
