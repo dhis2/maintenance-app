@@ -1,3 +1,10 @@
+# [32.5.0](https://github.com/dhis2/maintenance-app/compare/v32.4.4...v32.5.0) (2021-02-23)
+
+
+### Features
+
+* **list:** get translatable properties from schema for all objects ([#1800](https://github.com/dhis2/maintenance-app/issues/1800)) ([fed1d7d](https://github.com/dhis2/maintenance-app/commit/fed1d7d2240270528b1817f9f1e79588a248d708))
+
 ## [32.4.4](https://github.com/dhis2/maintenance-app/compare/v32.4.3...v32.4.4) (2021-02-01)
 
 
