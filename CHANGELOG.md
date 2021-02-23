@@ -1,3 +1,10 @@
+# [32.6.0](https://github.com/dhis2/maintenance-app/compare/v32.5.0...v32.6.0) (2021-02-23)
+
+
+### Features
+
+* add shortname to category, orgunitgrpset and degrpset ([#1799](https://github.com/dhis2/maintenance-app/issues/1799)) ([a7ff7b3](https://github.com/dhis2/maintenance-app/commit/a7ff7b3fd788f053d503a1a1d4e3c5f326253c30))
+
 # [32.5.0](https://github.com/dhis2/maintenance-app/compare/v32.4.4...v32.5.0) (2021-02-23)
 
 
