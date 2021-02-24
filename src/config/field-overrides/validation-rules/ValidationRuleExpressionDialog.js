@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { result } from 'lodash/fp';
 import Dialog from 'material-ui/Dialog';
-import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
+import ExpressionManager from '../../../EditModel/expression/ExpressionManager'
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import React from 'react';
 import Store from 'd2-ui/lib/store/Store';
