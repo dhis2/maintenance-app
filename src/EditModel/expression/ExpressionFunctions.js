@@ -7,41 +7,53 @@ const styles = {
     wrapper: {
         display: 'flex',
         flexWrap: 'wrap',
-        justifyContent: 'space-between'
     },
     button: {
         minWidth: 50,
-        margin: '5px 10px 5px 10px'
-    }
-}
+        marginRight: '15px',
+        padding: '0 5px',
+    },
+};
 
-class ExpressionFunctions extends Component {    
+class ExpressionFunctions extends Component {
+    createFunctionClick(operatorValue) {
+        return function functionButtonClicked() {
+            this.props.onFunctionClick(operatorValue);
+        }.bind(this);
+    }
+
+    renderButton(value, label) {
+        return (
+            <FlatButton
+                style={styles.button}
+                onClick={this.createFunctionClick(value)}
+            >
+                {label || value}
+            </FlatButton>
+        );
+    }
+
     render() {
         const classList = classes('expression-functions');
 
         return (
             <div className={classList} style={styles.wrapper}>
-                <FlatButton style={styles.button} onClick={this.createOperatorClick(' if( ')}>if(</FlatButton>
-                <FlatButton style={styles.button} onClick={this.createOperatorClick(' isNull( ')}>isNull(</FlatButton>
-                <FlatButton style={styles.button} onClick={this.createOperatorClick(' firstNonNull( ')}>firstNonNull(</FlatButton>
-                <FlatButton style={styles.button} onClick={this.createOperatorClick(' greatest( ')}>greatest(</FlatButton>
-                <FlatButton style={styles.button} onClick={this.createOperatorClick(' least( ')}>least(</FlatButton>
-                <FlatButton style={styles.button} onClick={this.createOperatorClick(' log( ')}>log(</FlatButton>
-                <FlatButton style={styles.button} onClick={this.createOperatorClick(' log10( ')}>log10(</FlatButton>
-                <FlatButton style={styles.button} onClick={this.createOperatorClick(' .periodOffset( ')}>.periodOffset(</FlatButton>
+                {this.renderButton(' if( ')}
+                {this.renderButton(' isNull( ')}
+                {this.renderButton(' isNotNull( ')}
+                {this.renderButton(' firstNonNull( ')}
+                {this.renderButton(' greatest( ')}
+                {this.renderButton(' least( ')}
+                {this.renderButton(' log( ')}
+                {this.renderButton(' log10( ')}
+                {this.renderButton(' .periodOffset( ')}
             </div>
         );
-    }
-
-    createOperatorClick(operatorValue) {
-        return function functionButtonClicked() {
-            this.props.onFunctionClick(operatorValue);
-        }.bind(this);
     }
 }
 
 ExpressionFunctions.propTypes = {
-    operatorClicked: PropTypes.func.isRequired,
+    onFunctionClick: PropTypes.func.isRequired,
 };
 
 export default ExpressionFunctions;
