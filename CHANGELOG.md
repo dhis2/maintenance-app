@@ -1,3 +1,19 @@
+# [32.8.0](https://github.com/dhis2/maintenance-app/compare/v32.7.0...v32.8.0) (2021-02-25)
+
+
+### Bug Fixes
+
+* **expressionfunctions:** cleanup ([85cef51](https://github.com/dhis2/maintenance-app/commit/85cef51fd8fdff4a5f2f67d6463690b93a6a6029))
+
+
+### Features
+
+* **expressionamanager:** add expression functions ([15dd501](https://github.com/dhis2/maintenance-app/commit/15dd5019fc24da01c00e681fa8f22e27841b2c8f))
+* **indicators:** expression function for indicators ([2e6e77f](https://github.com/dhis2/maintenance-app/commit/2e6e77fe7df897c2a559ab6f5ffce4814b91ad5b))
+* **predictor:** add expression functions ([bf1ab75](https://github.com/dhis2/maintenance-app/commit/bf1ab7569d17bc3a61566754720bf2b461bc91ec))
+* **program-indicators:** add expression functions, streamline buttons ([fca6eda](https://github.com/dhis2/maintenance-app/commit/fca6eda87cad9bdc60d9d9518ddd259b0b8fb713))
+* **validation-rules:** add expression functions ([a681cd4](https://github.com/dhis2/maintenance-app/commit/a681cd45e9b306ee0e9dbc9be47e41c760ec4480))
+
 # [32.7.0](https://github.com/dhis2/maintenance-app/compare/v32.6.0...v32.7.0) (2021-02-23)
 
 
