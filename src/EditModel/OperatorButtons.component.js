@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
 const styles = {
     operatorButton: {
@@ -19,7 +19,7 @@ const styles = {
 class OperatorButtons extends Component {
     operatorButton(label, value) {
         return (
-            <RaisedButton
+            <FlatButton
                 label={label}
                 onClick={() => this.props.onClick(value || label)}
                 style={styles.operatorButton}

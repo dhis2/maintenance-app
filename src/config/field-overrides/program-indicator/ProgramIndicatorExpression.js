@@ -8,6 +8,7 @@ import ExpressionFormulaWithErrorMessage from './ExpressionFormulaWithErrorMessa
 import AttributeSelector from './AttributeSelector';
 import VariableSelector from './VariableSelector';
 import ConstantSelector from './ConstantSelector';
+import ExpressionFunctions from '../../../EditModel/expression/ExpressionFunctions'
 import DataElementSelectors from './DataElementSelectors';
 import OperatorButtons from '../../../EditModel/OperatorButtons.component';
 import HelpText from './HelpText';
@@ -82,7 +83,7 @@ function ProgramIndicatorExpression({ d2, onChange, status, model, value: formul
                         errorStatus={status}
                     />
                     <OperatorButtons onClick={onSelect} />
-
+                    <ExpressionFunctions onFunctionClick={onSelect} />
                     <ExpressionDescription status={status} />
                 </Paper>
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import ExpressionManager from 'd2-ui/lib/expression-manager/ExpressionManager';
+import ExpressionManager from '../../../EditModel/expression/ExpressionManager'
 import expressionStatusStore from './expressionStatusStore'
 import MissingValueStrategy from '../validation-rules/MissingValueStrategy';
 
