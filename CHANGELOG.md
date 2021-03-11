@@ -1,3 +1,10 @@
+## [32.8.3](https://github.com/dhis2/maintenance-app/compare/v32.8.2...v32.8.3) (2021-03-11)
+
+
+### Bug Fixes
+
+* **programs:** request publicAccess explicitly ([c8e16ab](https://github.com/dhis2/maintenance-app/commit/c8e16ab8838f939aaa7a9f6dbebd54ef1dfae046))
+
 ## [32.8.2](https://github.com/dhis2/maintenance-app/compare/v32.8.1...v32.8.2) (2021-03-09)
 
 
