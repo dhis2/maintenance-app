@@ -138,8 +138,8 @@ class SqlView extends Component {
 
     /* eslint-disable react/no-array-index-key */
     renderCell = (cell, index) => {
-        const formattedValue =
-            Object(cell) !== cell ? cell : JSON.stringify(cell, null, 2);
+        const isObject = typeof cell === 'object' && cell != null;
+        const formattedValue = isObject ? JSON.stringify(cell, null, 2) : cell;
 
         return <td key={`cell${index}`}>{formattedValue}</td>;
     };
