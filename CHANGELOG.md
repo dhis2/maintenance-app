@@ -1,3 +1,10 @@
+## [32.8.4](https://github.com/dhis2/maintenance-app/compare/v32.8.3...v32.8.4) (2021-03-18)
+
+
+### Bug Fixes
+
+* **sqlView:** format non-primitive values ([#1816](https://github.com/dhis2/maintenance-app/issues/1816)) ([cd8982f](https://github.com/dhis2/maintenance-app/commit/cd8982fdd35ec673e3d36b2fb2c4a109154e44a3))
+
 ## [32.8.3](https://github.com/dhis2/maintenance-app/compare/v32.8.2...v32.8.3) (2021-03-11)
 
 
