@@ -76,7 +76,9 @@ const addProgramSection = store => action$ => action$
             // Create new section model and set the properties we can
             const newSection = d2.models.programSection.create({ id: generateUid() });
             newSection.name = newSectionData.name;
-            newSection.displayName = newSectionData.name;
+            // this is just used to show edited name immediately, not sent to serv
+            // cannot change dispayName directly as it does not have a setter (writable: false)
+            newSection.dataValues.displayName = newSectionData.name;
             newSection.description = newSectionData.description;
             newSection.renderType = newSectionData.renderType;
             newSection.sortOrder = sortOrder;
