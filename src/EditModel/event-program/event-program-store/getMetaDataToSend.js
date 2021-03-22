@@ -7,7 +7,7 @@ import {
     values,
     flatten,
 } from 'lodash/fp';
-import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
+import { getOwnedPropertyJSON, getJSONForProperties } from 'd2/lib/model/helpers/json';
 
 const checkIfDirty = model => model && model.isDirty();
 const programStagesSelector = get('programStages');
@@ -27,11 +27,21 @@ const hasDirtyProgramNotifications = state => programNotificationsSelector(state
 const hasDirtyDataEntryForms = compose(some(checkIfDirty), values, dataEntryFormsSelector);
 const hasDirtyProgramSections = compose(some(checkIfDirty), values, programSectionsSelector);
 
+/* Sharing settings was removed from :owner properties in 2.36
+    In programs we are using metadata API (instead of /sharing-api),
+    so we still need to include these properties
+*/
+const modelToJsonWithSharingProperties = model => {
+    const ownerProperties = model.modelDefinition.getOwnedPropertyNames()
+    const sharingProperties = ['publicAccess', 'userAccesses', 'userGroupAccesses']
+    return getJSONForProperties(model, ownerProperties.concat(sharingProperties))
+}
+
 const handleDataEntryForm = state => payload => {
     if (isProgramDirty(state)) {
         const withPrograms = {
             ...payload,
-            programs: [programSelector(state)].map(modelToJson)
+            programs: [programSelector(state)].map(modelToJsonWithSharingProperties)
         }
 
         //For custom-form
@@ -55,7 +65,7 @@ const handleProgramStages = state => payload => {
     if (isProgramStageDirty(state)) {
         return {
             ...payload,
-            programStages: programStagesSelector(state).map(modelToJson)
+            programStages: programStagesSelector(state).map(modelToJsonWithSharingProperties)
         }
     }
 
