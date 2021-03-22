@@ -1,3 +1,10 @@
+## [32.8.5](https://github.com/dhis2/maintenance-app/compare/v32.8.4...v32.8.5) (2021-03-22)
+
+
+### Bug Fixes
+
+* **program:** fix setting section displayname ([4a10ce6](https://github.com/dhis2/maintenance-app/commit/4a10ce6861fd82edaa99b1a1afe22c3570fd3294))
+
 ## [32.8.4](https://github.com/dhis2/maintenance-app/compare/v32.8.3...v32.8.4) (2021-03-18)
 
 
