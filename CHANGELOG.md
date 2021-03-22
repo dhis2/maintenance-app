@@ -1,3 +1,10 @@
+## [32.8.6](https://github.com/dhis2/maintenance-app/compare/v32.8.5...v32.8.6) (2021-03-22)
+
+
+### Bug Fixes
+
+* **program:** fix sharing settings not included in payload ([#1817](https://github.com/dhis2/maintenance-app/issues/1817)) ([0eb1a83](https://github.com/dhis2/maintenance-app/commit/0eb1a8343e49a4225dc7925d9c98450c127a6689))
+
 ## [32.8.5](https://github.com/dhis2/maintenance-app/compare/v32.8.4...v32.8.5) (2021-03-22)
 
 
