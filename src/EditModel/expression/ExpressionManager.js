@@ -262,6 +262,7 @@ class ExpressionManager extends Component {
                             />
                             <ExpressionFunctions
                                 onFunctionClick={this.appendToFormula}
+                                expressionType={this.props.expressionType}
                             />
                         </Column>
                     </Paper>
@@ -351,6 +352,7 @@ ExpressionManager.propTypes = {
     formulaValue: PropTypes.string,
     titleText: PropTypes.string,
     validateExpression: PropTypes.func,
+    expressionType: PropTypes.oneOf['indicator', 'programIndicator', 'validationRule', 'predictor'],
 };
 
 ExpressionManager.defaultProps = {

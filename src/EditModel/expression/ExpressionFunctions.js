@@ -15,6 +15,10 @@ const styles = {
     },
 };
 
+const functionsForExpressionType = {
+    indicator: [' .periodOffset( ']
+}
+
 class ExpressionFunctions extends Component {
     createFunctionClick(operatorValue) {
         return function functionButtonClicked() {
@@ -34,7 +38,9 @@ class ExpressionFunctions extends Component {
     }
 
     render() {
+        const expressionType = this.props.expressionType
         const classList = classes('expression-functions');
+        const extraFunctionsForType = expressionType ? functionsForExpressionType[expressionType] : []
 
         return (
             <div className={classList} style={styles.wrapper}>
@@ -46,7 +52,7 @@ class ExpressionFunctions extends Component {
                 {this.renderButton(' least( ')}
                 {this.renderButton(' log( ')}
                 {this.renderButton(' log10( ')}
-                {this.renderButton(' .periodOffset( ')}
+                {extraFunctionsForType.map(funcName => this.renderButton(funcName))}
             </div>
         );
     }
