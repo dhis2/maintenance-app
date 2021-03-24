@@ -29,6 +29,7 @@ class ExpressionFunctions extends Component {
     renderButton(value, label) {
         return (
             <FlatButton
+                key={value} 
                 style={styles.button}
                 onClick={this.createFunctionClick(value)}
             >

@@ -352,7 +352,7 @@ ExpressionManager.propTypes = {
     formulaValue: PropTypes.string,
     titleText: PropTypes.string,
     validateExpression: PropTypes.func,
-    expressionType: PropTypes.oneOf['indicator', 'programIndicator', 'validationRule', 'predictor'],
+    expressionType: PropTypes.oneOf(['indicator', 'programIndicator', 'validationRule', 'predictor']),
 };
 
 ExpressionManager.defaultProps = {
