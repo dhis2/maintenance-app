@@ -77,6 +77,7 @@ const IndicatorExpressionManagerContainer = React.createClass({
                 titleText={this.props.titleText}
                 validateExpression={actionToValidation$}
                 ref="expressionManager"
+                expressionType='indicator'
             />
         );
     },
