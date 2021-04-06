@@ -1,3 +1,10 @@
+## [32.8.10](https://github.com/dhis2/maintenance-app/compare/v32.8.9...v32.8.10) (2021-04-06)
+
+
+### Bug Fixes
+
+* **expressionmanager:** show .periodOffset for indicators only ([#1827](https://github.com/dhis2/maintenance-app/issues/1827)) ([6b09e03](https://github.com/dhis2/maintenance-app/commit/6b09e0367e225725bb72da449f97d818827079f1))
+
 ## [32.8.9](https://github.com/dhis2/maintenance-app/compare/v32.8.8...v32.8.9) (2021-03-30)
 
 
