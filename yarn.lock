@@ -2940,10 +2940,10 @@ d2-utilizr@^0.2.15, d2-utilizr@^0.2.9:
     lodash.isset "^4.3.0"
     lodash.isstring "^4.0.1"
 
-d2@30.0.4:
-  version "30.0.4"
-  resolved "https://registry.yarnpkg.com/d2/-/d2-30.0.4.tgz#ba51a43e7daedeb47e01c45aef71649bad1b2159"
-  integrity sha512-GjTfqPq7KAakeN398jnzh0DO7kTofy18UoARJqcASU6RvcVjlJNnRpanHbbaSe05BrjVZx4j05niwDn/VVqJ4w==
+d2@30.2.2:
+  version "30.2.2"
+  resolved "https://registry.yarnpkg.com/d2/-/d2-30.2.2.tgz#4f42fa0d9add9e198eb3f7e2d668bdc817aab7b3"
+  integrity sha512-pLSYvPrfdJYgzAo5IYPVHQ5y1tos6D5+cDvkbJ5wugWzVmuPQjAagm/39FnQ1xhGdAu32YYCRKRkRsTE5mr36A==
   dependencies:
     docdash "^0.4.0"
     jsdoc "^3.5.5"
