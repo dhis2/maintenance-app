@@ -157,7 +157,8 @@ function addDisplayProperties(attributes, renderingOptions) {
         const { displayName, valueType, optionSet, unique } = attributes.find(
             ({ id }) => id === trackedEntityAttribute.id
         );
-        const renderTypeOptions = getRenderTypeOptions(assignedAttribute, TRACKED_ENTITY_ATTRIBUTE_CLAZZ, renderingOptions);
+        
+        const renderTypeOptions = getRenderTypeOptions(trackedEntityAttribute, TRACKED_ENTITY_ATTRIBUTE_CLAZZ, renderingOptions);
         return {
             ...other,
             trackedEntityAttribute: {
