@@ -1,37 +1,52 @@
-import React from 'react';
-import ColorPicker from 'd2-ui/lib/legend/ColorPicker.component';
+import React, { Component } from 'react';
 import Divider from 'material-ui/Divider';
 import PropTypes from 'prop-types';
 import FieldWrapper from './helpers/FieldWrapper';
+import ColorPicker from './helpers/ColorPicker';
 
-export default function ColorPickerField(props, context) {
-    function transformChange(value) {
-        props.onChange({
-            target: {
-                value,
-            },
-        });
+export default class ColorPickerField extends Component {
+    constructor(props, context) {
+        super(props, context);
+
+        const style = { color: props.value };
+        this.state = { style };
     }
 
-    return (
-        <div>
-            <FieldWrapper label={context.d2.i18n.getTranslation('color')}>
-                <ColorPicker
-                    color={props.value || context.d2.i18n.getTranslation('select_color')}
-                    {...props}
-                    onChange={transformChange}
-                />
-            </FieldWrapper>
-            <Divider />
-        </div>
-    );
+    updateStyleState = (newStyleProp) => {
+        const style = {
+            ...this.state.style,
+            ...newStyleProp,
+        };
+
+        this.setState({ style });
+
+        this.props.onChange({
+            target: { value: style.color },
+        });
+    };
+
+    render() {
+        const { name: modelName } = this.props.modelDefinition;
+
+        return (
+            <div>
+                <FieldWrapper label="Color">
+                    <ColorPicker
+                        updateStyleState={this.updateStyleState}
+                        color={this.state.style.color}
+                        modelName={modelName}
+                    />
+                </FieldWrapper>
+                <Divider />
+            </div>
+        );
+    }
 }
-ColorPickerField.defaultProps = {
-    PickerComponent: null,
-};
+
 ColorPickerField.propTypes = {
-    ...ColorPicker.propTypes,
-    PickerComponent: PropTypes.node,
+    modelDefinition: PropTypes.object.isRequired,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
 };
 
 ColorPickerField.contextTypes = {
