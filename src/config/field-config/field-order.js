@@ -47,6 +47,7 @@ const fieldOrderByName = new Map([
         'name',
         'shortName',
         'code',
+        'formName',
         'description',
         'startDate',
         'endDate',
