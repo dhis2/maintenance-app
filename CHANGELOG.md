@@ -1,3 +1,10 @@
+# [32.9.0](https://github.com/dhis2/maintenance-app/compare/v32.8.23...v32.9.0) (2021-06-04)
+
+
+### Features
+
+* **category option:** add form name field ([0f62305](https://github.com/dhis2/maintenance-app/commit/0f62305e538209133506f439eaab795a16cdb792))
+
 ## [32.8.23](https://github.com/dhis2/maintenance-app/compare/v32.8.22...v32.8.23) (2021-06-02)
 
 
