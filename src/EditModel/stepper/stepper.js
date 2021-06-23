@@ -29,7 +29,7 @@ export const getStepFields = (step, fieldConfigs, modelType) => {
     const stepsByField = fieldGroups.groupsByField(modelType);
     if (stepsByField) {
         fieldConfigs.map((field) => {
-            if (stepsByField[field.name] === step) {
+            if (stepsByField[field.name] === step || field.isAttribute) {
                 field.props.style = { display: 'block' };
             } else {
                 field.props.style = { display: 'none' };
