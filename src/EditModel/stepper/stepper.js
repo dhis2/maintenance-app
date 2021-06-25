@@ -31,7 +31,7 @@ export const getStepFields = (step, fieldConfigs, modelType) => {
         fieldConfigs.map(field => {
             if (
                 stepsByField[field.name] === step ||
-                (field.isAttribute && step === 0)
+                (field.isAttribute && step === 0) // add custom attributes-fields to first step
             ) {
                 field.props.style = { display: 'block' };
             } else {
