@@ -1,3 +1,10 @@
+## [32.9.6](https://github.com/dhis2/maintenance-app/compare/v32.9.5...v32.9.6) (2021-06-28)
+
+
+### Bug Fixes
+
+* **stepper:** show attributes in steppers ([#1996](https://github.com/dhis2/maintenance-app/issues/1996)) ([1c76655](https://github.com/dhis2/maintenance-app/commit/1c766558a1892941069483559e5ea1a1ce40de6a))
+
 ## [32.9.5](https://github.com/dhis2/maintenance-app/compare/v32.9.4...v32.9.5) (2021-06-25)
 
 
