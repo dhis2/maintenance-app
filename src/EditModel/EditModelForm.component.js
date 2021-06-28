@@ -64,6 +64,7 @@ const modelToEditAndModelForm$ = Observable
 
                 // Check if value is an attribute
                 if (Object.keys(modelToEdit.attributes || []).indexOf(fieldConfig.name) >= 0) {
+                    fieldConfig.isAttribute = true
                     fieldConfig.value = modelToEdit.attributes[fieldConfig.name];
                     return fieldConfig;
                 }
