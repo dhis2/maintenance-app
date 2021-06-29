@@ -1,5 +1,6 @@
+import Button from 'd2-ui/lib/button/Button';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 
 const MAX_POLL_TRIES = 5;
 
@@ -24,7 +25,45 @@ ImageSelectText.propTypes = {
     children: PropTypes.any.isRequired,
 }
 
+const ImageSelectButton = ({ disabled, children, onClick }) => (
+    <span
+        onClick={(...args) => {
+            if (disabled) return
+            onClick(...args)
+        }}
+        style={{
+            display: 'inline-block',
+            marginRight: 4,
+            background: 'rgb(204, 204, 204)',
+            color: 'black',
+            height: 36,
+            lineHeight: '36px',
+            textTransform: 'uppercase',
+            fontWeight: 500,
+            fontSize: '14px',
+            letterSpacing: 0,
+            cursor: 'pointer',
+            padding: '0 16px',
+            ...(disabled ? {
+                color: 'rgba(0, 0, 0, 0.3)',
+                background: 'transparent',
+                cursor: 'not-allowed',
+            } : {}),
+        }}
+    >
+        {children}
+    </span>
+)
+
+ImageSelectButton.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    children: PropTypes.any,
+    disabled: PropTypes.bool,
+}
+
 export class ImageSelect extends Component {
+    fileInputRef = null
+
     constructor(props, context) {
         super(props, context);
 
@@ -181,80 +220,87 @@ export class ImageSelect extends Component {
                 </label>
 
                 <div style={{ display: 'flex' }}>
-                    <div style={{
-                        height: 46,
-                        width: 46,
-                        marginRight: 4,
-                        border: '1px solid grey',
+                    <label style={{
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        marginBottom: 4,
+                        marginRight: 4,
+                        cursor: 'pointer',
                     }}>
-                        {(loading || (!displayImage && pending)) && (
-                            <span>...</span>
-                        )}
+                        <div style={{
+                            height: 36,
+                            width: 36,
+                            // border: '2px solid #ff9800',
+                            borderRight: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            {(loading || (!displayImage && pending)) && (
+                                <span>...</span>
+                            )}
 
-                        {!loading && displayImage && (
-                            <img
-                                alt={this.getTranslation('org_unit_image_alt_text')}
-                                src={`${this.api.baseUrl}/fileResources/${fileResourceId}/data`}
-                                style={{
-                                    maxHeight: '40px',
-                                    maxWidth: '40px',
-                                    height: 'auto',
-                                    width: 'auto',
-                                }}
-                            />
-                        )}
+                            {!loading && displayImage && (
+                                <img
+                                    alt={this.getTranslation('org_unit_image_alt_text')}
+                                    src={`${this.api.baseUrl}/fileResources/${fileResourceId}/data`}
+                                    style={{
+                                        maxHeight: '100%',
+                                        maxWidth: '100%',
+                                        height: 'auto',
+                                        width: 'auto',
+                                    }}
+                                />
+                            )}
 
-                        {!displayImage && !loading && !pending && (
-                            <span>⨯</span>
-                        )}
-                    </div>
-
-                    <div>
-                        <label style={{ display: 'block', marginBottom: 4 }}>
-                            <input
-                                name="image-select-input"
-                                onChange={this.onFileSelect}
-                                type="file"
-                                accept="image/*"
-                                ref={this.setInputRef}
-                            />
-                        </label>
-
-                        <div>
-                            <button
-                                disabled={!this.props.value}
-                                onClick={() => {
-                                    if (this.state.initialValue) {
-                                        this.setState({ removed: true })
-                                    }
-
-                                    this.props.onChange({ target: { value: null } })
-                                }}
-                                style={{
-                                    display: 'inline-block',
-                                    marginRight: 4,
-                                }}
-                            >
-                                {this.getTranslation('org_unit_image_remove_image')}
-                            </button>
-
-                            <button
-                                disabled={!dirty}
-                                onClick={
-                                    () => this.props.onChange({
-                                        target: {
-                                            value: this.state.initialValue,
-                                        },
-                                    })
-                                }
-                            >
-                                {this.getTranslation('org_unit_image_reset')}
-                            </button>
+                            {!displayImage && !loading && !pending && (
+                                <span>⨯</span>
+                            )}
                         </div>
-                    </div>
+
+                        <Button
+                            onClick={() => this.fileInputRef.click()}
+                            style={{
+                                backgroundColor: '#ff9800',
+                                color: 'white',
+                            }}
+                        >
+                            {this.getTranslation('org_unit_image_select_file')}
+                        </Button>
+
+                        <input
+                            name="image-select-input"
+                            onChange={this.onFileSelect}
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            ref={r => (this.fileInputRef = r)}
+                        />
+                    </label>
+
+                    <ImageSelectButton
+                        disabled={!this.props.value}
+                        onClick={() => {
+                            if (this.state.initialValue) {
+                                this.setState({ removed: true })
+                            }
+
+                            this.props.onChange({ target: { value: null } })
+                        }}
+                    >
+                        {this.getTranslation('org_unit_image_remove_image')}
+                    </ImageSelectButton>
+
+                    {dirty && <ImageSelectButton
+                        onClick={
+                            () => this.props.onChange({
+                                target: {
+                                    value: this.state.initialValue,
+                                },
+                            })
+                        }
+                    >
+                        {this.getTranslation('org_unit_image_reset')}
+                    </ImageSelectButton>}
                 </div>
 
                 {hasNoImage && !error && !loading && (
