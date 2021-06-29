@@ -185,18 +185,18 @@ export class ImageSelect extends Component {
     render() {
         const { value: fileReference } = this.props;
         const { id: fileResourceId } = fileReference || {}
-        const { initialized, loading, error, pending } = this.state;
+        const { initialized, initialValue, loading, error, pending } = this.state;
 
         const fileResourceReady = initialized && !loading && !error && fileResourceId;
         const isPending = fileResourceReady && pending;
-        const displayImage = fileResourceReady && !pending;
+        const displayImage = fileResourceReady && !isPending;
         const wasRemoved = !fileResourceId && this.state.removed
         const hasNoImage = !fileResourceId && !this.state.removed
-        const hasInitialValue = this.state.initialValue && this.state.initialValue.id
+        const hasInitialValue = initialValue && initialValue.id
         const dirty = (
             (fileResourceId && !hasInitialValue) ||
             (!fileResourceId && hasInitialValue) ||
-            (hasInitialValue && this.state.initialValue.id !== fileResourceId)
+            (hasInitialValue && initialValue.id !== fileResourceId)
         )
 
         return (
@@ -235,7 +235,7 @@ export class ImageSelect extends Component {
                             alignItems: 'center',
                             justifyContent: 'center',
                         }}>
-                            {(loading || (!displayImage && pending)) && (
+                            {(loading || (!displayImage && isPending)) && (
                                 <span>...</span>
                             )}
 
@@ -252,7 +252,7 @@ export class ImageSelect extends Component {
                                 />
                             )}
 
-                            {!displayImage && !loading && !pending && (
+                            {!displayImage && !loading && !isPending && (
                                 <span>⨯</span>
                             )}
                         </div>
@@ -280,7 +280,7 @@ export class ImageSelect extends Component {
                     <ImageSelectButton
                         disabled={!this.props.value}
                         onClick={() => {
-                            if (this.state.initialValue) {
+                            if (initialValue) {
                                 this.setState({ removed: true })
                             }
 
@@ -290,11 +290,11 @@ export class ImageSelect extends Component {
                         {this.getTranslation('org_unit_image_remove_image')}
                     </ImageSelectButton>
 
-                    {dirty && <ImageSelectButton
+                    {initialValue && dirty && <ImageSelectButton
                         onClick={
                             () => this.props.onChange({
                                 target: {
-                                    value: this.state.initialValue,
+                                    value: initialValue,
                                 },
                             })
                         }
@@ -303,7 +303,7 @@ export class ImageSelect extends Component {
                     </ImageSelectButton>}
                 </div>
 
-                {hasNoImage && !error && !loading && (
+                {hasNoImage && !error && !loading && !isPending && (
                     <ImageSelectText>
                         {this.getTranslation('org_unit_image_no_image_text')}
                     </ImageSelectText>
@@ -323,9 +323,12 @@ export class ImageSelect extends Component {
 
                 {error && (
                     <ImageSelectText>
-                        {this.getTranslation('org_unit_image_image_upload_error_text')}
-                        <br />
-                        {error.toString()}
+                        <b>
+                            {this.getTranslation('org_unit_image_image_upload_error_text')}
+                            {' '}
+                        </b>
+
+                        {error instanceof Error ? error.message : error.toString()}
                     </ImageSelectText>
                 )}
 
