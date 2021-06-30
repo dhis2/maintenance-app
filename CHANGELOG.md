@@ -1,3 +1,10 @@
+# [32.10.0](https://github.com/dhis2/maintenance-app/compare/v32.9.7...v32.10.0) (2021-06-30)
+
+
+### Features
+
+* **image-select:** add image select field to org unit form DHIS2-11175 ([#2007](https://github.com/dhis2/maintenance-app/issues/2007)) ([27e9513](https://github.com/dhis2/maintenance-app/commit/27e951333c14a8ed6404f73e26cf8e148e1ac5e8))
+
 ## [32.9.7](https://github.com/dhis2/maintenance-app/compare/v32.9.6...v32.9.7) (2021-06-29)
 
 
