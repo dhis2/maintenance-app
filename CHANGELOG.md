@@ -1,3 +1,11 @@
+## [32.10.3](https://github.com/dhis2/maintenance-app/compare/v32.10.2...v32.10.3) (2021-07-02)
+
+
+### Bug Fixes
+
+* **image select:** adjust styles to reflect outcome of PR discussion ([32ca1e8](https://github.com/dhis2/maintenance-app/commit/32ca1e88b8f2d5a7bc6c8081b42a32a6fd823473))
+* **image select:** do not use the base url with api.get ([569ef3e](https://github.com/dhis2/maintenance-app/commit/569ef3ee405222f553e8eefd5026e9b89b780898))
+
 ## [32.10.2](https://github.com/dhis2/maintenance-app/compare/v32.10.1...v32.10.2) (2021-07-01)
 
 
