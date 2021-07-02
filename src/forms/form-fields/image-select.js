@@ -98,7 +98,7 @@ export class ImageSelect extends Component {
 
     checkStorageStatus(id) {
         return this.api
-            .get(`${this.api.baseUrl}/fileResources/${id}`)
+            .get(`fileResources/${id}`)
             .then(({ storageStatus }) => {
                 if (storageStatus === 'PENDING') {
                     this.setState({ pending: true });
@@ -185,13 +185,13 @@ export class ImageSelect extends Component {
     render() {
         const { value: fileReference } = this.props;
         const { id: fileResourceId } = fileReference || {}
-        const { initialized, initialValue, loading, error, pending } = this.state;
+        const { removed, initialized, initialValue, loading, error, pending } = this.state;
 
         const fileResourceReady = initialized && !loading && !error && fileResourceId;
         const isPending = fileResourceReady && pending;
         const displayImage = fileResourceReady && !isPending;
-        const wasRemoved = !fileResourceId && this.state.removed
-        const hasNoImage = !fileResourceId && !this.state.removed
+        const wasRemoved = !fileResourceId && removed
+        const hasNoImage = !fileResourceId && !loading
         const hasInitialValue = initialValue && initialValue.id
         const dirty = (
             (fileResourceId && !hasInitialValue) ||
@@ -209,7 +209,7 @@ export class ImageSelect extends Component {
                     style={{
                         display: 'block',
                         marginBottom: 6,
-                        fontSize: 14,
+                        fontSize: 12,
                         lineHeight: '22px',
                         pointerEvents: 'none',
                         userSelect: 'none',
@@ -226,36 +226,33 @@ export class ImageSelect extends Component {
                         marginRight: 4,
                         cursor: 'pointer',
                     }}>
-                        <div style={{
-                            height: 36,
-                            width: 36,
-                            // border: '2px solid #ff9800',
-                            borderRight: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}>
-                            {(loading || (!displayImage && isPending)) && (
-                                <span>...</span>
-                            )}
+                        {!hasNoImage && !error && (
+                            <div style={{
+                                height: 36,
+                                width: 36,
+                                borderRight: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+                                {!displayImage && (isPending || loading) && (
+                                    <span>...</span>
+                                )}
 
-                            {!loading && displayImage && (
-                                <img
-                                    alt={this.getTranslation('org_unit_image_alt_text')}
-                                    src={`${this.api.baseUrl}/fileResources/${fileResourceId}/data`}
-                                    style={{
-                                        maxHeight: '100%',
-                                        maxWidth: '100%',
-                                        height: 'auto',
-                                        width: 'auto',
-                                    }}
-                                />
-                            )}
-
-                            {!displayImage && !loading && !isPending && (
-                                <span>⨯</span>
-                            )}
-                        </div>
+                                {!loading && displayImage && (
+                                    <img
+                                        alt={this.getTranslation('org_unit_image_alt_text')}
+                                        src={`${this.api.baseUrl}/fileResources/${fileResourceId}/data`}
+                                        style={{
+                                            maxHeight: '100%',
+                                            maxWidth: '100%',
+                                            height: 'auto',
+                                            width: 'auto',
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        )}
 
                         <Button
                             onClick={() => this.fileInputRef.click()}
@@ -303,7 +300,7 @@ export class ImageSelect extends Component {
                     </ImageSelectButton>}
                 </div>
 
-                {hasNoImage && !error && !loading && !isPending && (
+                {hasNoImage && !removed && !error && !isPending && (
                     <ImageSelectText>
                         {this.getTranslation('org_unit_image_no_image_text')}
                     </ImageSelectText>
