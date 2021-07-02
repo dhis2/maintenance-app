@@ -98,7 +98,7 @@ export class ImageSelect extends Component {
 
     checkStorageStatus(id) {
         return this.api
-            .get(`${this.api.baseUrl}/fileResources/${id}`)
+            .get(`fileResources/${id}`)
             .then(({ storageStatus }) => {
                 if (storageStatus === 'PENDING') {
                     this.setState({ pending: true });
