@@ -121,6 +121,7 @@ const fieldGroupsForModelType = new Map([
                     'legendSets',
                     'aggregateExportCategoryOptionCombo',
                     'aggregateExportAttributeOptionCombo',
+                    'Alternative name',
                 ],
             },
             {
