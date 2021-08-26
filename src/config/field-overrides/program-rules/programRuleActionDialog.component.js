@@ -12,9 +12,7 @@ import ProgramRuleConditionField from './programRuleConditionField.component';
 import snackActions from '../../../Snackbar/snack.actions';
 import RefreshMask from '../../../forms/form-fields/helpers/RefreshMask.component';
 import sortBy from 'lodash/fp/sortBy';
-import {
-    ExpressionStatus,
-} from '../program-indicator/ExpressionStatusIcon';
+import { ExpressionStatus } from '../program-indicator/ExpressionStatusIcon';
 
 function toDisplay(element) {
     return {
@@ -331,28 +329,20 @@ class ProgramRuleActionDialog extends React.Component {
     }
 
     async validate(expression) {
-        let d2
-        let api
+        const api = this.d2.Api.getApi();
 
         if (!this.props.program || !this.props.program.id) {
             return;
         }
 
-        try {
-            d2 = await getInstance();
-            api = d2.Api.getApi();
-        } catch (error) {
-            return
-        }
-
         const pendingStatus = {
             status: ExpressionStatus.PENDING,
-            message: d2.i18n.getTranslation('checking_expression_status'),
-        }
+            message: this.getTranslation('checking_expression_status'),
+        };
         this.setState(prevState => ({
             ...prevState,
-            status: pendingStatus
-        }))
+            status: pendingStatus,
+        }));
 
         const programId = this.props.program.id;
         const url = `programRuleActions/data/expression/description?programId=${programId}`;
@@ -383,21 +373,17 @@ class ProgramRuleActionDialog extends React.Component {
                 status: newStatus,
             }));
         } catch (error) {
-            // If error contains a message and an error status we consider it to be a valid response
-            if (error.message && error.status === 'ERROR') {
-                const newStatus = {
-                    status: ExpressionStatus.INVALID,
-                    message: error.message,
-                }
+            const fallback = this.getTranslation('program_rule_action_fallback_error_message');
+            const message = error.message || fallback;
+            const newStatus = {
+                status: ExpressionStatus.INVALID,
+                message,
+            };
 
-                this.setState(prevState => ({
-                    ...prevState,
-                    status: newStatus,
-                }));
-            }
-
-            // Rethrow if not a valid error
-            throw error;
+            this.setState(prevState => ({
+                ...prevState,
+                status: newStatus,
+            }));
         }
     }
 
@@ -617,7 +603,7 @@ class ProgramRuleActionDialog extends React.Component {
                     fullWidth: true,
                     hideOperators: true,
                     quickAddLink: false,
-                    status: this.state.status
+                    status: this.state.status,
                 },
             },
             {
