@@ -13,7 +13,6 @@ import snackActions from '../../../Snackbar/snack.actions';
 import RefreshMask from '../../../forms/form-fields/helpers/RefreshMask.component';
 import sortBy from 'lodash/fp/sortBy';
 import {
-    ExpressionDescription,
     ExpressionStatus,
 } from '../program-indicator/ExpressionStatusIcon';
 
