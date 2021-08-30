@@ -1,3 +1,17 @@
+## [32.11.1](https://github.com/dhis2/maintenance-app/compare/v32.11.0...v32.11.1) (2021-08-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([e874127](https://github.com/dhis2/maintenance-app/commit/e87412789599d5d743ead778883bccb8a7dd56a4))
+
+# [32.11.0](https://github.com/dhis2/maintenance-app/compare/v32.10.6...v32.11.0) (2021-08-26)
+
+
+### Features
+
+* **program-rule-action:** validate program rule action expression ([#2046](https://github.com/dhis2/maintenance-app/issues/2046)) ([8fc2ac9](https://github.com/dhis2/maintenance-app/commit/8fc2ac961f7bf160e500bd9fa64cc21153665d78))
+
 ## [32.10.6](https://github.com/dhis2/maintenance-app/compare/v32.10.5...v32.10.6) (2021-08-10)
 
 
