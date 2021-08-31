@@ -250,6 +250,13 @@ export const programStageNotificationTemplate = new Map([
             component: DataElementDropDown,
         },
     ],
+    [
+        'sendRepeatable', {
+            fieldOptions: {
+                labelText: 'allow_notification_multiple_times'
+            }
+        }
+    ]
 ]);
 
 export default programNotificationTemplate;
