@@ -1,3 +1,10 @@
+# [32.12.0](https://github.com/dhis2/maintenance-app/compare/v32.11.2...v32.12.0) (2021-08-31)
+
+
+### Features
+
+* **programNotification:** add support for sendRepeatable flag ([#2045](https://github.com/dhis2/maintenance-app/issues/2045)) ([2429133](https://github.com/dhis2/maintenance-app/commit/2429133dfcf285b6586965817719ba29cb871cf2))
+
 ## [32.11.2](https://github.com/dhis2/maintenance-app/compare/v32.11.1...v32.11.2) (2021-08-31)
 
 
