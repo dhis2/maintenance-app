@@ -304,7 +304,17 @@ class ProgramRuleActionDialog extends React.Component {
 
     update(fieldName, value) {
         if (fieldName === 'data') {
-            this.validate(value);
+            if (!value) {
+                /**
+                 * The backend will throw an error when validating without an expression. Since
+                 * it does not make sense to validate something that isn't there, we're omitting
+                 * validation when the expression is absent.
+                 */
+
+                this.setState({ status: null })
+            } else {
+                this.validate(value);
+            }
         }
 
         const ruleAction = this.state.programRuleAction;
