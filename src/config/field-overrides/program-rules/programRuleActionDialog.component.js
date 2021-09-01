@@ -355,16 +355,16 @@ class ProgramRuleActionDialog extends React.Component {
         try {
             const { status, description, message } = await api.post(
                 url,
-                `"${expression}"`,
+                expression,
                 requestOptions
             );
-            const isOk = status === 'OK';
 
             const newStatus = {
-                status: isOk
-                    ? ExpressionStatus.VALID
-                    : ExpressionStatus.INVALID,
-                message: isOk ? description : message,
+                status:
+                    status === 'OK'
+                        ? ExpressionStatus.VALID
+                        : ExpressionStatus.INVALID,
+                message,
                 details: description,
             };
 
@@ -373,11 +373,13 @@ class ProgramRuleActionDialog extends React.Component {
                 status: newStatus,
             }));
         } catch (error) {
-            const fallback = this.getTranslation('program_rule_action_fallback_error_message');
-            const message = error.message || fallback;
+            const fallback = this.getTranslation(
+                'program_rule_action_fallback_error_message'
+            );
             const newStatus = {
                 status: ExpressionStatus.INVALID,
-                message,
+                message: error.message || fallback,
+                details: error.description,
             };
 
             this.setState(prevState => ({
