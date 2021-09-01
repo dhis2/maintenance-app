@@ -1,3 +1,10 @@
+## [32.12.2](https://github.com/dhis2/maintenance-app/compare/v32.12.1...v32.12.2) (2021-09-01)
+
+
+### Bug Fixes
+
+* **program-rule-action:** fix validation request ([#2059](https://github.com/dhis2/maintenance-app/issues/2059)) ([a3bb45a](https://github.com/dhis2/maintenance-app/commit/a3bb45ab7a7e72ab3d2ff7504505ef28d26ce05c))
+
 ## [32.12.1](https://github.com/dhis2/maintenance-app/compare/v32.12.0...v32.12.1) (2021-09-01)
 
 
