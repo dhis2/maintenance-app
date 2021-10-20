@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import DropDown from './drop-down';
 import { isNil } from 'lodash/fp';
 
@@ -37,7 +38,7 @@ class DropDownAsyncGetter extends React.Component {
     }
 
     render() {
-        const { getter, shouldRender, useValueDotId, ...props } = this.props;       
+        const { getter, shouldRender, useValueDotId, ...props } = this.props;
 
         if (shouldRender(this.props.model)) {
             const eventIdWrapper = (event) => {
@@ -66,11 +67,11 @@ class DropDownAsyncGetter extends React.Component {
     }
 }
 
-DropDownAsyncGetter.contextTypes = { d2: React.PropTypes.any };
+DropDownAsyncGetter.contextTypes = { d2: PropTypes.any };
 DropDownAsyncGetter.propTypes = Object.assign({
-    getter: React.PropTypes.func.isRequired,
-    shouldRender: React.PropTypes.func.isRequired,
-    useValueDotId: React.PropTypes.bool,
+    getter: PropTypes.func.isRequired,
+    shouldRender: PropTypes.func.isRequired,
+    useValueDotId: PropTypes.bool,
 }, DropDown.propTypes);
 
 DropDownAsyncGetter.defaultProps = {

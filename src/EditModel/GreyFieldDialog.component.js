@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import log from 'loglevel';
 
 import Dialog from 'material-ui/Dialog/Dialog';
@@ -403,12 +404,12 @@ class GreyFieldDialog extends React.Component {
     }
 }
 
-GreyFieldDialog.contextTypes = { d2: React.PropTypes.any.isRequired };
+GreyFieldDialog.contextTypes = { d2: PropTypes.any.isRequired };
 GreyFieldDialog.propTypes = {
-    open: React.PropTypes.bool.isRequired,
-    sectionModel: React.PropTypes.any.isRequired,
-    onRequestClose: React.PropTypes.func.isRequired,
-    onRequestSave: React.PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    sectionModel: PropTypes.any.isRequired,
+    onRequestClose: PropTypes.func.isRequired,
+    onRequestSave: PropTypes.func.isRequired,
 };
 
 export default GreyFieldDialog;

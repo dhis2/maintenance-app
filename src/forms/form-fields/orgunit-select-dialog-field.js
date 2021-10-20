@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
@@ -117,11 +118,11 @@ class OrgUnitSelectDialog extends React.Component {
     }
 }
 OrgUnitSelectDialog.contextTypes = {
-    d2: React.PropTypes.object.isRequired,
+    d2: PropTypes.object.isRequired,
 };
 OrgUnitSelectDialog.propTypes = {
-    value: React.PropTypes.object,
-    readOnly: React.PropTypes.bool,
+    value: PropTypes.object,
+    readOnly: PropTypes.bool,
 };
 
 export default OrgUnitSelectDialog;

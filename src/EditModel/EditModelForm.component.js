@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import log from 'loglevel';
 import { Observable } from 'rxjs';
 
@@ -109,11 +110,11 @@ const modelToEditAndModelForm$ = Observable
 
 export default React.createClass({
     propTypes: {
-        modelId: React.PropTypes.string.isRequired,
-        modelType: React.PropTypes.string.isRequired,
-        onSaveSuccess: React.PropTypes.func.isRequired,
-        onSaveError: React.PropTypes.func,
-        onCancel: React.PropTypes.func.isRequired,
+        modelId: PropTypes.string.isRequired,
+        modelType: PropTypes.string.isRequired,
+        onSaveSuccess: PropTypes.func.isRequired,
+        onSaveError: PropTypes.func,
+        onCancel: PropTypes.func.isRequired,
     },
 
     mixins: [Translate],

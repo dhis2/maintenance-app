@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import pure from 'recompose/pure';
 
 function PaletteSection({ keySet, label, filter, expand, expandClick, usedIds, insertFn, styles }, { d2 }) {
@@ -40,7 +41,7 @@ function PaletteSection({ keySet, label, filter, expand, expandClick, usedIds, i
 }
 
 PaletteSection.contextTypes = {
-    d2: React.PropTypes.object,
+    d2: PropTypes.object,
 };
 
 export const PurePaletteSection = pure(PaletteSection);

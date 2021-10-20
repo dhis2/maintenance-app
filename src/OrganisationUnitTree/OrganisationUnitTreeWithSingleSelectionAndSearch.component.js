@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import AutoComplete from 'material-ui/AutoComplete/AutoComplete';
 import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
@@ -46,21 +47,21 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
     );
 }
 OrganisationUnitTreeWithSingleSelectionAndSearch.propTypes = {
-    onOrgUnitSearch: React.PropTypes.func,
-    onNewRequest: React.PropTypes.func,
-    autoCompleteDataSource: React.PropTypes.array,
-    onChangeSelectedOrgUnit: React.PropTypes.func,
-    onAutoCompleteValueSelected: React.PropTypes.func,
-    searchOrganisationUnits: React.PropTypes.func,
-    roots: React.PropTypes.array,
-    idsThatShouldBeReloaded: React.PropTypes.array,
-    onUpdateInput: React.PropTypes.func,
-    selected: React.PropTypes.array,
-    initiallyExpanded: React.PropTypes.array,
-    onSelectClick: React.PropTypes.func,
-    noHitsLabel: React.PropTypes.string.isRequired,
-    hideMemberCount: React.PropTypes.bool,
-    hideCheckboxes: React.PropTypes.bool,
+    onOrgUnitSearch: PropTypes.func,
+    onNewRequest: PropTypes.func,
+    autoCompleteDataSource: PropTypes.array,
+    onChangeSelectedOrgUnit: PropTypes.func,
+    onAutoCompleteValueSelected: PropTypes.func,
+    searchOrganisationUnits: PropTypes.func,
+    roots: PropTypes.array,
+    idsThatShouldBeReloaded: PropTypes.array,
+    onUpdateInput: PropTypes.func,
+    selected: PropTypes.array,
+    initiallyExpanded: PropTypes.array,
+    onSelectClick: PropTypes.func,
+    noHitsLabel: PropTypes.string.isRequired,
+    hideMemberCount: PropTypes.bool,
+    hideCheckboxes: PropTypes.bool,
 };
 OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onOrgUnitSearch: noop,

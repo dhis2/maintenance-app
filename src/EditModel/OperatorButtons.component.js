@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 
 import FlatButton from 'material-ui/FlatButton';
 
@@ -54,7 +55,7 @@ class OperatorButtons extends Component {
 }
 
 OperatorButtons.propTypes = {
-    onClick: React.PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
 };
 
 export default OperatorButtons;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import SelectField from 'material-ui/SelectField/SelectField';
 import TextField from 'material-ui/TextField';
 import isString from 'd2-utilizr/lib/isString';
@@ -262,7 +262,7 @@ Dropdown.defaultProps = {
 };
 
 Dropdown.contextTypes = {
-    d2: React.PropTypes.any,
+    d2: PropTypes.any,
 };
 
 export default Dropdown;

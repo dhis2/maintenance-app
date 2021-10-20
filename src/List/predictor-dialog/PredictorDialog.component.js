@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
@@ -122,6 +123,6 @@ class PredictorDialog extends React.Component {
         );
     }
 }
-PredictorDialog.contextTypes = { d2: React.PropTypes.any };
+PredictorDialog.contextTypes = { d2: PropTypes.any };
 
 export default PredictorDialog;

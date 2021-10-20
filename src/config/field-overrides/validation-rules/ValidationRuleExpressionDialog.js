@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import PropTypes from 'prop-types'
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { result } from 'lodash/fp';
 import Dialog from 'material-ui/Dialog';
@@ -61,7 +62,7 @@ function ValidationRuleExpressionDialog({ open, close, actions, expressionDetail
     );
 }
 ValidationRuleExpressionDialog.contextTypes = {
-    d2: React.PropTypes.object,
+    d2: PropTypes.object,
 };
 
 const enhanceExpressionDialog = compose(

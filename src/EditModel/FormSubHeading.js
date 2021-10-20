@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import Heading from 'd2-ui/lib/headings/Heading.component';
 
 const defaultStyle = {
@@ -17,8 +18,8 @@ function FormSubHeading({ level, children, ...props }) {
     );
 }
 FormSubHeading.propTypes = {
-    children: React.PropTypes.string,
-    level: React.PropTypes.number,
+    children: PropTypes.string,
+    level: PropTypes.number,
 };
 
 export default FormSubHeading;

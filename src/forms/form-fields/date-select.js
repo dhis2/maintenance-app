@@ -1,15 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import DatePicker from 'material-ui/DatePicker/DatePicker';
 import IconButton from 'material-ui/IconButton/IconButton';
 
 export default React.createClass({
     propTypes: {
-        value: React.PropTypes.oneOfType([
-            React.PropTypes.string,
-            React.PropTypes.object,
+        value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.object,
         ]),
-        labelText: React.PropTypes.string.isRequired,
-        onChange: React.PropTypes.func.isRequired,
+        labelText: PropTypes.string.isRequired,
+        onChange: PropTypes.func.isRequired,
     },
 
     renderDatePicker() {

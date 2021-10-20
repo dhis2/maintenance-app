@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import d2lib from 'd2/lib/d2';
@@ -17,8 +18,8 @@ function hasNameInArray(listToCheck) {
 
 export default React.createClass({
     propTypes: {
-        nameListFilter: React.PropTypes.arrayOf(React.PropTypes.string),
-        onChange: React.PropTypes.func.isRequired,
+        nameListFilter: PropTypes.arrayOf(PropTypes.string),
+        onChange: PropTypes.func.isRequired,
     },
 
     mixins: [Translate],

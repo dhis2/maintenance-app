@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import { getInstance } from 'd2/lib/d2';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
@@ -21,7 +22,7 @@ function findValue(optionList, model) {
 
 export default React.createClass({
     propTypes: {
-        source: React.PropTypes.object.isRequired,
+        source: PropTypes.object.isRequired,
     },
 
     getInitialState() {

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import sideBarStore, { organisationUnitTreeChanged$ } from './sideBarStore';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import { onSectionChanged, onOrgUnitSearch } from './sideBarActions';
@@ -158,6 +159,6 @@ class SideBarContainer extends React.Component {
         );
     }
 }
-SideBarContainer.contextTypes = { d2: React.PropTypes.object };
+SideBarContainer.contextTypes = { d2: PropTypes.object };
 
 export default SideBarContainer;

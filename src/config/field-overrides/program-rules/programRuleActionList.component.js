@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
@@ -319,12 +320,12 @@ class ProgramRuleActionsList extends React.Component {
     }
 }
 
-ProgramRuleActionsList.contextTypes = { d2: React.PropTypes.any };
+ProgramRuleActionsList.contextTypes = { d2: PropTypes.any };
 
 ProgramRuleActionsList.propTypes = {
-    referenceProperty: React.PropTypes.string.isRequired,
-    model: React.PropTypes.object.isRequired,
-    style: React.PropTypes.object,
+    referenceProperty: PropTypes.string.isRequired,
+    model: PropTypes.object.isRequired,
+    style: PropTypes.object,
 };
 
 export default ProgramRuleActionsList;

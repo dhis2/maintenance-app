@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import PropTypes from 'prop-types'
 import { getInstance as getD2 } from 'd2/lib/d2';
 import Action from 'd2-ui/lib/action/Action';
 import IndicatorExpressionManager from './expression/ExpressionManager'
@@ -30,10 +31,10 @@ indicatorExpressionStatusActions.requestExpressionStatus
 
 const IndicatorExpressionManagerContainer = React.createClass({
     propTypes: {
-        indicatorExpressionChanged: React.PropTypes.func.isRequired,
-        description: React.PropTypes.string,
-        formula: React.PropTypes.string,
-        titleText: React.PropTypes.string,
+        indicatorExpressionChanged: PropTypes.func.isRequired,
+        description: PropTypes.string,
+        formula: PropTypes.string,
+        titleText: PropTypes.string,
     },
 
     mixins: [Translate],

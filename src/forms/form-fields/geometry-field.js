@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import TextField from '../../forms/form-fields/text-field';
 import { isNumber } from 'd2-ui/lib/forms/Validators';
 import { getOr } from 'lodash/fp';
@@ -74,7 +75,7 @@ class GeometryField extends React.Component {
     handleLatitude = event => {
         let lat = event.target.value;
         const long = this.getLongitude();
-        
+
         if (!isValidLatitude(lat)) {
             this.setState({
                 latError: this.getTranslation(isValidLatitude.message),
@@ -144,10 +145,10 @@ class GeometryField extends React.Component {
     }
 }
 GeometryField.propTypes = {
-    value: React.PropTypes.object,
-    onChange: React.PropTypes.func.isRequired,
+    value: PropTypes.object,
+    onChange: PropTypes.func.isRequired,
 };
-GeometryField.contextTypes = { d2: React.PropTypes.object.isRequired };
+GeometryField.contextTypes = { d2: PropTypes.object.isRequired };
 
 // Used to actually prevent saving
 export const validators = [

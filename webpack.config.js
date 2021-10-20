@@ -23,7 +23,7 @@ try {
     console.warn(`\nWARNING! Failed to load DHIS config:`, e.message);
     console.info('Using default config');
     dhisConfig = {
-        baseUrl: 'http://localhost:8080',
+        baseUrl: 'https://debug.dhis2.org/dev',
         authorization: 'Basic YWRtaW46ZGlzdHJpY3Q=', // admin:district
     };
 }

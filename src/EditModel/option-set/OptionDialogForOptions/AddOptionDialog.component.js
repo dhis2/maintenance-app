@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
 import Dialog from 'material-ui/Dialog/Dialog';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
@@ -153,6 +153,6 @@ AddOptionDialog.defaultProps = {
     title: '',
 };
 
-AddOptionDialog.contextTypes = { d2: React.PropTypes.object };
+AddOptionDialog.contextTypes = { d2: PropTypes.object };
 
 export default AddOptionDialog;

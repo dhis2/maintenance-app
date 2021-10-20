@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import { Observable } from 'rxjs';
 
 import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.component';
@@ -264,11 +264,11 @@ export default class OrganisationUnitTreeMultiSelect extends Component {
 }
 
 OrganisationUnitTreeMultiSelect.contextTypes = {
-    d2: React.PropTypes.object.isRequired,
+    d2: PropTypes.object.isRequired,
 };
 OrganisationUnitTreeMultiSelect.propTypes = {
     model: PropTypes.object.isRequired,
-    value: React.PropTypes.object,
+    value: PropTypes.object,
 };
 OrganisationUnitTreeMultiSelect.defaultProps = {
     value: [],
