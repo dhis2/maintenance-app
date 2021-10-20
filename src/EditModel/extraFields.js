@@ -27,27 +27,21 @@ class IndicatorExtraFields extends Component {
             dialogValid: true,
             dialogOpen: false,
         };
-
-        this.setNumerator = this.setNumerator.bind(this);
-        this.setDenominator = this.setDenominator.bind(this);
-        this.closeDialog = this.closeDialog.bind(this);
-        this.saveToModelAndCloseDialog = this.saveToModelAndCloseDialog.bind(this);
-        this.indicatorExpressionChanged = this.indicatorExpressionChanged.bind(this);
     }
 
-    setNumerator() {
+    setNumerator = () => {
         this.setState({ type: 'numerator', dialogOpen: true });
-    }
+    };
 
-    setDenominator() {
+    setDenominator = () => {
         this.setState({ type: 'denominator', dialogOpen: true });
-    }
+    };
 
-    closeDialog() {
+    closeDialog = () => {
         this.setState({ dialogOpen: false });
-    }
+    };
 
-    saveToModelAndCloseDialog() {
+    saveToModelAndCloseDialog = () => {
         if (this.state.expressionStatus.isValid) {
             this.props.modelToEdit[this.state.type] = this.state.expressionFormula;
             this.props.modelToEdit[`${this.state.type}Description`] = this.state.expressionDescription;
@@ -56,9 +50,9 @@ class IndicatorExtraFields extends Component {
         }
 
         this.setState({ dialogOpen: false });
-    }
+    };
 
-    indicatorExpressionChanged(data) {
+    indicatorExpressionChanged = data => {
         const expressionValues = {};
 
         if (data.expressionStatus.isValid) {
@@ -71,7 +65,7 @@ class IndicatorExtraFields extends Component {
             dialogValid: data.expressionStatus.isValid && Boolean(data.description.trim()),
             ...expressionValues,
         });
-    }
+    };
 
     renderExpressionManager() {
         return (

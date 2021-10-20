@@ -15,7 +15,6 @@ class ProgramRuleActionsList extends Component {
 
         this.d2 = context.d2;
         this.getTranslation = this.d2.i18n.getTranslation.bind(context.d2.i18n);
-        this.addProgramRuleAction = this.addProgramRuleAction.bind(this);
 
         this.state = {
             dialogOpen: false,
@@ -66,7 +65,7 @@ class ProgramRuleActionsList extends Component {
         });
     }
 
-    addProgramRuleAction() {
+    addProgramRuleAction = () => {
         this.setState({
             dialogOpen: true,
             currentRuleActionModel: Object.assign(
@@ -74,7 +73,7 @@ class ProgramRuleActionsList extends Component {
                 { programRule: { id: this.props.model.id } }
             ),
         });
-    }
+    };
 
     editAction = (model) => {
         this.setState({

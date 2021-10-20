@@ -201,14 +201,6 @@ class EditDataEntryForm extends Component {
         });
 
         this.getTranslation = this.context.d2.i18n.getTranslation.bind(this.context.d2.i18n);
-        this.handleSaveClick = this.handleSaveClick.bind(this);
-        this.handleCancelClick = this.handleCancelClick.bind(this);
-        this.handleDeleteClick = this.handleDeleteClick.bind(this);
-        this.handleStyleChange = this.handleStyleChange.bind(this);
-
-        this.startResize = this.startResize.bind(this);
-        this.doResize = this.doResize.bind(this);
-        this.endResize = this.endResize.bind(this);
     }
 
     componentWillUnmount() {
@@ -217,7 +209,7 @@ class EditDataEntryForm extends Component {
         }
     }
 
-    handleSaveClick() {
+    handleSaveClick = () => {
         const payload = {
             style: this.state.formStyle,
             htmlCode: this._editor.getData(),
@@ -235,13 +227,13 @@ class EditDataEntryForm extends Component {
                     action: this.context.d2.i18n.getTranslation('ok'),
                 });
             });
-    }
+    };
 
-    handleCancelClick() {
+    handleCancelClick = () => {
         goToRoute('list/dataSetSection/dataSet');
-    }
+    };
 
-    handleDeleteClick() {
+    handleDeleteClick = () => {
         snackActions.show({
             message: this.getTranslation('dataentryform_confirm_delete'),
             action: 'confirm',
@@ -258,22 +250,22 @@ class EditDataEntryForm extends Component {
                     });
             },
         });
-    }
+    };
 
-    handleStyleChange(e, i, value) {
+    handleStyleChange = (e, i, value) => {
         this.setState({
             formStyle: value,
         });
-    }
+    };
 
-    startResize(e) {
+    startResize = e => {
         this._startPos = e.clientX;
         this._startWidth = this.state.paletteWidth;
         window.addEventListener('mousemove', this.doResize);
         window.addEventListener('mouseup', this.endResize);
-    }
+    };
 
-    doResize(e) {
+    doResize = e => {
         if (!e.buttons) {
             // If no buttons are pressed it probably simply means we missed a mouseUp event - so stop resizing
             this.endResize();
@@ -286,12 +278,12 @@ class EditDataEntryForm extends Component {
                 paletteWidth: width,
             });
         });
-    }
+    };
 
-    endResize() {
+    endResize = () => {
         window.removeEventListener('mousemove', this.doResize);
         window.removeEventListener('mouseup', this.endResize);
-    }
+    };
 
     generateHtml(id, styleAttr, disabledAttr) {
         const style = styleAttr ? ` style=${styleAttr}` : '';

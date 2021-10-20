@@ -20,7 +20,6 @@ export default class TextFormField extends Component {
         };
 
         this.updateOnChange = Action.create(`updateOnKeyUp - ${props.name}`);
-        this.onValueChanged = this.onValueChanged.bind(this);
     }
 
     componentDidMount() {
@@ -53,7 +52,7 @@ export default class TextFormField extends Component {
         }
     }
 
-    onValueChanged(event) {
+    onValueChanged = event => {
         event.preventDefault();
         event.stopPropagation();
         // Keep local state to keep the field responsiveness
@@ -63,7 +62,7 @@ export default class TextFormField extends Component {
 
         // Fire the update handler
         this.updateOnChange(event.currentTarget.value);
-    }
+    };
 
     render() {
         const {

@@ -107,11 +107,6 @@ class EditDataEntryForm extends Component {
                     .filter(x => x.length);
                 this.setState({ filter });
             }));
-
-
-        this.handleDeleteClick = this.handleDeleteClick.bind(this);
-        this.handleStyleChange = this.handleStyleChange.bind(this);
-        this.setEditorReference = this.setEditorReference.bind(this);
     }
 
     componentWillUnmount() {
@@ -125,15 +120,15 @@ class EditDataEntryForm extends Component {
         }
     }
 
-    handleDeleteClick() {
+    handleDeleteClick = () => {
         this.props.onFormDelete();
-    }
+    };
 
-    handleStyleChange(e, i, value) {
+    handleStyleChange = (e, i, value) => {
         if (this.props.dataEntryForm.style !== value) {
             this.props.onStyleChange(value);
         }
-    }
+    };
 
     handleEditorChanged = (editorData) => {
         //prevent creation of new dataEntryForm when empty
@@ -166,9 +161,9 @@ class EditDataEntryForm extends Component {
         return insElem(id, this.state.programElements[id], this._editor, 'programid');
     }
 
-    setEditorReference(editor) {
+    setEditorReference = editor => {
         this._editor = editor;
-    }
+    };
 
     renderPalette() {
         return (

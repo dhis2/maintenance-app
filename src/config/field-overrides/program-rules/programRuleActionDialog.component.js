@@ -89,9 +89,6 @@ class ProgramRuleActionDialog extends Component {
 
         this.d2 = context.d2;
         this.getTranslation = this.d2.i18n.getTranslation.bind(this.d2.i18n);
-        this.save = this.save.bind(this);
-        this.update = this.update.bind(this);
-        this.validate = this.validate.bind(this);
     }
 
     componentDidMount() {
@@ -238,7 +235,7 @@ class ProgramRuleActionDialog extends Component {
         }
     }
 
-    async save() {
+    save = async () => {
         const programRuleAction = this.state.programRuleAction;
 
         // Fancily translate from DropDown format to DataTable format - consistency is for sheeple
@@ -301,9 +298,9 @@ class ProgramRuleActionDialog extends Component {
             });
             this.props.onRequestClose();
         }
-    }
+    };
 
-    update(fieldName, value) {
+    update = (fieldName, value) => {
         if (fieldName === 'data') {
             if (!value) {
                 /**
@@ -337,9 +334,9 @@ class ProgramRuleActionDialog extends Component {
         this.setState({
             programRuleAction: ruleAction,
         });
-    }
+    };
 
-    async validate(expression) {
+    validate = async expression => {
         const api = this.d2.Api.getApi();
 
         if (!this.props.program || !this.props.program.id) {
@@ -398,7 +395,7 @@ class ProgramRuleActionDialog extends Component {
                 status: newStatus,
             }));
         }
-    }
+    };
 
     getRelatedOptionSetFromSelected = () => {
         const ruleAction = this.state.programRuleAction;

@@ -76,8 +76,6 @@ export class ImageSelect extends Component {
             pending: false,
             removed: false,
         };
-
-        this.onFileSelect = this.onFileSelect.bind(this)
     }
 
     componentDidMount() {
@@ -131,7 +129,7 @@ export class ImageSelect extends Component {
         });
     }
 
-    onFileSelect(event) {
+    onFileSelect = event => {
         const { onChange } = this.props;
         const file = event.target.files[0];
 
@@ -176,7 +174,7 @@ export class ImageSelect extends Component {
                 this.setState({ loading: false, error })
                 onChange({ target: { value: null } })
             });
-    }
+    };
 
     getTranslation(key) {
         return this.context.d2.i18n.getTranslation(key);

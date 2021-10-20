@@ -22,10 +22,6 @@ class PredictorDialog extends Component {
         };
 
         this.getTranslation = this.context.d2.i18n.getTranslation.bind(this.context.d2.i18n);
-
-        this.setStartDate = this.setStartDate.bind(this);
-        this.setEndDate = this.setEndDate.bind(this);
-        this.executeAction = this.executeAction.bind(this);
     }
 
     componentDidMount() {
@@ -41,17 +37,17 @@ class PredictorDialog extends Component {
         predictorDialogStore.setState(Object.assign({}, predictorDialogStore.state, { open: false }));
     }
 
-    setStartDate(e, value) {
+    setStartDate = (e, value) => {
         const d = new Date(value);
         this.setState({ startDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
-    }
+    };
 
-    setEndDate(e, value) {
+    setEndDate = (e, value) => {
         const d = new Date(value);
         this.setState({ endDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
-    }
+    };
 
-    async executeAction() {
+    executeAction = async () => {
         const d2 = await getD2();
         const href = [this.state.model.modelDefinition.plural, this.state.model.id, 'run'].join('/');
         const targetUrl = `${href}?startDate=${this.state.startDate}&endDate=${this.state.endDate}`;
@@ -68,7 +64,7 @@ class PredictorDialog extends Component {
                 this.setState({ open: false, running: false });
                 console.error(err);
             });
-    }
+    };
 
     render() {
         const actions = [

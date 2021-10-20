@@ -13,8 +13,6 @@ class DropDownAsyncGetter extends Component {
             options: [],
         };
 
-        this.getOptions = this.getOptions.bind(this);
-
         if (props.model) {
             this.getOptions(props.model);
         }
@@ -29,13 +27,13 @@ class DropDownAsyncGetter extends Component {
         delete this.d2;
     }
 
-    async getOptions(programId) {
+    getOptions = async programId => {
         const options = await this.props.getter(programId, this.d2);
 
         if (this.d2) {
             this.setState({ options });
         }
-    }
+    };
 
     render() {
         const { getter, shouldRender, useValueDotId, ...props } = this.props;

@@ -58,25 +58,13 @@ class EditDataSetSections extends Component {
             });
         });
 
-        this.handleAddSectionClick = this.handleAddSectionClick.bind(this);
-        this.handleEditSectionClick = this.handleEditSectionClick.bind(this);
-        this.handleSectionSaved = this.handleSectionSaved.bind(this);
-
-        this.handleDeleteSectionClick = this.handleDeleteSectionClick.bind(this);
-        this.handleTranslateSectionClick = this.handleTranslateSectionClick.bind(this);
         this.handleTranslationSaved = this.handleTranslationSaved.bind(this);
         this.handleTranslationErrored = this.handleTranslationErrored.bind(this);
-
-        this.handleSectionGreyFieldsClick = this.handleSectionGreyFieldsClick.bind(this);
-
-        this.swapSections = this.swapSections.bind(this);
-        this.moveSectionUp = this.moveSectionUp.bind(this);
-        this.moveSectionDown = this.moveSectionDown.bind(this);
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
 
-    handleAddSectionClick() {
+    handleAddSectionClick = () => {
         const newSection = this.context.d2.models.sections.create();
         this.setState(state => ({
             editSectionModel: Object.assign(newSection, {
@@ -84,13 +72,13 @@ class EditDataSetSections extends Component {
                 sortOrder: state.sections.reduce((p, s) => Math.max(s.sortOrder, p), 0) + 1,
             }),
         }));
-    }
+    };
 
-    handleEditSectionClick(editSectionModel) {
+    handleEditSectionClick = editSectionModel => {
         this.setState({ editSectionModel });
-    }
+    };
 
-    handleSectionSaved(savedSection) {
+    handleSectionSaved = savedSection => {
         this.setState((state) => {
             let replaced = false;
             const sections = state.sections
@@ -115,9 +103,9 @@ class EditDataSetSections extends Component {
         }, () => {
             this.forceUpdate();
         });
-    }
+    };
 
-    handleDeleteSectionClick(section) {
+    handleDeleteSectionClick = section => {
         snackActions.show({
             message: `${this.getTranslation('confirm_delete_section')} ${section.displayName}`,
             action: 'confirm',
@@ -142,13 +130,13 @@ class EditDataSetSections extends Component {
                     });
             },
         });
-    }
+    };
 
-    handleTranslateSectionClick(section) {
+    handleTranslateSectionClick = section => {
         this.setState({
             translationModel: section,
         });
-    }
+    };
 
     handleTranslationSaved = () => {
         snackActions.show({ message: 'translation_saved', translate: true });
@@ -159,11 +147,11 @@ class EditDataSetSections extends Component {
         snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
     }
 
-    handleSectionGreyFieldsClick(section) {
+    handleSectionGreyFieldsClick = section => {
         this.setState({ greyFieldSectionModel: section });
-    }
+    };
 
-    swapSections(sectionA, sectionB) {
+    swapSections = (sectionA, sectionB) => {
         this.setState((state) => {
             const swapOrder = sectionA.sortOrder;
             sectionA.sortOrder = sectionB.sortOrder; // eslint-disable-line
@@ -185,23 +173,23 @@ class EditDataSetSections extends Component {
                 sections: state.sections.sort((a, b) => a.sortOrder - b.sortOrder),
             };
         });
-    }
+    };
 
-    moveSectionUp(section) {
+    moveSectionUp = section => {
         const currentIndex = this.state.sections.indexOf(section);
         if (currentIndex > 0) {
             const swapSection = this.state.sections[currentIndex - 1];
             this.swapSections(swapSection, section);
         }
-    }
+    };
 
-    moveSectionDown(section) {
+    moveSectionDown = section => {
         const currentIndex = this.state.sections.indexOf(section);
         if (currentIndex < this.state.sections.length - 1) {
             const swapSection = this.state.sections[currentIndex + 1];
             this.swapSections(swapSection, section);
         }
-    }
+    };
 
     render() {
         const contextActions = {

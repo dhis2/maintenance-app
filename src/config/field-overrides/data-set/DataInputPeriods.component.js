@@ -37,43 +37,35 @@ class DataInputPeriods extends Component {
         };
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
-        this.openDialog = this.openDialog.bind(this);
-        this.closeDialog = this.closeDialog.bind(this);
-        this.addPeriod = this.addPeriod.bind(this);
-        this.removePeriod = this.removePeriod.bind(this);
-        this.changePeriodDate = this.changePeriodDate.bind(this);
-
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleSave = this.handleSave.bind(this);
     }
 
-    openDialog() {
+    openDialog = () => {
         this.setState({
             dialogOpen: true,
             dataInputPeriods: (this.props.value || []).sort((a, b) => a.period.id.localeCompare(b.period.id)),
         });
-    }
+    };
 
-    closeDialog() {
+    closeDialog = () => {
         this.setState({
             dialogOpen: false,
         });
-    }
+    };
 
-    addPeriod(periodId) {
+    addPeriod = periodId => {
         this.setState({
             dataInputPeriods: this.state.dataInputPeriods.concat({ id: generateUid(), period: { id: periodId } }),
         });
-    }
+    };
 
-    removePeriod($k) {
+    removePeriod = $k => {
         this.state.dataInputPeriods.splice($k, 1);
         this.setState({
             dataInputPeriods: this.state.dataInputPeriods,
         });
-    }
+    };
 
-    changePeriodDate($k, dateField, nothing, value) {
+    changePeriodDate = ($k, dateField, nothing, value) => {
         this.setState({
             dataInputPeriods: this.state.dataInputPeriods.map((dip, $i) => {
                 if ($i === $k) {
@@ -83,13 +75,13 @@ class DataInputPeriods extends Component {
                 return dip;
             }),
         });
-    }
+    };
 
-    handleCancel() {
+    handleCancel = () => {
         this.closeDialog();
-    }
+    };
 
-    handleSave() {
+    handleSave = () => {
         this.props.onChange({
             target: {
                 value: this.state.dataInputPeriods.map(dip => ({
@@ -103,7 +95,7 @@ class DataInputPeriods extends Component {
             },
         });
         this.closeDialog();
-    }
+    };
 
     renderDatePicker(labelText, dateValue, onChange, onCancelClick) {
         return (

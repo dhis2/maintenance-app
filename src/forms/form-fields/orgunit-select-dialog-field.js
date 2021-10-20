@@ -32,8 +32,6 @@ class OrgUnitSelectDialog extends Component {
         }
 
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
-        this.handleSelectClick = this.handleSelectClick.bind(this);
-        this.save = this.save.bind(this);
     }
 
     componentWillMount() {
@@ -47,18 +45,18 @@ class OrgUnitSelectDialog extends Component {
         this.subscriptions.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
-    handleSelectClick(e, orgUnit) {
+    handleSelectClick = (e, orgUnit) => {
         this.setState({ value: orgUnit, selected: [orgUnit.path] });
-    }
+    };
 
-    save() {
+    save = () => {
         this.props.onChange({ target: { value: { id: this.state.value.id } } });
         this.setState({
             dialogOpen: false,
             parentName: this.state.value.displayName,
             selected: [this.state.value.path],
         });
-    }
+    };
 
     render() {
         const styles = {

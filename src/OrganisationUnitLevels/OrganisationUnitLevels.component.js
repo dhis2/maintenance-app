@@ -134,11 +134,6 @@ export default addD2Context(class extends Component {
                 open: false,
             },
         };
-
-        this._onTranslateClick = this._onTranslateClick.bind(this);
-        this._closeTranslationDialog = this._closeTranslationDialog.bind(this);
-        this._translationSaved = this._translationSaved.bind(this);
-        this._translationErrored = this._translationErrored.bind(this);
     }
 
     componentDidMount() {
@@ -162,7 +157,7 @@ export default addD2Context(class extends Component {
         );
     }
 
-    _onTranslateClick(data) {
+    _onTranslateClick = data => {
         const model = this.context.d2.models.organisationUnitLevel.create(data);
 
         this.setState({
@@ -171,22 +166,22 @@ export default addD2Context(class extends Component {
                 model,
             },
         });
-    }
+    };
 
-    _translationSaved() {
+    _translationSaved = () => {
         snackActions.show({ message: this.context.d2.i18n.getTranslation('translation_saved') });
-    }
+    };
 
-    _translationErrored() {
+    _translationErrored = () => {
         snackActions.show({ message: this.context.d2.i18n.getTranslation('translation_save_error'), action: 'ok' });
-    }
+    };
 
-    _closeTranslationDialog() {
+    _closeTranslationDialog = () => {
         this.setState({
             translation: {
                 open: false,
                 model: undefined,
             },
         });
-    }
+    };
 });

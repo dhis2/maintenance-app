@@ -60,9 +60,6 @@ class GreyFieldDialog extends Component {
             categories: [],
         };
 
-        this.closeDialog = this.closeDialog.bind(this);
-        this.handleSaveClick = this.handleSaveClick.bind(this);
-
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
 
@@ -167,11 +164,11 @@ class GreyFieldDialog extends Component {
         }
     }
 
-    closeDialog() {
+    closeDialog = () => {
         this.props.onRequestClose();
-    }
+    };
 
-    handleSaveClick() {
+    handleSaveClick = () => {
         const greyedFields = [];
         Object.keys(this.state.greyedFields).forEach((dataElement) => {
             this.state.greyedFields[dataElement].forEach((coc) => {
@@ -195,7 +192,7 @@ class GreyFieldDialog extends Component {
                 log.error('Failed to save section:', err);
                 snackActions.show({ message: this.getTranslation('failed_to_save_section'), action: 'ok' });
             });
-    }
+    };
 
     renderTableHeader() {
         let prevRowColCount = 1;
