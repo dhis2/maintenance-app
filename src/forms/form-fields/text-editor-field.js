@@ -46,7 +46,7 @@ class TextEditorField extends Component {
         };
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.value && newProps.value !== this.props.value) {
             this.setState({ value: newProps.value }, () => {
                 if (this.editor) {

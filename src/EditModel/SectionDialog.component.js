@@ -43,7 +43,7 @@ class SectionDialog extends Component {
         }));
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         if (props.sectionModel) {
             const currentSectionId = props.sectionModel.id;
             const sections = modelToEditStore.state.sections;

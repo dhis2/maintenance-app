@@ -66,7 +66,7 @@ class ProgramStageList extends Component {
         tableColumns: getTableColumnsForType('programStage'),
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.state.stages !== nextProps.programStages && this.props.programStages !== nextProps.programStages) {
             this.setState({
                 ...this.state,

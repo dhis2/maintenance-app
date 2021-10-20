@@ -23,11 +23,11 @@ const SearchBox = createClass({
         };
     },
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.searchBoxCb = this.createEventObserver('searchBox');
     },
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // Searchbox is not remounted when switching sections,
         // Clear the value when this happens
         if (this.props.params.modelType !== nextProps.params.modelType) {

@@ -39,7 +39,7 @@ class CompulsoryDataElementOperandDialog extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         if (!props.open) {
             itemsAvailableStore.setState(undefined);
             itemsSelectedStore.setState([]);

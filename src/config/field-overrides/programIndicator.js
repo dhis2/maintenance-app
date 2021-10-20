@@ -30,7 +30,7 @@ const enhance = compose(
             this.validate(value);
         },
 
-        componentWillReceiveProps(newProps) {
+        UNSAFE_componentWillReceiveProps(newProps) {
             if (newProps.value !== this.props.value) {
                 this.validate(newProps.value);
             }

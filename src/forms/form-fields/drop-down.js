@@ -20,7 +20,7 @@ class Dropdown extends Component {
         };
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         this.setState({
             options: this.getOptions(newProps.options, newProps.isRequired),
         });

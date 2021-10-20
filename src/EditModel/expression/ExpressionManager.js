@@ -106,7 +106,7 @@ class ExpressionManager extends Component {
         );
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (!this.props.expressionStatusStore) {
             return true;
         }

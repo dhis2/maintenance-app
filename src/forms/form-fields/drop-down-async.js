@@ -25,7 +25,7 @@ class DropDownAsync extends Component {
     // TODO: Remove this hack to update the categoryCombo property when the domainType is set to TRACKER
     // This should probably be done in the objectActions, however there we currently do not have any knowledge of the
     // options.. It might be worth loading the categoryOption with name `default` just for this.
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         const defaultOption = this.state.options.find(option => option.model.name === 'default');
 
         if (newProps.value && defaultOption && defaultOption.model.id !== newProps.value.id &&

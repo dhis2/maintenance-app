@@ -12,7 +12,7 @@ class SnackBarContainer extends Component {
         },
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.observerDisposables = [];
         const snackStoreDisposable = snackStore.subscribe((snack) => {
             if (snack) {

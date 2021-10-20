@@ -16,7 +16,7 @@ export default createClass({
         };
     },
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.subscription = this.props.itemListStore
             .map(modelList => modelList
                     .map(model => ({

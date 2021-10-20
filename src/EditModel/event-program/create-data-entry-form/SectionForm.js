@@ -54,7 +54,7 @@ class SectionForm extends Component {
         );
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.sections !== this.props.sections) {
             this.setState({
                 activeElements: getActiveElements(

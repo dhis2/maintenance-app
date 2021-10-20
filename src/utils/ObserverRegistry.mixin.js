@@ -1,5 +1,5 @@
 const ObserverRegistry = {
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.observerDisposables = [];
     },
 

@@ -37,7 +37,7 @@ export default class TextFormField extends Component {
             });
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         // Keep local state in sync with the passed in value
         if (newProps.value !== this.props.value) {
             this.setState({

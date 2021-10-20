@@ -44,7 +44,7 @@ const enhance = compose(
             this.validate(value);
         },
 
-        componentWillReceiveProps(newProps) {
+        UNSAFE_componentWillReceiveProps(newProps) {
             // Need to create a new validator when program is changed, as the validation depends on it
             if (newProps.model.program && (!this.props.validatorProgramId || newProps.model.program.id !== this.props.validatorProgramId)) {
                 this.validatorStatusSubscription && this.validatorStatusSubscription.unsubscribe();

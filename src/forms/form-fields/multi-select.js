@@ -98,7 +98,7 @@ export default createClass({
         };
     },
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (!this.props.referenceType) {
             return;
         }
@@ -110,7 +110,7 @@ export default createClass({
             .then(this.populateAssignedStore);
     },
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.queryParamFilter !== newProps.queryParamFilter) {
             // Reload the available items since the filter for the objects changed
             this.reloadAvailableItems();

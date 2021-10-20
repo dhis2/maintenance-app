@@ -34,7 +34,7 @@ class OrgUnitSelectDialog extends Component {
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.subscriptions = [];
         this.subscriptions.push(appStateStore.subscribe((appState) => {
             this.setState({ roots: appState.userOrganisationUnits.toArray() });

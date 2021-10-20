@@ -22,7 +22,7 @@ class ProgramStageField extends Component {
         return [`program.id:eq:${props.model.program.id}`];
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         const selectedProgram = newProps.model.program;
         if (selectedProgram && selectedProgram.id !== this.state.programId) {
             const queryParamFilter = this.getQueryParamFilter(newProps);

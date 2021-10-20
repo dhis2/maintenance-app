@@ -25,7 +25,7 @@ class AddOptionDialog extends Component {
 
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         //reset field values when model changes
         //this is needed due to the dialog not being unmounted between option changes,
         //and to keep the orignal-values in sync with the model

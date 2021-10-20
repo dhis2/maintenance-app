@@ -157,7 +157,7 @@ class List extends Component {
         },
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.observerDisposables = [];
 
         const sourceStoreDisposable = listStore
@@ -220,7 +220,7 @@ class List extends Component {
         this.registerDisposable(predictorDialogStoreDisposable);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.params.modelType !== newProps.params.modelType) {
             this.setState({
                 isLoading: true,

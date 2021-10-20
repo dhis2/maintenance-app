@@ -18,7 +18,7 @@ class DropDownAsyncGetter extends Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
 
         this.getOptions(newProps.model);
     }

@@ -10,7 +10,7 @@ class PeriodTypeDropDown extends Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.sub = periodTypeStore.subscribe((periodTypes) => {
             this.setState({ options: periodTypes });
         });

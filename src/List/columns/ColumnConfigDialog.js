@@ -28,7 +28,7 @@ export class ColumnConfigDialog extends Component {
         };
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.modelType !== newProps.modelType) {
             const newState = this.getUpdatedColumnState(newProps);
             this.setState({ ...newState });

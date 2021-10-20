@@ -86,7 +86,7 @@ class DataSetElementField extends Component {
         this.props.loadMetaData();
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.state.itemStore.setState(
             props.dataElements
                 .map(dataElement => ({

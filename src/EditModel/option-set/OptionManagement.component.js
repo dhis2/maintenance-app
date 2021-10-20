@@ -78,7 +78,7 @@ class OptionManagement extends Component {
             .subscribe(() => this.forceUpdate());
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.model !== newProps.model) {
             actions.getOptionsFor(newProps.model);
         }

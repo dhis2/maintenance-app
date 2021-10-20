@@ -36,7 +36,7 @@ export default createClass({
         };
     },
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         d2lib.getInstance()
             .then(d2 => this.setState({ models: d2.models }));
     },

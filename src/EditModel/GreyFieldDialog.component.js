@@ -63,7 +63,7 @@ class GreyFieldDialog extends Component {
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         const d2 = this.context.d2;
 
         if (props.sectionModel) {

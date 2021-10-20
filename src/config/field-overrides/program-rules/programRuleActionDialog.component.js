@@ -227,7 +227,7 @@ class ProgramRuleActionDialog extends Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.programRuleAction) {
             this.setState({
                 programRuleAction: newProps.ruleActionModel,

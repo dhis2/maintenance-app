@@ -136,7 +136,7 @@ export default createClass({
         return this.props.modelId === 'add';
     },
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.subscription = modelToEditAndModelForm$
             .subscribe((newState) => {
                 this.setState(newState);

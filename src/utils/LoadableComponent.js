@@ -55,7 +55,7 @@ export const LoadableWithLoaders = (loadableOpts, loaders, loaderOpts = {}) => {
             };
         }
 
-        componentWillMount() {
+        UNSAFE_componentWillMount() {
             // Start loading the component instead of waiting for loaders to resolve
             LoadedComponent.preload();
             if (typeof loaders === 'function') {
@@ -67,7 +67,7 @@ export const LoadableWithLoaders = (loadableOpts, loaders, loaderOpts = {}) => {
         componentDidMount() {
             this.runLoaders();
         }
-        componentWillReceiveProps(nextProps) {
+        UNSAFE_componentWillReceiveProps(nextProps) {
             // reload when switching sections
             if (shouldRunLoaders(this.props, nextProps)) {
                 this.runLoaders(nextProps);

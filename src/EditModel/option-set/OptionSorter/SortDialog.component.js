@@ -141,7 +141,7 @@ class SortDialog extends Component {
         this.i18n = context.d2.i18n;
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         this.setState({
             options: newProps.options || this.state.options,
         });

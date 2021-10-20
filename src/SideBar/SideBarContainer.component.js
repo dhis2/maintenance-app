@@ -8,7 +8,7 @@ import MaintenanceSideBar from './MaintenanceSidebar.component';
 import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
 
 class SideBarContainer extends Component {
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.subscription = sideBarStore
             .subscribe((sideBarState) => {
                 this.setState({
