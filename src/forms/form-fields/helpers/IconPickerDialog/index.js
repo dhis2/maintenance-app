@@ -1,1 +1,2 @@
-export IconPickerDialog from './IconPickerDialog';
+import IconPickerDialog from './IconPickerDialog';
+export default IconPickerDialog

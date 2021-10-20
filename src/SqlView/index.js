@@ -1,1 +1,2 @@
-export default from './SqlView.component';
+import SqlView from './SqlView.component';
+export default SqlView
