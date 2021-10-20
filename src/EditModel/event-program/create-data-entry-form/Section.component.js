@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { grey300, grey800 } from 'material-ui/styles/colors';
 import { SortableElement } from 'react-sortable-hoc';
 import Heading from 'd2-ui/lib/headings/Heading.component';

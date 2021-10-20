@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import organisationUnitLevelsStore from './organisationUnitLevels.store';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';

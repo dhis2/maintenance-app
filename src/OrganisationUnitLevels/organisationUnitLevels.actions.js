@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Action from 'd2-ui/lib/action/Action';
 import { Observable, ReplaySubject } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';

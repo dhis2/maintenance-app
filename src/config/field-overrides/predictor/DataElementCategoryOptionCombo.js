@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import DropDown from '../../../forms/form-fields/drop-down.js';
 import { red500, grey400 } from 'material-ui/styles/colors';
 import { LinearProgress } from 'material-ui';

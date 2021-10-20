@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import AddIcon from 'material-ui/svg-icons/content/add';
