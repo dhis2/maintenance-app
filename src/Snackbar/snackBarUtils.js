@@ -1,4 +1,3 @@
-import React from 'react';
 import { branch, lifecycle } from 'recompose';
 import snackActions from './snack.actions';
 

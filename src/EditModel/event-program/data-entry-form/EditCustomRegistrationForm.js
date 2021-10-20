@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
@@ -68,7 +68,7 @@ const styles = {
 };
 
 
-class EditDataEntryForm extends React.Component {
+class EditDataEntryForm extends Component {
     constructor(props, context) {
         super(props, context);
         this.getTranslation = this.context.d2.i18n.getTranslation.bind(this.context.d2.i18n);

@@ -1,5 +1,4 @@
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import pure from 'recompose/pure';
 import { getOr, __ } from 'lodash/fp';

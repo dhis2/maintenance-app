@@ -1,11 +1,11 @@
-import React from 'react';
+import { createClass } from 'react';
 import PropTypes from 'prop-types'
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import Paper from 'material-ui/Paper/Paper';
 import { withAuth } from "../utils/Auth";
 
-const SharingNotification = React.createClass({
+const SharingNotification = createClass({
     propTypes: {
         modelType: PropTypes.string,
         style: PropTypes.object,

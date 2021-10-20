@@ -1,9 +1,9 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 import DropDown from './drop-down';
 import { isNil } from 'lodash/fp';
 
-class DropDownAsyncGetter extends React.Component {
+class DropDownAsyncGetter extends Component {
     constructor(props, context) {
         super(props, context);
 

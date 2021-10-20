@@ -1,4 +1,4 @@
-import React from 'react';
+import { createClass } from 'react';
 
 import Tabs from 'material-ui/Tabs/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
@@ -7,7 +7,7 @@ import Paper from 'material-ui/Paper/Paper';
 import ItemsInGroupManager from './ItemsInGroupManager.component';
 import GroupsForItemManager from './GroupsForItemManager.component';
 
-export default React.createClass({
+export default createClass({
     render() {
         return (
             <Paper>

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -9,7 +9,7 @@ import programRuleActionTypes from './programRuleActionTypes';
 
 import snackActions from '../../../Snackbar/snack.actions';
 
-class ProgramRuleActionsList extends React.Component {
+class ProgramRuleActionsList extends Component {
     constructor(props, context) {
         super(props, context);
 

@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
 import InfoIcon from 'material-ui/svg-icons/action/info-outline';
 

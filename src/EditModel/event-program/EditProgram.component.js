@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import React from 'react';
 import { compose, branch, renderComponent } from 'recompose';
 import mapPropsStream from 'recompose/mapPropsStream';
 

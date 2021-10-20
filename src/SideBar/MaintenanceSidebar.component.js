@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types'
 import Sidebar from 'd2-ui/lib/sidebar/Sidebar.component';
 import noop from 'd2-utilizr/lib/noop';

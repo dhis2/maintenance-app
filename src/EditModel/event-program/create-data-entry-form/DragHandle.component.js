@@ -1,4 +1,3 @@
-import React from 'react';
 import { SortableHandle } from 'react-sortable-hoc';
 import { orange200, orange500 } from 'material-ui/styles/colors';
 import FontIcon from 'material-ui/FontIcon';

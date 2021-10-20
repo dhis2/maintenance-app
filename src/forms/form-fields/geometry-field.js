@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 import TextField from '../../forms/form-fields/text-field';
 import { isNumber } from 'd2-ui/lib/forms/Validators';
@@ -36,7 +36,7 @@ const featureTypes = {
     POLYGON: 'Polygon',
 };
 
-class GeometryField extends React.Component {
+class GeometryField extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {

@@ -1,4 +1,3 @@
-import React from 'react';
 import Paper from 'material-ui/Paper/Paper';
 import PropTypes from 'prop-types';
 import Heading from 'd2-ui/lib/headings/Heading.component';

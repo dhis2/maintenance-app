@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import ProgramRuleActionList from './program-rules/programRuleActionList.component';
 import ProgramRuleConditionField from './program-rules/programRuleConditionField.component';

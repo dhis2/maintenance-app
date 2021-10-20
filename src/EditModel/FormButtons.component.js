@@ -1,4 +1,4 @@
-import React from 'react';
+import { cloneElement } from 'react';
 import PropTypes from 'prop-types'
 import isArray from 'd2-utilizr/lib/isArray';
 
@@ -16,7 +16,7 @@ export default function FormButtons(props) {
 
     return (
         <div style={Object.assign(defaultStyle, props.style)}>
-            {buttonsToRender.map((child, index) => React.cloneElement(child, {
+            {buttonsToRender.map((child, index) => cloneElement(child, {
                 style: buttonStyle,
                 key: index,
             }))}

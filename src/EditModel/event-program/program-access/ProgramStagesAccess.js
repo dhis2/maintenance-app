@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import ListItem from 'material-ui/List/ListItem';
 import Divider from 'material-ui/Divider';
@@ -60,7 +60,7 @@ const styles = {
 
 const sharingFields = ['publicAccess', 'userAccesses', 'userGroupAccesses'];
 
-class ProgramStagesAccess extends React.Component {
+class ProgramStagesAccess extends Component {
     constructor(props) {
         super(props);
 

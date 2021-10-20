@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 import compose from 'recompose/compose';

@@ -1,4 +1,3 @@
-import React from 'react';
 import switchOnBoolean from './switchOnBoolean';
 
 const styles = {

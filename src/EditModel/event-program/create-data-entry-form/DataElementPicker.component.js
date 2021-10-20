@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { grey100, grey200, grey300, grey500 } from 'material-ui/styles/colors';
 import { get, isEqual, find } from 'lodash/fp';
 import FontIcon from 'material-ui/FontIcon';

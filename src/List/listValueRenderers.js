@@ -1,4 +1,3 @@
-import React from 'react';
 import { addValueRenderer } from 'd2-ui/lib/data-table/data-value/valueRenderers';
 import branch from 'recompose/branch';
 import CheckIcon from 'material-ui/svg-icons/navigation/check';

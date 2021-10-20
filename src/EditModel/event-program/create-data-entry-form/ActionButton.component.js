@@ -1,4 +1,3 @@
-import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 

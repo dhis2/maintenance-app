@@ -1,4 +1,3 @@
-import React from 'react';
 import DropDown from '../../forms/form-fields/drop-down';
 import TextField from '../../forms/form-fields/text-field';
 import SubFieldWrap from './helpers/SubFieldWrap';

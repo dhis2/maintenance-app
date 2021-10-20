@@ -5,7 +5,6 @@ import { result } from 'lodash/fp';
 import Dialog from 'material-ui/Dialog';
 import ExpressionManager from '../../../EditModel/expression/ExpressionManager'
 import FlatButton from 'material-ui/FlatButton/FlatButton';
-import React from 'react';
 import Store from 'd2-ui/lib/store/Store';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import MainContent from 'd2-ui/lib/layout/main-content/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';

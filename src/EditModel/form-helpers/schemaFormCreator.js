@@ -1,5 +1,3 @@
-import React from 'react';
-
 import mapPropsStream from 'recompose/mapPropsStream';
 import { identity, noop, compose } from 'lodash/fp';
 

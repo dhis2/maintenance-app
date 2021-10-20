@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { getInstance as getD2 } from 'd2/lib/d2';
 import Action from 'd2-ui/lib/action/Action';
 import IndicatorExpressionManager from './expression/ExpressionManager'
-import React from 'react';
+import { createClass } from 'react';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import indicatorExpressionStatusStore from 'd2-ui/lib/expression-manager/ExpressionStatus.store';
 
@@ -29,7 +29,7 @@ indicatorExpressionStatusActions.requestExpressionStatus
         indicatorExpressionStatusStore.setState(response);
     });
 
-const IndicatorExpressionManagerContainer = React.createClass({
+const IndicatorExpressionManagerContainer = createClass({
     propTypes: {
         indicatorExpressionChanged: PropTypes.func.isRequired,
         description: PropTypes.string,

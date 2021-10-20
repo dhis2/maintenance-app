@@ -1,4 +1,3 @@
-import React from 'react';
 import TreeView from 'd2-ui/lib/tree-view/TreeView.component';
 import withState from 'recompose/withState';
 

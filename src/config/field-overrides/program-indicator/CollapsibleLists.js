@@ -1,4 +1,3 @@
-import React from 'react';
 import CollapsibleList from './CollapsibleList';
 
 function CollapsibleLists({ listSources, onSelect }) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { createClass } from 'react';
 import PropTypes from 'prop-types'
 
 import TextField from 'material-ui/TextField/TextField';
@@ -11,7 +11,7 @@ import ItemSelector from './ItemSelector.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 
-export default React.createClass({
+export default createClass({
     mixins: [Translate],
 
     contextTypes: {

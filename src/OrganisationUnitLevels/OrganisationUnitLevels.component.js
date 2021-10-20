@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { Component } from 'react';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import organisationUnitLevelsStore from './organisationUnitLevels.store';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
@@ -125,7 +125,7 @@ const componentState$ = organisationUnitLevelsStore;
 
 const OrganisationUnitLevelsWithState = withStateFrom(componentState$, addD2Context(OrganisationUnitLevels));
 
-export default addD2Context(class extends React.Component {
+export default addD2Context(class extends Component {
     constructor(...args) {
         super(...args);
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import Translate from 'd2-ui/lib/i18n/Translate.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';

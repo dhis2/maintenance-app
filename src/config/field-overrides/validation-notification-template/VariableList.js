@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem } from 'material-ui/List';
 import Heading from 'd2-ui/lib/headings/Heading.component';

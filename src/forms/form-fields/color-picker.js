@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Divider from 'material-ui/Divider';
 import PropTypes from 'prop-types';
 import FieldWrapper from './helpers/FieldWrapper';

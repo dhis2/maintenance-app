@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import { blue50, blue200 } from 'material-ui/styles/colors';
 
 import InfoIcon from 'material-ui/svg-icons/action/info';

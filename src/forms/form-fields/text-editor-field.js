@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 
 // TODO: Put this in D2-UI
@@ -24,7 +24,7 @@ const styles = {
 
 };
 
-class TextEditorField extends React.Component {
+class TextEditorField extends Component {
     constructor(props) {
         super(props);
 

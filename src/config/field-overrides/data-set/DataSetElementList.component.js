@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import Column from 'd2-ui/lib/layout/Column.component';

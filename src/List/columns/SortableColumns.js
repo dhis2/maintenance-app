@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import DragHandle from '../../EditModel/event-program/create-data-entry-form/DragHandle.component';

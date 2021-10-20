@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 import log from 'loglevel';
 
@@ -52,7 +52,7 @@ const styles = {
     },
 };
 
-class GreyFieldDialog extends React.Component {
+class GreyFieldDialog extends Component {
     constructor(props, context) {
         super(props, context);
 

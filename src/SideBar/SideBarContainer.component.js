@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 import sideBarStore, { organisationUnitTreeChanged$ } from './sideBarStore';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
@@ -7,7 +7,7 @@ import { setAppState, default as appState } from '../App/appStateStore';
 import MaintenanceSideBar from './MaintenanceSidebar.component';
 import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
 
-class SideBarContainer extends React.Component {
+class SideBarContainer extends Component {
     componentWillMount() {
         this.subscription = sideBarStore
             .subscribe((sideBarState) => {

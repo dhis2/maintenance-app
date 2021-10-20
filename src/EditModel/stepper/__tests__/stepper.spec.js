@@ -1,4 +1,3 @@
-import React from 'react';
 import { shallow } from 'enzyme';
 import Stepper from 'material-ui/Stepper/Stepper';
 import Step from 'material-ui/Stepper/Step';

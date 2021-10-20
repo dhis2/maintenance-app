@@ -1,4 +1,3 @@
-import React from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
 import { isEqual } from 'lodash/fp';
 

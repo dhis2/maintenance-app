@@ -1,4 +1,3 @@
-import React from 'react';
 import MenuCards from './MenuCards.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import menuCardsStore from './menuCardsStore';

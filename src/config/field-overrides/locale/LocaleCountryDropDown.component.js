@@ -1,4 +1,3 @@
-import React from 'react';
 import LocaleDropDown from './LocaleDropDown.component';
 
 const LocaleCountryDropDown = props =>

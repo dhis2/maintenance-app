@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types'
 import AutoComplete from 'material-ui/AutoComplete/AutoComplete';
 import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';

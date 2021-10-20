@@ -1,4 +1,4 @@
-import React from 'react';
+import { createClass } from 'react';
 import PropTypes from 'prop-types'
 import log from 'loglevel';
 import { Observable } from 'rxjs';
@@ -108,7 +108,7 @@ const modelToEditAndModelForm$ = Observable
         };
     });
 
-export default React.createClass({
+export default createClass({
     propTypes: {
         modelId: PropTypes.string.isRequired,
         modelType: PropTypes.string.isRequired,

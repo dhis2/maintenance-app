@@ -1,5 +1,5 @@
 /* eslint-disable no-bitwise */
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import FieldWrapper from './helpers/FieldWrapper';
 import IconPickerDialog from './helpers/IconPickerDialog/IconPickerDialog';

@@ -1,4 +1,3 @@
-import React from 'react';
 import Paper from 'material-ui/Paper/Paper';
 import EditModelForm from './EditModelForm.component';
 import { goToAndScrollUp } from '../router-utils';

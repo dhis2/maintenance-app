@@ -1,6 +1,6 @@
 import Button from 'd2-ui/lib/button/Button';
 import PropTypes from 'prop-types';
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 
 const MAX_POLL_TRIES = 5;
 

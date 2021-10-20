@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types'
 import IconButton from 'material-ui/IconButton/IconButton';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';

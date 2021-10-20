@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ErrorMessage from 'd2-ui/lib/messages/ErrorMessage.component';

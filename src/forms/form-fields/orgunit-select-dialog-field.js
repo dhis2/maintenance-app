@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 
 import Dialog from 'material-ui/Dialog';
@@ -11,7 +11,7 @@ import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.compon
 import appStateStore from '../../App/appStateStore';
 
 
-class OrgUnitSelectDialog extends React.Component {
+class OrgUnitSelectDialog extends Component {
     constructor(props, context) {
         super(props, context);
 

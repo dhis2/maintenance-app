@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { connect } from 'react-redux';

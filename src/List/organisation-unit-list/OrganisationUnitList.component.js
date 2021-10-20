@@ -1,7 +1,7 @@
 import { getInstance } from 'd2/lib/d2';
 import ModelCollection from 'd2/lib/model/ModelCollection';
 import log from 'loglevel';
-import React from 'react';
+import { Component } from 'react';
 import appState from '../../App/appStateStore';
 import listActions, { fieldFilteringForQuery, getQueryForSchema } from '../list.actions';
 import List from '../List.component';
@@ -34,7 +34,7 @@ const createPrependedOrgUnitList = (selectedOrganisationUnit, organisationUnitLi
     return prependedOrgUnitList;
 }
 
-export default class OrganisationUnitList extends React.Component {
+export default class OrganisationUnitList extends Component {
     componentDidMount() {
         this.subscription = appState
             // Only do this is we're actually about to show organisation units

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
@@ -20,7 +20,7 @@ const styles = {
     },
 };
 
-class IndicatorExtraFields extends React.Component {
+class IndicatorExtraFields extends Component {
     constructor(props, state) {
         super(props, state);
         this.state = {

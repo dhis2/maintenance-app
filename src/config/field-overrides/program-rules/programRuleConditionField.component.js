@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { PropTypes } from 'prop-types';
 
 import { RaisedButton, IconButton, Divider } from 'material-ui';
@@ -74,7 +74,7 @@ const styles = {
     },
 };
 
-class ProgramRuleConditionField extends React.Component {
+class ProgramRuleConditionField extends Component {
     constructor(props, context) {
         super(props, context);
         this.d2 = context.d2;

@@ -1,5 +1,4 @@
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import DropDownAsync from '../../../forms/form-fields/drop-down-async';
 

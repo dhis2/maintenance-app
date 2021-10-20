@@ -1,4 +1,3 @@
-import React from 'react';
 import MultiSelect from '../../forms/form-fields/multi-select';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 

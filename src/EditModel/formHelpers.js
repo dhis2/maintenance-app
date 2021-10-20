@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Observable } from 'rxjs';
 import { getInstance } from 'd2/lib/d2';
 import mapPropsStream from 'recompose/mapPropsStream';

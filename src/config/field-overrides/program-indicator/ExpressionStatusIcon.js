@@ -1,4 +1,3 @@
-import React from 'react'
 import mapProps from 'recompose/mapProps';
 import branch from 'recompose/branch';
 import NotInterestedIcon from 'material-ui/svg-icons/av/not-interested';

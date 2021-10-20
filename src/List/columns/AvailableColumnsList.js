@@ -1,5 +1,4 @@
 import { AvailableDataElement as AvailableColumn } from '../../EditModel/event-program/create-data-entry-form/DataElementPicker.component';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 

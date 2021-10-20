@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 
 import Dialog from 'material-ui/Dialog';
@@ -27,7 +27,7 @@ const styles = {
     openDialogButton: { margin: '16px 0' },
 };
 
-class DataInputPeriods extends React.Component {
+class DataInputPeriods extends Component {
     constructor(props, context) {
         super(props, context);
 

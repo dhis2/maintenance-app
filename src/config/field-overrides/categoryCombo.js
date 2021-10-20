@@ -1,4 +1,3 @@
-import React from 'react';
 import MultiSelect from '../../forms/form-fields/multi-select';
 
 export default new Map([

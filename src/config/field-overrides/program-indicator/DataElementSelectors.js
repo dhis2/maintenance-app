@@ -1,4 +1,3 @@
-import React from 'react';
 import componentFromStream from 'recompose/componentFromStream';
 import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';

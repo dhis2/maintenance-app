@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import Loadable from 'react-loadable';
 import LoadingMask from '../loading-mask/LoadingMask.component';
 
@@ -46,7 +46,7 @@ export const LoadableWithLoaders = (loadableOpts, loaders, loaderOpts = {}) => {
         loaderOpts.shouldRunLoaders === 'function'
             ? loaderOpts.shouldRunLoaders
             : defaultShouldRunLoaders;
-    return class WithLoaders extends React.Component {
+    return class WithLoaders extends Component {
         constructor(props) {
             super(props);
             this.state = {

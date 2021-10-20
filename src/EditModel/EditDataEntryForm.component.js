@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 import Rx from 'rxjs';
 import log from 'loglevel';
@@ -72,7 +72,7 @@ const styles = {
     },
 };
 
-class EditDataEntryForm extends React.Component {
+class EditDataEntryForm extends Component {
     constructor(props, context) {
         super(props, context);
 

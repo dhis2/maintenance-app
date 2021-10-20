@@ -1,8 +1,8 @@
-import React from 'react';
+import { Component } from 'react';
 import DropDown from './drop-down';
 import periodTypeStore from '../../App/periodTypeStore';
 
-class PeriodTypeDropDown extends React.Component {
+class PeriodTypeDropDown extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {

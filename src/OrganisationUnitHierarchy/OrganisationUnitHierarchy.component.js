@@ -1,4 +1,3 @@
-import React from 'react';
 import Paper from 'material-ui/Paper/Paper';
 import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';

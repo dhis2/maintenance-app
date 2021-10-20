@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';

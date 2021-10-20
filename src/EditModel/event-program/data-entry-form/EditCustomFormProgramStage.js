@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { Observable } from 'rxjs';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import SelectField from 'material-ui/SelectField/SelectField';
@@ -65,7 +65,7 @@ const styles = {
     },
 };
 
-class EditDataEntryForm extends React.Component {
+class EditDataEntryForm extends Component {
     constructor(props, context) {
         super(props, context);
 

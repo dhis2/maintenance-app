@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, createClass } from 'react';
 import PropTypes from 'prop-types'
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
@@ -8,7 +8,7 @@ import { withAuth } from "../utils/Auth";
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 
-class ProgramSpeedDial extends React.Component {
+class ProgramSpeedDial extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -46,7 +46,7 @@ class ProgramSpeedDial extends React.Component {
 
 ProgramSpeedDial = addD2Context(ProgramSpeedDial);
 
-const ListActionBar = React.createClass({
+const ListActionBar = createClass({
     propTypes: {
         modelType: PropTypes.string.isRequired,
         groupName: PropTypes.string.isRequired

@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Snackbar from 'material-ui/Snackbar/Snackbar';
 import log from 'loglevel';
 import snackStore from './snack.store';

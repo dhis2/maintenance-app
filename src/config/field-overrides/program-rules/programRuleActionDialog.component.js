@@ -1,6 +1,6 @@
 import { getInstance } from 'd2/lib/d2';
 import PropTypes from 'prop-types'
-import React from 'react';
+import { Component } from 'react';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -77,7 +77,7 @@ const DropdownWithLoading = ({ loading, ...props }) => {
     );
 };
 
-class ProgramRuleActionDialog extends React.Component {
+class ProgramRuleActionDialog extends Component {
     constructor(props, context) {
         super(props, context);
 

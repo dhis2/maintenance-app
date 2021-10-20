@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { debounce, endsWith, sortBy } from 'lodash/fp';
 import PropTypes from 'prop-types';
 import Button from 'd2-ui/lib/button/Button';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Row from 'd2-ui/lib/layout/Row.component';
 import Column from 'd2-ui/lib/layout/Column.component';

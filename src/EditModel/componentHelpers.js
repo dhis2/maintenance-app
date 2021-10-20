@@ -1,4 +1,3 @@
-import React from 'react';
 import { isNil } from 'lodash/fp';
 import Paper from 'material-ui/Paper/Paper';
 import mapProps from 'recompose/mapProps';

@@ -1,4 +1,3 @@
-import React from 'react';
 import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
 import DropDown from '../../forms/form-fields/drop-down';
 import { featureTypeOverride } from './program';

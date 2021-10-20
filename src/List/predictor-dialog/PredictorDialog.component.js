@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 
 import RaisedButton from 'material-ui/RaisedButton';
@@ -12,7 +12,7 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 import snackActions from '../../Snackbar/snack.actions';
 import predictorDialogStore from './predictorDialogStore';
 
-class PredictorDialog extends React.Component {
+class PredictorDialog extends Component {
     constructor(...args) {
         super(...args);
 

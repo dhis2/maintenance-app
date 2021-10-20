@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hideIfNotAuthorizedToCreate } from './NotificationList';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
@@ -6,7 +6,7 @@ import Avatar from 'material-ui/Avatar';
 import FontIcon from 'material-ui/FontIcon';
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 
-class TrackerNotificationAddButton extends React.Component {
+class TrackerNotificationAddButton extends Component {
     constructor(props, context) {
         super(props, context);
 

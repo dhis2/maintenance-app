@@ -1,4 +1,4 @@
-import React from 'react';
+import { createClass } from 'react';
 import PropTypes from 'prop-types'
 import Card from 'material-ui/Card/Card';
 import CardHeader from 'material-ui/Card/CardHeader';
@@ -7,7 +7,7 @@ import CardActions from 'material-ui/Card/CardActions';
 import IconButton from 'material-ui/IconButton/IconButton';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 
-export default React.createClass({
+export default createClass({
     propTypes: {
         menuItems: PropTypes.arrayOf(PropTypes.shape({
             name: PropTypes.string,

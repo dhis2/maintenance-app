@@ -2,7 +2,7 @@ import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
 import LoadingMask from '../../loading-mask/LoadingMask.component';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';

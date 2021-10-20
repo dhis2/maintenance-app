@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'
 import log from 'loglevel';
 
@@ -21,7 +21,7 @@ const assignedDataElementStore = Store.create();
 const indicatorStore = Store.create();
 const assignedIndicatorStore = Store.create();
 
-class SectionDialog extends React.Component {
+class SectionDialog extends Component {
     constructor(props, context) {
         super(props, context);
 

@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import withSkipLogic from './helpers/withSkipLogic';
 import DropDown from '../../forms/form-fields/drop-down';
 import SubFieldWrap from './helpers/SubFieldWrap';

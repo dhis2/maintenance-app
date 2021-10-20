@@ -1,5 +1,4 @@
 // TODO: Move this to d2-ui
-import React from 'react';
 import Stepper from 'material-ui/Stepper/Stepper';
 import StepButton from 'material-ui/Stepper/StepButton';
 import StepContent from 'material-ui/Stepper/StepContent';

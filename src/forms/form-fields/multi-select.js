@@ -1,4 +1,4 @@
-import React from 'react';
+import { createClass } from 'react';
 import PropTypes from 'prop-types'
 import Store from 'd2-ui/lib/store/Store';
 import { getInstance } from 'd2/lib/d2';
@@ -66,7 +66,7 @@ function isOrganisationUnitLevelReference(referenceProperty, modelDefinition) {
 }
 
 // TODO: Refactor to es2015 class
-export default React.createClass({
+export default createClass({
     propTypes: {
         referenceType: PropTypes.string.isRequired,
         referenceProperty: PropTypes.string.isRequired,

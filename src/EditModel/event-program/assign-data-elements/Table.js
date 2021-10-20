@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 
 export const Table = ({ children, ...props }) => (
     <table {...props} style={{

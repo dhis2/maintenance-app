@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import { camelCaseToUnderscores } from 'd2-utilizr';

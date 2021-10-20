@@ -1,9 +1,9 @@
-import React from 'react';
+import { Component } from 'react';
 import DropdownAsync from '../../../forms/form-fields/drop-down-async';
 import PropTypes from 'prop-types';
 import objectActions from '../../../EditModel/objectActions';
 
-class ProgramStageField extends React.Component {
+class ProgramStageField extends Component {
     constructor(props, context) {
         super(props);
         

@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createStepperFromConfig } from '../../../stepper/stepper';
 import AssignAttributes from './AssignAttributes';
@@ -35,7 +35,7 @@ const stepperConfig = () => {
 const Stepper = createStepperFromConfig(stepperConfig(), 'vertical');
 const StepperWithAttributes = withAttributes(Stepper)
 
-class AttributesStepper extends React.Component {
+class AttributesStepper extends Component {
     constructor(props) {
         super(props);
         this.state = {

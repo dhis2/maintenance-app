@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import DragHandle from './DragHandle.component';
 import { grey200 } from 'material-ui/styles/colors';
