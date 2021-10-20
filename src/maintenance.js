@@ -16,9 +16,6 @@ import periodTypeStore from './App/periodTypeStore';
 import store from './store';
 import { loadAllColumnsPromise } from './List/columns/epics';
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
-
 const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
 
 Error.stackTraceLimit = Infinity;
