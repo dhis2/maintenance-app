@@ -209,62 +209,6 @@ class EditDataEntryForm extends Component {
         }
     }
 
-    handleSaveClick = () => {
-        const payload = {
-            style: this.state.formStyle,
-            htmlCode: this._editor.getData(),
-        };
-        this.context.d2.Api.getApi().post(['dataSets', this.props.params.modelId, 'form'].join('/'), payload)
-            .then(() => {
-                log.info('Form saved successfully');
-                snackActions.show({ message: this.getTranslation('form_saved') });
-                goToRoute('list/dataSetSection/dataSet');
-            })
-            .catch((e) => {
-                log.warn('Failed to save form:', e);
-                snackActions.show({
-                    message: `${this.getTranslation('failed_to_save_form')}${e.message ? `: ${e.message}` : ''}`,
-                    action: this.context.d2.i18n.getTranslation('ok'),
-                });
-            });
-    };
-
-    handleCancelClick = () => {
-        goToRoute('list/dataSetSection/dataSet');
-    };
-
-    handleDeleteClick = () => {
-        snackActions.show({
-            message: this.getTranslation('dataentryform_confirm_delete'),
-            action: 'confirm',
-            onActionTouchTap: () => {
-                this.context.d2.Api.getApi()
-                    .delete(['dataEntryForms', modelToEditStore.state.dataEntryForm.id].join('/'))
-                    .then(() => {
-                        snackActions.show({ message: this.getTranslation('form_deleted') });
-                        goToRoute('list/dataSetSection/dataSet');
-                    })
-                    .catch((err) => {
-                        log.error('Failed to delete form:', err);
-                        snackActions.show({ message: this.getTranslation('failed_to_delete_form'), action: 'ok' });
-                    });
-            },
-        });
-    };
-
-    handleStyleChange = (e, i, value) => {
-        this.setState({
-            formStyle: value,
-        });
-    };
-
-    startResize = e => {
-        this._startPos = e.clientX;
-        this._startWidth = this.state.paletteWidth;
-        window.addEventListener('mousemove', this.doResize);
-        window.addEventListener('mouseup', this.endResize);
-    };
-
     doResize = e => {
         if (!e.buttons) {
             // If no buttons are pressed it probably simply means we missed a mouseUp event - so stop resizing
@@ -305,6 +249,73 @@ class EditDataEntryForm extends Component {
 
         log.warn('Failed to generate HTML for ID:', id);
         return '';
+    }
+
+    handleCancelClick = () => {
+        goToRoute('list/dataSetSection/dataSet');
+    };
+
+    handleDeleteClick = () => {
+        snackActions.show({
+            message: this.getTranslation('dataentryform_confirm_delete'),
+            action: 'confirm',
+            onActionTouchTap: () => {
+                this.context.d2.Api.getApi()
+                    .delete(['dataEntryForms', modelToEditStore.state.dataEntryForm.id].join('/'))
+                    .then(() => {
+                        snackActions.show({ message: this.getTranslation('form_deleted') });
+                        goToRoute('list/dataSetSection/dataSet');
+                    })
+                    .catch((err) => {
+                        log.error('Failed to delete form:', err);
+                        snackActions.show({ message: this.getTranslation('failed_to_delete_form'), action: 'ok' });
+                    });
+            },
+        });
+    };
+
+    handleSaveClick = () => {
+        const payload = {
+            style: this.state.formStyle,
+            htmlCode: this._editor.getData(),
+        };
+        this.context.d2.Api.getApi().post(['dataSets', this.props.params.modelId, 'form'].join('/'), payload)
+            .then(() => {
+                log.info('Form saved successfully');
+                snackActions.show({ message: this.getTranslation('form_saved') });
+                goToRoute('list/dataSetSection/dataSet');
+            })
+            .catch((e) => {
+                log.warn('Failed to save form:', e);
+                snackActions.show({
+                    message: `${this.getTranslation('failed_to_save_form')}${e.message ? `: ${e.message}` : ''}`,
+                    action: this.context.d2.i18n.getTranslation('ok'),
+                });
+            });
+    };
+
+    handleStyleChange = (e, i, value) => {
+        this.setState({
+            formStyle: value,
+        });
+    };
+
+    insertElement(id) {
+        if (this.state.usedIds.indexOf(id) !== -1) {
+            return;
+        }
+
+        this._editor.insertHtml(this.generateHtml(id), 'unfiltered_html');
+        this.setState(state => ({ usedIds: state.usedIds.concat(id) }));
+        // Move the current selection to just after the newly inserted element
+        const range = this._editor.getSelection().getRanges()[0];
+        range.moveToElementEditablePosition(range.endContainer, true);
+    }
+
+    insertFlag(img) {
+        this._editor.insertHtml(`<img src="../dhis-web-commons/flags/${img}" />`, 'unfiltered_html');
+        const range = this._editor.getSelection().getRanges()[0];
+        range.moveToElementEditablePosition(range.endContainer, true);
     }
 
     processFormData(formData) {
@@ -351,22 +362,45 @@ class EditDataEntryForm extends Component {
         return outHtml;
     }
 
-    insertElement(id) {
-        if (this.state.usedIds.indexOf(id) !== -1) {
-            return;
-        }
+    startResize = e => {
+        this._startPos = e.clientX;
+        this._startWidth = this.state.paletteWidth;
+        window.addEventListener('mousemove', this.doResize);
+        window.addEventListener('mouseup', this.endResize);
+    };
 
-        this._editor.insertHtml(this.generateHtml(id), 'unfiltered_html');
-        this.setState(state => ({ usedIds: state.usedIds.concat(id) }));
-        // Move the current selection to just after the newly inserted element
-        const range = this._editor.getSelection().getRanges()[0];
-        range.moveToElementEditablePosition(range.endContainer, true);
-    }
+    renderPalette() {
+        const toggleGrey = (e, value) => {
+            this.setState({ insertGrey: value });
+        };
 
-    insertFlag(img) {
-        this._editor.insertHtml(`<img src="../dhis-web-commons/flags/${img}" />`, 'unfiltered_html');
-        const range = this._editor.getSelection().getRanges()[0];
-        range.moveToElementEditablePosition(range.endContainer, true);
+        return (
+            <div className="paletteContainer" style={{ width: this.state.paletteWidth }}>
+                <div className="resizeHandle" onMouseDown={this.startResize} />
+                <div className="palette">
+                    <div style={styles.paletteFilter}>
+                        <TextField
+                            floatingLabelText={this.getTranslation('filter_elements')}
+                            style={styles.paletteFilterField}
+                            onChange={this.filterAction}
+                        />
+                    </div>
+                    <div className="elements">
+                        {this.renderPaletteSection(this.operands, 'data_elements')}
+                        {this.renderPaletteSection(this.totals, 'totals')}
+                        {this.renderPaletteSection(this.indicators, 'indicators')}
+                        {this.renderPaletteSection(this.flags, 'flags')}
+                    </div>
+                    <CheckBox
+                        label={this.getTranslation('insert_grey_fields')}
+                        labelPosition="right"
+                        style={styles.greySwitch}
+                        onCheck={toggleGrey}
+                        checked={this.state.insertGrey}
+                    />
+                </div>
+            </div>
+        );
     }
 
     renderPaletteSection(keySet, label) {
@@ -404,40 +438,6 @@ class EditDataEntryForm extends Component {
                                 );
                             })
                     }
-                </div>
-            </div>
-        );
-    }
-
-    renderPalette() {
-        const toggleGrey = (e, value) => {
-            this.setState({ insertGrey: value });
-        };
-
-        return (
-            <div className="paletteContainer" style={{ width: this.state.paletteWidth }}>
-                <div className="resizeHandle" onMouseDown={this.startResize} />
-                <div className="palette">
-                    <div style={styles.paletteFilter}>
-                        <TextField
-                            floatingLabelText={this.getTranslation('filter_elements')}
-                            style={styles.paletteFilterField}
-                            onChange={this.filterAction}
-                        />
-                    </div>
-                    <div className="elements">
-                        {this.renderPaletteSection(this.operands, 'data_elements')}
-                        {this.renderPaletteSection(this.totals, 'totals')}
-                        {this.renderPaletteSection(this.indicators, 'indicators')}
-                        {this.renderPaletteSection(this.flags, 'flags')}
-                    </div>
-                    <CheckBox
-                        label={this.getTranslation('insert_grey_fields')}
-                        labelPosition="right"
-                        style={styles.greySwitch}
-                        onCheck={toggleGrey}
-                        checked={this.state.insertGrey}
-                    />
                 </div>
             </div>
         );

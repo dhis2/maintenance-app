@@ -73,88 +73,6 @@ class SectionForm extends Component {
         }
     }
 
-    getElementsForSection = section => {
-        const elems = section[this.props.elementPath];
-        return elems;
-    };
-
-    onToggleEditing = section => {
-        this.setState({
-            editingSection:
-                this.state.editingSection &&
-                isEqual(section.id, this.state.editingSection.id)
-                    ? null
-                    : section,
-
-            sectionEditOpen: !this.state.sectionEditOpen,
-        });
-    };
-
-    clearEditingSection = () => {
-        this.setState({ editingSection: null, sectionEditOpen: false });
-    };
-
-    openSection = sectionId => {
-        this.setState({
-            collapsedSections: pull(sectionId, this.state.collapsedSections),
-        });
-    };
-
-    closeSection = sectionId => {
-        const collapsedSections = this.state.collapsedSections;
-        collapsedSections.push(sectionId);
-        this.setState({
-            collapsedSections,
-        });
-    };
-
-    selectSection = sectionId => {
-        this.setState({
-            selectedSectionId: sectionId,
-        });
-    };
-
-    openNoSelectionSectionMessage = () => {
-        this.setState({
-            showNoSelectionSectionMessage: true,
-        });
-    };
-
-    closeNoSelectionSectionMessage = () => {
-        this.setState({
-            showNoSelectionSectionMessage: false,
-        });
-    };
-
-    isSectionCollapsed = sectionId =>
-        this.state.collapsedSections.includes(sectionId);
-
-    onToggleSection = sectionId => {
-        this.isSectionCollapsed(sectionId)
-            ? this.openSection(sectionId)
-            : this.closeSection(sectionId);
-    };
-
-    openSectionIfClosed = sectionId => {
-        this.isSectionCollapsed(sectionId) && this.openSection(sectionId);
-    };
-
-    onSelectSection = sectionId => {
-        this.openSectionIfClosed(sectionId);
-        this.selectSection(sectionId);
-    };
-
-    onSectionUpdated = (sectionId, newSectionData) => {
-        this.props.onSectionUpdated(sectionId, newSectionData);
-        this.clearEditingSection();
-    };
-
-    onSortEnd = ({ oldIndex, newIndex }) => {
-        this.props.onSectionOrderChanged(
-            arrayMove(this.props.sections, oldIndex, newIndex)
-        );
-    };
-
     onElementPicked = elementId => {
         const elementToAdd = find(
             element => isEqual(element.id, elementId),
@@ -186,6 +104,95 @@ class SectionForm extends Component {
         this.openSectionIfClosed(currentSelectedSection.id);
     };
 
+    onSectionUpdated = (sectionId, newSectionData) => {
+        this.props.onSectionUpdated(sectionId, newSectionData);
+        this.clearEditingSection();
+    };
+
+    onSelectSection = sectionId => {
+        this.openSectionIfClosed(sectionId);
+        this.selectSection(sectionId);
+    };
+
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.props.onSectionOrderChanged(
+            arrayMove(this.props.sections, oldIndex, newIndex)
+        );
+    };
+
+    onToggleEditing = section => {
+        this.setState({
+            editingSection:
+                this.state.editingSection &&
+                isEqual(section.id, this.state.editingSection.id)
+                    ? null
+                    : section,
+
+            sectionEditOpen: !this.state.sectionEditOpen,
+        });
+    };
+
+    onToggleSection = sectionId => {
+        this.isSectionCollapsed(sectionId)
+            ? this.openSection(sectionId)
+            : this.closeSection(sectionId);
+    };
+
+    getElementsForSection = section => {
+        const elems = section[this.props.elementPath];
+        return elems;
+    };
+
+    getFilteredAvailableElements() {
+        const filter = this.state.availableDataElementsFilter;
+        return this.props.availableElements.filter(
+            element =>
+                !filter.length ||
+                element.displayName.toLowerCase().includes(filter.toLowerCase())
+        );
+    }
+
+    clearEditingSection = () => {
+        this.setState({ editingSection: null, sectionEditOpen: false });
+    };
+
+    closeNoSelectionSectionMessage = () => {
+        this.setState({
+            showNoSelectionSectionMessage: false,
+        });
+    };
+
+    closeSection = sectionId => {
+        const collapsedSections = this.state.collapsedSections;
+        collapsedSections.push(sectionId);
+        this.setState({
+            collapsedSections,
+        });
+    };
+
+    handleFilterAvailableElements = event => {
+        this.setState({ availableDataElementsFilter: event.target.value });
+    };
+
+    isSectionCollapsed = sectionId =>
+        this.state.collapsedSections.includes(sectionId);
+
+    openNoSelectionSectionMessage = () => {
+        this.setState({
+            showNoSelectionSectionMessage: true,
+        });
+    };
+
+    openSection = sectionId => {
+        this.setState({
+            collapsedSections: pull(sectionId, this.state.collapsedSections),
+        });
+    };
+
+    openSectionIfClosed = sectionId => {
+        this.isSectionCollapsed(sectionId) && this.openSection(sectionId);
+    };
+
     removeElementFromSection = (elementId, sectionId) => {
         const sectionIndex = findIndex(
             section => isEqual(section.id, sectionId),
@@ -206,6 +213,12 @@ class SectionForm extends Component {
         this.props.onSectionOrderChanged(allSections);
     };
 
+    selectSection = sectionId => {
+        this.setState({
+            selectedSectionId: sectionId,
+        });
+    };
+
     sortItems = (sectionIndex, oldIndex, newIndex) => {
         const currentSection = this.props.sections[sectionIndex];
         const oldElements = this.getElementsForSection(currentSection);
@@ -214,19 +227,6 @@ class SectionForm extends Component {
         sections[sectionIndex][this.props.elementPath] = elements;
         this.props.onSectionOrderChanged(sections);
     };
-
-    handleFilterAvailableElements = event => {
-        this.setState({ availableDataElementsFilter: event.target.value });
-    };
-
-    getFilteredAvailableElements() {
-        const filter = this.state.availableDataElementsFilter;
-        return this.props.availableElements.filter(
-            element =>
-                !filter.length ||
-                element.displayName.toLowerCase().includes(filter.toLowerCase())
-        );
-    }
 
     render = () => {
         const filteredAvailableElements = this.getFilteredAvailableElements();

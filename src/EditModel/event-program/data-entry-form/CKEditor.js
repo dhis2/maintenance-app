@@ -69,16 +69,16 @@ export default class CKEditor extends Component {
         onEditorInitialized(this.editor);
     }
 
+    shouldComponentUpdate() {
+        return false;
+    }
+
     componentWillUnmount() {
         if (this.editor) {
             this.editor.destroy();
         }
 
         this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    }
-
-    shouldComponentUpdate() {
-        return false;
     }
 
     setContainerRef = (textarea) => {

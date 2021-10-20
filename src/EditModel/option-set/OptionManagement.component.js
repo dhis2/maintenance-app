@@ -90,22 +90,11 @@ class OptionManagement extends Component {
         }
     }
 
-    onAddOption = () => actions.setActiveModel();
-
     onAddDialogClose = () => actions.closeOptionDialog();
 
+    onAddOption = () => actions.setActiveModel();
+
     onEditOption = model => actions.setActiveModel(model);
-
-    translationSaved = () => snackActions.show({
-        message: 'translation_saved',
-        translate: true,
-    });
-
-    translationErrored = () => snackActions.show({
-        message: 'translation_save_error',
-        action: 'ok',
-        translate: true,
-    });
 
     displayInCorrectOrderWarning() {
         if (!(this.props.pager && this.props.pager.total > 50)) {
@@ -138,6 +127,18 @@ class OptionManagement extends Component {
                 return true;
         }
     }
+
+    translationErrored = () => snackActions.show({
+        message: 'translation_save_error',
+        action: 'ok',
+        translate: true,
+    });
+
+    translationSaved = () => snackActions.show({
+        message: 'translation_saved',
+        translate: true,
+    });
+
     renderPagination() {
         if (!this.props.pager) {
             return null;

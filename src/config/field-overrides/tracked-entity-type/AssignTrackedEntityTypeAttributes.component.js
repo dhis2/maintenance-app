@@ -65,16 +65,6 @@ class AssignTrackedEntityTypeAttributes extends Component {
         return Promise.resolve();
     }
 
-    onRemoveAttributes = (removedAttributesIds) => {
-        const newAssignedAttributesIds = this.state.assignedAttributesStore.getState()
-            .filter(assignedAttributeId => !removedAttributesIds.includes(assignedAttributeId));
-        const newAssignedAttributes = this.state.assignedAttributes
-            .filter(assignedAttribute => !removedAttributesIds.includes(assignedAttribute.trackedEntityAttribute.id));
-
-        this.updateState(newAssignedAttributes, newAssignedAttributesIds);
-        return Promise.resolve();
-    }
-
     onEditAttribute = (changedAttribute) => {
         const newAssignedAttributes = this.state.assignedAttributes
             .map(attribute => ((attribute.trackedEntityAttribute.id === changedAttribute.trackedEntityAttribute.id)
@@ -91,7 +81,15 @@ class AssignTrackedEntityTypeAttributes extends Component {
         this.updateState(newAssignedAttributes, newAttributesOrderIds);
     }
 
-    getTranslation = value => this.context.d2.i18n.getTranslation(value);
+    onRemoveAttributes = (removedAttributesIds) => {
+        const newAssignedAttributesIds = this.state.assignedAttributesStore.getState()
+            .filter(assignedAttributeId => !removedAttributesIds.includes(assignedAttributeId));
+        const newAssignedAttributes = this.state.assignedAttributes
+            .filter(assignedAttribute => !removedAttributesIds.includes(assignedAttribute.trackedEntityAttribute.id));
+
+        this.updateState(newAssignedAttributes, newAssignedAttributesIds);
+        return Promise.resolve();
+    }
 
     getAttributeModels = assignedAttributes =>
         this.state.availableAttributesStore.getState()
@@ -112,18 +110,10 @@ class AssignTrackedEntityTypeAttributes extends Component {
                 />
             ));
 
+    getTranslation = value => this.context.d2.i18n.getTranslation(value);
+
     setFilterText = (event) => {
         this.setState({ filterText: event.target.value });
-    }
-
-    updateState = (assignedAttributes, assignedAttributesIds) => {
-        assignedAttributesIds && this.state.assignedAttributesStore.setState(assignedAttributesIds);
-        this.updateAssignedState(assignedAttributes);
-        this.signalChangeToParent(assignedAttributes);
-    }
-
-    updateAssignedState = (assignedAttributes) => {
-        this.setState({ assignedAttributes });
     }
 
     signalChangeToParent = (assignedAttributes) => {
@@ -132,6 +122,16 @@ class AssignTrackedEntityTypeAttributes extends Component {
                 value: assignedAttributes,
             },
         });
+    }
+
+    updateAssignedState = (assignedAttributes) => {
+        this.setState({ assignedAttributes });
+    }
+
+    updateState = (assignedAttributes, assignedAttributesIds) => {
+        assignedAttributesIds && this.state.assignedAttributesStore.setState(assignedAttributesIds);
+        this.updateAssignedState(assignedAttributes);
+        this.signalChangeToParent(assignedAttributes);
     }
 
     render() {

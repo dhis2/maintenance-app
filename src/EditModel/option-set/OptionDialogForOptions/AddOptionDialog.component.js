@@ -36,22 +36,6 @@ class AddOptionDialog extends Component {
         }
     }
 
-    onUpdateField = (field, value) => {
-        if (!this.state.changedOriginalFieldValues.hasOwnProperty(field)) {
-            //store the original value so we can change it back if user cancels.
-            this.setState({changedOriginalFieldValues: {...this.state.changedOriginalFieldValues, [field]: this.props.model[field]}});
-        }
-        actions.updateModel(this.props.model, field, value);
-    }
-
-    onSaveSuccess = () => {
-        this.showSuccessMessage();
-        this.setState({ isSaving: false });
-        this.props.onRequestClose();
-        // After the save was successful we request the options from the server to get the updated list
-        actions.getOptionsFor(this.props.parentModel);
-    }
-
     onSaveError = ({ message, translate }) => {
         this.showErrorMessage(message, translate);
         this.setState({ isSaving: false });
@@ -70,6 +54,26 @@ class AddOptionDialog extends Component {
         }
     }
 
+    onSaveSuccess = () => {
+        this.showSuccessMessage();
+        this.setState({ isSaving: false });
+        this.props.onRequestClose();
+        // After the save was successful we request the options from the server to get the updated list
+        actions.getOptionsFor(this.props.parentModel);
+    }
+
+    onUpdateField = (field, value) => {
+        if (!this.state.changedOriginalFieldValues.hasOwnProperty(field)) {
+            //store the original value so we can change it back if user cancels.
+            this.setState({changedOriginalFieldValues: {...this.state.changedOriginalFieldValues, [field]: this.props.model[field]}});
+        }
+        actions.updateModel(this.props.model, field, value);
+    }
+
+    setFormRef = (form) => {
+        this.formRef = form;
+    }
+
     handleCancel = () => {
         const { changedOriginalFieldValues } = this.state;
 
@@ -81,8 +85,12 @@ class AddOptionDialog extends Component {
         this.props.onRequestClose();
     }
 
-    setFormRef = (form) => {
-        this.formRef = form;
+    showErrorMessage = (message, translate) => {
+        snackActions.show({
+            message,
+            action: 'ok',
+            translate,
+        });
     }
 
     showFirstValidationErrorMessage = (invalidFieldMessage) => {
@@ -96,14 +104,6 @@ class AddOptionDialog extends Component {
         snackActions.show({
             message: 'option_saved',
             translate: true,
-        });
-    }
-
-    showErrorMessage = (message, translate) => {
-        snackActions.show({
-            message,
-            action: 'ok',
-            translate,
         });
     }
 

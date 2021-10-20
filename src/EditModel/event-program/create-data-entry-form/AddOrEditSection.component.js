@@ -44,20 +44,17 @@ class AddOrEditSection extends Component {
         }
     }
 
-    onNameChanged = (event, sectionName) => {
-        this.setState({ section: { ...this.state.section, name: sectionName } });
-    };
-
     onDescriptionChanged = (event, sectionDescription) => {
         this.setState({ section: { ...this.state.section, description: sectionDescription } });
+    };
+
+    onNameChanged = (event, sectionName) => {
+        this.setState({ section: { ...this.state.section, name: sectionName } });
     };
 
     onRenderTypeChanged = (newSectionState) => {
         this.setState({ section: newSectionState });
     };
-
-    getTranslation = key =>
-        this.context.d2.i18n.getTranslation(key);
 
     getSaveData() {
         const { section } = this.state;
@@ -73,6 +70,35 @@ class AddOrEditSection extends Component {
             },
         };
     }
+
+    getTranslation = key =>
+        this.context.d2.i18n.getTranslation(key);
+
+    closeDialog = () => {
+        this.props.clearEditingSection();
+        this.setState({ ...initialState });
+    };
+
+    confirmAddNewSection = () => {
+        this.closeDialog();
+        this.props.onSectionAdded(this.state.section);
+    };
+
+    confirmUpdateSection = () => {
+        const { section } = this.state;
+        this.closeDialog();
+        this.props.onSectionUpdated(section.id, section);
+    }
+
+    focusOnSectionName = (input) => {
+        if (input) {
+            setTimeout(() => { input.focus(); }, 20);
+        }
+    };
+
+    openDialog = () => {
+        this.setState({ dialogOpen: true });
+    };
 
     showDialogForEditingModel(editingSection) {
         const { id, name, description, renderType } = editingSection;
@@ -92,32 +118,6 @@ class AddOrEditSection extends Component {
             },
         });
     }
-
-    closeDialog = () => {
-        this.props.clearEditingSection();
-        this.setState({ ...initialState });
-    };
-
-    openDialog = () => {
-        this.setState({ dialogOpen: true });
-    };
-
-    confirmAddNewSection = () => {
-        this.closeDialog();
-        this.props.onSectionAdded(this.state.section);
-    };
-
-    confirmUpdateSection = () => {
-        const { section } = this.state;
-        this.closeDialog();
-        this.props.onSectionUpdated(section.id, section);
-    }
-
-    focusOnSectionName = (input) => {
-        if (input) {
-            setTimeout(() => { input.focus(); }, 20);
-        }
-    };
 
     render = () => {
         const { id, name, description } = this.state.section;

@@ -53,6 +53,10 @@ class CreateDataEntryForm extends Component {
         this.setState({ curTab })
     }
 
+    getTranslation = key => {
+        return this.context.d2.i18n.getTranslation(key);
+    };
+
     programDataElementOrderChanged = ({ oldIndex, newIndex }) => {
         this.props.onChangeDefaultOrder(
             arrayMove(
@@ -72,10 +76,6 @@ class CreateDataEntryForm extends Component {
                 {contentToRender}
             </div>
         </Tab>;
-
-    getTranslation = key => {
-        return this.context.d2.i18n.getTranslation(key);
-    };
 
     render() {
         return (

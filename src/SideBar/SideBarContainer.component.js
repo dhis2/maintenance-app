@@ -46,6 +46,37 @@ class SideBarContainer extends Component {
         return this.state.userOrganisationUnits.toArray().map(v => v.path).concat(this.state.initiallyExpanded || []);
     }
 
+    _onAutoCompleteValueSelected(displayName) {
+        const ouToSelect = (this.state.autoCompleteOrganisationUnits || [])
+            .find(model => model.displayName === displayName);
+
+        if (ouToSelect) {
+            this._onChangeSelectedOrgUnit(null, ouToSelect);
+        }
+    }
+
+    _onChangeSection(newSection) {
+        onSectionChanged({
+            section: this.state.currentSection,
+            subSection: newSection,
+        });
+    }
+
+    _onChangeSelectedOrgUnit(event, model) {
+        setAppState({
+            selectedOrganisationUnit: model,
+        });
+
+        this.setState({
+            initiallyExpanded: model.path || [],
+        });
+    }
+
+    _searchOrganisationUnits(searchValue) {
+        onOrgUnitSearch(searchValue)
+            .subscribe(() => {}, e => console.error(e));
+    }
+
     renderSidebarItems() {
         if (this.state.currentSubSection === 'organisationUnit' && !/#\/edit\//.test(document.location.hash)) {
             if (this.state.userOrganisationUnits && this.state.selectedOrganisationUnit) {
@@ -97,37 +128,6 @@ class SideBarContainer extends Component {
             );
         }
         return null;
-    }
-
-    _searchOrganisationUnits(searchValue) {
-        onOrgUnitSearch(searchValue)
-            .subscribe(() => {}, e => console.error(e));
-    }
-
-    _onChangeSelectedOrgUnit(event, model) {
-        setAppState({
-            selectedOrganisationUnit: model,
-        });
-
-        this.setState({
-            initiallyExpanded: model.path || [],
-        });
-    }
-
-    _onAutoCompleteValueSelected(displayName) {
-        const ouToSelect = (this.state.autoCompleteOrganisationUnits || [])
-            .find(model => model.displayName === displayName);
-
-        if (ouToSelect) {
-            this._onChangeSelectedOrgUnit(null, ouToSelect);
-        }
-    }
-
-    _onChangeSection(newSection) {
-        onSectionChanged({
-            section: this.state.currentSection,
-            subSection: newSection,
-        });
     }
 
     render() {

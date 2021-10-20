@@ -51,6 +51,32 @@ export default class IconPickerDialog extends Component {
             });
     }
 
+    handleCancel = () => {
+        this.setState({
+            selectedIconKey: this.props.iconKey //if cancelling revert back to original icon
+        });
+        this.handleClose();
+    }
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
+    handleConfirm = () => {
+        this.setState({ iconKey: this.state.selectedIconKey });
+        this.props.updateStyleState({ icon: this.state.selectedIconKey });
+        this.handleClose();
+    }
+
+    handleDeselect = () => {
+        this.setState({ iconKey: '' });
+        this.props.updateStyleState({ icon: '' });
+    }
+
+    handleIconSelect = (iconKey) => {
+        this.setState({ selectedIconKey: iconKey });
+    };
+
     handleOpen = () => {
         this.setState({ open: true });
 
@@ -59,37 +85,16 @@ export default class IconPickerDialog extends Component {
         }
     };
 
-    handleClose = () => {
-        this.setState({ open: false });
-    };
-
-    handleCancel = () => {
-        this.setState({
-            selectedIconKey: this.props.iconKey //if cancelling revert back to original icon
-        });
-        this.handleClose();
+    handleTextFilterChange = (event) => {
+        this.setState({ textFilter: event.target.value });
+        this.debouncedUpdateTextFilter();
     }
-
-    handleConfirm = () => {
-        this.setState({ iconKey: this.state.selectedIconKey });
-        this.props.updateStyleState({ icon: this.state.selectedIconKey });
-        this.handleClose();
-    }
-
-    handleIconSelect = (iconKey) => {
-        this.setState({ selectedIconKey: iconKey });
-    };
 
     handleTypeFilterClick = (type) => {
         this.setState({
             iconTypeFilter: type,
             icons: filterIcons(this.iconsCache[type], this.state.textFilter),
         });
-    }
-
-    handleTextFilterChange = (event) => {
-        this.setState({ textFilter: event.target.value });
-        this.debouncedUpdateTextFilter();
     }
 
     updateTextFilter = () => {
@@ -99,24 +104,19 @@ export default class IconPickerDialog extends Component {
         });
     }
 
-    renderIconButtonImage = (iconKey) => {
-        const contextPath = this.context.d2.system.systemInfo.contextPath;
-        const altText = this.context.d2.i18n.getTranslation('current_icon');
-        const fallbackIconPath = `${contextPath}/api/icons/dhis2_logo_outline/icon.svg`
-        return (
-            <img
-                src={`${contextPath}/api/icons/${iconKey}/icon.svg`}
-                alt={altText}
-                className="icon-picker__icon-button-image"
-                style={{ backgroundColor: 'white', overflow: 'hidden' }}
-                onError={({ target }) => {
-                    target.onerror = "";
-                    target.src=fallbackIconPath;
-                    return true;
-                }}
-            />
-        );
-    };
+    renderActions = () => (
+        [
+            <RaisedButton
+                label={this.context.d2.i18n.getTranslation('select')}
+                primary
+                onClick={this.handleConfirm}
+            />,
+            <FlatButton
+                label={this.context.d2.i18n.getTranslation('cancel')}
+                onClick={this.handleCancel}
+            />,
+        ]
+    )
 
     renderIconButton = () => {
         const { iconKey } = this.state;
@@ -178,50 +178,24 @@ export default class IconPickerDialog extends Component {
         return buttons;
     }
 
-    handleDeselect = () => {
-        this.setState({ iconKey: '' });
-        this.props.updateStyleState({ icon: '' });
-    }
-
-    renderActions = () => (
-        [
-            <RaisedButton
-                label={this.context.d2.i18n.getTranslation('select')}
-                primary
-                onClick={this.handleConfirm}
-            />,
-            <FlatButton
-                label={this.context.d2.i18n.getTranslation('cancel')}
-                onClick={this.handleCancel}
-            />,
-        ]
-    )
-
-    renderTypeFilter = () => (
-        <div className="icon-picker__filter-button-wrap">
-            {
-                ['all', 'positive', 'negative', 'outline'].map(type => (
-                    <FlatButton
-                        key={type}
-                        label={this.context.d2.i18n.getTranslation(`icons_${type}`)}
-                        primary={type === this.state.iconTypeFilter}
-                        /* eslint-disable */
-                        onClick={() => this.handleTypeFilterClick(type)}
-                        /* eslint-enable */
-                    />
-                ))
-            }
-        </div>
-    )
-
-    renderTextFilter = () => (
-        <TextField
-            type="search"
-            floatingLabelText={this.context.d2.i18n.getTranslation('icon_search')}
-            value={this.state.textFilter}
-            onChange={this.handleTextFilterChange}
-        />
-    )
+    renderIconButtonImage = (iconKey) => {
+        const contextPath = this.context.d2.system.systemInfo.contextPath;
+        const altText = this.context.d2.i18n.getTranslation('current_icon');
+        const fallbackIconPath = `${contextPath}/api/icons/dhis2_logo_outline/icon.svg`
+        return (
+            <img
+                src={`${contextPath}/api/icons/${iconKey}/icon.svg`}
+                alt={altText}
+                className="icon-picker__icon-button-image"
+                style={{ backgroundColor: 'white', overflow: 'hidden' }}
+                onError={({ target }) => {
+                    target.onerror = "";
+                    target.src=fallbackIconPath;
+                    return true;
+                }}
+            />
+        );
+    };
 
     renderIconLibrary = () => {
         const { icons, selectedIconKey } = this.state;
@@ -246,6 +220,32 @@ export default class IconPickerDialog extends Component {
             </div>
         );
     }
+
+    renderTextFilter = () => (
+        <TextField
+            type="search"
+            floatingLabelText={this.context.d2.i18n.getTranslation('icon_search')}
+            value={this.state.textFilter}
+            onChange={this.handleTextFilterChange}
+        />
+    )
+
+    renderTypeFilter = () => (
+        <div className="icon-picker__filter-button-wrap">
+            {
+                ['all', 'positive', 'negative', 'outline'].map(type => (
+                    <FlatButton
+                        key={type}
+                        label={this.context.d2.i18n.getTranslation(`icons_${type}`)}
+                        primary={type === this.state.iconTypeFilter}
+                        /* eslint-disable */
+                        onClick={() => this.handleTypeFilterClick(type)}
+                        /* eslint-enable */
+                    />
+                ))
+            }
+        </div>
+    )
 
     render() {
         return (

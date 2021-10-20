@@ -52,10 +52,10 @@ class SqlView extends Component {
         }
     }
 
-    openFileLink(file) {
-        const { params: { modelId } } = this.props;
-        this.closeDownloadMenu();
-        window.open(`../api/sqlViews/${modelId}/${file}`, '_blank');
+    closeDownloadMenu = () => {
+        this.setState({
+            downloadMenuOpen: false,
+        });
     }
 
     openDownloadMenu = (event) => {
@@ -65,30 +65,19 @@ class SqlView extends Component {
         });
     }
 
-    closeDownloadMenu = () => {
-        this.setState({
-            downloadMenuOpen: false,
-        });
+    openFileLink(file) {
+        const { params: { modelId } } = this.props;
+        this.closeDownloadMenu();
+        window.open(`../api/sqlViews/${modelId}/${file}`, '_blank');
     }
 
-    renderHeader() {
-        const { title } = this.state.listGrid;
-        const { d2 } = this.context;
-        const headerText = `${d2.i18n.getTranslation('view_data_for')} "${title}"`;
-        return (
-            <div className="sql-view__header">
-                <FormHeading
-                    level={1}
-                    groupName="otherSection"
-                    schema="sqlView"
-                    skipTranslation
-                >
-                    {headerText}
-                </FormHeading>
-                {this.renderDropDownButton()}
-            </div>
-        );
-    }
+    /* eslint-disable react/no-array-index-key */
+    renderCell = (cell, index) => {
+        const isObject = typeof cell === 'object' && cell != null;
+        const formattedValue = isObject ? JSON.stringify(cell, null, 2) : cell;
+
+        return <td key={`cell${index}`}>{formattedValue}</td>;
+    };
 
     renderDropDownButton() {
         const { d2 } = this.context;
@@ -136,13 +125,24 @@ class SqlView extends Component {
         ));
     }
 
-    /* eslint-disable react/no-array-index-key */
-    renderCell = (cell, index) => {
-        const isObject = typeof cell === 'object' && cell != null;
-        const formattedValue = isObject ? JSON.stringify(cell, null, 2) : cell;
-
-        return <td key={`cell${index}`}>{formattedValue}</td>;
-    };
+    renderHeader() {
+        const { title } = this.state.listGrid;
+        const { d2 } = this.context;
+        const headerText = `${d2.i18n.getTranslation('view_data_for')} "${title}"`;
+        return (
+            <div className="sql-view__header">
+                <FormHeading
+                    level={1}
+                    groupName="otherSection"
+                    schema="sqlView"
+                    skipTranslation
+                >
+                    {headerText}
+                </FormHeading>
+                {this.renderDropDownButton()}
+            </div>
+        );
+    }
 
     renderRow = (row, index) => (
         <tr key={`row${index}`}>{row.map(this.renderCell)}</tr>

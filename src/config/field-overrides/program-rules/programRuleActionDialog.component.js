@@ -235,6 +235,79 @@ class ProgramRuleActionDialog extends Component {
         }
     }
 
+    getFilteredByOptionSetOrAll(models) {
+        if (!models) return [];
+        const ruleAction = this.state.programRuleAction;
+        if (shouldFilterOnOptionSet(ruleAction)) {
+            const filtered = models.filter(
+                elem => elem.model && elem.model.optionSet
+            );
+            return filtered;
+        }
+        return models;
+    }
+
+    getRelatedOptionSetFromSelected = () => {
+        const ruleAction = this.state.programRuleAction;
+        const selectedDEId = ruleAction.dataElement;
+        const seleactedTeaId = ruleAction.trackedEntityAttribute;
+
+        if (
+            (!selectedDEId && !seleactedTeaId) ||
+            (selectedDEId &&
+                !selectedDEId.model &&
+                (seleactedTeaId && !seleactedTeaId.model))
+        ) {
+            return null;
+        }
+        let relatedOptionSet;
+        //Get the optionSet that is related to either dataElement or trackedEntityAttribute
+        if (ruleAction.dataElement) {
+            const relatedToOptionSetID = ruleAction.dataElement;
+            const dataElement = this.state.programDataElements.find(
+                d => d.model.id === relatedToOptionSetID
+            );
+            relatedOptionSet = dataElement.model.optionSet;
+        } else if (ruleAction.trackedEntityAttribute) {
+            const relatedToOptionSetID = ruleAction.trackedEntityAttribute;
+            const teaObj = this.state.programTrackedEntityAttributes.find(
+                d => d.model.id === relatedToOptionSetID
+            );
+            relatedOptionSet = teaObj.model.optionSet;
+        }
+        return relatedOptionSet;
+    };
+
+    optionGroupDropdownGetter = async () => {
+        let relatedOptionSet = this.getRelatedOptionSetFromSelected();
+        if (!relatedOptionSet) return null;
+        //load optiongroups related to optionSet
+        this.setState({ loading: true });
+        const optionGroups = await this.d2.models.optionGroup.list({
+            fields: 'id,displayName,options[id,optionSet]',
+            filter: `options.optionSet.id:eq:${relatedOptionSet.id}`,
+            paging: false,
+        });
+        const withDisplay = optionGroups.toArray().map(toDisplay);
+        this.setState({ optionGroups: withDisplay, loading: false });
+        return withDisplay;
+    };
+
+    optionsDropdownGetter = async () => {
+        let relatedOptionSet = this.getRelatedOptionSetFromSelected();
+        if (!relatedOptionSet) return null;
+        //load options related to optionSet
+        this.setState({ loading: true });
+        const options = await this.d2.models.options.list({
+            fields: 'id,displayName',
+            filter: `optionSet.id:eq:${relatedOptionSet.id}`,
+            paging: false,
+        });
+        const withDisplay = options.toArray().map(toDisplay);
+        this.setState({ options: withDisplay, loading: false });
+        return withDisplay;
+    };
+
     save = async () => {
         const programRuleAction = this.state.programRuleAction;
 
@@ -396,79 +469,6 @@ class ProgramRuleActionDialog extends Component {
             }));
         }
     };
-
-    getRelatedOptionSetFromSelected = () => {
-        const ruleAction = this.state.programRuleAction;
-        const selectedDEId = ruleAction.dataElement;
-        const seleactedTeaId = ruleAction.trackedEntityAttribute;
-
-        if (
-            (!selectedDEId && !seleactedTeaId) ||
-            (selectedDEId &&
-                !selectedDEId.model &&
-                (seleactedTeaId && !seleactedTeaId.model))
-        ) {
-            return null;
-        }
-        let relatedOptionSet;
-        //Get the optionSet that is related to either dataElement or trackedEntityAttribute
-        if (ruleAction.dataElement) {
-            const relatedToOptionSetID = ruleAction.dataElement;
-            const dataElement = this.state.programDataElements.find(
-                d => d.model.id === relatedToOptionSetID
-            );
-            relatedOptionSet = dataElement.model.optionSet;
-        } else if (ruleAction.trackedEntityAttribute) {
-            const relatedToOptionSetID = ruleAction.trackedEntityAttribute;
-            const teaObj = this.state.programTrackedEntityAttributes.find(
-                d => d.model.id === relatedToOptionSetID
-            );
-            relatedOptionSet = teaObj.model.optionSet;
-        }
-        return relatedOptionSet;
-    };
-
-    optionsDropdownGetter = async () => {
-        let relatedOptionSet = this.getRelatedOptionSetFromSelected();
-        if (!relatedOptionSet) return null;
-        //load options related to optionSet
-        this.setState({ loading: true });
-        const options = await this.d2.models.options.list({
-            fields: 'id,displayName',
-            filter: `optionSet.id:eq:${relatedOptionSet.id}`,
-            paging: false,
-        });
-        const withDisplay = options.toArray().map(toDisplay);
-        this.setState({ options: withDisplay, loading: false });
-        return withDisplay;
-    };
-
-    optionGroupDropdownGetter = async () => {
-        let relatedOptionSet = this.getRelatedOptionSetFromSelected();
-        if (!relatedOptionSet) return null;
-        //load optiongroups related to optionSet
-        this.setState({ loading: true });
-        const optionGroups = await this.d2.models.optionGroup.list({
-            fields: 'id,displayName,options[id,optionSet]',
-            filter: `options.optionSet.id:eq:${relatedOptionSet.id}`,
-            paging: false,
-        });
-        const withDisplay = optionGroups.toArray().map(toDisplay);
-        this.setState({ optionGroups: withDisplay, loading: false });
-        return withDisplay;
-    };
-
-    getFilteredByOptionSetOrAll(models) {
-        if (!models) return [];
-        const ruleAction = this.state.programRuleAction;
-        if (shouldFilterOnOptionSet(ruleAction)) {
-            const filtered = models.filter(
-                elem => elem.model && elem.model.optionSet
-            );
-            return filtered;
-        }
-        return models;
-    }
 
     render() {
         const modelDefinition = this.d2.models.programRuleActions;

@@ -160,6 +160,31 @@ class ExpressionManager extends Component {
             this.expressionStatusDisposable.unsubscribe();
     }
 
+    addOperatorToFormula = operator => {
+        this.appendToFormula(operator);
+    };
+
+    appendToFormula = partToAppend => {
+        this.setState(
+            {
+                formula: [this.state.formula, partToAppend].join(''),
+            },
+            () => {
+                this.requestExpressionStatus();
+            }
+        );
+    };
+
+    dataElementOperandSelected = dataElementOperandId => {
+        const dataElementOperandFormula = [
+            '#{',
+            dataElementOperandId,
+            '}',
+        ].join('');
+
+        this.appendToFormula(dataElementOperandFormula);
+    };
+
     descriptionChange = newDescription => {
         this.setState(
             {
@@ -186,33 +211,8 @@ class ExpressionManager extends Component {
         );
     };
 
-    addOperatorToFormula = operator => {
-        this.appendToFormula(operator);
-    };
-
     programOperandSelected = programFormulaPart => {
         this.appendToFormula(programFormulaPart);
-    };
-
-    appendToFormula = partToAppend => {
-        this.setState(
-            {
-                formula: [this.state.formula, partToAppend].join(''),
-            },
-            () => {
-                this.requestExpressionStatus();
-            }
-        );
-    };
-
-    dataElementOperandSelected = dataElementOperandId => {
-        const dataElementOperandFormula = [
-            '#{',
-            dataElementOperandId,
-            '}',
-        ].join('');
-
-        this.appendToFormula(dataElementOperandFormula);
     };
 
     requestExpressionStatus = () => {

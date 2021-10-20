@@ -15,6 +15,11 @@ export default class ContextMenuHeader extends Component {
         open: false,
     };
 
+    handleAction = (action) => {
+        this.handleRequestClose()
+        action();
+    }
+
     handleOpen = event => {
         // This prevents ghost click.
         event.preventDefault();
@@ -30,11 +35,6 @@ export default class ContextMenuHeader extends Component {
             open: false,
         });
     };
-
-    handleAction = (action) => {
-        this.handleRequestClose()
-        action();
-    }
 
     render() {
         const actions = this.props.actions.map(action => (

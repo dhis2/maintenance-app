@@ -10,14 +10,14 @@ class ExpressionField extends Component {
         value: this.props.value,
     };
 
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
     handleOpen = () => {
         // Clear previous expression validation status
         expressionStatusStore.setState({});
         this.setState({ open: true, value: this.props.value });
-    };
-
-    handleClose = () => {
-        this.setState({ open: false });
     };
 
     handleSaveAndClose = () => {

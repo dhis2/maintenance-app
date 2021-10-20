@@ -41,13 +41,6 @@ class TrackerNotificationAddButton extends Component {
         };
     }
 
-    handleOpen = ({ isOpen }) => {
-        this.setState({
-            ...this.state,
-            open: isOpen,
-        });
-    };
-
     handleItemClick = (item, event) => {
         this.setState({
             ...this.state,
@@ -55,6 +48,13 @@ class TrackerNotificationAddButton extends Component {
         });
 
         this.props.onAddClick(item);
+    };
+
+    handleOpen = ({ isOpen }) => {
+        this.setState({
+            ...this.state,
+            open: isOpen,
+        });
     };
 
     render() {

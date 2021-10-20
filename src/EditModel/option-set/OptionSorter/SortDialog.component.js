@@ -147,73 +147,8 @@ class SortDialog extends Component {
         });
     }
 
-    moveOption = (dragId, targetId) => {
-        const dragIndex = this.state.options.findIndex(option => option.id === dragId);
-        const targetIndex = this.state.options.findIndex(option => option.id === targetId);
-        const dragOption = this.state.options[dragIndex];
-
-        const newList = [...this.state.options];
-
-        newList.splice(dragIndex, 1);
-        newList.splice(targetIndex, 0, dragOption);
-
-        this.setState({
-            options: newList,
-        });
-    }
-
-    render() {
-        return (
-            <Dialog
-                open={this.props.open}
-                onRequestClose={() => setSortDialogOpenTo(false)}
-                autoScrollBodyContent
-                style={{ height: '90%' }}
-                modal
-            >
-                <Heading>{this.i18n.getTranslation('sorting')}</Heading>
-                {this.renderDialogContent()}
-                <div style={styles.actionButtonWrap}>
-                    {this.isShowSaveButton() ? <RaisedButton
-                        style={styles.actionButton}
-                        disabled={this.props.isSaving}
-                        onClick={this._saveOptionOrder}
-                        primary
-                        label={this.i18n.getTranslation(this.props.isSaving ? 'saving' : 'save')}
-                    /> : undefined}
-                    <RaisedButton
-                        style={styles.actionButton}
-                        disabled={this.props.isSaving}
-                        label={this.i18n.getTranslation('close')}
-                        onClick={this._closeDialog}
-                    />
-                </div>
-            </Dialog>
-        );
-    }
-
-    renderDialogContent() {
-        if (this.props.isLoading) {
-            return (
-                <div>
-                    {this.props.isLoading ? <LinearProgress /> : undefined}
-                </div>
-            );
-        }
-
-        if (!this.props.onePage) {
-            return (
-                <div style={{ padding: '1rem 0' }}>{this.i18n.getTranslation('manual_sorting_is_not_available_for_option_sets_with_more_than_50_options')}</div>
-            );
-        }
-
-        return (
-            <SortableList options={this.state.options} moveOption={this.moveOption} />
-        );
-    }
-
-    isShowSaveButton() {
-        return !this.props.isLoading && this.props.onePage;
+    _closeDialog() {
+        setSortDialogOpenTo(false);
     }
 
     _saveOptionOrder = () => {
@@ -266,8 +201,73 @@ class SortDialog extends Component {
             });
     }
 
-    _closeDialog() {
-        setSortDialogOpenTo(false);
+    isShowSaveButton() {
+        return !this.props.isLoading && this.props.onePage;
+    }
+
+    moveOption = (dragId, targetId) => {
+        const dragIndex = this.state.options.findIndex(option => option.id === dragId);
+        const targetIndex = this.state.options.findIndex(option => option.id === targetId);
+        const dragOption = this.state.options[dragIndex];
+
+        const newList = [...this.state.options];
+
+        newList.splice(dragIndex, 1);
+        newList.splice(targetIndex, 0, dragOption);
+
+        this.setState({
+            options: newList,
+        });
+    }
+
+    renderDialogContent() {
+        if (this.props.isLoading) {
+            return (
+                <div>
+                    {this.props.isLoading ? <LinearProgress /> : undefined}
+                </div>
+            );
+        }
+
+        if (!this.props.onePage) {
+            return (
+                <div style={{ padding: '1rem 0' }}>{this.i18n.getTranslation('manual_sorting_is_not_available_for_option_sets_with_more_than_50_options')}</div>
+            );
+        }
+
+        return (
+            <SortableList options={this.state.options} moveOption={this.moveOption} />
+        );
+    }
+
+    render() {
+        return (
+            <Dialog
+                open={this.props.open}
+                onRequestClose={() => setSortDialogOpenTo(false)}
+                autoScrollBodyContent
+                style={{ height: '90%' }}
+                modal
+            >
+                <Heading>{this.i18n.getTranslation('sorting')}</Heading>
+                {this.renderDialogContent()}
+                <div style={styles.actionButtonWrap}>
+                    {this.isShowSaveButton() ? <RaisedButton
+                        style={styles.actionButton}
+                        disabled={this.props.isSaving}
+                        onClick={this._saveOptionOrder}
+                        primary
+                        label={this.i18n.getTranslation(this.props.isSaving ? 'saving' : 'save')}
+                    /> : undefined}
+                    <RaisedButton
+                        style={styles.actionButton}
+                        disabled={this.props.isSaving}
+                        label={this.i18n.getTranslation('close')}
+                        onClick={this._closeDialog}
+                    />
+                </div>
+            </Dialog>
+        );
     }
 }
 

@@ -106,61 +106,13 @@ class SectionDialog extends Component {
         assignedIndicatorStore.setState(indicators);
     }
 
-    removeIndicators = (indicators) => {
-        assignedIndicatorStore.setState(assignedIndicatorStore.state.filter(i => indicators.indexOf(i) === -1));
-        return Promise.resolve();
-    }
-
-    assignIndicators = (indicators) => {
-        assignedIndicatorStore.setState(assignedIndicatorStore.state.concat(indicators));
-        return Promise.resolve();
-    }
-
-    handleRowTotalsChange = (e, value) => {
-        this.setState({ showRowTotals: value });
-    }
-
-    handleColumnTotalsChange = (e, value) => {
-        this.setState({ showColumnTotals: value });
-    }
-
-    handleFilterChange = (e) => {
-        this.setState({ filterText: e.target.value });
-    }
-
-    handleNameChange = (e) => {
-        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
-            ? modelToEditStore.getState().sections
-            : modelToEditStore.getState().sections.toArray();
-        const nameDupe = sectionArray
-            .filter(s => s.id !== this.props.sectionModel.id)
-            .reduce((res, s) => res || s.name === e.target.value, false);
-
-        this.setState({ name: e.target.value, nameError: nameDupe ? this.getTranslation('value_not_unique') : '' });
-    }
-
-    handleCodeChange = (e) => {
-        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
-            ? modelToEditStore.getState().sections
-            : modelToEditStore.getState().sections.toArray();
-        const codeDupe = sectionArray
-            .filter(s => s.id !== this.props.sectionModel.id)
-            .reduce((res, s) => res || (s.code && s.code === e.target.value), false);
-
-        this.setState({ code: e.target.value, codeError: codeDupe ? this.getTranslation('value_not_unique') : '' });
-    }
-
-    handleDescriptionChange = (e) => {
-        this.setState({ description: e.target.value });
-    }
-
     assignDataElements = (dataElements) => {
         assignedDataElementStore.setState(assignedDataElementStore.state.concat(dataElements));
         return Promise.resolve();
     }
 
-    removeDataElements = (dataElements) => {
-        assignedDataElementStore.setState(assignedDataElementStore.state.filter(de => dataElements.indexOf(de) === -1));
+    assignIndicators = (indicators) => {
+        assignedIndicatorStore.setState(assignedIndicatorStore.state.concat(indicators));
         return Promise.resolve();
     }
 
@@ -190,6 +142,54 @@ class SectionDialog extends Component {
         this.setState({
             categoryCombo: categoryComboId,
         });
+    }
+
+    handleCodeChange = (e) => {
+        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
+            ? modelToEditStore.getState().sections
+            : modelToEditStore.getState().sections.toArray();
+        const codeDupe = sectionArray
+            .filter(s => s.id !== this.props.sectionModel.id)
+            .reduce((res, s) => res || (s.code && s.code === e.target.value), false);
+
+        this.setState({ code: e.target.value, codeError: codeDupe ? this.getTranslation('value_not_unique') : '' });
+    }
+
+    handleColumnTotalsChange = (e, value) => {
+        this.setState({ showColumnTotals: value });
+    }
+
+    handleDescriptionChange = (e) => {
+        this.setState({ description: e.target.value });
+    }
+
+    handleFilterChange = (e) => {
+        this.setState({ filterText: e.target.value });
+    }
+
+    handleNameChange = (e) => {
+        const sectionArray = Array.isArray(modelToEditStore.getState().sections)
+            ? modelToEditStore.getState().sections
+            : modelToEditStore.getState().sections.toArray();
+        const nameDupe = sectionArray
+            .filter(s => s.id !== this.props.sectionModel.id)
+            .reduce((res, s) => res || s.name === e.target.value, false);
+
+        this.setState({ name: e.target.value, nameError: nameDupe ? this.getTranslation('value_not_unique') : '' });
+    }
+
+    handleRowTotalsChange = (e, value) => {
+        this.setState({ showRowTotals: value });
+    }
+
+    removeDataElements = (dataElements) => {
+        assignedDataElementStore.setState(assignedDataElementStore.state.filter(de => dataElements.indexOf(de) === -1));
+        return Promise.resolve();
+    }
+
+    removeIndicators = (indicators) => {
+        assignedIndicatorStore.setState(assignedIndicatorStore.state.filter(i => indicators.indexOf(i) === -1));
+        return Promise.resolve();
     }
 
     saveSection = () => {
@@ -241,31 +241,6 @@ class SectionDialog extends Component {
             });
     }
 
-    renderFilters = () => {
-        const catCombos = [{ value: false, text: this.getTranslation('no_filter') }]
-            .concat(this.props.categoryCombos.sort((a, b) => a.text.localeCompare(b.text)));
-
-        return (
-            <div style={{ minWidth: 605 }}>
-                <DropDown
-                    options={catCombos}
-                    labelText={this.getTranslation('category_combo_filter')}
-                    onChange={this.handleCategoryComboChange}
-                    value={this.state.categoryCombo}
-                    isRequired
-                    disabled={this.props.categoryCombos.length === 1}
-                    style={{ width: 284 }}
-                />
-                <TextField
-                    fullWidth
-                    hintText={this.getTranslation('search_available_selected_items')}
-                    defaultValue={this.state.filterText}
-                    onChange={this.handleFilterChange}
-                />
-            </div>
-        );
-    }
-
     renderAvailableOptions = () => {
         const labelStyle = {
             position: 'relative',
@@ -309,6 +284,31 @@ class SectionDialog extends Component {
                         />
                     </div>
                 ) : null}
+            </div>
+        );
+    }
+
+    renderFilters = () => {
+        const catCombos = [{ value: false, text: this.getTranslation('no_filter') }]
+            .concat(this.props.categoryCombos.sort((a, b) => a.text.localeCompare(b.text)));
+
+        return (
+            <div style={{ minWidth: 605 }}>
+                <DropDown
+                    options={catCombos}
+                    labelText={this.getTranslation('category_combo_filter')}
+                    onChange={this.handleCategoryComboChange}
+                    value={this.state.categoryCombo}
+                    isRequired
+                    disabled={this.props.categoryCombos.length === 1}
+                    style={{ width: 284 }}
+                />
+                <TextField
+                    fullWidth
+                    hintText={this.getTranslation('search_available_selected_items')}
+                    defaultValue={this.state.filterText}
+                    onChange={this.handleFilterChange}
+                />
             </div>
         );
     }

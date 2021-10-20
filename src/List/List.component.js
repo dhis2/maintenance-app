@@ -235,17 +235,27 @@ class List extends Component {
 
     getTranslation = key => this.context.d2.i18n.getTranslation(key);
 
-    registerDisposable(disposable) {
-        this.observerDisposables.push(disposable);
+    closeDataElementOperandDialog = () => {
+        dataElementOperandStore.setState(Object.assign({}, dataElementOperandStore.state, {
+            open: false,
+        }));
     }
 
-    translationSaved = () => {
-        snackActions.show({ message: 'translation_saved', translate: true });
+    closeSharingDialog = (sharingState) => {
+        const model = sharingState
+            ? Object.assign(sharingStore.state.model, { publicAccess: sharingState.publicAccess })
+            : sharingStore.state.model;
+
+        sharingStore.setState(Object.assign({}, sharingStore.state, {
+            model,
+            open: false,
+        }));
     }
 
-    translationError = (errorMessage) => {
-        log.error(errorMessage);
-        snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
+    closeTranslationDialog = () => {
+        translationStore.setState(Object.assign({}, translationStore.state, {
+            open: false,
+        }));
     }
 
     isContextActionAllowed = (model, action) => {
@@ -312,6 +322,10 @@ class List extends Component {
         }
     }
 
+    registerDisposable(disposable) {
+        this.observerDisposables.push(disposable);
+    }
+
     searchListByName = (searchObserver) => {
         const searchListByNameDisposable = searchObserver
             .subscribe((value) => {
@@ -326,27 +340,37 @@ class List extends Component {
         this.registerDisposable(searchListByNameDisposable);
     }
 
-    closeTranslationDialog = () => {
-        translationStore.setState(Object.assign({}, translationStore.state, {
-            open: false,
-        }));
+    translationError = (errorMessage) => {
+        log.error(errorMessage);
+        snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
     }
 
-    closeSharingDialog = (sharingState) => {
-        const model = sharingState
-            ? Object.assign(sharingStore.state.model, { publicAccess: sharingState.publicAccess })
-            : sharingStore.state.model;
-
-        sharingStore.setState(Object.assign({}, sharingStore.state, {
-            model,
-            open: false,
-        }));
+    translationSaved = () => {
+        snackActions.show({ message: 'translation_saved', translate: true });
     }
 
-    closeDataElementOperandDialog = () => {
-        dataElementOperandStore.setState(Object.assign({}, dataElementOperandStore.state, {
-            open: false,
-        }));
+    renderContextMenuHeader() {
+        const { modelDefinition } = this.state;
+        const queryParamFilters = modelDefinition.filters.getQueryFilterValues();
+        const downloadObjectProps = {
+            name: modelDefinition.name,
+            pluralName: modelDefinition.plural,
+            queryParamFilters,
+            objectCount: this.state.pager.total
+        }
+        const actions = [
+            {
+                title: this.getTranslation('manage_columns'),
+                icon: 'view_column',
+                action: this.props.openColumnsDialog
+            },
+            {
+                title: this.getTranslation('download'),
+                icon: 'get_app',
+                action: () => this.props.openDialog(DIALOGTYPES.DOWNLOAD_OBJECT, downloadObjectProps)
+            },
+        ]
+        return <ContextMenuHeader actions={actions} />
     }
 
     renderFilters = () => {
@@ -406,30 +430,6 @@ class List extends Component {
                 })}
             </div>
         );
-    }
-
-    renderContextMenuHeader() {
-        const { modelDefinition } = this.state;
-        const queryParamFilters = modelDefinition.filters.getQueryFilterValues();
-        const downloadObjectProps = {
-            name: modelDefinition.name,
-            pluralName: modelDefinition.plural,
-            queryParamFilters,
-            objectCount: this.state.pager.total
-        }
-        const actions = [
-            {
-                title: this.getTranslation('manage_columns'),
-                icon: 'view_column',
-                action: this.props.openColumnsDialog
-            },
-            {
-                title: this.getTranslation('download'),
-                icon: 'get_app',
-                action: () => this.props.openDialog(DIALOGTYPES.DOWNLOAD_OBJECT, downloadObjectProps)
-            },
-        ]
-        return <ContextMenuHeader actions={actions} />
     }
 
     render() {

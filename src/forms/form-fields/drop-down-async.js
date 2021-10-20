@@ -49,17 +49,6 @@ class DropDownAsync extends Component {
         this.omgLikeJustStop = true;
     }
 
-    onRefreshClick = (e, props = this.props) => {
-        this.setState({
-            isRefreshing: true,
-        });
-
-        this.loadOptions(props)
-            .then((opts) => {
-                this.setState({ isRefreshing: false })
-            });
-    }
-
     onChange = (event) => {
         if (event.target.value === null) {
             this.props.onChange({
@@ -78,6 +67,17 @@ class DropDownAsync extends Component {
                 },
             });
         }
+    }
+
+    onRefreshClick = (e, props = this.props) => {
+        this.setState({
+            isRefreshing: true,
+        });
+
+        this.loadOptions(props)
+            .then((opts) => {
+                this.setState({ isRefreshing: false })
+            });
     }
 
     loadOptions(props = this.props) {

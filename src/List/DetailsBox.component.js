@@ -7,7 +7,11 @@ import FontIcon from 'material-ui/FontIcon/FontIcon';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
 class DetailsBox extends Component {
-    getTranslation = key => this.context.d2.i18n.getTranslation(key);
+    getDateString = (dateValue) => {
+        const stringifiedDate = new Date(dateValue).toString();
+
+        return stringifiedDate === 'Invalid Date' ? dateValue : stringifiedDate;
+    };
 
     getDetailBoxContent = () => {
         if (!this.props.source) {
@@ -30,11 +34,9 @@ class DetailsBox extends Component {
             });
     }
 
-    getDateString = (dateValue) => {
-        const stringifiedDate = new Date(dateValue).toString();
-
-        return stringifiedDate === 'Invalid Date' ? dateValue : stringifiedDate;
-    };
+    // Suffix the url with the .json extension to always get the json representation of the api resource
+    getJsonApiResource = value =>
+        <a style={{ wordBreak: 'break-all' }} href={`${value}.json`} rel="noopener noreferrer" target="_blank" >{value}</a>;
 
     getNamesToDisplay = (value) => {
         const namesToDisplay = value
@@ -47,9 +49,7 @@ class DetailsBox extends Component {
         );
     }
 
-    // Suffix the url with the .json extension to always get the json representation of the api resource
-    getJsonApiResource = value =>
-        <a style={{ wordBreak: 'break-all' }} href={`${value}.json`} rel="noopener noreferrer" target="_blank" >{value}</a>;
+    getTranslation = key => this.context.d2.i18n.getTranslation(key);
 
     getValueToRender = (fieldName, value) => {
         if (Array.isArray(value) && value.length) {

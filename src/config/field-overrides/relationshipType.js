@@ -153,15 +153,25 @@ class Constraint extends Component {
         this.setState({ loading: false });
     }
 
-    getSelectedRelationshipEntity = () => {
-        const props = this.props;
-        return (props.value && props.value.relationshipEntity) || null;
-    };
+    getFilterForModelType(entityModelProps) {
+        const filter = entityModelProps.filter;
+        if (typeof filter === 'function') {
+            return filter(this.props, this.state);
+        } else if (Array.isArray(filter)) {
+            return filter;
+        }
+        return null;
+    }
 
     getSelectedIDForModelType = modelType => {
         // We use state here, since program and programStage cannot be selected
         // at the same time (for the actual posted value). See constructor comment
         return (this.state.selected && this.state.selected[modelType]) || null;
+    };
+
+    getSelectedRelationshipEntity = () => {
+        const props = this.props;
+        return (props.value && props.value.relationshipEntity) || null;
     };
 
     fetchProgramForProgramStage = async programStageId => {
@@ -173,15 +183,22 @@ class Constraint extends Component {
         return program.toArray()[0];
     };
 
-    getFilterForModelType(entityModelProps) {
-        const filter = entityModelProps.filter;
-        if (typeof filter === 'function') {
-            return filter(this.props, this.state);
-        } else if (Array.isArray(filter)) {
-            return filter;
+    handleOptionsLoaded = (modelType, options) => {
+        // get reference to already selected constraint
+        // ie when a saved model is edited, so we can check for programType
+        if (!this.state.selected) return;
+        const selectedModelID =
+            this.state.selected[modelType] && this.state.selected[modelType].id;
+        const option = options.find(opt => opt.value == selectedModelID);
+        if (option) {
+            this.setState(state => ({
+                selected: {
+                    ...state.selected,
+                    [modelType]: option.model,
+                },
+            }));
         }
-        return null;
-    }
+    };
 
     handleSelectRelationshipEntity = (_, __, value) => {
         this.setState({
@@ -250,40 +267,6 @@ class Constraint extends Component {
         has('selected.program', this.state) &&
         this.state.selected.program.programType === 'WITH_REGISTRATION';
 
-    handleOptionsLoaded = (modelType, options) => {
-        // get reference to already selected constraint
-        // ie when a saved model is edited, so we can check for programType
-        if (!this.state.selected) return;
-        const selectedModelID =
-            this.state.selected[modelType] && this.state.selected[modelType].id;
-        const option = options.find(opt => opt.value == selectedModelID);
-        if (option) {
-            this.setState(state => ({
-                selected: {
-                    ...state.selected,
-                    [modelType]: option.model,
-                },
-            }));
-        }
-    };
-
-    renderErrorOrLoading = () => {
-        if (this.state.loading) {
-            return (
-                <div style={{ height: '72px' }}>
-                    <CircularProgress />
-                </div>
-            );
-        }
-        if (this.state.error) {
-            return (
-                <div style={styles.modelTypeSelectField}>
-                    Failed to load program for program stage.
-                </div>
-            );
-        }
-    };
-
     shouldRenderModelType = modelType => {
         const entity = this.getSelectedRelationshipEntity();
         if (
@@ -302,6 +285,23 @@ class Constraint extends Component {
             return false;
         }
         return true;
+    };
+
+    renderErrorOrLoading = () => {
+        if (this.state.loading) {
+            return (
+                <div style={{ height: '72px' }}>
+                    <CircularProgress />
+                </div>
+            );
+        }
+        if (this.state.error) {
+            return (
+                <div style={styles.modelTypeSelectField}>
+                    Failed to load program for program stage.
+                </div>
+            );
+        }
     };
 
     renderModelTypeSelectFields = () => {

@@ -34,6 +34,10 @@ class Dropdown extends Component {
         });
     }
 
+    getOptionText = value => (value && this.state.options.length
+        ? this.state.options.find(option => option.value === value).text
+        : '')
+
     getOptions(options) {
         const opts = options
             .map(option => ({
@@ -50,10 +54,6 @@ class Dropdown extends Component {
             });
     }
 
-    getOptionText = value => (value && this.state.options.length
-        ? this.state.options.find(option => option.value === value).text
-        : '')
-
     closeDialog = () => {
         this.setState({ dialogOpen: false });
     }
@@ -64,60 +64,6 @@ class Dropdown extends Component {
 
     textFieldOnChange = (e, value) => {
         this.setState({ filterText: value });
-    }
-
-    renderDialogOption = (value, label) => (
-        <div
-            style={{ cursor: 'pointer', margin: 8 }}
-            key={value}
-            onClick={() => {
-                this.props.onChange({ target: { value } });
-                this.setState({ dialogOpen: false, value });
-            }}
-        ><a>{label}</a></div>
-    )
-
-    renderOptions = () => {
-        const options = this.state.options
-            .map(option => (
-                <MenuItem
-                    primaryText={option.text}
-                    key={option.text}
-                    value={option.value}
-                    label={option.text}
-                />
-            ));
-
-        if (!this.props.isRequired) {
-            // When the value is not required we add an item that sets the value to null
-            // For this value we pass an empty label to not show the label no_value
-            // when this option is selected.
-            options.unshift([
-                <MenuItem
-                    primaryText={this.getTranslation('no_value')}
-                    key="no_value"
-                    value={null}
-                    label=" "
-                />,
-            ]);
-        }
-
-        return options;
-    }
-
-    renderSelectField(other) {
-        return (
-            <SelectField
-                value={this.state.value}
-                fullWidth={this.props.fullWidth}
-                errorText={this.props.errorText}
-                {...other}
-                onChange={this.onChange}
-                floatingLabelText={this.props.labelText}
-            >
-                {this.renderOptions()}
-            </SelectField>
-        );
     }
 
 
@@ -178,6 +124,61 @@ class Dropdown extends Component {
             </div>
         );
     }
+
+    renderDialogOption = (value, label) => (
+        <div
+            style={{ cursor: 'pointer', margin: 8 }}
+            key={value}
+            onClick={() => {
+                this.props.onChange({ target: { value } });
+                this.setState({ dialogOpen: false, value });
+            }}
+        ><a>{label}</a></div>
+    )
+
+    renderOptions = () => {
+        const options = this.state.options
+            .map(option => (
+                <MenuItem
+                    primaryText={option.text}
+                    key={option.text}
+                    value={option.value}
+                    label={option.text}
+                />
+            ));
+
+        if (!this.props.isRequired) {
+            // When the value is not required we add an item that sets the value to null
+            // For this value we pass an empty label to not show the label no_value
+            // when this option is selected.
+            options.unshift([
+                <MenuItem
+                    primaryText={this.getTranslation('no_value')}
+                    key="no_value"
+                    value={null}
+                    label=" "
+                />,
+            ]);
+        }
+
+        return options;
+    }
+
+    renderSelectField(other) {
+        return (
+            <SelectField
+                value={this.state.value}
+                fullWidth={this.props.fullWidth}
+                errorText={this.props.errorText}
+                {...other}
+                onChange={this.onChange}
+                floatingLabelText={this.props.labelText}
+            >
+                {this.renderOptions()}
+            </SelectField>
+        );
+    }
+
 
     render() {
         const {

@@ -134,9 +134,14 @@ class Section extends Component {
         this.props.sortItems(oldIndex, newIndex);
     };
 
-    openRemovalDialog = () => {
-        this.setState({ showRemovalDialog: true });
-    };
+    getFilteredElements() {
+        const filter = this.state.filter;
+        return this.props.elements.filter(
+            element =>
+                !filter.length ||
+                element.displayName.toLowerCase().includes(filter.toLowerCase())
+        );
+    }
 
     closeRemovalDialog = () => {
         this.setState({ showRemovalDialog: false });
@@ -153,14 +158,9 @@ class Section extends Component {
         });
     };
 
-    getFilteredElements() {
-        const filter = this.state.filter;
-        return this.props.elements.filter(
-            element =>
-                !filter.length ||
-                element.displayName.toLowerCase().includes(filter.toLowerCase())
-        );
-    }
+    openRemovalDialog = () => {
+        this.setState({ showRemovalDialog: true });
+    };
 
     render() {
         const elements = this.props.elements;

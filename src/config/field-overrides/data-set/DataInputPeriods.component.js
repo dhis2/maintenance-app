@@ -39,29 +39,9 @@ class DataInputPeriods extends Component {
         this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
     }
 
-    openDialog = () => {
-        this.setState({
-            dialogOpen: true,
-            dataInputPeriods: (this.props.value || []).sort((a, b) => a.period.id.localeCompare(b.period.id)),
-        });
-    };
-
-    closeDialog = () => {
-        this.setState({
-            dialogOpen: false,
-        });
-    };
-
     addPeriod = periodId => {
         this.setState({
             dataInputPeriods: this.state.dataInputPeriods.concat({ id: generateUid(), period: { id: periodId } }),
-        });
-    };
-
-    removePeriod = $k => {
-        this.state.dataInputPeriods.splice($k, 1);
-        this.setState({
-            dataInputPeriods: this.state.dataInputPeriods,
         });
     };
 
@@ -74,6 +54,12 @@ class DataInputPeriods extends Component {
 
                 return dip;
             }),
+        });
+    };
+
+    closeDialog = () => {
+        this.setState({
+            dialogOpen: false,
         });
     };
 
@@ -95,6 +81,20 @@ class DataInputPeriods extends Component {
             },
         });
         this.closeDialog();
+    };
+
+    openDialog = () => {
+        this.setState({
+            dialogOpen: true,
+            dataInputPeriods: (this.props.value || []).sort((a, b) => a.period.id.localeCompare(b.period.id)),
+        });
+    };
+
+    removePeriod = $k => {
+        this.state.dataInputPeriods.splice($k, 1);
+        this.setState({
+            dataInputPeriods: this.state.dataInputPeriods,
+        });
     };
 
     renderDatePicker(labelText, dateValue, onChange, onCancelClick) {

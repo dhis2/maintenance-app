@@ -33,18 +33,14 @@ class PredictorDialog extends Component {
         this.subscriptions.forEach(disposable => disposable.unsubscribe && disposable.unsubscribe());
     }
 
-    requestClose() {
-        predictorDialogStore.setState(Object.assign({}, predictorDialogStore.state, { open: false }));
-    }
+    setEndDate = (e, value) => {
+        const d = new Date(value);
+        this.setState({ endDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
+    };
 
     setStartDate = (e, value) => {
         const d = new Date(value);
         this.setState({ startDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
-    };
-
-    setEndDate = (e, value) => {
-        const d = new Date(value);
-        this.setState({ endDate: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` });
     };
 
     executeAction = async () => {
@@ -65,6 +61,10 @@ class PredictorDialog extends Component {
                 console.error(err);
             });
     };
+
+    requestClose() {
+        predictorDialogStore.setState(Object.assign({}, predictorDialogStore.state, { open: false }));
+    }
 
     render() {
         const actions = [

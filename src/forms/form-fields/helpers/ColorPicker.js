@@ -114,10 +114,6 @@ export default class ColorPicker extends Component {
         return { mergedStyles, LoadablePicker, pickerProps };
     };
 
-    handleOpenColor = () => {
-        this.setState({ open: !this.state.open });
-    };
-
     handleCloseColor = () => {
         this.setState({ open: false });
     };
@@ -125,6 +121,10 @@ export default class ColorPicker extends Component {
     handleColorChange = (val) => {
         this.setState({ open: false });
         this.props.updateStyleState({ color: val.hex });
+    };
+
+    handleOpenColor = () => {
+        this.setState({ open: !this.state.open });
     };
 
     handleUnsetColor = () => {

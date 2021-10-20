@@ -27,20 +27,6 @@ class DataElementCategoryOptionCombo extends Component {
         loading: false,
         loadErrorText: '',
     };
-    getTranslation = this.context.d2.i18n.getTranslation.bind(
-        this.context.d2.i18n
-    );
-
-    // The form builder is mutating objects which causes this.props.model.output
-    // and prevProps.model.output to be equal in the componentDidUpdate hook,
-    // after the output property was updated.
-    // By keeping track of this string literal the changes are detected correctly.
-    prevOutputId = null;
-
-    onChange = ({ target }) => {
-        const value = target.value ? { id: target.value } : null;
-        this.props.onChange({ target: { value } });
-    };
 
     componentDidMount() {
         const currModelOutputId = this.getModelOutputId();
@@ -69,12 +55,21 @@ class DataElementCategoryOptionCombo extends Component {
             : null;
     }
 
+    onChange = ({ target }) => {
+        const value = target.value ? { id: target.value } : null;
+        this.props.onChange({ target: { value } });
+    };
+
     getModelOutputId() {
         const model = this.props.model;
         return model && model.output && model.output.id
             ? model.output.id
             : null;
     }
+
+    getTranslation = this.context.d2.i18n.getTranslation.bind(
+        this.context.d2.i18n
+    );
 
     async fetchOptions() {
         this.setState({ loading: true, loadErrorText: '' });
@@ -103,6 +98,12 @@ class DataElementCategoryOptionCombo extends Component {
             this.setState({ loading: false, loadErrorText: msg });
         }
     }
+
+    // The form builder is mutating objects which causes this.props.model.output
+    // and prevProps.model.output to be equal in the componentDidUpdate hook,
+    // after the output property was updated.
+    // By keeping track of this string literal the changes are detected correctly.
+    prevOutputId = null;
 
     render() {
         if (this.state.loading) {

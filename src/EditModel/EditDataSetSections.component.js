@@ -74,8 +74,39 @@ class EditDataSetSections extends Component {
         }));
     };
 
+    handleDeleteSectionClick = section => {
+        snackActions.show({
+            message: `${this.getTranslation('confirm_delete_section')} ${section.displayName}`,
+            action: 'confirm',
+            onActionTouchTap: () => {
+                section.delete()
+                    .then(() => {
+                        const newSections = modelToEditStore.state.sections;
+                        modelToEditStore.setState(Object.assign(modelToEditStore.state, {
+                            sections: (Array.isArray(newSections)
+                                ? newSections
+                                : newSections.toArray()).filter(s => s.id !== section.id),
+                        }));
+
+                        snackActions.show({ message: this.getTranslation('section_deleted') });
+                        this.setState(state => ({
+                            sections: state.sections.filter(s => s.id !== section.id),
+                        }));
+                    })
+                    .catch((err) => {
+                        snackActions.show({ message: this.getTranslation('failed_to_delete_section'), action: 'ok' });
+                        log.warn('Failed to delete section', err);
+                    });
+            },
+        });
+    };
+
     handleEditSectionClick = editSectionModel => {
         this.setState({ editSectionModel });
+    };
+
+    handleSectionGreyFieldsClick = section => {
+        this.setState({ greyFieldSectionModel: section });
     };
 
     handleSectionSaved = savedSection => {
@@ -105,50 +136,35 @@ class EditDataSetSections extends Component {
         });
     };
 
-    handleDeleteSectionClick = section => {
-        snackActions.show({
-            message: `${this.getTranslation('confirm_delete_section')} ${section.displayName}`,
-            action: 'confirm',
-            onActionTouchTap: () => {
-                section.delete()
-                    .then(() => {
-                        const newSections = modelToEditStore.state.sections;
-                        modelToEditStore.setState(Object.assign(modelToEditStore.state, {
-                            sections: (Array.isArray(newSections)
-                                ? newSections
-                                : newSections.toArray()).filter(s => s.id !== section.id),
-                        }));
-
-                        snackActions.show({ message: this.getTranslation('section_deleted') });
-                        this.setState(state => ({
-                            sections: state.sections.filter(s => s.id !== section.id),
-                        }));
-                    })
-                    .catch((err) => {
-                        snackActions.show({ message: this.getTranslation('failed_to_delete_section'), action: 'ok' });
-                        log.warn('Failed to delete section', err);
-                    });
-            },
-        });
-    };
-
     handleTranslateSectionClick = section => {
         this.setState({
             translationModel: section,
         });
     };
 
-    handleTranslationSaved = () => {
-        snackActions.show({ message: 'translation_saved', translate: true });
-    }
-
     handleTranslationErrored = (errorMessage) => {
         log.error(errorMessage);
         snackActions.show({ message: 'translation_save_error', action: 'ok', translate: true });
     }
 
-    handleSectionGreyFieldsClick = section => {
-        this.setState({ greyFieldSectionModel: section });
+    handleTranslationSaved = () => {
+        snackActions.show({ message: 'translation_saved', translate: true });
+    }
+
+    moveSectionDown = section => {
+        const currentIndex = this.state.sections.indexOf(section);
+        if (currentIndex < this.state.sections.length - 1) {
+            const swapSection = this.state.sections[currentIndex + 1];
+            this.swapSections(swapSection, section);
+        }
+    };
+
+    moveSectionUp = section => {
+        const currentIndex = this.state.sections.indexOf(section);
+        if (currentIndex > 0) {
+            const swapSection = this.state.sections[currentIndex - 1];
+            this.swapSections(swapSection, section);
+        }
     };
 
     swapSections = (sectionA, sectionB) => {
@@ -173,22 +189,6 @@ class EditDataSetSections extends Component {
                 sections: state.sections.sort((a, b) => a.sortOrder - b.sortOrder),
             };
         });
-    };
-
-    moveSectionUp = section => {
-        const currentIndex = this.state.sections.indexOf(section);
-        if (currentIndex > 0) {
-            const swapSection = this.state.sections[currentIndex - 1];
-            this.swapSections(swapSection, section);
-        }
-    };
-
-    moveSectionDown = section => {
-        const currentIndex = this.state.sections.indexOf(section);
-        if (currentIndex < this.state.sections.length - 1) {
-            const swapSection = this.state.sections[currentIndex + 1];
-            this.swapSections(swapSection, section);
-        }
     };
 
     render() {

@@ -75,15 +75,7 @@ class ProgramStageList extends Component {
         }
     }
 
-    openSharing = (model) => {
-        this.setState({
-            ...this.state,
-            sharing: {
-                ...this.state.sharing,
-                id: model.id,
-            },
-        });
-    };
+    closeDetails = () => this.setState({ detailsObject: null });
 
     closeSharing = () => {
         this.setState({
@@ -95,9 +87,49 @@ class ProgramStageList extends Component {
         });
     };
 
+    contextActionChecker = (model, action) => {
+        if (action === 'move_up') {
+            return this.state.stages.indexOf(model) > 0;
+        } else if (action === 'move_down') {
+            return this.state.stages.indexOf(model) < this.state.stages.length - 1;
+        }
+        return true;
+    };
+
+    handleOnRequestClose = () => {
+        this.setState({
+            ...this.state,
+            translate: { ...this.state.translate, model: null },
+        });
+    }
+
+    moveStageDown = (stage) => {
+        const currentIndex = this.state.stages.indexOf(stage);
+        if (currentIndex < this.state.stages.length - 1) {
+            const swapStage = this.state.stages[currentIndex + 1];
+            this.swapStages(swapStage, stage);
+        }
+    }
+
+    moveStageUp = (stage) => {
+        const currentIndex = this.state.stages.indexOf(stage);
+        if (currentIndex > 0) {
+            const swapStage = this.state.stages[currentIndex - 1];
+            this.swapStages(swapStage, stage);
+        }
+    }
+
     openDetails = model => this.setState({ detailsObject: model });
 
-    closeDetails = () => this.setState({ detailsObject: null });
+    openSharing = (model) => {
+        this.setState({
+            ...this.state,
+            sharing: {
+                ...this.state.sharing,
+                id: model.id,
+            },
+        });
+    };
 
     openTranslate = (model) => {
         this.setState({
@@ -109,13 +141,6 @@ class ProgramStageList extends Component {
         });
     };
 
-    handleOnRequestClose = () => {
-        this.setState({
-            ...this.state,
-            translate: { ...this.state.translate, model: null },
-        });
-    }
-
     swapStages = (stageA, stageB) => {
         this.setState((state) => {
             const swapOrder = stageA.sortOrder;
@@ -126,58 +151,6 @@ class ProgramStageList extends Component {
             };
         });
     }
-
-    contextActionChecker = (model, action) => {
-        if (action === 'move_up') {
-            return this.state.stages.indexOf(model) > 0;
-        } else if (action === 'move_down') {
-            return this.state.stages.indexOf(model) < this.state.stages.length - 1;
-        }
-        return true;
-    };
-
-    moveStageUp = (stage) => {
-        const currentIndex = this.state.stages.indexOf(stage);
-        if (currentIndex > 0) {
-            const swapStage = this.state.stages[currentIndex - 1];
-            this.swapStages(swapStage, stage);
-        }
-    }
-
-    moveStageDown = (stage) => {
-        const currentIndex = this.state.stages.indexOf(stage);
-        if (currentIndex < this.state.stages.length - 1) {
-            const swapStage = this.state.stages[currentIndex + 1];
-            this.swapStages(swapStage, stage);
-        }
-    }
-
-    renderSharing = () => (!!this.state.sharing.id &&
-        <SharingDialog
-            id={this.state.sharing.id}
-            type={this.state.modelType}
-            open={!!this.state.sharing.id}
-            onRequestClose={this.closeSharing}
-            bodyStyle={styles.sharingDialogBody}
-            d2={this.context.d2}
-        />
-    );
-
-    renderTranslate = () => (!!this.state.translate.model &&
-        <TranslationDialog
-            objectToTranslate={this.state.translate.model}
-            objectTypeToTranslate={
-                this.state.translate.model.modelDefinition
-            }
-            open={!!this.state.translate.model}
-            onTranslationSaved={translationSaved}
-            onTranslationError={translationError}
-            onRequestClose={this.handleOnRequestClose}
-            fieldsToTranslate={getTranslatablePropertiesForModelType(
-                this.state.modelType,
-            )}
-        />
-    );
 
     renderDetails = () => (!!this.state.detailsObject &&
         <div style={styles.detailsBoxWrap}>
@@ -208,6 +181,33 @@ class ProgramStageList extends Component {
             </div>
         );
     };
+
+    renderSharing = () => (!!this.state.sharing.id &&
+        <SharingDialog
+            id={this.state.sharing.id}
+            type={this.state.modelType}
+            open={!!this.state.sharing.id}
+            onRequestClose={this.closeSharing}
+            bodyStyle={styles.sharingDialogBody}
+            d2={this.context.d2}
+        />
+    );
+
+    renderTranslate = () => (!!this.state.translate.model &&
+        <TranslationDialog
+            objectToTranslate={this.state.translate.model}
+            objectTypeToTranslate={
+                this.state.translate.model.modelDefinition
+            }
+            open={!!this.state.translate.model}
+            onTranslationSaved={translationSaved}
+            onTranslationError={translationError}
+            onRequestClose={this.handleOnRequestClose}
+            fieldsToTranslate={getTranslatablePropertiesForModelType(
+                this.state.modelType,
+            )}
+        />
+    );
 
     render() {
         const contextActions = {

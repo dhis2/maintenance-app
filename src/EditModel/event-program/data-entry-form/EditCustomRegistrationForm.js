@@ -109,10 +109,6 @@ class EditDataEntryForm extends Component {
             }));
     }
 
-    componentWillUnmount() {
-        this.disposables.forEach(disposable => disposable.unsubscribe());
-    }
-
     //Used for when the form is deleted, to update the form
     UNSAFE_componentWillReceiveProps({ dataEntryForm }) {
         if (this.props.dataEntryForm && !dataEntryForm) {
@@ -120,14 +116,16 @@ class EditDataEntryForm extends Component {
         }
     }
 
-    handleDeleteClick = () => {
-        this.props.onFormDelete();
+    componentWillUnmount() {
+        this.disposables.forEach(disposable => disposable.unsubscribe());
+    }
+
+    setEditorReference = editor => {
+        this._editor = editor;
     };
 
-    handleStyleChange = (e, i, value) => {
-        if (this.props.dataEntryForm.style !== value) {
-            this.props.onStyleChange(value);
-        }
+    handleDeleteClick = () => {
+        this.props.onFormDelete();
     };
 
     handleEditorChanged = (editorData) => {
@@ -147,6 +145,12 @@ class EditDataEntryForm extends Component {
         });
     }
 
+    handleStyleChange = (e, i, value) => {
+        if (this.props.dataEntryForm.style !== value) {
+            this.props.onStyleChange(value);
+        }
+    };
+
     insertElement(id) {
         if (this.state.usedIds.indexOf(id) !== -1) {
             return;
@@ -160,10 +164,6 @@ class EditDataEntryForm extends Component {
         }
         return insElem(id, this.state.programElements[id], this._editor, 'programid');
     }
-
-    setEditorReference = editor => {
-        this._editor = editor;
-    };
 
     renderPalette() {
         return (

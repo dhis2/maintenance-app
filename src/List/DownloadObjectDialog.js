@@ -32,13 +32,13 @@ const styles = {
 };
 
 export default class DownloadObjectDialog extends Component {
+    static contextTypes = {
+        d2: PropTypes.object,
+    };
+
     static propTypes = {
         queryParamFilters: PropTypes.array,
         defaultCloseDialog: PropTypes.func,
-    };
-
-    static contextTypes = {
-        d2: PropTypes.object,
     };
 
     constructor(props, context) {
@@ -52,10 +52,6 @@ export default class DownloadObjectDialog extends Component {
         this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
         this.metadataEndpoint = `${context.d2.Api.getApi().baseUrl}/metadata`;
     }
-
-    handleChange = (prop, evt, index, value) => {
-        this.setState({ [prop]: value });
-    };
 
     getDownloadUrl() {
         const { format, compression, skipSharing } = this.state;
@@ -73,6 +69,25 @@ export default class DownloadObjectDialog extends Component {
         }.${format}${compressionStr}?download=true&skipSharing=${skipSharing}&${pluralName}=true${filtersStr}`;
 
         return url;
+    }
+
+    handleChange = (prop, evt, index, value) => {
+        this.setState({ [prop]: value });
+    };
+
+    renderDownloadCount() {
+        const { objectCount, name, pluralName } = this.props;
+        let displayName = objectCount !== 1 ? pluralName : name;
+        const modelTypeStr = this.t(
+            camelCaseToUnderscores(displayName)
+        ).toLowerCase();
+
+        const str = this.t('the_download_contains_$$total$$_$$modelType$$', {
+            total: objectCount,
+            modelType: modelTypeStr,
+        });
+
+        return <p style={styles.downloadCount}>{str}</p>;
     }
 
     renderForm() {
@@ -118,20 +133,6 @@ export default class DownloadObjectDialog extends Component {
         );
     }
 
-    renderDownloadCount() {
-        const { objectCount, name, pluralName } = this.props;
-        let displayName = objectCount !== 1 ? pluralName : name;
-        const modelTypeStr = this.t(
-            camelCaseToUnderscores(displayName)
-        ).toLowerCase();
-
-        const str = this.t('the_download_contains_$$total$$_$$modelType$$', {
-            total: objectCount,
-            modelType: modelTypeStr,
-        });
-
-        return <p style={styles.downloadCount}>{str}</p>;
-    }
     render() {
         const actions = [
             <FlatButton

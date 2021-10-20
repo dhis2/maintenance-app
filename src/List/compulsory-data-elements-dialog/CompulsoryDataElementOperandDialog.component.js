@@ -59,63 +59,16 @@ class CompulsoryDataElementOperandDialog extends Component {
         }
     }
 
-    render() {
-        const saveButtonText = this.state.isSaving ? this.i18n.getTranslation('saving') : this.i18n.getTranslation('save');
-        const dialogActions = [
-            <FlatButton
-                disabled={this.state.isSaving}
-                style={{ marginRight: '1rem' }}
-                onClick={this.props.onRequestClose}
-                label={this.i18n.getTranslation('close')}
-            />,
-            <RaisedButton
-                labelColor="white"
-                disabled={this.state.isSaving}
-                primary
-                onClick={this._saveCollection}
-                label={saveButtonText}
-            />,
-        ];
-
-        return (
-            <Dialog
-                open={this.props.open}
-                onRequestClose={this.props.onRequestClose}
-                autoScrollBodyContent
-                modal
-                actions={dialogActions}
-                contentStyle={{ maxWidth: 'none', width: '95%' }}
-            >
-                <div style={{ marginBottom: '3.5rem' }}>
-                    <Heading>{this.i18n.getTranslation('edit_compulsory_data_elements')} - {this.props.model && this.props.model.displayName}</Heading>
-                    <TextField
-                        floatingLabelText={this.i18n.getTranslation('filter')}
-                        style={{ width: '100%' }}
-                        onChange={this._changeFilter}
-                    />
-                    <GroupEditor
-                        itemStore={itemsAvailableStore}
-                        assignedItemStore={itemsSelectedStore}
-                        onAssignItems={this._assignItems}
-                        onRemoveItems={this._removeItems}
-                        height={350}
-                        filterText={this.state.filterText}
-                    />
-                </div>
-            </Dialog>
-        );
-    }
-
-    _changeFilter = (event) => {
-        this.setState({ filterText: event.target.value });
-    };
-
     _assignItems = async (selectedItems) => {
         const newState = itemsSelectedStore.getState().concat(selectedItems);
 
         itemsSelectedStore.setState(newState);
 
         return Promise.resolve(true);
+    };
+
+    _changeFilter = (event) => {
+        this.setState({ filterText: event.target.value });
     };
 
     _removeItems = (selectedItems) => {
@@ -165,6 +118,53 @@ class CompulsoryDataElementOperandDialog extends Component {
                 this.props.onRequestClose();
             });
     };
+
+    render() {
+        const saveButtonText = this.state.isSaving ? this.i18n.getTranslation('saving') : this.i18n.getTranslation('save');
+        const dialogActions = [
+            <FlatButton
+                disabled={this.state.isSaving}
+                style={{ marginRight: '1rem' }}
+                onClick={this.props.onRequestClose}
+                label={this.i18n.getTranslation('close')}
+            />,
+            <RaisedButton
+                labelColor="white"
+                disabled={this.state.isSaving}
+                primary
+                onClick={this._saveCollection}
+                label={saveButtonText}
+            />,
+        ];
+
+        return (
+            <Dialog
+                open={this.props.open}
+                onRequestClose={this.props.onRequestClose}
+                autoScrollBodyContent
+                modal
+                actions={dialogActions}
+                contentStyle={{ maxWidth: 'none', width: '95%' }}
+            >
+                <div style={{ marginBottom: '3.5rem' }}>
+                    <Heading>{this.i18n.getTranslation('edit_compulsory_data_elements')} - {this.props.model && this.props.model.displayName}</Heading>
+                    <TextField
+                        floatingLabelText={this.i18n.getTranslation('filter')}
+                        style={{ width: '100%' }}
+                        onChange={this._changeFilter}
+                    />
+                    <GroupEditor
+                        itemStore={itemsAvailableStore}
+                        assignedItemStore={itemsSelectedStore}
+                        onAssignItems={this._assignItems}
+                        onRemoveItems={this._removeItems}
+                        height={350}
+                        filterText={this.state.filterText}
+                    />
+                </div>
+            </Dialog>
+        );
+    }
 }
 
 export default addD2Context(CompulsoryDataElementOperandDialog);

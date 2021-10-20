@@ -29,6 +29,63 @@ class ProgramRuleActionsList extends Component {
         this.loadProgramRuleActionTemplate();
     }
 
+    onChangeMakeDirtyHandler = (...p) => {
+        const event = p[0];
+
+        this.props.onChange(...p);
+        this.props.model.dirty = true;
+    };
+
+    addProgramRuleAction = () => {
+        this.setState({
+            dialogOpen: true,
+            currentRuleActionModel: Object.assign(
+                this.d2.models.programRuleActions.create(),
+                { programRule: { id: this.props.model.id } }
+            ),
+        });
+    };
+
+    deleteAction = (model) => {
+        snackActions.show({
+            message: this.getTranslation('confirm_delete_program_rule_action'),
+            action: 'confirm',
+            onActionTouchTap: () => {
+                this.props.onChange({ target: { value: this.props.model.programRuleActions.remove(model) } });
+                snackActions.show({ message: this.getTranslation('program_rule_action_deleted') });
+            },
+        });
+    }
+
+    editAction = (model) => {
+        this.setState({
+            dialogOpen: true,
+            currentRuleActionModel: Object.assign(model.clone(), {
+                dataElement: model.dataElement && model.dataElement.id || undefined,
+                trackedEntityAttribute: model.trackedEntityAttribute && model.trackedEntityAttribute.id || undefined,
+                programStage: model.programStage && model.programStage.id || undefined,
+                programStageSection: model.programStageSection && model.programStageSection.id || undefined,
+                option: model.option && model.option.id || undefined,
+                optionGroup: model.optionGroup && model.optionGroup.id || undefined,
+            }),
+        });
+    }
+
+    handleRuleChange = (ruleAction) => {
+        // Update the notificationTemplates with selected template
+        if(ruleAction.notificationTemplate) {
+            this.setState(state => ({
+                notificationTemplates: {
+                    ...state.notificationTemplates,
+                    byActionId: {
+                        ...state.notificationTemplates.byActionId,
+                        [ruleAction.id]: ruleAction.notificationTemplate
+                    }
+                }
+            }))
+        }
+    }
+
     /*
         Due to a change in the API, we cannot use field-filtering for notificationTemplates in a rule.
         It only returns an ID-string, so we need to load these manually
@@ -63,63 +120,6 @@ class ProgramRuleActionsList extends Component {
                 }
             })
         });
-    }
-
-    addProgramRuleAction = () => {
-        this.setState({
-            dialogOpen: true,
-            currentRuleActionModel: Object.assign(
-                this.d2.models.programRuleActions.create(),
-                { programRule: { id: this.props.model.id } }
-            ),
-        });
-    };
-
-    editAction = (model) => {
-        this.setState({
-            dialogOpen: true,
-            currentRuleActionModel: Object.assign(model.clone(), {
-                dataElement: model.dataElement && model.dataElement.id || undefined,
-                trackedEntityAttribute: model.trackedEntityAttribute && model.trackedEntityAttribute.id || undefined,
-                programStage: model.programStage && model.programStage.id || undefined,
-                programStageSection: model.programStageSection && model.programStageSection.id || undefined,
-                option: model.option && model.option.id || undefined,
-                optionGroup: model.optionGroup && model.optionGroup.id || undefined,
-            }),
-        });
-    }
-
-    deleteAction = (model) => {
-        snackActions.show({
-            message: this.getTranslation('confirm_delete_program_rule_action'),
-            action: 'confirm',
-            onActionTouchTap: () => {
-                this.props.onChange({ target: { value: this.props.model.programRuleActions.remove(model) } });
-                snackActions.show({ message: this.getTranslation('program_rule_action_deleted') });
-            },
-        });
-    }
-
-    onChangeMakeDirtyHandler = (...p) => {
-        const event = p[0];
-
-        this.props.onChange(...p);
-        this.props.model.dirty = true;
-    };
-
-    handleRuleChange = (ruleAction) => {
-        // Update the notificationTemplates with selected template
-        if(ruleAction.notificationTemplate) {
-            this.setState(state => ({
-                notificationTemplates: {
-                    ...state.notificationTemplates,
-                    byActionId: {
-                        ...state.notificationTemplates.byActionId,
-                        [ruleAction.id]: ruleAction.notificationTemplate
-                    }
-                }
-            }))
-        }
     }
 
     render() {

@@ -41,16 +41,6 @@ class WhatToSendStep extends Component {
         };
     }
 
-    handleProgramStage = event => {
-        const sId = event.target.value;
-        const selectedStage = this.props.programStages.find(stage => stage.id === sId);
-        this.setState({
-            ...this.state,
-            programStageId: sId,
-        });
-        this.props.handleProgramStageSelect(selectedStage);
-    };
-
     createProgramStageDropdown = () => {
         return {
             name: 'programStage',
@@ -63,6 +53,16 @@ class WhatToSendStep extends Component {
                 onChange: this.handleProgramStage,
             },
         };
+    };
+
+    handleProgramStage = event => {
+        const sId = event.target.value;
+        const selectedStage = this.props.programStages.find(stage => stage.id === sId);
+        this.setState({
+            ...this.state,
+            programStageId: sId,
+        });
+        this.props.handleProgramStageSelect(selectedStage);
     };
 
     render() {

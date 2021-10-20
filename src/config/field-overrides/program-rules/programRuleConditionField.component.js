@@ -114,14 +114,6 @@ class ProgramRuleConditionField extends Component {
         }
     }
 
-    makeTextPusher = text => () => this.pushText(text);
-
-    pushText = (text) => {
-        if (this.editor) {
-            this.editor.insertText(text);
-        }
-    };
-
     expander = section => () => this.setState({ expand: section });
 
     isSectionExpanded = section => this.state.expand === section;
@@ -145,10 +137,7 @@ class ProgramRuleConditionField extends Component {
             styles.rightScroll,
         );
 
-    refreshProgramRuleVariables = (e) => {
-        this.getProgramRuleVariablesForProgram(modelToEditStore.getState().program);
-        e.stopPropagation();
-    };
+    makeTextPusher = text => () => this.pushText(text);
 
     programRuleVariableButtonRenderer = (v, i) => {
         const varSymbol = v.programRuleVariableSourceType === 'TEI_ATTRIBUTE' ? 'A' : '#';
@@ -163,6 +152,31 @@ class ProgramRuleConditionField extends Component {
         const varText = `${varSymbol}{${v.displayName}}`;
         return this.renderRaisedButton(i, varLabel, varText);
     };
+
+    pushText = (text) => {
+        if (this.editor) {
+            this.editor.insertText(text);
+        }
+    };
+
+    refreshProgramRuleVariables = (e) => {
+        this.getProgramRuleVariablesForProgram(modelToEditStore.getState().program);
+        e.stopPropagation();
+    };
+
+    renderBuiltInVariablesMenu = () => {
+        const sectionName = 'built_in_variables';
+        const sectionContent = programRuleBuiltInVariables.map((varLabel, i) =>
+            this.renderRaisedButton(i, varLabel, varLabel));
+        return this.renderSection(sectionName, sectionContent);
+    }
+
+    renderFunctionsMenu = () => {
+        const sectionName = 'functions';
+        const sectionContent = programRuleFunctions.map((funcLabel, i) =>
+            this.renderRaisedButton(i, funcLabel, funcLabel));
+        return this.renderSection(sectionName, sectionContent);
+    }
 
     renderQuickAddButtons = () => {
         const AddVariableButton = (
@@ -195,6 +209,19 @@ class ProgramRuleConditionField extends Component {
         );
     }
 
+    renderRaisedButton = (key, label, text) => (
+        <RaisedButton
+            key={key}
+            label={label}
+            labelStyle={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+            style={styles.insertButton}
+            disabled={this.props.disabled}
+            onClick={this.makeTextPusher(text)}
+            title={text}
+            buttonStyle={{textAlign: 'left'}}
+        />
+    );
+
     renderSection = (sectionName, sectionContent) => (
         <div>
             <div onClick={this.expander(sectionName)} style={styles.expand}>
@@ -210,39 +237,12 @@ class ProgramRuleConditionField extends Component {
         </div>
     )
 
-    renderBuiltInVariablesMenu = () => {
-        const sectionName = 'built_in_variables';
-        const sectionContent = programRuleBuiltInVariables.map((varLabel, i) =>
-            this.renderRaisedButton(i, varLabel, varLabel));
-        return this.renderSection(sectionName, sectionContent);
-    }
-
     renderVariablesMenu = () => {
         const sectionName = 'variables';
         const sectionContent = this.state.programRuleVariables
             .map(this.programRuleVariableButtonRenderer);
         return this.renderSection(sectionName, sectionContent);
     }
-
-    renderFunctionsMenu = () => {
-        const sectionName = 'functions';
-        const sectionContent = programRuleFunctions.map((funcLabel, i) =>
-            this.renderRaisedButton(i, funcLabel, funcLabel));
-        return this.renderSection(sectionName, sectionContent);
-    }
-
-    renderRaisedButton = (key, label, text) => (
-        <RaisedButton
-            key={key}
-            label={label}
-            labelStyle={{ textTransform: 'none', whiteSpace: 'nowrap' }}
-            style={styles.insertButton}
-            disabled={this.props.disabled}
-            onClick={this.makeTextPusher(text)}
-            title={text}
-            buttonStyle={{textAlign: 'left'}}
-        />
-    );
 
     render() {
         const ref = (r) => { this.editor = r; };

@@ -15,13 +15,6 @@ class ProgramStageField extends Component {
         };
     }
 
-    getQueryParamFilter = (props = this.props) => {
-        if(!props.model.program) {
-            return null;
-        }
-        return [`program.id:eq:${props.model.program.id}`];
-    }
-
     UNSAFE_componentWillReceiveProps(newProps) {
         const selectedProgram = newProps.model.program;
         if (selectedProgram && selectedProgram.id !== this.state.programId) {
@@ -34,6 +27,13 @@ class ProgramStageField extends Component {
             //Clear programStage when program is changed
             objectActions.update({fieldName: 'programStage', value: null})
         }
+    }
+
+    getQueryParamFilter = (props = this.props) => {
+        if(!props.model.program) {
+            return null;
+        }
+        return [`program.id:eq:${props.model.program.id}`];
     }
 
     shouldRender = () => {

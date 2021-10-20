@@ -49,28 +49,11 @@ class GeometryField extends Component {
         );
     }
 
-    getLongitude = () => getOr('', 'value.coordinates[0]', this.props);
-
     getLatitude = () => getOr('', 'value.coordinates[1]', this.props);
 
     getLongLat = () => [this.getLongitude(), this.getLatitude()];
 
-    updateGeometryPoint(long, lat) {
-        const coordinates = [long, lat];
-        const geometry = {
-            type: featureTypes.POINT,
-            coordinates,
-        };
-        if (!long && !lat) {
-            this.props.onChange({ target: { value: null } });
-        } else {
-            this.props.onChange({
-                target: {
-                    value: geometry,
-                },
-            });
-        }
-    }
+    getLongitude = () => getOr('', 'value.coordinates[0]', this.props);
 
     handleLatitude = event => {
         let lat = event.target.value;
@@ -99,6 +82,23 @@ class GeometryField extends Component {
         }
         this.updateGeometryPoint(long, lat);
     };
+
+    updateGeometryPoint(long, lat) {
+        const coordinates = [long, lat];
+        const geometry = {
+            type: featureTypes.POINT,
+            coordinates,
+        };
+        if (!long && !lat) {
+            this.props.onChange({ target: { value: null } });
+        } else {
+            this.props.onChange({
+                target: {
+                    value: geometry,
+                },
+            });
+        }
+    }
 
     renderLatLongFields() {
         return (

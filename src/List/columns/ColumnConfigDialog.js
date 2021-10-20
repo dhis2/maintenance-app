@@ -67,13 +67,6 @@ export class ColumnConfigDialog extends Component {
         };
     };
 
-    withDisplayProps = value => ({
-        value: value,
-        displayValue: this.t(
-            camelCaseToUnderScores(value.replace(/(\w*)\[(\w*)]/, '$1___$2'))
-        ),
-    });
-
     handleAddColumn = column => {
         this.setState({
             selectedColumns: this.state.selectedColumns.concat(column),
@@ -89,25 +82,6 @@ export class ColumnConfigDialog extends Component {
                 newIndex
             ),
         });
-    };
-
-    handleResetToDefault = () => {
-        this.setState({
-            selectedColumns: this.state.default,
-            error: null,
-        });
-    };
-
-    handleSaveOrder = () => {
-        this.setState({ error: null });
-        if (this.state.selectedColumns === this.state.defaultColumns) {
-            this.props.setColumnsForModel(this.props.modelType, []);
-            return;
-        }
-        const selectedColumns = this.state.selectedColumns.map(
-            col => col.value
-        );
-        this.props.setColumnsForModel(this.props.modelType, selectedColumns);
     };
 
     handleRemoveItem = (index, modelType) => {
@@ -129,8 +103,34 @@ export class ColumnConfigDialog extends Component {
     };
 
     handleResetToDefault = () => {
+        this.setState({
+            selectedColumns: this.state.default,
+            error: null,
+        });
+    };
+
+    handleResetToDefault = () => {
         this.setState(state => ({ selectedColumns: state.defaultColumns }));
     };
+
+    handleSaveOrder = () => {
+        this.setState({ error: null });
+        if (this.state.selectedColumns === this.state.defaultColumns) {
+            this.props.setColumnsForModel(this.props.modelType, []);
+            return;
+        }
+        const selectedColumns = this.state.selectedColumns.map(
+            col => col.value
+        );
+        this.props.setColumnsForModel(this.props.modelType, selectedColumns);
+    };
+
+    withDisplayProps = value => ({
+        value: value,
+        displayValue: this.t(
+            camelCaseToUnderScores(value.replace(/(\w*)\[(\w*)]/, '$1___$2'))
+        ),
+    });
 
     render() {
         const actions = [

@@ -194,39 +194,6 @@ class GreyFieldDialog extends Component {
             });
     };
 
-    renderTableHeader() {
-        let prevRowColCount = 1;
-
-        return this.state.currentCategoryCombo && (
-            this.state.categoryCombos.get(this.state.currentCategoryCombo).categories.toArray().map((cat, catNum) => {
-                const colSpan = this.state.optionCount[this.state.currentCategoryCombo]
-                    .slice(catNum + 1)
-                    .reduce((product, optionCount) => optionCount * product, 1);
-
-                const isLastHeader = catNum === this.state.categoryCombos.get(this.state.currentCategoryCombo).categories.size - 1;
-                const row = (
-                    <tr key={catNum}>
-                        <th style={styles.thDataElements}>{isLastHeader && this.getTranslation('data_element')}</th>
-                        {
-                            // For each column in the previous row...
-                            Array(...Array(prevRowColCount)).map((e, rep) =>
-                                // ... render the columns for this row
-                                 cat.categoryOptions.toArray().map((opt, optNum) => (
-                                     <th
-                                         key={`${optNum}.${rep}`}
-                                         colSpan={colSpan}
-                                         style={styles.th}
-                                     >{opt.displayName === 'default' ? '' : opt.displayName}</th>
-                                    )))
-                        }
-                    </tr>
-                );
-                prevRowColCount *= cat.categoryOptions.size;
-                return row;
-            })
-        );
-    }
-
     renderCheckbox(dataElement, fieldArray, fieldNum) {
         const resolveCoc = (cocMap, fields) => {
             if (fields.length === 0) {
@@ -319,6 +286,39 @@ class GreyFieldDialog extends Component {
                         </tr>
                     );
                 }) : null;
+    }
+
+    renderTableHeader() {
+        let prevRowColCount = 1;
+
+        return this.state.currentCategoryCombo && (
+            this.state.categoryCombos.get(this.state.currentCategoryCombo).categories.toArray().map((cat, catNum) => {
+                const colSpan = this.state.optionCount[this.state.currentCategoryCombo]
+                    .slice(catNum + 1)
+                    .reduce((product, optionCount) => optionCount * product, 1);
+
+                const isLastHeader = catNum === this.state.categoryCombos.get(this.state.currentCategoryCombo).categories.size - 1;
+                const row = (
+                    <tr key={catNum}>
+                        <th style={styles.thDataElements}>{isLastHeader && this.getTranslation('data_element')}</th>
+                        {
+                            // For each column in the previous row...
+                            Array(...Array(prevRowColCount)).map((e, rep) =>
+                                // ... render the columns for this row
+                                 cat.categoryOptions.toArray().map((opt, optNum) => (
+                                     <th
+                                         key={`${optNum}.${rep}`}
+                                         colSpan={colSpan}
+                                         style={styles.th}
+                                     >{opt.displayName === 'default' ? '' : opt.displayName}</th>
+                                    )))
+                        }
+                    </tr>
+                );
+                prevRowColCount *= cat.categoryOptions.size;
+                return row;
+            })
+        );
     }
 
     render() {

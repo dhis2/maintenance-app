@@ -34,11 +34,11 @@ class SnackBarContainer extends Component {
         this.observerDisposables.forEach(disposable => disposable.unsubscribe());
     }
 
+    closeSnackbar = () => this.setState({ show: false });
+
     registerDisposable = (disposable) => {
         this.observerDisposables.push(disposable);
     }
-
-    closeSnackbar = () => this.setState({ show: false });
 
     render() {
         if (!this.state.snack) {

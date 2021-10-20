@@ -62,8 +62,6 @@ ImageSelectButton.propTypes = {
 }
 
 export class ImageSelect extends Component {
-    fileInputRef = null
-
     constructor(props, context) {
         super(props, context);
 
@@ -88,45 +86,6 @@ export class ImageSelect extends Component {
         this.pollStorageStatusWhilePending(id).finally(
             () => this.setState({ initialized: true })
         );
-    }
-
-    storageStatusCheckDelay() {
-        return new Promise(resolve => setTimeout(resolve, 1000))
-    }
-
-    checkStorageStatus(id) {
-        return this.api
-            .get(`fileResources/${id}`)
-            .then(({ storageStatus }) => {
-                if (storageStatus === 'PENDING') {
-                    this.setState({ pending: true });
-                } else if (storageStatus === 'STORED') {
-                    this.setState({ pending: false });
-                } else {
-                    const errorLabel = this.getTranslation('org_unit_image_storage_status_error');
-                    const error = new Error(`${errorLabel} ${storageStatus}`);
-                    this.setState({ error });
-                }
-
-                return storageStatus;
-            })
-            .catch(error => this.setState({ error }))
-    }
-
-    pollStorageStatusWhilePending(id, pollCount = 0) {
-        if (pollCount === MAX_POLL_TRIES) {
-            const error = new Error('Timed out polling for image storage status update')
-            this.setState({ error })
-            return
-        }
-
-        return this.checkStorageStatus(id).then(storageStatus => {
-            if (storageStatus === 'PENDING') {
-                return this.storageStatusCheckDelay().then(() =>
-                    this.pollStorageStatusWhilePending(id, pollCount + 1)
-                );
-            }
-        });
     }
 
     onFileSelect = event => {
@@ -178,6 +137,47 @@ export class ImageSelect extends Component {
 
     getTranslation(key) {
         return this.context.d2.i18n.getTranslation(key);
+    }
+
+    checkStorageStatus(id) {
+        return this.api
+            .get(`fileResources/${id}`)
+            .then(({ storageStatus }) => {
+                if (storageStatus === 'PENDING') {
+                    this.setState({ pending: true });
+                } else if (storageStatus === 'STORED') {
+                    this.setState({ pending: false });
+                } else {
+                    const errorLabel = this.getTranslation('org_unit_image_storage_status_error');
+                    const error = new Error(`${errorLabel} ${storageStatus}`);
+                    this.setState({ error });
+                }
+
+                return storageStatus;
+            })
+            .catch(error => this.setState({ error }))
+    }
+
+    fileInputRef = null
+
+    pollStorageStatusWhilePending(id, pollCount = 0) {
+        if (pollCount === MAX_POLL_TRIES) {
+            const error = new Error('Timed out polling for image storage status update')
+            this.setState({ error })
+            return
+        }
+
+        return this.checkStorageStatus(id).then(storageStatus => {
+            if (storageStatus === 'PENDING') {
+                return this.storageStatusCheckDelay().then(() =>
+                    this.pollStorageStatusWhilePending(id, pollCount + 1)
+                );
+            }
+        });
+    }
+
+    storageStatusCheckDelay() {
+        return new Promise(resolve => setTimeout(resolve, 1000))
     }
 
     render() {
