@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import 'react';
 import PropTypes from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import DragHandle from '../../EditModel/event-program/create-data-entry-form/DragHandle.component';
@@ -72,20 +72,24 @@ const SortableDataList = SortableContainer(
     )
 );
 
-class ColumnList extends Component {
-    render() {
-        return (
-            <SortableDataList
-                items={this.props.items}
-                onSortEnd={this.props.onSortEnd}
-                axis="xy"
-                onRemoveItem={this.props.onRemoveItem}
-                helperClass="sortableModalHelper"
-                useDragHandle
-            />
-        );
-    }
-}
+const ColumnList = (
+    {
+        items,
+        onSortEnd,
+        onRemoveItem,
+    },
+) => {
+    return (
+        <SortableDataList
+            items={items}
+            onSortEnd={onSortEnd}
+            axis="xy"
+            onRemoveItem={onRemoveItem}
+            helperClass="sortableModalHelper"
+            useDragHandle
+        />
+    );
+};
 
 ColumnList.PropTypes = {
     items: PropTypes.shape({
