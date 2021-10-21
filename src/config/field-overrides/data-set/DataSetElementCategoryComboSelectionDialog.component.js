@@ -142,7 +142,7 @@ export function DataSetElementCategoryComboSelection(props) {
         <FlatButton
             label={i18n.getTranslation('close')}
             primary
-            onTouchTap={props.onRequestClose}
+            onClick={props.onRequestClose}
         />,
     ];
 

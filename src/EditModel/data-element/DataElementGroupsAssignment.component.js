@@ -1,5 +1,5 @@
-import { createClass } from 'react';
 import PropTypes from 'prop-types'
+import ReactCreateClass from 'create-react-class'
 import { getInstance } from 'd2/lib/d2';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
@@ -20,7 +20,7 @@ function findValue(optionList, model) {
         .find(option => Array.from(model.dataElementGroups.values()).map(dataElementGroup => dataElementGroup.id).indexOf(option) !== -1);
 }
 
-export default createClass({
+export default ReactCreateClass({
     propTypes: {
         source: PropTypes.object.isRequired,
     },

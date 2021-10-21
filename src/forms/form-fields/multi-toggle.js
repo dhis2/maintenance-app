@@ -1,10 +1,10 @@
-import { createClass } from 'react';
+import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
 
 // Material UI
 import Checkbox from 'material-ui/Checkbox/Checkbox';
 
-export default createClass({
+export default ReactCreateClass({
     propTypes: {
         label: PropTypes.string.isRequired,
         onChange: PropTypes.func.isRequired,

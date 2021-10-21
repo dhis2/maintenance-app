@@ -1,3 +1,4 @@
+import React from 'react'
 
 import { Component } from 'react';
 import Snackbar from 'material-ui/Snackbar/Snackbar';

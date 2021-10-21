@@ -11,12 +11,12 @@ const DeleteDialog = ({ onCancel, onConfirm, question, open, t }) => {
         <FlatButton
             label={t('cancel')}
             primary
-            onTouchTap={onCancel}
+            onClick={onCancel}
         />,
         <FlatButton
             label={t('delete')}
             primary
-            onTouchTap={onConfirm}
+            onClick={onConfirm}
         />,
     ];
 

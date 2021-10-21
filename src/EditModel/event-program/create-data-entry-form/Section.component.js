@@ -171,12 +171,12 @@ class Section extends Component {
             <FlatButton
                 primary
                 label={this.getTranslation('cancel')}
-                onTouchTap={this.closeRemovalDialog}
+                onClick={this.closeRemovalDialog}
             />,
             <FlatButton
                 primary
                 label={this.getTranslation('delete')}
-                onTouchTap={this.confirmSectionRemoval}
+                onClick={this.confirmSectionRemoval}
             />,
         ];
 

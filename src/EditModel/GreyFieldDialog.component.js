@@ -362,13 +362,13 @@ class GreyFieldDialog extends Component {
                 actions={[
                     <FlatButton
                         label={this.getTranslation('cancel')}
-                        onTouchTap={this.closeDialog}
+                        onClick={this.closeDialog}
                         style={{ marginRight: 16 }}
                     />,
                     <RaisedButton
                         primary
                         label={this.getTranslation('save')}
-                        onTouchTap={this.handleSaveClick}
+                        onClick={this.handleSaveClick}
                     />,
                 ]}
                 onRequestClose={this.closeDialog}

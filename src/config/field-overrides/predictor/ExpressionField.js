@@ -55,10 +55,10 @@ class ExpressionField extends Component {
 
         // Make sure to use values from the state once the dialogue is open
         // As these values are not propagated to the props until handleSaveAndClose is called
-        const expressionDialogProps = this.state.open && this.state.value ? { 
-            ...props, 
+        const expressionDialogProps = this.state.open && this.state.value ? {
+            ...props,
             value: {
-                ...this.state.value 
+                ...this.state.value
             }
         } : props
 
@@ -66,7 +66,7 @@ class ExpressionField extends Component {
             <div style={styles.fieldWrap}>
                 <RaisedButton
                     label={this.props.labelText}
-                    onTouchTap={this.handleOpen}
+                    onClick={this.handleOpen}
                 />
                 {props.errorText ? <div style={styles.errorText}>{props.errorText}</div> : null}
                 <ExpressionDialog

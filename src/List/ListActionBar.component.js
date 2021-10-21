@@ -1,4 +1,5 @@
-import { Component, createClass } from 'react';
+import { Component } from 'react';
+import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
@@ -46,7 +47,7 @@ class ProgramSpeedDial extends Component {
 
 ProgramSpeedDial = addD2Context(ProgramSpeedDial);
 
-const ListActionBar = createClass({
+const ListActionBar = ReactCreateClass({
     propTypes: {
         modelType: PropTypes.string.isRequired,
         groupName: PropTypes.string.isRequired

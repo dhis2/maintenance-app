@@ -15,12 +15,12 @@ export default function ExpressionDialog({ open, handleClose, handleSaveAndClose
         <FlatButton
             label="Cancel"
             primary
-            onTouchTap={handleClose}
+            onClick={handleClose}
         />,
         <FlatButton
             label="Submit"
             primary
-            onTouchTap={handleSaveAndClose}
+            onClick={handleSaveAndClose}
         />,
     ];
 

@@ -1,3 +1,4 @@
+import React from 'react'
 import { render } from 'react-dom';
 import { init, config, getUserSettings, getManifest } from 'd2/lib/d2';
 import log from 'loglevel';
@@ -14,6 +15,12 @@ import setObservableConfig from 'recompose/setObservableConfig';
 import periodTypeStore from './App/periodTypeStore';
 import store from './store';
 import { loadAllColumnsPromise } from './List/columns/epics';
+import { Provider } from '@dhis2/app-runtime'
+
+const appConfig = {
+	baseUrl: '.',
+	apiVersion: 37,
+}
 
 const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
 
@@ -76,11 +83,13 @@ function getSystemSettings(d2) {
 
 function startApp() {
     render(
-        <MuiThemeProvider muiTheme={appTheme}>
-            <div>
-                {routes}
-            </div>
-        </MuiThemeProvider>,
+		<Provider config={appConfig}>
+			<MuiThemeProvider muiTheme={appTheme}>
+				<div>
+					{routes}
+				</div>
+			</MuiThemeProvider>
+		</Provider>,
         document.getElementById('app')
     );
 }
@@ -95,7 +104,7 @@ render(
 getManifest('./manifest.webapp')
     .then((manifest) => {
         const baseUrl = process.env.NODE_ENV === 'production' ? manifest.getBaseUrl() : dhisDevConfig.baseUrl;
-        config.baseUrl = `${baseUrl}/api/29`;
+        config.baseUrl = `${baseUrl}/api/37`;
         log.info(`Loading: ${manifest.name} v${manifest.version}`);
         log.info(`Built ${manifest.manifest_generated_at}`);
     })

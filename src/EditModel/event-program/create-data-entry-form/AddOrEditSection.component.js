@@ -139,13 +139,13 @@ class AddOrEditSection extends Component {
             <FlatButton
                 primary
                 label={this.getTranslation('cancel')}
-                onTouchTap={this.closeDialog}
+                onClick={this.closeDialog}
             />,
             <FlatButton
                 primary
                 label={confirmTxt}
                 disabled={!name}
-                onTouchTap={confirmHandler}
+                onClick={confirmHandler}
             />,
         ];
 

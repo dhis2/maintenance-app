@@ -1,9 +1,9 @@
-import { createClass } from 'react';
+import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
 import DatePicker from 'material-ui/DatePicker/DatePicker';
 import IconButton from 'material-ui/IconButton/IconButton';
 
-export default createClass({
+export default ReactCreateClass({
     propTypes: {
         value: PropTypes.oneOfType([
             PropTypes.string,

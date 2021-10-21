@@ -83,8 +83,8 @@ class IndicatorExtraFields extends Component {
 
         const dialogActions = [
             // TODO: This button should "commit" the change to the model where a cancel button will discard any changes made
-            <FlatButton label={d2.i18n.getTranslation('cancel')} onTouchTap={this.closeDialog} />,
-            <FlatButton label={d2.i18n.getTranslation('done')} onTouchTap={this.saveToModelAndCloseDialog} disabled={!this.state.dialogValid} />,
+            <FlatButton label={d2.i18n.getTranslation('cancel')} onClick={this.closeDialog} />,
+            <FlatButton label={d2.i18n.getTranslation('done')} onClick={this.saveToModelAndCloseDialog} disabled={!this.state.dialogValid} />,
         ];
 
         return (

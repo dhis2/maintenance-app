@@ -31,20 +31,3 @@ FormButtons.propTypes = {
     ]).isRequired,
     isFormValid: PropTypes.func,
 };
-//
-// export default React.createClass({
-//
-//
-//    render() {
-//        return (
-//            <div style={this.props.style}>
-//                {this.props.children.map((child, index) => {
-//                    return React.cloneElement(child, {
-//                        isFormValid: this.props.isFormValid,
-//                        key: index,
-//                    });
-//                })}
-//            </div>
-//        );
-//    },
-// });

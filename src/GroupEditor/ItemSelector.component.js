@@ -1,10 +1,10 @@
-import { createClass } from 'react';
+import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
 
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 
-export default createClass({
+export default ReactCreateClass({
     propTypes: {
         itemListStore: PropTypes.object.isRequired,
         onItemSelected: PropTypes.func.isRequired,

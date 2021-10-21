@@ -339,13 +339,13 @@ class SectionDialog extends Component {
                     sectionIdDiv,
                     <FlatButton
                         label={this.getTranslation('cancel')}
-                        onTouchTap={this.props.onRequestClose}
+                        onClick={this.props.onRequestClose}
                         style={{ marginRight: 24 }}
                     />,
                     <RaisedButton
                         primary
                         label={this.getTranslation('save')}
-                        onTouchTap={this.saveSection}
+                        onClick={this.saveSection}
                     />,
                 ]}
                 {...this.props}

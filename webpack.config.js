@@ -41,7 +41,7 @@ const webpackConfig = {
     performance: { hints: false },
     entry: {
         maintenance: './src/maintenance.js',
-        commons: ['babel-polyfill', 'material-ui', 'd2-utilizr'],
+        commons: ['material-ui', 'd2-utilizr'],
     },
     devtool: 'source-map',
     output: {
@@ -53,7 +53,10 @@ const webpackConfig = {
         loaders: [
             {
                 test: /\.jsx?$/,
-                include: path.resolve(__dirname, 'src/'),
+                include: [
+                    path.resolve(__dirname, 'src/'),
+                    /node_modules\/@dhis2/,
+                ],
                 loader: 'babel-loader',
                 options: {
                     cacheDirectory: true,

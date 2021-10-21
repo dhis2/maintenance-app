@@ -90,11 +90,11 @@ const NotificationDialog = (
         isProgram,
     };
     const actions = [
-        <FlatButton label={t('cancel')} primary onTouchTap={onCancel} />,
+        <FlatButton label={t('cancel')} primary onClick={onCancel} />,
         <FlatButton
             label={t('done')}
             primary
-            onTouchTap={() => onConfirm(model)}
+            onClick={() => onConfirm(model)}
         />,
     ];
     const title = `${!isTracker || isProgram

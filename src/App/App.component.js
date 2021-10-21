@@ -1,3 +1,4 @@
+import React from 'react'
 import MainContent from 'd2-ui/lib/layout/main-content/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
@@ -13,7 +14,7 @@ import { goToRoute } from '../router-utils';
 import appState, { setAppState } from './appStateStore';
 import { Provider } from 'react-redux';
 import store from '../store';
-import HeaderBar from "@dhis2/d2-ui-header-bar";
+import { HeaderBar } from "@dhis2/ui";
 import DialogRouter from '../Dialog/DialogRouter';
 
 import 'typeface-roboto';
@@ -80,7 +81,7 @@ class App extends AppWithD2 {
         return (
             <Provider store={store}>
                 <div>
-                    <HeaderBar d2={this.state.d2} />
+                    <HeaderBar appName='Maintenance' />
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
                         <TwoPanelLayout>

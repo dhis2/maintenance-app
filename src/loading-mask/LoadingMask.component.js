@@ -1,3 +1,4 @@
+import React from 'react'
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
 export default () => {

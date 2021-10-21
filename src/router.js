@@ -1,3 +1,4 @@
+import React from 'react'
 import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-router';
 
 import { getInstance } from 'd2/lib/d2';

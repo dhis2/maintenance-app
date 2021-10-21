@@ -1,4 +1,4 @@
-import { createClass } from 'react';
+import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
@@ -16,7 +16,7 @@ function hasNameInArray(listToCheck) {
     };
 }
 
-export default createClass({
+export default ReactCreateClass({
     propTypes: {
         nameListFilter: PropTypes.arrayOf(PropTypes.string),
         onChange: PropTypes.func.isRequired,
