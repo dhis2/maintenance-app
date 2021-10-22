@@ -1,0 +1,415 @@
+[
+  {
+    "created": 1498054709001,
+    "lastUpdated": 1498210178885,
+    "name": "Maps Preview",
+    "description": "A preview of the next generation maps (GIS) app, with an easy-to-use interface where any number of layers can be added and the order re-arranged by drag-and-drop. A new data table allows you to explore and filter your data while the map is updated instantly. The new maps app is planned for 2.29, but you can start to use the experimental version today.",
+    "developer": {
+      "name": "DHIS 2",
+      "organisation": "DHIS 2",
+      "address": null,
+      "email": "bjorn@dhis2.org"
+    },
+    "owner": "google-oauth2|104814071246462794536",
+    "sourceUrl": null,
+    "appType": "APP",
+    "versions": [
+      {
+        "created": 1498054709001,
+        "lastUpdated": 1503324064845,
+        "version": "1.0",
+        "minDhisVersion": "2.27",
+        "maxDhisVersion": "2.25",
+        "downloadUrl": "https://dhis2-appstore.s3.amazonaws.com/apps-standard/db7d489e-4e90-4d81-bab0-01f52892ae0b.zip",
+        "demoUrl": null,
+        "id": "gF98jP0QQZD"
+      }
+    ],
+    "reviews": [],
+    "images": [
+      {
+        "created": 1498209484259,
+        "lastUpdated": 1500747566840,
+        "caption": "Add new layer dialog",
+        "description": "The add new layer dialog provides a visual selection of the various layer types.",
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/4ee2b17f-1835-4059-ade1-7b1f1a519d4e.jpg",
+        "logo": false,
+        "id": "fP9axB9dzUA"
+      },
+      {
+        "created": 1498209467682,
+        "lastUpdated": 1498209758869,
+        "caption": "Layer stack panel",
+        "description": "The layer stack panel lets you drag and drop layers into the desired order, and lets you add number of layers.",
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/de04f79b-7b35-43a5-8b98-6567735e44a5.jpg",
+        "logo": false,
+        "id": "NSD06BVoV14"
+      },
+      {
+        "created": 1498210098404,
+        "lastUpdated": 1498210165232,
+        "caption": "Base map selection",
+        "description": "You can easily select your base map. OSM, Google and customizable map layers are available.",
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/bbea734f-3ebd-4801-817a-d50f07743c9c.jpg",
+        "logo": false,
+        "id": "SpPBHGJLw39"
+      },
+      {
+        "created": 1498209509798,
+        "lastUpdated": 1498209675777,
+        "caption": "Maps Preview app",
+        "description": "Event clustering with Google maps as base map.",
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/4be45421-6c4c-45b6-a4c6-7e3b3910c3f5.jpg",
+        "logo": true,
+        "id": "INuFoQOljWe"
+      }
+    ],
+    "status": "APPROVED",
+    "id": "FtUyHHLtfxl"
+  },
+  {
+    "created": 1502660073587,
+    "lastUpdated": 1502698372172,
+    "name": "WHO Data Quality Tool",
+    "description": "WHO Data Quality Tool for DHIS2, based on the WHO Data Quality Framework",
+    "developer": {
+      "name": "WHO/UoO",
+      "organisation": "WHO",
+      "address": "",
+      "email": "olavpo@ifi.uio.no"
+    },
+    "owner": "google-oauth2|104331921631834460535",
+    "sourceUrl": null,
+    "appType": "APP",
+    "versions": [
+      {
+        "created": 1502660073587,
+        "lastUpdated": 1502660073587,
+        "version": "1.0",
+        "minDhisVersion": "2.25",
+        "maxDhisVersion": "2.27",
+        "downloadUrl": "https://dhis2-appstore.s3.amazonaws.com/apps-standard/1e794fdf-5a9a-4742-a415-7f0aedc4d9a6.zip",
+        "demoUrl": null,
+        "id": "c6GKEQhFiMs"
+      }
+    ],
+    "reviews": [],
+    "images": [
+      {
+        "created": 1502660073587,
+        "lastUpdated": 1502660483086,
+        "caption": "WHO Data Quality Tool",
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/7ab2233f-04a4-4422-8520-7b917c509cb3.png",
+        "logo": true,
+        "id": "xnsj6XdwVK8"
+      },
+      {
+        "created": 1502660491738,
+        "lastUpdated": 1502660505900,
+        "caption": "Outlier analysis",
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/deff713a-3f27-416b-aaa4-98da9399c0ca.png",
+        "logo": false,
+        "id": "JDBY7OaNZpJ"
+      },
+      {
+        "created": 1502660497187,
+        "lastUpdated": 1502660514469,
+        "caption": "Annual report",
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/00647d77-971b-4399-a345-4facbfeeea73.png",
+        "logo": false,
+        "id": "FOAyN9F6ruc"
+      },
+      {
+        "created": 1502660414451,
+        "lastUpdated": 1502660475636,
+        "caption": "Consistency analysis",
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/739f27e0-e481-4f48-b5d7-26c2be939f9b.png",
+        "logo": false,
+        "id": "roXLepOHgCV"
+      }
+    ],
+    "status": "APPROVED",
+    "id": "rFDeB5LLQmi"
+  },
+  {
+    "created": 1498251648912,
+    "lastUpdated": 1503129764050,
+    "name": "Metadata Repository",
+    "description": "Application for reusing Metadata Repository hosted from multiple dhis2 implementations for reuse within few clicks",
+    "developer": {
+      "name": "HISP Tanzania",
+      "organisation": "HISP Tanzania",
+      "address": "",
+      "email": "info@hisptanzania.org"
+    },
+    "owner": "google-oauth2|114254875945375178446",
+    "sourceUrl": null,
+    "appType": "APP",
+    "versions": [
+      {
+        "created": 1502797099535,
+        "lastUpdated": 1502797099535,
+        "version": "2.0",
+        "minDhisVersion": "2.24",
+        "maxDhisVersion": "2.27",
+        "downloadUrl": "https://dhis2-appstore.s3.amazonaws.com/apps-standard/201efd36-4910-4e78-ae29-0c10768e61e6.zip",
+        "demoUrl": null,
+        "id": "lVtebA7Q2IJ"
+      }
+    ],
+    "reviews": [],
+    "images": [
+      {
+        "created": 1503097510434,
+        "lastUpdated": 1503097510434,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/dbfc37ac-505c-4c2e-9646-49e4515ac88a.png",
+        "logo": false,
+        "id": "wvBOuhGclcx"
+      },
+      {
+        "created": 1498251648912,
+        "lastUpdated": 1500466841663,
+        "caption": "Metadata repository",
+        "description": "Metadata repository browser",
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/60a4241e-7844-482d-bc89-044c3a768eff.png",
+        "logo": true,
+        "id": "QF0hhyvstaz"
+      },
+      {
+        "created": 1503129764050,
+        "lastUpdated": 1503129764050,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/54c2b803-8809-49f5-a212-0a02169d322e.png",
+        "logo": false,
+        "id": "W3xN8I6n311"
+      }
+    ],
+    "status": "APPROVED",
+    "id": "vkLeNLp3cG2"
+  },
+  {
+    "created": 1498210573969,
+    "lastUpdated": 1498303881678,
+    "name": "Data Table",
+    "description": null,
+    "developer": {
+      "name": "Jan Henrik Øverland",
+      "organisation": "NDOH South Africa / DHIS 2",
+      "address": "",
+      "email": "jan@dhis2.org"
+    },
+    "owner": "google-oauth2|112608293954284886268",
+    "sourceUrl": null,
+    "appType": "APP",
+    "versions": [
+      {
+        "created": 1498210573969,
+        "lastUpdated": 1498210573969,
+        "version": "27",
+        "minDhisVersion": "2.26",
+        "maxDhisVersion": null,
+        "downloadUrl": "https://dhis2-appstore.s3.amazonaws.com/apps-standard/2cc82b20-681b-4144-a0ec-ac635d4c2394.zip",
+        "demoUrl": null,
+        "id": "WXjetDn0rXp"
+      }
+    ],
+    "reviews": [],
+    "images": [
+      {
+        "created": 1498214554007,
+        "lastUpdated": 1498225757088,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/f21de74b-26cc-4949-81d9-891653c2c847.png",
+        "logo": false,
+        "id": "SWQDfmgrOqJ"
+      },
+      {
+        "created": 1498213983567,
+        "lastUpdated": 1498225823024,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/2b6f39df-a864-45ba-a08c-164940f451c8.png",
+        "logo": true,
+        "id": "btHulNQnxHx"
+      }
+    ],
+    "status": "APPROVED",
+    "id": "NCBigidRkGp"
+  },
+  {
+    "created": 1498251400401,
+    "lastUpdated": 1503129218668,
+    "name": "Interactive Scorecard Widget",
+    "description": "Interactive scorecard on your dashboard",
+    "developer": {
+      "name": "HISP Tanzania",
+      "organisation": "HISP Tanzania",
+      "address": "",
+      "email": "info@hisptanzania.org"
+    },
+    "owner": "google-oauth2|114254875945375178446",
+    "sourceUrl": null,
+    "appType": "DASHBOARD_WIDGET",
+    "versions": [
+      {
+        "created": 1503056176612,
+        "lastUpdated": 1503056176612,
+        "version": "2.2",
+        "minDhisVersion": "2.24",
+        "maxDhisVersion": "2.27",
+        "downloadUrl": "https://dhis2-appstore.s3.amazonaws.com/apps-dashboard/ae78d289-59c8-42a0-a4b9-5aaf4b4fa8e8.zip",
+        "demoUrl": null,
+        "id": "GPaTJz5JoWh"
+      }
+    ],
+    "reviews": [],
+    "images": [
+      {
+        "created": 1503129218668,
+        "lastUpdated": 1503129218668,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-dashboard/f25f6992-8c3d-43a7-9705-a16e76d6236b.png",
+        "logo": false,
+        "id": "pivmCnPO5Ei"
+      },
+      {
+        "created": 1498251414869,
+        "lastUpdated": 1498303971526,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-dashboard/fb3de467-3df9-491b-ae01-135f9bc94920.png",
+        "logo": true,
+        "id": "Rs1qeYpKxd1"
+      }
+    ],
+    "status": "APPROVED",
+    "id": "ARSxOwclT1Q"
+  },
+  {
+    "created": 1498067458725,
+    "lastUpdated": 1503129172713,
+    "name": "Interactive Scorecard",
+    "description": "The next generation of scorecards",
+    "developer": {
+      "name": "HISP Tanzania",
+      "organisation": "HISP Tanzania",
+      "address": "",
+      "email": "info@hisptanzania.org"
+    },
+    "owner": "google-oauth2|114254875945375178446",
+    "sourceUrl": null,
+    "appType": "APP",
+    "versions": [
+      {
+        "created": 1503095477030,
+        "lastUpdated": 1503095477030,
+        "version": "2.2",
+        "minDhisVersion": "2.25",
+        "maxDhisVersion": "2.27",
+        "downloadUrl": "https://dhis2-appstore.s3.amazonaws.com/apps-standard/3ad63731-a75d-4adb-95a1-4f646e481c20.zip",
+        "demoUrl": null,
+        "id": "rdoDOjriL0A"
+      }
+    ],
+    "reviews": [],
+    "images": [
+      {
+        "created": 1503096112340,
+        "lastUpdated": 1503096112340,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/5a84303f-3b44-4e23-844c-35b104f7d4c9.png",
+        "logo": false,
+        "id": "Wx5utXk0wnC"
+      },
+      {
+        "created": 1498251197736,
+        "lastUpdated": 1498251197736,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/94ed4216-058b-4693-82c0-d83a6566ed87.png",
+        "logo": true,
+        "id": "u1TeufUxmNz"
+      },
+      {
+        "created": 1503129172713,
+        "lastUpdated": 1503129172713,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/a9a68741-389c-4174-99d3-822dca6f4ba4.png",
+        "logo": false,
+        "id": "OEgjc3LWPqS"
+      },
+      {
+        "created": 1503095922245,
+        "lastUpdated": 1503095922245,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/177470b2-2e56-4b68-baf1-a66984e28151.png",
+        "logo": false,
+        "id": "mbwPylRcggx"
+      },
+      {
+        "created": 1503095941983,
+        "lastUpdated": 1503095941983,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/9ca8346f-64bb-4e86-8da9-79a7e176cd6a.png",
+        "logo": false,
+        "id": "PKT2ID60kNb"
+      }
+    ],
+    "status": "APPROVED",
+    "id": "ZCIvXjEmrya"
+  },
+  {
+    "created": 1500624984706,
+    "lastUpdated": 1500647682241,
+    "name": "Custom Js Css",
+    "description": "Custom JS/CSS is an app that lets you create and maintain custom Javascript and CSS content for your DHIS 2 instance. The Javascript and CSS can be used to override existing look or behavior or add new.",
+    "developer": {
+      "name": "MSF OCBA",
+      "organisation": "MSF OCBA",
+      "address": "",
+      "email": "hmis@barcelona.msf.org"
+    },
+    "owner": "google-oauth2|108608110897375412038",
+    "sourceUrl": null,
+    "appType": "APP",
+    "versions": [
+      {
+        "created": 1500624984706,
+        "lastUpdated": 1501619311518,
+        "version": "1.0.1",
+        "minDhisVersion": "2.21",
+        "maxDhisVersion": null,
+        "downloadUrl": "https://dhis2-appstore.s3.amazonaws.com/apps-standard/94b4f2ca-3888-426e-8eff-bd10ee4b85cf.zip",
+        "demoUrl": null,
+        "id": "WWx7KhFeE9e"
+      }
+    ],
+    "reviews": [],
+    "images": [
+      {
+        "created": 1500624984706,
+        "lastUpdated": 1500624984706,
+        "caption": null,
+        "description": null,
+        "imageUrl": "https://dhis2-appstore.s3.amazonaws.com/images-standard/ec23259d-bc2d-43e6-8a34-81009a1cefaf.png",
+        "logo": true,
+        "id": "kx8IljNcdyC"
+      }
+    ],
+    "status": "APPROVED",
+    "id": "feEdFdIB8ng"
+  }
+]

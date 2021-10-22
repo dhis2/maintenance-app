@@ -1,0 +1,430 @@
+{
+  "pager": {
+    "page": 1,
+    "pageCount": 369,
+    "total": 1844,
+    "nextPage": "http://localhost:8080/dhis/api/dataElements?page=2&pageSize=5"
+  },
+  "dataElements": [
+    {
+      "id": "umC9U5YGDq4",
+      "created": "2014-12-21T18:15:50.886+0000",
+      "name": "BS_COLL (N, DSD) TARGET: Blood Units Donated",
+      "href": "http://localhost:8080/dhis/api/dataElements/umC9U5YGDq4",
+      "lastUpdated": "2014-12-21T18:15:51.344+0000",
+      "code": "BS_COLL_N_DSD_TARGET",
+      "shortName": "BS_COLL (N, DSD) TARGET",
+      "zeroIsSignificant": true,
+      "displayDescription": "Target the total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "type": "int",
+      "dataDimension": true,
+      "description": "Target the total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "externalAccess": false,
+      "publicAccess": "--------",
+      "aggregationOperator": "sum",
+      "url": "",
+      "numberType": "zeroPositiveInt",
+      "domainType": "AGGREGATE",
+      "dimension": "umC9U5YGDq4",
+      "displayName": "BS_COLL (N, DSD) TARGET: Blood Units Donated",
+      "displayShortName": "BS_COLL (N, DSD) TARGET",
+      "access": {
+        "update": true,
+        "externalize": false,
+        "delete": true,
+        "write": true,
+        "read": true,
+        "manage": true
+      },
+      "categoryCombo": {
+        "id": "bjDvmb4bfuf",
+        "name": "default",
+        "created": "2014-01-28T07:43:51.405+0000",
+        "lastUpdated": "2014-10-05T13:08:02.114+0000"
+      },
+      "user": {
+        "id": "kwwcGq36yOZ",
+        "name": "Jim Grace",
+        "created": "2014-01-28T19:45:59.984+0000",
+        "lastUpdated": "2015-01-02T12:20:56.567+0000"
+      },
+      "aggregationLevels": [],
+      "dataElementGroups": [],
+      "dataSets": [
+        {
+          "id": "oYO9GvA05LE",
+          "name": "MER Targets: Narratives (USG)",
+          "created": "2015-01-13T15:07:36.102+0000",
+          "lastUpdated": "2015-03-06T11:08:47.090+0000"
+        },
+        {
+          "id": "qRvKHvlzNdv",
+          "name": "MER Targets: Facility Based",
+          "code": "MER_TARGETS_SITE_FY15",
+          "created": "2014-09-23T11:22:46.107+0000",
+          "lastUpdated": "2015-01-23T06:47:18.530+0000"
+        },
+        {
+          "id": "tCIW2VFd8uu",
+          "name": "MER Targets: Community Based",
+          "code": "MER_TARGETS_SUBNAT_FY15",
+          "created": "2014-09-27T13:44:34.834+0000",
+          "lastUpdated": "2015-03-06T10:57:00.956+0000"
+        },
+        {
+          "id": "xxo1G5V1JG2",
+          "name": "MER Targets: National (IM)",
+          "code": "MER_TARGETS_OU_IM_FY15",
+          "created": "2014-10-01T07:46:59.588+0000",
+          "lastUpdated": "2015-03-06T11:07:52.158+0000"
+        }
+      ],
+      "attributeValues": [],
+      "items": [],
+      "userGroupAccesses": [
+        {
+          "userGroupUid": "c6hGi8GEZot",
+          "access": "r-------"
+        }
+      ]
+    },
+    {
+      "id": "NYXJu5vwbhN",
+      "created": "2014-04-27T11:45:26.098+0000",
+      "name": "BS_COLL (N, DSD): Blood Units Donated",
+      "href": "http://localhost:8080/dhis/api/dataElements/NYXJu5vwbhN",
+      "lastUpdated": "2014-12-30T04:14:50.406+0000",
+      "code": "BS_COLL_N_DSD",
+      "shortName": "BS_COLL (N, DSD)",
+      "zeroIsSignificant": true,
+      "displayDescription": "The total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "type": "int",
+      "dataDimension": true,
+      "description": "The total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "externalAccess": false,
+      "publicAccess": "--------",
+      "aggregationOperator": "sum",
+      "url": "",
+      "numberType": "zeroPositiveInt",
+      "domainType": "AGGREGATE",
+      "dimension": "NYXJu5vwbhN",
+      "displayName": "BS_COLL (N, DSD): Blood Units Donated",
+      "displayShortName": "BS_COLL (N, DSD)",
+      "access": {
+        "update": true,
+        "externalize": false,
+        "delete": true,
+        "write": true,
+        "read": true,
+        "manage": true
+      },
+      "categoryCombo": {
+        "id": "bjDvmb4bfuf",
+        "name": "default",
+        "created": "2014-01-28T07:43:51.405+0000",
+        "lastUpdated": "2014-10-05T13:08:02.114+0000"
+      },
+      "user": {
+        "id": "Ipjmc9acNPv",
+        "name": "Jorge Queipo",
+        "created": "2014-01-28T20:15:25.978+0000",
+        "lastUpdated": "2015-01-02T12:20:56.543+0000"
+      },
+      "aggregationLevels": [],
+      "dataElementGroups": [
+        {
+          "id": "QGG1usDv9kb",
+          "name": "All SI - Strategic Information",
+          "created": "2014-09-11T19:16:30.177+0000",
+          "lastUpdated": "2014-12-30T05:36:05.353+0000"
+        }
+      ],
+      "dataSets": [
+        {
+          "id": "xXmmo2so2V8",
+          "name": "MER: National (IP) - FY14 - LEGACY",
+          "code": "MER_OU_IM",
+          "created": "2014-09-02T02:57:13.844+0000",
+          "lastUpdated": "2015-03-06T11:07:47.805+0000"
+        },
+        {
+          "id": "i29foJcLY9Y",
+          "name": "MER Results: Facility Based",
+          "code": "MER_RESULTS_SITE_FY15",
+          "created": "2014-09-23T11:22:46.107+0000",
+          "lastUpdated": "2015-01-25T11:39:59.207+0000"
+        },
+        {
+          "id": "w9BiI08vABw",
+          "name": "MER: Community Based - FY14 - LEGACY",
+          "code": "MER_SUBNAT",
+          "created": "2014-08-28T07:39:18.242+0000",
+          "lastUpdated": "2015-03-06T11:08:45.902+0000"
+        },
+        {
+          "id": "MHI0whLjJlB",
+          "name": "MER: Narratives - FY14 - LEGACY",
+          "code": "MER_RESULTS_NARRATIVES",
+          "created": "2014-10-02T11:57:51.541+0000",
+          "lastUpdated": "2015-01-25T11:43:53.460+0000"
+        },
+        {
+          "id": "E2h9AI5Wfm9",
+          "name": "POC: MER",
+          "code": "POC: MER",
+          "created": "2014-10-10T12:23:02.939+0000",
+          "lastUpdated": "2015-01-20T13:16:34.125+0000"
+        },
+        {
+          "id": "ovYEbELCknv",
+          "name": "MER Results: National (IM)",
+          "code": "MER_RESULTS_OU_IM_FY15",
+          "created": "2014-10-01T07:46:59.588+0000",
+          "lastUpdated": "2015-03-06T11:08:42.737+0000"
+        },
+        {
+          "id": "STL4izfLznL",
+          "name": "MER Results: Community Based",
+          "code": "MER_RESULTS_SUBNAT_FY15",
+          "created": "2014-09-27T13:44:34.834+0000",
+          "lastUpdated": "2015-01-23T06:44:46.165+0000"
+        },
+        {
+          "id": "qAEmxYxKodg",
+          "name": "POC: MER With 2 Multitabs",
+          "code": "MER_POC",
+          "created": "2014-08-21T04:46:37.507+0000",
+          "lastUpdated": "2014-12-15T16:31:31.692+0000"
+        },
+        {
+          "id": "gpJ2TLXI3mY",
+          "name": "MER: Facility Based - FY14 - LEGACY",
+          "code": "MER_SITE",
+          "created": "2014-08-28T07:39:59.777+0000",
+          "lastUpdated": "2015-01-25T11:39:58.766+0000"
+        }
+      ],
+      "attributeValues": [],
+      "items": [],
+      "userGroupAccesses": [
+        {
+          "userGroupUid": "c6hGi8GEZot",
+          "access": "r-------"
+        }
+      ]
+    },
+    {
+      "id": "f2a9eOzfpR7",
+      "created": "2015-01-12T10:36:56.060+0000",
+      "name": "BS_COLL (N, DSD_NARRATIVE) TARGET: Blood Units Donated",
+      "href": "http://localhost:8080/dhis/api/dataElements/f2a9eOzfpR7",
+      "lastUpdated": "2015-01-12T10:36:56.625+0000",
+      "code": "BS_COLL_N_DSD_NARRATIVE_TARGET",
+      "shortName": "BS_COLL (N, DSD_NARRATIVE) TARGET",
+      "zeroIsSignificant": true,
+      "displayDescription": "Target the total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "type": "string",
+      "dataDimension": true,
+      "description": "Target the total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "externalAccess": false,
+      "textType": "longText",
+      "publicAccess": "rw------",
+      "aggregationOperator": "sum",
+      "url": "",
+      "domainType": "AGGREGATE",
+      "dimension": "f2a9eOzfpR7",
+      "displayName": "BS_COLL (N, DSD_NARRATIVE) TARGET: Blood Units Donated",
+      "displayShortName": "BS_COLL (N, DSD_NARRATIVE) TARGET",
+      "access": {
+        "update": true,
+        "externalize": false,
+        "delete": true,
+        "write": true,
+        "read": true,
+        "manage": true
+      },
+      "categoryCombo": {
+        "id": "bjDvmb4bfuf",
+        "name": "default",
+        "created": "2014-01-28T07:43:51.405+0000",
+        "lastUpdated": "2014-10-05T13:08:02.114+0000"
+      },
+      "user": {
+        "id": "kwwcGq36yOZ",
+        "name": "Jim Grace",
+        "created": "2014-01-28T19:45:59.984+0000",
+        "lastUpdated": "2015-01-02T12:20:56.567+0000"
+      },
+      "aggregationLevels": [],
+      "dataElementGroups": [],
+      "dataSets": [
+        {
+          "id": "oYO9GvA05LE",
+          "name": "MER Targets: Narratives (USG)",
+          "created": "2015-01-13T15:07:36.102+0000",
+          "lastUpdated": "2015-03-06T11:08:47.090+0000"
+        },
+        {
+          "id": "AyFVOGbAvcH",
+          "name": "MER Targets: Narratives",
+          "created": "2015-01-05T09:25:09.576+0000",
+          "lastUpdated": "2015-03-06T11:08:47.711+0000"
+        }
+      ],
+      "attributeValues": [],
+      "items": [],
+      "userGroupAccesses": []
+    },
+    {
+      "id": "Zh08CCOJSBD",
+      "created": "2014-10-07T08:21:22.652+0000",
+      "name": "BS_COLL (N, DSD_NARRATIVE): Blood Units Donated",
+      "href": "http://localhost:8080/dhis/api/dataElements/Zh08CCOJSBD",
+      "lastUpdated": "2014-12-30T04:14:43.120+0000",
+      "code": "BS_COLL_N_DSD_NARRATIVE",
+      "shortName": "BS_COLL (N, DSD NARRATIVE)",
+      "zeroIsSignificant": true,
+      "displayDescription": "The total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "type": "string",
+      "dataDimension": true,
+      "description": "The total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "externalAccess": false,
+      "textType": "longText",
+      "publicAccess": "rw------",
+      "aggregationOperator": "sum",
+      "url": "",
+      "domainType": "AGGREGATE",
+      "dimension": "Zh08CCOJSBD",
+      "displayName": "BS_COLL (N, DSD_NARRATIVE): Blood Units Donated",
+      "displayShortName": "BS_COLL (N, DSD NARRATIVE)",
+      "access": {
+        "update": true,
+        "externalize": false,
+        "delete": true,
+        "write": true,
+        "read": true,
+        "manage": true
+      },
+      "categoryCombo": {
+        "id": "bjDvmb4bfuf",
+        "name": "default",
+        "created": "2014-01-28T07:43:51.405+0000",
+        "lastUpdated": "2014-10-05T13:08:02.114+0000"
+      },
+      "user": {
+        "id": "Ipjmc9acNPv",
+        "name": "Jorge Queipo",
+        "created": "2014-01-28T20:15:25.978+0000",
+        "lastUpdated": "2015-01-02T12:20:56.543+0000"
+      },
+      "aggregationLevels": [],
+      "dataElementGroups": [],
+      "dataSets": [
+        {
+          "id": "MHI0whLjJlB",
+          "name": "MER: Narratives - FY14 - LEGACY",
+          "code": "MER_RESULTS_NARRATIVES",
+          "created": "2014-10-02T11:57:51.541+0000",
+          "lastUpdated": "2015-01-25T11:43:53.460+0000"
+        },
+        {
+          "id": "E2h9AI5Wfm9",
+          "name": "POC: MER",
+          "code": "POC: MER",
+          "created": "2014-10-10T12:23:02.939+0000",
+          "lastUpdated": "2015-01-20T13:16:34.125+0000"
+        },
+        {
+          "id": "f6NLvRGixJV",
+          "name": "MER Results: Narratives (USG)",
+          "created": "2015-01-13T14:52:48.500+0000",
+          "lastUpdated": "2015-03-06T11:08:42.125+0000"
+        },
+        {
+          "id": "NJlAVhe4zjv",
+          "name": "MER Results: Narratives",
+          "created": "2015-01-05T09:25:09.576+0000",
+          "lastUpdated": "2015-03-06T11:08:41.582+0000"
+        }
+      ],
+      "attributeValues": [],
+      "items": [],
+      "userGroupAccesses": []
+    },
+    {
+      "id": "BZhXcbNa5ST",
+      "created": "2014-12-21T18:13:33.296+0000",
+      "name": "BS_COLL (N, TA) TARGET: Blood Units Donated",
+      "href": "http://localhost:8080/dhis/api/dataElements/BZhXcbNa5ST",
+      "lastUpdated": "2014-12-21T18:13:33.926+0000",
+      "code": "BS_COLL_N_TA_TARGET",
+      "shortName": "BS_COLL (N, TA) TARGET",
+      "zeroIsSignificant": true,
+      "displayDescription": "Target the total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "type": "int",
+      "dataDimension": true,
+      "description": "Target the total number of blood units that were donated in the country National Blood Transfusion Service (NBTS) network.",
+      "externalAccess": false,
+      "publicAccess": "--------",
+      "aggregationOperator": "sum",
+      "numberType": "zeroPositiveInt",
+      "domainType": "AGGREGATE",
+      "dimension": "BZhXcbNa5ST",
+      "displayName": "BS_COLL (N, TA) TARGET: Blood Units Donated",
+      "displayShortName": "BS_COLL (N, TA) TARGET",
+      "access": {
+        "update": true,
+        "externalize": false,
+        "delete": true,
+        "write": true,
+        "read": true,
+        "manage": true
+      },
+      "categoryCombo": {
+        "id": "bjDvmb4bfuf",
+        "name": "default",
+        "created": "2014-01-28T07:43:51.405+0000",
+        "lastUpdated": "2014-10-05T13:08:02.114+0000"
+      },
+      "user": {
+        "id": "kwwcGq36yOZ",
+        "name": "Jim Grace",
+        "created": "2014-01-28T19:45:59.984+0000",
+        "lastUpdated": "2015-01-02T12:20:56.567+0000"
+      },
+      "aggregationLevels": [],
+      "dataElementGroups": [],
+      "dataSets": [
+        {
+          "id": "qRvKHvlzNdv",
+          "name": "MER Targets: Facility Based",
+          "code": "MER_TARGETS_SITE_FY15",
+          "created": "2014-09-23T11:22:46.107+0000",
+          "lastUpdated": "2015-01-23T06:47:18.530+0000"
+        },
+        {
+          "id": "tCIW2VFd8uu",
+          "name": "MER Targets: Community Based",
+          "code": "MER_TARGETS_SUBNAT_FY15",
+          "created": "2014-09-27T13:44:34.834+0000",
+          "lastUpdated": "2015-03-06T10:57:00.956+0000"
+        },
+        {
+          "id": "xxo1G5V1JG2",
+          "name": "MER Targets: National (IM)",
+          "code": "MER_TARGETS_OU_IM_FY15",
+          "created": "2014-10-01T07:46:59.588+0000",
+          "lastUpdated": "2015-03-06T11:07:52.158+0000"
+        }
+      ],
+      "attributeValues": [],
+      "items": [],
+      "userGroupAccesses": [
+        {
+          "userGroupUid": "c6hGi8GEZot",
+          "access": "r-------"
+        }
+      ]
+    }
+  ]
+}

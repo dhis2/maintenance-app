@@ -1,0 +1,26 @@
+sudo: false
+language: node_js
+node_js:
+- node
+script:
+- npm run travis
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] || travis_terminate 0'
+- codeclimate-test-reporter < ./coverage/lcov.info
+notifications:
+  slack:
+    secure: MPEurDUvYfcl3b5Hji/42sKF6TQLRcrkqMfKINy6buFePKdbkwDjQd+r0GYAC153lLpbJeiFy7p8TAVp2QP3wmC02ea9n3CG8juKpCBabyaZq3RBvhJ7kKUd/BdTLPNWU1ttSrQlzOoAs3HcuEAaeUzhW3d0LPH+bVvYx4aG8UM=
+env:
+  global:
+  - GH_REF: github.com/dhis2/d2.git
+  - secure: dczgNmycwYw9E7aAQN+/Ad/l93SIWTPDCnJ39eLWb0Wwp4CdvNAfdt9EV9ysQSba5ylaD7I1dD6nmFkZla1m8UtxdrPbTm/gf0v40ZXgSErxkFpRt+cj442j6v/IqFi9Ok78KwVpeyUjraWD5HToCwBI9BxtpoqrCVh84DfplSo=
+  - secure: K5uXYumjeCupQouc6ZEzh+jpY0RlWf8PcPtnlrpvjLvGWZxj7OhzyfATxM9qPVOUDVc0NW7N3FuaowZwrW4oRg5YiW4BdJy4xwPUn/+hrsJ0IAHlSvJf+e5vzkCcItNRL/zs+BD1iTyVBohqT4KT+Cx9qCD72v3QVT7wVZMUb4A=
+before_deploy:
+- npm run build
+deploy:
+  provider: npm
+  email: ci@dhis2.org
+  api_key:
+    secure: QJTOEQWRhTx5Sl3reCWDHx8BBA5oxmxSerExjM5nlWoVldrYeAZXDrGPIF75MM45NX2Z+iPQC4drbAJCeDJOa62OFBvvfPrlixfVTMbrZnfy9ZUafMCDTukelxeoki9NwkMtFi9+ZzF9Wp/H8O9SAXFKUDcKt9n8RLjZ+Zn7LPQ=
+  on:
+    tags: true
+  skip_cleanup: true

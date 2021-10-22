@@ -1,0 +1,31 @@
+{
+    "extends": [
+        "react-app",
+        "prettier"
+    ],
+    "settings": {
+        "react": {
+            "version": "^15.3.1"
+        }
+    },
+    "env": {
+        "browser": true,
+        "jest": true
+    },
+    "rules": {
+        "no-param-reassign": [2, { "props": false }],
+        "no-fallthrough": "off",
+        "array-callback-return": "off",
+        "import/no-extraneous-dependencies": 0,
+        "no-unused-expressions": ["error", {
+            "allowTernary": true,
+            "allowShortCircuit": true
+        }]
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
+    }
+}

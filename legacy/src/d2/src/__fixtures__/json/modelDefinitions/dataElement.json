@@ -1,0 +1,298 @@
+{
+  "name": "dataElement",
+  "isMetaData": true,
+  "apiEndpoint": "/dataElements",
+  "modelValidations": {},
+  "modelProperties": {
+    "aggregationLevels": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "zeroIsSignificant": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "boolean",
+      "required": true,
+      "owner": true
+    },
+    "dimensionType": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": false,
+      "persisted": false,
+      "required": true,
+      "owner": false
+    },
+    "type": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": true,
+      "owner": true
+    },
+    "optionSet": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "id": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": false,
+      "owner": true
+    },
+    "created": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "description": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": false,
+      "owner": true
+    },
+    "commentOptionSet": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "name": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": true,
+      "owner": true
+    },
+    "externalAccess": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": false,
+      "persisted": false,
+      "type": "boolean",
+      "required": true,
+      "owner": false
+    },
+    "textType": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": false,
+      "owner": true
+    },
+    "href": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": false,
+      "persisted": false,
+      "type": "string",
+      "required": true,
+      "owner": false
+    },
+    "dataElementGroups": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": false
+    },
+    "publicAccess": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": false,
+      "owner": true
+    },
+    "aggregationOperator": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": true,
+      "owner": true
+    },
+    "formName": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": false,
+      "owner": true
+    },
+    "lastUpdated": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "dataSets": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": false
+    },
+    "code": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": false,
+      "owner": true
+    },
+    "access": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": false,
+      "persisted": false,
+      "required": true,
+      "owner": false
+    },
+    "url": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": false,
+      "owner": true
+    },
+    "numberType": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": false,
+      "owner": true
+    },
+    "domainType": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": true,
+      "owner": true
+    },
+    "legendSet": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "categoryCombo": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "dimension": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": false,
+      "persisted": false,
+      "type": "string",
+      "required": true,
+      "owner": false
+    },
+    "attributeValues": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "items": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": false,
+      "persisted": false,
+      "required": true,
+      "owner": false
+    },
+    "userGroupAccesses": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "shortName": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "type": "string",
+      "required": true,
+      "owner": true
+    },
+    "displayName": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": false,
+      "persisted": false,
+      "type": "string",
+      "required": true,
+      "owner": false
+    },
+    "user": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": true,
+      "persisted": true,
+      "required": false,
+      "owner": true
+    },
+    "filter": {
+      "configurable": false,
+      "enumerable": true,
+      "writable": false,
+      "persisted": false,
+      "type": "string",
+      "required": true,
+      "owner": false
+    }
+  }
+}

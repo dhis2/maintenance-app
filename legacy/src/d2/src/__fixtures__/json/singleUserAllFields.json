@@ -1,0 +1,86 @@
+{
+  "id": "aUplAx3DOWy",
+  "created": "2014-12-12T01:32:41.319+0000",
+  "name": "(TBD) (TBD)",
+  "href": "http://localhost:8080/dhis/api/users/aUplAx3DOWy",
+  "lastUpdated": "2014-12-12T01:32:41.717+0000",
+  "surname": "(TBD)",
+  "externalAccess": false,
+  "firstName": "(TBD)",
+  "email": "gehronmm@state.gov",
+  "displayName": "(TBD) (TBD)",
+  "userCredentials": {
+    "id": "wGSOMhMgFWP",
+    "name": "(TBD) (TBD)",
+    "code": "invite-gehronmm@state.gov-NwNtAp21lzy",
+    "created": "2014-12-12T01:32:40.304+0000",
+    "lastUpdated": "2015-03-10T15:29:44.198+0000"
+  },
+  "access": {
+    "update": true,
+    "externalize": false,
+    "delete": true,
+    "write": true,
+    "read": true,
+    "manage": false
+  },
+  "organisationUnits": [
+    {
+      "id": "nBo9Y4yZubB",
+      "name": "Caribbean Region",
+      "code": "nBo9Y4yZubB",
+      "created": "2014-09-29T06:46:04.353+0000",
+      "lastUpdated": "2015-01-02T06:23:29.737+0000",
+      "href": "http://localhost:8080/dhis/api/organisationUnits/nBo9Y4yZubB"
+    }
+  ],
+  "dataViewOrganisationUnits": [
+    {
+      "id": "nBo9Y4yZubB",
+      "name": "Caribbean Region",
+      "code": "nBo9Y4yZubB",
+      "created": "2014-09-29T06:46:04.353+0000",
+      "lastUpdated": "2015-01-02T06:23:29.737+0000",
+      "href": "http://localhost:8080/dhis/api/organisationUnits/nBo9Y4yZubB"
+    }
+  ],
+  "attributeValues": [],
+  "userGroups": [
+    {
+      "id": "c6hGi8GEZot",
+      "name": "Data SI access",
+      "created": "2014-09-29T02:44:05.359+0000",
+      "lastUpdated": "2015-02-02T01:28:02.209+0000",
+      "href": "http://localhost:8080/dhis/api/userGroups/c6hGi8GEZot"
+    },
+    {
+      "id": "YbkldVOJMUl",
+      "name": "Data EA access",
+      "created": "2014-09-29T02:44:02.361+0000",
+      "lastUpdated": "2015-02-02T01:28:02.148+0000",
+      "href": "http://localhost:8080/dhis/api/userGroups/YbkldVOJMUl"
+    },
+    {
+      "id": "QoMuDremcib",
+      "name": "OU Caribbean Region Partner 3476 all mechanisms - Pan American Health Organization",
+      "created": "2014-09-29T02:46:07.074+0000",
+      "lastUpdated": "2015-01-02T06:23:29.863+0000",
+      "href": "http://localhost:8080/dhis/api/userGroups/QoMuDremcib"
+    },
+    {
+      "id": "iuD8wUFz95X",
+      "name": "Data SIMS access",
+      "created": "2014-09-29T02:44:09.145+0000",
+      "lastUpdated": "2015-02-02T01:28:02.230+0000",
+      "href": "http://localhost:8080/dhis/api/userGroups/iuD8wUFz95X"
+    },
+    {
+      "id": "okg30Suwvdt",
+      "name": "OU Caribbean Region Partner 3476 users - Pan American Health Organization",
+      "created": "2014-09-29T02:46:06.809+0000",
+      "lastUpdated": "2015-01-02T06:23:29.806+0000",
+      "href": "http://localhost:8080/dhis/api/userGroups/okg30Suwvdt"
+    }
+  ],
+  "userGroupAccesses": []
+}

@@ -1,0 +1,27 @@
+.idea
+*.iml
+.project
+.settings
+
+npm-debug.log
+
+jspm_packages/*
+
+node_modules/*
+!node_modules/d2
+!node_modules/fixtures
+
+build/*
+dist/*
+lib/*
+docs/*
+
+bower_components
+coverage
+.nyc_output
+
+design_doc.md
+
+# TODO: Jshint is a dependency of the git hook which installs these files on install...
+.jshintignore
+.jshintrc

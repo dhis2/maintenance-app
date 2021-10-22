@@ -1,0 +1,36 @@
+{
+  "lastUpdated": "2014-12-12T01:32:41.717+0000",
+  "id": "aUplAx3DOWy",
+  "created": "2014-12-12T01:32:41.319+0000",
+  "surname": "(TBD)",
+  "email": "gehronmm@state.gov",
+  "firstName": "(TBD)",
+  "userCredentials": {
+    "id": "wGSOMhMgFWP",
+    "name": "(TBD) (TBD)",
+    "code": "invite-gehronmm@state.gov-NwNtAp21lzy",
+    "created": "2014-12-12T01:32:40.304+0000",
+    "lastUpdated": "2015-03-10T15:29:44.198+0000"
+  },
+  "organisationUnits": [
+    {
+      "id": "nBo9Y4yZubB",
+      "name": "Caribbean Region",
+      "code": "nBo9Y4yZubB",
+      "created": "2014-09-29T06:46:04.353+0000",
+      "lastUpdated": "2015-01-02T06:23:29.737+0000",
+      "href": "http://localhost:8080/dhis/api/organisationUnits/nBo9Y4yZubB"
+    }
+  ],
+  "dataViewOrganisationUnits": [
+    {
+      "id": "nBo9Y4yZubB",
+      "name": "Caribbean Region",
+      "code": "nBo9Y4yZubB",
+      "created": "2014-09-29T06:46:04.353+0000",
+      "lastUpdated": "2015-01-02T06:23:29.737+0000",
+      "href": "http://localhost:8080/dhis/api/organisationUnits/nBo9Y4yZubB"
+    }
+  ],
+  "attributeValues": []
+}

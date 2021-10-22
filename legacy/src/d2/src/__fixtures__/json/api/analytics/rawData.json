@@ -1,0 +1,100 @@
+{
+    "metaData": {
+        "items": {
+            "RXL3lPSK8oG": {
+                "name": "Clinic"
+            },
+            "J5jldMd8OHv": {
+                "name": "Facility Type"
+            },
+            "ou": {
+                "name": "Organisation unit"
+            },
+            "CXw2yu5fodb": {
+                "name": "CHC"
+            },
+            "O6uvpzGd5pu": {
+                "name": "Bo"
+            },
+            "fbfJHSPpUQD": {
+                "name": "ANC 1st visit",
+                "legendSet": "fqs276KXCXi"
+            },
+            "uYxK4wmcPqA": {
+                "name": "CHP"
+            },
+            "MAs88nJc9nL": {
+                "name": "Private Clinic"
+            },
+            "fdc6uOvgoji": {
+                "name": "Bombali"
+            },
+            "tDZVQ1WtwpA": {
+                "name": "Hospital"
+            },
+            "dx": {
+                "name": "Data"
+            },
+            "pq2XI5kz2BY": {
+                "name": "Fixed"
+            },
+            "cYeuwXTCPkU": {
+                "name": "ANC 2nd visit",
+                "legendSet": "fqs276KXCXi"
+            },
+            "Jtf34kNZhzP": {
+                "name": "ANC 3rd visit"
+            },
+            "PT59n8BQbqM": {
+                "name": "Outreach"
+            },
+            "EYbopBOJWsW": {
+                "name": "MCHP"
+            },
+            "PVLOW4bCshG": {
+                "name": "NGO"
+            },
+            "oRVt7g429ZO": {
+                "name": "Public facilities"
+            },
+            "Bpx0589u8y0": {
+                "name": "Facility Ownership"
+            },
+            "w0gFTTmsUcF": {
+                "name": "Mission"
+            }
+        },
+        "dimensions": {
+            "dx": [
+                "fbfJHSPpUQD",
+                "cYeuwXTCPkU",
+                "Jtf34kNZhzP"
+            ],
+            "pe": [],
+            "J5jldMd8OHv": [
+                "uYxK4wmcPqA",
+                "EYbopBOJWsW",
+                "RXL3lPSK8oG",
+                "tDZVQ1WtwpA",
+                "CXw2yu5fodb"
+            ],
+            "ou": [
+                "O6uvpzGd5pu",
+                "fdc6uOvgoji"
+            ],
+            "co": [
+                "pq2XI5kz2BY",
+                "PT59n8BQbqM"
+            ],
+            "Bpx0589u8y0": [
+                "PVLOW4bCshG",
+                "MAs88nJc9nL",
+                "oRVt7g429ZO",
+                "w0gFTTmsUcF"
+            ]
+        }
+    },
+    "rows": [],
+    "width": 0,
+    "height": 0
+}

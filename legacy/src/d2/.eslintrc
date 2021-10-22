@@ -1,0 +1,25 @@
+{
+    "extends": "dhis2",
+    "parser": "babel-eslint",
+    "rules": {
+        "class-methods-use-this": ["warn"]
+    },
+    "overrides": [
+        {
+            "files": ["src/**/__tests__/**/*.js", "src/**/__mocks__/**/*.js"],
+            "env": {
+                "jest": true,
+                "browser": true
+            },
+            "rules": {
+                "arrow-body-style": ["ignore"]
+            }
+        },
+        {
+            "files": "src/__fixtures__/fixtures.js",
+            "rules": {
+                "global-require": ["ignore"]
+            }
+        }
+    ]
+}

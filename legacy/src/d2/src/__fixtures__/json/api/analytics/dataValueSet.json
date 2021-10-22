@@ -1,0 +1,26 @@
+{
+    "dataValues": [
+        {
+            "dataElement": "DE_359596",
+            "period": "201709",
+            "orgUnit": "OU_525",
+            "categoryOptionCombo": "COC_167661",
+            "value": "17640.0",
+            "storedBy": "[aggregated]",
+            "created": "2017-10-18",
+            "lastUpdated": "2017-10-18",
+            "comment": "[aggregated]"
+        },
+        {
+            "dataElement": "DE_359596",
+            "period": "201709",
+            "orgUnit": "OU_525",
+            "categoryOptionCombo": "COC_167660",
+            "value": "4668.0",
+            "storedBy": "[aggregated]",
+            "created": "2017-10-18",
+            "lastUpdated": "2017-10-18",
+            "comment": "[aggregated]"
+        }
+    ]
+}

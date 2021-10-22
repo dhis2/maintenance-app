@@ -1,0 +1,64 @@
+{
+  "lastUpdated": "2015-08-11T12:24:43.271+0000",
+  "id": "xE7jOejl9FI",
+  "created": "2013-04-18T15:15:08.407+0000",
+  "name": "John Traore",
+  "birthday": "1971-04-08",
+  "education": "Master of super using",
+  "gender": "gender_male",
+  "displayName": "John Traore",
+  "jobTitle": "Super user",
+  "externalAccess": false,
+  "surname": "Traore",
+  "employer": "DHIS",
+  "introduction": "I am the super user of DHIS 2",
+  "email": "demo@dhis2.org",
+  "languages": "English",
+  "lastCheckedInterpretations": "2014-10-22T09:36:07.675+0000",
+  "firstName": "John",
+  "phoneNumber": "",
+  "interests": "Football, swimming, singing, dancing",
+  "userCredentials": {
+    "code": "admin",
+    "created": "2013-04-18T15:15:08.401+0000",
+    "name": "John Traore",
+    "passwordLastUpdated": "2014-12-18T19:56:05.264+0000",
+    "lastLogin": "2015-10-02T10:00:14.467+0000",
+    "displayName": "John Traore",
+    "invitation": false,
+    "selfRegistered": false,
+    "externalAccess": false,
+    "disabled": false,
+    "username": "admin",
+    "userGroupAccesses": [],
+    "cogsDimensionConstraints": [],
+    "catDimensionConstraints": [],
+    "userRoles": [
+      {
+        "id": "Ufph3mGRmMo"
+      }
+    ]
+  },
+  "organisationUnits": [
+    {
+      "id": "ImspTQPwCqd"
+    }
+  ],
+  "dataViewOrganisationUnits": [],
+  "userGroupAccesses": [],
+  "attributeValues": [],
+  "userGroups": [
+    {
+      "id": "vAvEltyXGbD"
+    },
+    {
+      "id": "wl5cDMuUhmF"
+    },
+    {
+      "id": "QYrzIjSfI8z"
+    },
+    {
+      "id": "jvrEwEJ2yZn"
+    }
+  ]
+}

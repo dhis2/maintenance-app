@@ -1,0 +1,120 @@
+{
+    "created": "2013-10-16T10:40:45.031",
+    "lastUpdated": "2017-02-23T17:41:35.921",
+    "name": "Reporting rates",
+    "href": "https://play.dhis2.org/demo/api/legendSets/k1JHPfXsJND",
+    "id": "k1JHPfXsJND",
+    "displayName": "Reporting rates",
+    "publicAccess": "r-------",
+    "externalAccess": false,
+    "symbolizer": "color",
+    "access": {
+        "read": true,
+        "update": true,
+        "externalize": false,
+        "delete": true,
+        "write": true,
+        "manage": true
+    },
+    "user": {
+        "id": "xE7jOejl9FI"
+    },
+    "userGroupAccesses": [
+        {
+            "access": "rw------",
+            "userGroupUid": "wl5cDMuUhmF",
+            "displayName": "Administrators",
+            "id": "wl5cDMuUhmF"
+        }
+    ],
+    "attributeValues": [],
+    "legends": [
+        {
+            "lastUpdated": "2016-10-05T18:25:21.921",
+            "created": "2016-10-05T18:25:21.921",
+            "name": "Medium",
+            "id": "jEchJpYeJsj",
+            "endValue": 80.0,
+            "color": "#6baed6",
+            "startValue": 60.0,
+            "legendSet": {
+                "id": "k1JHPfXsJND"
+            },
+            "translations": []
+        },
+        {
+            "lastUpdated": "2016-10-05T18:25:21.921",
+            "created": "2016-10-05T18:25:21.921",
+            "name": "Low",
+            "id": "UmOS6jE35Uy",
+            "endValue": 60.0,
+            "color": "#3182BD",
+            "startValue": 30.0,
+            "legendSet": {
+                "id": "k1JHPfXsJND"
+            },
+            "translations": []
+        },
+        {
+            "lastUpdated": "2016-10-05T18:25:21.921",
+            "created": "2016-10-05T18:25:21.921",
+            "name": "Non reporting",
+            "id": "jMw9EOicPbm",
+            "endValue": 30.0,
+            "color": "#08519C",
+            "startValue": 0.0,
+            "legendSet": {
+                "id": "k1JHPfXsJND"
+            },
+            "translations": []
+        },
+        {
+            "lastUpdated": "2016-10-05T18:25:21.921",
+            "created": "2016-10-05T18:25:21.921",
+            "name": "Excellent",
+            "id": "baH8XcMGg8d",
+            "endValue": 100.0,
+            "color": "#EFF3FF",
+            "startValue": 90.0,
+            "legendSet": {
+                "id": "k1JHPfXsJND"
+            },
+            "translations": []
+        },
+        {
+            "lastUpdated": "2016-10-05T18:25:21.921",
+            "created": "2016-10-05T18:25:21.921",
+            "name": "Invalid",
+            "id": "DinVyhLbrJK",
+            "endValue": 1000.0,
+            "color": "#CCCCCC",
+            "startValue": 100.0,
+            "legendSet": {
+                "id": "k1JHPfXsJND"
+            },
+            "translations": []
+        },
+        {
+            "lastUpdated": "2016-10-05T18:25:21.921",
+            "created": "2016-10-05T18:25:21.921",
+            "name": "High",
+            "id": "FNpcjfIWvZZ",
+            "endValue": 90.0,
+            "color": "#BDD7E7",
+            "startValue": 80.0,
+            "legendSet": {
+                "id": "k1JHPfXsJND"
+            },
+            "translations": []
+        }
+    ],
+    "translations": [],
+    "userAccesses": [
+        {
+            "access": "rw------",
+            "displayName": "Kanu Nwankwo",
+            "id": "UgDpalMTGDr",
+            "userUid": "UgDpalMTGDr"
+        }
+    ]
+}

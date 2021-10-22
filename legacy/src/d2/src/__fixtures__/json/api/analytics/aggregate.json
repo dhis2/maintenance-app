@@ -1,0 +1,73 @@
+{
+    "headers": [
+        {
+            "name": "pe",
+            "column": "Period",
+            "valueType": "TEXT",
+            "type": "java.lang.String",
+            "hidden": false,
+            "meta": true
+        },
+        {
+            "name": "ou",
+            "column": "Organisation unit",
+            "valueType": "TEXT",
+            "type": "java.lang.String",
+            "hidden": false,
+            "meta": true
+        },
+        {
+            "name": "value",
+            "column": "Value",
+            "valueType": "NUMBER",
+            "type": "java.lang.Double",
+            "hidden": false,
+            "meta": false
+        }
+    ],
+    "metaData": {
+        "items": {
+            "2016": {
+                "name": 2016
+            },
+            "eBAyeGv0exc": {
+                "name": "Inpatient morbidity and mortality"
+            },
+            "pe": {
+                "name": "Period"
+            },
+            "ou": {
+                "name": "Organisation unit"
+            },
+            "oZg33kd9taw": {
+                "name": "Gender"
+            },
+            "O6uvpzGd5pu": {
+                "name": "Bo"
+            },
+            "Zj7UnCAulEk": {
+                "name": "Inpatient morbidity and mortality"
+            }
+        },
+        "dimensions": {
+            "pe": [
+                2016
+            ],
+            "ou": [
+                "O6uvpzGd5pu"
+            ],
+            "oZg33kd9taw": [
+                "Female"
+            ]
+        }
+    },
+    "width": 3,
+    "height": 1,
+    "rows": [
+        [
+            2016,
+            "O6uvpzGd5pu",
+            2875
+        ]
+    ]
+}

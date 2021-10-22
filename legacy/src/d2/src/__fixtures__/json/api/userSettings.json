@@ -1,0 +1,12 @@
+{
+  "keyDbLocale": "en",
+  "keyMessageSmsNotification": true,
+  "keyTrackerDashboardLayout": null,
+  "keyStyle": "light_blue/light_blue.css",
+  "keyAutoSaveDataEntryForm": false,
+  "keyUiLocale": "fr",
+  "keyAutoSavetTrackedEntityForm": false,
+  "keyAnalysisDisplayProperty": "name",
+  "keyAutoSaveCaseEntryForm": false,
+  "keyMessageEmailNotification": true
+}
