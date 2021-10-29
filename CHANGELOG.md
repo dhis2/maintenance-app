@@ -1,3 +1,10 @@
+# [32.13.0](https://github.com/dhis2/maintenance-app/compare/v32.12.4...v32.13.0) (2021-10-29)
+
+
+### Features
+
+* add shortname to indicator- and category grp set ([#2074](https://github.com/dhis2/maintenance-app/issues/2074)) ([fa926cc](https://github.com/dhis2/maintenance-app/commit/fa926ccb839abb91bf2c672eb513c477aa429f67))
+
 ## [32.12.4](https://github.com/dhis2/maintenance-app/compare/v32.12.3...v32.12.4) (2021-09-05)
 
 
