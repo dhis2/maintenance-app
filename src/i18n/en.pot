@@ -6898,14 +6898,6 @@ msgstr ""
 msgid "XYZ"
 msgstr ""
 
-#: vector_style
-msgid "Vector Style"
-msgstr ""
-
-#: before_layer_id
-msgid "Before layer id"
-msgstr ""
-
 #: attribution
 msgid "Attribution"
 msgstr ""
