@@ -86,12 +86,6 @@ export default new Map([
         {
             required: true,
             component: props => {
-                console.log(
-                    'props',
-                    props.labelText,
-                    props.options,
-                    props.options[0]
-                );
                 if (props.model.mapService === 'VECTOR_STYLE') {
                     return <DropDown value={'BASEMAP'} disabled {...props} />;
                 }
