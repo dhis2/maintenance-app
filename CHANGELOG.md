@@ -1,3 +1,10 @@
+# [32.14.0](https://github.com/dhis2/maintenance-app/compare/v32.13.0...v32.14.0) (2021-11-16)
+
+
+### Features
+
+* support adding vector style map layer to external map layer ([#2078](https://github.com/dhis2/maintenance-app/issues/2078)) ([6240c74](https://github.com/dhis2/maintenance-app/commit/6240c746b22a331769611d4f3523ecf837e9e126))
+
 # [32.13.0](https://github.com/dhis2/maintenance-app/compare/v32.12.4...v32.13.0) (2021-10-29)
 
 
