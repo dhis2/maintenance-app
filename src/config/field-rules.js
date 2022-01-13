@@ -530,7 +530,7 @@ export default new Map([
         },
     ]],
     ['eventProgramStage', [
-        createDefaultRuleForField('validationStrategy', "ON_COMPLETE"),
+        createDefaultRuleForField('validationStrategy', "ON_UPDATE_AND_INSERT"),
     ]],
     ['programIndicator', [{
         field: 'analyticsPeriodBoundaries',
