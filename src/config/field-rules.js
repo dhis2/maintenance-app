@@ -812,4 +812,30 @@ export default new Map([
     ['predictor', [
         createDefaultRuleForField('organisationUnitDescendants', "SELECTED"),
     ]],
+    ['eventProgram', [
+        {
+            field: 'openDaysAfterCoEndDate',
+            when: {
+                field: 'categoryCombo',
+                operator: 'PREDICATE',
+                value: (categoryComboField) => categoryComboField && categoryComboField.name === 'default'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }]
+        }
+    ]],
+    ['trackerProgram', [
+        {
+            field: 'openDaysAfterCoEndDate',
+            when: {
+                field: 'categoryCombo',
+                operator: 'PREDICATE',
+                value: (categoryComboField) => categoryComboField && categoryComboField.name === 'default'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }]
+        }
+    ]],
 ]);
