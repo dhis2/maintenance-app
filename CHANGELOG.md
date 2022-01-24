@@ -1,3 +1,10 @@
+## [32.14.6](https://github.com/dhis2/maintenance-app/compare/v32.14.5...v32.14.6) (2022-01-24)
+
+
+### Bug Fixes
+
+* **program:** fix validationStrategy dropdown ([#2117](https://github.com/dhis2/maintenance-app/issues/2117)) ([6065468](https://github.com/dhis2/maintenance-app/commit/60654683b17c3f704a273b41dd47f19b1e7253d2))
+
 ## [32.14.5](https://github.com/dhis2/maintenance-app/compare/v32.14.4...v32.14.5) (2022-01-05)
 
 
