@@ -21,6 +21,12 @@ const constantDisplayNameMap= {
             'COMPLETION': 'program_completion',
             'ENROLLMENT': 'program_enrollment'
         }
+    },
+    predictor: {
+        organisationUnitDescendants: {
+            SELECTED: 'organisation_unit_descendants_selected',
+            DESCENDANTS: 'organisation_unit_descendants_descendants'
+        }
     }
 }
 

@@ -808,5 +808,8 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }]
         }
-    ]]
+    ]],
+    ['predictor', [
+        createDefaultRuleForField('organisationUnitDescendants', "SELECTED"),
+    ]],
 ]);
