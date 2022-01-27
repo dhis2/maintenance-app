@@ -403,6 +403,7 @@ const fieldOrderByName = new Map([
         'outputCombo',
         'periodType',
         'organisationUnitLevels',
+        'organisationUnitDescendants',
         'generator',
         'sampleSkipTest',
         'sequentialSampleCount',
