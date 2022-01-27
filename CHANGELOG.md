@@ -1,3 +1,10 @@
+# [32.15.0](https://github.com/dhis2/maintenance-app/compare/v32.14.7...v32.15.0) (2022-01-27)
+
+
+### Features
+
+* **predictor:** add field for orgunit descendants ([#2123](https://github.com/dhis2/maintenance-app/issues/2123)) ([18c7876](https://github.com/dhis2/maintenance-app/commit/18c78762c929b1b70c7533f11d512c4cc2788ffd))
+
 ## [32.14.7](https://github.com/dhis2/maintenance-app/compare/v32.14.6...v32.14.7) (2022-01-27)
 
 
