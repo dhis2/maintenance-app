@@ -1,3 +1,10 @@
+# [32.16.0](https://github.com/dhis2/maintenance-app/compare/v32.15.1...v32.16.0) (2022-01-31)
+
+
+### Features
+
+* add openDaysAfterCoEndDate to programs ([#2127](https://github.com/dhis2/maintenance-app/issues/2127)) ([339c753](https://github.com/dhis2/maintenance-app/commit/339c7536c1f62b6f0e0fad2e7ec5465e946c505a))
+
 ## [32.15.1](https://github.com/dhis2/maintenance-app/compare/v32.15.0...v32.15.1) (2022-01-28)
 
 
