@@ -26,6 +26,7 @@ class SectionDialog extends React.Component {
 
         this.state = {
             categoryCombo: false,
+            disableDataElementAutoGroup: false
         };
         dataElementStore.setState([]);
         assignedDataElementStore.setState([]);
