@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import mapPropsStream from 'recompose/mapPropsStream';
-import { first, compose } from 'lodash/fp';
+import { first, get, compose } from 'lodash/fp';
 import { createStepperContentFromConfig } from '../stepper/stepper';
 import { activeStepSelector } from './selectors';
 import eventProgramStore from './eventProgramStore';
@@ -20,13 +20,20 @@ import {editProgramStageField} from "./tracker-program/program-stages/actions";
 
 const eventProgramFields = fieldOrder.for('eventProgram');
 const eventProgramStageFields = fieldOrder.for('eventProgramStage');
+
+const enhance = compose(
+    mapPropsStream(props$ => props$
+        .combineLatest(eventProgramStore.map(get('program')), (props, model) => ({ ...props, model })),
+    ),
+    createFieldConfigsFor('program', eventProgramFields, undefined, true, true, 'eventProgram'),
+);
+
 let ProgramForm = props => (
     <FormBuilder
         fields={props.fieldConfigs}
         onUpdateField={props.editFieldChanged}>
     </FormBuilder>)
-
-ProgramForm = createFieldConfigsFor('program', eventProgramFields, undefined, true, true, 'eventProgram')(ProgramForm);
+ProgramForm = enhance(ProgramForm)
 
 let ProgramStageForm = props => (
     <FormBuilder

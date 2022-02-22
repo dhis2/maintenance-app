@@ -150,7 +150,8 @@ function loadEventProgramMetadataByProgramId(programPayload) {
         'user[id,name]',
         'publicAccess',
         'userGroupAccesses',
-        'userAccesses'
+        'userAccesses',
+        'categoryCombo[id,name]'
     ].join(',');
 
     // Tomcat 8.5 does not allow unencoded brackets in querystrings. By passing the query params

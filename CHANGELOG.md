@@ -1,3 +1,45 @@
+## [32.16.2](https://github.com/dhis2/maintenance-app/compare/v32.16.1...v32.16.2) (2022-02-18)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([a10fb00](https://github.com/dhis2/maintenance-app/commit/a10fb00f85be1d4a85237dcc9d4f4ca88401d9e7))
+
+## [32.16.1](https://github.com/dhis2/maintenance-app/compare/v32.16.0...v32.16.1) (2022-02-01)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([74d45b6](https://github.com/dhis2/maintenance-app/commit/74d45b672547a307cc5ff72cd007572869f7688f))
+
+# [32.16.0](https://github.com/dhis2/maintenance-app/compare/v32.15.1...v32.16.0) (2022-01-31)
+
+
+### Features
+
+* add openDaysAfterCoEndDate to programs ([#2127](https://github.com/dhis2/maintenance-app/issues/2127)) ([339c753](https://github.com/dhis2/maintenance-app/commit/339c7536c1f62b6f0e0fad2e7ec5465e946c505a))
+
+## [32.15.1](https://github.com/dhis2/maintenance-app/compare/v32.15.0...v32.15.1) (2022-01-28)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([00b852c](https://github.com/dhis2/maintenance-app/commit/00b852c7215dc7ac590ea53c2302ffad935acda4))
+
+# [32.15.0](https://github.com/dhis2/maintenance-app/compare/v32.14.7...v32.15.0) (2022-01-27)
+
+
+### Features
+
+* **predictor:** add field for orgunit descendants ([#2123](https://github.com/dhis2/maintenance-app/issues/2123)) ([18c7876](https://github.com/dhis2/maintenance-app/commit/18c78762c929b1b70c7533f11d512c4cc2788ffd))
+
+## [32.14.7](https://github.com/dhis2/maintenance-app/compare/v32.14.6...v32.14.7) (2022-01-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([a87b800](https://github.com/dhis2/maintenance-app/commit/a87b80043e42b68981eeb653a568d8b9267bb11a))
+
 ## [32.14.6](https://github.com/dhis2/maintenance-app/compare/v32.14.5...v32.14.6) (2022-01-24)
 
 
