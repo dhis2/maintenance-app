@@ -27,6 +27,7 @@ const programRuleFunctions = [
     'd2:zScoreWFA( <ageInMonth>, <weight>, <gender> )',
     'd2:zScoreHFA( <ageInMonth>, <height>, <gender> )',
     'd2:zScoreWFH( <height>, <weight>, <gender> )',
+    'd2:extractDataMatrixValue( <key>, <value>)',
 ];
 
 export default programRuleFunctions;
