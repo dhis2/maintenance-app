@@ -1,3 +1,10 @@
+# [32.17.0](https://github.com/dhis2/maintenance-app/compare/v32.16.2...v32.17.0) (2022-02-24)
+
+
+### Features
+
+* **programrule:** add extractDataMatrixValue function ([#2135](https://github.com/dhis2/maintenance-app/issues/2135)) ([c1b2ee5](https://github.com/dhis2/maintenance-app/commit/c1b2ee593e9002c821b355adc8661e4cb2a6dbf8))
+
 ## [32.16.2](https://github.com/dhis2/maintenance-app/compare/v32.16.1...v32.16.2) (2022-02-18)
 
 
