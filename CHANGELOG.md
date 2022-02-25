@@ -1,3 +1,10 @@
+# [32.18.0](https://github.com/dhis2/maintenance-app/compare/v32.17.0...v32.18.0) (2022-02-25)
+
+
+### Features
+
+* **program:** add webhook for program notifications ([#2136](https://github.com/dhis2/maintenance-app/issues/2136)) ([cc1055e](https://github.com/dhis2/maintenance-app/commit/cc1055e2757f75dc4fb5d5baa5adf01f45d397e4))
+
 # [32.17.0](https://github.com/dhis2/maintenance-app/compare/v32.16.2...v32.17.0) (2022-02-24)
 
 
