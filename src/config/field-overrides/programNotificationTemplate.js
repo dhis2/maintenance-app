@@ -206,6 +206,7 @@ export const programNotificationTemplate = new Map([
                     'USERS_AT_ORGANISATION_UNIT',
                     'USER_GROUP',
                     'PROGRAM_ATTRIBUTE',
+                    'WEB_HOOK',
                 ],
             },
         },
@@ -240,6 +241,7 @@ export const programStageNotificationTemplate = new Map([
                     'USER_GROUP',
                     'PROGRAM_ATTRIBUTE', // This is only for Tracker programs
                     'DATA_ELEMENT',
+                    'WEB_HOOK',
                 ],
             },
         },

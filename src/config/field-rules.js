@@ -642,6 +642,23 @@ export default new Map([
             }],
         },
         {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'EQUALS',
+                value: 'WEB_HOOK',
+            }],
+            operations: [{
+                field: 'deliveryChannels',
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    if(fieldConfig) {
+                        fieldConfig.value = model[fieldConfig.name] = ['HTTP']
+                    }
+                }
+            }],
+        },
+        {
             field: 'notifyUsersInHierarchyOnly',
             when: [{
                 field: 'notifyParentOrganisationUnitOnly',
@@ -737,6 +754,23 @@ export default new Map([
             operations: [{
                 field: 'notifyParentOrganisationUnitOnly',
                 type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'EQUALS',
+                value: 'WEB_HOOK',
+            }],
+            operations: [{
+                field: 'deliveryChannels',
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    if(fieldConfig) {
+                        fieldConfig.value = model[fieldConfig.name] = ['HTTP']
+                    }
+                }
             }],
         },
     ]],
