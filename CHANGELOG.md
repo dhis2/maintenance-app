@@ -1,3 +1,10 @@
+# [32.19.0](https://github.com/dhis2/maintenance-app/compare/v32.18.3...v32.19.0) (2022-02-28)
+
+
+### Features
+
+* **dataset-section:** add checkbox to disable auto grouping ([#2124](https://github.com/dhis2/maintenance-app/issues/2124)) ([aa1ad67](https://github.com/dhis2/maintenance-app/commit/aa1ad67b60fa7fb5ee6fe8c4cb871b4eaea0041a))
+
 ## [32.18.3](https://github.com/dhis2/maintenance-app/compare/v32.18.2...v32.18.3) (2022-02-28)
 
 
