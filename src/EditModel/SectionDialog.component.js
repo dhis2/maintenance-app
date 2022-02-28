@@ -26,6 +26,7 @@ class SectionDialog extends React.Component {
 
         this.state = {
             categoryCombo: false,
+            disableDataElementAutoGroup: false
         };
         dataElementStore.setState([]);
         assignedDataElementStore.setState([]);
@@ -84,6 +85,7 @@ class SectionDialog extends React.Component {
                 description: props.sectionModel.description,
                 showRowTotals: props.sectionModel.showRowTotals,
                 showColumnTotals: props.sectionModel.showColumnTotals,
+                disableDataElementAutoGroup: props.sectionModel.disableDataElementAutoGroup,
                 filterText: '',
                 filterDataElementIds,
             }, () => {
@@ -121,6 +123,10 @@ class SectionDialog extends React.Component {
 
     handleColumnTotalsChange = (e, value) => {
         this.setState({ showColumnTotals: value });
+    }
+
+    handleDisableDataElementAutoGroupChange = (e, value) => {
+        this.setState({ disableDataElementAutoGroup: value })
     }
 
     handleFilterChange = (e) => {
@@ -210,6 +216,7 @@ class SectionDialog extends React.Component {
             description: this.state.description,
             showRowTotals: this.state.showRowTotals,
             showColumnTotals: this.state.showColumnTotals,
+            disableDataElementAutoGroup: this.state.disableDataElementAutoGroup,
             dataElements: assignedDataElementStore.state.map(de => ({ id: de })),
             indicators: assignedIndicatorStore.state.map(i => ({ id: i })),
             sortOrder: this.props.sectionModel.sortOrder || modelToEditStore
@@ -382,6 +389,12 @@ class SectionDialog extends React.Component {
                     checked={this.state.showColumnTotals}
                     style={{ margin: '16px 0' }}
                     onCheck={this.handleColumnTotalsChange}
+                />
+                 <Checkbox
+                    label={this.getTranslation('disable_data_element_auto_group')}
+                    checked={this.state.disableDataElementAutoGroup}
+                    style={{ margin: '16px 0' }}
+                    onCheck={this.handleDisableDataElementAutoGroupChange}
                 />
                 {this.renderFilters()}
                 {this.renderAvailableOptions()}
