@@ -461,6 +461,7 @@ const fieldOrderByName = new Map([
         'name',
         'useCodeForOptionSet',
         'programRuleVariableSourceType',
+        'valueType',
         'programStage',
         'dataElement',
         'trackedEntityAttribute',

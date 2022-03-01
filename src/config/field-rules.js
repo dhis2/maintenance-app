@@ -497,6 +497,18 @@ export default new Map([
                 elseValue: false,
             }],
         },
+        {
+            field: 'valueType',
+            when: [{
+                field: 'programRuleVariableSourceType',
+                operator: 'NOT_EQUALS',
+                value: 'CALCULATED_VALUE',
+            }],
+            operations: [{
+                field: 'valueType',
+                type: 'HIDE_FIELD',
+            }],
+        },
     ]],
     ['programStage', [
         {
