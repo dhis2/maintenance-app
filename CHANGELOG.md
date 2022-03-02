@@ -1,3 +1,10 @@
+# [32.20.0](https://github.com/dhis2/maintenance-app/compare/v32.19.1...v32.20.0) (2022-03-02)
+
+
+### Features
+
+* **programrule-variable:** add valueType for CALCULATED_VALUE ([#2147](https://github.com/dhis2/maintenance-app/issues/2147)) ([00d3084](https://github.com/dhis2/maintenance-app/commit/00d30847ccd89971cc28dbfab3890cd9596deaa4))
+
 ## [32.19.1](https://github.com/dhis2/maintenance-app/compare/v32.19.0...v32.19.1) (2022-03-01)
 
 
