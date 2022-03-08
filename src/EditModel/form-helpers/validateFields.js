@@ -10,7 +10,7 @@ const isRequiredField = field => get('isRequired', field.fieldOptions) === true;
 
 const isDirtyField = field => field.value;
 
-const isRequiredOrDirtyField = field => isRequiredField(field) || isDirtyField(field);
+const isRequiredOrDirtyField = field => !field.hiddenComponent && (isRequiredField(field) || isDirtyField(field));
 
 const validateField = (field, formRef, formRefStateClone) => {
     const validateResult = formRef.validateField(formRefStateClone, field.name, field.value);
