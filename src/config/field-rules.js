@@ -509,6 +509,7 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }],
         },
+        createDefaultRuleForField('valueType', 'TEXT')
     ]],
     ['programStage', [
         {
