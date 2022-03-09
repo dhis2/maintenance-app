@@ -1,3 +1,10 @@
+## [32.20.3](https://github.com/dhis2/maintenance-app/compare/v32.20.2...v32.20.3) (2022-03-09)
+
+
+### Bug Fixes
+
+* **validate:** do not validate hidden fields ([#2149](https://github.com/dhis2/maintenance-app/issues/2149)) ([308258f](https://github.com/dhis2/maintenance-app/commit/308258f3226dcf6e6b01606bf00b9791b4a5b44b))
+
 ## [32.20.2](https://github.com/dhis2/maintenance-app/compare/v32.20.1...v32.20.2) (2022-03-08)
 
 
