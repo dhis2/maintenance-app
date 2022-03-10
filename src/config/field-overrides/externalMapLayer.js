@@ -43,23 +43,24 @@ export default new Map([
                     );
                 }
 
-                if (props.model.mapService === 'VECTOR_STYLE') {
-                    return (
-                        <TextField
-                            labelText={d2.i18n.getTranslation(
-                                'before_layer_id'
-                            )}
-                            value={props.model.layers || ''}
-                            fullWidth
-                            onChange={e => {
-                                actions.update({
-                                    fieldName: 'layers',
-                                    value: e.target.value,
-                                });
-                            }}
-                        />
-                    );
-                }
+                // TODO enable this when maps-app has implemented before_layer_id
+                // if (props.model.mapService === 'VECTOR_STYLE') {
+                //     return (
+                //         <TextField
+                //             labelText={d2.i18n.getTranslation(
+                //                 'before_layer_id'
+                //             )}
+                //             value={props.model.layers || ''}
+                //             fullWidth
+                //             onChange={e => {
+                //                 actions.update({
+                //                     fieldName: 'layers',
+                //                     value: e.target.value,
+                //                 });
+                //             }}
+                //         />
+                //     );
+                // }
                 return null;
             }),
         },
