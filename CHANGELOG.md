@@ -1,3 +1,10 @@
+## [32.20.4](https://github.com/dhis2/maintenance-app/compare/v32.20.3...v32.20.4) (2022-03-14)
+
+
+### Bug Fixes
+
+* disable beforeLayerId until maps-app implements support ([#2152](https://github.com/dhis2/maintenance-app/issues/2152)) ([d201407](https://github.com/dhis2/maintenance-app/commit/d2014075c77ffb637c98ce2695a1a043ea7b6e77))
+
 ## [32.20.3](https://github.com/dhis2/maintenance-app/compare/v32.20.2...v32.20.3) (2022-03-09)
 
 
