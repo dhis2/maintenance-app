@@ -1,11 +1,11 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types'
-import SelectField from 'material-ui/SelectField/SelectField';
 import TextField from 'material-ui/TextField';
 import isString from 'd2-utilizr/lib/isString';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
+import SelectField from './mui-drop-down.js';
 
 class Dropdown extends Component {
     constructor(props, context) {

@@ -71,13 +71,16 @@ const isFieldPersisted = field => field.persisted;
  * @param {string} customFieldOrderName
  * @return {field => Object} Contains rendering info like the react component
  */
-const createFieldConfig = (modelDefinition, models, customFieldOrderName) =>
-    field => createFieldConfigOrig(
-        field,
-        modelDefinition,
-        this.models,
-        customFieldOrderName,
-    );
+function createFieldConfig(modelDefinition, models, customFieldOrderName) {
+    return field => {
+        return createFieldConfigOrig(
+            field,
+            modelDefinition,
+            this.models,
+            customFieldOrderName
+        );
+    };
+}
 
 /**
  * @param {Object} overrideConfig
@@ -169,9 +172,12 @@ class FormFieldsForModel {
     getFormFieldsForModel(model, fieldOverrides = {}, customFieldOrderName) {
         this.checkForInvalidModel(model);
 
+        const boundCreateFieldConfig = createFieldConfig.bind(this)
+        const mapCallback = boundCreateFieldConfig(model.modelDefinition, this.models, customFieldOrderName)
+
         const fieldInstances = this
             .getRulesForModel(model, fieldOverrides)
-            .map(createFieldConfig(model.modelDefinition, this.models, customFieldOrderName))
+            .map(mapCallback)
             .filter(identity)
         ;
 

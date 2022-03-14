@@ -47,13 +47,17 @@ class SnackBarContainer extends Component {
         }
         //Span wrapper for styling, to work with multiline messages
         const actionLabel = <span style={{position: 'relative', top: '-3px'}}>{this.state.snack.action}</span>
+        const message =
+            typeof this.state.snack.message === 'string'
+                ? this.state.snack.message
+                : this.state.snack.message.toString()
         return (
             <Snackbar
                 style={{ maxWidth: 'auto', height: 'auto', zIndex: 5 }}
                 bodyStyle={{ maxWidth: 'auto', height:'auto', 'lineHeight': '24px', minHeight: '48px', padding: '10px 24px'}}
                 contentStyle={{ display: 'flex', alignItems: 'center', height: '100%'}}
                 ref="snackbar"
-                message={this.state.snack.message}
+                message={message}
                 action={actionLabel}
                 autoHideDuration={0}
                 open={this.state.show}

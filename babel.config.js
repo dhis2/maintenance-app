@@ -27,4 +27,8 @@ module.exports = {
             plugins: [require('styled-jsx/babel-test')],
         },
     },
-}
+    ignore: [
+        /[\/\\]core-js/,
+        /@babel[\/\\]runtime/,
+    ],
+};
