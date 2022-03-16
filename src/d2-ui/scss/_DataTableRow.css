@@ -1,0 +1,19 @@
+.data-table__rows__row {
+	 cursor: pointer;
+	 display: table-row;
+}
+ .data-table__rows__row:hover .data-table__rows__row__column {
+	 background-color: #f1f1f1;
+}
+ .data-table__rows__row__column {
+	 height: 50px;
+	 padding: 0 1.6rem;
+	 vertical-align: middle;
+	 border-bottom: 1px solid #e0e0e0;
+	 border-top: 0;
+	 display: table-cell;
+	 text-align: left;
+	 transition: all 0.3s ease;
+	 position: relative;
+}
+

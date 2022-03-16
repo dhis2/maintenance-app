@@ -78,7 +78,7 @@ class EditDataSetSections extends Component {
         snackActions.show({
             message: `${this.getTranslation('confirm_delete_section')} ${section.displayName}`,
             action: 'confirm',
-            onActionTouchTap: () => {
+            onClick: () => {
                 section.delete()
                     .then(() => {
                         const newSections = modelToEditStore.state.sections;

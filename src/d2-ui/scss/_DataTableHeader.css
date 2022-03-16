@@ -1,0 +1,17 @@
+$data-table--headers--header--text-color: #757575;
+$data-table--headers--header--border-color: #E0E0E0;
+
+.data-table__headers {
+  display: table-row;
+}
+
+.data-table__headers__header {
+  @include data-table-cell;
+
+  border-bottom: 2px solid $data-table--headers--header--border-color;
+  color: $data-table--headers--header--text-color;
+  display: table-cell;
+  font-weight: 400;
+  text-align: left;
+  transition: all .3s ease;
+}

@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 import { programDataEntryFormChanged, programDataEntryFormRemove } from './actions';
 import eventProgramStore from '../eventProgramStore';
 import CKEditor from './CKEditor';
-import '../../../../scss/EditModel/EditDataEntryFormProgramStage.scss';
 import PaletteSection from './PaletteSection';
 import { bindFuncsToKeys, processFormData, insertElement as insElem } from "./dataEntryFormUtils";
 import PropTypes from 'prop-types';

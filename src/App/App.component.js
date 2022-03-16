@@ -81,7 +81,6 @@ class App extends AppWithD2 {
         return (
             <Provider store={store}>
                 <div>
-                    <HeaderBar appName='Maintenance' />
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
                         <TwoPanelLayout>

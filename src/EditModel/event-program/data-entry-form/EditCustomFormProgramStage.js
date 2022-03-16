@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import { dataEntryFormChanged, dataEntryFormRemove } from './actions';
 import eventProgramStore from '../eventProgramStore';
 import CKEditor from './CKEditor';
-import '../../../../scss/EditModel/EditDataEntryFormProgramStage.scss';
 import { getProgramStageDataElementsByStageId } from "../notifications/selectors";
 import PaletteSection from './PaletteSection';
 import { bindFuncsToKeys, processFormData, insertElement as insElem } from "./dataEntryFormUtils";

@@ -19,7 +19,6 @@ import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';
 import { goToRoute } from '../router-utils';
 
-import '../../scss/EditModel/EditDataEntryForm.scss';
 
 
 const inputPattern = /<input.*?\/>/gi;
@@ -259,7 +258,7 @@ class EditDataEntryForm extends Component {
         snackActions.show({
             message: this.getTranslation('dataentryform_confirm_delete'),
             action: 'confirm',
-            onActionTouchTap: () => {
+            onClick: () => {
                 this.context.d2.Api.getApi()
                     .delete(['dataEntryForms', modelToEditStore.state.dataEntryForm.id].join('/'))
                     .then(() => {

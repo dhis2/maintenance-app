@@ -1,0 +1,14 @@
+.data-table__headers {
+	 display: table-row;
+}
+ .data-table__headers__header {
+	 height: 50px;
+	 padding: 0 1.6rem;
+	 vertical-align: middle;
+	 border-bottom: 2px solid #e0e0e0;
+	 color: #757575;
+	 display: table-cell;
+	 font-weight: 400;
+	 text-align: left;
+	 transition: all 0.3s ease;
+}

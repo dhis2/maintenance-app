@@ -1,0 +1,39 @@
+$main-text-color: #333;
+
+$default-font-size: 14px;
+$default-padding: 1.6rem;
+$default-margin: 1rem;
+$default-margin-large: $default-margin * 2;
+
+$data-table-background: #FFF;
+$data-table-text-color: #212121;
+
+$table-row-border-color: #E0E0E0;
+$table-row-hover-color: #F1F1F1;
+$table-row-responsive-header-color: #757575;
+
+$data-table-cell-padding: 0 $default-padding;
+
+$box-shadow-color-light: rgba(0, 0, 0, .12);
+$box-shadow-color-dark: rgba(0, 0, 0, .24);
+
+@mixin data-table-cell {
+  height: 50px;
+  padding: $data-table-cell-padding;
+  vertical-align: middle;
+}
+
+$data-table--context-menu--border-color: #FFF;
+$data-table--context-menu--background-color: rgba(255, 255, 255, 1);
+$data-table--context-menu--hover-background-color: rgba(200, 200, 255, .9);
+
+.data-table__context-menu__item {
+  cursor: pointer;
+  display: block;
+  padding: $default-margin / 2 $default-padding;
+  text-align: left;
+}
+
+.data-table__context-menu__item:hover {
+  background: $data-table--context-menu--hover-background-color;
+}

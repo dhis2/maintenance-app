@@ -4,7 +4,6 @@ import { init, config, getUserSettings, getManifest } from 'd2/lib/d2';
 import log from 'loglevel';
 import LoadingMask from './loading-mask/LoadingMask.component';
 import routes from './router';
-import '../scss/maintenance.scss';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './translationRegistration';
 import appTheme from './App/app.theme';

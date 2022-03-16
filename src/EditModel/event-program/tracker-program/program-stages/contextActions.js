@@ -21,7 +21,7 @@ export async function deleteProgramStageWithSnackbar(model) {
         ].join(' '),
         action: 'confirm',
 
-        onActionTouchTap: () => {
+        onClick: () => {
             store.dispatch(deleteProgramStage(model.id));
 
             // Fire the afterDeleteHook

@@ -340,7 +340,7 @@ This is not allowed. Offending dataElement is '${dataElement.displayName}' with 
                 message: `The following program stages: '${offendingPSIDs.join(', ')}' contain program stage data elements with domainType=AGGREGATE. This is not allowed.
     Click the REMOVE button to clean up, or click anywhere on the page to ignore this issue. See the log for more details.`,
                 action: 'remove',
-                onActionTouchTap: (e) => resolve(removeOffendingElements(offendingPSIDs, offendingElementIDs))
+                onClick: (e) => resolve(removeOffendingElements(offendingPSIDs, offendingElementIDs))
             });
         });
         return Observable.from(prom).mergeAll();

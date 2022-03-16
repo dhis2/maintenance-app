@@ -1,0 +1,44 @@
+$main-text-color: #333;
+
+$default-font-size: 14px;
+$default-padding: 1.6rem;
+$default-margin: 1rem;
+$default-margin-large: $default-margin * 2;
+
+$data-table-background: #FFF;
+$data-table-text-color: #212121;
+
+$table-row-border-color: #E0E0E0;
+$table-row-hover-color: #F1F1F1;
+$table-row-responsive-header-color: #757575;
+
+$data-table-cell-padding: 0 $default-padding;
+
+$box-shadow-color-light: rgba(0, 0, 0, .12);
+$box-shadow-color-dark: rgba(0, 0, 0, .24);
+
+@mixin data-table-cell {
+  height: 50px;
+  padding: $data-table-cell-padding;
+  vertical-align: middle;
+}
+
+.data-table__rows__row {
+  cursor: pointer;
+  display: table-row;
+
+  &:hover .data-table__rows__row__column {
+    background-color: $table-row-hover-color;
+  }
+}
+
+.data-table__rows__row__column {
+  @include data-table-cell;
+
+  border-bottom: 1px solid $table-row-border-color;
+  border-top: 0;
+  display: table-cell;
+  text-align: left;
+  transition: all .3s ease;
+  position: relative;
+}

@@ -66,7 +66,7 @@ contextActions.delete
                     model.name,
                 ].join(' '),
                 action: 'confirm',
-                onActionTouchTap: () => {
+                onClick: () => {
                     model.delete()
                         .then(() => {
                             // Remove deleted item from the listStore

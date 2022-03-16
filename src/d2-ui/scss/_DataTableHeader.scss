@@ -1,0 +1,42 @@
+$main-text-color: #333;
+
+$default-font-size: 14px;
+$default-padding: 1.6rem;
+$default-margin: 1rem;
+$default-margin-large: $default-margin * 2;
+
+$data-table-background: #FFF;
+$data-table-text-color: #212121;
+
+$table-row-border-color: #E0E0E0;
+$table-row-hover-color: #F1F1F1;
+$table-row-responsive-header-color: #757575;
+
+$data-table-cell-padding: 0 $default-padding;
+
+$box-shadow-color-light: rgba(0, 0, 0, .12);
+$box-shadow-color-dark: rgba(0, 0, 0, .24);
+
+@mixin data-table-cell {
+  height: 50px;
+  padding: $data-table-cell-padding;
+  vertical-align: middle;
+}
+
+$data-table--headers--header--text-color: #757575;
+$data-table--headers--header--border-color: #E0E0E0;
+
+.data-table__headers {
+  display: table-row;
+}
+
+.data-table__headers__header {
+  @include data-table-cell;
+
+  border-bottom: 2px solid $data-table--headers--header--border-color;
+  color: $data-table--headers--header--text-color;
+  display: table-cell;
+  font-weight: 400;
+  text-align: left;
+  transition: all .3s ease;
+}

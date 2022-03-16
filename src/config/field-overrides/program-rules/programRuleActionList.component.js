@@ -50,7 +50,7 @@ class ProgramRuleActionsList extends Component {
         snackActions.show({
             message: this.getTranslation('confirm_delete_program_rule_action'),
             action: 'confirm',
-            onActionTouchTap: () => {
+            onClick: () => {
                 this.props.onChange({ target: { value: this.props.model.programRuleActions.remove(model) } });
                 snackActions.show({ message: this.getTranslation('program_rule_action_deleted') });
             },

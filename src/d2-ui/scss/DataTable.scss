@@ -1,0 +1,43 @@
+$main-text-color: #333;
+
+$default-font-size: 14px;
+$default-padding: 1.6rem;
+$default-margin: 1rem;
+$default-margin-large: $default-margin * 2;
+
+$data-table-background: #FFF;
+$data-table-text-color: #212121;
+
+$table-row-border-color: #E0E0E0;
+$table-row-hover-color: #F1F1F1;
+$table-row-responsive-header-color: #757575;
+
+$data-table-cell-padding: 0 $default-padding;
+
+$box-shadow-color-light: rgba(0, 0, 0, .12);
+$box-shadow-color-dark: rgba(0, 0, 0, .24);
+
+@mixin data-table-cell {
+  height: 50px;
+  padding: $data-table-cell-padding;
+  vertical-align: middle;
+}
+
+@import './DataTableHeader';
+@import './DataTableRow';
+@import './DataTableContextMenu';
+
+.data-table {
+  background-color: $data-table-background;
+  border-spacing: 0;
+  box-shadow: 0 1px 3px 0 $box-shadow-color-light, 0 1px 2px 0 $box-shadow-color-dark;
+  color: $data-table-text-color;
+  display: table;
+  margin-bottom: $default-margin-large;
+  max-width: 100%;
+  width: 100%;
+}
+
+.data-table__rows {
+  display: table-row-group;
+}

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import log from 'loglevel';
 
 import isIterable from 'd2-utilizr/lib/isIterable';
-import DataTable from 'd2-ui/lib/data-table/DataTable.component';
+import DataTable from '../d2-ui/data-table/DataTable.component';
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import SharingDialog from '@dhis2/d2-ui-sharing-dialog';

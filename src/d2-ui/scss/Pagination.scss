@@ -1,0 +1,39 @@
+@import 'susy';
+
+$disabled-state-text-color: #CCC;
+
+.data-table-pager--buttons {
+  @include container();
+
+  list-style: none;
+  padding: 0;
+  text-align: right;
+
+  li {
+    display: inline-block;
+  }
+
+  .data-table-pager--previous-page,
+  .data-table-pager--next-page {
+    padding: 0;
+
+    i {
+      border-radius: 100%;
+      cursor: pointer;
+      margin: .5rem;
+      padding: .5rem;
+    }
+
+    .data-table-pager--previous-page__disabled,
+    .data-table-pager--next-page__disabled {
+      color: $disabled-state-text-color;
+    }
+  }
+
+  .data-table-pager--page-info {
+    line-height: 24px;
+    padding: 1rem;
+    text-align: center;
+    vertical-align: top;
+  }
+}

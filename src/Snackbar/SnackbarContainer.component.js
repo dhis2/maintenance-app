@@ -61,7 +61,7 @@ class SnackBarContainer extends Component {
                 action={actionLabel}
                 autoHideDuration={0}
                 open={this.state.show}
-                onActionTouchTap={this.state.snack.onActionTouchTap}
+                onClick={this.state.snack.onClick}
                 onRequestClose={this.closeSnackbar}
             />
         );
