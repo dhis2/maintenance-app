@@ -1,4 +1,5 @@
 module.exports = {
+    setupFilesAfterEnv: ['<rootDir>/src/setup-tests.js'],
     collectCoverageFrom: ['src/**/*.js'],
     testPathIgnorePatterns: [
         '/node_modules/',
