@@ -6,7 +6,7 @@
 
 node_modules*
 .sass-cache
-src/css/*
+src/css/**/*.scss
 coverage/*
 .nyc_output/
 
