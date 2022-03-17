@@ -131,7 +131,8 @@
     "@dhis2/ui": "8.1.6",
     "material-ui": "0.20.0",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react-dom": "^16.14.0",
+    "react-error-overlay": "6.0.9"
   },
   "pre-commit": [
     "test"
