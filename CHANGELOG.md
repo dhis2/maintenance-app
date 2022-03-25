@@ -1,3 +1,10 @@
+## [32.20.6](https://github.com/dhis2/maintenance-app/compare/v32.20.5...v32.20.6) (2022-03-25)
+
+
+### Bug Fixes
+
+* remove timezone info from dip timestamps [DHIS2-11543] ([09e0365](https://github.com/dhis2/maintenance-app/commit/09e036500f5eb1f5337d784e101319d80cdfc0ca))
+
 ## [32.20.5](https://github.com/dhis2/maintenance-app/compare/v32.20.4...v32.20.5) (2022-03-18)
 
 
