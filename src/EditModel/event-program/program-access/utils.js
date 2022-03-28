@@ -7,16 +7,16 @@ export const areSharingPropertiesSimilar = (a, b) => {
     const compareFunction = (a, b) => a.id < b.id;
     if (
         !isEqual(
-            Array.sort(a.userAccesses || [], compareFunction),
-            Array.sort(b.userAccesses || [], compareFunction),
+            a.userAccesses?.sort(compareFunction),
+            b.userAccesses?.sort(compareFunction),
         )
     ) {
         return false;
     }
 
     return isEqual(
-        Array.sort(a.userGroupAccesses || [], compareFunction),
-        Array.sort(b.userGroupAccesses || [], compareFunction),
+        a.userGroupAccesses?.sort(compareFunction),
+        b.userGroupAccesses?.sort(compareFunction)
     );
 };
 
