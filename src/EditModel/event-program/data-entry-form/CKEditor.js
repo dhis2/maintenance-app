@@ -1,98 +1,55 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
 import { noop } from 'lodash/fp';
-import log from 'loglevel';
-import { Observable } from 'rxjs';
+import { CKEditor } from 'ckeditor4-react'
+import { useDebouncedCallback } from 'use-debounce'
 
-export default class CKEditor extends Component {
-    constructor(props, context) {
-        super(props, context);
+const CKEditorWrapper = ({ initialContent, onEditorInitialized = noop, onEditorChange = noop }) => {
+    const debouncedOnChange = useDebouncedCallback(onEditorChange, 250)
 
-        this.subscriptions = new Set();
-    }
-
-    componentDidMount() {
-        const { onEditorChange = noop, onEditorInitialized = noop } = this.props;
-
-        if (!window.CKEDITOR) {
-            log.error('CKEDITOR namespace can not be found on the window. You probably forgot to load the CKEditor script');
+    // The 'change' event is only triggered in WYSIWYG mode
+    // See https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#event-change
+    // and https://jira.dhis2.org/browse/DHIS2-5276
+    const handleModeChange = (event) => {
+        const { editor } = event
+        if (editor.mode === 'source') {
+            const editable = editor.editable()
+            editable.attachListener(editable, 'input', () => {
+                debouncedOnChange(editor.getData())
+            })
         }
-
-        this.editor = window.CKEDITOR.replace(this.editorContainer, {
-            plugins: [
-                'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
-                'clipboard', 'colorbutton', 'colordialog', 'contextmenu',
-                'dialogadvtab', 'div', 'elementspath', 'enterkey',
-                'entities', 'filebrowser', 'find', 'floatingspace',
-                'font', 'format', 'horizontalrule', 'htmlwriter',
-                'image', 'indentlist', 'indentblock', 'justify',
-                'link', 'list', 'liststyle', 'magicline',
-                'maximize', 'forms', 'pastefromword', 'pastetext',
-                'preview', 'removeformat', 'resize', 'selectall',
-                'showblocks', 'showborders', 'sourcearea', 'specialchar',
-                'stylescombo', 'tab', 'table', 'tabletools',
-                'toolbar', 'undo', 'wsc', 'wysiwygarea',
-            ].join(','),
-            removePlugins: 'scayt,wsc,about',
-            allowedContent: true,
-            extraPlugins: 'div',
-            height: 500,
-        });
-
-        this.editor.setData(this.props.initialContent);
-
-        // editor 'change'-event is not fired in source-mode,
-        // This results in the need to switch back to HTML-mode to save source-data
-        // Therefore we setup this observable when switching to source
-        // See https://jira.dhis2.org/browse/DHIS2-5276
-        let sourceChange$ = Observable.fromEventPattern(x => this.editor.on('mode', x))
-            .switchMap(e => {
-                if (e.editor.mode === 'source') {
-                    const editable = e.editor.editable();
-                    return Observable.fromEventPattern(x =>
-                        editable.attachListener(editable, 'input', x)
-                    );
-                }
-                return Observable.empty();
-            });
-
-        const editorChangeSubscription = Observable.fromEventPattern((x) => { this.editor.on('change', x); })
-            .merge(sourceChange$)
-            .debounceTime(250)
-            .subscribe(() => {
-                onEditorChange(this.editor.getData());
-            });
-
-        this.subscriptions.add(editorChangeSubscription);
-
-        // Callback to the parent to pass the editor instance so the parent can call functions on it like insertHTML.
-        onEditorInitialized(this.editor);
     }
 
-    shouldComponentUpdate() {
-        return false;
-    }
-
-    componentWillUnmount() {
-        if (this.editor) {
-            this.editor.destroy();
-        }
-
-        this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    }
-
-    setContainerRef = (textarea) => {
-        this.editorContainer = textarea;
-    }
-
-    render() {
-        return (
-            <textarea ref={this.setContainerRef} />
-        );
-    }
+    return (
+        <CKEditor
+            initData={initialContent}
+            onInstanceReady={onEditorInitialized}
+            onChange={(event) => debouncedOnChange(event.editor.getData())}
+            onMode={handleModeChange}
+            config={{
+                plugins: [
+                    'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
+                    'clipboard', 'colorbutton', 'colordialog', 'contextmenu',
+                    'dialogadvtab', 'div', 'elementspath', 'enterkey',
+                    'entities', 'filebrowser', 'find', 'floatingspace',
+                    'font', 'format', 'horizontalrule', 'htmlwriter',
+                    'image', 'indentlist', 'indentblock', 'justify',
+                    'link', 'list', 'liststyle', 'magicline',
+                    'maximize', 'forms', 'pastefromword', 'pastetext',
+                    'preview', 'removeformat', 'resize', 'selectall',
+                    'showblocks', 'showborders', 'sourcearea', 'specialchar',
+                    'stylescombo', 'tab', 'table', 'tabletools',
+                    'toolbar', 'undo', 'wsc', 'wysiwygarea',
+                ].join(','),
+                removePlugins: 'scayt,wsc,about',
+                allowedContent: true,
+                extraPlugins: 'div',
+                height: 500,
+            }}
+        />
+    )
 }
 
-CKEditor.propTypes = {
+CKEditorWrapper.propTypes = {
     /**
      * Change handler that will be called when the content of the editor changed.
      */
@@ -109,3 +66,5 @@ CKEditor.propTypes = {
      */
     initialContent: PropTypes.string,
 };
+
+export default CKEditorWrapper
