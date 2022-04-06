@@ -15,6 +15,18 @@ const backToList = () => {
     goToRoute('list/otherSection/sqlView');
 };
 
+const formatCellValue = (cell) => {
+  if (cell === null) {
+    return null
+  }
+
+  if (typeof cell === 'object') {
+    return JSON.stringify(cell, null, 2)
+  }
+
+  return String(cell)
+}
+
 const styles = {
     menuItem: {
         paddingLeft: '1.5rem',
@@ -138,10 +150,7 @@ class SqlView extends Component {
 
     /* eslint-disable react/no-array-index-key */
     renderCell = (cell, index) => {
-        const isObject = typeof cell === 'object' && cell != null;
-        const formattedValue = isObject ? JSON.stringify(cell, null, 2) : cell;
-
-        return <td key={`cell${index}`}>{formattedValue}</td>;
+        return <td key={`cell${index}`}>{formatCellValue(cell)}</td>;
     };
 
     renderRow = (row, index) => (
