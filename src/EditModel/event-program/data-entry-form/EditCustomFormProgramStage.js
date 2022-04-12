@@ -5,7 +5,7 @@ import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import Paper from 'material-ui/Paper/Paper';
 import TextField from 'material-ui/TextField/TextField';
-import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
+import { LoadingMask } from '@dhis2/d2-ui-core';
 import { Action } from '@dhis2/d2-ui-core';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { compose, getOr, noop, curry } from 'lodash/fp';

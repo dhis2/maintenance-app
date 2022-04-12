@@ -11,7 +11,7 @@ import Paper from 'material-ui/Paper/Paper';
 import TextField from 'material-ui/TextField/TextField';
 import CheckBox from 'material-ui/Checkbox/Checkbox';
 
-import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
+import { LoadingMask } from '@dhis2/d2-ui-core';
 import { Heading } from '@dhis2/d2-ui-core';
 import { Action } from '@dhis2/d2-ui-core';
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import log from 'loglevel';
 
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
-import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
+import { LoadingMask } from '@dhis2/d2-ui-core';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
