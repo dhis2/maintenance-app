@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import withD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { addD2Context } from '@dhis2/d2-ui-core';
 import { get, compose } from 'lodash/fp';
 
 import SubFieldWrap from './helpers/SubFieldWrap';
@@ -13,7 +13,7 @@ import ConfidentialField from './tracked-entity-attribute/ConfidentialField';
 import withSkipLogic from './helpers/withSkipLogic';
 
 
-const TrackedEntityField = withD2Context((props, { d2 }) => (
+const TrackedEntityField = addD2Context((props, { d2 }) => (
     <SubFieldWrap>
         <DropDownAsync
             labelText={d2.i18n.getTranslation('tracked_entity')}

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { addD2Context } from '@dhis2/d2-ui-core';
 import organisationUnitLevelsStore from './organisationUnitLevels.store';
-import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
+import { withStateFrom } from '@dhis2/d2-ui-core';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import actions from './organisationUnitLevels.actions';

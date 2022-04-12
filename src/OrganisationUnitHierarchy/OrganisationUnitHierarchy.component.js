@@ -1,6 +1,6 @@
 import Paper from 'material-ui/Paper/Paper';
 import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
-import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
+import { withStateFrom } from '@dhis2/d2-ui-core';
 import { setAppState, default as appState } from '../App/appStateStore';
 import { Action } from '@dhis2/d2-ui-core';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';

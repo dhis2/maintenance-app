@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Observable } from 'rxjs';
 import { findDOMNode } from 'react-dom';
-import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
+import { withStateFrom } from '@dhis2/d2-ui-core';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
