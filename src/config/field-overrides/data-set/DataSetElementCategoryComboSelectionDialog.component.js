@@ -12,7 +12,8 @@ import { Row } from '@dhis2/d2-ui-core';
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import { map, memoize } from 'lodash/fp';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
+
+import Translate from '../../../d2-ui/i18n/Translate.component.js';
 
 const enhance = compose(
     getContext({ d2: PropTypes.object }),

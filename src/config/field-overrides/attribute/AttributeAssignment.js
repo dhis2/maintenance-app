@@ -1,5 +1,5 @@
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
+import Translate from '../../../d2-ui/i18n/Translate.component.js';
 import { Heading } from '@dhis2/d2-ui-core';
 import Checkbox from '../../../forms/form-fields/check-box';
 import actions from '../../../EditModel/objectActions';

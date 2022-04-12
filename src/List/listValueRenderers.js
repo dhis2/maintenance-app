@@ -6,7 +6,7 @@ import renderComponent from 'recompose/renderComponent';
 import renderNothing from 'recompose/renderNothing';
 import mapProps from 'recompose/mapProps';
 import { isString } from 'lodash/fp';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
+import Translate from '../d2-ui/i18n/Translate.component.js';
 
 const removeProps = mapProps(() => ({}));
 const renderNothingWhenValueIsNotAString = branch(

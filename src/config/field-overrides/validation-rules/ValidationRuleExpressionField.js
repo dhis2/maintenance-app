@@ -3,7 +3,7 @@ import { withState, withProps, compose, onlyUpdateForKeys } from 'recompose';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import { Row } from '@dhis2/d2-ui-core';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
+import Translate from '../../../d2-ui/i18n/Translate.component.js';
 
 import ValidationRuleExpressionDialog from './ValidationRuleExpressionDialog';
 
