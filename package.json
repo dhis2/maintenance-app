@@ -92,6 +92,7 @@
     "@dhis2/d2-i18n": "^1.1.0",
     "@dhis2/d2-ui-core": "^7.3.4",
     "@dhis2/d2-ui-sharing-dialog": "^1.0.12",
+    "@dhis2/d2-ui-translation-dialog": "^7.3.4",
     "@dhis2/prop-types": "^3.0.0",
     "@dhis2/ui": "^8.1.6",
     "ckeditor": "4.6.1",
