@@ -1986,6 +1986,16 @@
     material-ui "^0.20.0"
     prop-types "^15.5.10"
 
+"@dhis2/d2-ui-org-unit-tree@^7.3.4":
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-org-unit-tree/-/d2-ui-org-unit-tree-7.3.4.tgz#ddfbfa58a033424e3954f720d314e7e09ea54db5"
+  integrity sha512-V9J8AakOQiCVxg2y3zK+0IPmVUXOmADYoGkk4QUmcg5npZ31tz55mtBBSIr+BBQydeAUy+k1z1qARzkD2C/FRQ==
+  dependencies:
+    "@dhis2/d2-ui-core" "7.3.4"
+    "@material-ui/core" "^3.3.1"
+    babel-runtime "^6.26.0"
+    prop-types "^15.5.10"
+
 "@dhis2/d2-ui-sharing-dialog@^1.0.12":
   version "1.0.15"
   resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-sharing-dialog/-/d2-ui-sharing-dialog-1.0.15.tgz#2cc6cc1bd5cd401dd6163776c775bec79a018b71"
