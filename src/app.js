@@ -51,6 +51,7 @@ function getSystemSettings(d2) {
 
 export default function App() {
     const { d2, d2Error } = useD2({
+        i18nRoot: './i18n',
         onInitialized: async d2 => {
             await addCustomModels(d2)
             await getSystemSettings(d2)
