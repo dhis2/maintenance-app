@@ -1975,7 +1975,7 @@
     material-ui "^0.20.0"
     rxjs "^5.5.7"
 
-"@dhis2/d2-ui-forms@^7.3.4":
+"@dhis2/d2-ui-forms@7.3.4", "@dhis2/d2-ui-forms@^7.3.4":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-forms/-/d2-ui-forms-7.3.4.tgz#1b9870e8de8e617106cf1734bed338ff682ccd7a"
   integrity sha512-Hg6Wg0Bj7AG76b/K1VnG1NrcduGNCrvmJJE1peh5TisnSCev6j2+Hw3YYT9SCEhUeyo/8DDh9bX9G9UXSN1p2A==
@@ -1999,6 +1999,21 @@
     lodash "^4.17.10"
     material-ui "^0.20.0"
     prop-types "^15.5.10"
+
+"@dhis2/d2-ui-legend@^7.3.4":
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-legend/-/d2-ui-legend-7.3.4.tgz#2161f761ab0452f78c41dadcd6ee6dd86a3f6759"
+  integrity sha512-ku9KRnn7eQnoQKTSDY1RbakcDeAgew8R7aCp3DwK4tc1hdbRxlHLA0SpP8TNTwNOzVZVtn/9uzCP16h3nBzUGQ==
+  dependencies:
+    "@dhis2/d2-ui-core" "7.3.4"
+    "@dhis2/d2-ui-forms" "7.3.4"
+    "@dhis2/d2-ui-table" "7.3.4"
+    babel-runtime "^6.26.0"
+    d2-utilizr "^0.2.15"
+    material-ui "^0.20.0"
+    prop-types "^15.5.10"
+    recompose "^0.26.0"
+    rxjs "^5.5.7"
 
 "@dhis2/d2-ui-org-unit-select@^7.3.4":
   version "7.3.4"
@@ -2032,7 +2047,22 @@
     recompose "^0.26.0"
     rxjs "^5.5.7"
 
-"@dhis2/d2-ui-translation-dialog@^7.3.4":
+"@dhis2/d2-ui-table@7.3.4":
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-table/-/d2-ui-table-7.3.4.tgz#0defe736808e67c8255074a02b8c4c69fae14d73"
+  integrity sha512-MLvIBhwstGSF9YOtphSfK4+qWswn/PG4Rms41WX8TUED9n9EpqQVJ7UDwslaF6ontlNEIlJGzqPqHHLxzTm0Iw==
+  dependencies:
+    "@dhis2/d2-ui-core" "7.3.4"
+    "@dhis2/d2-ui-translation-dialog" "7.3.4"
+    babel-runtime "^6.26.0"
+    d2-utilizr "^0.2.15"
+    lodash "^4.17.10"
+    material-ui "^0.20.0"
+    prop-types "^15.5.10"
+    recompose "^0.26.0"
+    rxjs "^5.5.7"
+
+"@dhis2/d2-ui-translation-dialog@7.3.4", "@dhis2/d2-ui-translation-dialog@^7.3.4":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-translation-dialog/-/d2-ui-translation-dialog-7.3.4.tgz#050dbf964e3684cea01550a2f4b07dec94415197"
   integrity sha512-YnYotRu52UEZHmyd7xYonZAy+yYEKJVPnNpnQxIZNc20Q8C3tRXyuWruPtTHcW8LtUnf6sqb1uLkv2oOhMXP+w==
