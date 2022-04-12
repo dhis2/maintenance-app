@@ -1,4 +1,4 @@
-import Button from 'd2-ui/lib/button/Button';
+import { Button } from '@dhis2/d2-ui-core';
 import PropTypes from 'prop-types';
 import { Component, createRef } from 'react';
 
