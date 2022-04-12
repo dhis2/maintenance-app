@@ -93,6 +93,7 @@
     "@dhis2/d2-ui-core": "^7.3.4",
     "@dhis2/d2-ui-forms": "^7.3.4",
     "@dhis2/d2-ui-icon-picker": "^7.3.4",
+    "@dhis2/d2-ui-org-unit-select": "^7.3.4",
     "@dhis2/d2-ui-org-unit-tree": "^7.3.4",
     "@dhis2/d2-ui-sharing-dialog": "^1.0.12",
     "@dhis2/d2-ui-translation-dialog": "^7.3.4",
