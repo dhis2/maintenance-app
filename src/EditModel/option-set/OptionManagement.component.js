@@ -2,12 +2,10 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Observable } from 'rxjs';
 
-import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
-
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
-import Pagination from 'd2-ui/lib/pagination/Pagination.component';
+import { Pagination, withStateFrom } from '@dhis2/d2-ui-core';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import AlertIcon from 'material-ui/svg-icons/alert/warning';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
