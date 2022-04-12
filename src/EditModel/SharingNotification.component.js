@@ -1,6 +1,6 @@
 import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 import Paper from 'material-ui/Paper/Paper';
 import { withAuth } from "../utils/Auth";

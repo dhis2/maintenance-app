@@ -4,7 +4,7 @@ import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import d2lib from 'd2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 
 function hasNameInArray(listToCheck) {
     return function hasNameInArrayInner(value) {

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { getInstance } from 'd2';
 
 import { CircularProgress } from '@dhis2/d2-ui-core';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 
 import SaveButton from './SaveButton.component';

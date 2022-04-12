@@ -5,7 +5,7 @@ import { getInstance } from 'd2';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import { Action } from '@dhis2/d2-ui-core';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 import TextField from 'material-ui/TextField/TextField';
 import log from 'loglevel';
 import QuickAddLink from './helpers/QuickAddLink.component';

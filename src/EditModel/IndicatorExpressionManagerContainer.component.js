@@ -4,7 +4,7 @@ import { getInstance as getD2 } from 'd2';
 import { Action } from '@dhis2/d2-ui-core';
 import IndicatorExpressionManager from './expression/ExpressionManager'
 import ReactCreateClass from 'create-react-class'
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 import indicatorExpressionStatusStore from 'd2-ui/lib/expression-manager/ExpressionStatus.store';
 
 import { createActionToValidation$ } from '../utils/createActionToValidation$';

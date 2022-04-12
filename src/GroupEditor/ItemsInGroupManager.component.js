@@ -8,7 +8,7 @@ import d2lib from 'd2';
 import ModelTypeSelector from './ModelTypeSelector.component';
 import { Store } from '@dhis2/d2-ui-core';
 import ItemSelector from './ItemSelector.component';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 
 export default ReactCreateClass({
