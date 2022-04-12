@@ -1,5 +1,7 @@
-import { isStartDateBeforeEndDate } from '@dhis2/d2-ui-forms/Validators';
+import Validators from '@dhis2/d2-ui-forms/Validators';
 import OrganisationUnitTreeMultiSelect from '../../forms/form-fields/orgunit-tree-multi-select';
+
+const { isStartDateBeforeEndDate } = Validators
 
 export default new Map([
     ['organisationUnits', {

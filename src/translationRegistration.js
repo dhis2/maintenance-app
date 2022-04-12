@@ -1,5 +1,7 @@
 import { config } from 'd2';
-import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from '@dhis2/d2-ui-forms/Validators';
+import Validators from '@dhis2/d2-ui-forms/Validators';
+
+const { isRequired, isUrl, isNumber: isNumberValidator, isEmail } = Validators;
 
 [
     'file_resource',

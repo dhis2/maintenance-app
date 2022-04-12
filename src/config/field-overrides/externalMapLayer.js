@@ -2,8 +2,10 @@ import DropDown from '../../forms/form-fields/drop-down';
 import TextField from '../../forms/form-fields/text-field';
 import SubFieldWrap from './helpers/SubFieldWrap';
 import actions from '../../EditModel/objectActions';
-import { isUrl } from '@dhis2/d2-ui-forms/Validators';
+import Validators from '@dhis2/d2-ui-forms/Validators';
 import { addD2Context } from '@dhis2/d2-ui-core';
+
+const { isUrl } = Validators
 
 export default new Map([
     ['imageFormat', {
