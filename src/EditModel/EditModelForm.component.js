@@ -7,7 +7,7 @@ import { getInstance } from 'd2';
 
 import { CircularProgress } from '@dhis2/d2-ui-core';
 import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { FormBuilder } from '@dhis2/d2-ui-forms';
 
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';

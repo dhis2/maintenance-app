@@ -4,7 +4,7 @@ import { addD2Context } from '@dhis2/d2-ui-core';
 import organisationUnitLevelsStore from './organisationUnitLevels.store';
 import { withStateFrom } from '@dhis2/d2-ui-core';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { FormBuilder } from '@dhis2/d2-ui-forms';
 import actions from './organisationUnitLevels.actions';
 import IconButton from 'material-ui/IconButton/IconButton';
 import Paper from 'material-ui/Paper/Paper';
