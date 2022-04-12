@@ -8,7 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import { Pagination, withStateFrom } from '@dhis2/d2-ui-core';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import AlertIcon from 'material-ui/svg-icons/alert/warning';
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import TranslationDialog from '@dhis2/d2-ui-translation-dialog';
 import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 
 import OptionSorter from './OptionSorter/OptionSorter.component';

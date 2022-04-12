@@ -12,7 +12,7 @@ import SaveButton from '../EditModel/SaveButton.component';
 import FormButtons from '../EditModel/FormButtons.component';
 import snackActions from '../Snackbar/snack.actions';
 import { Heading } from '@dhis2/d2-ui-core';
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import TranslationDialog from '@dhis2/d2-ui-translation-dialog';
 
 function saveOrganisationUnitLevels(i18n) {
     actions.saveOrganisationUnitLevels()

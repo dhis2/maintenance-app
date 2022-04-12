@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import log from 'loglevel';
 
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import TranslationDialog from '@dhis2/d2-ui-translation-dialog';
 import { LoadingMask } from '@dhis2/d2-ui-core';
 
 import DataTable from 'd2-ui/lib/data-table/DataTable.component';
