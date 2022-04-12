@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { getInstance } from 'd2';
 
-import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
+import { CircularProgress } from '@dhis2/d2-ui-core';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 
