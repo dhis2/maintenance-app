@@ -13,14 +13,13 @@ import {
     ExpressionDescription,
     ExpressionOperators,
     ExpressionFormula,
+    ConstantSelector,
+    ProgramOperandSelector,
+    ReportingRatesSelector,
+    DataElementOperandSelector,
+    OrganisationUnitGroupSelector
 } from '@dhis2/d2-ui-expression-manager';
 import ExpressionFunctions from './ExpressionFunctions';
-
-import OrganisationUnitGroupSelector from 'd2-ui/lib/expression-manager/OrganisationUnitGroupSelector';
-import DataElementOperandSelector from 'd2-ui/lib/expression-manager/DataElementOperandSelector';
-import ReportingRatesSelector from 'd2-ui/lib/expression-manager/ReportingRatesSelector';
-import ProgramOperandSelector from 'd2-ui/lib/expression-manager/ProgramOperandSelector';
-import ConstantSelector from 'd2-ui/lib/expression-manager/ConstantSelector';
 
 import { Heading } from '@dhis2/d2-ui-core';
 import { addD2Context } from '@dhis2/d2-ui-core';
