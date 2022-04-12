@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import IconPicker from 'd2-ui/lib/icon-picker/IconPicker.component';
+import IconPicker from '@dhis2/d2-ui-icon-picker';
 import Divider from 'material-ui/Divider';
 
 export default function IconPickerField(props) {
