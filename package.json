@@ -91,6 +91,7 @@
     "@dhis2/cli-app-scripts": "^9.0.0",
     "@dhis2/d2-i18n": "^1.1.0",
     "@dhis2/d2-ui-core": "^7.3.4",
+    "@dhis2/d2-ui-expression-manager": "^7.3.4",
     "@dhis2/d2-ui-forms": "^7.3.4",
     "@dhis2/d2-ui-icon-picker": "^7.3.4",
     "@dhis2/d2-ui-org-unit-select": "^7.3.4",

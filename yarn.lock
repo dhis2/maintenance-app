@@ -1961,6 +1961,20 @@
     lodash "^4.17.10"
     material-ui "^0.20.0"
 
+"@dhis2/d2-ui-expression-manager@^7.3.4":
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-expression-manager/-/d2-ui-expression-manager-7.3.4.tgz#304aa627846174f0e77b21cd2294f2393b22d54c"
+  integrity sha512-A+4lJrj2mYydmX70oYugEupC77ozEYxf6UlrG1MqauaN317l5VzUGaYQDgUdl8jmuy9VN8Jdq5fbahEb3dbDfw==
+  dependencies:
+    "@dhis2/d2-ui-core" "7.3.4"
+    babel-runtime "^6.26.0"
+    classnames "^2.2.5"
+    d2 "~31.1"
+    lodash "^4.17.10"
+    loglevel "^1.6.1"
+    material-ui "^0.20.0"
+    rxjs "^5.5.7"
+
 "@dhis2/d2-ui-forms@^7.3.4":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-forms/-/d2-ui-forms-7.3.4.tgz#1b9870e8de8e617106cf1734bed338ff682ccd7a"
