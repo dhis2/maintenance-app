@@ -7,7 +7,7 @@ import { getInstance } from 'd2';
 import { generateUid } from 'd2/uid';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import { Store } from '@dhis2/d2-ui-core';
-import Row from 'd2-ui/lib/layout/Row.component';
+import { Row } from '@dhis2/d2-ui-core';
 
 import TextField from 'material-ui/TextField/TextField';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';

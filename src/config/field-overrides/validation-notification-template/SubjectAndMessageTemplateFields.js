@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import Row from 'd2-ui/lib/layout/Row.component';
-import Column from 'd2-ui/lib/layout/Column.component';
+import { Row } from '@dhis2/d2-ui-core';
+import { Column } from '@dhis2/d2-ui-core';
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField/TextField';
 import { Heading } from '@dhis2/d2-ui-core';

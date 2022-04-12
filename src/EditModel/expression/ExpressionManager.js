@@ -25,8 +25,8 @@ import ConstantSelector from 'd2-ui/lib/expression-manager/ConstantSelector';
 import { Heading } from '@dhis2/d2-ui-core';
 import { addD2Context } from '@dhis2/d2-ui-core';
 import { Action } from '@dhis2/d2-ui-core';
-import Row from 'd2-ui/lib/layout/Row.component';
-import Column from 'd2-ui/lib/layout/Column.component';
+import { Row } from '@dhis2/d2-ui-core';
+import { Column } from '@dhis2/d2-ui-core';
 
 /* NOTE: THIS IS A COPY OF ExpressionManager from d2-ui v29.
 See https://github.com/dhis2/d2-ui/blob/v29/src/expression-manager/ExpressionManager.js
