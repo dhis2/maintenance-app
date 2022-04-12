@@ -1,4 +1,4 @@
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 
 const expressionStatusStore = Store.create();
 

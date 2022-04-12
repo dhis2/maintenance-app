@@ -1,4 +1,4 @@
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import { getInstance } from 'd2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import isObject from 'd2-utilizr/lib/isObject';

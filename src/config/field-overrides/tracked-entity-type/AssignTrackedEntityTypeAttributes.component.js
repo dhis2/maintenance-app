@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import TextField from 'material-ui/TextField/TextField';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
 import TETAttributeRow from '../../../forms/form-fields/attribute-row';

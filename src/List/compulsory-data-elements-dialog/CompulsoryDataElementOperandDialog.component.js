@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField/TextField';
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import Heading from 'd2-ui/lib/headings/Heading.component';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import snackActions from '../../Snackbar/snack.actions';
 
 const itemsAvailableStore = Store.create();

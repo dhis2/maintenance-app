@@ -8,7 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import TextField from 'material-ui/TextField/TextField';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import Checkbox from 'material-ui/Checkbox';
 
 import DropDown from '../forms/form-fields/drop-down';

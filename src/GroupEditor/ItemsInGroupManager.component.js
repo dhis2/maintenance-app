@@ -6,7 +6,7 @@ import log from 'loglevel';
 
 import d2lib from 'd2';
 import ModelTypeSelector from './ModelTypeSelector.component';
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import ItemSelector from './ItemSelector.component';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';

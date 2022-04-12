@@ -1,4 +1,4 @@
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 
 export const optionDialogStore = Store.create();
 export const sortDialogStore = Store.create({

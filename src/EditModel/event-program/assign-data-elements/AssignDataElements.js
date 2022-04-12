@@ -14,7 +14,7 @@ import TextField from 'material-ui/TextField/TextField';
 import pure from 'recompose/pure';
 import withState from 'recompose/withState';
 import Checkbox from 'material-ui/Checkbox/Checkbox';
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import {
     addDataElementsToStage,
     removeDataElementsFromStage,

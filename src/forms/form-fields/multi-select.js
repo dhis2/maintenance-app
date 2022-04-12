@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import ReactCreateClass from 'create-react-class'
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import { getInstance } from 'd2';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';

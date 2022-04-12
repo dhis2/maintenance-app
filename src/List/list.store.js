@@ -1,5 +1,5 @@
 import { Subject, Observable } from 'rxjs';
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import { getTableColumnsForType, getFilterFieldsForType, getFiltersForType } from '../config/maintenance-models';
 
 export default Store.create({

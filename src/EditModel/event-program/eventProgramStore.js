@@ -1,4 +1,4 @@
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import { equals, some, get, compose, identity, map, __, concat, isObject, values, flatten } from 'lodash/fp';
 import { getOwnedPropertyJSON } from 'd2/model/helpers/json';
 import { getMetaDataToSend } from './event-program-store/getMetaDataToSend'
