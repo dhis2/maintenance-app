@@ -6,7 +6,7 @@ import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import TextField from 'material-ui/TextField';
 
-import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.component';
+import { OrgUnitTreeMultipleRoots as OrgUnitTree } from '@dhis2/d2-ui-org-unit-tree';
 
 import appStateStore from '../../App/appStateStore';
 

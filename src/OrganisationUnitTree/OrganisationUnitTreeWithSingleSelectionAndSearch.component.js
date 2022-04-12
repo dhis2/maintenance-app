@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import AutoComplete from 'material-ui/AutoComplete/AutoComplete';
-import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';
+import { OrgUnitTree } from '@dhis2/d2-ui-org-unit-tree';
 import { addD2Context } from '@dhis2/d2-ui-core';
 import noop from 'd2-utilizr/lib/noop';
 
@@ -28,7 +28,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                 .map(root =>
                 {
                     return (
-                        <OrganisationUnitTree
+                        <OrgUnitTree
                             key={root.id}
                             root={root}
                             selected={props.selected}
