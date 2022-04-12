@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hideIfNotAuthorizedToCreate } from './NotificationList';
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { addD2Context } from '@dhis2/d2-ui-core';
 import Avatar from 'material-ui/Avatar';
 import FontIcon from 'material-ui/FontIcon';
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';

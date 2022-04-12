@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Dialog from 'material-ui/Dialog/Dialog';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { addD2Context } from '@dhis2/d2-ui-core';
 
 import IndicatorExpressionManagerContainer from './IndicatorExpressionManagerContainer.component';
 import modelToEditStore from './modelToEditStore';

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Observable } from 'rxjs';
 
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { addD2Context } from '@dhis2/d2-ui-core';
 import { getInstance } from 'd2';
 
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
