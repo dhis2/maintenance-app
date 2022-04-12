@@ -1952,15 +1952,6 @@
     material-ui "^0.20.0"
     rxjs "^5.5.7"
 
-"@dhis2/d2-ui-core@^1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-core/-/d2-ui-core-1.3.2.tgz#0e8fe88c76240065772e8296f267c478a4a00028"
-  integrity sha512-Qy8WFjFJUS7row7CHGbEEF3bjd2ESebLVYrffc/beY1cij2r5FQUmqTFDPyjOBiIIZAVwvn9aZK5sxtl9FJSJA==
-  dependencies:
-    babel-runtime "^6.26.0"
-    lodash "^4.17.10"
-    material-ui "^0.20.0"
-
 "@dhis2/d2-ui-expression-manager@^7.3.4":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-expression-manager/-/d2-ui-expression-manager-7.3.4.tgz#304aa627846174f0e77b21cd2294f2393b22d54c"
@@ -2047,14 +2038,16 @@
     babel-runtime "^6.26.0"
     prop-types "^15.5.10"
 
-"@dhis2/d2-ui-sharing-dialog@^1.0.12":
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-sharing-dialog/-/d2-ui-sharing-dialog-1.0.15.tgz#2cc6cc1bd5cd401dd6163776c775bec79a018b71"
-  integrity sha512-5HyDSAZCnx0SZlWRG14igrPM96cDIVSJ5CC+kyL+sNzURnafOmPlHgqB1NSCjIF0PhEsJOvRnxhm6qaQssDeUg==
+"@dhis2/d2-ui-sharing-dialog@^7.3.4":
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-sharing-dialog/-/d2-ui-sharing-dialog-7.3.4.tgz#456d13e76a964a6fcba423d54ef96fc668054da6"
+  integrity sha512-6TYKo1HzfoxjnSgG2OBdKON1VGPS9Nn6Ym8gPJBbskZoGtj7muGF20iVFqxt/VdhrnvSIwE9xOVbJ73s6UU5sg==
   dependencies:
-    "@dhis2/d2-ui-core" "^1.3.2"
+    "@dhis2/d2-ui-core" "7.3.4"
+    "@material-ui/core" "^3.3.1"
+    "@material-ui/icons" "^3.0.1"
     babel-runtime "^6.26.0"
-    material-ui "^0.19.3"
+    downshift "^2.2.2"
     prop-types "^15.5.10"
     recompose "^0.26.0"
     rxjs "^5.5.7"
@@ -6335,6 +6328,11 @@ compression@^1.5.2, compression@^1.7.4:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
+compute-scroll-into-view@^1.0.2:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.17.tgz#6a88f18acd9d42e9cf4baa6bec7e0522607ab7ab"
+  integrity sha512-j4dx+Fb0URmzbwwMUrhqWM2BEWHdFGx+qZ9qqASHRPqvTYdqvWnHg0H1hIbcyLnvgnoNAVMlwkepyqM3DaIFUg==
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -7649,6 +7647,14 @@ dotenv@^8.1.0:
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.6.0.tgz#061af664d19f7f4d8fc6e4ff9b584ce237adcb8b"
   integrity sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==
+
+downshift@^2.2.2:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-2.2.3.tgz#85187568455134e72025fbddd40bb9cf96c55eed"
+  integrity sha512-SXFgGq5QYT9mxbaSsYdp4Ng0tP87F5z33PD+tZ2kyK0qIBYd1rcPe90+ykCOYqsWHsb/gcrjaAav2Jpa6qNbQg==
+  dependencies:
+    compute-scroll-into-view "^1.0.2"
+    prop-types "^15.6.0"
 
 duplexer3@^0.1.4:
   version "0.1.4"
@@ -10061,9 +10067,9 @@ human-signals@^2.1.0:
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
 hyphenate-style-name@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.2.tgz#31160a36930adaf1fc04c6074f7eb41465d4ec4b"
-  integrity sha1-MRYKNpMK2vH8BMYHT360FGXU7Es=
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
+  integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
 
 i18next-conv@^9:
   version "9.2.1"
@@ -12331,9 +12337,9 @@ kew@^0.7.0:
   integrity sha1-edk9LTM2PW/dKXCzNdkUGtWR15s=
 
 keycode@^2.1.8:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"
-  integrity sha1-PQr1bce4uOXLqNCpfxByBO7CKwQ=
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.1.tgz#09c23b2be0611d26117ea2501c2c391a01f39eff"
+  integrity sha512-Rdgz9Hl9Iv4QKi8b0OlCRQEzp4AgVxyCtz5S/+VIHezDmrDhkp2N2TqBWOLz0/gbeREXOOiI9/4b8BY9uw2vFg==
 
 keyv@^3.0.0:
   version "3.1.0"
@@ -12973,7 +12979,7 @@ material-design-icons-iconfont@^4.0.5:
   resolved "https://registry.yarnpkg.com/material-design-icons-iconfont/-/material-design-icons-iconfont-4.0.5.tgz#4107ba3b8a9d688a3d9325fc7363af51b17d3aee"
   integrity sha512-ByJJ1yz8+RfCx2uNiC5WjVCR7K3UWRb8ytWV3RMaoFRzQLNr/J5x7+Wg1+3OlIZahNXrId9Hu+BfXfQIo01v7g==
 
-material-ui@0.20.0, material-ui@^0.19.3, material-ui@^0.20.0:
+material-ui@0.20.0, material-ui@^0.20.0:
   version "0.20.0"
   resolved "https://registry.yarnpkg.com/material-ui/-/material-ui-0.20.0.tgz#85411bb59c916c9c7703f29dcffc44e3a67d5111"
   integrity sha512-wkHkeU1SaGfCrtwIzBOl5vynNNNzVGW27ql0Ue5HZLB4WyRQ3YohJBdKa5lBrH5JD/Cgae7IzrP7cVWDyKpeLQ==
@@ -17029,9 +17035,9 @@ run-queue@^1.0.0, run-queue@^1.0.3:
     aproba "^1.1.1"
 
 rxjs@^5.2.0, rxjs@^5.5.7:
-  version "5.5.11"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.5.11.tgz#f733027ca43e3bec6b994473be4ab98ad43ced87"
-  integrity sha512-3bjO7UwWfA2CV7lmwYMBzj4fQ6Cq+ftHc2MvUe+WMS7wcdJ1LosDWmdjPQanYp2dBRj572p7PeU81JUxHKOcBA==
+  version "5.5.12"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.5.12.tgz#6fa61b8a77c3d793dbaf270bee2f43f652d741cc"
+  integrity sha512-xx2itnL5sBbqeeiVgNPVuQQ1nC8Jp2WfNJhXWHmElW9YmrpS9UVnNzhP3EH3HFqexO5Tlp8GhYY+WEcqcVMvGw==
   dependencies:
     symbol-observable "1.0.1"
 
