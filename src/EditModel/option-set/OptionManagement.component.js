@@ -2,7 +2,8 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Observable } from 'rxjs';
 
-import DataTable from 'd2-ui/lib/data-table/DataTable.component';
+import DataTable from '../../d2-ui/data-table/DataTable.component.js';
+
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 import { Pagination, withStateFrom } from '@dhis2/d2-ui-core';

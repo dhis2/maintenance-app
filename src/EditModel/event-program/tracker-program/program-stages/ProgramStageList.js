@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import DataTable from 'd2-ui/lib/data-table/DataTable.component';
+import DataTable from '../../../../d2-ui/data-table/DataTable.component.js'
+
 import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 import TranslationDialog from '@dhis2/d2-ui-translation-dialog';
 

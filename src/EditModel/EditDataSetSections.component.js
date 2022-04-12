@@ -5,7 +5,8 @@ import log from 'loglevel';
 import TranslationDialog from '@dhis2/d2-ui-translation-dialog';
 import { LoadingMask } from '@dhis2/d2-ui-core';
 
-import DataTable from 'd2-ui/lib/data-table/DataTable.component';
+import DataTable from '../../d2-ui/data-table/DataTable.component.js'
+
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
 

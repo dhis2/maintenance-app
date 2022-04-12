@@ -2,7 +2,8 @@ import { Component } from 'react';
 import PropTypes from 'prop-types'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon';
-import DataTable from 'd2-ui/lib/data-table/DataTable.component';
+
+import DataTable from '../../../d2-ui/data-table/DataTable.component.js';
 
 import ProgramRuleActionDialog from './programRuleActionDialog.component';
 import programRuleActionTypes from './programRuleActionTypes';
