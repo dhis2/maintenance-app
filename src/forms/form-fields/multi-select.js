@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import ReactCreateClass from 'create-react-class'
 import { Store } from '@dhis2/d2-ui-core';
 import { getInstance } from 'd2';
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
+import { GroupEditor } from '@dhis2/d2-ui-group-editor';
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 import { Action } from '@dhis2/d2-ui-core';
 import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import mapProps from 'recompose/mapProps';
 import compose from 'recompose/compose';
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
+import { GroupEditor } from '@dhis2/d2-ui-group-editor';
 import Paper from 'material-ui/Paper/Paper';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { get, first, getOr, __ } from 'lodash/fp';

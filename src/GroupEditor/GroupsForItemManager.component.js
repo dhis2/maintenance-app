@@ -8,7 +8,7 @@ import ModelTypeSelector from './ModelTypeSelector.component';
 import { Store } from '@dhis2/d2-ui-core';
 import ItemSelector from './ItemSelector.component';
 import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
+import { GroupEditor } from '@dhis2/d2-ui-group-editor';
 
 export default ReactCreateClass({
     mixins: [Translate],

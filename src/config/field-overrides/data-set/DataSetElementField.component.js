@@ -5,7 +5,7 @@ import { uniq, get, range } from 'lodash/fp';
 
 import { getInstance } from 'd2';
 import { generateUid } from 'd2/uid';
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
+import { GroupEditor } from '@dhis2/d2-ui-group-editor';
 import { Store } from '@dhis2/d2-ui-core';
 import { Row } from '@dhis2/d2-ui-core';
 
