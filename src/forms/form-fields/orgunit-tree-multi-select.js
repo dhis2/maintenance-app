@@ -3,9 +3,7 @@ import PropTypes from 'prop-types'
 import { Observable } from 'rxjs';
 
 import { OrgUnitTreeMultipleRoots as OrgUnitTree } from '@dhis2/d2-ui-org-unit-tree';
-import OrgUnitSelectByLevel from 'd2-ui/lib/org-unit-select/OrgUnitSelectByLevel.component';
-import OrgUnitSelectByGroup from 'd2-ui/lib/org-unit-select/OrgUnitSelectByGroup.component';
-import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.component';
+import { OrgUnitSelectByLevel, OrgUnitSelectByGroup, OrgUnitSelectAll } from '@dhis2/d2-ui-org-unit-select';
 import TextField from 'material-ui/TextField/TextField';
 
 import { Action } from '@dhis2/d2-ui-core';
