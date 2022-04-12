@@ -9,10 +9,12 @@ import Tab from 'material-ui/Tabs/Tab';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider';
 
-import ExpressionDescription from 'd2-ui/lib/expression-manager/ExpressionDescription';
-import ExpressionOperators from 'd2-ui/lib/expression-manager/ExpressionOperators';
+import {
+    ExpressionDescription,
+    ExpressionOperators,
+    ExpressionFormula,
+} from '@dhis2/d2-ui-expression-manager';
 import ExpressionFunctions from './ExpressionFunctions';
-import ExpressionFormula from 'd2-ui/lib/expression-manager/ExpressionFormula';
 
 import OrganisationUnitGroupSelector from 'd2-ui/lib/expression-manager/OrganisationUnitGroupSelector';
 import DataElementOperandSelector from 'd2-ui/lib/expression-manager/DataElementOperandSelector';
