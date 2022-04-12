@@ -1950,6 +1950,17 @@
     lodash "^4.17.10"
     material-ui "^0.20.0"
 
+"@dhis2/d2-ui-core@^7.3.4":
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-core/-/d2-ui-core-7.3.4.tgz#88fe3aca89999e4bec11124dcfc2963f54b1e24a"
+  integrity sha512-SYhr9iioZQ475ru92d1l8NXPWlsEcPv0XqADDGSV0vJol9gE45axanmODjGhdqeigMzc4MeFgPKgJ2RFwonqJQ==
+  dependencies:
+    babel-runtime "^6.26.0"
+    d2 "~31.7"
+    lodash "^4.17.10"
+    material-ui "^0.20.0"
+    rxjs "^5.5.7"
+
 "@dhis2/d2-ui-sharing-dialog@^1.0.12":
   version "1.0.15"
   resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-sharing-dialog/-/d2-ui-sharing-dialog-1.0.15.tgz#2cc6cc1bd5cd401dd6163776c775bec79a018b71"
@@ -6655,11 +6666,6 @@ d2-manifest@^1.0.0-2:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui@^29.0.35:
-  version "29.0.35"
-  resolved "https://registry.yarnpkg.com/d2-ui/-/d2-ui-29.0.35.tgz#b0f8540957e90ded7bf2257bbd2604b7b8034c0c"
-  integrity sha512-NS4YXUdDti5igBLAT+IdWnQeAygf/m2ubG8+nakkrKhP4RHGgwuZmKveLKkpmbZDATvE4Dz/0DLnTaP+/ZLgaA==
-
 d2-utilizr@^0.2.9:
   version "0.2.16"
   resolved "https://registry.yarnpkg.com/d2-utilizr/-/d2-utilizr-0.2.16.tgz#b71df7ca8c7ab5125ca8bdb4899611bc6782a754"
@@ -6677,6 +6683,13 @@ d2@^31.10.2:
   version "31.10.2"
   resolved "https://registry.yarnpkg.com/d2/-/d2-31.10.2.tgz#93023171a703ad37dedf273b07e9643155e42466"
   integrity sha512-kW/2DKv567foH9JNEBtebfOW6gdmHzNd5dsvA7m8aVK0IZAXYd++lKKqmTUPzpjSRHuM7oUAnTw29/a5JIdfWQ==
+  dependencies:
+    isomorphic-fetch "^2.2.1"
+
+d2@~31.7:
+  version "31.7.0"
+  resolved "https://registry.yarnpkg.com/d2/-/d2-31.7.0.tgz#3a843240fecaafdf213da78b55aed9b8611ee22e"
+  integrity sha512-+ubKyPWKxUz90g5RHCYIt4KxKPzcCOBvDS7X0076XSycecfx4qvtkGBcKyFmXdz27iwTLUpNtruL9pUK9aTi/A==
   dependencies:
     isomorphic-fetch "^2.2.1"
 
