@@ -1,3 +1,6 @@
+import '@dhis2/d2-ui-core/css/Pagination.css'
+import '@dhis2/d2-ui-core/css/Table.css'
+
 import './ColorPickers/ColorPickers.css'
 import './EditModel/EditDataEntryForm.css'
 import './EditModel/EditDataEntryFormProgramStage.css'
