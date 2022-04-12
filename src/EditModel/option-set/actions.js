@@ -1,5 +1,5 @@
 import log from 'loglevel';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 import isArray from 'd2-utilizr/lib/isArray';
 import { getInstance } from 'd2';
 import { has } from 'lodash/fp';

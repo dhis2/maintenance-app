@@ -1,5 +1,5 @@
 import { map, get, filter, flatten, compose, identity, head } from 'lodash/fp';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 import log from 'loglevel';
 import { Observable } from 'rxjs';
 import { getInstance } from 'd2';

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 import { Observable, ReplaySubject } from 'rxjs';
 import { getInstance } from 'd2';
 import organisationUnitLevelsStore from './organisationUnitLevels.store';

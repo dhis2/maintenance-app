@@ -8,7 +8,7 @@ import OrgUnitSelectByGroup from 'd2-ui/lib/org-unit-select/OrgUnitSelectByGroup
 import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.component';
 import TextField from 'material-ui/TextField/TextField';
 
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 
 const styles = {
     multiSelectWrapper: {

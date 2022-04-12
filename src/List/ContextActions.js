@@ -2,7 +2,7 @@ import { Subject } from 'rxjs';
 import log from 'loglevel';
 
 import { getInstance as getD2 } from 'd2';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
 import detailsStore from './details.store';

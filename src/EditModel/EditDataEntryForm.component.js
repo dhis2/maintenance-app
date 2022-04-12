@@ -13,7 +13,7 @@ import CheckBox from 'material-ui/Checkbox/Checkbox';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 
 import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';

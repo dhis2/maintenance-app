@@ -4,7 +4,7 @@ import Store from 'd2-ui/lib/store/Store';
 import { getInstance } from 'd2';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 import TextField from 'material-ui/TextField/TextField';
 import log from 'loglevel';

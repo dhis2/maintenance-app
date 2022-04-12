@@ -5,7 +5,7 @@ import MenuItem from 'material-ui/MenuItem/MenuItem';
 import Paper from 'material-ui/Paper/Paper';
 import TextField from 'material-ui/TextField/TextField';
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { compose, getOr, noop, curry } from 'lodash/fp';
 import { bindActionCreators } from 'redux';
