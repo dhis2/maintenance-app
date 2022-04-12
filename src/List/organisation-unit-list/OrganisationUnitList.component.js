@@ -1,4 +1,4 @@
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import ModelCollection from 'd2/lib/model/ModelCollection';
 import log from 'loglevel';
 import { Component } from 'react';

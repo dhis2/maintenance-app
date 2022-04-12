@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import mapPropsStream from 'recompose/mapPropsStream';
 import { identity, noop, compose } from 'lodash/fp';
 

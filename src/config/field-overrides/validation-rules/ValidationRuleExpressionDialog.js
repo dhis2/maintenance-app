@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import PropTypes from 'prop-types'
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2';
 import { result } from 'lodash/fp';
 import Dialog from 'material-ui/Dialog';
 import ExpressionManager from '../../../EditModel/expression/ExpressionManager'

@@ -2,7 +2,7 @@ import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
-import d2lib from 'd2/lib/d2';
+import d2lib from 'd2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import Translate from 'd2-ui/lib/i18n/Translate.mixin';
 

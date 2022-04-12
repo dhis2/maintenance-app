@@ -1,7 +1,7 @@
 import mapPropsStream from 'recompose/mapPropsStream';
 import { noop, overSome, negate } from 'lodash/fp';
 import { Observable } from 'rxjs';
-import { getInstance, config } from 'd2/lib/d2';
+import { getInstance, config } from 'd2';
 import CollapsibleList from './CollapsibleList';
 
 config.i18n.strings.add('enrollment_count');

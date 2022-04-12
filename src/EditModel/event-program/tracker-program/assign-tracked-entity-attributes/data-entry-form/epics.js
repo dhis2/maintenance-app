@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import { get, getOr, compose, isEqual, findIndex, maxBy, filter, sortBy } from 'lodash/fp';
 import { generateUid } from 'd2/lib/uid';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import {
     PROGRAM_SECTIONS_ORDER_CHANGE,
     PROGRAM_SECTIONS_ADD,

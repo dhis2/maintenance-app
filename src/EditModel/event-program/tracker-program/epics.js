@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 
 import { generateUid } from 'd2/lib/uid';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 
 import programStore from '../eventProgramStore';
 import { deleteProgramStageWithSnackbar } from './program-stages/contextActions';

@@ -5,7 +5,7 @@ import {
 } from './actions';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import { getStageNotificationsForProgramStageId } from './selectors';
 import { getProgramStageById } from "../tracker-program/program-stages/selectors";
 import eventProgramStore from '../eventProgramStore';

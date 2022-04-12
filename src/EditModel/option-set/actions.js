@@ -1,7 +1,7 @@
 import log from 'loglevel';
 import Action from 'd2-ui/lib/action/Action';
 import isArray from 'd2-utilizr/lib/isArray';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import { has } from 'lodash/fp';
 
 import snackActions from '../../Snackbar/snack.actions';

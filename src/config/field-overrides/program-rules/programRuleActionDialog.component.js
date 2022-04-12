@@ -1,4 +1,4 @@
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import PropTypes from 'prop-types'
 import { Component } from 'react';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';

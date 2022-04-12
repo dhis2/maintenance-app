@@ -1,7 +1,7 @@
 import snackActions from '../../../../Snackbar/snack.actions';
 import { afterDeleteHook$ } from '../../../../List/ContextActions';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import log from 'loglevel';
 import { deleteProgramStage } from './actions';
 

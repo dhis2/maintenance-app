@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import TextField from 'material-ui/TextField/TextField';
 import log from 'loglevel';
 
-import d2lib from 'd2/lib/d2';
+import d2lib from 'd2';
 import ModelTypeSelector from './ModelTypeSelector.component';
 import Store from 'd2-ui/lib/store/Store';
 import ItemSelector from './ItemSelector.component';

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { compose, lifecycle } from 'recompose';
 
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import { withProgramStageFromProgramStage$ } from './utils';
 import { changeStepperDisabledState } from '../../actions';
 import { saveProgramStageEdit, cancelProgramStageEdit, editProgramStageReset } from './actions';

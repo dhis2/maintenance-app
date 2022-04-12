@@ -2,7 +2,7 @@ import React from 'react'
 import MainContent from 'd2-ui/lib/layout/main-content/MainContent.component';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import AppWithD2 from 'd2-ui/lib/app/AppWithD2.component';
 import LoadingMask from '../loading-mask/LoadingMask.component';
 import SectionTabs from '../TopBar/SectionTabs.component';

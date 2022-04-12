@@ -2,7 +2,7 @@ import { map, get, filter, flatten, compose, identity, head } from 'lodash/fp';
 import Action from 'd2-ui/lib/action/Action';
 import log from 'loglevel';
 import { Observable } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import { generateUid } from 'd2/lib/uid';
 import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
 

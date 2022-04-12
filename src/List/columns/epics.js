@@ -1,7 +1,7 @@
 import logger from 'loglevel';
 import { combineEpics } from 'redux-observable';
 import { Observable } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import { notifyUser } from '../../EditModel/actions';
 import listActions from '../list.actions';
 import listStore from '../list.store';

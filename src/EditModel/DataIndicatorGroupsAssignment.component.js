@@ -1,6 +1,6 @@
 import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 
 import DropDown from '../forms/form-fields/drop-down';

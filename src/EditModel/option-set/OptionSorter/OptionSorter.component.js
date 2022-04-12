@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Observable } from 'rxjs';
 
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import SortDialog, { setSortDialogOpenTo } from './SortDialog.component';

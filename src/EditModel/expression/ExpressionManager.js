@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import log from 'loglevel';
 import { Observable } from 'rxjs';
-import { config } from 'd2/lib/d2';
+import { config } from 'd2';
 
 import Tabs from 'material-ui/Tabs/Tabs';
 import Tab from 'material-ui/Tabs/Tab';

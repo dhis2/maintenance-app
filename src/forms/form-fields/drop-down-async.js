@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 
 import DropDown from './drop-down';
 import QuickAddLink from './helpers/QuickAddLink.component';

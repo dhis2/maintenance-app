@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import PropTypes from 'prop-types'
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2';
 import Action from 'd2-ui/lib/action/Action';
 import IndicatorExpressionManager from './expression/ExpressionManager'
 import ReactCreateClass from 'create-react-class'

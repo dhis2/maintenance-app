@@ -4,7 +4,7 @@ import objectActions from '../EditModel/objectActions';
 import modelToEditStore from '../EditModel/modelToEditStore';
 import { afterDeleteHook$ } from '../List/ContextActions.js';
 import { Observable } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 
 class DefaultSideBarIcon extends FontIcon {
     shouldComponentUpdate() {

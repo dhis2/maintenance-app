@@ -3,7 +3,7 @@ import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';
 import { compose, memoize, getOr, values, get, isNil } from 'lodash/fp';
 import { Observable } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import CircularProgress from 'material-ui/CircularProgress/CircularProgress';
 import CollapsibleLists from './CollapsibleLists';
 

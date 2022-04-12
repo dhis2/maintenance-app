@@ -2,7 +2,7 @@
 
 import { Observable } from 'rxjs';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 
 import AddOptionDialog from './AddOptionDialog.component';
 import { createFieldConfigForModelTypes } from '../../formHelpers';
