@@ -91,6 +91,7 @@
     "@dhis2/cli-app-scripts": "^9.0.0",
     "@dhis2/d2-i18n": "^1.1.0",
     "@dhis2/d2-ui-core": "^7.3.4",
+    "@dhis2/d2-ui-forms": "^7.3.4",
     "@dhis2/d2-ui-icon-picker": "^7.3.4",
     "@dhis2/d2-ui-sharing-dialog": "^1.0.12",
     "@dhis2/d2-ui-translation-dialog": "^7.3.4",
