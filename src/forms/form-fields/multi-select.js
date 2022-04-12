@@ -3,7 +3,7 @@ import ReactCreateClass from 'create-react-class'
 import { Store } from '@dhis2/d2-ui-core';
 import { getInstance } from 'd2';
 import { GroupEditor } from '@dhis2/d2-ui-group-editor';
-import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
+import { GroupEditorWithOrdering } from '@dhis2/d2-ui-group-editor';
 import { Action } from '@dhis2/d2-ui-core';
 import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 import TextField from 'material-ui/TextField/TextField';

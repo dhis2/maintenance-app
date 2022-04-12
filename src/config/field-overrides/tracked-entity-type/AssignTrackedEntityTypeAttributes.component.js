@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
+import { GroupEditorWithOrdering } from '@dhis2/d2-ui-group-editor';
 import { Store } from '@dhis2/d2-ui-core';
 import TextField from 'material-ui/TextField/TextField';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
