@@ -96,7 +96,7 @@
     "ckeditor": "4.6.1",
     "create-react-class": "^15.7.0",
     "d2": "^31.10.2",
-    "d2-ui": "29.0.34",
+    "d2-ui": "^29.0.35",
     "lodash": "^4.17.11",
     "material-design-icons-iconfont": "^4.0.5",
     "material-ui": "0.20.0",

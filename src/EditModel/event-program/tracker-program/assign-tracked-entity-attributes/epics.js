@@ -1,6 +1,6 @@
 import { combineEpics } from 'redux-observable';
 import { getOr, get, has, map, compose, isEqual, includes, negate, filter, __ } from 'lodash/fp';
-import { generateUid } from 'd2/lib/uid';
+import { generateUid } from 'd2/uid';
 import { Observable } from 'rxjs';
 import {
     PROGRAM_ATTRIBUTES_ADD, PROGRAM_ATTRIBUTES_REMOVE, PROGRAM_ATTRIBUTES_ADDREMOVE_COMPLETE,

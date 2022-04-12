@@ -3,7 +3,7 @@ import log from 'loglevel';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 
-import { generateUid } from 'd2/lib/uid';
+import { generateUid } from 'd2/uid';
 import { getInstance } from 'd2';
 
 import programStore from '../eventProgramStore';

@@ -18,7 +18,7 @@ import {
     filter,
     __,
 } from 'lodash/fp';
-import { generateUid } from 'd2/lib/uid';
+import { generateUid } from 'd2/uid';
 import { getStageSectionsById } from "../tracker-program/program-stages/selectors";
 
 // getProgramStageToModify :: String -> ProgramStage[] -> ProgramStage

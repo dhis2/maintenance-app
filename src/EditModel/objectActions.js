@@ -3,8 +3,8 @@ import Action from 'd2-ui/lib/action/Action';
 import log from 'loglevel';
 import { Observable } from 'rxjs';
 import { getInstance } from 'd2';
-import { generateUid } from 'd2/lib/uid';
-import { getOwnedPropertyJSON } from 'd2/lib/model/helpers/json';
+import { generateUid } from 'd2/uid';
+import { getOwnedPropertyJSON } from 'd2/model/helpers/json';
 
 import indicatorGroupsStore from './indicatorGroupsStore';
 import dataElementGroupStore from './data-element/dataElementGroupsStore';
