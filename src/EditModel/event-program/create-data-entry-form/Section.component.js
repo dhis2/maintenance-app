@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { grey300, grey800 } from 'material-ui/styles/colors';
 import { SortableElement } from 'react-sortable-hoc';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';

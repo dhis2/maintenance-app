@@ -4,7 +4,7 @@ import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import TextField from 'material-ui/TextField/TextField';
 import { addD2Context } from '@dhis2/d2-ui-core';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
 import { Store } from '@dhis2/d2-ui-core';
 import snackActions from '../../Snackbar/snack.actions';

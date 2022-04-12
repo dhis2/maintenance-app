@@ -11,7 +11,7 @@ import Paper from 'material-ui/Paper/Paper';
 import SaveButton from '../EditModel/SaveButton.component';
 import FormButtons from '../EditModel/FormButtons.component';
 import snackActions from '../Snackbar/snack.actions';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 
 function saveOrganisationUnitLevels(i18n) {

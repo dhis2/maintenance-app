@@ -1,6 +1,6 @@
 import React from 'react'
 import MenuCards from './MenuCards.component';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 import menuCardsStore from './menuCardsStore';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 

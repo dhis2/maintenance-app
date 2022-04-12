@@ -1,4 +1,4 @@
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 
 export default function AccessDenied() {
     return (

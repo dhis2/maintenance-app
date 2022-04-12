@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 
 const defaultStyle = {
     fontSize: '1.25rem',

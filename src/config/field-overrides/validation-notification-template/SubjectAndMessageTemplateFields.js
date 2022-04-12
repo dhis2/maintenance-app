@@ -4,7 +4,7 @@ import Row from 'd2-ui/lib/layout/Row.component';
 import Column from 'd2-ui/lib/layout/Column.component';
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField/TextField';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 
 import VariableList from './VariableList';
 

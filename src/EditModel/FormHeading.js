@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 import { addD2Context } from '@dhis2/d2-ui-core';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 import HelpLink from '../List/HelpLink.component';
 import BackButton from './BackButton.component';
 import { goToAndScrollUp } from '../router-utils';

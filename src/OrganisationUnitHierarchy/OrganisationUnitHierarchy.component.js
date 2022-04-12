@@ -8,7 +8,7 @@ import { addD2Context } from '@dhis2/d2-ui-core';
 import { getInstance } from 'd2';
 import { Observable } from 'rxjs';
 import snackActions from '../Snackbar/snack.actions';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 import searchForOrganisationUnitsWithinHierarchy from './searchForOrganisationUnitsWithinHierarchy';
 import log from 'loglevel';
 import FontIcon from 'material-ui/FontIcon/FontIcon';

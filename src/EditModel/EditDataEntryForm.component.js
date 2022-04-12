@@ -12,7 +12,7 @@ import TextField from 'material-ui/TextField/TextField';
 import CheckBox from 'material-ui/Checkbox/Checkbox';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 import { Action } from '@dhis2/d2-ui-core';
 
 import snackActions from '../Snackbar/snack.actions';
