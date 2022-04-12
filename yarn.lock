@@ -1989,6 +1989,18 @@
     material-ui "^0.20.0"
     rxjs "^5.5.7"
 
+"@dhis2/d2-ui-group-editor@^7.3.4":
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-group-editor/-/d2-ui-group-editor-7.3.4.tgz#dc0c9e5946beafa71231bcf0ad4f858eb9f7e58d"
+  integrity sha512-0Bxa2I7YzadXdnobxWYs5BNVDS+0hglvB5nlHGsKv9BiVrpphQnpiVmd1cdFjMd8+A/G0GAey4taFFNixCM7MA==
+  dependencies:
+    "@dhis2/d2-ui-core" "7.3.4"
+    babel-runtime "^6.26.0"
+    material-ui "^0.20.0"
+    prop-types "^15.5.10"
+    recompose "^0.26.0"
+    rxjs "^5.5.7"
+
 "@dhis2/d2-ui-icon-picker@^7.3.4":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@dhis2/d2-ui-icon-picker/-/d2-ui-icon-picker-7.3.4.tgz#9bd8e6df4af8daa19a3c32c7063a7dcf8f864edd"
