@@ -2,6 +2,7 @@ import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
 import Rx from 'rxjs';
 import log from 'loglevel';
+import { getInstance as getD2 } from 'd2/lib/d2';
 
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
@@ -16,13 +17,8 @@ import Action from 'd2-ui/lib/action/Action';
 import snackActions from '../Snackbar/snack.actions';
 import modelToEditStore from './modelToEditStore';
 import { goToRoute } from '../router-utils';
+import { processFormData, generateHtmlForId } from './processFormData';
 
-
-
-const inputPattern = /<input.*?\/>/gi;
-const dataElementCategoryOptionIdPattern = /id="(\w*?)-(\w*?)-val"/;
-const dataElementPattern = /dataelementid="(\w{11})"/;
-const indicatorPattern = /indicatorid="(\w{11})"/;
 
 function clampPaletteWidth(width) {
     return Math.min(750, Math.max(width, 250));
@@ -54,10 +50,18 @@ const styles = {
 };
 
 const EditDataEntryForm = () => {
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
     const [usedIds, setUsedIds] = useState([])
     const [filter, setFilter] = useState('')
     const [paletteWidth, setPaletteWidth] = useState(clampPaletteWidth(window.innerWidth / 3))
     const [insertGrey, setInsertGrey] = useState(false)
+
+    const getTranslation = label => getD2().i18n.getTranslation(label)
+
+    useEffect(() => {
+        // loadData().then(() => setLoading(false)).catch(error => setError(error))
+    }, [])
 }
 
 class EditDataEntryFormX extends Component {
@@ -68,7 +72,7 @@ class EditDataEntryFormX extends Component {
             usedIds: [],
             filter: '',
             paletteWidth: clampPaletteWidth(window.innerWidth / 3),
-            expand: 'data_elements',
+            // expand: 'data_elements',
             insertGrey: false,
         };
 
@@ -149,7 +153,17 @@ class EditDataEntryFormX extends Component {
                     this.setState({ filter });
                 });
 
-            const formHtml = dataSet.dataEntryForm ? this.processFormData(dataSet.dataEntryForm) : '';
+            let formHtml = ''
+            if (dataSet.dataEntryForm) {
+                const { outHtml, usedIds } = processFormData({
+                    formData: dataSet.dataEntryForm,
+                    insertGrey: this.state.insertGrey,
+                    operands: this.operands,
+                    totals: this.totals,
+                    indicators: this.indicators,
+                })
+                this.setState({ usedIds })
+            }
 
             this.setState({
                 formTitle: dataSet.displayName,
@@ -183,7 +197,14 @@ class EditDataEntryFormX extends Component {
                 })
                     .debounceTime(250)
                     .subscribe(() => {
-                        this.processFormData.call(this, this._editor.getData());
+                        const { usedIds } = processFormData({
+                            formData: this._editor.getData(),
+                            insertGrey: this.state.insertGrey,
+                            operands: this.operands,
+                            totals: this.totals,
+                            indicators: this.indicators,
+                        });
+                        this.setState({ usedIds });
                     });
             });
         });
@@ -216,28 +237,6 @@ class EditDataEntryFormX extends Component {
         window.removeEventListener('mousemove', this.doResize);
         window.removeEventListener('mouseup', this.endResize);
     };
-
-    generateHtml(id, styleAttr, disabledAttr) {
-        const style = styleAttr ? ` style=${styleAttr}` : '';
-        const disabled = disabledAttr || this.state.insertGrey ? ' disabled="disabled"' : '';
-
-        if (id.indexOf('-') !== -1) {
-            const label = this.operands && this.operands[id];
-            const attr = `name="entryfield" title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
-            return `<input id="${id}" ${attr}/>`;
-        } else if (this.totals.hasOwnProperty(id)) {
-            const label = this.totals[id];
-            const attr = `name="total" readonly title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
-            return `<input dataelementid="${id}" id="total${id}" name="total" ${attr}/>`;
-        } else if (this.indicators.hasOwnProperty(id)) {
-            const label = this.indicators[id];
-            const attr = `name="indicator" readonly title="${label}" value="[ ${label} ]"${style}${disabled}`.trim();
-            return `<input indicatorid="${id}" id="indicator${id}" ${attr}/>`;
-        }
-
-        log.warn('Failed to generate HTML for ID:', id);
-        return '';
-    }
 
     handleCancelClick = () => {
         goToRoute('list/dataSetSection/dataSet');
@@ -277,7 +276,7 @@ class EditDataEntryFormX extends Component {
                 log.warn('Failed to save form:', e);
                 snackActions.show({
                     message: `${this.getTranslation('failed_to_save_form')}${e.message ? `: ${e.message}` : ''}`,
-                    action: this.context.d2.i18n.getTranslation('ok'),
+                    action: this.getTranslation('ok'),
                 });
             });
     };
@@ -293,7 +292,15 @@ class EditDataEntryFormX extends Component {
             return;
         }
 
-        this._editor.insertHtml(this.generateHtml(id), 'unfiltered_html');
+        this._editor.insertHtml(
+            generateHtmlForId(id, {
+                insertGrey: this.state.insertGrey,
+                operands: this.operands,
+                totals: this.totals,
+                indicators: this.indicators,
+            }),
+            'unfiltered_html'
+        );
         this.setState(state => ({ usedIds: state.usedIds.concat(id) }));
         // Move the current selection to just after the newly inserted element
         const range = this._editor.getSelection().getRanges()[0];
@@ -304,50 +311,6 @@ class EditDataEntryFormX extends Component {
         this._editor.insertHtml(`<img src="../dhis-web-commons/flags/${img}" />`, 'unfiltered_html');
         const range = this._editor.getSelection().getRanges()[0];
         range.moveToElementEditablePosition(range.endContainer, true);
-    }
-
-    processFormData(formData) {
-        const inHtml = formData.hasOwnProperty('htmlCode') ? formData.htmlCode : formData || '';
-        let outHtml = '';
-
-        const usedIds = [];
-
-        let inputElement = inputPattern.exec(inHtml);
-        let inPos = 0;
-        while (inputElement !== null) {
-            outHtml += inHtml.substr(inPos, inputElement.index - inPos);
-            inPos = inputPattern.lastIndex;
-
-            const inputHtml = inputElement[0];
-            const inputStyle = (/style="(.*?)"/.exec(inputHtml) || ['', ''])[1];
-            const inputDisabled = /disabled/.exec(inputHtml) !== null;
-
-            const idMatch = dataElementCategoryOptionIdPattern.exec(inputHtml);
-            const dataElementTotalMatch = dataElementPattern.exec(inputHtml);
-            const indicatorMatch = indicatorPattern.exec(inputHtml);
-            if (idMatch) {
-                const id = `${idMatch[1]}-${idMatch[2]}-val`;
-                usedIds.push(id);
-                outHtml += this.generateHtml(id, inputStyle, inputDisabled);
-            } else if (dataElementTotalMatch) {
-                const id = dataElementTotalMatch[1];
-                usedIds.push(id);
-                outHtml += this.generateHtml(id, inputStyle, inputDisabled);
-            } else if (indicatorMatch) {
-                const id = indicatorMatch[1];
-                usedIds.push(id);
-                outHtml += this.generateHtml(id, inputStyle, inputDisabled);
-            } else {
-                outHtml += inputHtml;
-            }
-
-            inputElement = inputPattern.exec(inHtml);
-        }
-        outHtml += inHtml.substr(inPos);
-
-        this.setState({ usedIds });
-
-        return outHtml;
     }
 
     startResize = e => {
@@ -365,9 +328,13 @@ class EditDataEntryFormX extends Component {
         const handleToggleGrey = insertGrey => {
             this.setState({ insertGrey });
         };
+        const formContainerStyles = {
+            ...styles.formContainer,
+            marginRight: this.state.paletteWidth,
+        };
 
         return (
-            <div style={Object.assign({}, styles.formContainer, { marginRight: this.state.paletteWidth })}>
+            <div style={formContainerStyles}>
                 <Heading style={styles.heading}>
                     {this.state.formTitle} {this.getTranslation('data_entry_form')}
                 </Heading>
