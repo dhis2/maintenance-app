@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import TextField from 'material-ui/TextField/TextField';
 import log from 'loglevel';
 
-import d2lib from 'd2';
+import { getInstance as getD2 } from 'd2';
 import ModelTypeSelector from './ModelTypeSelector.component';
 import { Store } from '@dhis2/d2-ui-core';
 import ItemSelector from './ItemSelector.component';
@@ -94,8 +94,7 @@ export default ReactCreateClass({
 
     _assignItems(items) {
         const requests = this.createUrls(items)
-            .map(url => d2lib
-                .getInstance()
+            .map(url => getD2()
                 .then(d2 => d2.Api.getApi())
                 .then(api => api.post(url))
             );
@@ -104,7 +103,7 @@ export default ReactCreateClass({
             .then(() => {
                 const itemDefinition = this.state.modelToEdit.modelDefinition.name.replace('Group', '');
 
-                return d2lib.getInstance()
+                return getD2()
                     .then(d2 => Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]))
                     .then(([d2, fullModel]) => {
                         this.state.assignedItemStore.setState(fullModel[d2.models[itemDefinition].plural]);
@@ -118,7 +117,7 @@ export default ReactCreateClass({
 
     _removeItems(items) {
         const requests = this.createUrls(items)
-            .map(url => d2lib.getInstance()
+            .map(url => getD2()
                     .then(d2 => d2.Api.getApi())
                     .then(api => api.delete(url)));
 
@@ -126,7 +125,7 @@ export default ReactCreateClass({
             .then(() => {
                 const itemDefinition = this.state.modelToEdit.modelDefinition.name.replace('Group', '');
 
-                return d2lib.getInstance()
+                return getD2()
                     .then(d2 => Promise.all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]))
                     .then(([d2, fullModel]) => {
                         this.state.assignedItemStore.setState(fullModel[d2.models[itemDefinition].plural]);
@@ -159,7 +158,7 @@ export default ReactCreateClass({
     _workItemChanged(model) {
         const itemDefinition = model.modelDefinition.name.replace('Group', '');
 
-        d2lib.getInstance()
+        getD2()
             .then((d2) => {
                 if (!d2.models[itemDefinition]) {
                     return Promise.reject(`This groupType does not have a model named: ${itemDefinition}`);
@@ -186,7 +185,7 @@ export default ReactCreateClass({
 
         const itemDefinition = this.state.modelToEdit.modelDefinition.name.replace('Group', '');
 
-        d2lib.getInstance()
+        getD2()
             .then(d2 => Promise
                     .all([d2, d2.models[this.state.modelToEdit.modelDefinition.name].get(this.state.modelToEdit.id)]))
             .then(([d2, fullModel]) => {
