@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types'
+import React, { Component, useState } from 'react';
+import PropTypes from 'prop-types';
 import Rx from 'rxjs';
 import log from 'loglevel';
 
@@ -8,8 +8,6 @@ import FlatButton from 'material-ui/FlatButton/FlatButton';
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import Paper from 'material-ui/Paper/Paper';
-import TextField from 'material-ui/TextField/TextField';
-import CheckBox from 'material-ui/Checkbox/Checkbox';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Heading from 'd2-ui/lib/headings/Heading.component';
@@ -53,25 +51,16 @@ const styles = {
     deleteButton: {
         marginLeft: '2rem',
     },
-    paletteHeader: {},
-    paletteFilter: {
-        position: 'absolute',
-        top: -16,
-        width: '100%',
-        padding: '8px 8px 16px',
-    },
-    paletteFilterField: {
-        width: '100%',
-    },
-    greySwitch: {
-        position: 'absolute',
-        bottom: 8,
-        left: 8,
-        right: 8,
-    },
 };
 
-class EditDataEntryForm extends Component {
+const EditDataEntryForm = () => {
+    const [usedIds, setUsedIds] = useState([])
+    const [filter, setFilter] = useState('')
+    const [paletteWidth, setPaletteWidth] = useState(clampPaletteWidth(window.innerWidth / 3))
+    const [insertGrey, setInsertGrey] = useState(false)
+}
+
+class EditDataEntryFormX extends Component {
     constructor(props, context) {
         super(props, context);
 
@@ -162,7 +151,6 @@ class EditDataEntryForm extends Component {
 
             const formHtml = dataSet.dataEntryForm ? this.processFormData(dataSet.dataEntryForm) : '';
 
-            // TODO
             this.setState({
                 formTitle: dataSet.displayName,
                 formHtml,
@@ -301,7 +289,7 @@ class EditDataEntryForm extends Component {
     };
 
     insertElement(id) {
-        if (this.state.usedIds.indexOf(id) !== -1) {
+        if (this.state.usedIds.includes(id)) {
             return;
         }
 
@@ -369,87 +357,37 @@ class EditDataEntryForm extends Component {
         window.addEventListener('mouseup', this.endResize);
     };
 
-    renderPalette() {
-        const toggleGrey = (e, value) => {
-            this.setState({ insertGrey: value });
-        };
-
-        return (
-            <div className="paletteContainer" style={{ width: this.state.paletteWidth }}>
-                <div className="resizeHandle" onMouseDown={this.startResize} />
-                <div className="palette">
-                    <div style={styles.paletteFilter}>
-                        <TextField
-                            floatingLabelText={this.getTranslation('filter_elements')}
-                            style={styles.paletteFilterField}
-                            onChange={this.filterAction}
-                        />
-                    </div>
-                    <div className="elements">
-                        {this.renderPaletteSection(this.operands, 'data_elements')}
-                        {this.renderPaletteSection(this.totals, 'totals')}
-                        {this.renderPaletteSection(this.indicators, 'indicators')}
-                        {this.renderPaletteSection(this.flags, 'flags')}
-                    </div>
-                    <CheckBox
-                        label={this.getTranslation('insert_grey_fields')}
-                        labelPosition="right"
-                        style={styles.greySwitch}
-                        onCheck={toggleGrey}
-                        checked={this.state.insertGrey}
-                    />
-                </div>
-            </div>
-        );
-    }
-
-    renderPaletteSection(keySet, label) {
-        const filteredItems = Object.keys(keySet)
-            .filter(key => !this.state.filter.length || this.state.filter.every(
-                filter => keySet[key].toLowerCase().indexOf(filter.toLowerCase()) !== -1
-            ));
-
-        const cellClass = label === this.state.expand ? 'cell expanded' : 'cell';
-
-        const expandClick = () => {
-            this.setState({ expand: label });
-        };
-
-        return (
-            <div className={cellClass}>
-                <div style={styles.paletteHeader} className="header" onClick={expandClick}>
-                    <div className="arrow">&#9656;</div>
-                    {this.getTranslation(label)}:
-                    <div className="count">{filteredItems.length}</div>
-                </div>
-                <div className="items">
-                    {
-                        filteredItems
-                            .sort((a, b) => keySet[a] ? keySet[a].localeCompare(keySet[b]) : a.localeCompare(b))
-                            .map((key) => {
-                                // Active items are items that are not already added to the form
-                                const isActive = this.state.usedIds.indexOf(key) === -1;
-                                const className = isActive ? 'item active' : 'item inactive';
-                                const name = keySet[key].name || keySet[key];
-                                return (
-                                    <div key={key} className={className} title={name}>
-                                        <a onClick={this.insertFn[key]}>{name}</a>
-                                    </div>
-                                );
-                            })
-                    }
-                </div>
-            </div>
-        );
-    }
-
     render() {
-        return this.state.formHtml === undefined ? <LoadingMask /> : (
+        if (this.state.formHtml === undefined) {
+            return <LoadingMask />
+        }
+
+        const handleToggleGrey = insertGrey => {
+            this.setState({ insertGrey });
+        };
+
+        return (
             <div style={Object.assign({}, styles.formContainer, { marginRight: this.state.paletteWidth })}>
                 <Heading style={styles.heading}>
                     {this.state.formTitle} {this.getTranslation('data_entry_form')}
                 </Heading>
-                {this.renderPalette()}
+                <Palette
+                    getTranslation={this.getTranslation}
+                    usedIds={this.state.usedIds}
+                    insertFn={this.insertFn}
+                    filter={this.state.filter}
+                    onFilterChange={this.filterAction}
+                    sections={[
+                        { keySet: this.operands, label: 'data_elements' },
+                        { keySet: this.totals, label: 'totals' },
+                        { keySet: this.indicators, label: 'indicators' },
+                        { keySet: this.flags, label: 'flags' },
+                    ]}
+                    paletteWidth={this.state.paletteWidth}
+                    onStartResize={this.startResize}
+                    insertGrey={this.state.insertGrey}
+                    onToggleGrey={handleToggleGrey}
+                />
                 <textarea id="designTextarea" name="designTextarea" />
                 <Paper style={styles.formPaper}>
                     <div style={styles.formSection}>
