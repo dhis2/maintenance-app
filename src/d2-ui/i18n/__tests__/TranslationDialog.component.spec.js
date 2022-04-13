@@ -1,5 +1,7 @@
 import TranslationDialog from '../TranslationDialog.component';
 
-xdescribe('TranslationDialog component', () => {
-    it('has no tests');
+describe('TranslationDialog component', () => {
+    it('has no tests', () => {
+        // TODO
+    });
 });
