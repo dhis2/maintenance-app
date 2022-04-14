@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField/TextField';
 import CheckBox from 'material-ui/Checkbox/Checkbox';
 import PaletteSection from './PaletteSection.component';
+import Action from 'd2-ui/lib/action/Action';
+
+function useConst(factory) {
+  const ref = useRef(null)
+  if (ref.current === null) {
+    ref.current = factory()
+  }
+  return ref.current
+}
 
 const styles = {
     paletteFilter: {
@@ -31,10 +40,23 @@ const Palette = ({
     onStartResize,
     insertGrey,
     onToggleGrey,
-    filter,
-    onFilterChange
 }) => {
     const [expand, setExpand] = useState('data_elements');
+    const [filter, setFilter] = useState('');
+    // TODO: replace Action with useDebounce and useEffect
+    const filterAction = useConst(() => {
+        const filterAction = Action.create('filter');
+        filterAction
+            .map(({ data, complete, error }) => ({ data: data[1], complete, error }))
+            .debounceTime(75)
+            .subscribe((args) => {
+                const filter = args.data
+                      .split(' ')
+                      .filter(x => x.length);
+                setFilter(filter);
+            });
+        return filterAction;
+    });
 
     return (
         <div className="paletteContainer" style={{ width: paletteWidth }}>
@@ -44,7 +66,7 @@ const Palette = ({
                     <TextField
                         floatingLabelText={getTranslation('filter_elements')}
                         style={styles.paletteFilterField}
-                        onChange={onFilterChange}
+                        onChange={filterAction}
                     />
                 </div>
                 <div className="elements">
@@ -85,11 +107,6 @@ Palette.propTypes = {
     onStartResize: PropTypes.func.isRequired,
     insertGrey: PropTypes.bool,
     onToggleGrey: PropTypes.func.isRequired,
-    filter: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.array,
-    ]),
-    onFilterChange: PropTypes.func.isRequired,
 };
 
 export default Palette;

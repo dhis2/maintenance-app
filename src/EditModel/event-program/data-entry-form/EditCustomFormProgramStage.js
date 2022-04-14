@@ -135,7 +135,7 @@ class EditDataEntryForm extends Component {
     //Used for when the form is deleted, to update the form
     UNSAFE_componentWillReceiveProps({ dataEntryForm }) {
         if (this.props.dataEntryForm && (!dataEntryForm || !dataEntryForm.id )) {
-            this._editor.setData('');
+            this._editor?.setData('');
         }
     }
 
@@ -144,6 +144,7 @@ class EditDataEntryForm extends Component {
     }
 
     setEditorReference = editor => {
+        console.log('setEditorReference')
         this._editor = editor;
     };
 

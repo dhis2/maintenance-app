@@ -3,6 +3,27 @@ import { noop } from 'lodash/fp';
 import { CKEditor } from 'ckeditor4-react'
 import { useDebouncedCallback } from 'use-debounce'
 
+const config = {
+    plugins: [
+        'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
+        'clipboard', 'colorbutton', 'colordialog', 'contextmenu',
+        'dialogadvtab', 'div', 'elementspath', 'enterkey',
+        'entities', 'filebrowser', 'find', 'floatingspace',
+        'font', 'format', 'horizontalrule', 'htmlwriter',
+        'image', 'indentlist', 'indentblock', 'justify',
+        'link', 'list', 'liststyle', 'magicline',
+        'maximize', 'forms', 'pastefromword', 'pastetext',
+        'preview', 'removeformat', 'resize', 'selectall',
+        'showblocks', 'showborders', 'sourcearea', 'specialchar',
+        'stylescombo', 'tab', 'table', 'tabletools',
+        'toolbar', 'undo', 'wsc', 'wysiwygarea',
+    ].join(','),
+    removePlugins: 'scayt,wsc,about',
+    allowedContent: true,
+    extraPlugins: 'div',
+    height: 500,
+}
+
 const CKEditorWrapper = ({ initialContent, onEditorInitialized = noop, onEditorChange = noop }) => {
     const debouncedOnChange = useDebouncedCallback(onEditorChange, 250)
 
@@ -22,29 +43,12 @@ const CKEditorWrapper = ({ initialContent, onEditorInitialized = noop, onEditorC
     return (
         <CKEditor
             initData={initialContent}
-            onInstanceReady={onEditorInitialized}
+            onInstanceReady={(event) => {
+                onEditorInitialized(event.editor)
+            }}
             onChange={(event) => debouncedOnChange(event.editor.getData())}
             onMode={handleModeChange}
-            config={{
-                plugins: [
-                    'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
-                    'clipboard', 'colorbutton', 'colordialog', 'contextmenu',
-                    'dialogadvtab', 'div', 'elementspath', 'enterkey',
-                    'entities', 'filebrowser', 'find', 'floatingspace',
-                    'font', 'format', 'horizontalrule', 'htmlwriter',
-                    'image', 'indentlist', 'indentblock', 'justify',
-                    'link', 'list', 'liststyle', 'magicline',
-                    'maximize', 'forms', 'pastefromword', 'pastetext',
-                    'preview', 'removeformat', 'resize', 'selectall',
-                    'showblocks', 'showborders', 'sourcearea', 'specialchar',
-                    'stylescombo', 'tab', 'table', 'tabletools',
-                    'toolbar', 'undo', 'wsc', 'wysiwygarea',
-                ].join(','),
-                removePlugins: 'scayt,wsc,about',
-                allowedContent: true,
-                extraPlugins: 'div',
-                height: 500,
-            }}
+            config={config}
         />
     )
 }
