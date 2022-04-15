@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Rx from 'rxjs';
 import log from 'loglevel';
@@ -18,6 +18,7 @@ import snackActions from '../../Snackbar/snack.actions';
 import modelToEditStore from '../modelToEditStore';
 import { goToRoute } from '../../router-utils';
 
+import Palette from './Palette.component'
 import { processFormData, generateHtmlForId } from './processFormData';
 import { useData } from './useData';
 
@@ -72,6 +73,18 @@ const createEditor = () => {
 
 // TODO?: Automatic labels <span label-id="{id}-{id}"></span> / <span label-id="{id}"></span>
 const EditDataEntryForm = ({ params }) => {
+    // TODO: replace with useD2 once https://github.com/dhis2/maintenance-app/pull/2182 is merged
+    const [d2, setD2] = useState()
+    useEffect(() => {
+        getD2().then(d2 => setD2(d2))
+    }, [])
+    const getTranslation = label => {
+        if (d2) {
+            return d2.i18n.getTranslation(label)
+        }
+        return label
+    }
+
     const startPosRef = useRef()
     const startWidthRef = useRef()
     const handleStartResize = e => {
@@ -148,6 +161,7 @@ const EditDataEntryForm = ({ params }) => {
     } = useData({
         modelId: params.modelId,
         onComplete: ({
+            dataSet,
             operands,
             totals,
             indicators,
@@ -209,7 +223,6 @@ const EditDataEntryForm = ({ params }) => {
         }
     })
 
-    const getTranslation = label => getD2().i18n.getTranslation(label)
     const handleSaveClick = async () => {
         const payload = {
             style: formStyle,
@@ -257,7 +270,7 @@ const EditDataEntryForm = ({ params }) => {
         });
     };
 
-    if (loading) {
+    if (loading || !d2) {
         return <LoadingMask />
     }
 

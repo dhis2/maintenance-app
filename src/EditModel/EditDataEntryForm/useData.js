@@ -3,7 +3,7 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 
 // Load form data, operands, indicators and flags
 const loadData = async ({ modelId }) => {
-    const d2 = getD2();
+    const d2 = await getD2();
 
     return await Promise.all([
         d2.models.dataSets.get(modelId, {
@@ -52,7 +52,7 @@ const loadData = async ({ modelId }) => {
             return out;
         }, {});
 
-        return { operands, totals, indicators, flags };
+        return { dataSet, operands, totals, indicators, flags };
     })
 }
 
@@ -64,17 +64,15 @@ export const useData = ({ modelId, onComplete }) => {
     useEffect(() => {
         setLoading(true)
 
-        loadData({
-            modelId: params.modelId,
-        }).then(({ operands, totals, indicators, flags }) => {
-            setData({ operands, totals, indicators, flags })
-            return onComplete({ operands, totals, indicators, flags })
+        loadData({ modelId }).then(({ dataSet, operands, totals, indicators, flags }) => {
+            setData({ dataSet, operands, totals, indicators, flags })
+            return onComplete({ dataSet, operands, totals, indicators, flags })
         }).catch(error => {
             setError(error)
         }).finally(() => {
             setLoading(false)
         })
-    }, [params.modelId]);
+    }, [modelId]);
 
     const { operands, totals, indicators, flags } = data;
 

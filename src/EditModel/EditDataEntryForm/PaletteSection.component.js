@@ -40,6 +40,8 @@ const PaletteSection = ({
                             const className = isActive ? 'item active' : 'item inactive';
                             const name = keySet[key].name || keySet[key];
 
+                            // TODO: use a <button> instead of a <a> and set
+                            // disabled attribute to true if active
                             return (
                                 <div key={key} className={className} title={name}>
                                     <a onClick={insertFn[key]}>{name}</a>
