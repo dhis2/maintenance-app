@@ -144,7 +144,6 @@ class EditDataEntryForm extends Component {
     }
 
     setEditorReference = editor => {
-        console.log('setEditorReference')
         this._editor = editor;
     };
 
