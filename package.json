@@ -20,13 +20,11 @@
     "test:watch": "npm test -- --watch",
     "_prebuild": "rm -rf build",
     "_build": "npm test && NODE_ENV=production webpack --progress && npm run manifest",
-    "_postbuild": "cp -r src/i18n icon.png package.json ./build/ && yarn copy-ckeditor",
     "build": "d2-app-scripts build",
     "validate": "npm ls --depth 0",
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "lint": "eslint ./src",
-    "profile": "npm run start -- --profile",
-    "copy-ckeditor": "mkdir ./build/vendor && cp -r ./node_modules/ckeditor ./build/vendor"
+    "profile": "npm run start -- --profile"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
@@ -95,6 +93,7 @@
     "@dhis2/prop-types": "^3.0.0",
     "@dhis2/ui": "^8.1.6",
     "ckeditor": "4.6.1",
+    "ckeditor4-react": "^3.0.0",
     "create-react-class": "^15.7.0",
     "d2": "30.2.2",
     "d2-ui": "29.0.34",
@@ -123,7 +122,8 @@
     "redux": "^3.6.0",
     "redux-observable": "0.18.0",
     "rxjs": "^5.2.0",
-    "typeface-roboto": "^0.0.54"
+    "typeface-roboto": "^0.0.54",
+    "use-debounce": "^7.0.1"
   },
   "resolutions": {
     "@dhis2/app-runtime": "3.4.0",
