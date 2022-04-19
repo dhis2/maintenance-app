@@ -1,0 +1,20 @@
+export const ckeditorConfig = {
+    plugins: [
+        'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
+        'clipboard', 'colorbutton', 'colordialog', 'contextmenu',
+        'dialogadvtab', 'div', 'elementspath', 'enterkey',
+        'entities', 'filebrowser', 'find', 'floatingspace',
+        'font', 'format', 'horizontalrule', 'htmlwriter',
+        'image', 'indentlist', 'indentblock', 'justify',
+        'link', 'list', 'liststyle', 'magicline',
+        'maximize', 'forms', 'pastefromword', 'pastetext',
+        'preview', 'removeformat', 'resize', 'selectall',
+        'showblocks', 'showborders', 'sourcearea', 'specialchar',
+        'stylescombo', 'tab', 'table', 'tabletools',
+        'toolbar', 'undo', 'wsc', 'wysiwygarea',
+    ].join(','),
+    removePlugins: 'scayt,wsc,about',
+    allowedContent: true,
+    extraPlugins: 'div',
+    height: 500,
+}

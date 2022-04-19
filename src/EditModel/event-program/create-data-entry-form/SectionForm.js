@@ -299,7 +299,7 @@ class SectionForm extends Component {
     };
 }
 
-SectionForm.PropTypes = {
+SectionForm.propTypes = {
     onSectionUpdated: PropTypes.func.isRequired,
     onSectionOrderChanged: PropTypes.func.isRequired,
     onSectionAdded: PropTypes.func.isRequired,

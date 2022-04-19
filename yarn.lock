@@ -5959,6 +5959,19 @@ cjs-module-lexer@^1.0.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-1.2.2.tgz#9f84ba3244a512f3a54e5277e8eef4c489864e40"
   integrity sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==
 
+ckeditor4-integrations-common@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ckeditor4-integrations-common/-/ckeditor4-integrations-common-1.0.0.tgz#a8afc33b94877b4d01362c7c73aa9eec162b2d20"
+  integrity sha512-OAoQT/gYrHkg0qgzf6MS/rndYhq3SScLVQ3rtXQeuCE8ju7nFHg3qZ7WGA2XpFxcZzsMP6hhugXqdel5vbcC3g==
+
+ckeditor4-react@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ckeditor4-react/-/ckeditor4-react-3.0.0.tgz#4df03e0184fc3e5f0e965ec585ce8d6e6383db64"
+  integrity sha512-t/HT6GjFWbY9jv099mT+6p9ZJhybGeqBxbS/S+Y0MH/vlo2wRmCaSEBUBJQF7b+gexhfe/DYk89NmRGDePlH7A==
+  dependencies:
+    ckeditor4-integrations-common "^1.0.0"
+    prop-types "^15.8.1"
+
 ckeditor@4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/ckeditor/-/ckeditor-4.6.1.tgz#d6f9b1b2fa0222406e08ff154728ef420157a666"
@@ -19133,6 +19146,11 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-debounce@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-7.0.1.tgz#380e6191cc13ad29f8e2149a12b5c37cc2891190"
+  integrity sha512-fOrzIw2wstbAJuv8PC9Vg4XgwyTLEOdq4y/Z3IhVl8DAE4svRcgyEUvrEXu+BMNgMoc3YND6qLT61kkgEKXh7Q==
 
 use@^3.1.0:
   version "3.1.1"
