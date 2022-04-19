@@ -4,6 +4,8 @@ import Rx from 'rxjs';
 import log from 'loglevel';
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { NoticeBox } from '@dhis2/ui';
+import { useCKEditor } from 'ckeditor4-react';
+import { ckeditorConfig } from '../ckeditorConfig';
 
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
@@ -46,29 +48,6 @@ const styles = {
     },
 };
 
-const createEditor = () => {
-    return window.CKEDITOR.replace('designTextarea', {
-        plugins: [
-            'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
-            'clipboard', 'colorbutton', 'colordialog', 'contextmenu',
-            'dialogadvtab', 'div', 'elementspath', 'enterkey',
-            'entities', 'filebrowser', 'find', 'floatingspace',
-            'font', 'format', 'horizontalrule', 'htmlwriter',
-            'image', 'indentlist', 'indentblock', 'justify',
-            'link', 'list', 'liststyle', 'magicline',
-            'maximize', 'forms', 'pastefromword', 'pastetext',
-            'preview', 'removeformat', 'resize', 'selectall',
-            'showblocks', 'showborders', 'sourcearea', 'specialchar',
-            'stylescombo', 'tab', 'table', 'tabletools',
-            'toolbar', 'undo', 'wsc', 'wysiwygarea',
-        ].join(','),
-        removePlugins: 'scayt,wsc,about',
-        allowedContent: true,
-        extraPlugins: 'div',
-        height: 500,
-    })
-}
-
 // TODO: replace with useD2 from app-runtime-adapter-d2 if
 // https://github.com/dhis2/maintenance-app/pull/2182 is merged
 const useD2 = () => {
@@ -90,14 +69,13 @@ const EditDataEntryForm = ({ params }) => {
         return label;
     }
 
-    const insertElementRef = useRef()
+    const insertElementRef = useRef();
     insertElementRef.current = id => {
         if (usedIds.includes(id)) {
             return;
         }
 
-        // TODO
-        this._editor.insertHtml(
+        editor.insertHtml(
             generateHtmlForId(id, {
                 insertGrey,
                 operands,
@@ -106,17 +84,15 @@ const EditDataEntryForm = ({ params }) => {
             }),
             'unfiltered_html'
         );
-        setUsedIds(usedIds => ({ usedIds: usedIds.concat(id) }));
-        // TODO
+        setUsedIds(usedIds => usedIds.concat(id));
         // Move the current selection to just after the newly inserted element
-        const range = this._editor.getSelection().getRanges()[0];
+        const range = editor.getSelection().getRanges()[0];
         range.moveToElementEditablePosition(range.endContainer, true);
     }
-    const insertFlagRef = useRef()
+    const insertFlagRef = useRef();
     insertFlagRef.current = img => {
-        // TODO
-        this._editor.insertHtml(`<img src="../dhis-web-commons/flags/${img}" />`, 'unfiltered_html');
-        const range = this._editor.getSelection().getRanges()[0];
+        editor.insertHtml(`<img src="../dhis-web-commons/flags/${img}" />`, 'unfiltered_html');
+        const range = editor.getSelection().getRanges()[0];
         range.moveToElementEditablePosition(range.endContainer, true);
     }
 
@@ -130,6 +106,41 @@ const EditDataEntryForm = ({ params }) => {
     const [formHtml, setFormHtml] = useState('');
     const [formStyle, setFormStyle] = useState('NORMAL');
     const { onStartResize } = useResize({ paletteWidth, setPaletteWidth });
+
+    const handleEditorChangeRef = useRef();
+    handleEditorChangeRef.current = () => {
+        const { usedIds } = processFormData({
+            formData: editor.getData(),
+            insertGrey,
+            operands,
+            totals,
+            indicators,
+        });
+        setUsedIds(usedIds);
+    }
+
+    const [editorElement, setEditorElement] = useState();
+    const { editor, status } = useCKEditor({
+        config: ckeditorConfig,
+        element: editorElement,
+    });
+    useEffect(() => {
+        if (status === 'ready') {
+            editor.setData(formHtml);
+
+            const subscriber = Rx.Observable.fromEventPattern((x) => {
+                editor.on('change', x);
+            })
+                .debounceTime(250)
+                .subscribe(() => {
+                    handleEditorChangeRef.current();
+                });
+            return () => {
+                subscriber.unsubscribe();
+            }
+        }
+    }, [editor, status, formHtml]);
+
     const {
         loading,
         error,
@@ -170,47 +181,24 @@ const EditDataEntryForm = ({ params }) => {
                     indicators,
                 });
                 setUsedIds(usedIds);
+                formHtml = outHtml;
             }
 
             setFormTitle(dataSet.displayName);
             setFormHtml(formHtml);
             setFormStyle(dataSet.dataEntryForm && dataSet.dataEntryForm.style || 'NORMAL');
-
-            // TODO
-            /*const editor = createEditor()
-              editor.setData(formHtml);
-
-              Rx.Observable.fromEventPattern((x) => {
-              editor.on('change', x);
-              })
-              .debounceTime(250)
-              .subscribe(() => {
-              // TODO: store form related state in one variable
-              // and with use-debounce do:
-              // setFormState(formState => ({ ...formState, formData: editor.getData() }))
-              // or use useRef
-
-              const { usedIds } = processFormData({
-              formData: editor.getData(),
-              insertGrey: this.state.insertGrey,
-              operands: this.operands,
-              totals: this.totals,
-              indicators: this.indicators,
-              });
-              this.setState({ usedIds });
-              });*/
         }
     })
 
     const handleSaveClick = async () => {
         const payload = {
             style: formStyle,
-            // TODO
-            // htmlCode: this._editor.getData(),
+            htmlCode: editor.getData(),
         };
 
         try {
-            await getD2().Api.getApi().post(['dataSets', params.modelId, 'form'].join('/'), payload)
+            const d2 = await getD2();
+            await d2.Api.getApi().post(['dataSets', params.modelId, 'form'].join('/'), payload);
 
             log.info('Form saved successfully');
             snackActions.show({ message: getTranslation('form_saved') });
@@ -233,7 +221,8 @@ const EditDataEntryForm = ({ params }) => {
             action: 'confirm',
             onClick: async () => {
                 try {
-                    await getD2().Api.getApi().delete([
+                    const d2 = await getD2();
+                    await d2.Api.getApi().delete([
                         'dataEntryForms', modelToEditStore.state.dataEntryForm.id
                     ].join('/'));
 
@@ -287,7 +276,7 @@ const EditDataEntryForm = ({ params }) => {
                 insertGrey={insertGrey}
                 onToggleGrey={setInsertGrey}
             />
-            {/*<textarea id="designTextarea" name="designTextarea" />*/}
+            <div ref={setEditorElement}></div>
             <Paper style={styles.formPaper}>
                 <div style={styles.formSection}>
                     {/* TODO: translate label 'Form display style' */}

@@ -1,28 +1,8 @@
 import PropTypes from 'prop-types';
 import { noop } from 'lodash/fp';
-import { CKEditor } from 'ckeditor4-react'
-import { useDebouncedCallback } from 'use-debounce'
-
-const config = {
-    plugins: [
-        'a11yhelp', 'basicstyles', 'bidi', 'blockquote',
-        'clipboard', 'colorbutton', 'colordialog', 'contextmenu',
-        'dialogadvtab', 'div', 'elementspath', 'enterkey',
-        'entities', 'filebrowser', 'find', 'floatingspace',
-        'font', 'format', 'horizontalrule', 'htmlwriter',
-        'image', 'indentlist', 'indentblock', 'justify',
-        'link', 'list', 'liststyle', 'magicline',
-        'maximize', 'forms', 'pastefromword', 'pastetext',
-        'preview', 'removeformat', 'resize', 'selectall',
-        'showblocks', 'showborders', 'sourcearea', 'specialchar',
-        'stylescombo', 'tab', 'table', 'tabletools',
-        'toolbar', 'undo', 'wsc', 'wysiwygarea',
-    ].join(','),
-    removePlugins: 'scayt,wsc,about',
-    allowedContent: true,
-    extraPlugins: 'div',
-    height: 500,
-}
+import { CKEditor } from 'ckeditor4-react';
+import { useDebouncedCallback } from 'use-debounce';
+import { ckeditorConfig } from '../../ckeditorConfig';
 
 const CKEditorWrapper = ({ initialContent, onEditorInitialized = noop, onEditorChange = noop }) => {
     const debouncedOnChange = useDebouncedCallback(onEditorChange, 250)
@@ -48,7 +28,7 @@ const CKEditorWrapper = ({ initialContent, onEditorInitialized = noop, onEditorC
             }}
             onChange={(event) => debouncedOnChange(event.editor.getData())}
             onMode={handleModeChange}
-            config={config}
+            config={ckeditorConfig}
         />
     )
 }
