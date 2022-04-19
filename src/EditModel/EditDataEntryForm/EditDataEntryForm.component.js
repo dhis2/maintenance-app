@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Rx from 'rxjs';
 import log from 'loglevel';
@@ -18,13 +18,11 @@ import snackActions from '../../Snackbar/snack.actions';
 import modelToEditStore from '../modelToEditStore';
 import { goToRoute } from '../../router-utils';
 
-import Palette from './Palette.component'
+import Palette from './Palette.component';
 import { processFormData, generateHtmlForId } from './processFormData';
 import { useData } from './useData';
-
-function clampPaletteWidth(width) {
-    return Math.min(750, Math.max(width, 250));
-}
+import { useResize } from './useResize';
+import { clampPaletteWidth } from './clampPaletteWidth';
 
 const styles = {
     heading: {
@@ -71,46 +69,26 @@ const createEditor = () => {
     })
 }
 
+// TODO: replace with useD2 from app-runtime-adapter-d2 if
+// https://github.com/dhis2/maintenance-app/pull/2182 is merged
+const useD2 = () => {
+    const [d2, setD2] = useState();
+    useEffect(() => {
+        getD2().then(d2 => setD2(d2));
+    }, []);
+
+    return { d2 };
+}
+
 // TODO?: Automatic labels <span label-id="{id}-{id}"></span> / <span label-id="{id}"></span>
 const EditDataEntryForm = ({ params }) => {
-    // TODO: replace with useD2 once https://github.com/dhis2/maintenance-app/pull/2182 is merged
-    const [d2, setD2] = useState()
-    useEffect(() => {
-        getD2().then(d2 => setD2(d2))
-    }, [])
+    const { d2 } = useD2();
     const getTranslation = label => {
         if (d2) {
-            return d2.i18n.getTranslation(label)
+            return d2.i18n.getTranslation(label);
         }
-        return label
+        return label;
     }
-
-    const startPosRef = useRef()
-    const startWidthRef = useRef()
-    const handleStartResize = e => {
-        startPosRef.current = e.clientX;
-        startWidthRef.current = paletteWidth;
-        window.addEventListener('mousemove', handleDoResize);
-        window.addEventListener('mouseup', handleEndResize);
-    };
-    const handleDoResize = useCallback(e => {
-        if (!e.buttons) {
-            // If no buttons are pressed it probably simply means we missed a mouseUp event - so stop resizing
-            handleEndResize();
-        }
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        const width = clampPaletteWidth(startWidthRef.current + (startPosRef.current - e.clientX));
-        window.requestAnimationFrame(() => {
-            setPaletteWidth(width)
-        });
-    }, []);
-    const handleEndResize = useCallback(() => {
-        window.removeEventListener('mousemove', handleDoResize);
-        window.removeEventListener('mouseup', handleEndResize);
-    }, []);
 
     const insertElementRef = useRef()
     insertElementRef.current = id => {
@@ -151,6 +129,7 @@ const EditDataEntryForm = ({ params }) => {
     const [formTitle, setFormTitle] = useState('');
     const [formHtml, setFormHtml] = useState('');
     const [formStyle, setFormStyle] = useState('NORMAL');
+    const { onStartResize } = useResize({ paletteWidth, setPaletteWidth });
     const {
         loading,
         error,
@@ -303,7 +282,7 @@ const EditDataEntryForm = ({ params }) => {
                     { keySet: flags, label: 'flags' },
                 ]}
                 paletteWidth={paletteWidth}
-                onStartResize={handleStartResize}
+                onStartResize={onStartResize}
                 insertGrey={insertGrey}
                 onToggleGrey={setInsertGrey}
             />
