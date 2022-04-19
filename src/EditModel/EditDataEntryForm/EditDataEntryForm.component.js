@@ -217,6 +217,7 @@ const EditDataEntryForm = ({ params }) => {
             goToRoute('list/dataSetSection/dataSet');
         } catch (e) {
             log.warn('Failed to save form:', e);
+            // TODO: use i18n interpolation for message instead of manually constructing string
             snackActions.show({
                 message: `${this.getTranslation('failed_to_save_form')}${e.message ? `: ${e.message}` : ''}`,
                 action: getTranslation('ok'),
@@ -289,15 +290,16 @@ const EditDataEntryForm = ({ params }) => {
             {/*<textarea id="designTextarea" name="designTextarea" />*/}
             <Paper style={styles.formPaper}>
                 <div style={styles.formSection}>
+                    {/* TODO: translate label 'Form display style' */}
                     <SelectField
                         value={formStyle}
                         floatingLabelText="Form display style"
                         onChange={(e, i, value) => setFormStyle(value)}
                     >
-                        <MenuItem value={'NORMAL'} primaryText={getTranslation('normal')} />
-                        <MenuItem value={'COMFORTABLE'} primaryText={getTranslation('comfortable')} />
-                        <MenuItem value={'COMPACT'} primaryText={getTranslation('compact')} />
-                        <MenuItem value={'NONE'} primaryText={getTranslation('none')} />
+                        <MenuItem value="NORMAL" primaryText={getTranslation('normal')} />
+                        <MenuItem value="COMFORTABLE" primaryText={getTranslation('comfortable')} />
+                        <MenuItem value="COMPACT" primaryText={getTranslation('compact')} />
+                        <MenuItem value="NONE" primaryText={getTranslation('none')} />
                     </SelectField>
                 </div>
                 <div style={styles.formSection}>
@@ -307,14 +309,14 @@ const EditDataEntryForm = ({ params }) => {
                         style={styles.cancelButton}
                         onClick={handleCancelClick}
                     />
-                    {modelToEditStore.state.dataEntryForm && modelToEditStore.state.dataEntryForm.id ? (
+                    {modelToEditStore.state?.dataEntryForm?.id && (
                         <FlatButton
                             primary
                             label={getTranslation('delete')}
                             style={styles.deleteButton}
                             onClick={handleDeleteClick}
                         />
-                    ) : undefined}
+                    )}
                 </div>
             </Paper>
         </div>
