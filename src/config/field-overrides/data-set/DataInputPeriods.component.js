@@ -26,6 +26,11 @@ const styles = {
     openDialogButton: { margin: '16px 0' },
 };
 
+const getISOFormatLocalTimestamp = value =>
+    new Date(value.getTime() - value.getTimezoneOffset() * 60000)
+        .toISOString()
+        .substring(0, 23);
+
 class DataInputPeriods extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -76,7 +81,10 @@ class DataInputPeriods extends React.Component {
         this.setState({
             dataInputPeriods: this.state.dataInputPeriods.map((dip, $i) => {
                 if ($i === $k) {
-                    dip[dateField] = value;
+                    dip[dateField] =
+                        value instanceof Date
+                            ? getISOFormatLocalTimestamp(value)
+                            : value;
                 }
 
                 return dip;
