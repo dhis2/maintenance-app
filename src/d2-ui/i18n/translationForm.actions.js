@@ -1,7 +1,6 @@
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2';
 import { Observable } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
-import Action from '../action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 
 export function getLocales() {
     if (!getLocales.localePromise) {
@@ -35,7 +34,7 @@ export function getTranslationsForModel(model) {
             return Promise.reject(new Error(`Can not find modelDefinition for ${model.id}`));
         }
 
-        return getInstance().then(d2 => {
+        return getD2().then(d2 => {
             const api = d2.Api.getApi();
 
             return api.get(`${getModelHref(model)}/translations`);
@@ -48,7 +47,7 @@ export const saveTranslations = Action.create('saveTranslations');
 saveTranslations.subscribe(({ data: [model, translations], complete, error }) => {
     const translationHref = `${getModelHref(model)}/translations`;
 
-    getInstance().then(d2 => {
+    getD2().then(d2 => {
         const api = d2.Api.getApi();
 
         api

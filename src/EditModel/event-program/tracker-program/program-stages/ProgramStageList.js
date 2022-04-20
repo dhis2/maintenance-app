@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import DataTable from 'd2-ui/lib/data-table/DataTable.component';
+import DataTable from '../../../../d2-ui/data-table/DataTable.component.js'
+
 import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
+import TranslationDialog from '@dhis2/d2-ui-translation-dialog';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon/FontIcon';

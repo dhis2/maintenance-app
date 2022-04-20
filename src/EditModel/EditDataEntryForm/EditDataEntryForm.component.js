@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Rx from 'rxjs';
 import log from 'loglevel';
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { useD2 } from '@dhis2/app-runtime-adapter-d2';
+import { getInstance as getD2 } from 'd2';
 import { NoticeBox } from '@dhis2/ui';
 import { useCKEditor } from 'ckeditor4-react';
 import { ckeditorConfig } from '../ckeditorConfig';
@@ -13,8 +14,8 @@ import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import Paper from 'material-ui/Paper/Paper';
 
-import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import LoadingMask from '../../loading-mask/LoadingMask.component';
+import { Heading } from '@dhis2/d2-ui-core';
 
 import snackActions from '../../Snackbar/snack.actions';
 import modelToEditStore from '../modelToEditStore';
@@ -47,17 +48,6 @@ const styles = {
         marginLeft: '2rem',
     },
 };
-
-// TODO: replace with useD2 from app-runtime-adapter-d2 if
-// https://github.com/dhis2/maintenance-app/pull/2182 is merged
-const useD2 = () => {
-    const [d2, setD2] = useState();
-    useEffect(() => {
-        getD2().then(d2 => setD2(d2));
-    }, []);
-
-    return { d2 };
-}
 
 // TODO?: Automatic labels <span label-id="{id}-{id}"></span> / <span label-id="{id}"></span>
 const EditDataEntryForm = ({ params }) => {

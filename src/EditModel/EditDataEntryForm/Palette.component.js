@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField/TextField';
 import CheckBox from 'material-ui/Checkbox/Checkbox';
 import PaletteSection from './PaletteSection.component';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 
 function useConst(factory) {
   const ref = useRef(null)

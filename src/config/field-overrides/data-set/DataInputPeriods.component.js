@@ -9,10 +9,10 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 
-import { generateUid } from 'd2/lib/uid';
+import { generateUid } from 'd2/uid';
 
-import getPeriod from 'd2/lib/period/parser';
-import PeriodPicker from 'd2-ui/lib/period-picker/PeriodPicker.component';
+import getPeriod from 'd2/period/parser';
+import { PeriodPicker } from '@dhis2/d2-ui-core';
 
 
 const styles = {

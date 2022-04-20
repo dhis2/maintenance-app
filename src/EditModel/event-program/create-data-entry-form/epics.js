@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import { get, getOr, compose, isEqual, findIndex, maxBy, filter, sortBy } from 'lodash/fp';
-import { generateUid } from 'd2/lib/uid';
-import { getInstance } from 'd2/lib/d2';
+import { generateUid } from 'd2/uid';
+import { getInstance } from 'd2';
 import { getProgramStageToModify } from '../assign-data-elements/epics';
 import {
     PROGRAM_STAGE_DATA_ELEMENTS_ORDER_CHANGE,

@@ -1,12 +1,12 @@
 import { Observable } from 'rxjs';
 import PropTypes from 'prop-types'
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2';
 import { result } from 'lodash/fp';
 import Dialog from 'material-ui/Dialog';
 import ExpressionManager from '../../../EditModel/expression/ExpressionManager'
 import FlatButton from 'material-ui/FlatButton/FlatButton';
-import Store from 'd2-ui/lib/store/Store';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
+import { Store } from '@dhis2/d2-ui-core';
+import Translate from '../../../d2-ui/i18n/Translate.component.js';
 
 import { withState, withProps, compose } from 'recompose';
 

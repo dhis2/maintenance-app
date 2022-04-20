@@ -1,6 +1,6 @@
 import { ActionsObservable } from 'redux-observable';
-import Store from 'd2-ui/lib/store/Store';
-import { isValidUid } from 'd2/lib/uid';
+import { Store } from '@dhis2/d2-ui-core';
+import { isValidUid } from 'd2/uid';
 import {
     PROGRAM_STAGE_DATA_ELEMENTS_ADD,
     PROGRAM_STAGE_DATA_ELEMENTS_REMOVE,

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { debounce, endsWith, sortBy } from 'lodash/fp';
 import PropTypes from 'prop-types';
-import Button from 'd2-ui/lib/button/Button';
+import { Button } from '@dhis2/d2-ui-core';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';

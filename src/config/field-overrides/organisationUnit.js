@@ -1,7 +1,9 @@
-import { isStartDateBeforeEndDate } from 'd2-ui/lib/forms/Validators';
+import Validators from '@dhis2/d2-ui-forms/Validators';
 import OrgUnitSelectDialogField from '../../forms/form-fields/orgunit-select-dialog-field';
 import GeometryField, { validators as GeometryValidators } from '../../forms/form-fields/geometry-field';
 import { ImageSelect, ImageValidators } from '../../forms/form-fields/image-select';
+
+const { isStartDateBeforeEndDate } = Validators
 
 export default new Map([
     [

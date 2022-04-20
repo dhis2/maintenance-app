@@ -1,15 +1,12 @@
-import React from 'react'
-import MainContent from 'd2-ui/lib/layout/main-content/MainContent.component';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types';
+import { MainContent, withStateFrom, SinglePanel, TwoPanel } from '@dhis2/d2-ui-core';
 import SideBar from '../SideBar/SideBarContainer.component';
 import SnackbarContainer from '../Snackbar/SnackbarContainer.component';
-import { getInstance } from 'd2/lib/d2';
-import AppWithD2 from 'd2-ui/lib/app/AppWithD2.component';
+import { getInstance } from 'd2';
 import LoadingMask from '../loading-mask/LoadingMask.component';
 import SectionTabs from '../TopBar/SectionTabs.component';
-import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import { Observable } from 'rxjs';
-import SinglePanelLayout from 'd2-ui/lib/layout/SinglePanel.component';
-import TwoPanelLayout from 'd2-ui/lib/layout/TwoPanel.component';
 import { goToRoute } from '../router-utils';
 import appState, { setAppState } from './appStateStore';
 import { Provider } from 'react-redux';
@@ -35,6 +32,51 @@ const sections$ = appState
     }));
 
 const SectionTabsWrap = withStateFrom(sections$, SectionTabs);
+
+// From https://github.com/dhis2/d2-ui/blob/v29.0.35/src/app/AppWithD2.component.js
+class AppWithD2 extends Component {
+    state = {};
+
+    componentDidMount() {
+        if (!this.props.d2) {
+            log.error('D2 is a required prop to <AppWithD2 />');
+        } else {
+            this.props.d2
+                .then(d2 => this.setState({ d2 }))
+                .catch(error => log.error(error));
+        }
+    }
+
+    getChildContext = () => {
+        return {
+            d2: this.state.d2,
+        };
+    };
+
+    render() {
+        const getChildren = () => {
+            if (!this.props.children) { return null; }
+            return React.Children.map(this.props.children, child => React.cloneElement(child));
+        };
+
+        return (
+            <div>
+                {getChildren()}
+            </div>
+        );
+    }
+}
+
+AppWithD2.propTypes = {
+    children: PropTypes.element,
+    d2: PropTypes.shape({
+        then: PropTypes.func.isRequired,
+    }),
+};
+
+AppWithD2.childContextTypes = {
+    d2: PropTypes.object,
+};
 
 class App extends AppWithD2 {
     componentDidMount() {
@@ -83,17 +125,17 @@ class App extends AppWithD2 {
                 <div>
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
-                        <TwoPanelLayout>
+                        <TwoPanel>
                             <SideBar
                                 activeGroupName={this.props.params.groupName}
                                 activeModelType={this.props.params.modelType}
                             />
                             <MainContent>{this.props.children}</MainContent>
-                        </TwoPanelLayout>
+                        </TwoPanel>
                     ) : (
-                        <SinglePanelLayout>
+                        <SinglePanel>
                             <MainContent>{this.props.children}</MainContent>
-                        </SinglePanelLayout>
+                        </SinglePanel>
                     )}
                     <SnackbarContainer />
                 </div>

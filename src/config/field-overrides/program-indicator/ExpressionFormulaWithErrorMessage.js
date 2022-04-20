@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { negate } from 'lodash/fp';
 
-import ExpressionFormula from 'd2-ui/lib/expression-manager/ExpressionFormula';
+import { ExpressionFormula } from '@dhis2/d2-ui-expression-manager';
 import { ExpressionStatus, getColorForExpressionStatus } from './ExpressionStatusIcon';
 
 

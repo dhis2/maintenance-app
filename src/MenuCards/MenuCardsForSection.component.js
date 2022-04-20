@@ -1,5 +1,5 @@
 import MenuCards from './MenuCards.component';
-import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
+import { withStateFrom } from '@dhis2/d2-ui-core';
 import menuCardsStore from './menuCardsStore';
 import appState from '../App/appStateStore';
 

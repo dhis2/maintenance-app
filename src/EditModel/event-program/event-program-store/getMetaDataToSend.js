@@ -7,7 +7,7 @@ import {
     values,
     flatten,
 } from 'lodash/fp';
-import { getOwnedPropertyJSON, getJSONForProperties } from 'd2/lib/model/helpers/json';
+import { getOwnedPropertyJSON, getJSONForProperties } from 'd2/model/helpers/json';
 
 const checkIfDirty = model => model && model.isDirty();
 const programStagesSelector = get('programStages');

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { get, find, isEqual, compose } from 'lodash/fp';
-import { generateUid } from 'd2/lib/uid';
-import { getInstance } from 'd2/lib/d2';
+import { generateUid } from 'd2/uid';
+import { getInstance } from 'd2';
 import log from 'loglevel';
 import { combineEpics } from 'redux-observable';
 

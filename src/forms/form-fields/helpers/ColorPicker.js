@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'd2-ui/lib/button/Button';
+import { Button } from '@dhis2/d2-ui-core';
 import LoadableComponent from '../../../utils/LoadableComponent';
 
 const LoadableSwatchesPicker = LoadableComponent({

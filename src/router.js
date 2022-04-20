@@ -1,7 +1,7 @@
 import React from 'react'
 import { Router, Route, IndexRoute, hashHistory, IndexRedirect } from 'react-router';
 
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import log from 'loglevel';
 import noop from 'lodash/fp/noop';
 

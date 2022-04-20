@@ -7,7 +7,7 @@ import Dialog from 'material-ui/Dialog';
 import DatePicker from 'material-ui/DatePicker';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2';
 
 import snackActions from '../../Snackbar/snack.actions';
 import predictorDialogStore from './predictorDialogStore';

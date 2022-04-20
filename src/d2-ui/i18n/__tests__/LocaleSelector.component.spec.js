@@ -4,7 +4,7 @@ import MuiSelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
 import LocaleSelector from '../LocaleSelector.component';
-import { getStubContext } from '../../../config/inject-theme';
+import { getStubContext } from '../../config/inject-theme';
 
 describe('LocaleSelector component', () => {
     let Component;

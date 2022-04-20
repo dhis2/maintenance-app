@@ -1,7 +1,7 @@
 import React from 'react'
 import IconButton from 'material-ui/IconButton/IconButton';
 import { goToRoute } from '../router-utils';
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { addD2Context } from '@dhis2/d2-ui-core';
 import { withProps, compose, renderNothing } from 'recompose';
 
 function goToGroupEditor() {

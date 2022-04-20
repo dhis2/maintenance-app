@@ -6,7 +6,7 @@ import Tab from 'material-ui/Tabs/Tab';
 import Paper from 'material-ui/Paper/Paper';
 
 import { camelCaseToUnderscores } from 'd2-utilizr';
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { addD2Context } from '@dhis2/d2-ui-core';
 
 import EditModelForm from './EditModelForm.component';
 import OptionManagement from './option-set/OptionManagement.component';

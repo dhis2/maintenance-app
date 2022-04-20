@@ -1,5 +1,5 @@
 import React from 'react'
-import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
+import { CircularProgress } from '@dhis2/d2-ui-core';
 
 export default () => {
     const loadingStatusMask = {

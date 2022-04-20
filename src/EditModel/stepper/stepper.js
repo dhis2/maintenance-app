@@ -6,7 +6,7 @@ import Step from 'material-ui/Stepper/Step';
 import IconButton from 'material-ui/IconButton/IconButton';
 import ForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import BackwardIcon from 'material-ui/svg-icons/navigation/arrow-back';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
+import Translate from '../../d2-ui/i18n/Translate.component.js';
 import log from 'loglevel';
 import { isString, isNumber } from 'lodash/fp';
 

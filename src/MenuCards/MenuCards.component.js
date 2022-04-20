@@ -6,7 +6,7 @@ import CardHeader from 'material-ui/Card/CardHeader';
 import CardText from 'material-ui/Card/CardText';
 import CardActions from 'material-ui/Card/CardActions';
 import IconButton from 'material-ui/IconButton/IconButton';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 
 export default ReactCreateClass({
     propTypes: {

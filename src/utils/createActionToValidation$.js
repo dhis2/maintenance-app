@@ -1,4 +1,4 @@
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2';
 import { Observable } from 'rxjs';
 
 export const createActionToValidation$ = url => ({data}) => {

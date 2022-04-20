@@ -6,9 +6,9 @@ import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import TextField from 'material-ui/TextField/TextField';
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
+import { GroupEditorWithOrdering } from '@dhis2/d2-ui-group-editor';
 
-import Store from 'd2-ui/lib/store/Store';
+import { Store } from '@dhis2/d2-ui-core';
 import Checkbox from 'material-ui/Checkbox';
 
 import DropDown from '../forms/form-fields/drop-down';
@@ -260,7 +260,7 @@ class SectionDialog extends Component {
             <div>
                 <div style={editorStyle}>
                     <label style={labelStyle}>{this.getTranslation('data_elements')}</label>
-                    <GroupEditor
+                    <GroupEditorWithOrdering
                         itemStore={dataElementStore}
                         assignedItemStore={assignedDataElementStore}
                         onAssignItems={this.assignDataElements}
@@ -273,7 +273,7 @@ class SectionDialog extends Component {
                 {indicatorStore.state.length ? (
                     <div style={editorStyle}>
                         <label style={labelStyle}>{this.getTranslation('indicators')}</label>
-                        <GroupEditor
+                        <GroupEditorWithOrdering
                             itemStore={indicatorStore}
                             assignedItemStore={assignedIndicatorStore}
                             onAssignItems={this.assignIndicators}

@@ -1,6 +1,6 @@
 import mapPropsStream from 'recompose/mapPropsStream';
 import { noop } from 'lodash/fp';
-import { getAllObjectsWithFields } from 'd2-ui/lib/data-helpers';
+import { getAllObjectsWithFields } from '@dhis2/d2-ui-expression-manager/data-helpers';
 import { Observable } from 'rxjs';
 import CollapsibleList from './CollapsibleList';
 

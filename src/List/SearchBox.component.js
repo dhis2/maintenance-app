@@ -1,7 +1,7 @@
 import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
 import ObservedEvents from '../utils/ObservedEvents.mixin';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 import TextField from 'material-ui/TextField/TextField';
 import { currentSubSection$ } from '../App/appStateStore';
 import { withRouter } from 'react-router';

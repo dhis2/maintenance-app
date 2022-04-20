@@ -31,8 +31,8 @@ import {
     flatten,
 } from 'lodash/fp';
 
-import { getInstance } from 'd2/lib/d2';
-import { generateUid } from 'd2/lib/uid';
+import { getInstance } from 'd2';
+import { generateUid } from 'd2/uid';
 
 import { getImportStatus } from './metadataimport-helpers';
 import { goToAndScrollUp } from '../../router-utils';

@@ -1,13 +1,12 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import ErrorMessage from 'd2-ui/lib/messages/ErrorMessage.component';
+import { ErrorMessage } from '@dhis2/d2-ui-core';
 
 import modelToEditStore from '../../EditModel/modelToEditStore';
 import LoadableComponent from '../../utils/LoadableComponent';
 
 
-const LoadableLegendComponent = LoadableComponent({ loader: () => import('d2-ui/lib/legend/Legend.component') });
+const LoadableLegendComponent = LoadableComponent({ loader: () => import('@dhis2/d2-ui-legend/Legend.component.js') });
 
 class LegendsField extends Component {
     updateLegends = (newLegends) => {

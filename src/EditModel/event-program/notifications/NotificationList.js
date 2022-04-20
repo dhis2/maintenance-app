@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
-import DataTable from 'd2-ui/lib/data-table/DataTable.component';
 import FloatingActionButton from 'material-ui/FloatingActionButton/FloatingActionButton';
 import AddIcon from 'material-ui/svg-icons/content/add';
 import getContext from 'recompose/getContext';
 import compose from 'recompose/compose';
 import branch from 'recompose/branch';
 import renderNothing from 'recompose/renderNothing';
+
+import DataTable from '../../../d2-ui/data-table/DataTable.component.js'
 
 function AddButton({ onAddClick }) {
     const cssStyles = {

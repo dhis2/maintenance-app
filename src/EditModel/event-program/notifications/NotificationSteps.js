@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { FormBuilder } from '@dhis2/d2-ui-forms';
 import { modelToEditSelector } from './selectors';
 import { setStageNotificationValue, setSelectedProgramStage } from './actions';
 import {

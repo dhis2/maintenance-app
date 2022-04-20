@@ -2,9 +2,9 @@ import ReactCreateClass from 'create-react-class'
 import PropTypes from 'prop-types'
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
-import d2lib from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
 
 function hasNameInArray(listToCheck) {
     return function hasNameInArrayInner(value) {
@@ -37,8 +37,7 @@ export default ReactCreateClass({
     },
 
     UNSAFE_componentWillMount() {
-        d2lib.getInstance()
-            .then(d2 => this.setState({ models: d2.models }));
+        getD2().then(d2 => this.setState({ models: d2.models }));
     },
 
     _onChange(event, index, modelType) {

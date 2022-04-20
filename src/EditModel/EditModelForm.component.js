@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import log from 'loglevel';
 import { Observable } from 'rxjs';
 
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 
-import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
-import Translate from 'd2-ui/lib/i18n/Translate.mixin';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { CircularProgress } from '@dhis2/d2-ui-core';
+import Translate from '@dhis2/d2-ui-translation-dialog/Translate.mixin.js';
+import { FormBuilder } from '@dhis2/d2-ui-forms';
 
 import SaveButton from './SaveButton.component';
 import CancelButton from './CancelButton.component';

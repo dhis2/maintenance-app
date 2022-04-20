@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
 import LoadingMask from '../../loading-mask/LoadingMask.component';
-import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
+import { CircularProgress } from '@dhis2/d2-ui-core';
 import has from 'lodash/fp/has';
 
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';

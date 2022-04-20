@@ -2,8 +2,8 @@ import { Component } from 'react';
 import PropTypes from 'prop-types'
 
 import Dialog from 'material-ui/Dialog/Dialog';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { FormBuilder } from '@dhis2/d2-ui-forms';
+import { Heading } from '@dhis2/d2-ui-core';
 
 import FormButtons from '../../FormButtons.component';
 import SaveButton from '../../SaveButton.component';

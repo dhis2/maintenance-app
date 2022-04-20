@@ -1,7 +1,7 @@
 import mapPropsStream from 'recompose/mapPropsStream';
 import { identity, noop, compose } from 'lodash/fp';
 
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { FormBuilder } from '@dhis2/d2-ui-forms';
 
 import { applyRulesToFieldConfigs, getRulesForModelType } from '../form-rules';
 import { createFieldConfigsFor } from './schemaFieldConfigCreator';

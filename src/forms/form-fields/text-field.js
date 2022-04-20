@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types'
 import TextField from 'material-ui/TextField/TextField';
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 
 export default class TextFormField extends Component {
     static getWantedProperties(props) {

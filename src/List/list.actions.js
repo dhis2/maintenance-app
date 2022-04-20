@@ -1,8 +1,8 @@
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 import { Observable } from 'rxjs';
 import log from 'loglevel';
 
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 
 import listStore from './list.store';
 import detailsStore from './details.store';

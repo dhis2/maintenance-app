@@ -1,6 +1,6 @@
 const glob = require('glob');
 const fetch = require('node-fetch');
-const { init } = require('d2/lib/d2');
+const { init } = require('d2');
 const { memoize, spread, curry, replace, compose, map } = require('lodash/fp');
 const fs = require('fs');
 

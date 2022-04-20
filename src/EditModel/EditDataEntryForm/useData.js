@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { getInstance as getD2 } from 'd2';
 
 // Load form data, operands, indicators and flags
 const loadData = async ({ modelId }) => {

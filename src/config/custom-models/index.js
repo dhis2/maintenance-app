@@ -1,4 +1,4 @@
-import ModelDefinition from 'd2/lib/model/ModelDefinition';
+import ModelDefinition from 'd2/model/ModelDefinition';
 import locale from './locale';
 
 function createFromSchema({ schema, CustomModelDefinition }) {

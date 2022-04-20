@@ -2,29 +2,30 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import log from 'loglevel';
 import { Observable } from 'rxjs';
-import { config } from 'd2/lib/d2';
+import { config } from 'd2';
 
 import Tabs from 'material-ui/Tabs/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
 import Paper from 'material-ui/Paper/Paper';
 import Divider from 'material-ui/Divider';
 
-import ExpressionDescription from 'd2-ui/lib/expression-manager/ExpressionDescription';
-import ExpressionOperators from 'd2-ui/lib/expression-manager/ExpressionOperators';
+import {
+    ExpressionDescription,
+    ExpressionOperators,
+    ExpressionFormula,
+    ConstantSelector,
+    ProgramOperandSelector,
+    ReportingRatesSelector,
+    DataElementOperandSelector,
+    OrganisationUnitGroupSelector
+} from '@dhis2/d2-ui-expression-manager';
 import ExpressionFunctions from './ExpressionFunctions';
-import ExpressionFormula from 'd2-ui/lib/expression-manager/ExpressionFormula';
 
-import OrganisationUnitGroupSelector from 'd2-ui/lib/expression-manager/OrganisationUnitGroupSelector';
-import DataElementOperandSelector from 'd2-ui/lib/expression-manager/DataElementOperandSelector';
-import ReportingRatesSelector from 'd2-ui/lib/expression-manager/ReportingRatesSelector';
-import ProgramOperandSelector from 'd2-ui/lib/expression-manager/ProgramOperandSelector';
-import ConstantSelector from 'd2-ui/lib/expression-manager/ConstantSelector';
-
-import Heading from 'd2-ui/lib/headings/Heading.component';
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
-import Action from 'd2-ui/lib/action/Action';
-import Row from 'd2-ui/lib/layout/Row.component';
-import Column from 'd2-ui/lib/layout/Column.component';
+import { Heading } from '@dhis2/d2-ui-core';
+import { addD2Context } from '@dhis2/d2-ui-core';
+import { Action } from '@dhis2/d2-ui-core';
+import { Row } from '@dhis2/d2-ui-core';
+import { Column } from '@dhis2/d2-ui-core';
 
 /* NOTE: THIS IS A COPY OF ExpressionManager from d2-ui v29.
 See https://github.com/dhis2/d2-ui/blob/v29/src/expression-manager/ExpressionManager.js

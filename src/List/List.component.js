@@ -5,11 +5,11 @@ import log from 'loglevel';
 
 import isIterable from 'd2-utilizr/lib/isIterable';
 import DataTable from '../d2-ui/data-table/DataTable.component';
-import Pagination from 'd2-ui/lib/pagination/Pagination.component';
+import { Pagination } from '@dhis2/d2-ui-core';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
-import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import TranslationDialog from '@dhis2/d2-ui-translation-dialog';
+import { Heading } from '@dhis2/d2-ui-core';
 
 import DetailsBoxWithScroll from './DetailsBoxWithScroll.component';
 import contextActions from './ContextActions';

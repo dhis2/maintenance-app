@@ -1,4 +1,4 @@
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 import { setAppState, default as appState } from '../App/appStateStore';
 import { goToRoute } from '../router-utils';
 import { Observable } from 'rxjs';

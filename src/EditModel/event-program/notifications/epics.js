@@ -5,12 +5,12 @@ import {
 } from './actions';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import { getStageNotificationsForProgramStageId } from './selectors';
 import { getProgramStageById } from "../tracker-program/program-stages/selectors";
 import eventProgramStore from '../eventProgramStore';
 import { equals, first, negate, find, pick } from 'lodash/fp';
-import { generateUid } from 'd2/lib/uid';
+import { generateUid } from 'd2/uid';
 import snackActions from "../../../Snackbar/snack.actions";
 
 // notEqualTo :: any -> any -> Boolean

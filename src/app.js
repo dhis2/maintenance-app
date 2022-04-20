@@ -3,7 +3,7 @@ import './d2-ui/scss/index.js'
 import { useConfig } from '@dhis2/app-runtime'
 import React, { useEffect, useState } from 'react'
 import { render } from 'react-dom';
-import { init, config, getUserSettings, getManifest } from 'd2/lib/d2';
+import { useD2 } from '@dhis2/app-runtime-adapter-d2'
 import log from 'loglevel';
 import LoadingMask from './loading-mask/LoadingMask.component';
 import routes from './router';
@@ -25,32 +25,6 @@ if (process.env.NODE_ENV !== 'production') {
     log.setLevel(log.levels.DEBUG);
 } else {
     log.setLevel(log.levels.INFO);
-}
-
-function configI18n(userSettings) {
-    const uiLocale = userSettings.keyUiLocale;
-
-    if (uiLocale && uiLocale !== 'en') {
-        // Add the language sources for the preferred locale
-        config.i18n.sources.add(`./i18n/i18n_module_${uiLocale}.properties`);
-    }
-
-    // Add english as locale for all cases (either as primary or fallback)
-    config.i18n.sources.add('./i18n/i18n_module_en.properties');
-
-    // Force load strings for the header-bar
-    config.i18n.strings.add('app_search_placeholder');
-    config.i18n.strings.add('manage_my_apps');
-    config.i18n.strings.add('log_out');
-    config.i18n.strings.add('account');
-    config.i18n.strings.add('profile');
-    config.i18n.strings.add('settings');
-    config.i18n.strings.add('about_dhis2');
-    config.i18n.strings.add('help');
-    config.i18n.strings.add('no_results_found');
-
-    // Others
-    config.i18n.strings.add('version');
 }
 
 function addCustomModels(d2) {
@@ -75,46 +49,16 @@ function getSystemSettings(d2) {
     });
 }
 
-// render(
-//     <MuiThemeProvider muiTheme={appTheme}>
-//         <LoadingMask />
-//     </MuiThemeProvider>,
-//     document.getElementById('app')
-// );
-//
-// getManifest('./manifest.webapp')
-//     .then((manifest) => {
-//         const baseUrl = process.env.NODE_ENV === 'production' ? manifest.getBaseUrl() : dhisDevConfig.baseUrl;
-//         config.baseUrl = `${baseUrl}/api/37`;
-//         log.info(`Loading: ${manifest.name} v${manifest.version}`);
-//         log.info(`Built ${manifest.manifest_generated_at}`);
-//     })
-//     .then(getUserSettings)
-//     .then(configI18n)
-//     .then(init)
-//     .then(addCustomModels)
-//     .then(getSystemSettings)
-//     .then(startApp)
-//     .catch(log.error.bind(log));
-
 export default function App() {
-    const { baseUrl, apiVersion } = useConfig()
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const { d2, d2Error } = useD2({
+        i18nRoot: './i18n',
+        onInitialized: async d2 => {
+            await addCustomModels(d2)
+            await getSystemSettings(d2)
+        }
+    })
 
-    useEffect(() => {
-        config.baseUrl = `${baseUrl}/api/${apiVersion}`;
-
-        getUserSettings()
-            .then(configI18n)
-            .then(init)
-            .then(addCustomModels)
-            .then(getSystemSettings)
-            .catch(setError)
-            .finally(() => setLoading(false))
-    }, [])
-
-    if (loading) {
+    if (!d2) {
         return (
             <MuiThemeProvider muiTheme={appTheme}>
                 <LoadingMask />
@@ -122,10 +66,10 @@ export default function App() {
         )
     }
 
-    if (error) {
+    if (d2Error) {
         return (
             <MuiThemeProvider muiTheme={appTheme}>
-                <div>Error: ${error.toString()}</div>
+                <div>Error: ${d2Error.toString()}</div>
             </MuiThemeProvider>
         )
     }

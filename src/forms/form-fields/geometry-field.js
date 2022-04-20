@@ -1,8 +1,10 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types'
 import TextField from '../../forms/form-fields/text-field';
-import { isNumber } from 'd2-ui/lib/forms/Validators';
+import Validators from '@dhis2/d2-ui-forms/Validators';
 import { getOr } from 'lodash/fp';
+
+const { isNumber } = Validators
 
 // Allows parsed numbers
 function isNumeric(number) {

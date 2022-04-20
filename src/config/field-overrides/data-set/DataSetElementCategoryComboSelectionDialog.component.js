@@ -7,12 +7,13 @@ import IconButton from 'material-ui/IconButton/IconButton';
 import BuildIcon from 'material-ui/svg-icons/action/build';
 import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
-import Column from 'd2-ui/lib/layout/Column.component';
-import Row from 'd2-ui/lib/layout/Row.component';
+import { Column } from '@dhis2/d2-ui-core';
+import { Row } from '@dhis2/d2-ui-core';
 import SelectField from 'material-ui/SelectField/SelectField';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 import { map, memoize } from 'lodash/fp';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
+
+import Translate from '../../../d2-ui/i18n/Translate.component.js';
 
 const enhance = compose(
     getContext({ d2: PropTypes.object }),

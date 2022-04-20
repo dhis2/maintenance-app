@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import store, { isStoreStateDirty, getMetaDataToSend } from '../eventProgramStore';
-import ModelDefinition from 'd2/lib/model/ModelDefinition';
-import ModelDefinitions from 'd2/lib/model/ModelDefinitions';
+import ModelDefinition from 'd2/model/ModelDefinition';
+import ModelDefinitions from 'd2/model/ModelDefinitions';
 import programSchema from '../../../__fixtures__/schemas/program.json';
 import programStageSchema from '../../../__fixtures__/schemas/programStage.json';
 import programNotificationTemplateSchema from '../../../__fixtures__/schemas/programNotificationTemplate.json';

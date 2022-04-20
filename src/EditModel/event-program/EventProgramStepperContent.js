@@ -14,7 +14,7 @@ import { createFieldConfigsFor } from '../formHelpers';
 import { editFieldChanged } from './actions';
 import { wrapInPaper } from '../componentHelpers';
 import fieldOrder from '../../config/field-config/field-order';
-import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
+import { FormBuilder } from '@dhis2/d2-ui-forms';
 import {editProgramStageField} from "./tracker-program/program-stages/actions";
 
 const eventProgramFields = fieldOrder.for('eventProgram');

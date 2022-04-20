@@ -2,13 +2,11 @@ import { Component } from 'react';
 import PropTypes from 'prop-types'
 import { Observable } from 'rxjs';
 
-import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTreeMultipleRoots.component';
-import OrgUnitSelectByLevel from 'd2-ui/lib/org-unit-select/OrgUnitSelectByLevel.component';
-import OrgUnitSelectByGroup from 'd2-ui/lib/org-unit-select/OrgUnitSelectByGroup.component';
-import OrgUnitSelectAll from 'd2-ui/lib/org-unit-select/OrgUnitSelectAll.component';
+import { OrgUnitTreeMultipleRoots as OrgUnitTree } from '@dhis2/d2-ui-org-unit-tree';
+import { OrgUnitSelectByLevel, OrgUnitSelectByGroup, OrgUnitSelectAll } from '@dhis2/d2-ui-org-unit-select';
 import TextField from 'material-ui/TextField/TextField';
 
-import Action from 'd2-ui/lib/action/Action';
+import { Action } from '@dhis2/d2-ui-core';
 
 const styles = {
     multiSelectWrapper: {

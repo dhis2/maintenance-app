@@ -2,12 +2,14 @@ import DropDown from '../../forms/form-fields/drop-down';
 import TextField from '../../forms/form-fields/text-field';
 import SubFieldWrap from './helpers/SubFieldWrap';
 import actions from '../../EditModel/objectActions';
-import { isUrl } from 'd2-ui/lib/forms/Validators';
-import withD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import Validators from '@dhis2/d2-ui-forms/Validators';
+import { addD2Context } from '@dhis2/d2-ui-core';
+
+const { isUrl } = Validators
 
 export default new Map([
     ['imageFormat', {
-        component: withD2Context((props, { d2 }) => (props.model.mapService === 'WMS' ?
+        component: addD2Context((props, { d2 }) => (props.model.mapService === 'WMS' ?
             <SubFieldWrap>
                 <DropDown
                     labelText={props.labelText}

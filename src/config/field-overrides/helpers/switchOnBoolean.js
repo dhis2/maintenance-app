@@ -1,5 +1,5 @@
 import 'react';
-import withD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { addD2Context } from '@dhis2/d2-ui-core';
 import wrapDisplayName from 'recompose/wrapDisplayName';
 import { memoize } from 'lodash/fp';
 
@@ -12,5 +12,5 @@ export default memoize(function switchOnBoolean(predicate, WhenTrue, WhenFalse =
 
     switchedComponent.displayName = wrapDisplayName(WhenTrue, switchOnBoolean.name);
 
-    return withD2Context(switchedComponent);
+    return addD2Context(switchedComponent);
 });

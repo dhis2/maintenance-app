@@ -7,7 +7,7 @@ import Avatar from 'material-ui/Avatar';
 import { goToRoute } from '../router-utils';
 import { withAuth } from "../utils/Auth";
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
-import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
+import { addD2Context } from '@dhis2/d2-ui-core';
 
 class ProgramSpeedDial extends Component {
     constructor(props, context) {

@@ -1,9 +1,4 @@
-import {
-    isRequired,
-    isUrl,
-    isNumber as isNumberValidator,
-    isEmail,
-} from 'd2-ui/lib/forms/Validators';
+import { Validators } from '@dhis2/d2-ui-forms';
 import isString from 'd2-utilizr/lib/isString';
 import { getOr, isNumber } from 'lodash/fp';
 
@@ -51,6 +46,12 @@ export function createValidatorFromValidatorFunction(validatorFn) {
 }
 
 function addValidatorForType(type, modelValidation) {
+    const {
+        isUrl,
+        isNumber: isNumberValidator,
+        isEmail,
+    } = Validators
+
     function maxNumber(value) {
         return Number(value) <= modelValidation.max;
     }
@@ -134,7 +135,7 @@ export function getValidatorsFromModelValidation(
     let validators = [];
 
     if (modelValidation.required) {
-        validators.push(createValidatorFromValidatorFunction(isRequired));
+        validators.push(createValidatorFromValidatorFunction(Validators.isRequired));
     }
 
     if (modelDefinition) {

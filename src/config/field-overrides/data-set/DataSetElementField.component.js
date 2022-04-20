@@ -3,11 +3,11 @@ import { Component } from 'react';
 
 import { uniq, get, range } from 'lodash/fp';
 
-import { getInstance } from 'd2/lib/d2';
-import { generateUid } from 'd2/lib/uid';
-import GroupEditor from 'd2-ui/lib/group-editor/GroupEditor.component';
-import Store from 'd2-ui/lib/store/Store';
-import Row from 'd2-ui/lib/layout/Row.component';
+import { getInstance } from 'd2';
+import { generateUid } from 'd2/uid';
+import { GroupEditor } from '@dhis2/d2-ui-group-editor';
+import { Store } from '@dhis2/d2-ui-core';
+import { Row } from '@dhis2/d2-ui-core';
 
 import TextField from 'material-ui/TextField/TextField';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';

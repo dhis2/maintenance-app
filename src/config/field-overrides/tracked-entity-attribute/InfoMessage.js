@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import Translate from 'd2-ui/lib/i18n/Translate.component';
+import Translate from '../../../d2-ui/i18n/Translate.component.js';
 import InfoIcon from 'material-ui/svg-icons/action/info-outline';
 
 export default function InfoMessage({ message, ...wrapperProps }) {

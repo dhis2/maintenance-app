@@ -1,6 +1,6 @@
 import Paper from 'material-ui/Paper/Paper';
 import PropTypes from 'prop-types';
-import Heading from 'd2-ui/lib/headings/Heading.component';
+import { Heading } from '@dhis2/d2-ui-core';
 import OrganisationUnitTreeMultiSelect from '../../../forms/form-fields/orgunit-tree-multi-select';
 import ProgramStagesAccess from './ProgramStagesAccess';
 import { branch, renderComponent } from 'recompose';

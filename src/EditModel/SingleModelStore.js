@@ -1,5 +1,5 @@
-import Store from 'd2-ui/lib/store/Store';
-import { getInstance as getD2 } from 'd2/lib/d2';
+import { Store } from '@dhis2/d2-ui-core';
+import { getInstance as getD2 } from 'd2';
 import { Observable } from 'rxjs';
 import isString from 'd2-utilizr/lib/isString';
 

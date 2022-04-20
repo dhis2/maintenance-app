@@ -1,5 +1,5 @@
 import { Observable, ReplaySubject } from 'rxjs';
-import { getInstance } from 'd2/lib/d2';
+import { getInstance } from 'd2';
 import { isEmpty, memoize } from 'lodash/fp';
 
 import { ExpressionStatus } from './ExpressionStatusIcon';

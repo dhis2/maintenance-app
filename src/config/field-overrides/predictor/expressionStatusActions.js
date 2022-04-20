@@ -1,5 +1,5 @@
-import Action from 'd2-ui/lib/action/Action';
-import { getInstance } from 'd2/lib/d2';
+import { Action } from '@dhis2/d2-ui-core';
+import { getInstance } from 'd2';
 import { Observable } from 'rxjs';
 import expressionStatusStore from './expressionStatusStore';
 

@@ -1,5 +1,5 @@
-import ModelDefinition from 'd2/lib/model/ModelDefinition';
-import ModelCollection from 'd2/lib/model/ModelCollection';
+import ModelDefinition from 'd2/model/ModelDefinition';
+import ModelCollection from 'd2/model/ModelCollection';
 
 let cachedLocales = null;
 const resetCache = () => {

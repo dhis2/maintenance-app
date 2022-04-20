@@ -1,4 +1,4 @@
-import TreeView from 'd2-ui/lib/tree-view/TreeView.component';
+import { TreeView } from '@dhis2/d2-ui-core';
 import withState from 'recompose/withState';
 
 function CollapsibleList({ items, label, onItemClick, expanded, setExpanded }) {
