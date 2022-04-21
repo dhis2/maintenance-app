@@ -1,20 +1,22 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 
 export default class Icon extends Component {
     constructor(props) {
         super(props);
-        this.img = null;
-
-        this.setImgRef = (element) => {
-            this.img = element;
-        };
+        this.img = createRef();
     }
 
     componentDidMount() {
-        this.img.onload = () => {
-            this.img.removeAttribute('data-loading');
-        };
+        const img = this.img.current
+
+        if (img?.current) {
+            img.onload = this.handleLoad;
+        }
+    }
+
+    handleLoad = () => {
+        this.img.current.removeAttribute('data-loading');
     }
 
     handleClick = () => {
@@ -28,13 +30,14 @@ export default class Icon extends Component {
         /* eslint-disable */
         return (
             <img
-                ref={this.setImgRef}
+                ref={this.img}
                 src={href}
                 alt={title}
                 title={title}
                 data-loading
                 className={`icon-picker__icon${classSuffix}`}
                 onClick={this.handleClick}
+                onLoad={this.handleLoad}
             />
         );
         /* eslint-enable */
