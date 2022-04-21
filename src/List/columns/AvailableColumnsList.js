@@ -43,7 +43,7 @@ const AvailableColumnsList = ({ columns, onClick, selectedColumns }) => {
     );
 };
 
-AvailableColumnsList.PropTypes = {
+AvailableColumnsList.propTypes = {
     columns: PropTypes.array,
     onClick: PropTypes.func,
     selectedColumns: PropTypes.array

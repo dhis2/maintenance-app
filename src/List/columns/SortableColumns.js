@@ -91,11 +91,13 @@ const ColumnList = (
     );
 };
 
-ColumnList.PropTypes = {
-    items: PropTypes.shape({
-        value: PropTypes.any,
-        displayValue: PropTypes.string,
-    }),
+ColumnList.propTypes = {
+    items: PropTypes.arrayOf(
+        PropTypes.shape({
+            value: PropTypes.any,
+            displayValue: PropTypes.string,
+        })
+    ),
     columns: PropTypes.array,
 };
 
