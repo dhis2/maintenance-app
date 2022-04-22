@@ -1,5 +1,6 @@
+import { useD2 } from '@dhis2/app-runtime-adapter-d2';
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { addD2Context } from '@dhis2/d2-ui-core';
 import organisationUnitLevelsStore from './organisationUnitLevels.store';
 import { withStateFrom } from '@dhis2/d2-ui-core';
@@ -22,14 +23,16 @@ function saveOrganisationUnitLevels(i18n) {
         );
 }
 
-function OrganisationUnitLevels(props, context) {
-    const canEdit = context.d2.currentUser.canUpdate(context.d2.models.organisationUnitLevel);
+function OrganisationUnitLevels(props) {
+    const { d2 } = useD2()
 
-    if (props.isLoading) {
+    if (props.isLoading || !d2) {
         return (
             <LinearProgress />
         );
     }
+
+    const canEdit = d2.currentUser.canUpdate(d2.models.organisationUnitLevel);
 
     const styles = {
         paperWrap: {
@@ -98,16 +101,17 @@ function OrganisationUnitLevels(props, context) {
 
     return (
         <div>
-            <Heading>{context.d2.i18n.getTranslation('organisation_unit_level_management')}</Heading>
+            <Heading>{d2.i18n.getTranslation('organisation_unit_level_management')}</Heading>
             <Paper style={styles.paperWrap}>
                 {fieldRows}
                 <FormButtons>
-                    {canEdit ? <SaveButton onClick={() => saveOrganisationUnitLevels(context.d2.i18n)} isValid={props.formStatus.every(v => v)} isSaving={props.isSaving} /> : []}
+                    {canEdit ? <SaveButton onClick={() => saveOrganisationUnitLevels(d2.i18n)} isValid={props.formStatus.every(v => v)} isSaving={props.isSaving} /> : []}
                 </FormButtons>
             </Paper>
         </div>
     );
 }
+
 OrganisationUnitLevels.defaultProps = {
     fieldsForOrganisationUnitLevel: [],
     formStatus: [false],
@@ -123,65 +127,64 @@ OrganisationUnitLevels.propTypes = {
 
 const componentState$ = organisationUnitLevelsStore;
 
-const OrganisationUnitLevelsWithState = withStateFrom(componentState$, addD2Context(OrganisationUnitLevels));
+const OrganisationUnitLevelsWithState = withStateFrom(componentState$, OrganisationUnitLevels);
 
-export default addD2Context(class extends Component {
-    constructor(...args) {
-        super(...args);
+export default function OrganisationUnitLevelsWrapper() {
+    const { d2 } = useD2();
+    const [translationOpen, setTranslationOpen] = useState(false);
+    const [translationModel, setTranslationModel] = useState(null);
 
-        this.state = {
-            translation: {
-                open: false,
-            },
-        };
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         actions.initOrgUnitLevels();
-    }
+    }, [])
 
-    render() {
+    const onTranslateClick = data => {
+        const model = d2.models.organisationUnitLevel.create(data);
+
+        setTranslationModel(model)
+        setTranslationOpen(true)
+    };
+
+    const translationSaved = () => {
+        snackActions.show({
+            message: d2.i18n.getTranslation('translation_saved'),
+        });
+    };
+
+    const translationErrored = () => {
+        snackActions.show({
+            message: d2.i18n.getTranslation('translation_save_error'),
+            action: 'ok',
+        });
+    };
+
+    const closeTranslationDialog = () => {
+        setTranslationOpen(false)
+        setTranslationModel(null)
+    };
+
+    if (!d2) {
         return (
-            <div>
-                <OrganisationUnitLevelsWithState onTranslateClick={this._onTranslateClick} />
-                {this.state.translation.model ? <TranslationDialog
-                    objectToTranslate={this.state.translation.model}
-                    objectTypeToTranslate={this.state.translation.model && this.state.translation.model.modelDefinition}
-                    open={this.state.translation.open}
-                    onTranslationSaved={this._translationSaved}
-                    onTranslationError={this._translationErrored}
-                    onRequestClose={this._closeTranslationDialog}
-                    fieldsToTranslate={['name']}
-                /> : null }
-            </div>
+            <LinearProgress />
         );
     }
 
-    _onTranslateClick = data => {
-        const model = this.context.d2.models.organisationUnitLevel.create(data);
+    return (
+        <div>
+            <OrganisationUnitLevelsWithState
+                onTranslateClick={onTranslateClick}
+            />
 
-        this.setState({
-            translation: {
-                open: true,
-                model,
-            },
-        });
-    };
-
-    _translationSaved = () => {
-        snackActions.show({ message: this.context.d2.i18n.getTranslation('translation_saved') });
-    };
-
-    _translationErrored = () => {
-        snackActions.show({ message: this.context.d2.i18n.getTranslation('translation_save_error'), action: 'ok' });
-    };
-
-    _closeTranslationDialog = () => {
-        this.setState({
-            translation: {
-                open: false,
-                model: undefined,
-            },
-        });
-    };
-});
+            {translationModel ? <TranslationDialog
+                d2={d2}
+                objectToTranslate={translationModel}
+                objectTypeToTranslate={translationModel && translationModel.modelDefinition}
+                open={translationOpen}
+                onTranslationSaved={translationSaved}
+                onTranslationError={translationErrored}
+                onRequestClose={closeTranslationDialog}
+                fieldsToTranslate={['name']}
+            /> : null }
+        </div>
+    );
+}
