@@ -1,6 +1,6 @@
 {
   "name": "maintenance-app",
-  "version": "32.20.16",
+  "version": "32.20.17",
   "description": "DHIS2 Maintenance app",
   "repository": {
     "type": "git",
