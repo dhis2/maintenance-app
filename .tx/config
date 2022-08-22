@@ -1,10 +1,11 @@
 [main]
-host = https://www.transifex.com
-lang_map = fa_AF: prs, uz@Cyrl: uz, uz@Latn: uz_Latn
+host     = https://www.transifex.com
+lang_map = uz@Latn: uz_Latn, fa_AF: prs, uz@Cyrl: uz
 
-[app-maintenance.i18n-module-en-properties]
-file_filter = src/i18n/i18n_module_<lang>.properties
+[o:hisp-uio:p:app-maintenance:r:i18n-module-en-properties]
+file_filter  = src/i18n/i18n_module_<lang>.properties
+source_file  = src/i18n/i18n_module_en.properties
+source_lang  = en
+type         = PROPERTIES
 minimum_perc = 0
-source_file = src/i18n/i18n_module_en.properties
-source_lang = en
-type = PROPERTIES
+
