@@ -1,3 +1,10 @@
+## [32.20.26](https://github.com/dhis2/maintenance-app/compare/v32.20.25...v32.20.26) (2022-09-07)
+
+
+### Bug Fixes
+
+* **dropdown:** filter multi_text in valueType ([6d427a7](https://github.com/dhis2/maintenance-app/commit/6d427a792d015dcca86678948a7a876245e4ae0f))
+
 ## [32.20.25](https://github.com/dhis2/maintenance-app/compare/v32.20.24...v32.20.25) (2022-09-06)
 
 
