@@ -4,10 +4,9 @@ import SelectField from 'material-ui/SelectField';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
-import LoadingMask from '../../loading-mask/LoadingMask.component';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import has from 'lodash/fp/has';
-
+import { first } from 'lodash/fp';
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
 const PROGRAM_STAGE_INSTANCE = 'PROGRAM_STAGE_INSTANCE';
@@ -19,6 +18,9 @@ const relationshipEntities = {
 };
 //PROGRAMSTAGE INSTANCE: Event in program stage
 //Program instance: Enrollment in program
+
+const isEventProgram = model =>
+    model && model.programType === 'WITHOUT_REGISTRATION';
 
 // Map of the different valid selection of the embedded objects, according to selected constraint-type
 const modelTypesForRelationshipEntity = {
@@ -53,11 +55,13 @@ const modelTypesForRelationshipEntity = {
             modelType: 'program',
             mutex: 'programStage',
             required: true,
+            // exclude from posted value, "default"-programStage is used instead
+            excludeFromValue: true,
         },
         {
             modelType: 'programStage', //This is only used for Tracker-programs
             mutex: 'program',
-            required: false,
+            required: true,
             filter: (props, state) => {
                 return [`program.id:eq:${state.selected.program.id}`];
             },
@@ -208,24 +212,24 @@ class Constraint extends Component {
         };
         // Clear values if mutually exclusive
         let prevState = objOptions.mutex ? {} : this.props.value;
-        const selectedProgram = this.getSelectedIDForModelType('program');
-        if (modelType === 'programStage' && value === null && selectedProgram) {
-            // If "no value is selected", we need to manually add the program as selected
-            // and clear the programStage
+
+        // if its an event-program, we need to set the "default"-programStage
+        // and exclude "program"-from the posted-value
+        if (modelType === 'program' && isEventProgram(value)) {
             prevState = {
                 ...prevState,
-                program: {
-                    id: selectedProgram.id,
-                },
+                programStage: first(value.programStages.toArray())
             };
-            modelTypeValue = null;
         }
 
         const relationshipConstraint = {
             ...prevState,
             relationshipEntity: this.props.value.relationshipEntity,
-            [modelType]: modelTypeValue,
+            ...(!objOptions.excludeFromValue && {
+                [modelType]: modelTypeValue,
+            }),
         };
+
         this.props.onChange({
             target: {
                 value: relationshipConstraint,
@@ -245,6 +249,10 @@ class Constraint extends Component {
             },
         }));
     };
+
+    hasSelectedEventProgram = () =>
+        has('selected.program', this.state) &&
+        this.state.selected.program.programType === 'WITHOUT_REGISTRATION';
 
     hasSelectedTrackerProgram = () =>
         has('selected.program', this.state) &&
