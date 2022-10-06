@@ -95,7 +95,7 @@ class DropDownAsync extends Component {
              * attributeselector to work when changing programs.
              */
 
-            fieldsForReferenceType = 'id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]]';
+            fieldsForReferenceType = 'id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName,valueType]],programStages[id]';
         }
         // Need trackedEntityAttribute-ids for trackerProgram to assign programTrackedEntityAttributes
         if (props.referenceType === 'trackedEntityType') {
