@@ -22,6 +22,9 @@ const relationshipEntities = {
 const isEventProgram = model =>
     model && model.programType === 'WITHOUT_REGISTRATION';
 
+const isTrackerProgram = model =>
+    model && model.programType === 'WITH_REGISTRATION';
+
 // Map of the different valid selection of the embedded objects, according to selected constraint-type
 const modelTypesForRelationshipEntity = {
     TRACKED_ENTITY_INSTANCE: [
@@ -51,7 +54,9 @@ const modelTypesForRelationshipEntity = {
         },
     ],
     PROGRAM_STAGE_INSTANCE: [
-        {
+        {   
+            // This is only used to render the selectors
+            // programStage is to identify the program regardless of programType
             modelType: 'program',
             mutex: 'programStage',
             required: true,
@@ -59,7 +64,7 @@ const modelTypesForRelationshipEntity = {
             excludeFromValue: true,
         },
         {
-            modelType: 'programStage', //This is only used for Tracker-programs
+            modelType: 'programStage',
             mutex: 'program',
             required: true,
             filter: (props, state) => {
@@ -218,7 +223,7 @@ class Constraint extends Component {
         if (modelType === 'program' && isEventProgram(value)) {
             prevState = {
                 ...prevState,
-                programStage: first(value.programStages.toArray())
+                programStage: first(value.programStages.toArray()),
             };
         }
 
@@ -250,13 +255,9 @@ class Constraint extends Component {
         }));
     };
 
-    hasSelectedEventProgram = () =>
-        has('selected.program', this.state) &&
-        this.state.selected.program.programType === 'WITHOUT_REGISTRATION';
-
     hasSelectedTrackerProgram = () =>
         has('selected.program', this.state) &&
-        this.state.selected.program.programType === 'WITH_REGISTRATION';
+        isTrackerProgram(this.state.selected.program);
 
     handleOptionsLoaded = (modelType, options) => {
         // get reference to already selected constraint
@@ -264,7 +265,7 @@ class Constraint extends Component {
         if (!this.state.selected) return;
         const selectedModelID =
             this.state.selected[modelType] && this.state.selected[modelType].id;
-        const option = options.find(opt => opt.value == selectedModelID);
+        const option = options.find(opt => opt.value === selectedModelID);
         if (option) {
             this.setState(state => ({
                 selected: {
