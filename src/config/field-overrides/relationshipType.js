@@ -56,11 +56,11 @@ const modelTypesForRelationshipEntity = {
     PROGRAM_STAGE_INSTANCE: [
         {   
             // This is only used to render the selectors
-            // programStage is to identify the program regardless of programType
+            // programStage is used to identify the program regardless of programType
             modelType: 'program',
             mutex: 'programStage',
             required: true,
-            // exclude from posted value, "default"-programStage is used instead
+            // exclude from posted value, "default"-programStage is used in case of event-program
             excludeFromValue: true,
         },
         {
@@ -108,9 +108,7 @@ class Constraint extends Component {
 
         When Program Stage Instance is selected, we need to know the programType for selected programs, so we keep a reference to the model.
         We use the program-dropdown as a 'filter' (for trackerprograms) to only show programStages for the selected program,
-        however we cannot post this value to the server together with a programStage, as that results in an error.
-        If the selected program is a tracker-program, it should also be possible to further select a programStage
-        to narrow down the relationship. However this is optional, and if its not selected, we just post the programID.
+        however we cannot post the `program` value to the server together with a programStage, as that results in an error.
         Therefore we save the selected values in the state. */
 
         let selected = null;
