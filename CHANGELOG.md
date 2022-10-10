@@ -1,3 +1,12 @@
+## [32.20.29](https://github.com/dhis2/maintenance-app/compare/v32.20.28...v32.20.29) (2022-10-10)
+
+
+### Bug Fixes
+
+* **validation-rule:** fix loading-spinner for expressions ([006146f](https://github.com/dhis2/maintenance-app/commit/006146fa73ee7f6c3544811547f640d4ae21b578))
+* minor cleanup ([452e46f](https://github.com/dhis2/maintenance-app/commit/452e46f86090fc98e26eb7420014eaf5c17f5197))
+* **relationship-type:** use default-programStage for event-programs ([8daf836](https://github.com/dhis2/maintenance-app/commit/8daf83614dbc4fb93cfea737e094a286c36c7f50))
+
 ## [32.20.28](https://github.com/dhis2/maintenance-app/compare/v32.20.27...v32.20.28) (2022-10-08)
 
 
