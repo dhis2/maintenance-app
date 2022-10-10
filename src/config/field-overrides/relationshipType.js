@@ -4,10 +4,9 @@ import SelectField from 'material-ui/SelectField';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
-import LoadingMask from '../../loading-mask/LoadingMask.component';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import has from 'lodash/fp/has';
-
+import { first } from 'lodash/fp';
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
 const PROGRAM_STAGE_INSTANCE = 'PROGRAM_STAGE_INSTANCE';
@@ -19,6 +18,12 @@ const relationshipEntities = {
 };
 //PROGRAMSTAGE INSTANCE: Event in program stage
 //Program instance: Enrollment in program
+
+const isEventProgram = model =>
+    model && model.programType === 'WITHOUT_REGISTRATION';
+
+const isTrackerProgram = model =>
+    model && model.programType === 'WITH_REGISTRATION';
 
 // Map of the different valid selection of the embedded objects, according to selected constraint-type
 const modelTypesForRelationshipEntity = {
@@ -49,15 +54,19 @@ const modelTypesForRelationshipEntity = {
         },
     ],
     PROGRAM_STAGE_INSTANCE: [
-        {
+        {   
+            // This is only used to render the selectors
+            // programStage is used to identify the program regardless of programType
             modelType: 'program',
             mutex: 'programStage',
             required: true,
+            // exclude from posted value, "default"-programStage is used in case of event-program
+            excludeFromValue: true,
         },
         {
-            modelType: 'programStage', //This is only used for Tracker-programs
+            modelType: 'programStage',
             mutex: 'program',
-            required: false,
+            required: true,
             filter: (props, state) => {
                 return [`program.id:eq:${state.selected.program.id}`];
             },
@@ -99,9 +108,7 @@ class Constraint extends Component {
 
         When Program Stage Instance is selected, we need to know the programType for selected programs, so we keep a reference to the model.
         We use the program-dropdown as a 'filter' (for trackerprograms) to only show programStages for the selected program,
-        however we cannot post this value to the server together with a programStage, as that results in an error.
-        If the selected program is a tracker-program, it should also be possible to further select a programStage
-        to narrow down the relationship. However this is optional, and if its not selected, we just post the programID.
+        however we cannot post the `program` value to the server together with a programStage, as that results in an error.
         Therefore we save the selected values in the state. */
 
         let selected = null;
@@ -208,24 +215,24 @@ class Constraint extends Component {
         };
         // Clear values if mutually exclusive
         let prevState = objOptions.mutex ? {} : this.props.value;
-        const selectedProgram = this.getSelectedIDForModelType('program');
-        if (modelType === 'programStage' && value === null && selectedProgram) {
-            // If "no value is selected", we need to manually add the program as selected
-            // and clear the programStage
+
+        // if its an event-program, we need to set the "default"-programStage
+        // and exclude "program"-from the posted-value
+        if (modelType === 'program' && isEventProgram(value)) {
             prevState = {
                 ...prevState,
-                program: {
-                    id: selectedProgram.id,
-                },
+                programStage: first(value.programStages.toArray()),
             };
-            modelTypeValue = null;
         }
 
         const relationshipConstraint = {
             ...prevState,
             relationshipEntity: this.props.value.relationshipEntity,
-            [modelType]: modelTypeValue,
+            ...(!objOptions.excludeFromValue && {
+                [modelType]: modelTypeValue,
+            }),
         };
+
         this.props.onChange({
             target: {
                 value: relationshipConstraint,
@@ -248,7 +255,7 @@ class Constraint extends Component {
 
     hasSelectedTrackerProgram = () =>
         has('selected.program', this.state) &&
-        this.state.selected.program.programType === 'WITH_REGISTRATION';
+        isTrackerProgram(this.state.selected.program);
 
     handleOptionsLoaded = (modelType, options) => {
         // get reference to already selected constraint
@@ -256,7 +263,7 @@ class Constraint extends Component {
         if (!this.state.selected) return;
         const selectedModelID =
             this.state.selected[modelType] && this.state.selected[modelType].id;
-        const option = options.find(opt => opt.value == selectedModelID);
+        const option = options.find(opt => opt.value === selectedModelID);
         if (option) {
             this.setState(state => ({
                 selected: {
