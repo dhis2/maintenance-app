@@ -11,9 +11,11 @@ export default new Map([
     }],
     ['leftSide', {
         component: LeftSideExpressionField,
+        unique: false,
     }],
     ['rightSide', {
         component: RightSideExpressionField,
+        unique: false,
     }],
     ['organisationUnitLevels', {
         referenceType: 'organisationUnitLevel',
