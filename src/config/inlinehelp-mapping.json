@@ -2,7 +2,7 @@
     "/list/categorySection": "/metadata.html#manage_category",
     "/edit/categorySection": "/metadata.html#create_${objectType}",
 
-    "/list/dataElementSection": "/en/user/html/manage_data_element.html",
+    "/list/dataElementSection": "/metadata.html#manage_data_element",
     "/edit/dataElementSection": "/metadata.html#create_${objectType}",
 
     "/list/dataSetSection": "/metadata.html#manage_data_set",
