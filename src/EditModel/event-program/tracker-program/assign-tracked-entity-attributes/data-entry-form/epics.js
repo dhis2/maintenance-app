@@ -23,7 +23,8 @@ const updateProgramSection = store => action$ => action$
                     // Modify the original Model instance
                     if (isEqual(section.id, programSectionId)) {
                         section.name = newProgramStageSectionData.name;
-                        section.displayName = newProgramStageSectionData.name;
+                        // cannot change dispayName directly as it does not have a setter (writable: false)
+                        section.dataValues.displayName = newProgramStageSectionData.name;
                         section.description = newProgramStageSectionData.description;
                         section.renderType = newProgramStageSectionData.renderType;
                     }
