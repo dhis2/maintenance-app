@@ -6,7 +6,11 @@ import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import has from 'lodash/fp/has';
-import { first } from 'lodash/fp';
+import { first, uniqBy, isEqual } from 'lodash/fp';
+import Store from 'd2-ui/lib/store/Store';
+import TextField from 'material-ui/TextField/TextField';
+import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
+
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
 const PROGRAM_STAGE_INSTANCE = 'PROGRAM_STAGE_INSTANCE';
@@ -24,6 +28,11 @@ const isEventProgram = model =>
 
 const isTrackerProgram = model =>
     model && model.programType === 'WITH_REGISTRATION';
+
+const toDisplayElement = model => ({
+    value: model.id,
+    text: model.displayName,
+});
 
 // Map of the different valid selection of the embedded objects, according to selected constraint-type
 const modelTypesForRelationshipEntity = {
@@ -54,7 +63,7 @@ const modelTypesForRelationshipEntity = {
         },
     ],
     PROGRAM_STAGE_INSTANCE: [
-        {   
+        {
             // This is only used to render the selectors
             // programStage is used to identify the program regardless of programType
             modelType: 'program',
@@ -91,6 +100,13 @@ const styles = {
         flex: '1 1 300px',
         marginRight: '14px',
         position: 'relative',
+    },
+    groupEditor: {
+        padding: '2rem 0rem 4rem',
+    },
+    fieldname: {
+        fontSize: 16,
+        color: '#00000080',
     },
 };
 
@@ -129,14 +145,20 @@ class Constraint extends Component {
             selected,
             loading: true,
             error: false,
+            // loading state for options
+            // these are loaded by `DropdownAsync`
+            optionsLoading: {
+                program: true,
+                tet: true,
+            }
         };
     }
 
     componentDidMount() {
         /* Since we cannot get the programId from the same request as when loading the model,
-            (due to the nature of the dynamic structure of the relationShipConstraint object)
-            we need to grab the programStage with another request, as we need this to show the
-            program that the selected program stage belongs to. */
+        (due to the nature of the dynamic structure of the relationShipConstraint object, which only returns programStage)
+        we need to grab the program with another request, as we need this to show the
+        program that the selected program stage belongs to. */
         const selectedPS =
             this.state.selected && this.state.selected.programStage;
         if (selectedPS) {
@@ -156,8 +178,10 @@ class Constraint extends Component {
                         error: e,
                     });
                 });
+        } else {
+            // console.log('SET LOADING ELSE FALSE');
+            this.setState({ loading: false });
         }
-        this.setState({ loading: false });
     }
 
     getSelectedRelationshipEntity = () => {
@@ -189,6 +213,10 @@ class Constraint extends Component {
         }
         return null;
     }
+
+    handleChange = newValue => {
+        this.props.onChange({ target: { value: newValue } });
+    };
 
     handleSelectRelationshipEntity = (_, __, value) => {
         this.setState({
@@ -233,6 +261,8 @@ class Constraint extends Component {
             }),
         };
 
+        console.log({ relationshipConstraint });
+        console.log(this.state);
         this.props.onChange({
             target: {
                 value: relationshipConstraint,
@@ -253,6 +283,18 @@ class Constraint extends Component {
         }));
     };
 
+    handleSelectTrackedEntityAttribute = trackedEntityAttributeIds => {
+        const newValue = {
+            ...this.props.value,
+            trackerDataView: {
+                ...this.props.value.trackerDataView,
+                attributes: trackedEntityAttributeIds,
+            },
+        };
+        this.handleChange(newValue);
+        console.log('select', trackedEntityAttributeIds);
+    };
+
     hasSelectedTrackerProgram = () =>
         has('selected.program', this.state) &&
         isTrackerProgram(this.state.selected.program);
@@ -260,12 +302,17 @@ class Constraint extends Component {
     handleOptionsLoaded = (modelType, options) => {
         // get reference to already selected constraint
         // ie when a saved model is edited, so we can check for programType
-        if (!this.state.selected) return;
+        if (!this.state.selected) {
+            this.setState({ loading: false });
+            return;
+        }
+        // this.forceUpdate()
         const selectedModelID =
             this.state.selected[modelType] && this.state.selected[modelType].id;
         const option = options.find(opt => opt.value === selectedModelID);
         if (option) {
             this.setState(state => ({
+                loading: false,
                 selected: {
                     ...state.selected,
                     [modelType]: option.model,
@@ -346,7 +393,56 @@ class Constraint extends Component {
             );
         });
 
-        return <div style={styles.modelTypeWrapper}>{modelDropdowns}</div>;
+        return modelDropdowns;
+    };
+
+    // https://dhis2.atlassian.net/browse/DHIS2-13547
+    renderRelationshipDisplaySelect = () => {
+        const entity = this.getSelectedRelationshipEntity();
+        if (!this.state.selected) {
+            return null;
+        }
+        const selectedProgram = this.state.selected.program;
+        const selectedTrackedEntityType = this.state.selected.trackedEntityType;
+
+        if (
+            entity === TRACKED_ENTITY_INSTANCE &&
+            selectedTrackedEntityType.trackedEntityTypeAttributes
+        ) {
+            let trackedEntityAttributes = selectedTrackedEntityType.trackedEntityTypeAttributes.map(
+                teta => teta.trackedEntityAttribute
+            );
+
+            const programTrackedEntityAttributes =
+                selectedProgram &&
+                Array.isArray(selectedProgram.programTrackedEntityAttributes)
+                    ? selectedProgram.programTrackedEntityAttributes.map(
+                          pteta => pteta.trackedEntityAttribute
+                      )
+                    : [];
+
+            // normally programTrackedEntity-Attributes should be a superset of trackedEntityType-Attributes
+            // however this is not guaranteed, and is only "enforced" client-side when creating a program.
+            // program attributes are also not updated if attributes are updated for a tet.
+            // thus we concat these lists and remove duplicates to be sure to show all available attributes.
+            const availableAttributes = uniqBy('id')(
+                trackedEntityAttributes.concat(programTrackedEntityAttributes)
+            ).sort((a, b) => a.displayName.localeCompare(b.displayName));
+            const assignedAttributes =
+                this.props.value && this.props.value.trackerDataView
+                    ? this.props.value.trackerDataView.attributes
+                    : [];
+
+            return (
+                <AssignTrackedEntityTypeAttributes
+                    availableAttributes={availableAttributes}
+                    assignedAttributes={assignedAttributes}
+                    onChange={this.handleSelectTrackedEntityAttribute}
+                />
+            );
+        }
+
+        return null;
     };
 
     render = () => {
@@ -368,14 +464,149 @@ class Constraint extends Component {
                         />
                     ))}
                 </SelectField>
-                {this.getSelectedRelationshipEntity() &&
-                    this.renderModelTypeSelectFields()}
+                <div style={styles.modelTypeWrapper}>
+                    {this.getSelectedRelationshipEntity() &&
+                        this.renderModelTypeSelectFields()}
+                    {this.renderRelationshipDisplaySelect()}
+                </div>
             </div>
         );
     };
 }
 
 Constraint.contextTypes = {
+    d2: PropTypes.object,
+};
+
+class AssignTrackedEntityTypeAttributes extends Component {
+    constructor(props) {
+        super(props);
+
+        // we need to "copy" to state here because GroupEditor-component
+        // need a d2-store
+        this.state = {
+            availableAttributesStore: Store.create({
+                getInitialState() {
+                    return props.availableAttributes.map(toDisplayElement);
+                },
+            }),
+            assignedAttributesStore: Store.create({
+                getInitialState() {
+                    return props.assignedAttributes;
+                },
+            }),
+            filterText: '',
+            //assignedAttributes: this.props.trackedEntityTypeAttributes || [],
+        };
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const currAvailableAttributes = this.props.availableAttributes;
+        if (!isEqual(currAvailableAttributes)(prevProps.availableAttributes)) {
+            const currAssignedAttributes = this.props.assignedAttributes;
+
+            // update d2-store to new values
+            this.state.availableAttributesStore.setState(
+                currAvailableAttributes.map(toDisplayElement)
+            );
+
+            // filter out selected attributes that are now unavailable
+            const newAssignedAttributes = currAssignedAttributes.filter(id =>
+                currAvailableAttributes.find(attr => attr.id === id)
+            );
+
+            // if program is changed, update assigned attributes to deselect attributes part of program only
+            if (newAssignedAttributes.length !== currAssignedAttributes) {
+                const attributesToRemove = currAssignedAttributes.filter(
+                    id => !newAssignedAttributes.includes(id)
+                );
+                console.log('REMOVE', attributesToRemove);
+                this.onRemoveAttributes(attributesToRemove);
+            }
+        }
+    }
+
+    onAssignAttributes = assignedAttributes => {
+        const newAssignedAttributes = this.state.assignedAttributesStore
+            .getState()
+            .concat(assignedAttributes);
+
+        this.handleChange(newAssignedAttributes);
+        return Promise.resolve();
+    };
+
+    onRemoveAttributes = removedAttributeIds => {
+        console.log({
+            removedAttributeIds,
+            assigned: this.state.assignedAttributesStore.getState(),
+        });
+        const newAssignedAttributes = this.state.assignedAttributesStore
+            .getState()
+            .filter(
+                assignedAttributeId =>
+                    !removedAttributeIds.includes(assignedAttributeId)
+            );
+
+        this.handleChange(newAssignedAttributes);
+        return Promise.resolve();
+    };
+
+    onMoveAttributes = newAttributes => {
+        this.state.assignedAttributesStore.setState(newAttributes);
+    };
+
+    getTranslation = value => this.context.d2.i18n.getTranslation(value);
+
+    handleChange = newAssignedAttributesIds => {
+        console.log('changing attributes to', newAssignedAttributesIds);
+        this.state.assignedAttributesStore.setState(newAssignedAttributesIds);
+        this.props.onChange(newAssignedAttributesIds);
+        return Promise.resolve();
+    };
+
+    setFilterText = event => {
+        this.setState({ filterText: event.target.value });
+    };
+
+    render() {
+        if (this.state.isLoading) {
+            return null;
+        }
+        return (
+            <div>
+                <div style={styles.groupEditor}>
+                    <div style={styles.fieldname}>
+                        {this.getTranslation('tracked_entity_attributes_to_display_in_list')}
+                    </div>
+                    <TextField
+                        hintText={this.getTranslation(
+                            'search_available_tracked_entity_type_attributes'
+                        )}
+                        onChange={this.setFilterText}
+                        value={this.state.filterText}
+                        fullWidth
+                    />
+                    <GroupEditorWithOrdering
+                        itemStore={this.state.availableAttributesStore}
+                        assignedItemStore={this.state.assignedAttributesStore}
+                        height={250}
+                        filterText={this.state.filterText}
+                        onAssignItems={this.onAssignAttributes}
+                        onRemoveItems={this.onRemoveAttributes}
+                        onOrderChanged={this.onMoveAttributes}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+AssignTrackedEntityTypeAttributes.propTypes = {
+    availableAttributes: PropTypes.array,
+    assignedAttributes: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
+};
+AssignTrackedEntityTypeAttributes.contextTypes = {
     d2: PropTypes.object,
 };
 
