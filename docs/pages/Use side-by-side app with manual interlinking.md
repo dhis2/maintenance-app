@@ -1,0 +1,3 @@
+- ## How does this solution relate to the goals we want to achieve?
+- ## Advantages
+- ## Disadvantages

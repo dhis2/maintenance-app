@@ -1,0 +1,10 @@
+- ## Goals we want to achieve in order of priority?
+	- App is on app platform
+	- We can add new features
+	- We want to improve DX
+	- We want to improve existing UX
+- ## Potential solutions to maintenance app refactor
+	- ### [[Port existing app to app platform]]
+	- ### [[Use react 17+ so multiple react versions can be used]]
+	- ### [[Use side-by-side app with automatic interlinking]]
+	- ### [[Use side-by-side app with manual interlinking]]
