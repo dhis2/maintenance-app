@@ -146,11 +146,13 @@ class Constraint extends Component {
             loading: true,
             error: false,
             // loading state for options
-            // these are loaded by `DropdownAsync`
+            // these are initialized in componentDidMount and loaded by `DropdownAsync`
+            // shaped like
+            // { program: true, trackedEntityType: true }
             optionsLoading: {
-                program: true,
-                tet: true,
-            }
+                // program: true,
+                // trackedEntityType: true,
+            },
         };
     }
 
@@ -184,8 +186,38 @@ class Constraint extends Component {
         }
     }
 
-    getSelectedRelationshipEntity = () => {
-        const props = this.props;
+    componentDidUpdate(prevProps) {
+        const prevEntity = this.getSelectedRelationshipEntity(prevProps);
+        const entity = this.getSelectedRelationshipEntity();
+
+        if (prevEntity !== entity) {
+            console.log('CHANGED ENTITY', entity);
+            const modelTypes = modelTypesForRelationshipEntity[entity];
+
+            // initialize loading state for modelTypes
+            const optionsLoadingState = modelTypes.reduce((acc, modelOpts) => {
+                const modelType = modelOpts.modelType;
+                acc[modelType] = this.shouldRenderModelType(modelType);
+                return acc;
+            }, {});
+            console.log({ optionsLoadingState }, optionsLoadingState);
+            //this.setState({ optionsLoading: optionsLoadingState });
+        }
+    }
+
+    isLoading = () => {
+        const optionsLoading = this.isOptionsLoading();
+        console.log(this.state);
+        return this.state.loading || optionsLoading;
+    };
+
+    isOptionsLoading = () => {
+        return Object.values(this.state.optionsLoading).some(
+            loading => loading
+        );
+    };
+
+    getSelectedRelationshipEntity = (props = this.props) => {
         return (props.value && props.value.relationshipEntity) || null;
     };
 
@@ -261,8 +293,6 @@ class Constraint extends Component {
             }),
         };
 
-        console.log({ relationshipConstraint });
-        console.log(this.state);
         this.props.onChange({
             target: {
                 value: relationshipConstraint,
@@ -292,7 +322,6 @@ class Constraint extends Component {
             },
         };
         this.handleChange(newValue);
-        console.log('select', trackedEntityAttributeIds);
     };
 
     hasSelectedTrackerProgram = () =>
@@ -302,6 +331,7 @@ class Constraint extends Component {
     handleOptionsLoaded = (modelType, options) => {
         // get reference to already selected constraint
         // ie when a saved model is edited, so we can check for programType
+        console.log('HANDLE OPTIONS LOADED', modelType);
         if (!this.state.selected) {
             this.setState({ loading: false });
             return;
@@ -317,17 +347,25 @@ class Constraint extends Component {
                     ...state.selected,
                     [modelType]: option.model,
                 },
+                optionsLoading: {
+                    ...state.optionsLoading,
+                    [modelType]: false,
+                },
             }));
         }
     };
 
+    renderLoading = () => {
+        return (
+            <div style={{ height: '72px' }}>
+                <CircularProgress />
+            </div>
+        );
+    };
+
     renderErrorOrLoading = () => {
         if (this.state.loading) {
-            return (
-                <div style={{ height: '72px' }}>
-                    <CircularProgress />
-                </div>
-            );
+            return this.renderLoading();
         }
         if (this.state.error) {
             return (
@@ -401,6 +439,9 @@ class Constraint extends Component {
         const entity = this.getSelectedRelationshipEntity();
         if (!this.state.selected) {
             return null;
+        }
+        if (this.isLoading()) {
+            return this.renderLoading();
         }
         const selectedProgram = this.state.selected.program;
         const selectedTrackedEntityType = this.state.selected.trackedEntityType;
@@ -576,7 +617,9 @@ class AssignTrackedEntityTypeAttributes extends Component {
             <div>
                 <div style={styles.groupEditor}>
                     <div style={styles.fieldname}>
-                        {this.getTranslation('tracked_entity_attributes_to_display_in_list')}
+                        {this.getTranslation(
+                            'tracked_entity_attributes_to_display_in_list'
+                        )}
                     </div>
                     <TextField
                         hintText={this.getTranslation(
