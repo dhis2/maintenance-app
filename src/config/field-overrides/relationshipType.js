@@ -186,35 +186,8 @@ class Constraint extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-        const prevEntity = this.getSelectedRelationshipEntity(prevProps);
-        const entity = this.getSelectedRelationshipEntity();
-
-        if (prevEntity !== entity) {
-            console.log('CHANGED ENTITY', entity);
-            const modelTypes = modelTypesForRelationshipEntity[entity];
-
-            // initialize loading state for modelTypes
-            const optionsLoadingState = modelTypes.reduce((acc, modelOpts) => {
-                const modelType = modelOpts.modelType;
-                acc[modelType] = this.shouldRenderModelType(modelType);
-                return acc;
-            }, {});
-            console.log({ optionsLoadingState }, optionsLoadingState);
-            //this.setState({ optionsLoading: optionsLoadingState });
-        }
-    }
-
     isLoading = () => {
-        const optionsLoading = this.isOptionsLoading();
-        console.log(this.state);
-        return this.state.loading || optionsLoading;
-    };
-
-    isOptionsLoading = () => {
-        return Object.values(this.state.optionsLoading).some(
-            loading => loading
-        );
+        return this.state.loading;
     };
 
     getSelectedRelationshipEntity = (props = this.props) => {
@@ -334,11 +307,7 @@ class Constraint extends Component {
         isTrackerProgram(this.state.selected.program);
 
     handleOptionsLoaded = (modelType, options) => {
-        // get reference to already selected constraint
-        // ie when a saved model is edited, so we can check for programType
-        console.log('HANDLE OPTIONS LOADED', modelType);
         if (!this.state.selected) {
-            this.setState({ loading: false });
             return;
         }
 
@@ -351,10 +320,6 @@ class Constraint extends Component {
                 selected: {
                     ...state.selected,
                     [modelType]: option.model,
-                },
-                optionsLoading: {
-                    ...state.optionsLoading,
-                    [modelType]: false,
                 },
             }));
         }
@@ -477,10 +442,16 @@ class Constraint extends Component {
                 : [];
 
         return (
-            <AssignTrackedEntityAttributes
-                availableAttributes={availableAttributes}
-                assignedAttributes={assignedAttributes}
+            <GroupEditorWithOrderingD2Store
+                availableItems={availableAttributes}
+                assignedItems={assignedAttributes}
                 onChange={this.handleSelectTrackedEntityAttribute}
+                fieldName={this.translate(
+                    'tracked_entity_attributes_to_display_in_list'
+                )}
+                searchHint={this.translate(
+                    'search_available_tracked_entity_attributes'
+                )}
             />
         );
     }
@@ -492,13 +463,8 @@ class Constraint extends Component {
             this.state.selected.program &&
             isEventProgram(this.state.selected.program)
         ) {
-            console.log(
-                'IS EVENT PROGRAM',
-                this.state.selected.program.programStages
-            );
             selectedProgramStage = this.state.selected.program.programStages.toArray()[0];
         }
-        console.log({ selectedProgramStage });
 
         if (!selectedProgramStage) {
             return null;
@@ -514,12 +480,14 @@ class Constraint extends Component {
             this.props.value && this.props.value.trackerDataView
                 ? this.props.value.trackerDataView.dataElements
                 : [];
-        console.log({assignedDataElements})
+
         return (
-            <AssignDataElements
-                availableDataElements={availableDataElements}
-                assignedDataElements={assignedDataElements}
+            <GroupEditorWithOrderingD2Store
+                availableItems={availableDataElements}
+                assignedItems={assignedDataElements}
                 onChange={this.handleSelectTrackerEntityDataElement}
+                fieldName={this.translate('data_elements_to_display_in_list')}
+                searchHint={this.translate('search_available_data_elements')}
             />
         );
     }
@@ -531,7 +499,7 @@ class Constraint extends Component {
             return null;
         }
         if (this.isLoading()) {
-            return this.renderLoading();
+            return null;
         }
 
         if (entity === TRACKED_ENTITY_INSTANCE || entity === PROGRAM_INSTANCE) {
@@ -578,208 +546,117 @@ Constraint.contextTypes = {
     d2: PropTypes.object,
 };
 
-class AssignDataElements extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            availableDataElementsStore: Store.create({
-                getInitialState() {
-                    return props.availableDataElements.map(toDisplayElement);
-                },
-            }),
-            assignedDataElementsStore: Store.create({
-                getInitialState() {
-                    return props.assignedDataElements;
-                },
-            }),
-            filterText: '',
-        };
-    }
-
-    handleChange = dataElements => {
-        this.state.assignedDataElementsStore.setState(dataElements);
-        this.props.onChange(dataElements);
-    }
-
-    onAssignDataElements = assignedDataElements => {
-        const newAssignedDataElements = this.state.assignedDataElementsStore
-            .getState()
-            .concat(assignedDataElements);
-
-        this.handleChange(newAssignedDataElements);
-        return Promise.resolve();
-    };
-
-    onRemoveDataElements = removedDataElements => {
-        const newAssignedDataElements = this.state.assignedDataElementsStore
-            .getState()
-            .filter(dataElement => !removedDataElements.includes(dataElement));
-
-        this.handleChange(newAssignedDataElements);
-        return Promise.resolve();
-    };
-
-    onMoveDataElements = assignedDataElements => {
-        this.handleChange(assignedDataElements);
-    };
-
-    getTranslation = value => this.context.d2.i18n.getTranslation(value);
-
-    render() {
-        return (
-            <div style={styles.groupEditor}>
-                <div style={styles.fieldname}>
-                    {this.getTranslation('data_elements_to_display_in_list')}
-                </div>
-                <TextField
-                    hintText={this.getTranslation(
-                        'search_available_data_elements'
-                    )}
-                    onChange={this.setFilterText}
-                    value={this.state.filterText}
-                    fullWidth
-                />
-                <GroupEditorWithOrdering
-                    itemStore={this.state.availableDataElementsStore}
-                    assignedItemStore={this.state.assignedDataElementsStore}
-                    height={250}
-                    filterText={this.state.filterText}
-                    onAssignItems={this.onAssignDataElements}
-                    onRemoveItems={this.onRemoveDataElements}
-                    onOrderChanged={this.onMoveDataElements}
-                />
-            </div>
-        );
-    }
-}
-
-AssignDataElements.contextTypes = {
-    d2: PropTypes.object,
-};
-
-class AssignTrackedEntityAttributes extends Component {
+class GroupEditorWithOrderingD2Store extends Component {
     constructor(props) {
         super(props);
 
         // we need to "copy" to state here because GroupEditor-component
         // need a d2-store
         this.state = {
-            availableAttributesStore: Store.create({
+            availableItems: Store.create({
                 getInitialState() {
-                    return props.availableAttributes.map(toDisplayElement);
+                    return props.availableItems.map(toDisplayElement);
                 },
             }),
-            assignedAttributesStore: Store.create({
+            assignedItemsStore: Store.create({
                 getInitialState() {
-                    return props.assignedAttributes;
+                    return props.assignedItems;
                 },
             }),
             filterText: '',
         };
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        const currAvailableAttributes = this.props.availableAttributes;
-        if (!isEqual(currAvailableAttributes)(prevProps.availableAttributes)) {
-            const currAssignedAttributes = this.props.assignedAttributes;
+    componentDidUpdate(prevProps) {
+        const currAvailableItems = this.props.availableItems;
+        if (!isEqual(currAvailableItems)(prevProps.availableItems)) {
+            const currAssignedItems = this.props.assignedItems;
 
             // update d2-store to new values
-            this.state.availableAttributesStore.setState(
-                currAvailableAttributes.map(toDisplayElement)
+            this.state.availableItems.setState(
+                currAvailableItems.map(toDisplayElement)
             );
 
             // filter out selected attributes that may be unavailable
-            const assignedAttributesToRemove = currAssignedAttributes.filter(
-                id => !currAvailableAttributes.find(attr => attr.id === id)
+            const assignedItemsToRemove = currAssignedItems.filter(
+                id => !currAvailableItems.find(attr => attr.id === id)
             );
 
-            // if program is changed, update assigned attributes to deselect attributes part of program
-            if (assignedAttributesToRemove.length > 0) {
-                console.log('REMOVE', assignedAttributesToRemove);
-                this.onRemoveAttributes(assignedAttributesToRemove);
+            // if availableItems is changed, deselect items that are not available
+            if (assignedItemsToRemove.length > 0) {
+                this.onRemoveItems(assignedItemsToRemove);
             }
         }
     }
 
-    onAssignAttributes = assignedAttributes => {
-        const newAssignedAttributes = this.state.assignedAttributesStore
+    onAssignItems = assignedItems => {
+        const newAssignedItems = this.state.assignedItemsStore
             .getState()
-            .concat(assignedAttributes);
+            .concat(assignedItems);
 
-        this.handleChange(newAssignedAttributes);
+        this.handleChange(newAssignedItems);
         return Promise.resolve();
     };
 
-    onRemoveAttributes = removedAttributeIds => {
-        console.log({
-            removedAttributeIds,
-            assigned: this.state.assignedAttributesStore.getState(),
-        });
-        const newAssignedAttributes = this.state.assignedAttributesStore
+    onRemoveItems = removedItemsIds => {
+        const newAssignedItems = this.state.assignedItemsStore
             .getState()
             .filter(
                 assignedAttributeId =>
-                    !removedAttributeIds.includes(assignedAttributeId)
+                    !removedItemsIds.includes(assignedAttributeId)
             );
 
-        this.handleChange(newAssignedAttributes);
+        this.handleChange(newAssignedItems);
         return Promise.resolve();
     };
 
-    onMoveAttributes = newAssignedAttributes => {
-        this.handleChange(newAssignedAttributes);
+    onMoveItems = newAssignedItems => {
+        this.handleChange(newAssignedItems);
     };
 
-    getTranslation = value => this.context.d2.i18n.getTranslation(value);
-
-    handleChange = newAssignedAttributesIds => {
-        this.state.assignedAttributesStore.setState(newAssignedAttributesIds);
-        this.props.onChange(newAssignedAttributesIds);
+    handleChange = newAssignedItemsIds => {
+        this.state.assignedItemsStore.setState(newAssignedItemsIds);
+        this.props.onChange(newAssignedItemsIds);
     };
 
-    setFilterText = event => {
-        this.setState({ filterText: event.target.value });
+    handleFilterChange = filterText => {
+        this.setState({ filterText });
     };
 
     render() {
-        if (this.state.isLoading) {
-            return null;
-        }
         return (
             <div style={styles.groupEditor}>
-                <div style={styles.fieldname}>
-                    {this.getTranslation(
-                        'tracked_entity_attributes_to_display_in_list'
-                    )}
-                </div>
+                <div style={styles.fieldname}>{this.props.fieldName}</div>
                 <TextField
-                    hintText={this.getTranslation(
-                        'search_available_tracked_entity_type_attributes'
-                    )}
+                    hintText={this.props.searchHint}
                     onChange={this.setFilterText}
                     value={this.state.filterText}
                     fullWidth
                 />
                 <GroupEditorWithOrdering
-                    itemStore={this.state.availableAttributesStore}
-                    assignedItemStore={this.state.assignedAttributesStore}
+                    itemStore={this.state.availableItems}
+                    assignedItemStore={this.state.assignedItemsStore}
                     height={250}
-                    filterText={this.state.filterText}
-                    onAssignItems={this.onAssignAttributes}
-                    onRemoveItems={this.onRemoveAttributes}
-                    onOrderChanged={this.onMoveAttributes}
+                    filterText={this.props.filterText}
+                    onAssignItems={this.onAssignItems}
+                    onRemoveItems={this.onRemoveItems}
+                    onOrderChanged={this.onMoveItems}
                 />
             </div>
         );
     }
 }
 
-AssignTrackedEntityAttributes.propTypes = {
-    availableAttributes: PropTypes.array,
-    assignedAttributes: PropTypes.array,
+GroupEditorWithOrderingD2Store.PropTypes = {
+    // array of objects with shape { id, displayName }
+    availableItems: PropTypes.array.isRequired,
+    // array of ids
+    assignedItems: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
+    fieldName: PropTypes.string.isRequired,
+    searchHint: PropTypes.string.isRequired,
 };
-AssignTrackedEntityAttributes.contextTypes = {
+GroupEditorWithOrderingD2Store.contextTypes = {
     d2: PropTypes.object,
 };
 
