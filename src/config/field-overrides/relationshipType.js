@@ -182,7 +182,6 @@ class Constraint extends Component {
                     });
                 });
         } else {
-            // console.log('SET LOADING ELSE FALSE');
             this.setState({ loading: false });
         }
     }
@@ -319,6 +318,17 @@ class Constraint extends Component {
         this.handleChange(newValue);
     };
 
+    handleSelectTrackerEntityDataElement = dataElementIds => {
+        const newValue = {
+            ...this.props.value,
+            trackerDataView: {
+                ...this.props.value.trackerDataView,
+                dataElements: dataElementIds,
+            },
+        };
+        this.handleChange(newValue);
+    };
+
     hasSelectedTrackerProgram = () =>
         has('selected.program', this.state) &&
         isTrackerProgram(this.state.selected.program);
@@ -331,7 +341,7 @@ class Constraint extends Component {
             this.setState({ loading: false });
             return;
         }
-        // this.forceUpdate()
+
         const selectedModelID =
             this.state.selected[modelType] && this.state.selected[modelType].id;
         const option = options.find(opt => opt.value === selectedModelID);
@@ -475,6 +485,45 @@ class Constraint extends Component {
         );
     }
 
+    renderAssignDataElements() {
+        let selectedProgramStage = this.state.selected.programStage;
+
+        if (
+            this.state.selected.program &&
+            isEventProgram(this.state.selected.program)
+        ) {
+            console.log(
+                'IS EVENT PROGRAM',
+                this.state.selected.program.programStages
+            );
+            selectedProgramStage = this.state.selected.program.programStages.toArray()[0];
+        }
+        console.log({ selectedProgramStage });
+
+        if (!selectedProgramStage) {
+            return null;
+        }
+
+        const availableDataElements = selectedProgramStage.programStageDataElements
+            ? selectedProgramStage.programStageDataElements.map(
+                  psde => psde.dataElement
+              )
+            : [];
+
+        const assignedDataElements =
+            this.props.value && this.props.value.trackerDataView
+                ? this.props.value.trackerDataView.dataElements
+                : [];
+        console.log({assignedDataElements})
+        return (
+            <AssignDataElements
+                availableDataElements={availableDataElements}
+                assignedDataElements={assignedDataElements}
+                onChange={this.handleSelectTrackerEntityDataElement}
+            />
+        );
+    }
+
     // https://dhis2.atlassian.net/browse/DHIS2-13547
     renderRelationshipDisplaySelect = () => {
         const entity = this.getSelectedRelationshipEntity();
@@ -487,6 +536,10 @@ class Constraint extends Component {
 
         if (entity === TRACKED_ENTITY_INSTANCE || entity === PROGRAM_INSTANCE) {
             return this.renderAssignTrackedEntityAttributes();
+        }
+
+        if (entity === PROGRAM_STAGE_INSTANCE) {
+            return this.renderAssignDataElements();
         }
 
         return null;
@@ -525,6 +578,85 @@ Constraint.contextTypes = {
     d2: PropTypes.object,
 };
 
+class AssignDataElements extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            availableDataElementsStore: Store.create({
+                getInitialState() {
+                    return props.availableDataElements.map(toDisplayElement);
+                },
+            }),
+            assignedDataElementsStore: Store.create({
+                getInitialState() {
+                    return props.assignedDataElements;
+                },
+            }),
+            filterText: '',
+        };
+    }
+
+    handleChange = dataElements => {
+        this.state.assignedDataElementsStore.setState(dataElements);
+        this.props.onChange(dataElements);
+    }
+
+    onAssignDataElements = assignedDataElements => {
+        const newAssignedDataElements = this.state.assignedDataElementsStore
+            .getState()
+            .concat(assignedDataElements);
+
+        this.handleChange(newAssignedDataElements);
+        return Promise.resolve();
+    };
+
+    onRemoveDataElements = removedDataElements => {
+        const newAssignedDataElements = this.state.assignedDataElementsStore
+            .getState()
+            .filter(dataElement => !removedDataElements.includes(dataElement));
+
+        this.handleChange(newAssignedDataElements);
+        return Promise.resolve();
+    };
+
+    onMoveDataElements = assignedDataElements => {
+        this.handleChange(assignedDataElements);
+    };
+
+    getTranslation = value => this.context.d2.i18n.getTranslation(value);
+
+    render() {
+        return (
+            <div style={styles.groupEditor}>
+                <div style={styles.fieldname}>
+                    {this.getTranslation('data_elements_to_display_in_list')}
+                </div>
+                <TextField
+                    hintText={this.getTranslation(
+                        'search_available_data_elements'
+                    )}
+                    onChange={this.setFilterText}
+                    value={this.state.filterText}
+                    fullWidth
+                />
+                <GroupEditorWithOrdering
+                    itemStore={this.state.availableDataElementsStore}
+                    assignedItemStore={this.state.assignedDataElementsStore}
+                    height={250}
+                    filterText={this.state.filterText}
+                    onAssignItems={this.onAssignDataElements}
+                    onRemoveItems={this.onRemoveDataElements}
+                    onOrderChanged={this.onMoveDataElements}
+                />
+            </div>
+        );
+    }
+}
+
+AssignDataElements.contextTypes = {
+    d2: PropTypes.object,
+};
+
 class AssignTrackedEntityAttributes extends Component {
     constructor(props) {
         super(props);
@@ -543,7 +675,6 @@ class AssignTrackedEntityAttributes extends Component {
                 },
             }),
             filterText: '',
-            //assignedAttributes: this.props.trackedEntityTypeAttributes || [],
         };
     }
 
@@ -557,18 +688,15 @@ class AssignTrackedEntityAttributes extends Component {
                 currAvailableAttributes.map(toDisplayElement)
             );
 
-            // filter out selected attributes that are now unavailable
-            const newAssignedAttributes = currAssignedAttributes.filter(id =>
-                currAvailableAttributes.find(attr => attr.id === id)
+            // filter out selected attributes that may be unavailable
+            const assignedAttributesToRemove = currAssignedAttributes.filter(
+                id => !currAvailableAttributes.find(attr => attr.id === id)
             );
 
-            // if program is changed, update assigned attributes to deselect attributes part of program only
-            if (newAssignedAttributes.length !== currAssignedAttributes) {
-                const attributesToRemove = currAssignedAttributes.filter(
-                    id => !newAssignedAttributes.includes(id)
-                );
-                console.log('REMOVE', attributesToRemove);
-                this.onRemoveAttributes(attributesToRemove);
+            // if program is changed, update assigned attributes to deselect attributes part of program
+            if (assignedAttributesToRemove.length > 0) {
+                console.log('REMOVE', assignedAttributesToRemove);
+                this.onRemoveAttributes(assignedAttributesToRemove);
             }
         }
     }
