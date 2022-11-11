@@ -56,6 +56,7 @@ const modelTypesForRelationshipEntity = {
         },
     ],
     PROGRAM_INSTANCE: [
+        //Enrollment in program
         {
             modelType: 'program',
             required: true,
@@ -63,6 +64,7 @@ const modelTypesForRelationshipEntity = {
         },
     ],
     PROGRAM_STAGE_INSTANCE: [
+        //Event in program or program stage
         {
             // This is only used to render the selectors
             // programStage is used to identify the program regardless of programType
@@ -71,11 +73,15 @@ const modelTypesForRelationshipEntity = {
             required: true,
             // exclude from posted value, "default"-programStage is used in case of event-program
             excludeFromValue: true,
+            fields:
+                'id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName]],programStages[id,programStageDataElements[dataElement[id,displayName]]]',
         },
         {
             modelType: 'programStage',
             mutex: 'program',
             required: true,
+            fields:
+                'id,displayName,programStageDataElements[id,dataElement[id,displayName]]',
             filter: (props, state) => {
                 return [`program.id:eq:${state.selected.program.id}`];
             },
@@ -142,6 +148,7 @@ class Constraint extends Component {
             });
         }
 
+        const optionsLoading = this.initalizeOptionsLoadingState();
         this.state = {
             selected,
             loading: true,
@@ -150,11 +157,9 @@ class Constraint extends Component {
             // these are initialized in componentDidMount and loaded by `DropdownAsync`
             // shaped like
             // { program: true, trackedEntityType: true }
-            optionsLoading: {
-                // program: true,
-                // trackedEntityType: true,
-            },
+            optionsLoading,
         };
+        this.initalizeOptionsLoadingState();
     }
 
     componentDidMount() {
@@ -186,8 +191,36 @@ class Constraint extends Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        const prevEntity = this.getSelectedRelationshipEntity(prevProps);
+        const entity = this.getSelectedRelationshipEntity();
+        if (prevEntity !== entity) {
+            const optionsLoading = this.initalizeOptionsLoadingState();
+            this.setState({ optionsLoading });
+        }
+    }
+
+    initalizeOptionsLoadingState = () => {
+        const entity = this.getSelectedRelationshipEntity();
+        const modelTypes = modelTypesForRelationshipEntity[entity];
+        // initialize loading state for modelTypes
+        const optionsLoadingState = modelTypes.reduce((acc, modelOpts) => {
+            const modelType = modelOpts.modelType;
+            acc[modelType] = this.shouldRenderModelType(modelType);
+            return acc;
+        }, {});
+        return optionsLoadingState;
+    };
+
     isLoading = () => {
-        return this.state.loading;
+        const optionsLoading = this.isOptionsLoading();
+        return this.state.loading || optionsLoading;
+    };
+
+    isOptionsLoading = () => {
+        return Object.values(this.state.optionsLoading).some(
+            loading => loading
+        );
     };
 
     getSelectedRelationshipEntity = (props = this.props) => {
@@ -307,7 +340,15 @@ class Constraint extends Component {
         isTrackerProgram(this.state.selected.program);
 
     handleOptionsLoaded = (modelType, options) => {
+        const optionsLoading = {
+            ...this.state.optionsLoading,
+            [modelType]: false,
+        };
         if (!this.state.selected) {
+            this.setState(state => ({
+                loading: false,
+                optionsLoading,
+            }));
             return;
         }
 
@@ -321,6 +362,7 @@ class Constraint extends Component {
                     ...state.selected,
                     [modelType]: option.model,
                 },
+                optionsLoading,
             }));
         }
     };
@@ -392,6 +434,7 @@ class Constraint extends Component {
                         )} ${objOpts.required ? ' *' : ''}`}
                         value={value}
                         referenceType={modelType}
+                        fieldFilter={objOpts.fields}
                         onChange={this.handleSelectValue.bind(this, modelType)}
                         onOptionsLoaded={this.handleOptionsLoaded}
                         queryParamFilter={filter}
@@ -499,7 +542,7 @@ class Constraint extends Component {
             return null;
         }
         if (this.isLoading()) {
-            return null;
+            return this.renderLoading();
         }
 
         if (entity === TRACKED_ENTITY_INSTANCE || entity === PROGRAM_INSTANCE) {
