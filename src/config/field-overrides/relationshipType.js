@@ -148,7 +148,7 @@ class Constraint extends Component {
             });
         }
 
-        const optionsLoading = this.initalizeOptionsLoadingState();
+        const optionsLoading = this.getOptionsLoadingState();
         this.state = {
             selected,
             loading: true,
@@ -159,7 +159,7 @@ class Constraint extends Component {
             // { program: true, trackedEntityType: true }
             optionsLoading,
         };
-        this.initalizeOptionsLoadingState();
+        this.getOptionsLoadingState();
     }
 
     componentDidMount() {
@@ -195,12 +195,12 @@ class Constraint extends Component {
         const prevEntity = this.getSelectedRelationshipEntity(prevProps);
         const entity = this.getSelectedRelationshipEntity();
         if (prevEntity !== entity) {
-            const optionsLoading = this.initalizeOptionsLoadingState();
+            const optionsLoading = this.getOptionsLoadingState();
             this.setState({ optionsLoading });
         }
     }
 
-    initalizeOptionsLoadingState = () => {
+    getOptionsLoadingState = () => {
         const entity = this.getSelectedRelationshipEntity();
         const modelTypes = modelTypesForRelationshipEntity[entity];
         // initialize loading state for modelTypes
@@ -213,8 +213,7 @@ class Constraint extends Component {
     };
 
     isLoading = () => {
-        const optionsLoading = this.isOptionsLoading();
-        return this.state.loading || optionsLoading;
+        return this.state.loading || this.isOptionsLoading();
     };
 
     isOptionsLoading = () => {
