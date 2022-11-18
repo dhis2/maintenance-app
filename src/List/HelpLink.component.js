@@ -24,7 +24,7 @@ function getDocsVersion({ major, minor, snapshot }) {
     if (snapshot) {
         return 'master';
     }
-    return `${major}.${minor}`;
+    return `${major}${minor}`;
 }
 
 /** 
@@ -94,7 +94,6 @@ function findHelpLinkForPath(path, schema) {
     const variablesToReplaceCamel = new Map([['objectType', camelCaseToUnderscores(schema)]]);
 
     const replacedMappingPath = replaceMappingPathPlaceholder(path, variablesToReplace);
-
     return getPartialHelpContentPath(replacedMappingPath, variablesToReplaceCamel);
 }
 
@@ -102,7 +101,8 @@ export default function HelpLink({ schema }, { d2 }) {
     const path = window.location.hash
         .replace(/^#/, '') // Remove leading hash
         .replace(/\?.+?$/, ''); // Remove query param/cache breaker
-    const docsLink = `https://docs.dhis2.org/${getDocsVersion(d2.system.version)}`;
+    const docsVersion = getDocsVersion(d2.system.version)
+    const docsLink = `https://docs.dhis2.org/en/use/user-guides/dhis-core-version-${docsVersion}/configuring-the-system`
     const helpLink = findHelpLinkForPath(path, schema);
 
     if (helpLink) {
