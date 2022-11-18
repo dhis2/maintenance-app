@@ -1,3 +1,10 @@
+## [32.20.34](https://github.com/dhis2/maintenance-app/compare/v32.20.33...v32.20.34) (2022-11-18)
+
+
+### Bug Fixes
+
+* **help-links:** update help-link mappings ([#2352](https://github.com/dhis2/maintenance-app/issues/2352)) ([deabee6](https://github.com/dhis2/maintenance-app/commit/deabee65c9e1c59b01a589e82d7ad049a89e83a6))
+
 ## [32.20.33](https://github.com/dhis2/maintenance-app/compare/v32.20.32...v32.20.33) (2022-11-16)
 
 
