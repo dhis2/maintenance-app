@@ -202,6 +202,9 @@ class Constraint extends Component {
 
     getOptionsLoadingState = () => {
         const entity = this.getSelectedRelationshipEntity();
+        if(!entity) {
+            return {};
+        }
         const modelTypes = modelTypesForRelationshipEntity[entity];
         // initialize loading state for modelTypes
         const optionsLoadingState = modelTypes.reduce((acc, modelOpts) => {
