@@ -23,7 +23,7 @@ export async function loadOptionsForOptionSet(optionSetId, paging) {
 
     return d2.models.option
         .filter().on('optionSet.id').equals(optionSetId)
-        .list({ fields: ':all,attributeValues[:owner,attribute[id,name]', paging });
+        .list({ fields: ':all,attributeValues[:owner,value,attribute[id,name,displayName]]', paging });
 }
 
 function processResponse(options) {
