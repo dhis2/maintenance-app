@@ -1,3 +1,10 @@
+## [32.20.35](https://github.com/dhis2/maintenance-app/compare/v32.20.34...v32.20.35) (2022-11-21)
+
+
+### Bug Fixes
+
+* **options:** fix attributeValues for options ([#2388](https://github.com/dhis2/maintenance-app/issues/2388)) ([1e07d02](https://github.com/dhis2/maintenance-app/commit/1e07d021b1abfc34080a7e60e535e21f045ca7ed))
+
 ## [32.20.34](https://github.com/dhis2/maintenance-app/compare/v32.20.33...v32.20.34) (2022-11-18)
 
 
