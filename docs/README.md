@@ -31,11 +31,11 @@ are complicated as well), we:
   section / piece of code is somehow different from the rest, we can co-locate
   that difference with that particular section without having to complicate
 
-## Open ToDos
+## ToDos
 
-* Create a new repository
-  * What should the name be?
-* Copy this doc into the new repository
+* [x] Create a new repository
+  * [https://github.com/dhis2/maintenance-app-beta](https://github.com/dhis2/maintenance-app-beta)
+* [x] Copy this doc into the new repository
 
 ## Open discussions
 
