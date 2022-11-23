@@ -159,7 +159,6 @@ class Constraint extends Component {
             // { program: true, trackedEntityType: true }
             optionsLoading,
         };
-        this.getOptionsLoadingState();
     }
 
     componentDidMount() {
