@@ -201,7 +201,7 @@ class Constraint extends Component {
 
     getOptionsLoadingState = () => {
         const entity = this.getSelectedRelationshipEntity();
-        if(!entity) {
+        if (!entity) {
             return {};
         }
         const modelTypes = modelTypesForRelationshipEntity[entity];
@@ -294,11 +294,7 @@ class Constraint extends Component {
             }),
         };
 
-        this.props.onChange({
-            target: {
-                value: relationshipConstraint,
-            },
-        });
+        this.handleChange(relationshipConstraint);
 
         // Keep reference in state to check for selected programType etc
         // Clear state when program changes
@@ -611,19 +607,20 @@ class GroupEditorWithOrderingD2Store extends Component {
         };
     }
 
-    componentDidUpdate(prevProps) {
-        const currAvailableItems = this.props.availableItems;
-        if (!isEqual(currAvailableItems)(prevProps.availableItems)) {
-            const currAssignedItems = this.props.assignedItems;
+    componentWillReceiveProps(nextProps) {
+        const prevAvailableItems = this.props.availableItems;
+        const nextAvailableItems = nextProps.availableItems;
+        if (!isEqual(prevAvailableItems)(nextAvailableItems)) {
+            const nextAssignedItems = this.props.assignedItems;
 
             // update d2-store to new values
             this.state.availableItems.setState(
-                currAvailableItems.map(toDisplayElement)
+                nextAvailableItems.map(toDisplayElement)
             );
 
             // filter out selected attributes that may be unavailable
-            const assignedItemsToRemove = currAssignedItems.filter(
-                id => !currAvailableItems.find(attr => attr.id === id)
+            const assignedItemsToRemove = nextAssignedItems.filter(
+                id => !nextAvailableItems.find(attr => attr.id === id)
             );
 
             // if availableItems is changed, deselect items that are not available
