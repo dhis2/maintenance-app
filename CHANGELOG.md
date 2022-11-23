@@ -1,3 +1,10 @@
+## [32.20.36](https://github.com/dhis2/maintenance-app/compare/v32.20.35...v32.20.36) (2022-11-23)
+
+
+### Bug Fixes
+
+* **program:** fix rename program attributes section name ([#2376](https://github.com/dhis2/maintenance-app/issues/2376)) ([e365d30](https://github.com/dhis2/maintenance-app/commit/e365d308b82a26be8fde7dcc7d7cc9af7fed7d90))
+
 ## [32.20.35](https://github.com/dhis2/maintenance-app/compare/v32.20.34...v32.20.35) (2022-11-21)
 
 
