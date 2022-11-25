@@ -4,9 +4,12 @@ import SelectField from 'material-ui/SelectField';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DropdownAsync from '../../forms/form-fields/drop-down-async';
-import LoadingMask from '../../loading-mask/LoadingMask.component';
 import CircularProgress from 'd2-ui/lib/circular-progress/CircularProgress';
 import has from 'lodash/fp/has';
+import { first, uniqBy, isEqual } from 'lodash/fp';
+import Store from 'd2-ui/lib/store/Store';
+import TextField from 'material-ui/TextField/TextField';
+import GroupEditorWithOrdering from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 
 const TRACKED_ENTITY_INSTANCE = 'TRACKED_ENTITY_INSTANCE';
 const PROGRAM_INSTANCE = 'PROGRAM_INSTANCE';
@@ -19,6 +22,17 @@ const relationshipEntities = {
 };
 //PROGRAMSTAGE INSTANCE: Event in program stage
 //Program instance: Enrollment in program
+
+const isEventProgram = model =>
+    model && model.programType === 'WITHOUT_REGISTRATION';
+
+const isTrackerProgram = model =>
+    model && model.programType === 'WITH_REGISTRATION';
+
+const toDisplayElement = model => ({
+    value: model.id,
+    text: model.displayName,
+});
 
 // Map of the different valid selection of the embedded objects, according to selected constraint-type
 const modelTypesForRelationshipEntity = {
@@ -42,6 +56,7 @@ const modelTypesForRelationshipEntity = {
         },
     ],
     PROGRAM_INSTANCE: [
+        //Enrollment in program
         {
             modelType: 'program',
             required: true,
@@ -49,15 +64,24 @@ const modelTypesForRelationshipEntity = {
         },
     ],
     PROGRAM_STAGE_INSTANCE: [
+        //Event in program or program stage
         {
+            // This is only used to render the selectors
+            // programStage is used to identify the program regardless of programType
             modelType: 'program',
             mutex: 'programStage',
             required: true,
+            // exclude from posted value, "default"-programStage is used in case of event-program
+            excludeFromValue: true,
+            fields:
+                'id,displayName,programType,programTrackedEntityAttributes[id,trackedEntityAttribute[id,displayName]],programStages[id,programStageDataElements[dataElement[id,displayName]]]',
         },
         {
-            modelType: 'programStage', //This is only used for Tracker-programs
+            modelType: 'programStage',
             mutex: 'program',
-            required: false,
+            required: true,
+            fields:
+                'id,displayName,programStageDataElements[id,dataElement[id,displayName]]',
             filter: (props, state) => {
                 return [`program.id:eq:${state.selected.program.id}`];
             },
@@ -83,6 +107,14 @@ const styles = {
         marginRight: '14px',
         position: 'relative',
     },
+    groupEditor: {
+        padding: '2rem 0rem 4rem',
+        width: '100%',
+    },
+    fieldname: {
+        fontSize: 16,
+        color: '#00000080',
+    },
 };
 
 class Constraint extends Component {
@@ -99,9 +131,7 @@ class Constraint extends Component {
 
         When Program Stage Instance is selected, we need to know the programType for selected programs, so we keep a reference to the model.
         We use the program-dropdown as a 'filter' (for trackerprograms) to only show programStages for the selected program,
-        however we cannot post this value to the server together with a programStage, as that results in an error.
-        If the selected program is a tracker-program, it should also be possible to further select a programStage
-        to narrow down the relationship. However this is optional, and if its not selected, we just post the programID.
+        however we cannot post the `program` value to the server together with a programStage, as that results in an error.
         Therefore we save the selected values in the state. */
 
         let selected = null;
@@ -118,18 +148,24 @@ class Constraint extends Component {
             });
         }
 
+        const optionsLoading = this.getOptionsLoadingState();
         this.state = {
             selected,
             loading: true,
             error: false,
+            // loading state for options
+            // these are initialized in componentDidMount and loaded by `DropdownAsync`
+            // shaped like
+            // { program: true, trackedEntityType: true }
+            optionsLoading,
         };
     }
 
     componentDidMount() {
         /* Since we cannot get the programId from the same request as when loading the model,
-            (due to the nature of the dynamic structure of the relationShipConstraint object)
-            we need to grab the programStage with another request, as we need this to show the
-            program that the selected program stage belongs to. */
+        (due to the nature of the dynamic structure of the relationShipConstraint object, which only returns programStage)
+        we need to grab the program with another request, as we need this to show the
+        program that the selected program stage belongs to. */
         const selectedPS =
             this.state.selected && this.state.selected.programStage;
         if (selectedPS) {
@@ -149,12 +185,46 @@ class Constraint extends Component {
                         error: e,
                     });
                 });
+        } else {
+            this.setState({ loading: false });
         }
-        this.setState({ loading: false });
     }
 
-    getSelectedRelationshipEntity = () => {
-        const props = this.props;
+    componentDidUpdate(prevProps) {
+        const prevEntity = this.getSelectedRelationshipEntity(prevProps);
+        const entity = this.getSelectedRelationshipEntity();
+        if (prevEntity !== entity) {
+            const optionsLoading = this.getOptionsLoadingState();
+            this.setState({ optionsLoading });
+        }
+    }
+
+    getOptionsLoadingState = () => {
+        const entity = this.getSelectedRelationshipEntity();
+        if (!entity) {
+            return {};
+        }
+        const modelTypes = modelTypesForRelationshipEntity[entity];
+        // initialize loading state for modelTypes
+        const optionsLoadingState = modelTypes.reduce((acc, modelOpts) => {
+            const modelType = modelOpts.modelType;
+            acc[modelType] = this.shouldRenderModelType(modelType);
+            return acc;
+        }, {});
+        return optionsLoadingState;
+    };
+
+    isLoading = () => {
+        return this.state.loading || this.isOptionsLoading();
+    };
+
+    isOptionsLoading = () => {
+        return Object.values(this.state.optionsLoading).some(
+            loading => loading
+        );
+    };
+
+    getSelectedRelationshipEntity = (props = this.props) => {
         return (props.value && props.value.relationshipEntity) || null;
     };
 
@@ -183,18 +253,16 @@ class Constraint extends Component {
         return null;
     }
 
+    handleChange = newValue => {
+        this.props.onChange({ target: { value: newValue } });
+    };
+
     handleSelectRelationshipEntity = (_, __, value) => {
         this.setState({
             error: false,
             selected: null,
         });
-        this.props.onChange({
-            target: {
-                value: {
-                    relationshipEntity: value,
-                },
-            },
-        });
+        this.handleChange({ relationshipEntity: value });
     };
 
     handleSelectValue = (modelType, { target: { value } }) => {
@@ -208,29 +276,25 @@ class Constraint extends Component {
         };
         // Clear values if mutually exclusive
         let prevState = objOptions.mutex ? {} : this.props.value;
-        const selectedProgram = this.getSelectedIDForModelType('program');
-        if (modelType === 'programStage' && value === null && selectedProgram) {
-            // If "no value is selected", we need to manually add the program as selected
-            // and clear the programStage
+
+        // if its an event-program, we need to set the "default"-programStage
+        // and exclude "program"-from the posted-value
+        if (modelType === 'program' && isEventProgram(value)) {
             prevState = {
                 ...prevState,
-                program: {
-                    id: selectedProgram.id,
-                },
+                programStage: first(value.programStages.toArray()),
             };
-            modelTypeValue = null;
         }
 
         const relationshipConstraint = {
             ...prevState,
             relationshipEntity: this.props.value.relationshipEntity,
-            [modelType]: modelTypeValue,
+            ...(!objOptions.excludeFromValue && {
+                [modelType]: modelTypeValue,
+            }),
         };
-        this.props.onChange({
-            target: {
-                value: relationshipConstraint,
-            },
-        });
+
+        this.handleChange(relationshipConstraint);
 
         // Keep reference in state to check for selected programType etc
         // Clear state when program changes
@@ -246,34 +310,71 @@ class Constraint extends Component {
         }));
     };
 
+    handleSelectTrackedEntityAttribute = trackedEntityAttributeIds => {
+        const newValue = {
+            ...this.props.value,
+            trackerDataView: {
+                ...this.props.value.trackerDataView,
+                attributes: trackedEntityAttributeIds,
+            },
+        };
+        this.handleChange(newValue);
+    };
+
+    handleSelectTrackerEntityDataElement = dataElementIds => {
+        const newValue = {
+            ...this.props.value,
+            trackerDataView: {
+                ...this.props.value.trackerDataView,
+                dataElements: dataElementIds,
+            },
+        };
+        this.handleChange(newValue);
+    };
+
     hasSelectedTrackerProgram = () =>
         has('selected.program', this.state) &&
-        this.state.selected.program.programType === 'WITH_REGISTRATION';
+        isTrackerProgram(this.state.selected.program);
 
     handleOptionsLoaded = (modelType, options) => {
-        // get reference to already selected constraint
-        // ie when a saved model is edited, so we can check for programType
-        if (!this.state.selected) return;
+        const optionsLoading = {
+            ...this.state.optionsLoading,
+            [modelType]: false,
+        };
+        if (!this.state.selected) {
+            this.setState(state => ({
+                loading: false,
+                optionsLoading,
+            }));
+            return;
+        }
+
         const selectedModelID =
             this.state.selected[modelType] && this.state.selected[modelType].id;
-        const option = options.find(opt => opt.value == selectedModelID);
+        const option = options.find(opt => opt.value === selectedModelID);
         if (option) {
             this.setState(state => ({
+                loading: false,
                 selected: {
                     ...state.selected,
                     [modelType]: option.model,
                 },
+                optionsLoading,
             }));
         }
     };
 
+    renderLoading = () => {
+        return (
+            <div style={{ height: '72px' }}>
+                <CircularProgress />
+            </div>
+        );
+    };
+
     renderErrorOrLoading = () => {
         if (this.state.loading) {
-            return (
-                <div style={{ height: '72px' }}>
-                    <CircularProgress />
-                </div>
-            );
+            return this.renderLoading();
         }
         if (this.state.error) {
             return (
@@ -330,6 +431,7 @@ class Constraint extends Component {
                         )} ${objOpts.required ? ' *' : ''}`}
                         value={value}
                         referenceType={modelType}
+                        fieldFilter={objOpts.fields}
                         onChange={this.handleSelectValue.bind(this, modelType)}
                         onOptionsLoaded={this.handleOptionsLoaded}
                         queryParamFilter={filter}
@@ -339,7 +441,116 @@ class Constraint extends Component {
             );
         });
 
-        return <div style={styles.modelTypeWrapper}>{modelDropdowns}</div>;
+        return modelDropdowns;
+    };
+
+    renderAssignTrackedEntityAttributes() {
+        const selectedProgram = this.state.selected.program;
+        const selectedTrackedEntityType = this.state.selected.trackedEntityType;
+
+        if (!selectedProgram && !selectedTrackedEntityType) {
+            return null;
+        }
+
+        const trackedEntityTypeAttributes =
+            selectedTrackedEntityType &&
+            Array.isArray(selectedTrackedEntityType.trackedEntityTypeAttributes)
+                ? selectedTrackedEntityType.trackedEntityTypeAttributes.map(
+                      teta => teta.trackedEntityAttribute
+                  )
+                : [];
+
+        const programTrackedEntityAttributes =
+            selectedProgram &&
+            Array.isArray(selectedProgram.programTrackedEntityAttributes)
+                ? selectedProgram.programTrackedEntityAttributes.map(
+                      pteta => pteta.trackedEntityAttribute
+                  )
+                : [];
+
+        // normally programTrackedEntity-Attributes should be a superset of trackedEntityType-Attributes
+        // however this is not guaranteed, and is only "enforced" client-side when creating a program.
+        // program attributes are also not updated if attributes are updated for a tet.
+        // thus we concat these lists and remove duplicates to be sure to show all available attributes.
+        const availableAttributes = uniqBy('id')(
+            trackedEntityTypeAttributes.concat(programTrackedEntityAttributes)
+        ).sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+        const assignedAttributes =
+            this.props.value && this.props.value.trackerDataView
+                ? this.props.value.trackerDataView.attributes
+                : [];
+
+        return (
+            <GroupEditorWithOrderingD2Store
+                availableItems={availableAttributes}
+                assignedItems={assignedAttributes}
+                onChange={this.handleSelectTrackedEntityAttribute}
+                fieldName={this.translate(
+                    'tracked_entity_attributes_to_display_in_list'
+                )}
+                searchHint={this.translate(
+                    'search_available_tracked_entity_attributes'
+                )}
+            />
+        );
+    }
+
+    renderAssignDataElements() {
+        let selectedProgramStage = this.state.selected.programStage;
+
+        if (
+            this.state.selected.program &&
+            isEventProgram(this.state.selected.program)
+        ) {
+            selectedProgramStage = this.state.selected.program.programStages.toArray()[0];
+        }
+
+        if (!selectedProgramStage) {
+            return null;
+        }
+
+        const availableDataElements = selectedProgramStage.programStageDataElements
+            ? selectedProgramStage.programStageDataElements.map(
+                  psde => psde.dataElement
+              )
+            : [];
+
+        const assignedDataElements =
+            this.props.value && this.props.value.trackerDataView
+                ? this.props.value.trackerDataView.dataElements
+                : [];
+
+        return (
+            <GroupEditorWithOrderingD2Store
+                availableItems={availableDataElements}
+                assignedItems={assignedDataElements}
+                onChange={this.handleSelectTrackerEntityDataElement}
+                fieldName={this.translate('data_elements_to_display_in_list')}
+                searchHint={this.translate('search_available_data_elements')}
+            />
+        );
+    }
+
+    // https://dhis2.atlassian.net/browse/DHIS2-13547
+    renderRelationshipDisplaySelect = () => {
+        const entity = this.getSelectedRelationshipEntity();
+        if (!this.state.selected) {
+            return null;
+        }
+        if (this.isLoading()) {
+            return this.renderLoading();
+        }
+
+        if (entity === TRACKED_ENTITY_INSTANCE || entity === PROGRAM_INSTANCE) {
+            return this.renderAssignTrackedEntityAttributes();
+        }
+
+        if (entity === PROGRAM_STAGE_INSTANCE) {
+            return this.renderAssignDataElements();
+        }
+
+        return null;
     };
 
     render = () => {
@@ -361,14 +572,132 @@ class Constraint extends Component {
                         />
                     ))}
                 </SelectField>
-                {this.getSelectedRelationshipEntity() &&
-                    this.renderModelTypeSelectFields()}
+                <div style={styles.modelTypeWrapper}>
+                    {this.getSelectedRelationshipEntity() &&
+                        this.renderModelTypeSelectFields()}
+                    {this.renderRelationshipDisplaySelect()}
+                </div>
             </div>
         );
     };
 }
 
 Constraint.contextTypes = {
+    d2: PropTypes.object,
+};
+
+class GroupEditorWithOrderingD2Store extends Component {
+    constructor(props) {
+        super(props);
+
+        // we need to "copy" to state here because GroupEditor-component
+        // need a d2-store
+        this.state = {
+            availableItems: Store.create({
+                getInitialState() {
+                    return props.availableItems.map(toDisplayElement);
+                },
+            }),
+            assignedItemsStore: Store.create({
+                getInitialState() {
+                    return props.assignedItems;
+                },
+            }),
+            filterText: '',
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const prevAvailableItems = this.props.availableItems;
+        const nextAvailableItems = nextProps.availableItems;
+        if (!isEqual(prevAvailableItems)(nextAvailableItems)) {
+            const nextAssignedItems = this.props.assignedItems;
+
+            // update d2-store to new values
+            this.state.availableItems.setState(
+                nextAvailableItems.map(toDisplayElement)
+            );
+
+            // filter out selected attributes that may be unavailable
+            const assignedItemsToRemove = nextAssignedItems.filter(
+                id => !nextAvailableItems.find(attr => attr.id === id)
+            );
+
+            // if availableItems is changed, deselect items that are not available
+            if (assignedItemsToRemove.length > 0) {
+                this.onRemoveItems(assignedItemsToRemove);
+            }
+        }
+    }
+
+    onAssignItems = assignedItems => {
+        const newAssignedItems = this.state.assignedItemsStore
+            .getState()
+            .concat(assignedItems);
+
+        this.handleChange(newAssignedItems);
+        return Promise.resolve();
+    };
+
+    onRemoveItems = removedItemsIds => {
+        const newAssignedItems = this.state.assignedItemsStore
+            .getState()
+            .filter(
+                assignedAttributeId =>
+                    !removedItemsIds.includes(assignedAttributeId)
+            );
+
+        this.handleChange(newAssignedItems);
+        return Promise.resolve();
+    };
+
+    onMoveItems = newAssignedItems => {
+        this.handleChange(newAssignedItems);
+    };
+
+    handleChange = newAssignedItemsIds => {
+        this.state.assignedItemsStore.setState(newAssignedItemsIds);
+        this.props.onChange(newAssignedItemsIds);
+    };
+
+    handleFilterChange = filterText => {
+        this.setState({ filterText });
+    };
+
+    render() {
+        return (
+            <div style={styles.groupEditor}>
+                <div style={styles.fieldname}>{this.props.fieldName}</div>
+                <TextField
+                    hintText={this.props.searchHint}
+                    onChange={this.setFilterText}
+                    value={this.state.filterText}
+                    fullWidth
+                />
+                <GroupEditorWithOrdering
+                    itemStore={this.state.availableItems}
+                    assignedItemStore={this.state.assignedItemsStore}
+                    height={250}
+                    filterText={this.props.filterText}
+                    onAssignItems={this.onAssignItems}
+                    onRemoveItems={this.onRemoveItems}
+                    onOrderChanged={this.onMoveItems}
+                />
+            </div>
+        );
+    }
+}
+
+GroupEditorWithOrderingD2Store.PropTypes = {
+    // array of objects with shape { id, displayName }
+    availableItems: PropTypes.array.isRequired,
+    // array of ids
+    assignedItems: PropTypes.array.isRequired,
+    onChange: PropTypes.func.isRequired,
+    fieldName: PropTypes.string.isRequired,
+    searchHint: PropTypes.string.isRequired,
+};
+GroupEditorWithOrderingD2Store.contextTypes = {
     d2: PropTypes.object,
 };
 
