@@ -1,3 +1,10 @@
+# [32.21.0](https://github.com/dhis2/maintenance-app/compare/v32.20.37...v32.21.0) (2022-11-25)
+
+
+### Features
+
+* **relationship-type:** support attributes and dataElements for display ([#2378](https://github.com/dhis2/maintenance-app/issues/2378)) ([9062333](https://github.com/dhis2/maintenance-app/commit/9062333b2031e5456abde01e3d0d964797c54220))
+
 ## [32.20.37](https://github.com/dhis2/maintenance-app/compare/v32.20.36...v32.20.37) (2022-11-25)
 
 
