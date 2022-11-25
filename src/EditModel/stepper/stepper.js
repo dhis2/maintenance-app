@@ -28,8 +28,11 @@ function isActiveStep(activeStep, step, index) {
 export const getStepFields = (step, fieldConfigs, modelType) => {
     const stepsByField = fieldGroups.groupsByField(modelType);
     if (stepsByField) {
-        fieldConfigs.map((field) => {
-            if (stepsByField[field.name] === step) {
+        fieldConfigs.map(field => {
+            if (
+                stepsByField[field.name] === step ||
+                (field.isAttribute && step === 0) // add custom attributes-fields to first step
+            ) {
                 field.props.style = { display: 'block' };
             } else {
                 field.props.style = { display: 'none' };

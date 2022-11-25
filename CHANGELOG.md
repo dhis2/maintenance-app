@@ -1,3 +1,480 @@
+## [32.20.1](https://github.com/dhis2/maintenance-app/compare/v32.20.0...v32.20.1) (2022-03-02)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([51171ff](https://github.com/dhis2/maintenance-app/commit/51171fff801dcac97131cdbb27934a867d4fda0f))
+
+# [32.20.0](https://github.com/dhis2/maintenance-app/compare/v32.19.1...v32.20.0) (2022-03-02)
+
+
+### Features
+
+* **programrule-variable:** add valueType for CALCULATED_VALUE ([#2147](https://github.com/dhis2/maintenance-app/issues/2147)) ([00d3084](https://github.com/dhis2/maintenance-app/commit/00d30847ccd89971cc28dbfab3890cd9596deaa4))
+
+## [32.19.1](https://github.com/dhis2/maintenance-app/compare/v32.19.0...v32.19.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([f8158eb](https://github.com/dhis2/maintenance-app/commit/f8158eb226c13e7eed073923a7abc5b6e4d0199c))
+
+# [32.19.0](https://github.com/dhis2/maintenance-app/compare/v32.18.3...v32.19.0) (2022-02-28)
+
+
+### Features
+
+* **dataset-section:** add checkbox to disable auto grouping ([#2124](https://github.com/dhis2/maintenance-app/issues/2124)) ([aa1ad67](https://github.com/dhis2/maintenance-app/commit/aa1ad67b60fa7fb5ee6fe8c4cb871b4eaea0041a))
+
+## [32.18.3](https://github.com/dhis2/maintenance-app/compare/v32.18.2...v32.18.3) (2022-02-28)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ccc5b16](https://github.com/dhis2/maintenance-app/commit/ccc5b16d2b44ea17852c6f701ac44ba8a1ada598))
+
+## [32.18.2](https://github.com/dhis2/maintenance-app/compare/v32.18.1...v32.18.2) (2022-02-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([8ed6981](https://github.com/dhis2/maintenance-app/commit/8ed6981fe0a3c0414bbcbc420866ba63ffdc9083))
+
+## [32.18.1](https://github.com/dhis2/maintenance-app/compare/v32.18.0...v32.18.1) (2022-02-26)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ba14205](https://github.com/dhis2/maintenance-app/commit/ba14205f8859df3ca46c9f2711df0395279eeb9c))
+
+# [32.18.0](https://github.com/dhis2/maintenance-app/compare/v32.17.0...v32.18.0) (2022-02-25)
+
+
+### Features
+
+* **program:** add webhook for program notifications ([#2136](https://github.com/dhis2/maintenance-app/issues/2136)) ([cc1055e](https://github.com/dhis2/maintenance-app/commit/cc1055e2757f75dc4fb5d5baa5adf01f45d397e4))
+
+# [32.17.0](https://github.com/dhis2/maintenance-app/compare/v32.16.2...v32.17.0) (2022-02-24)
+
+
+### Features
+
+* **programrule:** add extractDataMatrixValue function ([#2135](https://github.com/dhis2/maintenance-app/issues/2135)) ([c1b2ee5](https://github.com/dhis2/maintenance-app/commit/c1b2ee593e9002c821b355adc8661e4cb2a6dbf8))
+
+## [32.16.2](https://github.com/dhis2/maintenance-app/compare/v32.16.1...v32.16.2) (2022-02-18)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([a10fb00](https://github.com/dhis2/maintenance-app/commit/a10fb00f85be1d4a85237dcc9d4f4ca88401d9e7))
+
+## [32.16.1](https://github.com/dhis2/maintenance-app/compare/v32.16.0...v32.16.1) (2022-02-01)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([74d45b6](https://github.com/dhis2/maintenance-app/commit/74d45b672547a307cc5ff72cd007572869f7688f))
+
+# [32.16.0](https://github.com/dhis2/maintenance-app/compare/v32.15.1...v32.16.0) (2022-01-31)
+
+
+### Features
+
+* add openDaysAfterCoEndDate to programs ([#2127](https://github.com/dhis2/maintenance-app/issues/2127)) ([339c753](https://github.com/dhis2/maintenance-app/commit/339c7536c1f62b6f0e0fad2e7ec5465e946c505a))
+
+## [32.15.1](https://github.com/dhis2/maintenance-app/compare/v32.15.0...v32.15.1) (2022-01-28)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([00b852c](https://github.com/dhis2/maintenance-app/commit/00b852c7215dc7ac590ea53c2302ffad935acda4))
+
+# [32.15.0](https://github.com/dhis2/maintenance-app/compare/v32.14.7...v32.15.0) (2022-01-27)
+
+
+### Features
+
+* **predictor:** add field for orgunit descendants ([#2123](https://github.com/dhis2/maintenance-app/issues/2123)) ([18c7876](https://github.com/dhis2/maintenance-app/commit/18c78762c929b1b70c7533f11d512c4cc2788ffd))
+
+## [32.14.7](https://github.com/dhis2/maintenance-app/compare/v32.14.6...v32.14.7) (2022-01-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([a87b800](https://github.com/dhis2/maintenance-app/commit/a87b80043e42b68981eeb653a568d8b9267bb11a))
+
+## [32.14.6](https://github.com/dhis2/maintenance-app/compare/v32.14.5...v32.14.6) (2022-01-24)
+
+
+### Bug Fixes
+
+* **program:** fix validationStrategy dropdown ([#2117](https://github.com/dhis2/maintenance-app/issues/2117)) ([6065468](https://github.com/dhis2/maintenance-app/commit/60654683b17c3f704a273b41dd47f19b1e7253d2))
+
+## [32.14.5](https://github.com/dhis2/maintenance-app/compare/v32.14.4...v32.14.5) (2022-01-05)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ca2dcce](https://github.com/dhis2/maintenance-app/commit/ca2dcceec0cbb71b03db58a08a4902c254bdfc26))
+
+## [32.14.4](https://github.com/dhis2/maintenance-app/compare/v32.14.3...v32.14.4) (2021-12-11)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([dd47463](https://github.com/dhis2/maintenance-app/commit/dd4746346d756129a4a8f9b560a7974f7c6418a3))
+
+## [32.14.3](https://github.com/dhis2/maintenance-app/compare/v32.14.2...v32.14.3) (2021-12-10)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([09a2b30](https://github.com/dhis2/maintenance-app/commit/09a2b3073fd5ff03795ac9dc220e7840d3cfe6cb))
+
+## [32.14.2](https://github.com/dhis2/maintenance-app/compare/v32.14.1...v32.14.2) (2021-11-28)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([7bf061a](https://github.com/dhis2/maintenance-app/commit/7bf061a8a6ec5306c3451a368b216962c66ca97d))
+
+## [32.14.1](https://github.com/dhis2/maintenance-app/compare/v32.14.0...v32.14.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([86bdb7b](https://github.com/dhis2/maintenance-app/commit/86bdb7b8a18e115db3e7d480ebc54023af823163))
+
+# [32.14.0](https://github.com/dhis2/maintenance-app/compare/v32.13.0...v32.14.0) (2021-11-16)
+
+
+### Features
+
+* support adding vector style map layer to external map layer ([#2078](https://github.com/dhis2/maintenance-app/issues/2078)) ([6240c74](https://github.com/dhis2/maintenance-app/commit/6240c746b22a331769611d4f3523ecf837e9e126))
+
+# [32.13.0](https://github.com/dhis2/maintenance-app/compare/v32.12.4...v32.13.0) (2021-10-29)
+
+
+### Features
+
+* add shortname to indicator- and category grp set ([#2074](https://github.com/dhis2/maintenance-app/issues/2074)) ([fa926cc](https://github.com/dhis2/maintenance-app/commit/fa926ccb839abb91bf2c672eb513c477aa429f67))
+
+## [32.12.4](https://github.com/dhis2/maintenance-app/compare/v32.12.3...v32.12.4) (2021-09-05)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([7e95bd5](https://github.com/dhis2/maintenance-app/commit/7e95bd532d283a746bc8689fdcf5d73788490d48))
+
+## [32.12.3](https://github.com/dhis2/maintenance-app/compare/v32.12.2...v32.12.3) (2021-09-04)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([12234ba](https://github.com/dhis2/maintenance-app/commit/12234baacd44623cf63a9a6bfac9ab2f8f07b4be))
+
+## [32.12.2](https://github.com/dhis2/maintenance-app/compare/v32.12.1...v32.12.2) (2021-09-01)
+
+
+### Bug Fixes
+
+* **program-rule-action:** fix validation request ([#2059](https://github.com/dhis2/maintenance-app/issues/2059)) ([a3bb45a](https://github.com/dhis2/maintenance-app/commit/a3bb45ab7a7e72ab3d2ff7504505ef28d26ce05c))
+
+## [32.12.1](https://github.com/dhis2/maintenance-app/compare/v32.12.0...v32.12.1) (2021-09-01)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([20b1da4](https://github.com/dhis2/maintenance-app/commit/20b1da4e0961cb6070a83454d849e4afdd8de6e8))
+
+# [32.12.0](https://github.com/dhis2/maintenance-app/compare/v32.11.2...v32.12.0) (2021-08-31)
+
+
+### Features
+
+* **programNotification:** add support for sendRepeatable flag ([#2045](https://github.com/dhis2/maintenance-app/issues/2045)) ([2429133](https://github.com/dhis2/maintenance-app/commit/2429133dfcf285b6586965817719ba29cb871cf2))
+
+## [32.11.2](https://github.com/dhis2/maintenance-app/compare/v32.11.1...v32.11.2) (2021-08-31)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([1b58a95](https://github.com/dhis2/maintenance-app/commit/1b58a959f72a442b2dbef9addef0428eb8758657))
+
+## [32.11.1](https://github.com/dhis2/maintenance-app/compare/v32.11.0...v32.11.1) (2021-08-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([e874127](https://github.com/dhis2/maintenance-app/commit/e87412789599d5d743ead778883bccb8a7dd56a4))
+
+# [32.11.0](https://github.com/dhis2/maintenance-app/compare/v32.10.6...v32.11.0) (2021-08-26)
+
+
+### Features
+
+* **program-rule-action:** validate program rule action expression ([#2046](https://github.com/dhis2/maintenance-app/issues/2046)) ([8fc2ac9](https://github.com/dhis2/maintenance-app/commit/8fc2ac961f7bf160e500bd9fa64cc21153665d78))
+
+## [32.10.6](https://github.com/dhis2/maintenance-app/compare/v32.10.5...v32.10.6) (2021-08-10)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([d356ba8](https://github.com/dhis2/maintenance-app/commit/d356ba8eeacd4ef5115c29e3aed083134e454232))
+
+## [32.10.5](https://github.com/dhis2/maintenance-app/compare/v32.10.4...v32.10.5) (2021-07-25)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([af5378e](https://github.com/dhis2/maintenance-app/commit/af5378ec646dbdb23025d7a2c05e6a38646d2541))
+
+## [32.10.4](https://github.com/dhis2/maintenance-app/compare/v32.10.3...v32.10.4) (2021-07-02)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([2cf182c](https://github.com/dhis2/maintenance-app/commit/2cf182c7429115c038c08839f9b5ab7b8206b736))
+
+## [32.10.3](https://github.com/dhis2/maintenance-app/compare/v32.10.2...v32.10.3) (2021-07-02)
+
+
+### Bug Fixes
+
+* **image select:** adjust styles to reflect outcome of PR discussion ([32ca1e8](https://github.com/dhis2/maintenance-app/commit/32ca1e88b8f2d5a7bc6c8081b42a32a6fd823473))
+* **image select:** do not use the base url with api.get ([569ef3e](https://github.com/dhis2/maintenance-app/commit/569ef3ee405222f553e8eefd5026e9b89b780898))
+
+## [32.10.2](https://github.com/dhis2/maintenance-app/compare/v32.10.1...v32.10.2) (2021-07-01)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([91c44a4](https://github.com/dhis2/maintenance-app/commit/91c44a4d2935cd1db7222e5ed7d4aeaeda3a9ce9))
+
+## [32.10.1](https://github.com/dhis2/maintenance-app/compare/v32.10.0...v32.10.1) (2021-06-30)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([7078004](https://github.com/dhis2/maintenance-app/commit/7078004b00ece13476c2d7772bb64a6f22e0f6d1))
+
+# [32.10.0](https://github.com/dhis2/maintenance-app/compare/v32.9.7...v32.10.0) (2021-06-30)
+
+
+### Features
+
+* **image-select:** add image select field to org unit form DHIS2-11175 ([#2007](https://github.com/dhis2/maintenance-app/issues/2007)) ([27e9513](https://github.com/dhis2/maintenance-app/commit/27e951333c14a8ed6404f73e26cf8e148e1ac5e8))
+
+## [32.9.7](https://github.com/dhis2/maintenance-app/compare/v32.9.6...v32.9.7) (2021-06-29)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([f10d94c](https://github.com/dhis2/maintenance-app/commit/f10d94c5cb032bcc480ee0c70311fa3ec4e2cc62))
+
+## [32.9.6](https://github.com/dhis2/maintenance-app/compare/v32.9.5...v32.9.6) (2021-06-28)
+
+
+### Bug Fixes
+
+* **stepper:** show attributes in steppers ([#1996](https://github.com/dhis2/maintenance-app/issues/1996)) ([1c76655](https://github.com/dhis2/maintenance-app/commit/1c766558a1892941069483559e5ea1a1ce40de6a))
+
+## [32.9.5](https://github.com/dhis2/maintenance-app/compare/v32.9.4...v32.9.5) (2021-06-25)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([b4d5eb1](https://github.com/dhis2/maintenance-app/commit/b4d5eb1aea9779e3ac1437ff086ade3f4ba302f1))
+
+## [32.9.4](https://github.com/dhis2/maintenance-app/compare/v32.9.3...v32.9.4) (2021-06-25)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([6c6f3f7](https://github.com/dhis2/maintenance-app/commit/6c6f3f7ed55d444e57b6299aa3a58ea19a800af5))
+
+## [32.9.3](https://github.com/dhis2/maintenance-app/compare/v32.9.2...v32.9.3) (2021-06-23)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([8ec0048](https://github.com/dhis2/maintenance-app/commit/8ec00483fc55f3398ae57a7f527f6a71e41b9d71))
+
+## [32.9.2](https://github.com/dhis2/maintenance-app/compare/v32.9.1...v32.9.2) (2021-06-11)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([1843100](https://github.com/dhis2/maintenance-app/commit/1843100b2e3996bbccb0ea637d2ef7e18526afbb))
+
+## [32.9.1](https://github.com/dhis2/maintenance-app/compare/v32.9.0...v32.9.1) (2021-06-11)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([5e66b9d](https://github.com/dhis2/maintenance-app/commit/5e66b9dd2d1a09cba18959dec8e003d2156b9981))
+
+# [32.9.0](https://github.com/dhis2/maintenance-app/compare/v32.8.23...v32.9.0) (2021-06-04)
+
+
+### Features
+
+* **category option:** add form name field ([0f62305](https://github.com/dhis2/maintenance-app/commit/0f62305e538209133506f439eaab795a16cdb792))
+
+## [32.8.23](https://github.com/dhis2/maintenance-app/compare/v32.8.22...v32.8.23) (2021-06-02)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([40664cb](https://github.com/dhis2/maintenance-app/commit/40664cbe6ee5e1073fdc6474c7c971235d86599e))
+
+## [32.8.22](https://github.com/dhis2/maintenance-app/compare/v32.8.21...v32.8.22) (2021-05-26)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([4f58d49](https://github.com/dhis2/maintenance-app/commit/4f58d49c5b5eec723f1729845ad713b84786b89d))
+
+## [32.8.21](https://github.com/dhis2/maintenance-app/compare/v32.8.20...v32.8.21) (2021-05-14)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([3e95a93](https://github.com/dhis2/maintenance-app/commit/3e95a9326595f83943e0543931273cf8734e1163))
+
+## [32.8.20](https://github.com/dhis2/maintenance-app/compare/v32.8.19...v32.8.20) (2021-05-10)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([2b3d0e6](https://github.com/dhis2/maintenance-app/commit/2b3d0e64217876555353a3a5695edb89b014adf9))
+
+## [32.8.19](https://github.com/dhis2/maintenance-app/compare/v32.8.18...v32.8.19) (2021-04-30)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([95f06e5](https://github.com/dhis2/maintenance-app/commit/95f06e5eb3e23a33914f2a5da35a200e3497a4f9))
+
+## [32.8.18](https://github.com/dhis2/maintenance-app/compare/v32.8.17...v32.8.18) (2021-04-29)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([a415567](https://github.com/dhis2/maintenance-app/commit/a415567dd16f828239eddbfbd1f4eaa6475be234))
+
+## [32.8.17](https://github.com/dhis2/maintenance-app/compare/v32.8.16...v32.8.17) (2021-04-28)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ee3fdbe](https://github.com/dhis2/maintenance-app/commit/ee3fdbe8d4548d34138d78537f4ca8efd4d61e4b))
+
+## [32.8.16](https://github.com/dhis2/maintenance-app/compare/v32.8.15...v32.8.16) (2021-04-26)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([6a65275](https://github.com/dhis2/maintenance-app/commit/6a6527540a55bfc6f6549f826edcf08313b213b1))
+
+## [32.8.15](https://github.com/dhis2/maintenance-app/compare/v32.8.14...v32.8.15) (2021-04-23)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([3c9c04f](https://github.com/dhis2/maintenance-app/commit/3c9c04fbf526548566c13a3ecb5d25b586d2be06))
+
+## [32.8.14](https://github.com/dhis2/maintenance-app/compare/v32.8.13...v32.8.14) (2021-04-22)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([4b8432f](https://github.com/dhis2/maintenance-app/commit/4b8432f6bbceadb64f39d5465e68b60abd73ccda))
+
+## [32.8.13](https://github.com/dhis2/maintenance-app/compare/v32.8.12...v32.8.13) (2021-04-21)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([da2b4a9](https://github.com/dhis2/maintenance-app/commit/da2b4a9e072512120eec6f4e877eaf36c59c50fa))
+
+## [32.8.12](https://github.com/dhis2/maintenance-app/compare/v32.8.11...v32.8.12) (2021-04-20)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([f21ce98](https://github.com/dhis2/maintenance-app/commit/f21ce98debf88f452530b628ceda0b3949ec86b8))
+
+## [32.8.11](https://github.com/dhis2/maintenance-app/compare/v32.8.10...v32.8.11) (2021-04-16)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([28bddd4](https://github.com/dhis2/maintenance-app/commit/28bddd45f5f3efa6ea11120c9d020dec1b6fecec))
+
+## [32.8.10](https://github.com/dhis2/maintenance-app/compare/v32.8.9...v32.8.10) (2021-04-06)
+
+
+### Bug Fixes
+
+* **expressionmanager:** show .periodOffset for indicators only ([#1827](https://github.com/dhis2/maintenance-app/issues/1827)) ([6b09e03](https://github.com/dhis2/maintenance-app/commit/6b09e0367e225725bb72da449f97d818827079f1))
+
+## [32.8.9](https://github.com/dhis2/maintenance-app/compare/v32.8.8...v32.8.9) (2021-03-30)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([2dc811a](https://github.com/dhis2/maintenance-app/commit/2dc811a3af8dadde90456478d46d161fedcc186c))
+
+## [32.8.8](https://github.com/dhis2/maintenance-app/compare/v32.8.7...v32.8.8) (2021-03-28)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([abd7036](https://github.com/dhis2/maintenance-app/commit/abd7036bae6c01224bdaf047a1fe3ca67479c0f9))
+
+## [32.8.7](https://github.com/dhis2/maintenance-app/compare/v32.8.6...v32.8.7) (2021-03-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([117dd79](https://github.com/dhis2/maintenance-app/commit/117dd79f182453bc230715da6515e9760dd0cbd5))
+
+## [32.8.6](https://github.com/dhis2/maintenance-app/compare/v32.8.5...v32.8.6) (2021-03-22)
+
+
+### Bug Fixes
+
+* **program:** fix sharing settings not included in payload ([#1817](https://github.com/dhis2/maintenance-app/issues/1817)) ([0eb1a83](https://github.com/dhis2/maintenance-app/commit/0eb1a8343e49a4225dc7925d9c98450c127a6689))
+
+## [32.8.5](https://github.com/dhis2/maintenance-app/compare/v32.8.4...v32.8.5) (2021-03-22)
+
+
+### Bug Fixes
+
+* **program:** fix setting section displayname ([4a10ce6](https://github.com/dhis2/maintenance-app/commit/4a10ce6861fd82edaa99b1a1afe22c3570fd3294))
+
+## [32.8.4](https://github.com/dhis2/maintenance-app/compare/v32.8.3...v32.8.4) (2021-03-18)
+
+
+### Bug Fixes
+
+* **sqlView:** format non-primitive values ([#1816](https://github.com/dhis2/maintenance-app/issues/1816)) ([cd8982f](https://github.com/dhis2/maintenance-app/commit/cd8982fdd35ec673e3d36b2fb2c4a109154e44a3))
+
+## [32.8.3](https://github.com/dhis2/maintenance-app/compare/v32.8.2...v32.8.3) (2021-03-11)
+
+
+### Bug Fixes
+
+* **programs:** request publicAccess explicitly ([c8e16ab](https://github.com/dhis2/maintenance-app/commit/c8e16ab8838f939aaa7a9f6dbebd54ef1dfae046))
+
+## [32.8.2](https://github.com/dhis2/maintenance-app/compare/v32.8.1...v32.8.2) (2021-03-09)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([24fe702](https://github.com/dhis2/maintenance-app/commit/24fe7027725b9eb3239d2eecdfb0e0c2ea4e6a6e))
+
 ## [32.8.1](https://github.com/dhis2/maintenance-app/compare/v32.8.0...v32.8.1) (2021-02-26)
 
 

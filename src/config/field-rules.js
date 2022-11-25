@@ -497,6 +497,19 @@ export default new Map([
                 elseValue: false,
             }],
         },
+        {
+            field: 'valueType',
+            when: [{
+                field: 'programRuleVariableSourceType',
+                operator: 'NOT_EQUALS',
+                value: 'CALCULATED_VALUE',
+            }],
+            operations: [{
+                field: 'valueType',
+                type: 'HIDE_FIELD',
+            }],
+        },
+        createDefaultRuleForField('valueType', 'TEXT')
     ]],
     ['programStage', [
         {
@@ -530,7 +543,7 @@ export default new Map([
         },
     ]],
     ['eventProgramStage', [
-        createDefaultRuleForField('validationStrategy', "ON_COMPLETE"),
+        createDefaultRuleForField('validationStrategy', "ON_UPDATE_AND_INSERT"),
     ]],
     ['programIndicator', [{
         field: 'analyticsPeriodBoundaries',
@@ -642,6 +655,23 @@ export default new Map([
             }],
         },
         {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'EQUALS',
+                value: 'WEB_HOOK',
+            }],
+            operations: [{
+                field: 'deliveryChannels',
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    if(fieldConfig) {
+                        fieldConfig.value = model[fieldConfig.name] = ['HTTP']
+                    }
+                }
+            }],
+        },
+        {
             field: 'notifyUsersInHierarchyOnly',
             when: [{
                 field: 'notifyParentOrganisationUnitOnly',
@@ -739,6 +769,23 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }],
         },
+        {
+            field: 'notificationRecipient',
+            when: [{
+                field: 'notificationRecipient',
+                operator: 'EQUALS',
+                value: 'WEB_HOOK',
+            }],
+            operations: [{
+                field: 'deliveryChannels',
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    if(fieldConfig) {
+                        fieldConfig.value = model[fieldConfig.name] = ['HTTP']
+                    }
+                }
+            }],
+        },
     ]],
     ['categoryCombo', [
         {
@@ -808,5 +855,34 @@ export default new Map([
                 type: 'HIDE_FIELD',
             }]
         }
-    ]]
+    ]],
+    ['predictor', [
+        createDefaultRuleForField('organisationUnitDescendants', "SELECTED"),
+    ]],
+    ['eventProgram', [
+        {
+            field: 'openDaysAfterCoEndDate',
+            when: {
+                field: 'categoryCombo',
+                operator: 'PREDICATE',
+                value: (categoryComboField) => categoryComboField && categoryComboField.name === 'default'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }]
+        }
+    ]],
+    ['trackerProgram', [
+        {
+            field: 'openDaysAfterCoEndDate',
+            when: {
+                field: 'categoryCombo',
+                operator: 'PREDICATE',
+                value: (categoryComboField) => categoryComboField && categoryComboField.name === 'default'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }]
+        }
+    ]],
 ]);

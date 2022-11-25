@@ -52,18 +52,26 @@ export default class SubjectAndMessageTemplateFields extends Component {
         });
     }
 
+    getMessageLabel() {
+        const d2 = this.context.d2;
+        if(this.props.model && this.props.model.notificationRecipient === 'WEB_HOOK') {
+            return d2.i18n.getTranslation('web_hook_url')
+        }
+        return d2.i18n.getTranslation('message_template')
+    }
+
     render() {
         const d2 = this.context.d2;
 
         const subjectChange = (event, value) => this.props.onUpdate({ fieldName: 'subjectTemplate', value });
         const messageChange = (event, value) => this.props.onUpdate({ fieldName: 'messageTemplate', value });
-        const messageLabel = d2.i18n.getTranslation('message_template');
+        const messageLabel = this.getMessageLabel();
 
         return (
             <div style={{ ...styles.fieldWrap, ...this.props.style }}>
                 <Divider style={styles.divider} />
                 <Heading level={3} style={styles.heading}>
-                    Message template
+                    {d2.i18n.getTranslation('message_template')}
                 </Heading>
                 <Row>
                     <Column>

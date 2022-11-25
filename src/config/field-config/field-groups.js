@@ -85,7 +85,11 @@ const fieldGroupsForModelType = new Map([
             },
             {
                 label: 'when_to_send_it',
-                fields: ['notificationTrigger', 'relativeScheduledDays'],
+                fields: [
+                    'notificationTrigger',
+                    'relativeScheduledDays',
+                    'sendRepeatable',
+                ],
             },
             {
                 label: 'who_to_send_it_to',

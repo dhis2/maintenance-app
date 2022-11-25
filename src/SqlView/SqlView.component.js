@@ -15,6 +15,18 @@ const backToList = () => {
     goToRoute('list/otherSection/sqlView');
 };
 
+const formatCellValue = (cell) => {
+  if (cell === null) {
+    return null
+  }
+
+  if (typeof cell === 'object') {
+    return JSON.stringify(cell, null, 2)
+  }
+
+  return String(cell)
+}
+
 const styles = {
     menuItem: {
         paddingLeft: '1.5rem',
@@ -46,6 +58,7 @@ class SqlView extends Component {
             const { listGrid } = await d2.Api.getApi().get(url, queryParams);
             this.setState({ listGrid });
         } catch (error) {
+            console.error(error)
             backToList();
             snackActions.show({ message: d2.i18n.getTranslation('sql_query_error'), action: 'ok' });
         }
@@ -136,8 +149,13 @@ class SqlView extends Component {
     }
 
     /* eslint-disable react/no-array-index-key */
-    renderCell = (cell, index) => <td key={`cell${index}`}>{cell}</td>;
-    renderRow = (row, index) => <tr key={`row${index}`}>{row.map(this.renderCell)}</tr>;
+    renderCell = (cell, index) => {
+        return <td key={`cell${index}`}>{formatCellValue(cell)}</td>;
+    };
+
+    renderRow = (row, index) => (
+        <tr key={`row${index}`}>{row.map(this.renderCell)}</tr>
+    );
     /* eslint-enable react/no-array-index-key */
 
     renderTable() {
