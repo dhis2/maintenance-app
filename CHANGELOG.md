@@ -1,3 +1,10 @@
+## [32.21.2](https://github.com/dhis2/maintenance-app/compare/v32.21.1...v32.21.2) (2022-12-05)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([cd58b8d](https://github.com/dhis2/maintenance-app/commit/cd58b8dd8a12a09398483be24d01c90f1260931a))
+
 ## [32.21.1](https://github.com/dhis2/maintenance-app/compare/v32.21.0...v32.21.1) (2022-12-03)
 
 
