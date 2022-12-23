@@ -14,12 +14,14 @@ const localeSchemaDefinition = {
             type: 'CREATE_PUBLIC',
             authorities: [
                 'F_SYSTEM_SETTING',
+                'F_LOCALE_ADD',
             ],
         },
         {
             type: 'CREATE_PRIVATE',
             authorities: [
                 'F_SYSTEM_SETTING',
+                'F_LOCALE_ADD',
             ],
         },
         {
