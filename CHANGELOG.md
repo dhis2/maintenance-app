@@ -1,3 +1,10 @@
+## [32.21.3](https://github.com/dhis2/maintenance-app/compare/v32.21.2...v32.21.3) (2022-12-23)
+
+
+### Bug Fixes
+
+* update authority for locales modules [DHIS2-14290] ([#2421](https://github.com/dhis2/maintenance-app/issues/2421)) ([d863195](https://github.com/dhis2/maintenance-app/commit/d863195ad79f2ca2f6ea70f88bc790e4585b1bfa))
+
 ## [32.21.2](https://github.com/dhis2/maintenance-app/compare/v32.21.1...v32.21.2) (2022-12-05)
 
 
