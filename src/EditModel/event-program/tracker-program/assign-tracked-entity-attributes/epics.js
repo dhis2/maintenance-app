@@ -71,6 +71,16 @@ const removeAttributeFromProgram = store => action$ => action$
         const removeAttributes = keepProgramAttributesNotInUidList(attributeIdsToRemove);
 
         program.programTrackedEntityAttributes = removeAttributes(programAttributes);
+
+        state.programSections.forEach(programSection => {
+            const currentAttributes = Array.from(
+                programSection.trackedEntityAttributes.values()
+            );
+            programSection.trackedEntityAttributes = currentAttributes.filter(
+                attr => !attributeIdsToRemove.includes(attr.id)
+            );
+        });
+
         store.setState({
             ...store.getState(),
             program,
