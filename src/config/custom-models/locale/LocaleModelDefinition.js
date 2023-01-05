@@ -18,13 +18,17 @@ export default class LocaleModelDefinition extends ModelDefinition {
             this.api.get('locales/dbLocales'),
             this.api.get('me/authorization'),
         ]).then(([locales, authorities]) => {
-            const canCreateAndDelete = authorities.some(auth => ['F_SYSTEM_SETTING', 'ALL'].includes(auth));
+            const deleteAuthorities = ['F_SYSTEM_SETTING', 'ALL']
+            const addAuthorities = ['F_LOCALE_ADD']
+            const canDelete = authorities.some(auth => deleteAuthorities.includes(auth));
+            const canAdd = canDelete || authorities.some(auth => addAuthorities.includes(auth));
+
             const access = {
                 read: true,
-                update: canCreateAndDelete,
+                update: canAdd,
                 externalize: false,
-                delete: canCreateAndDelete,
-                write: canCreateAndDelete,
+                delete: canDelete,
+                write: canAdd,
                 manage: false,
             };
 
