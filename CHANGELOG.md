@@ -1,3 +1,10 @@
+## [32.21.4](https://github.com/dhis2/maintenance-app/compare/v32.21.3...v32.21.4) (2023-01-05)
+
+
+### Bug Fixes
+
+* clear out removed attributes in program sections [DHIS2-14406] ([#2425](https://github.com/dhis2/maintenance-app/issues/2425)) ([c0a290b](https://github.com/dhis2/maintenance-app/commit/c0a290b2d058e5086801238a8c1350f568d18ba6))
+
 ## [32.21.3](https://github.com/dhis2/maintenance-app/compare/v32.21.2...v32.21.3) (2022-12-23)
 
 
