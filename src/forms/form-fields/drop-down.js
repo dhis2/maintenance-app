@@ -11,7 +11,7 @@ import MenuItem from 'material-ui/MenuItem/MenuItem';
 // A map to filter out options across all usages of the dropdown
 // Entries are ['referenceProperty' of the rendered field, optionsToFilter]
 // ['valueType', ['MULTI_TEXT']], means filter out options "MULTI_TEXT" when referenceProperty is "valueType"
-const OPTIONS_BLOCK_LIST = new Map([['valueType', ['MULTI_TEXT']]])
+const OPTIONS_BLOCK_LIST = new Map()
 
 class Dropdown extends Component {
     constructor(props, context) {
