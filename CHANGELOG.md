@@ -1,3 +1,11 @@
+## [32.21.5](https://github.com/dhis2/maintenance-app/compare/v32.21.4...v32.21.5) (2023-01-16)
+
+
+### Bug Fixes
+
+* remove csv/xml downloads (start) [DHIS2-14482] ([#2430](https://github.com/dhis2/maintenance-app/issues/2430)) ([2e0afa6](https://github.com/dhis2/maintenance-app/commit/2e0afa62291204141f2709c5ff149c6228958d06))
+* remove irrelevant fields for progRulAct update [DHIS2-14462] ([#2429](https://github.com/dhis2/maintenance-app/issues/2429)) ([59841d4](https://github.com/dhis2/maintenance-app/commit/59841d42c9e6a931dea78fc4ea426ab2af887794))
+
 ## [32.21.4](https://github.com/dhis2/maintenance-app/compare/v32.21.3...v32.21.4) (2023-01-05)
 
 
