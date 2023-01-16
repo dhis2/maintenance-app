@@ -26,7 +26,6 @@ const styles = {
         marginTop: '8px',
     },
     downloadFormat: {
-        color: 'black',
         display: 'inline-block',
     },
 };
