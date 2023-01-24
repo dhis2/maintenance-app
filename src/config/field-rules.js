@@ -1,3 +1,4 @@
+import optionSet from './disabled-on-edit/optionSet.js';
 import { defaultAnalyticsPeriodBoundaries, createDefaultRuleForField } from './field-config/field-defaults';
 
 /**
@@ -67,6 +68,60 @@ export default new Map([
             }],
         },
         {
+            field: 'optionSet',
+            when: {
+                operator: 'PREDICATE',
+                value: () => {
+                    // value can be ID or model here, so need to check for valueType in operation...
+                    return true
+                }
+            },
+            operations: [{
+                type: 'CHANGE_VALUE',
+                field: 'valueType',
+                setValue: (model, fieldConfig) => {
+                    const isMultiText = model && (model.valueType === 'MULTI_TEXT'
+                            || (model.optionSet && model.optionSet.valueType === 'MULTI_TEXT'));
+
+                    if(isMultiText) {
+                        // this is needed for the UI to reflect that valueType is MULTI_TEXT
+                        // However it is always disabled in this case, because it's dictated by the optionSet
+                        // see setValueTypeToOptionSet()
+                        if(fieldConfig.originalOptions) {
+                            console.log('originalOptions', fieldConfig.originalOptions)
+                            fieldConfig.props.options = fieldConfig.originalOptions;
+                        }
+                        if(model.domainType === 'TRACKER') {
+                            // only set fieldConfig here, model is set below in optionSet since it depends on that
+                            fieldConfig.value = undefined
+                        }
+                } else {
+                        // MULTI_TEXT should not be selectable for valueType for dataElements, since it needs to be an optionSet
+                        // thus the option is removed from the valueType options
+                        const options = fieldConfig.props.options;
+                        if(!fieldConfig.originalOptions) {
+                            fieldConfig.originalOptions = fieldConfig.props.options;
+                        }
+                        fieldConfig.props.options = options.filter(option => option.value !== 'MULTI_TEXT');
+                    }
+                },
+            }, {
+                type: 'CHANGE_VALUE',
+                field: 'optionSet',
+                setValue: (model, fieldConfig) => {
+                    const isMultiText = model && (model.valueType === 'MULTI_TEXT'
+                            || (model.optionSet && model.optionSet.valueType === 'MULTI_TEXT'));
+                    if(model && model.domainType === 'TRACKER' && isMultiText) {
+                        fieldConfig.props.errorText = 'Value type cannot be "Multi text" when domain type is "Tracker"'
+                        model.valueType = undefined
+                        model.optionSet = fieldConfig.value = undefined;
+                    } else {
+                        fieldConfig.props.errorText = undefined;
+                    }
+                },
+            }],
+        },
+        {
             field: 'valueType',
             when: {
                 field: 'optionSet',
@@ -90,6 +145,7 @@ export default new Map([
                 value: [
                     'TEXT',
                     'LONG_TEXT',
+                    'MULTI_TEXT',
                     'LETTER',
                     'PHONE_NUMBER',
                     'EMAIL',
