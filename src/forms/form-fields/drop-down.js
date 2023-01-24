@@ -26,6 +26,11 @@ class Dropdown extends Component {
             options: this.getOptions(newProps.options, newProps.isRequired),
         });
 
+        if(newProps.value !== this.props.value) {
+            this.setState({
+                value: newProps.value
+            })
+        }
     }
 
     onChange = (event, index, value) => {
