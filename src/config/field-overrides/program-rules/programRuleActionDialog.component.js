@@ -250,8 +250,15 @@ class ProgramRuleActionDialog extends React.Component {
             option: this.state.options,
             optionGroup: this.state.optionGroups,
         };
+
+        const currentActionType = programRuleAction.programRuleActionType;
+        const relevantFields = [
+            ...(programRuleActionTypes[currentActionType].required || []),
+            ...(programRuleActionTypes[currentActionType].optional || []),
+        ];
+
         Object.keys(fieldRefs).forEach(field => {
-            if (programRuleAction[field]) {
+            if (programRuleAction[field] && relevantFields.includes(field)) {
                 const ref = fieldRefs[field].find(
                     v => v.value === programRuleAction[field]
                 );
