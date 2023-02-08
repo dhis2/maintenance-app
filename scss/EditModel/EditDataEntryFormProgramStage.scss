@@ -110,7 +110,8 @@
   }
 
   .item {
-    &.active {
+    &.active,
+    &.expand {
       a {
         cursor: pointer;
         &:hover {
@@ -125,9 +126,5 @@
         cursor: default;
       }
     }
-  }
-
-  .expand {
-    @extend .item.active;
   }
 }
