@@ -118,13 +118,13 @@
         text-decoration: underline;
       }
     }
+  }
 
-    .item.inactive {
-      a {
-        color: inherit;
-        opacity: 0.5;
-        cursor: default;
-      }
+  .item.inactive {
+    a {
+      color: inherit;
+      opacity: 0.5;
+      cursor: default;
     }
   }
 }
