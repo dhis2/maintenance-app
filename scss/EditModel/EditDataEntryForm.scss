@@ -115,17 +115,17 @@
   }
 }
 
-.item {
-  &.active,
-  &.expand {
-    a {
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
-      }
+.item.active,
+.expand {
+  a {
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
-  &.inactive {
+
+  .item.inactive {
     a {
       color: inherit;
       opacity: 0.5;
