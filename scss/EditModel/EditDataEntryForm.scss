@@ -3,7 +3,6 @@
   right: 16px;
   top: 112px;
   bottom: 16px;
-
   &:hover {
     .resizeHandle:after {
       border-color: rgba(0, 0, 0, 0.12);
@@ -30,7 +29,6 @@
       margin-left: 5px;
       transition: border 125ms linear;
     }
-
     &:hover:after {
       border-color: rgba(0, 0, 0, 0.45);
     }
@@ -68,11 +66,9 @@
 
         &.expanded {
           flex: 35;
-
           .header .arrow {
             transform: rotate(90deg);
           }
-
           .items {
             //box-shadow: 0 -4px 16px 1px rgba(0, 0, 0, 0.3);
           }
@@ -83,13 +79,11 @@
           font-size: 16px;
           padding-top: 8px;
           cursor: pointer;
-
           .arrow {
             display: inline-block;
             margin: 0 2px;
             transition: transform 175ms ease-out;
           }
-
           .count {
             display: inline-block;
             font-weight: 400;
@@ -97,7 +91,6 @@
             margin-left: 4px;
           }
         }
-
         .items {
           position: absolute;
           padding-left: 16px;
