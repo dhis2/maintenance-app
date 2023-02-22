@@ -88,11 +88,11 @@ export default new Map([
                         // However it is always disabled in this case, because it's dictated by the optionSet
                         // see setValueTypeToOptionSet()
                         if(fieldConfig.originalOptions) {
-                            console.log('originalOptions', fieldConfig.originalOptions)
                             fieldConfig.props.options = fieldConfig.originalOptions;
                         }
                         if(model.domainType === 'TRACKER') {
-                            // only set fieldConfig here, model is set below in optionSet since it depends on that
+                            // only set fieldConfig here, model is set below in optionSet since it depends on
+                            // the optionSet value to be set to check for the valueType.
                             fieldConfig.value = undefined
                         }
                 } else {
