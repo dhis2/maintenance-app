@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withProps from 'recompose/withProps';
 import compose from 'recompose/compose';
+import getContext from 'recompose/getContext';
 import { map } from 'lodash/fp';
+import TextField from 'material-ui/TextField/TextField';
 
 import RelativeScheduledDays from './program-notification-template/RelativeScheduledDays';
 import DeliveryChannels from './program-notification-template/DeliveryChannels';
@@ -11,6 +13,7 @@ import DropDownAsync from '../../forms/form-fields/drop-down-async';
 import SubjectAndMessageTemplateFields from './validation-notification-template/SubjectAndMessageTemplateFields';
 import { setStageNotificationValue } from '../../EditModel/event-program/notifications/actions';
 import DropDownAsyncGetter from '../../forms/form-fields/drop-down-async-getter';
+import Dropdown from '../../forms/form-fields/drop-down.js';
 
 const PROGRAM_STAGE_VARIABLES = [
     'program_name',
@@ -129,6 +132,74 @@ const DataElementDropDown = compose(
     );
 });
 
+class NotificationRecipientC extends React.Component {
+    constructor(props, context) {
+        super(props, context)
+        this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+    }
+
+    render() {
+        const { onUpdate, ...props } = this.props;
+        const label = this.t('web_hook_url');
+
+        if (props.value === 'WEB_HOOK') {
+            return (
+                <div>
+                    <Dropdown {...props} />
+                    <TextField
+                        label={label}
+                        multiLine
+                        fullWidth
+                        errorText={this.props.errorText}
+                        required={this.props.isRequired}
+                        floatingLabelText={`${label} ${
+                            this.props.isRequired ? '(*)' : ''
+                        }`}
+                        value={this.props.model.messageTemplate || ''}
+                        onChange={(event, value) => onUpdate({fieldName: 'messageTemplate', value})}
+                    />
+                </div>
+            );
+        }
+
+        return <Dropdown {...props} />;
+    }
+}
+NotificationRecipientC.contextTypes = { d2: React.PropTypes.object };
+NotificationRecipientC = connect(undefined, boundOnUpdate)(NotificationRecipientC);
+
+// const NotificationRecipient = compose(
+//     getContext({ d2: React.PropTypes.object }),
+//     connect(
+//         undefined,
+//         boundOnUpdate
+//     ),
+// )((props, context) => {
+//     console.log({ context });
+//     if (props.value === 'WEB_HOOK') {
+//         return (
+//             <div>
+//                 <Dropdown {...props} />
+//                 <TextField
+//                     label="messageTemplate"
+//                     multiLine
+//                     fullWidth
+//                     errorText={this.props.errorText}
+//                     required={this.props.isRequired}
+//                     floatingLabelText={`${messageLabel} ${
+//                         this.props.isRequired ? '(*)' : ''
+//                     }`}
+//                     value={this.props.model.messageTemplate || ''}
+//                     onChange={(event, value) => props.onUpdate({fieldName: 'messageTemplate', value})}
+//                 />
+//             </div>
+//         );
+//     }
+//     console.log({ props });
+
+//     return <Dropdown {...props} />;
+// });
+
 /**
  * programNotificationTemplate are shared for both program notification and
  * programStage notifications. We use a customFieldOrder name to differentiate
@@ -209,6 +280,7 @@ export const programNotificationTemplate = new Map([
                     'WEB_HOOK',
                 ],
             },
+            component: NotificationRecipientC,
         },
     ],
 ]);
