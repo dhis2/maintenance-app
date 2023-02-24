@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withProps from 'recompose/withProps';
@@ -132,73 +132,41 @@ const DataElementDropDown = compose(
     );
 });
 
-class NotificationRecipientC extends React.Component {
-    constructor(props, context) {
-        super(props, context)
-        this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+const NotificationRecipient = compose(
+    getContext({ d2: PropTypes.object }),
+    connect(
+        undefined,
+        boundOnUpdate
+    )
+)(({ onUpdate, d2, ...props }) => {
+    const label = d2.i18n.getTranslation('web_hook_url');
+    if (props.value === 'WEB_HOOK') {
+        return (
+            <div>
+                <Dropdown {...props} />
+                <TextField
+                    label={label}
+                    multiLine
+                    fullWidth
+                    errorText={props.errorText}
+                    required={props.isRequired}
+                    floatingLabelText={`${label} ${
+                        props.isRequired ? '(*)' : ''
+                    }`}
+                    value={props.model.messageTemplate || ''}
+                    onChange={(event, value) =>
+                        onUpdate({ fieldName: 'messageTemplate', value })
+                    }
+                />
+            </div>
+        );
     }
+    return <Dropdown {...props} />;
+});
 
-    render() {
-        const { onUpdate, ...props } = this.props;
-        const label = this.t('web_hook_url');
-
-        if (props.value === 'WEB_HOOK') {
-            return (
-                <div>
-                    <Dropdown {...props} />
-                    <TextField
-                        label={label}
-                        multiLine
-                        fullWidth
-                        errorText={this.props.errorText}
-                        required={this.props.isRequired}
-                        floatingLabelText={`${label} ${
-                            this.props.isRequired ? '(*)' : ''
-                        }`}
-                        value={this.props.model.messageTemplate || ''}
-                        onChange={(event, value) => onUpdate({fieldName: 'messageTemplate', value})}
-                    />
-                </div>
-            );
-        }
-
-        return <Dropdown {...props} />;
-    }
-}
-NotificationRecipientC.contextTypes = { d2: React.PropTypes.object };
-NotificationRecipientC = connect(undefined, boundOnUpdate)(NotificationRecipientC);
-
-// const NotificationRecipient = compose(
-//     getContext({ d2: React.PropTypes.object }),
-//     connect(
-//         undefined,
-//         boundOnUpdate
-//     ),
-// )((props, context) => {
-//     console.log({ context });
-//     if (props.value === 'WEB_HOOK') {
-//         return (
-//             <div>
-//                 <Dropdown {...props} />
-//                 <TextField
-//                     label="messageTemplate"
-//                     multiLine
-//                     fullWidth
-//                     errorText={this.props.errorText}
-//                     required={this.props.isRequired}
-//                     floatingLabelText={`${messageLabel} ${
-//                         this.props.isRequired ? '(*)' : ''
-//                     }`}
-//                     value={this.props.model.messageTemplate || ''}
-//                     onChange={(event, value) => props.onUpdate({fieldName: 'messageTemplate', value})}
-//                 />
-//             </div>
-//         );
-//     }
-//     console.log({ props });
-
-//     return <Dropdown {...props} />;
-// });
+// NotificationRecipient.contextTypes = {
+//     d2: PropTypes.object,
+// };
 
 /**
  * programNotificationTemplate are shared for both program notification and
@@ -280,7 +248,7 @@ export const programNotificationTemplate = new Map([
                     'WEB_HOOK',
                 ],
             },
-            component: NotificationRecipientC,
+            component: NotificationRecipient,
         },
     ],
 ]);
