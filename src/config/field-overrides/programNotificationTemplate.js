@@ -164,10 +164,6 @@ const NotificationRecipient = compose(
     return <Dropdown {...props} />;
 });
 
-// NotificationRecipient.contextTypes = {
-//     d2: PropTypes.object,
-// };
-
 /**
  * programNotificationTemplate are shared for both program notification and
  * programStage notifications. We use a customFieldOrder name to differentiate
@@ -284,6 +280,7 @@ export const programStageNotificationTemplate = new Map([
                     'WEB_HOOK',
                 ],
             },
+            component: NotificationRecipient,
         },
     ],
     [
