@@ -146,7 +146,6 @@ const NotificationRecipient = compose(
                 <Dropdown {...props} />
                 <TextField
                     label={label}
-                    multiLine
                     fullWidth
                     errorText={props.errorText}
                     required={props.isRequired}
