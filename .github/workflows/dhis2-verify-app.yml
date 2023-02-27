@@ -4,6 +4,9 @@ on:
     push:
         branches:
 
+concurrency:
+    group: ${{ github.workflow}}-${{ github.ref }}
+
 env:
     GIT_AUTHOR_NAME: '@dhis2-bot'
     GIT_AUTHOR_EMAIL: 'apps@dhis2.org'
