@@ -1,4 +1,3 @@
-import optionSet from './disabled-on-edit/optionSet.js';
 import { defaultAnalyticsPeriodBoundaries, createDefaultRuleForField } from './field-config/field-defaults';
 
 /**
