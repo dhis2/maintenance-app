@@ -7,11 +7,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import camelCaseToUnderscores from 'd2-utilizr/lib/camelCaseToUnderscores';
 
-const formats = {
-    json: 'JSON',
-    xml: 'XML',
-    csv: 'CSV',
-};
+const format = 'json';
 
 const compressions = {
     zip: 'Zip',
@@ -27,7 +23,10 @@ const styles = {
         marginTop: '20px',
     },
     downloadCount: {
-        marginTop: 0,
+        marginTop: '8px',
+    },
+    downloadFormat: {
+        display: 'inline-block',
     },
 };
 
@@ -45,7 +44,6 @@ export default class DownloadObjectDialog extends Component {
         super(props);
 
         this.state = {
-            format: 'json',
             compression: 'zip',
             skipSharing: false,
         };
@@ -58,7 +56,7 @@ export default class DownloadObjectDialog extends Component {
     };
 
     getDownloadUrl() {
-        const { format, compression, skipSharing } = this.state;
+        const { compression, skipSharing } = this.state;
         const { queryParamFilters, pluralName } = this.props;
 
         const compressionStr = compression !== 'none' ? `.${compression}` : '';
@@ -78,20 +76,9 @@ export default class DownloadObjectDialog extends Component {
     renderForm() {
         return (
             <div>
-                <SelectField
-                    value={this.state.format}
-                    onChange={this.handleChange.bind(this, 'format')}
-                    floatingLabelText={this.t('format')}
-                    fullWidth
-                >
-                    {Object.keys(formats).map(format => (
-                        <MenuItem
-                            value={format}
-                            primaryText={formats[format]}
-                            key={format}
-                        />
-                    ))}
-                </SelectField>
+                <span style={styles.downloadFormat}>
+                    {this.t('download_format_json')}
+                </span>
                 <SelectField
                     value={this.state.compression}
                     onChange={this.handleChange.bind(this, 'compression')}

@@ -1,3 +1,19 @@
+## [32.21.6](https://github.com/dhis2/maintenance-app/compare/v32.21.5...v32.21.6) (2023-02-14)
+
+
+### Bug Fixes
+
+* add code to categoryOptionGroupset [DHIS2-12749] ([#2438](https://github.com/dhis2/maintenance-app/issues/2438)) ([453b8e9](https://github.com/dhis2/maintenance-app/commit/453b8e9d05ffacc56f019f1b386330a6fb2ee03d))
+* add translations for program columns [DHIS2-12750] ([#2439](https://github.com/dhis2/maintenance-app/issues/2439)) ([b25e0f8](https://github.com/dhis2/maintenance-app/commit/b25e0f807ec4b294d5db61ea838a9bfa06e24f06))
+
+## [32.21.5](https://github.com/dhis2/maintenance-app/compare/v32.21.4...v32.21.5) (2023-01-16)
+
+
+### Bug Fixes
+
+* remove csv/xml downloads (start) [DHIS2-14482] ([#2430](https://github.com/dhis2/maintenance-app/issues/2430)) ([2e0afa6](https://github.com/dhis2/maintenance-app/commit/2e0afa62291204141f2709c5ff149c6228958d06))
+* remove irrelevant fields for progRulAct update [DHIS2-14462] ([#2429](https://github.com/dhis2/maintenance-app/issues/2429)) ([59841d4](https://github.com/dhis2/maintenance-app/commit/59841d42c9e6a931dea78fc4ea426ab2af887794))
+
 ## [32.21.4](https://github.com/dhis2/maintenance-app/compare/v32.21.3...v32.21.4) (2023-01-05)
 
 
