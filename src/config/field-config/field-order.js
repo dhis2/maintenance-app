@@ -72,6 +72,7 @@ const fieldOrderByName = new Map([
     ['categoryOptionGroupSet', [
         'name',
         'shortName',
+        'code',
         'description',
         'dataDimension',
         'dataDimensionType',
