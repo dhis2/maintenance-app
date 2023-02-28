@@ -206,7 +206,12 @@ function getAvailableColumnsForModel(model) {
         'programScope',
         'sortOrderInListNoProgram',
         'sortOrderInVisitSchedule',
-        'displayOnVisitSchedule'
+        'displayOnVisitSchedule',
+        'objectTypes',
+        'orgUnitLevelName', //dataApprovalLevels, seems to not be in use
+        'symbolizer', // legendSets, seems to not be in use,
+        'updateJobId', //SQLViews, always empty
+        'isDefault' // categories,categoryCombo, request filters out default - so superfluous
     ]);
     // These should have translated fields from the server, ie displayName.
     // In some cases the translated property does not exist on the model, and we should probably show
@@ -216,6 +221,11 @@ function getAvailableColumnsForModel(model) {
         'description',
         'shortName',
         'formName',
+        'instruction',
+        'subjectTemplate',
+        'messageTemplate',
+        'numeratorDescription',
+        'denominatorDescription',
     ]);
     let availableColumns = ['user[name]', 'lastUpdatedBy[name]'];
 
