@@ -10,6 +10,7 @@ import { decimals } from './sharedFields';
 import ProgramIndicatorExpression from './program-indicator/ProgramIndicatorExpression';
 import { ExpressionStatus } from './program-indicator/ExpressionStatusIcon';
 import { AnalyticsPeriodBoundaries } from './program-indicator/AnalyticsPeriodBoundaries';
+import OrgUnitField from './program-indicator/OrgUnitField';
 import createExpressionValidator from './program-indicator/createExpressionValidator';
 
 const enhance = compose(
@@ -48,6 +49,9 @@ const EnhancedProgramIndicatorExpression = enhance(ProgramIndicatorExpression);
 export default new Map([
     ['analyticsPeriodBoundaries', {
         component: AnalyticsPeriodBoundaries,
+    }],
+    ['orgUnitField', {
+        component: OrgUnitField,
     }],
     ['expression', {
         component: (props) => <EnhancedProgramIndicatorExpression {...props} type="expression" />

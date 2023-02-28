@@ -120,6 +120,7 @@ const fieldGroupsForModelType = new Map([
                     'decimals',
                     'aggregationType',
                     'analyticsType',
+                    'orgUnitField',
                     'analyticsPeriodBoundaries',
                     'displayInForm',
                     'legendSets',
