@@ -1,3 +1,10 @@
+# [32.22.0](https://github.com/dhis2/maintenance-app/compare/v32.21.6...v32.22.0) (2023-02-28)
+
+
+### Features
+
+* **option-set:** add support for multi-text valuetype ([#2435](https://github.com/dhis2/maintenance-app/issues/2435)) ([ba64d73](https://github.com/dhis2/maintenance-app/commit/ba64d735472d93c270d6e55e8cf40301f034192e))
+
 ## [32.21.6](https://github.com/dhis2/maintenance-app/compare/v32.21.5...v32.21.6) (2023-02-14)
 
 
