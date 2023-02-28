@@ -8,11 +8,6 @@ import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem/MenuItem';
 
 
-// A map to filter out options across all usages of the dropdown
-// Entries are ['referenceProperty' of the rendered field, optionsToFilter]
-// ['valueType', ['MULTI_TEXT']], means filter out options "MULTI_TEXT" when referenceProperty is "valueType"
-const OPTIONS_BLOCK_LIST = new Map([['valueType', ['MULTI_TEXT']]])
-
 class Dropdown extends Component {
     constructor(props, context) {
         super(props, context);
@@ -30,6 +25,12 @@ class Dropdown extends Component {
         this.setState({
             options: this.getOptions(newProps.options, newProps.isRequired),
         });
+
+        if(newProps.value !== this.props.value) {
+            this.setState({
+                value: newProps.value
+            })
+        }
     }
 
     onChange = (event, index, value) => {
@@ -46,11 +47,6 @@ class Dropdown extends Component {
                 value: option.value,
                 text: option.text,
             }));
-
-        const blockedProperties = OPTIONS_BLOCK_LIST.get(this.props.referenceProperty)
-        if(blockedProperties) {
-            opts = opts.filter(opt => !blockedProperties.includes(opt.value))
-        }
 
         return opts
             .map((option) => {
