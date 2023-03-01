@@ -1,3 +1,31 @@
+## [32.22.3](https://github.com/dhis2/maintenance-app/compare/v32.22.2...v32.22.3) (2023-03-01)
+
+
+### Bug Fixes
+
+* sorting options in natural sort order [DHIS2-13714] ([b221696](https://github.com/dhis2/maintenance-app/commit/b2216967bd5776fd8ff899617c6dd8f6c2b7887a))
+
+## [32.22.2](https://github.com/dhis2/maintenance-app/compare/v32.22.1...v32.22.2) (2023-03-01)
+
+
+### Bug Fixes
+
+* add missing translations and clean custom columns ([#2447](https://github.com/dhis2/maintenance-app/issues/2447)) ([cacc93a](https://github.com/dhis2/maintenance-app/commit/cacc93ab3780283e101b6c01ac52e0c7c5931511))
+
+## [32.22.1](https://github.com/dhis2/maintenance-app/compare/v32.22.0...v32.22.1) (2023-03-01)
+
+
+### Bug Fixes
+
+* sort options by sort order [DHIS2-14602] ([#2445](https://github.com/dhis2/maintenance-app/issues/2445)) ([a183abe](https://github.com/dhis2/maintenance-app/commit/a183abe74c463d0254ec1da3bc018a4879fac343))
+
+# [32.22.0](https://github.com/dhis2/maintenance-app/compare/v32.21.6...v32.22.0) (2023-02-28)
+
+
+### Features
+
+* **option-set:** add support for multi-text valuetype ([#2435](https://github.com/dhis2/maintenance-app/issues/2435)) ([ba64d73](https://github.com/dhis2/maintenance-app/commit/ba64d735472d93c270d6e55e8cf40301f034192e))
+
 ## [32.21.6](https://github.com/dhis2/maintenance-app/compare/v32.21.5...v32.21.6) (2023-02-14)
 
 
