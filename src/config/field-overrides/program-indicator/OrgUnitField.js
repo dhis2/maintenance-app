@@ -46,23 +46,23 @@ export default class OrgUnitField extends Component {
         this.staticOptions = {
             event: {
                 value: ANALYTICS_TYPE_EVENT,
-                text: this.translate('Event'),
+                text: this.translate('event_organisation_unit'),
             },
             enrollment: {
                 value: ANALYTICS_TYPE_ENROLLMENT,
-                text: this.translate('Enrollment'),
+                text: this.translate('enrollment_organisation_unit'),
             },
             ownerAtStart: {
                 value: 'OWNER_AT_START',
-                text: this.translate('Owner at start'),
+                text: this.translate('owner_at_start_organisation_unit'),
             },
             ownerAtEnd: {
                 value: 'OWNER_AT_END',
-                text: this.translate('Owner at end'),
+                text: this.translate('owner_at_end_organisation_unit'),
             },
             registration: {
                 value: 'REGISTRATION',
-                text: this.translate('Registration'),
+                text: this.translate('registration_organisation_unit'),
             },
         };
         this.onChange = this.onChange.bind(this);
@@ -305,7 +305,7 @@ export default class OrgUnitField extends Component {
 
         return (
             <DropDown
-                labelText={this.translate('Organisation unit field')}
+                labelText={this.translate('organisation_unit_field')}
                 errorText={this.state.error ? this.state.error.message : ''}
                 onChange={this.onChange}
                 translateLabel={false}
