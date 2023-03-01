@@ -2,7 +2,7 @@ import { defaultAnalyticsPeriodBoundaries, createDefaultRuleForField } from './f
 
 /**
  * Rule functions in EditModel/form-rules
- *
+ * 
  * Rules for the form fields.
  * If multiple `when` objects are specified these are evaluated as an OR.
  * The following would result check if either of the statements return true
@@ -627,7 +627,6 @@ export default new Map([
             field: 'orgUnitField',
             type: 'HIDE_FIELD',
         }],
-
     }, {
         field: 'analyticsPeriodBoundaries',
         when: [{
