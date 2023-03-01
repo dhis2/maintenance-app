@@ -156,10 +156,12 @@ export default class OrgUnitField extends Component {
             return false;
         }
 
+        // For event programs no analytics type is required
         if (program.programType === PROGRAM_TYPE_WITHOUT_REGISTRATION) {
             return true;
         }
 
+        // For tracker programs we do need and analytics type
         if (
             program.programType === PROGRAM_TYPE_WITH_REGISTRATION &&
             analyticsType
@@ -173,14 +175,17 @@ export default class OrgUnitField extends Component {
     shouldFetchDataElementsForProgram() {
         const { program, analyticsType } = this.props.model;
 
+        // Do not fetch whilst loading
         if (this.state.loading) {
             return false;
         }
 
+        // Only fetch when all params are available
         if (!this.hasRequiredParams()) {
             return false;
         }
 
+        // This combination of params does not need data elements
         if (
             program.programType === PROGRAM_TYPE_WITH_REGISTRATION &&
             analyticsType === ANALYTICS_TYPE_ENROLLMENT
@@ -188,6 +193,7 @@ export default class OrgUnitField extends Component {
             return false;
         }
 
+        // Only fetch when not unavailable
         return !Array.isArray(
             this.state.dataElements[this.props.model.program.id]
         );
