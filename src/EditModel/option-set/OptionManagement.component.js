@@ -107,21 +107,6 @@ class OptionManagement extends Component {
         translate: true,
     });
 
-    displayInCorrectOrderWarning() {
-        if (!(this.props.pager && this.props.pager.total > 50)) {
-            return null;
-        }
-
-        return (
-            <div style={styles.alertWrapper}>
-                <AlertIcon color="orange" />
-                <div style={styles.alertText}>
-                    {this.i18n.getTranslation('list_might_not_represent_the_accurate_order_of_options_due_the_availability_of_pagination')}
-                </div>
-            </div>
-        );
-    }
-
     isContextActionAllowed = (model, action) => {
         if (!model || !model.access) {
             return false;
@@ -190,7 +175,6 @@ class OptionManagement extends Component {
 
         return (
             <div style={styles.optionManagementWrap}>
-                {this.displayInCorrectOrderWarning()}
                 {this.renderPagination()}
                 <OptionSorter
                     style={styles.sortBarStyle}
