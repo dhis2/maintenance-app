@@ -208,7 +208,7 @@ function getAvailableColumnsForModel(model) {
         'sortOrderInVisitSchedule',
         'displayOnVisitSchedule',
         'objectTypes',
-        'orgUnitLevelName', //dataApprovalLevels, seems to not be in use
+        'orgUnitLevelName', //dataApprovalLevels, seems to always be empty
         'symbolizer', // legendSets, seems to not be in use,
         'updateJobId', //SQLViews, always empty
         'isDefault' // categories,categoryCombo, request filters out default - so superfluous
