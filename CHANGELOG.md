@@ -1,3 +1,10 @@
+## [32.22.2](https://github.com/dhis2/maintenance-app/compare/v32.22.1...v32.22.2) (2023-03-01)
+
+
+### Bug Fixes
+
+* add missing translations and clean custom columns ([#2447](https://github.com/dhis2/maintenance-app/issues/2447)) ([cacc93a](https://github.com/dhis2/maintenance-app/commit/cacc93ab3780283e101b6c01ac52e0c7c5931511))
+
 ## [32.22.1](https://github.com/dhis2/maintenance-app/compare/v32.22.0...v32.22.1) (2023-03-01)
 
 
