@@ -1,3 +1,10 @@
+## [32.22.3](https://github.com/dhis2/maintenance-app/compare/v32.22.2...v32.22.3) (2023-03-01)
+
+
+### Bug Fixes
+
+* sorting options in natural sort order [DHIS2-13714] ([b221696](https://github.com/dhis2/maintenance-app/commit/b2216967bd5776fd8ff899617c6dd8f6c2b7887a))
+
 ## [32.22.2](https://github.com/dhis2/maintenance-app/compare/v32.22.1...v32.22.2) (2023-03-01)
 
 
