@@ -8,9 +8,10 @@ const ANALYTICS_TYPE_EVENT = 'EVENT';
 const ANALYTICS_TYPE_ENROLLMENT = 'ENROLLMENT';
 const ORG_UNIT_VALUE_TYPE = 'ORGANISATION_UNIT';
 const PROGRAM_REQUEST_OPTIONS = {
-    fields: 'programStages[id,programStageDataElements[dataElement[id,displayName,valueType]]',
+    fields:
+        'programStages[id,programStageDataElements[dataElement[id,displayName,valueType]]',
     paging: false,
-}
+};
 const extractOrgUnitDataElementsFromProgramStage = program =>
     program.programStages.toArray().flatMap(({ programStageDataElements }) =>
         programStageDataElements.reduce((acc, { dataElement }) => {
@@ -55,11 +56,16 @@ export default class OrgUnitField extends Component {
             error: null,
             value: undefined,
             dataElements: {},
+            options: [],
         };
         this.staticOptions = {
-            event: {
+            eventDefault: {
                 value: ANALYTICS_TYPE_EVENT,
-                text: this.translate('event_organisation_unit'),
+                text: this.translate('event_organisation_unit_default'),
+            },
+            enrollmentDefault: {
+                value: ANALYTICS_TYPE_ENROLLMENT,
+                text: this.translate('enrollment_organisation_unit_default'),
             },
             enrollment: {
                 value: ANALYTICS_TYPE_ENROLLMENT,
@@ -87,16 +93,38 @@ export default class OrgUnitField extends Component {
         if (this.hasRequiredParams()) {
             this.fetchDataElements();
         }
+        this.setState({ options: this.getOptions() });
 
         this.updateManualPrevProps();
     }
 
-    componentDidUpdate() {
-        if (
-            this.hasRelevantPropChanged() &&
-            this.shouldFetchDataElementsForProgram()
-        ) {
+    componentDidUpdate(_, prevState) {
+        const isDoneLoading =
+            prevState.loading === true && this.state.loading === false;
+        const hasRelevantPropChanged = this.hasRelevantPropChanged();
+        const requiresDataElementsForProgram = this.requiresDataElementsForProgram();
+        const shouldFetch =
+            hasRelevantPropChanged && requiresDataElementsForProgram;
+        const shouldSetOptions =
+            (isDoneLoading || hasRelevantPropChanged) &&
+            !requiresDataElementsForProgram;
+
+        if (shouldFetch) {
             this.fetchDataElements();
+        }
+
+        if (shouldSetOptions) {
+            const options = this.getOptions();
+            const isCurrentValueInOptions = options.some(
+                ({ value }) => value === this.props.value
+            );
+
+            // Reset selection to default if selected option is no longer valid
+            if (!isCurrentValueInOptions) {
+                this.props.onChange({ target: { value: undefined } });
+            }
+
+            this.setState({ options });
         }
 
         this.updateManualPrevProps();
@@ -175,7 +203,7 @@ export default class OrgUnitField extends Component {
         return false;
     }
 
-    shouldFetchDataElementsForProgram() {
+    requiresDataElementsForProgram() {
         const { program, analyticsType } = this.props.model;
 
         // Do not fetch whilst loading
@@ -242,7 +270,7 @@ export default class OrgUnitField extends Component {
             hasDataElements
         ) {
             return [
-                this.staticOptions.event,
+                this.staticOptions.eventDefault,
                 ...this.getDataElementsForProgram(),
             ];
         }
@@ -253,7 +281,7 @@ export default class OrgUnitField extends Component {
             hasDataElements
         ) {
             return [
-                this.staticOptions.event,
+                this.staticOptions.eventDefault,
                 ...this.getProgramAttributesForProgram(),
                 ...this.getDataElementsForProgram(),
                 this.staticOptions.registration,
@@ -268,7 +296,7 @@ export default class OrgUnitField extends Component {
             analyticsType === ANALYTICS_TYPE_ENROLLMENT
         ) {
             return [
-                this.staticOptions.enrollment,
+                this.staticOptions.enrollmentDefault,
                 ...this.getProgramAttributesForProgram(),
                 this.staticOptions.registration,
                 this.staticOptions.ownerAtStart,
@@ -312,7 +340,7 @@ export default class OrgUnitField extends Component {
                 errorText={this.state.error ? this.state.error.message : ''}
                 onChange={this.onChange}
                 translateLabel={false}
-                options={this.getOptions()}
+                options={this.state.options}
                 disabled={this.state.loading}
                 isRequired={true}
                 value={this.props.value || this.getDefaultValue()}
