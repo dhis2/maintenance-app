@@ -102,12 +102,12 @@ export default class OrgUnitField extends Component {
         const isDoneLoading =
             prevState.loading === true && this.state.loading === false;
         const hasRelevantPropChanged = this.hasRelevantPropChanged();
-        const requiresDataElementsForProgram = this.requiresDataElementsForProgram();
+        const shouldFetchDataElementsForProgram = this.shouldFetchDataElementsForProgram();
         const shouldFetch =
-            hasRelevantPropChanged && requiresDataElementsForProgram;
+            hasRelevantPropChanged && shouldFetchDataElementsForProgram;
         const shouldSetOptions =
             (isDoneLoading || hasRelevantPropChanged) &&
-            !requiresDataElementsForProgram;
+            !shouldFetchDataElementsForProgram;
 
         if (shouldFetch) {
             this.fetchDataElements();
@@ -203,7 +203,7 @@ export default class OrgUnitField extends Component {
         return false;
     }
 
-    requiresDataElementsForProgram() {
+    shouldFetchDataElementsForProgram() {
         const { program, analyticsType } = this.props.model;
 
         // Do not fetch whilst loading
