@@ -7,6 +7,19 @@ const PROGRAM_TYPE_WITHOUT_REGISTRATION = 'WITHOUT_REGISTRATION';
 const ANALYTICS_TYPE_EVENT = 'EVENT';
 const ANALYTICS_TYPE_ENROLLMENT = 'ENROLLMENT';
 const ORG_UNIT_VALUE_TYPE = 'ORGANISATION_UNIT';
+const PROGRAM_REQUEST_OPTIONS = {
+    fields: 'programStages[id,programStageDataElements[dataElement[id,displayName,valueType]]',
+    paging: false,
+}
+const extractOrgUnitDataElementsFromProgramStage = program =>
+    program.programStages.toArray().flatMap(({ programStageDataElements }) =>
+        programStageDataElements.reduce((acc, { dataElement }) => {
+            if (dataElement.valueType === ORG_UNIT_VALUE_TYPE) {
+                acc.push(dataElement);
+            }
+            return acc;
+        }, [])
+    );
 
 /*
 The reason all of this works needs some clarification:
@@ -118,20 +131,9 @@ export default class OrgUnitField extends Component {
         });
 
         try {
-            const api = this.d2.Api.getApi();
-            const url = `programs/${this.props.model.program.id}`;
-            const data = {
-                fields:
-                    'programStages[id,programStageDataElements[dataElement[id,displayName,valueType]]',
-            };
-            const allDataElements = await api.get(url, data);
-            const orgUnitFieldDataElements = allDataElements.programStages
-                .flatMap(({ programStageDataElements }) =>
-                    programStageDataElements.map(
-                        ({ dataElement }) => dataElement
-                    )
-                )
-                .filter(({ valueType }) => valueType === ORG_UNIT_VALUE_TYPE);
+            const orgUnitFieldDataElements = await this.d2.models.program
+                .get(this.props.model.program.id, PROGRAM_REQUEST_OPTIONS)
+                .then(extractOrgUnitDataElementsFromProgramStage);
 
             this.setState({
                 dataElements: {
@@ -142,7 +144,7 @@ export default class OrgUnitField extends Component {
                 error: null,
             });
         } catch (error) {
-            console.error(error)
+            console.error(error);
             this.setState({
                 loading: false,
                 error,
