@@ -313,6 +313,7 @@ export default class OrgUnitField extends Component {
                 disabled={this.state.loading}
                 isRequired={true}
                 value={this.props.value || this.getDefaultValue()}
+                style={this.props.style}
             />
         );
     }
