@@ -1,3 +1,10 @@
+## [32.22.4](https://github.com/dhis2/maintenance-app/compare/v32.22.3...v32.22.4) (2023-03-02)
+
+
+### Bug Fixes
+
+* **programNotifications:** move webhook url to recipient step ([#2444](https://github.com/dhis2/maintenance-app/issues/2444)) ([2e51775](https://github.com/dhis2/maintenance-app/commit/2e517752db9bc0441588b73588da7c509363d83e))
+
 ## [32.22.3](https://github.com/dhis2/maintenance-app/compare/v32.22.2...v32.22.3) (2023-03-01)
 
 
