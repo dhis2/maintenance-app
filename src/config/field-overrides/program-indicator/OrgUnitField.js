@@ -142,6 +142,7 @@ export default class OrgUnitField extends Component {
                 error: null,
             });
         } catch (error) {
+            console.error(error)
             this.setState({
                 loading: false,
                 error,
