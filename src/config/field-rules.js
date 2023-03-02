@@ -616,6 +616,17 @@ export default new Map([
                 }
             },
         }],
+    },{
+        field: 'orgUnitField',
+        when: [{
+            field: 'program',
+            operator: 'EQUALS',
+            value: undefined,
+        }],
+        operations: [{
+            field: 'orgUnitField',
+            type: 'HIDE_FIELD',
+        }],
     }, {
         field: 'analyticsPeriodBoundaries',
         when: [{
