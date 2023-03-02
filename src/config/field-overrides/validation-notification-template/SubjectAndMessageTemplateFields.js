@@ -52,20 +52,12 @@ export default class SubjectAndMessageTemplateFields extends Component {
         });
     }
 
-    getMessageLabel() {
-        const d2 = this.context.d2;
-        if(this.props.model && this.props.model.notificationRecipient === 'WEB_HOOK') {
-            return d2.i18n.getTranslation('web_hook_url')
-        }
-        return d2.i18n.getTranslation('message_template')
-    }
-
     render() {
         const d2 = this.context.d2;
 
         const subjectChange = (event, value) => this.props.onUpdate({ fieldName: 'subjectTemplate', value });
         const messageChange = (event, value) => this.props.onUpdate({ fieldName: 'messageTemplate', value });
-        const messageLabel = this.getMessageLabel();
+        const messageLabel = d2.i18n.getTranslation('message_template')
 
         return (
             <div style={{ ...styles.fieldWrap, ...this.props.style }}>
@@ -87,7 +79,8 @@ export default class SubjectAndMessageTemplateFields extends Component {
                             />
                         </div>
                         <div>
-                            <TextField
+                        {this.props.model && this.props.model.notificationRecipient !== 'WEB_HOOK'
+                             && (<TextField
                                 label="messageTemplate"
                                 multiLine
                                 fullWidth
@@ -98,7 +91,7 @@ export default class SubjectAndMessageTemplateFields extends Component {
                                 value={this.props.model.messageTemplate || ''}
                                 onChange={messageChange}
                                 onKeyUp={this.setActiveField('messageTemplate')}
-                            />
+                            />)}
                         </div>
                     </Column>
                     <VariableList onItemSelected={this.insertVariable} variableTypes={this.props.variableTypes} />
