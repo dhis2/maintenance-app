@@ -1,3 +1,10 @@
+# [32.23.0](https://github.com/dhis2/maintenance-app/compare/v32.22.4...v32.23.0) (2023-03-02)
+
+
+### Features
+
+* introduce org-unit-field override component ([#2448](https://github.com/dhis2/maintenance-app/issues/2448)) ([a38f189](https://github.com/dhis2/maintenance-app/commit/a38f189ad9b675b6783711d8a9a7b4cc4869c49d))
+
 ## [32.22.4](https://github.com/dhis2/maintenance-app/compare/v32.22.3...v32.22.4) (2023-03-02)
 
 
