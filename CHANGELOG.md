@@ -1,3 +1,10 @@
+## [32.23.1](https://github.com/dhis2/maintenance-app/compare/v32.23.0...v32.23.1) (2023-03-06)
+
+
+### Bug Fixes
+
+* **programrule:** rename hide program stage action ([#2389](https://github.com/dhis2/maintenance-app/issues/2389)) ([a3046a3](https://github.com/dhis2/maintenance-app/commit/a3046a33425af934fef1fc65bdcd4fd1d5015011))
+
 # [32.23.0](https://github.com/dhis2/maintenance-app/compare/v32.22.4...v32.23.0) (2023-03-02)
 
 
