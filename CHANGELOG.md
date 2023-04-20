@@ -1,3 +1,10 @@
+## [32.23.2](https://github.com/dhis2/maintenance-app/compare/v32.23.1...v32.23.2) (2023-04-20)
+
+
+### Bug Fixes
+
+* use en as default for localeCompare ([#2462](https://github.com/dhis2/maintenance-app/issues/2462)) ([165ebc1](https://github.com/dhis2/maintenance-app/commit/165ebc180643a3dfd95259de3e9effc4209b8d86))
+
 ## [32.23.1](https://github.com/dhis2/maintenance-app/compare/v32.23.0...v32.23.1) (2023-03-06)
 
 
