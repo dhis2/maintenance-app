@@ -536,35 +536,30 @@ export default new Map([
         field: 'analyticsPeriodBoundaries',
         when: [{
             field: 'analyticsType',
-            operator: 'EQUALS',
-            value: 'EVENT',
+            operator: 'HAS_VALUE',
         }],
         operations: [{
             type: 'CHANGE_VALUE',
             setValue: (model, fieldConfig) => {
                 if (fieldConfig) {
-                    fieldConfig.value = defaultAnalyticsPeriodBoundaries('event', fieldConfig.value);
-                    model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries('event', fieldConfig.value);
+                    const prevAnalyticsType = fieldConfig.previousAnalyticsType;
+                    const analyticsType = model.analyticsType
+                    const currentBoundaries = fieldConfig.value;
+                    const didChange = prevAnalyticsType && prevAnalyticsType !== analyticsType;
+
+                    if(!currentBoundaries || didChange) {
+                        const defaultValue = defaultAnalyticsPeriodBoundaries(analyticsType, fieldConfig.value);
+                        fieldConfig.value = defaultValue;
+                        model[fieldConfig.name] = defaultValue;
+                    }
+                    // save previous analytics type to be able to check if it has changed
+                    // no other good way to check, since all rules are run on every change
+                    fieldConfig.previousAnalyticsType = analyticsType;
                 }
-            },
-        }],
-    }, {
-        field: 'analyticsPeriodBoundaries',
-        when: [{
-            field: 'analyticsType',
-            operator: 'EQUALS',
-            value: 'ENROLLMENT',
-        }],
-        operations: [{
-            type: 'CHANGE_VALUE',
-            setValue: (model, fieldConfig) => {
-                if (fieldConfig) {
-                    fieldConfig.value = defaultAnalyticsPeriodBoundaries('enrollment', fieldConfig.value);
-                    model[fieldConfig.name] = defaultAnalyticsPeriodBoundaries('enrollment', fieldConfig.value);
-                }
-            },
-        }],
-    }]],
+            }
+        }]
+    },
+    ]],
     ['programStageNotificationTemplate', [
         {
             field: 'notificationTrigger',
