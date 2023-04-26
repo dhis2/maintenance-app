@@ -1,5 +1,3 @@
-import { isEqual } from 'lodash/fp';
-
 import {
     BEFORE_END_OF_REPORTING_PERIOD,
     AFTER_START_OF_REPORTING_PERIOD,
