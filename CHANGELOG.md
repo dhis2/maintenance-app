@@ -1,3 +1,10 @@
+## [32.23.3](https://github.com/dhis2/maintenance-app/compare/v32.23.2...v32.23.3) (2023-04-27)
+
+
+### Bug Fixes
+
+* **programindicators:** default period boundary ([#2468](https://github.com/dhis2/maintenance-app/issues/2468)) ([b3e51b4](https://github.com/dhis2/maintenance-app/commit/b3e51b4b7ec3b65d5e5466cbc6a6041c1cff1936))
+
 ## [32.23.2](https://github.com/dhis2/maintenance-app/compare/v32.23.1...v32.23.2) (2023-04-20)
 
 
