@@ -1,5 +1,3 @@
-import { isEqual } from 'lodash/fp';
-
 import {
     BEFORE_END_OF_REPORTING_PERIOD,
     AFTER_START_OF_REPORTING_PERIOD,
@@ -7,9 +5,9 @@ import {
     ENROLLMENT_DATE,
 } from '../field-overrides/program-indicator/enums';
 
-export function defaultAnalyticsPeriodBoundaries(type, current) {
-    const defaultProps = {
-        enrollment: [
+export function defaultAnalyticsPeriodBoundaries(type) {
+    const defaultBoundaries = {
+        ENROLLMENT: [
             {
                 analyticsPeriodBoundaryType: AFTER_START_OF_REPORTING_PERIOD,
                 boundaryTarget: ENROLLMENT_DATE,
@@ -19,7 +17,7 @@ export function defaultAnalyticsPeriodBoundaries(type, current) {
                 boundaryTarget: ENROLLMENT_DATE,
             },
         ],
-        event: [
+        EVENT: [
             {
                 analyticsPeriodBoundaryType: AFTER_START_OF_REPORTING_PERIOD,
                 boundaryTarget: EVENT_DATE,
@@ -30,17 +28,7 @@ export function defaultAnalyticsPeriodBoundaries(type, current) {
             },
         ],
     };
-
-    function isNotDefault(val) {
-        return !isEqual(val, defaultProps.event)
-            && !isEqual(val, defaultProps.enrollment);
-    }
-
-    if (current && isNotDefault(current)) {
-        return current;
-    }
-
-    return defaultProps[type];
+    return defaultBoundaries[type];
 }
 
 /**
