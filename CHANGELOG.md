@@ -1,3 +1,10 @@
+## [32.23.4](https://github.com/dhis2/maintenance-app/compare/v32.23.3...v32.23.4) (2023-05-09)
+
+
+### Bug Fixes
+
+* program indicator clean up [DHIS2-14951] ([#2467](https://github.com/dhis2/maintenance-app/issues/2467)) ([78fd74e](https://github.com/dhis2/maintenance-app/commit/78fd74ea0d8e26e47cd50db7556999881285362f))
+
 ## [32.23.3](https://github.com/dhis2/maintenance-app/compare/v32.23.2...v32.23.3) (2023-04-27)
 
 
