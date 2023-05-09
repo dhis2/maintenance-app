@@ -29,6 +29,8 @@ const programIndicatorVariables = [
     'sync_date',
     'value_count',
     'zero_pos_value_count',
+    'analytics_period_start',
+    'analytics_period_end',
 ];
 // See https://jira.dhis2.org/browse/DHIS2-6256 for reference
 // Hidden if true
@@ -37,7 +39,7 @@ const conditionalPIVariables = {
     enrollment_date: isEventProgram,
     enrollment_status: isEventProgram,
     event_count: overSome([isFilterType, isAggregationTypeNotCount]),
-    org_unit_count: isFilterType,
+    org_unit_count:  overSome([isFilterType, isAggregationTypeNotCount]),
     incident_date: isEventProgram,
     program_stage_id: isAnalyticsTypeEnrollment,
     program_stage_name: isAnalyticsTypeEnrollment,
