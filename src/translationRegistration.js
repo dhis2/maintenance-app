@@ -55,7 +55,7 @@ import { isRequired, isUrl, isNumber as isNumberValidator, isEmail } from 'd2-ui
     isRequired.message,
     isUrl.message,
     isNumberValidator.message,
-    isEmail.message,
+    'value_should_be_an_email',
     'value_not_max',
     'value_not_min',
     'value_not_max',

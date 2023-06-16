@@ -2,7 +2,6 @@ import {
     isRequired,
     isUrl,
     isNumber as isNumberValidator,
-    isEmail,
 } from 'd2-ui/lib/forms/Validators';
 import isString from 'd2-utilizr/lib/isString';
 import { getOr, isNumber } from 'lodash/fp';
@@ -43,6 +42,17 @@ function isIntegerValidator(value) {
 }
 isIntegerValidator.message = 'number_should_not_have_decimals';
 
+function isEmpty(value) {
+    return typeof value === 'undefined' || value === null || value === ''
+}
+
+const EMAIL_ADDRESS_PATTERN =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i
+function isEmailValidator(value) {
+    return isEmpty(value) || (isString(value) && EMAIL_ADDRESS_PATTERN.test(value))
+}
+isEmailValidator.message = 'value_should_be_an_email'
+
 export function createValidatorFromValidatorFunction(validatorFn) {
     return {
         validator: validatorFn,
@@ -72,6 +82,7 @@ function addValidatorForType(type, modelValidation) {
     minTextOrArray.message = 'value_not_min';
 
     const validators = [];
+    
 
     switch (type) {
         case NUMBER:
@@ -118,7 +129,7 @@ function addValidatorForType(type, modelValidation) {
             validators.push(createValidatorFromValidatorFunction(isUrl));
             break;
         case EMAIL:
-            validators.push(createValidatorFromValidatorFunction(isEmail));
+            validators.push(createValidatorFromValidatorFunction(isEmailValidator));
             break;
         default:
             break;
