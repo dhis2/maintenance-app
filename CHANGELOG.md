@@ -1,3 +1,10 @@
+## [32.23.22](https://github.com/dhis2/maintenance-app/compare/v32.23.21...v32.23.22) (2023-06-28)
+
+
+### Bug Fixes
+
+* update email validator [DHIS2-15417] ([#2549](https://github.com/dhis2/maintenance-app/issues/2549)) ([e6cafd7](https://github.com/dhis2/maintenance-app/commit/e6cafd7565838bd347525ec8042d5779d4f872f5))
+
 ## [32.23.21](https://github.com/dhis2/maintenance-app/compare/v32.23.20...v32.23.21) (2023-06-28)
 
 
