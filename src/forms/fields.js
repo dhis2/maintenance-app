@@ -46,6 +46,8 @@ function isEmpty(value) {
     return typeof value === 'undefined' || value === null || value === ''
 }
 
+// Email pattern also used in @dhis2/ui-forms (not imported to avoid additional dependency)
+// Taken from the HTML5 spec http://www.w3.org/TR/html5/forms.html#e-mail-state-(type=email)
 const EMAIL_ADDRESS_PATTERN =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i
 function isEmailValidator(value) {
