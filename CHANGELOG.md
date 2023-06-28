@@ -1,3 +1,60 @@
+## [32.23.21](https://github.com/dhis2/maintenance-app/compare/v32.23.20...v32.23.21) (2023-06-28)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([c1fa742](https://github.com/dhis2/maintenance-app/commit/c1fa74258d05233603fefaa19d5bbd7d24402bc4))
+
+## [32.23.20](https://github.com/dhis2/maintenance-app/compare/v32.23.19...v32.23.20) (2023-06-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([74ad162](https://github.com/dhis2/maintenance-app/commit/74ad16203a1995b9e3af290a3682a11f74479ef9))
+
+## [32.23.19](https://github.com/dhis2/maintenance-app/compare/v32.23.18...v32.23.19) (2023-06-24)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([5413834](https://github.com/dhis2/maintenance-app/commit/5413834c1f86d5e52487d38eaecb1385611d9505))
+
+## [32.23.18](https://github.com/dhis2/maintenance-app/compare/v32.23.17...v32.23.18) (2023-06-23)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([fd4abcb](https://github.com/dhis2/maintenance-app/commit/fd4abcb038ac150528e24b42fbe6ba9e86f6ff8d))
+
+## [32.23.17](https://github.com/dhis2/maintenance-app/compare/v32.23.16...v32.23.17) (2023-06-22)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([58da54f](https://github.com/dhis2/maintenance-app/commit/58da54f30c95025307639b9c85634bdea919d761))
+
+## [32.23.16](https://github.com/dhis2/maintenance-app/compare/v32.23.15...v32.23.16) (2023-06-21)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ad8ac2b](https://github.com/dhis2/maintenance-app/commit/ad8ac2bae58bd73a5b0122ac4a8e05b5b0cc81a0))
+* **translations:** sync translations from transifex (master) ([ce47552](https://github.com/dhis2/maintenance-app/commit/ce47552b0b11fd0123530a21e4b82b6a7dd4404c))
+
+## [32.23.15](https://github.com/dhis2/maintenance-app/compare/v32.23.14...v32.23.15) (2023-06-18)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([1a407d8](https://github.com/dhis2/maintenance-app/commit/1a407d82dace64753bd765c903f737dd8ecb7b3f))
+
+## [32.23.14](https://github.com/dhis2/maintenance-app/compare/v32.23.13...v32.23.14) (2023-06-17)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([f81c12b](https://github.com/dhis2/maintenance-app/commit/f81c12bafcae9e258a451bf63b42de180238f97b))
+
 ## [32.23.13](https://github.com/dhis2/maintenance-app/compare/v32.23.12...v32.23.13) (2023-06-16)
 
 
