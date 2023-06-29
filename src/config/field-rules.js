@@ -89,35 +89,16 @@ export default new Map([
                         if(fieldConfig.originalOptions) {
                             fieldConfig.props.options = fieldConfig.originalOptions;
                         }
-                        if(model.domainType === 'TRACKER') {
-                            // only set fieldConfig here, model is set below in optionSet since it depends on
-                            // the optionSet value to be set to check for the valueType.
-                            fieldConfig.value = undefined
-                        }
-                } else {
-                        // MULTI_TEXT should not be selectable for valueType for dataElements, since it needs to be an optionSet
-                        // thus the option is removed from the valueType options
-                        const options = fieldConfig.props.options;
-                        if(!fieldConfig.originalOptions) {
-                            fieldConfig.originalOptions = fieldConfig.props.options;
-                        }
-                        fieldConfig.props.options = options.filter(option => option.value !== 'MULTI_TEXT');
-                    }
-                },
-            }, {
-                type: 'CHANGE_VALUE',
-                field: 'optionSet',
-                setValue: (model, fieldConfig) => {
-                    const isMultiText = model && (model.valueType === 'MULTI_TEXT'
-                            || (model.optionSet && model.optionSet.valueType === 'MULTI_TEXT'));
-                    if(model && model.domainType === 'TRACKER' && isMultiText) {
-                        fieldConfig.props.errorText = 'Value type cannot be "Multi text" when domain type is "Tracker"'
-                        model.valueType = undefined
-                        model.optionSet = fieldConfig.value = undefined;
                     } else {
-                        fieldConfig.props.errorText = undefined;
-                    }
-                },
+                            // MULTI_TEXT should not be selectable for valueType for dataElements, since it needs to be an optionSet
+                            // thus the option is removed from the valueType options
+                            const options = fieldConfig.props.options;
+                            if(!fieldConfig.originalOptions) {
+                                fieldConfig.originalOptions = fieldConfig.props.options;
+                            }
+                            fieldConfig.props.options = options.filter(option => option.value !== 'MULTI_TEXT');
+                        }
+                    },
             }],
         },
         {
