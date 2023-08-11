@@ -1,3 +1,10 @@
+## [32.23.31](https://github.com/dhis2/maintenance-app/compare/v32.23.30...v32.23.31) (2023-08-11)
+
+
+### Bug Fixes
+
+* update invalid email text [DHIS2-15416] ([#2550](https://github.com/dhis2/maintenance-app/issues/2550)) ([a22da8e](https://github.com/dhis2/maintenance-app/commit/a22da8e0a4104c09758b158163f897f651164b6e))
+
 ## [32.23.30](https://github.com/dhis2/maintenance-app/compare/v32.23.29...v32.23.30) (2023-08-02)
 
 
