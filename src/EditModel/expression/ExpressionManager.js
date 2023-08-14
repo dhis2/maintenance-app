@@ -47,6 +47,8 @@ const styles = {
     expressionDescription: {
         padding: '1rem',
         margin: '1rem 0',
+        maxHeight: '250px',
+        overflow: 'auto',
     },
     expressionMessage: {
         valid: {
