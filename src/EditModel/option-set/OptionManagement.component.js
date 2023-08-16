@@ -9,10 +9,10 @@ import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
-import AlertIcon from 'material-ui/svg-icons/alert/warning';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
 import TextField from 'material-ui/TextField';
+
 import OptionSorter from './OptionSorter/OptionSorter.component';
 import OptionDialogForOptions from './OptionDialogForOptions/OptionDialogForOptions.component';
 
@@ -109,9 +109,9 @@ class OptionManagement extends Component {
     onEditOption = model => actions.setActiveModel(model);
 
     translationSaved = () => snackActions.show({
-            message: 'translation_saved',
-            translate: true,
-        });
+        message: 'translation_saved',
+        translate: true,
+    });
 
     translationErrored = () => snackActions.show({
         message: 'translation_save_error',
@@ -219,15 +219,15 @@ class OptionManagement extends Component {
                     parentModel={this.props.model}
                 />
                 {this.state.modelToTranslate && <TranslationDialog
-                        objectToTranslate={this.state.modelToTranslate}
-                        objectTypeToTranslate={
-                            this.state.modelToTranslate &&
+                    objectToTranslate={this.state.modelToTranslate}
+                    objectTypeToTranslate={
+                        this.state.modelToTranslate &&
                         this.state.modelToTranslate.modelDefinition}
-                        open={Boolean(this.state.modelToTranslate)}
-                        onTranslationSaved={this.translationSaved}
-                        onTranslationError={this.translationErrored}
+                    open={Boolean(this.state.modelToTranslate)}
+                    onTranslationSaved={this.translationSaved}
+                    onTranslationError={this.translationErrored}
                     onRequestClose={() => this.setState({ modelToTranslate: null })}
-                        fieldsToTranslate={['name']}
+                    fieldsToTranslate={['name']}
                 />}
                 {this.state.modelToShare && this.renderSharingDialog()}
                 <div>
@@ -271,18 +271,18 @@ const optionList$ = Observable.combineLatest(
     optionsForOptionSetStore,
     Observable.of(['name', 'code']),
     ({ options, pager, ...other }, columns) => ({
-            ...other,
-            rows: options,
-            pager,
-            columns,
+        ...other,
+        rows: options,
+        pager,
+        columns,
     }),
 );
 
 const stateForOptionManagement$ = Observable
     .combineLatest(modelToEditStore, optionList$, (modelToEdit, optionList) => (
         {
-        ...optionList,
-        model: modelToEdit,
+            ...optionList,
+            model: modelToEdit,
         }
     ));
 

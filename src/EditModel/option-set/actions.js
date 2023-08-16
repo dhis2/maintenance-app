@@ -29,7 +29,7 @@ export async function loadOptionsForOptionSet(optionSetId, { paging, filter }) {
     }
 
     return filteredOptions
-        .list({ fields: ':all,attributeValues[:owner,attribute[id,name]', paging });
+        .list({ fields: ':all,attributeValues[:owner,value,attribute[id,name,displayName]]', paging, order: 'sortOrder:asc' });
 }
 
 function processResponse(options) {
