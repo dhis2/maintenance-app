@@ -25,7 +25,7 @@ export async function loadOptionsForOptionSet(optionSetId, { paging, filter }) {
         .filter().on('optionSet.id').equals(optionSetId)
        
     if(filter) {
-        filteredOptions = filteredOptions.filter().on('identifiable').ilike(filter)
+        filteredOptions = filteredOptions.filter().on('identifiable').token(filter)
     }
 
     return filteredOptions
