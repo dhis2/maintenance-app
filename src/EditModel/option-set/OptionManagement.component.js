@@ -12,7 +12,7 @@ import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
 import AlertIcon from 'material-ui/svg-icons/alert/warning';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
-
+import TextField from 'material-ui/TextField';
 import OptionSorter from './OptionSorter/OptionSorter.component';
 import OptionDialogForOptions from './OptionDialogForOptions/OptionDialogForOptions.component';
 
@@ -31,6 +31,12 @@ const styles = {
     },
     dataTableWrap: {
         position: 'relative',
+    },
+    sortBarWrap: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        marginTop: '-16px',
     },
     sortBarStyle: {
         display: 'flex',
@@ -67,6 +73,7 @@ class OptionManagement extends Component {
             isSorting: false,
             modelToTranslate: null,
             modelToShare: null,
+            filter: '',
         };
 
         this.i18n = context.d2.i18n;
@@ -74,13 +81,13 @@ class OptionManagement extends Component {
 
     componentDidMount() {
         this.subscription = actions
-            .getOptionsFor(this.props.model)
+            .getOptionsFor(this.props.model, undefined)
             .subscribe(() => this.forceUpdate());
     }
 
     componentWillReceiveProps(newProps) {
         if (this.props.model !== newProps.model) {
-            actions.getOptionsFor(newProps.model);
+            actions.getOptionsFor(newProps.model, undefined);
         }
     }
 
@@ -90,6 +97,11 @@ class OptionManagement extends Component {
         }
     }
 
+    handleFilter = ({ target: { value } }) => {
+        this.setState({ filter: value })
+        actions.getOptionsFor(this.props.model, value);
+    };
+
     onAddOption = () => actions.setActiveModel();
 
     onAddDialogClose = () => actions.closeOptionDialog();
@@ -97,9 +109,9 @@ class OptionManagement extends Component {
     onEditOption = model => actions.setActiveModel(model);
 
     translationSaved = () => snackActions.show({
-        message: 'translation_saved',
-        translate: true,
-    });
+            message: 'translation_saved',
+            translate: true,
+        });
 
     translationErrored = () => snackActions.show({
         message: 'translation_save_error',
@@ -176,11 +188,22 @@ class OptionManagement extends Component {
         return (
             <div style={styles.optionManagementWrap}>
                 {this.renderPagination()}
-                <OptionSorter
-                    style={styles.sortBarStyle}
-                    buttonStyle={styles.sortButtonStyle}
-                    rows={this.props.rows}
-                />
+                <div style={styles.sortBarWrap}>
+                    <TextField
+                        floatingLabelText={`${this.i18n.getTranslation(
+                            'search_by_name_code_id'
+                        )}`}
+                        value={this.state.filter}
+                        onChange={this.handleFilter}
+                    />
+                
+                    <OptionSorter
+                        style={styles.sortBarStyle}
+                        buttonStyle={styles.sortButtonStyle}
+                        rows={this.props.rows}
+                        disabled={!!this.state.filter}
+                    />
+                </div>
                 <div style={styles.dataTableWrap}>
                     {this.props.isLoading && <LinearProgress />}
                     <DataTable
@@ -196,15 +219,15 @@ class OptionManagement extends Component {
                     parentModel={this.props.model}
                 />
                 {this.state.modelToTranslate && <TranslationDialog
-                    objectToTranslate={this.state.modelToTranslate}
-                    objectTypeToTranslate={
-                        this.state.modelToTranslate &&
+                        objectToTranslate={this.state.modelToTranslate}
+                        objectTypeToTranslate={
+                            this.state.modelToTranslate &&
                         this.state.modelToTranslate.modelDefinition}
-                    open={Boolean(this.state.modelToTranslate)}
-                    onTranslationSaved={this.translationSaved}
-                    onTranslationError={this.translationErrored}
+                        open={Boolean(this.state.modelToTranslate)}
+                        onTranslationSaved={this.translationSaved}
+                        onTranslationError={this.translationErrored}
                     onRequestClose={() => this.setState({ modelToTranslate: null })}
-                    fieldsToTranslate={['name']}
+                        fieldsToTranslate={['name']}
                 />}
                 {this.state.modelToShare && this.renderSharingDialog()}
                 <div>
@@ -248,18 +271,18 @@ const optionList$ = Observable.combineLatest(
     optionsForOptionSetStore,
     Observable.of(['name', 'code']),
     ({ options, pager, ...other }, columns) => ({
-        ...other,
-        rows: options,
-        pager,
-        columns,
+            ...other,
+            rows: options,
+            pager,
+            columns,
     }),
 );
 
 const stateForOptionManagement$ = Observable
     .combineLatest(modelToEditStore, optionList$, (modelToEdit, optionList) => (
         {
-            ...optionList,
-            model: modelToEdit,
+        ...optionList,
+        model: modelToEdit,
         }
     ));
 

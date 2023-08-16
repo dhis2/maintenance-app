@@ -18,12 +18,18 @@ const actions = Action.createActionsFromNames([
     'updateModel',
 ], 'optionSet');
 
-export async function loadOptionsForOptionSet(optionSetId, paging) {
+export async function loadOptionsForOptionSet(optionSetId, { paging, filter }) {
     const d2 = await getInstance();
 
-    return d2.models.option
+    let filteredOptions = d2.models.option
         .filter().on('optionSet.id').equals(optionSetId)
-        .list({ fields: ':all,attributeValues[:owner,value,attribute[id,name,displayName]]', paging, order: 'sortOrder:asc' });
+       
+    if(filter) {
+        filteredOptions = filteredOptions.filter().on('identifiable').ilike(filter)
+    }
+
+    return filteredOptions
+        .list({ fields: ':all,attributeValues[:owner,attribute[id,name]', paging });
 }
 
 function processResponse(options) {
@@ -111,6 +117,7 @@ actions.saveOption
                 id: parentModel.id,
             };
         }
+        console.log('saving with sortOrder', model.sortOrder)
 
         model.save()
             .then(() => {
@@ -138,14 +145,18 @@ actions.saveOption
     });
 
 actions.getOptionsFor
-    .subscribe(async ({ data: model, complete }) => {
+    .distinctUntilChanged()
+    .debounceTime(250)
+    .subscribe(async ({ data: [ model, filter ], complete }) => {
+        console.log(filter)
+        console.log(optionDialogStore.state)
         optionsForOptionSetStore.setState({
+            ...optionsForOptionSetStore.state,
             isLoading: true,
-            options: [],
-        });
+        })
 
         if (model && model.id) {
-            loadOptionsForOptionSet(model.id, true)
+            loadOptionsForOptionSet(model.id, { paging: true, filter})
                 .then(processResponse)
                 .then(() => complete());
         }

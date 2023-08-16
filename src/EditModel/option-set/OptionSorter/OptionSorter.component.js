@@ -93,25 +93,31 @@ class OptionSorter extends Component {
     }
 
     render() {
+        const isDisabled = this.props.disabled || this.state.isSorting;
+        const disabledLabel = this.props.disabled ? this.getTranslation('sorting_is_disabled_when_filter_is_applied') : undefined;
+
         return (
             <div style={this.props.style}>
                 <RaisedButton
                     style={this.props.buttonStyle}
                     onClick={() => this.onSortBy('displayName')}
-                    disabled={this.state.isSorting}
+                    disabled={isDisabled}
                     label={this.getTranslation(this.state.isSorting ? 'sorting' : 'sort_by_name')}
+                    title={disabledLabel}
                 />
                 <RaisedButton
                     style={this.props.buttonStyle}
                     onClick={() => this.onSortBy('code')}
-                    disabled={this.state.isSorting}
+                    disabled={isDisabled}
                     label={this.getTranslation(this.state.isSorting ? 'sorting' : 'sort_by_code')}
+                    title={disabledLabel}
                 />
                 <RaisedButton
                     style={this.props.buttonStyle}
                     onClick={() => setSortDialogOpenTo(true)}
-                    disabled={this.state.isSorting}
+                    disabled={isDisabled}
                     label={this.getTranslation(this.state.isSorting ? 'sorting' : 'sort_manually')}
+                    title={disabledLabel}
                 />
                 <SortDialog />
             </div>
@@ -121,11 +127,13 @@ class OptionSorter extends Component {
 
 OptionSorter.propTypes = {
     buttonStyle: PropTypes.object,
+    disabled: PropTypes.bool,
     style: PropTypes.object,
 };
 
 OptionSorter.defaultProps = {
     buttonStyle: {},
+    disabled: false,
     style: {},
 };
 

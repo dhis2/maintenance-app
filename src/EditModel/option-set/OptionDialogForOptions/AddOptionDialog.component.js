@@ -49,7 +49,7 @@ class AddOptionDialog extends Component {
         this.setState({ isSaving: false });
         this.props.onRequestClose();
         // After the save was successful we request the options from the server to get the updated list
-        actions.getOptionsFor(this.props.parentModel);
+        actions.getOptionsFor(this.props.parentModel, undefined);
     }
 
     onSaveError = ({ message, translate }) => {
