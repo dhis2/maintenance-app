@@ -117,7 +117,6 @@ actions.saveOption
                 id: parentModel.id,
             };
         }
-        console.log('saving with sortOrder', model.sortOrder)
 
         model.save()
             .then(() => {
@@ -148,8 +147,7 @@ actions.getOptionsFor
     .distinctUntilChanged()
     .debounceTime(250)
     .subscribe(async ({ data: [ model, filter ], complete }) => {
-        console.log(filter)
-        console.log(optionDialogStore.state)
+        
         optionsForOptionSetStore.setState({
             ...optionsForOptionSetStore.state,
             isLoading: true,
