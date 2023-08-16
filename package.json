@@ -39,7 +39,7 @@
     "css-loader": "^0.28.1",
     "d2-manifest": "^1.0.0-2",
     "d2-utilizr": "^0.2.9",
-    "d3-color": "^1.0.2",
+    "d3-color": "^3.1.0",
     "d3-format": "^1.0.2",
     "d3-scale": "^1.0.3",
     "enzyme": "^3.0.0",
