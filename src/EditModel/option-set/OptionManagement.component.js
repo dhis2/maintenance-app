@@ -87,7 +87,7 @@ class OptionManagement extends Component {
 
     componentWillReceiveProps(newProps) {
         if (this.props.model !== newProps.model) {
-            actions.getOptionsFor(newProps.model, undefined);
+            actions.getOptionsFor(newProps.model, this.state.filter);
         }
     }
 
@@ -104,7 +104,9 @@ class OptionManagement extends Component {
 
     onAddOption = () => actions.setActiveModel();
 
-    onAddDialogClose = () => actions.closeOptionDialog();
+    onAddDialogClose = () => {
+        actions.closeOptionDialog();
+    } 
 
     onEditOption = model => actions.setActiveModel(model);
 
@@ -177,14 +179,17 @@ class OptionManagement extends Component {
                     modelToShare
                 })
             },
-            delete: modelToDelete => actions.deleteOption(modelToDelete, this.props.model),
+            delete: modelToDelete =>  {
+               const deleteRef = actions.deleteOption(modelToDelete, this.props.model)
+            },
             translate: (modelToTranslate) => {
                 this.setState({
                     modelToTranslate,
                 });
             },
         };
-
+        const isEmptyFilter = typeof this.state.filter === 'string' && this.state.filter.trim().length === 0
+        
         return (
             <div style={styles.optionManagementWrap}>
                 {this.renderPagination()}
@@ -201,7 +206,7 @@ class OptionManagement extends Component {
                         style={styles.sortBarStyle}
                         buttonStyle={styles.sortButtonStyle}
                         rows={this.props.rows}
-                        disabled={!!this.state.filter}
+                        disabled={!isEmptyFilter}
                     />
                 </div>
                 <div style={styles.dataTableWrap}>

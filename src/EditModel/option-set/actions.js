@@ -46,6 +46,7 @@ function processResponse(options) {
                     onePage: true,
                     isLoading: false,
                     options: optionsInOrder,
+                    filter: optionsForOptionSetStore.state.filter
                 });
             });
     }
@@ -60,6 +61,7 @@ function processResponse(options) {
             options.pager.getPreviousPage()
                 .then(processResponse);
         },
+        filter: optionsForOptionSetStore.state.filter,
         pager: options.pager,
         onePage: false,
         isLoading: false,
@@ -146,11 +148,13 @@ actions.saveOption
 actions.getOptionsFor
     .distinctUntilChanged()
     .debounceTime(250)
-    .subscribe(async ({ data: [ model, filter ], complete }) => {
-        
+    .subscribe(async ({ data: [ model, newFilter ], complete }) => {
+        const filter = newFilter == undefined ? optionsForOptionSetStore.state.filter : newFilter;
+
         optionsForOptionSetStore.setState({
             ...optionsForOptionSetStore.state,
             isLoading: true,
+            filter
         })
 
         if (model && model.id) {
@@ -182,7 +186,7 @@ actions.deleteOption
         return api.delete(`${modelParent.modelDefinition.apiEndpoint}/${modelParent.id}/options/${modelToDelete.id}`)
             .then(() => modelToDelete.delete())
             .then(() => snackActions.show({ message: deleteMessage }))
-            .then(() => actions.getOptionsFor(modelParent))
+            .then(() => actions.getOptionsFor(modelParent, undefined))
             .then(() => modelParent.options.delete(modelToDelete.id))
             .then(complete)
             .catch(error);
