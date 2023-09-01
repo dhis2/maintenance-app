@@ -120,7 +120,7 @@ class DataElementCategoryOptionCombo extends Component {
         if (this.state.loading) {
             return (
                 <DropDownLoader
-                    msg={this.getTranslation('outpadmiut_combo_loading')}
+                    msg={this.getTranslation('output_combo_loading')}
                 />
             );
         }
