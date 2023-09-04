@@ -1,3 +1,10 @@
+## [32.23.32](https://github.com/dhis2/maintenance-app/compare/v32.23.31...v32.23.32) (2023-08-15)
+
+
+### Bug Fixes
+
+* **dataelement:** remove multi-text optionset restriction for tracker ([#2624](https://github.com/dhis2/maintenance-app/issues/2624)) ([3455669](https://github.com/dhis2/maintenance-app/commit/345566991487d16da37bdd3a081ff993fbd281dd))
+
 ## [32.23.31](https://github.com/dhis2/maintenance-app/compare/v32.23.30...v32.23.31) (2023-08-11)
 
 
