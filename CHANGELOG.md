@@ -1,3 +1,10 @@
+## [32.23.33](https://github.com/dhis2/maintenance-app/compare/v32.23.32...v32.23.33) (2023-09-08)
+
+
+### Bug Fixes
+
+* **expressionmanager:** add overflow to description ([#2683](https://github.com/dhis2/maintenance-app/issues/2683)) ([fc80bd9](https://github.com/dhis2/maintenance-app/commit/fc80bd9117429286aa947951cceaf5c302a778f5))
+
 ## [32.23.32](https://github.com/dhis2/maintenance-app/compare/v32.23.31...v32.23.32) (2023-08-15)
 
 
