@@ -1,3 +1,12 @@
+## [32.23.38](https://github.com/dhis2/maintenance-app/compare/v32.23.37...v32.23.38) (2023-11-02)
+
+
+### Bug Fixes
+
+* **predictor:** fix hide when default catcombo ([37f79e3](https://github.com/dhis2/maintenance-app/commit/37f79e3ccc1cf8fa25ca5fa4b96adcac2e2c04e5))
+* typo ([0f61601](https://github.com/dhis2/maintenance-app/commit/0f616015c315ee36d41e3281109c8c4765ed3fa4))
+* **predictor:** update default unselected categoryoptioncombo selection ([b8d6cd2](https://github.com/dhis2/maintenance-app/commit/b8d6cd2fc521bb32c698bafcf48f77e4339b8ef6))
+
 ## [32.23.37](https://github.com/dhis2/maintenance-app/compare/v32.23.36...v32.23.37) (2023-10-22)
 
 
