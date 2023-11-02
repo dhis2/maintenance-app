@@ -23,7 +23,8 @@ class DataElementCategoryOptionCombo extends Component {
         options: [],
         loading: false,
         loadErrorText: '',
-        defaultCategoryOptionComboId: null
+        defaultCategoryOptionComboId: null,
+        hasOnlyDefaultCatCombo: false,
     };
     getTranslation = this.context.d2.i18n.getTranslation.bind(
         this.context.d2.i18n
@@ -86,7 +87,7 @@ class DataElementCategoryOptionCombo extends Component {
         try {
             const catComboResponse = this.context.d2.models.dataElements.get(
                 this.props.model.output.id,
-                { fields: ['categoryCombo[isDefault,categoryOptionCombos[id,name]]'] }
+                { fields: ['categoryCombo[isDefault,categoryOptionCombos[id,name]]']}
             );
             // need to get the default categoryCombo - to be able to show the correct label in the dropdown
             const defaultCatComboResponse = this.context.d2.models.categoryCombos.list({
@@ -99,6 +100,10 @@ class DataElementCategoryOptionCombo extends Component {
             const categoryOptionCombos =
                 response.categoryCombo.categoryOptionCombos;
 
+            const hasOnlyDefaultCatCombo = defaultCategoryOptionCombo &&
+                categoryOptionCombos.length === 1 &&
+                categoryOptionCombos[0].id === defaultCategoryOptionCombo.id;
+
             let options = [{ text: this.getTranslation('predict_according_to_input_category_option_combo'), value: defaultCategoryOptionCombo.id }];
             
             options = options.concat(categoryOptionCombos.map(
@@ -108,11 +113,11 @@ class DataElementCategoryOptionCombo extends Component {
                 })
             ));
 
-            this.setState({ options, loading: false, defaultCategoryOptionComboId: defaultCategoryOptionCombo.id });
+            this.setState({ options, loading: false, defaultCategoryOptionComboId: defaultCategoryOptionCombo.id, hasOnlyDefaultCatCombo });
         } catch (error) {
             console.error(error);
             const msg = this.getTranslation('output_combo_error');
-            this.setState({ loading: false, loadErrorText: msg });
+            this.setState({ loading: false, loadErrorText: msg, hasOnlyDefaultCatCombo: false });
         }
     }
 
@@ -134,6 +139,10 @@ class DataElementCategoryOptionCombo extends Component {
         }
 
         if (this.state.options.length === 0) {
+            return null;
+        }
+
+        if(this.state.hasOnlyDefaultCatCombo) {
             return null;
         }
 
