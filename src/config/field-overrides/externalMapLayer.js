@@ -91,6 +91,13 @@ export default new Map([
                     return <DropDown {...props} value={'BASEMAP'} disabled />;
                 }
 
+                if (
+                    props.model.mapService === 'GEOJSON_URL' ||
+                    props.model.mapService === 'ARCGIS_FEATURE'
+                ) {
+                    return <DropDown {...props} value={'OVERLAY'} disabled />;
+                }
+
                 return <DropDown {...props} />;
             },
         },
