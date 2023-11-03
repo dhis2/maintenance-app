@@ -1,3 +1,10 @@
+# [32.24.0](https://github.com/dhis2/maintenance-app/compare/v32.23.38...v32.24.0) (2023-11-03)
+
+
+### Features
+
+* force Overlay for geojson and arcgis ([#2722](https://github.com/dhis2/maintenance-app/issues/2722)) ([87ae5e0](https://github.com/dhis2/maintenance-app/commit/87ae5e0f74c6726d33e9cd270c54797763e00d82))
+
 ## [32.23.38](https://github.com/dhis2/maintenance-app/compare/v32.23.37...v32.23.38) (2023-11-02)
 
 
