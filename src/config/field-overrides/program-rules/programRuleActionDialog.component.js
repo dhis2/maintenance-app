@@ -1,4 +1,3 @@
-import { getInstance } from 'd2/lib/d2';
 import React from 'react';
 import FormBuilder from 'd2-ui/lib/forms/FormBuilder.component';
 import Dialog from 'material-ui/Dialog';
@@ -679,7 +678,7 @@ class ProgramRuleActionDialog extends React.Component {
                         fieldMapping.optional.includes(field.name);
 
                     if (isOptional || isRequired) {
-                        field.props.style = { display: 'inline-block' };
+                        field.props.style = { display: 'block' };
                         if (isRequired) {
                             field.props.isRequired = true;
                             field.props.labelText += ' (*)';
