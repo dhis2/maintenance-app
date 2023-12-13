@@ -1,3 +1,10 @@
+## [32.24.4](https://github.com/dhis2/maintenance-app/compare/v32.24.3...v32.24.4) (2023-12-13)
+
+
+### Bug Fixes
+
+* fix crash when instance url contains api ([#2745](https://github.com/dhis2/maintenance-app/issues/2745)) ([4114327](https://github.com/dhis2/maintenance-app/commit/41143270de65f2c19f157593a443e0e6b50b2b51))
+
 ## [32.24.3](https://github.com/dhis2/maintenance-app/compare/v32.24.2...v32.24.3) (2023-11-26)
 
 
