@@ -1,3 +1,10 @@
+## [32.24.5](https://github.com/dhis2/maintenance-app/compare/v32.24.4...v32.24.5) (2023-12-14)
+
+
+### Bug Fixes
+
+* add in missing cache translation strings [DHIS2-15940] ([#2715](https://github.com/dhis2/maintenance-app/issues/2715)) ([f3d8e9c](https://github.com/dhis2/maintenance-app/commit/f3d8e9c5017ac631145063d15e94c4c33af5d17a))
+
 ## [32.24.4](https://github.com/dhis2/maintenance-app/compare/v32.24.3...v32.24.4) (2023-12-13)
 
 
