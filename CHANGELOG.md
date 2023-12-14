@@ -1,3 +1,54 @@
+## [32.24.4](https://github.com/dhis2/maintenance-app/compare/v32.24.3...v32.24.4) (2023-12-13)
+
+
+### Bug Fixes
+
+* fix crash when instance url contains api ([#2745](https://github.com/dhis2/maintenance-app/issues/2745)) ([4114327](https://github.com/dhis2/maintenance-app/commit/41143270de65f2c19f157593a443e0e6b50b2b51))
+
+## [32.24.3](https://github.com/dhis2/maintenance-app/compare/v32.24.2...v32.24.3) (2023-11-26)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([3968236](https://github.com/dhis2/maintenance-app/commit/3968236bb43288bcf355cffbca06e64027d340d1))
+
+## [32.24.2](https://github.com/dhis2/maintenance-app/compare/v32.24.1...v32.24.2) (2023-11-19)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([1d45d64](https://github.com/dhis2/maintenance-app/commit/1d45d64f5d5cbeb4215ea03e7c9b508681b99c30))
+
+## [32.24.1](https://github.com/dhis2/maintenance-app/compare/v32.24.0...v32.24.1) (2023-11-05)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([56728e2](https://github.com/dhis2/maintenance-app/commit/56728e2a373080a5f42636995eb340852377897b))
+
+# [32.24.0](https://github.com/dhis2/maintenance-app/compare/v32.23.38...v32.24.0) (2023-11-03)
+
+
+### Features
+
+* force Overlay for geojson and arcgis ([#2722](https://github.com/dhis2/maintenance-app/issues/2722)) ([87ae5e0](https://github.com/dhis2/maintenance-app/commit/87ae5e0f74c6726d33e9cd270c54797763e00d82))
+
+## [32.23.38](https://github.com/dhis2/maintenance-app/compare/v32.23.37...v32.23.38) (2023-11-02)
+
+
+### Bug Fixes
+
+* **predictor:** fix hide when default catcombo ([37f79e3](https://github.com/dhis2/maintenance-app/commit/37f79e3ccc1cf8fa25ca5fa4b96adcac2e2c04e5))
+* typo ([0f61601](https://github.com/dhis2/maintenance-app/commit/0f616015c315ee36d41e3281109c8c4765ed3fa4))
+* **predictor:** update default unselected categoryoptioncombo selection ([b8d6cd2](https://github.com/dhis2/maintenance-app/commit/b8d6cd2fc521bb32c698bafcf48f77e4339b8ef6))
+
+## [32.23.37](https://github.com/dhis2/maintenance-app/compare/v32.23.36...v32.23.37) (2023-10-22)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([1570a65](https://github.com/dhis2/maintenance-app/commit/1570a6557eff3d4412524e24a8b15865607d6d7c))
+
 ## [32.23.36](https://github.com/dhis2/maintenance-app/compare/v32.23.35...v32.23.36) (2023-10-03)
 
 

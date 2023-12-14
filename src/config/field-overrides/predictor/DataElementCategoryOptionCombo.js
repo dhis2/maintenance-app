@@ -3,8 +3,6 @@ import DropDown from '../../../forms/form-fields/drop-down.js';
 import { red500, grey400 } from 'material-ui/styles/colors';
 import { LinearProgress } from 'material-ui';
 
-const DEFAULT = 'default';
-
 const DropDownLoader = ({ msg }) => (
     <p
         style={{
@@ -25,6 +23,8 @@ class DataElementCategoryOptionCombo extends Component {
         options: [],
         loading: false,
         loadErrorText: '',
+        defaultCategoryOptionComboId: null,
+        hasOnlyDefaultCatCombo: false,
     };
     getTranslation = this.context.d2.i18n.getTranslation.bind(
         this.context.d2.i18n
@@ -37,7 +37,13 @@ class DataElementCategoryOptionCombo extends Component {
     prevOutputId = null;
 
     onChange = ({ target }) => {
-        const value = target.value ? { id: target.value } : null;
+        const selectedId = target.value;
+        let value = selectedId ? { id: selectedId } : null;
+        
+        if(selectedId === this.state.defaultCategoryOptionComboId) {
+            value = null
+        }
+
         this.props.onChange({ target: { value } });
     };
 
@@ -79,27 +85,39 @@ class DataElementCategoryOptionCombo extends Component {
         this.setState({ loading: true, loadErrorText: '' });
 
         try {
-            const response = await this.context.d2.models.dataElements.get(
+            const catComboResponse = this.context.d2.models.dataElements.get(
                 this.props.model.output.id,
-                { fields: ['categoryCombo[categoryOptionCombos[id,name]]'] }
+                { fields: ['categoryCombo[isDefault,categoryOptionCombos[id,name]]']}
             );
+            // need to get the default categoryCombo - to be able to show the correct label in the dropdown
+            const defaultCatComboResponse = this.context.d2.models.categoryCombos.list({
+                fields: ['id', 'name', 'isDefault', 'categoryOptionCombos[id,name]'],
+                filter: `isDefault:eq:true`
+            })
+            const [response, defaultCatCombo] = await Promise.all([catComboResponse, defaultCatComboResponse])
+
+            const defaultCategoryOptionCombo = defaultCatCombo.toArray()[0].categoryOptionCombos.toArray()[0]
             const categoryOptionCombos =
                 response.categoryCombo.categoryOptionCombos;
-            const hasOnlyDefault =
-                categoryOptionCombos.length === 1 &&
-                categoryOptionCombos[0].name === DEFAULT;
-            const options = hasOnlyDefault
-                ? []
-                : categoryOptionCombos.map(o => ({
-                      text: o.name,
-                      value: o.id,
-                  }));
 
-            this.setState({ options, loading: false });
+            const hasOnlyDefaultCatCombo = defaultCategoryOptionCombo &&
+                categoryOptionCombos.length === 1 &&
+                categoryOptionCombos[0].id === defaultCategoryOptionCombo.id;
+
+            let options = [{ text: this.getTranslation('predict_according_to_input_category_option_combo'), value: defaultCategoryOptionCombo.id }];
+            
+            options = options.concat(categoryOptionCombos.map(
+                o => ({
+                    text: o.name,
+                    value: o.id,
+                })
+            ));
+
+            this.setState({ options, loading: false, defaultCategoryOptionComboId: defaultCategoryOptionCombo.id, hasOnlyDefaultCatCombo });
         } catch (error) {
             console.error(error);
             const msg = this.getTranslation('output_combo_error');
-            this.setState({ loading: false, loadErrorText: msg });
+            this.setState({ loading: false, loadErrorText: msg, hasOnlyDefaultCatCombo: false });
         }
     }
 
@@ -124,12 +142,19 @@ class DataElementCategoryOptionCombo extends Component {
             return null;
         }
 
+        if(this.state.hasOnlyDefaultCatCombo) {
+            return null;
+        }
+
+        const value = this.props.value && this.props.value.id || this.state.defaultCategoryOptionComboId
+
         return (
             <DropDown
                 labelText={this.getTranslation('output_combo')}
                 onChange={this.onChange}
-                value={this.props.value && this.props.value.id}
+                value={value}
                 options={this.state.options}
+                isRequired
             />
         );
     }
