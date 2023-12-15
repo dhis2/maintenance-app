@@ -1,3 +1,10 @@
+## [32.24.6](https://github.com/dhis2/maintenance-app/compare/v32.24.5...v32.24.6) (2023-12-15)
+
+
+### Bug Fixes
+
+* **programrules:** make static text fullwidth ([#2750](https://github.com/dhis2/maintenance-app/issues/2750)) ([f7289ec](https://github.com/dhis2/maintenance-app/commit/f7289eccd732d6cf744e281e5133524b1ab85c31))
+
 ## [32.24.5](https://github.com/dhis2/maintenance-app/compare/v32.24.4...v32.24.5) (2023-12-14)
 
 
