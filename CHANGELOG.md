@@ -1,3 +1,10 @@
+## [32.24.7](https://github.com/dhis2/maintenance-app/compare/v32.24.6...v32.24.7) (2023-12-15)
+
+
+### Bug Fixes
+
+* **indicator-group:** add description field ([#2760](https://github.com/dhis2/maintenance-app/issues/2760)) ([092b795](https://github.com/dhis2/maintenance-app/commit/092b795c2a0a3e82f1f2e00f72b64eb35c946ad6))
+
 ## [32.24.6](https://github.com/dhis2/maintenance-app/compare/v32.24.5...v32.24.6) (2023-12-15)
 
 
