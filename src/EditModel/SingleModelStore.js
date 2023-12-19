@@ -117,6 +117,12 @@ function cloneHandlerByObjectType(objectType, model) {
             }))
             return model;
         }
+        case 'trackedEntityType': {
+            model.trackedEntityTypeAttributes = model.trackedEntityTypeAttributes.map((a) => ({
+                ...a,
+                id: undefined
+            }))
+        }
         default: 
             return model;
     }
