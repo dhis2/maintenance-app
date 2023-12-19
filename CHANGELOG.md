@@ -1,3 +1,10 @@
+## [32.24.9](https://github.com/dhis2/maintenance-app/compare/v32.24.8...v32.24.9) (2023-12-19)
+
+
+### Bug Fixes
+
+* **text-field:** fix error message when field is multiline ([#2766](https://github.com/dhis2/maintenance-app/issues/2766)) ([bb32b61](https://github.com/dhis2/maintenance-app/commit/bb32b61664bc8dfa77d8c89e468492e2c87920e6))
+
 ## [32.24.8](https://github.com/dhis2/maintenance-app/compare/v32.24.7...v32.24.8) (2023-12-19)
 
 
