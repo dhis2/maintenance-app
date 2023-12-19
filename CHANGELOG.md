@@ -1,3 +1,10 @@
+## [32.24.8](https://github.com/dhis2/maintenance-app/compare/v32.24.7...v32.24.8) (2023-12-19)
+
+
+### Bug Fixes
+
+* **trackedEntityType:** fix cloning tet with attributes ([#2756](https://github.com/dhis2/maintenance-app/issues/2756)) ([0aa1664](https://github.com/dhis2/maintenance-app/commit/0aa16642d5af50686e3113091432e7cefa02e144))
+
 ## [32.24.7](https://github.com/dhis2/maintenance-app/compare/v32.24.6...v32.24.7) (2023-12-15)
 
 
