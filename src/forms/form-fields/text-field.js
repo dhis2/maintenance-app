@@ -79,8 +79,6 @@ export default class TextFormField extends Component {
         const styles = {
             errorStyle: {
                 position: 'absolute',
-                lineHeight: multiLine ? '48px' : '12px',
-                marginTop: multiLine ? -16 : -12,
                 bottom: '-0.9em',
             },
             fieldWrap: {
