@@ -37,7 +37,7 @@ const actionTypeFieldMapping = {
         label: 'prevent_adding_new_events_to_stage', // see https://dhis2.atlassian.net/browse/DHIS2-13995
         required: ['programStage'],
         labelOverrides: {
-            programStage: 'program_stage_to_hide',
+            programStage: 'program_stage',
         },
     },
     HIDEOPTION: {
