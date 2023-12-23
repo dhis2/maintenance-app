@@ -1,3 +1,10 @@
+## [32.24.10](https://github.com/dhis2/maintenance-app/compare/v32.24.9...v32.24.10) (2023-12-23)
+
+
+### Bug Fixes
+
+* **programrule:** rename program stage to hide label ([#2770](https://github.com/dhis2/maintenance-app/issues/2770)) ([72ab0cf](https://github.com/dhis2/maintenance-app/commit/72ab0cfb102f1919a4a77feea2d9b079f3c6f860))
+
 ## [32.24.9](https://github.com/dhis2/maintenance-app/compare/v32.24.8...v32.24.9) (2023-12-19)
 
 
