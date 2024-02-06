@@ -1,3 +1,10 @@
+# [32.25.0](https://github.com/dhis2/maintenance-app/compare/v32.24.14...v32.25.0) (2024-02-06)
+
+
+### Features
+
+* **program:** add custom terminology for tracker ([#2798](https://github.com/dhis2/maintenance-app/issues/2798)) ([91cf15c](https://github.com/dhis2/maintenance-app/commit/91cf15cca0198186c5cce78f72c57be9f79a6a42))
+
 ## [32.24.14](https://github.com/dhis2/maintenance-app/compare/v32.24.13...v32.24.14) (2024-01-21)
 
 
