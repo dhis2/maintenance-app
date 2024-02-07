@@ -1,3 +1,24 @@
+# [32.25.0](https://github.com/dhis2/maintenance-app/compare/v32.24.14...v32.25.0) (2024-02-06)
+
+
+### Features
+
+* **program:** add custom terminology for tracker ([#2798](https://github.com/dhis2/maintenance-app/issues/2798)) ([91cf15c](https://github.com/dhis2/maintenance-app/commit/91cf15cca0198186c5cce78f72c57be9f79a6a42))
+
+## [32.24.14](https://github.com/dhis2/maintenance-app/compare/v32.24.13...v32.24.14) (2024-01-21)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([709e56c](https://github.com/dhis2/maintenance-app/commit/709e56c49385a6009e1d07e65e94a46023b8eb15))
+
+## [32.24.13](https://github.com/dhis2/maintenance-app/compare/v32.24.12...v32.24.13) (2024-01-07)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([c32b0bc](https://github.com/dhis2/maintenance-app/commit/c32b0bce9f7169a518f336f800bd8233064325a3))
+
 ## [32.24.12](https://github.com/dhis2/maintenance-app/compare/v32.24.11...v32.24.12) (2023-12-31)
 
 
