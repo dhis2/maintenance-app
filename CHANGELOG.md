@@ -1,3 +1,10 @@
+## [32.25.1](https://github.com/dhis2/maintenance-app/compare/v32.25.0...v32.25.1) (2024-02-07)
+
+
+### Bug Fixes
+
+* add missing aggregation type strings [DHIS2-16252] ([#2786](https://github.com/dhis2/maintenance-app/issues/2786)) ([3c38055](https://github.com/dhis2/maintenance-app/commit/3c38055c40222051a2b28497f3726c8109d87842))
+
 # [32.25.0](https://github.com/dhis2/maintenance-app/compare/v32.24.14...v32.25.0) (2024-02-06)
 
 
