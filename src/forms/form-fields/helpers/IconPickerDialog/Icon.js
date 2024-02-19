@@ -11,9 +11,18 @@ export default class Icon extends Component {
         };
     }
 
+    componentWillUnmount() {
+        delete this.img.onload
+    }
+
     componentDidMount() {
         this.img.onload = () => {
-            this.img.removeAttribute('data-loading');
+            try { 
+                this.img.removeAttribute('data-loading');
+
+            } catch(e) {
+                console.log('failed', e);
+            }
         };
     }
 
@@ -33,6 +42,9 @@ export default class Icon extends Component {
                 alt={title}
                 title={title}
                 data-loading
+                loading="lazy"
+                width={60}
+                height={60}
                 className={`icon-picker__icon${classSuffix}`}
                 onClick={this.handleClick}
             />

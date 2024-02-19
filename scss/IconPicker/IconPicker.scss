@@ -49,7 +49,7 @@
     &__scroll-box {
         // This takes into account the primary and secundary header, 
         // footer and space above and below the dialog
-        height: calc(100vh - 320px);
+        height: calc(100vh - 330px);
         max-height: 1200px;
         overflow-y: auto;
         overflow-x: hidden;

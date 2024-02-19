@@ -17,7 +17,7 @@ var dhisConfig;
 
 try {
     dhisConfig = require(dhisConfigPath);
-    dhisConfig.baseUrl = 'https://debug.dhis2.org/dev',
+    dhisConfig.baseUrl = 'http://localhost:8080',
     console.log(dhisConfig);
 } catch (e) {
     // Failed to load config file - use default config

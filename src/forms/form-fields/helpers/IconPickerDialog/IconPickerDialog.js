@@ -9,6 +9,8 @@ import CircularProgress from 'material-ui/CircularProgress';
 import TextField from 'material-ui/TextField';
 import Icon from './Icon';
 import filterIcons from './filterIcons';
+import { IconPickerCustomTab } from './IconPickerCustomTab.js';
+import { IconList } from './IconList.js';
 
 export default class IconPickerDialog extends Component {
     constructor(props, context) {
@@ -19,7 +21,10 @@ export default class IconPickerDialog extends Component {
             selectedIconKey: props.iconKey,
             icons: null,
             iconTypeFilter: 'all',
-            textFilter: '',
+            debouncedTextFilter: '',
+            // list of icons uploaded by the user, to be able to prepend list with
+            // newly uploaded icons
+            uploadedIcons: [],
         };
         this.iconsCache = {
             all: null,
@@ -27,36 +32,10 @@ export default class IconPickerDialog extends Component {
             negative: null,
             outline: null,
         };
-
-        this.debouncedUpdateTextFilter = debounce(375, this.updateTextFilter);
-    }
-
-    fetchIconLibrary = () => {
-        this.context.d2.Api.getApi().get('/icons')
-            .then((icons) => {
-                const sortedIcons = sortBy('key', icons).map((icon) => {
-                    // The '_positive', '_negative' and '_outline' suffixes are stripped for the searchKeys
-                    // to make sure that search queries for 'negative' only return icons that actually have
-                    // 'negative' in the relevant parts of the icon key.
-                    icon.searchKey = icon.key.substring(0, icon.key.lastIndexOf('_'));
-                    return icon;
-                });
-                this.iconsCache = {
-                    all: sortedIcons,
-                    positive: sortedIcons.filter(icon => endsWith('_positive', icon.key)),
-                    negative: sortedIcons.filter(icon => endsWith('_negative', icon.key)),
-                    outline: sortedIcons.filter(icon => endsWith('_outline', icon.key)),
-                };
-                this.setState({ icons: sortedIcons });
-            });
     }
 
     handleOpen = () => {
         this.setState({ open: true });
-
-        if (!this.icons) {
-            this.fetchIconLibrary();
-        }
     };
 
     handleClose = () => {
@@ -65,44 +44,52 @@ export default class IconPickerDialog extends Component {
 
     handleCancel = () => {
         this.setState({
-            selectedIconKey: this.props.iconKey //if cancelling revert back to original icon
+            selectedIconKey: this.props.iconKey, //if cancelling revert back to original icon
         });
         this.handleClose();
-    }
-
-    handleConfirm = () => {
-        this.setState({ iconKey: this.state.selectedIconKey });
-        this.props.updateStyleState({ icon: this.state.selectedIconKey });
-        this.handleClose();
-    }
-
-    handleIconSelect = (iconKey) => {
-        this.setState({ selectedIconKey: iconKey });
     };
 
-    handleTypeFilterClick = (type) => {
+    handleConfirm = () => {
         this.setState({
-            iconTypeFilter: type,
-            icons: filterIcons(this.iconsCache[type], this.state.textFilter),
+            iconKey: this.state.selectedIconKey,
         });
-    }
+        this.props.updateStyleState({
+            icon: this.state.selectedIconKey,
+        });
+        this.handleClose();
+    };
 
-    handleTextFilterChange = (event) => {
-        this.setState({ textFilter: event.target.value });
-        this.debouncedUpdateTextFilter();
-    }
+    handleIconSelect = iconKey => {
+        this.setState({
+            selectedIconKey: iconKey,
+        });
+    };
+
+    handleTypeFilterClick = type => {
+        // this.setState({
+        //     iconTypeFilter: type,
+        //     icons: filterIcons(this.iconsCache[type], this.state.textFilter),
+        // });
+    };
+
+    handleTextFilterChange = debounce(375, value => {
+        this.setState({
+            debouncedTextFilter: value,
+        });
+        this.updateTextFilter();
+    });
 
     updateTextFilter = () => {
         const icons = this.iconsCache[this.state.iconTypeFilter];
         this.setState({
-            icons: filterIcons(icons, this.state.textFilter),
+            icons: filterIcons(icons, this.state.debouncedTextFilter),
         });
-    }
+    };
 
-    renderIconButtonImage = (iconKey) => {
+    renderIconButtonImage = iconKey => {
         const contextPath = this.context.d2.system.systemInfo.contextPath;
         const altText = this.context.d2.i18n.getTranslation('current_icon');
-        const fallbackIconPath = `${contextPath}/api/icons/dhis2_logo_outline/icon.svg`
+        const fallbackIconPath = `${contextPath}/api/icons/dhis2_logo_outline/icon.svg`;
         return (
             <img
                 src={`${contextPath}/api/icons/${iconKey}/icon.svg`}
@@ -110,8 +97,8 @@ export default class IconPickerDialog extends Component {
                 className="icon-picker__icon-button-image"
                 style={{ backgroundColor: 'white', overflow: 'hidden' }}
                 onError={({ target }) => {
-                    target.onerror = "";
-                    target.src=fallbackIconPath;
+                    target.onerror = '';
+                    target.src = fallbackIconPath;
                     return true;
                 }}
             />
@@ -134,20 +121,18 @@ export default class IconPickerDialog extends Component {
                     height: 36,
                     lineHeight: 2.5,
                     marginTop: 10,
-                    boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
+                    boxShadow:
+                        '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
                     cursor: 'pointer',
                     textTransform: 'uppercase',
                 }}
             >
-                {iconKey &&
-                    this.renderIconButtonImage(iconKey)
-                }
+                {iconKey && this.renderIconButtonImage(iconKey)}
 
                 <span style={{ padding: '0 16px' }}>
                     {iconKey
                         ? this.context.d2.i18n.getTranslation('change_icon')
-                        : this.context.d2.i18n.getTranslation('add_icon')
-                    }
+                        : this.context.d2.i18n.getTranslation('add_icon')}
                 </span>
             </Button>
         );
@@ -166,86 +151,62 @@ export default class IconPickerDialog extends Component {
                         height: 36,
                         lineHeight: 2.5,
                         marginTop: 10,
-                        boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
+                        boxShadow:
+                            '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
                         cursor: 'pointer',
                     }}
                 >
                     {this.context.d2.i18n.getTranslation('deselect_icon')}
                 </Button>
-            )
+            );
         }
 
         return buttons;
-    }
+    };
 
     handleDeselect = () => {
         this.setState({ iconKey: '' });
         this.props.updateStyleState({ icon: '' });
-    }
+    };
 
-    renderActions = () => (
-        [
-            <RaisedButton
-                label={this.context.d2.i18n.getTranslation('select')}
-                primary
-                onClick={this.handleConfirm}
-            />,
-            <FlatButton
-                label={this.context.d2.i18n.getTranslation('cancel')}
-                onClick={this.handleCancel}
-            />,
-        ]
-    )
+    renderActions = () => [
+        <RaisedButton
+            label={this.context.d2.i18n.getTranslation('select')}
+            primary
+            onClick={this.handleConfirm}
+        />,
+        <FlatButton
+            label={this.context.d2.i18n.getTranslation('cancel')}
+            onClick={this.handleCancel}
+        />,
+    ];
 
     renderTypeFilter = () => (
         <div className="icon-picker__filter-button-wrap">
-            {
-                ['all', 'positive', 'negative', 'outline'].map(type => (
-                    <FlatButton
-                        key={type}
-                        label={this.context.d2.i18n.getTranslation(`icons_${type}`)}
-                        primary={type === this.state.iconTypeFilter}
-                        /* eslint-disable */
-                        onClick={() => this.handleTypeFilterClick(type)}
-                        /* eslint-enable */
-                    />
-                ))
-            }
+            {['all', 'positive', 'negative', 'outline', 'custom'].map(type => (
+                <FlatButton
+                    key={type}
+                    label={this.context.d2.i18n.getTranslation(`icons_${type}`)}
+                    primary={type === this.state.iconTypeFilter}
+                    onClick={() =>
+                        this.setState({
+                            iconTypeFilter: type,
+                        })
+                    }
+                />
+            ))}
         </div>
-    )
+    );
 
     renderTextFilter = () => (
         <TextField
             type="search"
-            floatingLabelText={this.context.d2.i18n.getTranslation('icon_search')}
-            value={this.state.textFilter}
-            onChange={this.handleTextFilterChange}
+            floatingLabelText={this.context.d2.i18n.getTranslation(
+                'icon_search'
+            )}
+            onChange={event => this.handleTextFilterChange(event.target.value)}
         />
-    )
-
-    renderIconLibrary = () => {
-        const { icons, selectedIconKey } = this.state;
-        if (!icons) {
-            return (
-                <div className="icon-picker__list-loader">
-                    <CircularProgress />
-                </div>
-            );
-        }
-
-        return (
-            <div className="icon-picker__icon-list">
-                {icons.map(icon => (
-                    <Icon
-                        icon={icon}
-                        key={icon.key}
-                        selectedIconKey={selectedIconKey}
-                        handleClick={this.handleIconSelect}
-                    />
-                ))}
-            </div>
-        );
-    }
+    );
 
     render() {
         return (
@@ -269,7 +230,33 @@ export default class IconPickerDialog extends Component {
                         {this.renderTextFilter()}
                     </div>
                     <div className="icon-picker__scroll-box">
-                        {this.renderIconLibrary()}
+                        {this.state.iconTypeFilter === 'custom' ? (
+                            <IconPickerCustomTab
+                                onIconUpload={iconKey => {
+                                    if (this.iconListRef) {
+                                        this.iconListRef.fetchIconAndAddToStartOfList(
+                                            iconKey
+                                        );
+                                    }
+                                }}
+                            >
+                                <IconList
+                                    ref={ref => (this.iconListRef = ref)}
+                                    onIconSelect={this.handleIconSelect}
+                                    type={'custom'}
+                                    textFilter={this.state.debouncedTextFilter}
+                                    selectedIconKey={this.state.selectedIconKey}
+                                    prependedIcons={this.state.uploadedIcons}
+                                />
+                            </IconPickerCustomTab>
+                        ) : (
+                            <IconList
+                                onIconSelect={this.handleIconSelect}
+                                type={'default'}
+                                textFilter={this.state.debouncedTextFilter}
+                                selectedIconKey={this.state.selectedIconKey}
+                            />
+                        )}
                     </div>
                 </Dialog>
             </div>
