@@ -59,9 +59,7 @@ export class IconPickerCustomTab extends Component {
         });
         let value = event.target.value;
         const name = event.target.name;
-        if (!value) {
-            return;
-        }
+
         value = value.trim();
         this.setState(prevState => ({
             iconMetadata: {
@@ -150,6 +148,15 @@ export class IconPickerCustomTab extends Component {
     };
 
     render() {
+        const iconFileKey = (
+            (this.state.iconFile && this.state.iconFile.name) ||
+            ''
+        )
+            .replace(/\..*$/, '')
+            .replaceAll('-', '_');
+
+        const iconKey = this.state.iconMetadata.key || iconFileKey;
+
         return (
             <div style={styles.wrapper}>
                 <div style={styles.iconForm}>
@@ -196,6 +203,7 @@ export class IconPickerCustomTab extends Component {
                         name="key"
                         onChange={this.handleIconMetadataChange}
                         floatingLabelText="Icon Key"
+                        value={iconKey}
                     />
                     <TextField
                         name="description"
@@ -208,7 +216,6 @@ export class IconPickerCustomTab extends Component {
                         floatingLabelText="Keywords"
                         multiLine
                     />
-
                     <Button
                         style={styles.uploadButton}
                         onClick={this.handleFileUpload}
@@ -225,7 +232,7 @@ export class IconPickerCustomTab extends Component {
 
 IconPickerCustomTab.propTypes = {
     children: PropTypes.node,
-    onIconUpload: PropTypes.function,
+    onIconUpload: PropTypes.func,
 };
 
 IconPickerCustomTab.contextTypes = {
