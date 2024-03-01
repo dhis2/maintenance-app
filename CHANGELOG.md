@@ -1,3 +1,10 @@
+## [32.25.3](https://github.com/dhis2/maintenance-app/compare/v32.25.2...v32.25.3) (2024-03-01)
+
+
+### Bug Fixes
+
+* **program:** add custom labels for program ([#2810](https://github.com/dhis2/maintenance-app/issues/2810)) ([7c24d98](https://github.com/dhis2/maintenance-app/commit/7c24d98031a1331d3bce682cf5a8838962393987))
+
 ## [32.25.2](https://github.com/dhis2/maintenance-app/compare/v32.25.1...v32.25.2) (2024-02-28)
 
 
