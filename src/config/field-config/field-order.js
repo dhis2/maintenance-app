@@ -277,6 +277,8 @@ const fieldOrderByName = new Map([
         'incidentDateLabel',
         'enrollmentDateLabel',
         'enrollmentLabel',
+        'eventLabel',
+        'programStageLabel',
         'followUpLabel',
         'registeringUnitLabel',
         'orgUnitLabel',
