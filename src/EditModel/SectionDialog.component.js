@@ -5,6 +5,7 @@ import Dialog from 'material-ui/Dialog/Dialog';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 import TextField from 'material-ui/TextField/TextField';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import GroupEditor from 'd2-ui/lib/group-editor/GroupEditorWithOrdering.component';
 
 import Store from 'd2-ui/lib/store/Store';
@@ -14,6 +15,8 @@ import DropDown from '../forms/form-fields/drop-down';
 import snackActions from '../Snackbar/snack.actions';
 
 import modelToEditStore from './modelToEditStore';
+import SelectField from 'material-ui/SelectField';
+import { MenuItem } from 'material-ui/DropDownMenu';
 
 const dataElementStore = Store.create();
 const assignedDataElementStore = Store.create();
@@ -26,72 +29,122 @@ class SectionDialog extends React.Component {
 
         this.state = {
             categoryCombo: false,
-            disableDataElementAutoGroup: false
+            disableDataElementAutoGroup: false,
+            displayOptions: {
+                pivotMode: null,
+                pivotedCategory: null,
+            },
+            categories: [],
         };
         dataElementStore.setState([]);
         assignedDataElementStore.setState([]);
         indicatorStore.setState([]);
         assignedIndicatorStore.setState([]);
 
-        this.getTranslation = context.d2.i18n.getTranslation.bind(context.d2.i18n);
+        this.getTranslation = context.d2.i18n.getTranslation.bind(
+            context.d2.i18n
+        );
     }
 
     componentDidMount() {
         this.subscriptions = [];
-        this.subscriptions.push(assignedDataElementStore.subscribe(() => {
-            this.forceUpdate();
-        }));
+        this.subscriptions.push(
+            assignedDataElementStore.subscribe(() => {
+                this.forceUpdate();
+            })
+        );
+
+        const d2 = this.context.d2;
+        const categoryCombos = this.props.categoryCombos
+            .map(coc => coc.value)
+            .join(',');
+
+        return d2.models.categories
+            .list({
+                filter: `categoryCombos.id:in:[${categoryCombos}]`,
+                paging: false,
+                fields: [
+                    'id,displayName',
+                    'categoryCombos[id]',
+                ].join(','),
+            })
+            .then(response => {
+                const categories = response.toArray();
+
+                this.setState({
+                    categories,
+                });
+            }).catch(err => {
+                snackActions.show({ message: 'Something went wrong.' + err, action: 'ok' });
+            })
     }
 
     componentWillReceiveProps(props) {
         if (props.sectionModel) {
             const currentSectionId = props.sectionModel.id;
             const sections = modelToEditStore.state.sections;
-            const sectionArray = Array.isArray(sections) ? sections : sections.toArray();
-            const otherSections = sectionArray.filter(s => s.id !== currentSectionId);
-            const filterDataElementIds = otherSections
-                .reduce((elements, section) => elements.concat((Array.isArray(section.dataElements)
-                    ? section.dataElements
-                    : section.dataElements.toArray()
-                ).map(de => de.id)), []);
+            const sectionArray = Array.isArray(sections)
+                ? sections
+                : sections.toArray();
+            const otherSections = sectionArray.filter(
+                s => s.id !== currentSectionId
+            );
+            const filterDataElementIds = otherSections.reduce(
+                (elements, section) =>
+                    elements.concat(
+                        (Array.isArray(section.dataElements)
+                            ? section.dataElements
+                            : section.dataElements.toArray()
+                        ).map(de => de.id)
+                    ),
+                []
+            );
 
             // Default category combo filter = no filter
             const categoryComboId = false;
 
-
             assignedDataElementStore.setState(
                 props.sectionModel.dataElements
                     ? props.sectionModel.dataElements.toArray().map(de => de.id)
-                    : [],
+                    : []
             );
 
             indicatorStore.setState(
                 modelToEditStore.state.indicators
                     .toArray()
                     .map(i => ({ value: i.id, text: i.displayName }))
-                    .sort((a, b) => a.text.localeCompare(b.text)),
+                    .sort((a, b) => a.text.localeCompare(b.text))
             );
             assignedIndicatorStore.setState(
                 props.sectionModel.indicators
                     ? props.sectionModel.indicators.toArray().map(i => i.id)
-                    : [],
+                    : []
             );
 
-            this.setState({
-                name: props.sectionModel.name,
-                code: props.sectionModel.code,
-                nameError: '',
-                codeError: '',
-                description: props.sectionModel.description,
-                showRowTotals: props.sectionModel.showRowTotals,
-                showColumnTotals: props.sectionModel.showColumnTotals,
-                disableDataElementAutoGroup: props.sectionModel.disableDataElementAutoGroup,
-                filterText: '',
-                filterDataElementIds,
-            }, () => {
-                this.handleCategoryComboChange({ target: { value: categoryComboId } });
-                this.forceUpdate();
-            });
+            this.setState(
+                {
+                    name: props.sectionModel.name,
+                    code: props.sectionModel.code,
+                    nameError: '',
+                    codeError: '',
+                    description: props.sectionModel.description,
+                    showRowTotals: props.sectionModel.showRowTotals,
+                    showColumnTotals: props.sectionModel.showColumnTotals,
+                    displayOptions: props.sectionModel.displayOptions
+                        ? JSON.parse(props.sectionModel.displayOptions)
+                        : {},
+                    disableDataElementAutoGroup:
+                        props.sectionModel.disableDataElementAutoGroup,
+                    filterText: '',
+                    filterDataElementIds,
+                },
+                () => {
+                    this.handleCategoryComboChange({
+                        target: { value: categoryComboId },
+                    });
+                    this.forceUpdate();
+                }
+            );
         }
     }
 
@@ -99,41 +152,47 @@ class SectionDialog extends React.Component {
         this.subscriptions.forEach(disposable => disposable.unsubscribe());
     }
 
-    setAssignedDataElements = (dataElements) => {
+    setAssignedDataElements = dataElements => {
         assignedDataElementStore.setState(dataElements);
-    }
+    };
 
-    setAssignedIndicators = (indicators) => {
+    setAssignedIndicators = indicators => {
         assignedIndicatorStore.setState(indicators);
-    }
+    };
 
-    removeIndicators = (indicators) => {
-        assignedIndicatorStore.setState(assignedIndicatorStore.state.filter(i => indicators.indexOf(i) === -1));
+    removeIndicators = indicators => {
+        assignedIndicatorStore.setState(
+            assignedIndicatorStore.state.filter(
+                i => indicators.indexOf(i) === -1
+            )
+        );
         return Promise.resolve();
-    }
+    };
 
-    assignIndicators = (indicators) => {
-        assignedIndicatorStore.setState(assignedIndicatorStore.state.concat(indicators));
+    assignIndicators = indicators => {
+        assignedIndicatorStore.setState(
+            assignedIndicatorStore.state.concat(indicators)
+        );
         return Promise.resolve();
-    }
+    };
 
     handleRowTotalsChange = (e, value) => {
         this.setState({ showRowTotals: value });
-    }
+    };
 
     handleColumnTotalsChange = (e, value) => {
         this.setState({ showColumnTotals: value });
-    }
+    };
 
     handleDisableDataElementAutoGroupChange = (e, value) => {
-        this.setState({ disableDataElementAutoGroup: value })
-    }
+        this.setState({ disableDataElementAutoGroup: value });
+    };
 
-    handleFilterChange = (e) => {
+    handleFilterChange = e => {
         this.setState({ filterText: e.target.value });
-    }
+    };
 
-    handleNameChange = (e) => {
+    handleNameChange = e => {
         const sectionArray = Array.isArray(modelToEditStore.getState().sections)
             ? modelToEditStore.getState().sections
             : modelToEditStore.getState().sections.toArray();
@@ -141,61 +200,84 @@ class SectionDialog extends React.Component {
             .filter(s => s.id !== this.props.sectionModel.id)
             .reduce((res, s) => res || s.name === e.target.value, false);
 
-        this.setState({ name: e.target.value, nameError: nameDupe ? this.getTranslation('value_not_unique') : '' });
-    }
+        this.setState({
+            name: e.target.value,
+            nameError: nameDupe ? this.getTranslation('value_not_unique') : '',
+        });
+    };
 
-    handleCodeChange = (e) => {
+    handleCodeChange = e => {
         const sectionArray = Array.isArray(modelToEditStore.getState().sections)
             ? modelToEditStore.getState().sections
             : modelToEditStore.getState().sections.toArray();
         const codeDupe = sectionArray
             .filter(s => s.id !== this.props.sectionModel.id)
-            .reduce((res, s) => res || (s.code && s.code === e.target.value), false);
+            .reduce(
+                (res, s) => res || (s.code && s.code === e.target.value),
+                false
+            );
 
-        this.setState({ code: e.target.value, codeError: codeDupe ? this.getTranslation('value_not_unique') : '' });
-    }
+        this.setState({
+            code: e.target.value,
+            codeError: codeDupe ? this.getTranslation('value_not_unique') : '',
+        });
+    };
 
-    handleDescriptionChange = (e) => {
+    handleDescriptionChange = e => {
         this.setState({ description: e.target.value });
-    }
+    };
 
-    assignDataElements = (dataElements) => {
-        assignedDataElementStore.setState(assignedDataElementStore.state.concat(dataElements));
+    assignDataElements = dataElements => {
+        assignedDataElementStore.setState(
+            assignedDataElementStore.state.concat(dataElements)
+        );
         return Promise.resolve();
-    }
+    };
 
-    removeDataElements = (dataElements) => {
-        assignedDataElementStore.setState(assignedDataElementStore.state.filter(de => dataElements.indexOf(de) === -1));
+    removeDataElements = dataElements => {
+        assignedDataElementStore.setState(
+            assignedDataElementStore.state.filter(
+                de => dataElements.indexOf(de) === -1
+            )
+        );
         return Promise.resolve();
-    }
+    };
 
-    handleCategoryComboChange = (event) => {
+    handleCategoryComboChange = event => {
         const categoryComboId = event.target.value;
 
         if (modelToEditStore.state.dataSetElements) {
             dataElementStore.setState(
                 modelToEditStore.state.dataSetElements
-                    .filter((dse) => {
+                    .filter(dse => {
                         if (categoryComboId) {
                             return dse.categoryCombo
                                 ? dse.categoryCombo.id === categoryComboId
-                                : dse.dataElement.categoryCombo.id === categoryComboId;
+                                : dse.dataElement.categoryCombo.id ===
+                                      categoryComboId;
                         }
                         return true;
                     })
-                    .filter(dse => (this.state.filterDataElementIds
-                        ? !this.state.filterDataElementIds.includes(dse.dataElement.id)
-                        : true),
+                    .filter(
+                        dse =>
+                            this.state.filterDataElementIds
+                                ? !this.state.filterDataElementIds.includes(
+                                      dse.dataElement.id
+                                  )
+                                : true
                     )
-                    .map(dse => ({ value: dse.dataElement.id, text: dse.dataElement.displayName }))
-                    .sort((a, b) => a.text.localeCompare(b.text)),
+                    .map(dse => ({
+                        value: dse.dataElement.id,
+                        text: dse.dataElement.displayName,
+                    }))
+                    .sort((a, b) => a.text.localeCompare(b.text))
             );
         }
 
         this.setState({
             categoryCombo: categoryComboId,
         });
-    }
+    };
 
     saveSection = () => {
         if (!this.state.name || this.state.name.trim().length === 0) {
@@ -216,40 +298,136 @@ class SectionDialog extends React.Component {
             description: this.state.description,
             showRowTotals: this.state.showRowTotals,
             showColumnTotals: this.state.showColumnTotals,
+            displayOptions: JSON.stringify(this.state.displayOptions),
             disableDataElementAutoGroup: this.state.disableDataElementAutoGroup,
-            dataElements: assignedDataElementStore.state.map(de => ({ id: de })),
+            dataElements: assignedDataElementStore.state.map(de => ({
+                id: de,
+            })),
             indicators: assignedIndicatorStore.state.map(i => ({ id: i })),
-            sortOrder: this.props.sectionModel.sortOrder || modelToEditStore
-                .state
-                .sections
-                .toArray()
-                .reduce((prev, s) => Math.max(prev, s.sortOrder + 1), 0),
+            sortOrder:
+                this.props.sectionModel.sortOrder ||
+                modelToEditStore.state.sections
+                    .toArray()
+                    .reduce((prev, s) => Math.max(prev, s.sortOrder + 1), 0),
         });
-        sectionModel.save()
-            .then((res) => {
-                snackActions.show({ message: this.getTranslation('section_saved') });
-                this.context.d2.models.sections.get(res.response.uid, {
-                    fields: [
-                        ':all,dataElements[id,categoryCombo[id,displayName]]',
-                        'greyedFields[categoryOptionCombo,dataElement]',
-                    ].join(','),
-                })
-                    .then((section) => {
+        sectionModel
+            .save()
+            .then(res => {
+                snackActions.show({
+                    message: this.getTranslation('section_saved'),
+                });
+                this.context.d2.models.sections
+                    .get(res.response.uid, {
+                        fields: [
+                            ':all,dataElements[id,categoryCombo[id,displayName]]',
+                            'greyedFields[categoryOptionCombo,dataElement]',
+                        ].join(','),
+                    })
+                    .then(section => {
                         this.props.onSaveSection(section);
                     });
             })
-            .catch((err) => {
+            .catch(err => {
                 log.warn('Failed to save section:', err);
                 snackActions.show({
                     message: this.getTranslation('failed_to_save_section'),
                     action: this.getTranslation('ok'),
                 });
             });
-    }
+    };
+
+    handleChoosePivotMode = (e, pivotMode) => {
+        const [firstCategory] = this.state.categories || [];
+        const categoryId = firstCategory ? firstCategory.id : null;
+        const pivotedCategory =
+            pivotMode === 'move_categories' ? categoryId : null;
+        this.setState({
+            displayOptions: {
+                ...this.state.displayOptions,
+                pivotMode,
+                pivotedCategory,
+            },
+        });
+    };
+
+    handlePivotCategoryChoice = (event, i, pivotedCategoryValue) => {
+        this.setState({
+            displayOptions: {
+                ...this.state.displayOptions,
+                pivotedCategory: pivotedCategoryValue,
+            },
+        });
+    };
+
+    renderSectionDisplayConfigurationOptions = () => {
+        const pivotOptions = [
+            {
+                value: 'n/a',
+                text: this.getTranslation('pivot_default'),
+            },
+            {
+                value: 'pivot',
+                text: this.getTranslation('pivot_move_data_elements_to_column'),
+            },
+            {
+                value: 'move_categories',
+                text: this.getTranslation('pivot_move_category_to_row'),
+            },
+        ];
+        const isMoveCategoryMode =
+            this.state.displayOptions.pivotMode === 'move_categories';
+
+        return (
+            <div>
+                <label>{this.getTranslation('pivot_options')}</label>
+                <RadioButtonGroup
+                    onChange={this.handleChoosePivotMode}
+                    valueSelected={this.state.displayOptions.pivotMode}
+                    name="pivotOptions"
+                    defaultSelected="n/a"
+                >
+                    {pivotOptions.map(({ value, text }) => {
+                        return (
+                            <RadioButton
+                                value={value}
+                                label={text}
+                                style={{ margin: '10px' }}
+                            />
+                        );
+                    })}
+                </RadioButtonGroup>
+                {isMoveCategoryMode && (
+                    <SelectField
+                        style={{ marginLeft: '50px', marginTop: '-16px' }}
+                        floatingLabelFixed
+                        floatingLabelText={this.getTranslation(
+                            'pivot_category_to_move_to_row'
+                        )}
+                        value={this.state.displayOptions.pivotedCategory}
+                        onChange={this.handlePivotCategoryChoice}
+                    >
+                        {this.state.categories.map(cat => {
+                            return (
+                                <MenuItem
+                                    value={cat.id}
+                                    primaryText={cat.displayName}
+                                />
+                            );
+                        })}
+                    </SelectField>
+                )}
+            </div>
+        );
+    };
 
     renderFilters = () => {
-        const catCombos = [{ value: false, text: this.getTranslation('no_filter') }]
-            .concat(this.props.categoryCombos.sort((a, b) => a.text.localeCompare(b.text)));
+        const catCombos = [
+            { value: false, text: this.getTranslation('no_filter') },
+        ].concat(
+            this.props.categoryCombos.sort((a, b) =>
+                a.text.localeCompare(b.text)
+            )
+        );
 
         return (
             <div style={{ minWidth: 605 }}>
@@ -264,13 +442,15 @@ class SectionDialog extends React.Component {
                 />
                 <TextField
                     fullWidth
-                    hintText={this.getTranslation('search_available_selected_items')}
+                    hintText={this.getTranslation(
+                        'search_available_selected_items'
+                    )}
                     defaultValue={this.state.filterText}
                     onChange={this.handleFilterChange}
                 />
             </div>
         );
-    }
+    };
 
     renderAvailableOptions = () => {
         const labelStyle = {
@@ -290,7 +470,9 @@ class SectionDialog extends React.Component {
         return (
             <div>
                 <div style={editorStyle}>
-                    <label style={labelStyle}>{this.getTranslation('data_elements')}</label>
+                    <label style={labelStyle}>
+                        {this.getTranslation('data_elements')}
+                    </label>
                     <GroupEditor
                         itemStore={dataElementStore}
                         assignedItemStore={assignedDataElementStore}
@@ -303,7 +485,9 @@ class SectionDialog extends React.Component {
                 </div>
                 {indicatorStore.state.length ? (
                     <div style={editorStyle}>
-                        <label style={labelStyle}>{this.getTranslation('indicators')}</label>
+                        <label style={labelStyle}>
+                            {this.getTranslation('indicators')}
+                        </label>
                         <GroupEditor
                             itemStore={indicatorStore}
                             assignedItemStore={assignedIndicatorStore}
@@ -317,7 +501,7 @@ class SectionDialog extends React.Component {
                 ) : null}
             </div>
         );
-    }
+    };
 
     render() {
         let title = this.getTranslation('add_section');
@@ -326,15 +510,28 @@ class SectionDialog extends React.Component {
         if (this.props.sectionModel.id) {
             title = this.getTranslation('edit_section');
             sectionIdDiv = (
-                <div style={{ float: 'left', padding: 8, color: 'rgba(0,0,0,0.5)' }}>
+                <div
+                    style={{
+                        float: 'left',
+                        padding: 8,
+                        color: 'rgba(0,0,0,0.5)',
+                    }}
+                >
                     {this.getTranslation('section_id')}:
-                    <span style={{ fontFamily: 'monospace' }}>{this.props.sectionModel.id}</span>
+                    <span style={{ fontFamily: 'monospace' }}>
+                        {this.props.sectionModel.id}
+                    </span>
                 </div>
             );
         }
 
-        const validateName = (e) => {
-            this.setState({ nameError: e.target.value.trim().length > 0 ? '' : this.getTranslation('value_required') });
+        const validateName = e => {
+            this.setState({
+                nameError:
+                    e.target.value.trim().length > 0
+                        ? ''
+                        : this.getTranslation('value_required'),
+            });
         };
 
         return (
@@ -390,14 +587,17 @@ class SectionDialog extends React.Component {
                     style={{ margin: '16px 0' }}
                     onCheck={this.handleColumnTotalsChange}
                 />
-                 <Checkbox
-                    label={this.getTranslation('disable_data_element_auto_group')}
+                <Checkbox
+                    label={this.getTranslation(
+                        'disable_data_element_auto_group'
+                    )}
                     checked={this.state.disableDataElementAutoGroup}
                     style={{ margin: '16px 0' }}
                     onCheck={this.handleDisableDataElementAutoGroupChange}
                 />
                 {this.renderFilters()}
                 {this.renderAvailableOptions()}
+                {this.renderSectionDisplayConfigurationOptions()}
             </Dialog>
         );
     }
