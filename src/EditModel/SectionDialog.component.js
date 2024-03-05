@@ -59,32 +59,24 @@ class SectionDialog extends React.Component {
             .map(coc => coc.value)
             .join(',');
 
-        return d2.models.categoryCombos
+        return d2.models.categories
             .list({
-                filter: `id:in:[${categoryCombos}]`,
+                filter: `categoryCombos.id:in:[${categoryCombos}]`,
                 paging: false,
                 fields: [
                     'id,displayName',
-                    'categories[id,displayName,categoryOptions[id,displayName]]',
-                    'categoryOptionCombos[id,displayName',
-                    'categoryOptions[id,displayName]]',
+                    'categoryCombos[id]',
                 ].join(','),
             })
-            .then(result => {
-                const categories = [];
-                result.forEach(val => {
-                    val.categories.forEach(({ id, displayName }) => {
-                        // a section with data elements with different category combos returns duplicate categories
-                        if (!categories.find(cat => cat.id === id)) {
-                            categories.push({ id, displayName });
-                        }
-                    });
-                });
+            .then(response => {
+                const categories = response.toArray();
 
                 this.setState({
                     categories,
                 });
-            });
+            }).catch(err => {
+                snackActions.show({ message: 'Something went wrong.' + err, action: 'ok' });
+            })
     }
 
     componentWillReceiveProps(props) {
@@ -345,10 +337,10 @@ class SectionDialog extends React.Component {
     };
 
     handleChoosePivotMode = (e, pivotMode) => {
+        const [firstCategory] = this.state.categories || [];
+        const categoryId = firstCategory ? firstCategory.id : null;
         const pivotedCategory =
-            pivotMode === 'move_categories'
-                ? this.state.categories[0].id
-                : null;
+            pivotMode === 'move_categories' ? categoryId : null;
         this.setState({
             displayOptions: {
                 ...this.state.displayOptions,
