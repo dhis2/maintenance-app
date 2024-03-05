@@ -1,3 +1,10 @@
+# [32.26.0](https://github.com/dhis2/maintenance-app/compare/v32.25.4...v32.26.0) (2024-03-05)
+
+
+### Features
+
+* **DHIS2-16132:** add ability to transpose/pivot a section form ([#2802](https://github.com/dhis2/maintenance-app/issues/2802)) ([b9a5cc1](https://github.com/dhis2/maintenance-app/commit/b9a5cc1d7fce46d47d1120235b752d5a9fda0413))
+
 ## [32.25.4](https://github.com/dhis2/maintenance-app/compare/v32.25.3...v32.25.4) (2024-03-03)
 
 
