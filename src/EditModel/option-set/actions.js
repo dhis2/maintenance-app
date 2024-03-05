@@ -18,11 +18,17 @@ const actions = Action.createActionsFromNames([
     'updateModel',
 ], 'optionSet');
 
-export async function loadOptionsForOptionSet(optionSetId, paging) {
+export async function loadOptionsForOptionSet(optionSetId, { paging, filter }) {
     const d2 = await getInstance();
 
-    return d2.models.option
+    let filteredOptions = d2.models.option
         .filter().on('optionSet.id').equals(optionSetId)
+       
+    if(filter) {
+        filteredOptions = filteredOptions.filter().on('identifiable').token(filter)
+    }
+
+    return filteredOptions
         .list({ fields: ':all,attributeValues[:owner,value,attribute[id,name,displayName]]', paging, order: 'sortOrder:asc' });
 }
 
@@ -40,6 +46,7 @@ function processResponse(options) {
                     onePage: true,
                     isLoading: false,
                     options: optionsInOrder,
+                    filter: optionsForOptionSetStore.state.filter
                 });
             });
     }
@@ -54,6 +61,7 @@ function processResponse(options) {
             options.pager.getPreviousPage()
                 .then(processResponse);
         },
+        filter: optionsForOptionSetStore.state.filter,
         pager: options.pager,
         onePage: false,
         isLoading: false,
@@ -138,14 +146,19 @@ actions.saveOption
     });
 
 actions.getOptionsFor
-    .subscribe(async ({ data: model, complete }) => {
+    .distinctUntilChanged()
+    .debounceTime(250)
+    .subscribe(async ({ data: [ model, newFilter ], complete }) => {
+        const filter = newFilter == undefined ? optionsForOptionSetStore.state.filter : newFilter;
+
         optionsForOptionSetStore.setState({
+            ...optionsForOptionSetStore.state,
             isLoading: true,
-            options: [],
-        });
+            filter
+        })
 
         if (model && model.id) {
-            loadOptionsForOptionSet(model.id, true)
+            loadOptionsForOptionSet(model.id, { paging: true, filter})
                 .then(processResponse)
                 .then(() => complete());
         }
@@ -173,7 +186,7 @@ actions.deleteOption
         return api.delete(`${modelParent.modelDefinition.apiEndpoint}/${modelParent.id}/options/${modelToDelete.id}`)
             .then(() => modelToDelete.delete())
             .then(() => snackActions.show({ message: deleteMessage }))
-            .then(() => actions.getOptionsFor(modelParent))
+            .then(() => actions.getOptionsFor(modelParent, undefined))
             .then(() => modelParent.options.delete(modelToDelete.id))
             .then(complete)
             .catch(error);

@@ -9,9 +9,9 @@ import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
 
 import Pagination from 'd2-ui/lib/pagination/Pagination.component';
 import LinearProgress from 'material-ui/LinearProgress/LinearProgress';
-import AlertIcon from 'material-ui/svg-icons/alert/warning';
 import TranslationDialog from 'd2-ui/lib/i18n/TranslationDialog.component';
 import SharingDialog from '@dhis2/d2-ui-sharing-dialog';
+import TextField from 'material-ui/TextField';
 
 import OptionSorter from './OptionSorter/OptionSorter.component';
 import OptionDialogForOptions from './OptionDialogForOptions/OptionDialogForOptions.component';
@@ -31,6 +31,12 @@ const styles = {
     },
     dataTableWrap: {
         position: 'relative',
+    },
+    sortBarWrap: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        marginTop: '-16px',
     },
     sortBarStyle: {
         display: 'flex',
@@ -67,6 +73,7 @@ class OptionManagement extends Component {
             isSorting: false,
             modelToTranslate: null,
             modelToShare: null,
+            filter: '',
         };
 
         this.i18n = context.d2.i18n;
@@ -74,13 +81,13 @@ class OptionManagement extends Component {
 
     componentDidMount() {
         this.subscription = actions
-            .getOptionsFor(this.props.model)
+            .getOptionsFor(this.props.model, undefined)
             .subscribe(() => this.forceUpdate());
     }
 
     componentWillReceiveProps(newProps) {
         if (this.props.model !== newProps.model) {
-            actions.getOptionsFor(newProps.model);
+            actions.getOptionsFor(newProps.model, this.state.filter);
         }
     }
 
@@ -90,9 +97,16 @@ class OptionManagement extends Component {
         }
     }
 
+    handleFilter = ({ target: { value } }) => {
+        this.setState({ filter: value })
+        actions.getOptionsFor(this.props.model, value);
+    };
+
     onAddOption = () => actions.setActiveModel();
 
-    onAddDialogClose = () => actions.closeOptionDialog();
+    onAddDialogClose = () => {
+        actions.closeOptionDialog();
+    } 
 
     onEditOption = model => actions.setActiveModel(model);
 
@@ -165,22 +179,36 @@ class OptionManagement extends Component {
                     modelToShare
                 })
             },
-            delete: modelToDelete => actions.deleteOption(modelToDelete, this.props.model),
+            delete: modelToDelete =>  {
+               const deleteRef = actions.deleteOption(modelToDelete, this.props.model)
+            },
             translate: (modelToTranslate) => {
                 this.setState({
                     modelToTranslate,
                 });
             },
         };
-
+        const isEmptyFilter = typeof this.state.filter === 'string' && this.state.filter.trim().length === 0
+        
         return (
             <div style={styles.optionManagementWrap}>
                 {this.renderPagination()}
-                <OptionSorter
-                    style={styles.sortBarStyle}
-                    buttonStyle={styles.sortButtonStyle}
-                    rows={this.props.rows}
-                />
+                <div style={styles.sortBarWrap}>
+                    <TextField
+                        floatingLabelText={`${this.i18n.getTranslation(
+                            'search_by_name_code_id'
+                        )}`}
+                        value={this.state.filter}
+                        onChange={this.handleFilter}
+                    />
+                
+                    <OptionSorter
+                        style={styles.sortBarStyle}
+                        buttonStyle={styles.sortButtonStyle}
+                        rows={this.props.rows}
+                        disabled={!isEmptyFilter}
+                    />
+                </div>
                 <div style={styles.dataTableWrap}>
                     {this.props.isLoading && <LinearProgress />}
                     <DataTable
