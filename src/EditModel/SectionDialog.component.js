@@ -18,6 +18,8 @@ import modelToEditStore from './modelToEditStore';
 import SelectField from 'material-ui/SelectField';
 import { MenuItem } from 'material-ui/DropDownMenu';
 
+import * as DOMPurify from 'dompurify';
+
 const dataElementStore = Store.create();
 const assignedDataElementStore = Store.create();
 const indicatorStore = Store.create();
@@ -359,6 +361,17 @@ class SectionDialog extends React.Component {
         });
     };
 
+    handleSectionTextUpdate = (fieldName) => (ev, text) => {
+        const cleanHtml = DOMPurify.sanitize(text);
+
+        this.setState({
+            displayOptions: {
+                ...this.state.displayOptions,
+                [fieldName]: cleanHtml,
+            },
+        });
+    }
+
     renderSectionDisplayConfigurationOptions = () => {
         const pivotOptions = [
             {
@@ -389,6 +402,7 @@ class SectionDialog extends React.Component {
                     {pivotOptions.map(({ value, text }) => {
                         return (
                             <RadioButton
+                                key={value}
                                 value={value}
                                 label={text}
                                 style={{ margin: '10px' }}
@@ -416,6 +430,25 @@ class SectionDialog extends React.Component {
                         })}
                     </SelectField>
                 )}
+                <div style={{marginTop: '16px'}}>
+                    <label>{this.getTranslation('section_text_descriptions')}</label>
+                    <TextField
+                        fullWidth
+                        hintText={this.getTranslation(
+                            'section_before_text'
+                        )}
+                        defaultValue={this.state.displayOptions.beforeSectionText}
+                        onChange={this.handleSectionTextUpdate('beforeSectionText')}
+                    />
+                    <TextField
+                        fullWidth
+                        hintText={this.getTranslation(
+                            'section_after_text'
+                        )}
+                        defaultValue={this.state.displayOptions.afterSectionText}
+                        onChange={this.handleSectionTextUpdate('afterSectionText')}
+                    />
+                </div>
             </div>
         );
     };
