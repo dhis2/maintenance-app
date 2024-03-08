@@ -1,3 +1,10 @@
+## [32.26.1](https://github.com/dhis2/maintenance-app/compare/v32.26.0...v32.26.1) (2024-03-08)
+
+
+### Bug Fixes
+
+* externalMapLayer force overlay for geojson and arcgis mapServices([#2813](https://github.com/dhis2/maintenance-app/issues/2813)) ([9a2b8bd](https://github.com/dhis2/maintenance-app/commit/9a2b8bdfbb0c670b42381fe7b3bc45a946dd0c6b))
+
 # [32.26.0](https://github.com/dhis2/maintenance-app/compare/v32.25.4...v32.26.0) (2024-03-05)
 
 
