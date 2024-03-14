@@ -18,12 +18,20 @@ import modelToEditStore from './modelToEditStore';
 import SelectField from 'material-ui/SelectField';
 import { MenuItem } from 'material-ui/DropDownMenu';
 
-import * as DOMPurify from 'dompurify';
+import { sanitize } from 'dompurify';
 
 const dataElementStore = Store.create();
 const assignedDataElementStore = Store.create();
 const indicatorStore = Store.create();
 const assignedIndicatorStore = Store.create();
+
+const cleanDisplayOptions = (displayOptions) => {
+    return {
+        ...displayOptions,
+        beforeSectionText: sanitize(displayOptions.beforeSectionText),
+        afterSectionText: sanitize(displayOptions.afterSectionText),
+    }
+}
 
 class SectionDialog extends React.Component {
     constructor(props, context) {
@@ -293,6 +301,9 @@ class SectionDialog extends React.Component {
         const sectionModel = this.props.sectionModel.id
             ? this.props.sectionModel
             : this.props.sectionModel.modelDefinition.create();
+        
+        const displayOptions = cleanDisplayOptions(this.state.displayOptions)
+
         Object.assign(sectionModel, {
             dataSet: { id: modelToEditStore.state.id },
             name: this.state.name,
@@ -300,7 +311,7 @@ class SectionDialog extends React.Component {
             description: this.state.description,
             showRowTotals: this.state.showRowTotals,
             showColumnTotals: this.state.showColumnTotals,
-            displayOptions: JSON.stringify(this.state.displayOptions),
+            displayOptions: JSON.stringify(displayOptions),
             disableDataElementAutoGroup: this.state.disableDataElementAutoGroup,
             dataElements: assignedDataElementStore.state.map(de => ({
                 id: de,
@@ -362,13 +373,13 @@ class SectionDialog extends React.Component {
     };
 
     handleSectionTextUpdate = (fieldName) => (ev, text) => {
-        const cleanHtml = DOMPurify.sanitize(text);
-
-        this.setState({
-            displayOptions: {
-                ...this.state.displayOptions,
-                [fieldName]: cleanHtml,
-            },
+        this.setState(prevState => {
+            return {
+                displayOptions: {
+                    ...prevState.displayOptions,
+                    [fieldName]: text,
+                }
+            }
         });
     }
 
