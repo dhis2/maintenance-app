@@ -1,3 +1,10 @@
+# [32.27.0](https://github.com/dhis2/maintenance-app/compare/v32.26.2...v32.27.0) (2024-03-18)
+
+
+### Features
+
+* **DHIS2-17002:** configure text to display before and after section ([#2812](https://github.com/dhis2/maintenance-app/issues/2812)) ([94ba5d3](https://github.com/dhis2/maintenance-app/commit/94ba5d384090177bc7d5f397a52b644b9517548b))
+
 ## [32.26.2](https://github.com/dhis2/maintenance-app/compare/v32.26.1...v32.26.2) (2024-03-10)
 
 
