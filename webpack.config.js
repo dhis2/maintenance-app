@@ -54,7 +54,10 @@ const webpackConfig = {
         loaders: [
             {
                 test: /\.jsx?$/,
-                include: path.resolve(__dirname, 'src/'),
+                include: [
+                    path.resolve(__dirname, 'src/'), 
+                    path.resolve(__dirname, 'node_modules/dompurify')
+                ],
                 loader: 'babel-loader',
                 options: {
                     cacheDirectory: true,
