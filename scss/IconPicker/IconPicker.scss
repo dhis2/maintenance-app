@@ -97,16 +97,19 @@
         gap: 24px;
         padding-block-start: 24px;
     }
-    & .form {
+
+    .form {
         display: flex;
         flex-direction: column;
 
-        div {
+        .form-fields {
             display: flex;
             flex-direction: column;
         }
     }
+
     .upload-button {
+        max-width: 256px;
         margin-block-start: 8px;
     }
 }

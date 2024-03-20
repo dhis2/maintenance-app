@@ -174,7 +174,7 @@ export class IconPickerCustomTab extends Component {
 
                             <span style={{ padding: '0 16px' }}>
                                 {this.context.d2.i18n.getTranslation(
-                                    'choose_file_to_uploadddd'
+                                    'choose_file_to_upload'
                                 )}
                             </span>
                         </Button>
@@ -187,7 +187,7 @@ export class IconPickerCustomTab extends Component {
                         />
                     </div>
                     {this.state.iconFile && (
-                        <div>
+                        <div className="form-fields">
                             <TextField
                                 name="key"
                                 onChange={this.handleIconMetadataChange}
