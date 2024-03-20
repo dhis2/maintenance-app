@@ -31,3 +31,11 @@ addValueRenderer(
     ({ columnName, valueType }) => columnName === 'formType' && valueType === 'CONSTANT',
     renderNothingWhenValueIsNotAString(({ value }) => (<Translate>{value.toLowerCase()}</Translate>))
 );
+
+addValueRenderer(
+    ({ columnName, valueType, value }) => {
+        return columnName === 'icon' && valueType === 'URL' && value.endsWith('/icon') 
+    },
+    ({ value }) => <img width={36} src={value} alt={'icon'} />
+)
+

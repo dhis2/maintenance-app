@@ -66,14 +66,16 @@ export default class IconModelDefinition extends ModelDefinition {
             name: iconData.key,
             displayName: iconData.key,
             id: iconData.key,
+            user: iconData.createdBy,
+            icon: iconData.href
         });
     }
     get(id) {
         // id is actually key here
         console.log('get', id);
 
-        return this.api.get(`icons/${id}`).then((icon) => this.iconToModel(icon));
-    } 
+        return this.api.get(`icons/${id}`).then(icon => this.iconToModel(icon));
+    }
 
     list() {
         console.log('icon list!');
@@ -94,7 +96,9 @@ export default class IconModelDefinition extends ModelDefinition {
         };
 
         const params = {
-            fields: ':all',
+            fields:
+                'key,description,custom,created,lastUpdated,createdBy[id,displayName,name],fileResource,href',
+            type: 'custom',
             search: queryString || '',
         };
 
@@ -111,12 +115,6 @@ export default class IconModelDefinition extends ModelDefinition {
                     response.icons,
                     response.pager
                 );
-                console.log({ collection });
-                // Array.from(collection.valuesContainerMap).forEach(m => {
-                //     m.value.dataValues.id = m.value.key
-                //     m.value.id = m.value.key
-                // })
-                // Array.from(collection).map(m => m.id = m.key)
                 return collection;
             });
         console.log(res);

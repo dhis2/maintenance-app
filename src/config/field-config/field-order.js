@@ -517,6 +517,12 @@ const fieldOrderByName = new Map([
         'type',
         'sqlQuery',
     ]],
+    ['icon', [
+        'key',
+        'description',
+        'fileResource',
+        'keywords',
+    ]],
 ]);
 
 export default {

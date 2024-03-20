@@ -228,9 +228,8 @@ const typeDetails = {
     },
     icon: {
         columns: [
-            'displayName',
             'key',
-            'href'
+            'icon'
         ],
     },
     sqlView: {

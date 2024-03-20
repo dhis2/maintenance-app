@@ -1,3 +1,17 @@
+/* Icon does not have a schema, so we create a synthetic one
+It also does not have an id (it has user-defined key instead).
+This presents some challenges because a lot of the model-code is tied
+to them having an ID. So we add a "synthetic"-ID field
+
+Some other fields are also "synthetic" (eg. does not exist at all on the Icon object)
+
+    - Access - this is calculated in the IconModelDefinition
+    - Name  === key
+    - Displayname === key
+    - Icon === href . This is mostly because "href"-field is translated to "API URL" by default
+    - User === createdBy
+*/
+
 const iconSchemaDefinition = {
     klass: 'org.hisp.dhis.icon',
     shareable: false,
@@ -12,15 +26,15 @@ const iconSchemaDefinition = {
     authorities: [
         {
             type: 'CREATE_PUBLIC',
-            authorities: ['F_SYSTEM_SETTING', 'F_LOCALE_ADD'],
+            authorities: ['M_dhis-web-maintenance'],
         },
         {
             type: 'CREATE_PRIVATE',
-            authorities: ['F_SYSTEM_SETTING', 'F_LOCALE_ADD'],
+            authorities: ['M_dhis-web-maintenance'],
         },
         {
             type: 'DELETE',
-            authorities: ['F_SYSTEM_SETTING'],
+            authorities: ['M_dhis-web-maintenance'],
         },
     ],
     properties: [
@@ -142,10 +156,10 @@ const iconSchemaDefinition = {
             propertyTransformer: false,
         },
         {
-            klass: 'java.util.List',
+            klass: 'java.util.Set',
             propertyType: 'COLLECTION',
-            itemKlass: 'org.hisp.dhis.translation.Translation',
-            itemPropertyType: 'COMPLEX',
+            itemKlass: 'java.lang.String',
+            itemPropertyType: 'TEXT',
             name: 'keyword',
             fieldName: 'keywords',
             persisted: false,
@@ -212,6 +226,38 @@ const iconSchemaDefinition = {
             propertyTransformer: false,
         },
         {
+            klass: 'java.lang.String',
+            propertyType: 'URL',
+            name: 'icon',
+            fieldName: 'href',
+            persisted: false,
+            attribute: true,
+            simple: true,
+            collection: false,
+            ordered: false,
+            owner: false,
+            identifiableObject: false,
+            nameableObject: false,
+            embeddedObject: false,
+            analyticalObject: false,
+            readable: true,
+            writable: true,
+            unique: false,
+            required: false,
+            max: 1.7976931348623157e308,
+            min: 0,
+            manyToMany: false,
+            oneToOne: false,
+            manyToOne: false,
+            oneToMany: false,
+            translatable: false,
+            gistPreferences: {
+                included: 'AUTO',
+                transformation: 'AUTO',
+            },
+            propertyTransformer: false,
+        },
+        {
             fieldName: 'created',
             description: 'The date this object was created.',
             simple: true,
@@ -234,6 +280,40 @@ const iconSchemaDefinition = {
             name: 'created',
             persisted: true,
             manyToOne: false,
+        },
+        {
+            klass: 'org.hisp.dhis.user.User',
+            propertyType: 'REFERENCE',
+            name: 'user',
+            fieldName: 'user',
+            persisted: false,
+            namespace: 'http://dhis2.org/schema/dxf/2.0',
+            attribute: false,
+            simple: false,
+            collection: false,
+            ordered: false,
+            owner: false,
+            identifiableObject: true,
+            nameableObject: false,
+            embeddedObject: false,
+            analyticalObject: false,
+            readable: true,
+            writable: true,
+            unique: false,
+            required: false,
+            manyToMany: false,
+            oneToOne: false,
+            manyToOne: false,
+            oneToMany: false,
+            href: 'https://debug.dhis2.org/dev/api/schemas/user',
+            relativeApiEndpoint: '/users',
+            apiEndpoint: 'https://debug.dhis2.org/dev/api/users',
+            translatable: false,
+            gistPreferences: {
+                included: 'AUTO',
+                transformation: 'AUTO',
+            },
+            propertyTransformer: true,
         },
         {
             fieldName: 'lastUpdated',
