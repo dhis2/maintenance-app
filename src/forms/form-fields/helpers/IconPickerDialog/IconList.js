@@ -22,6 +22,12 @@ export class IconList extends Component {
     }
 
     componentDidMount() {
+        // init observer only after first page is fetched
+        // this is needed so that the observer doesnt return early due to loading state
+        this.fetchIcons(1).then(() => this.initIntersectionObserver());
+    }
+
+    initIntersectionObserver() {
         this.intersectionObserver = new IntersectionObserver(
             entries => {
                 if (this.state.loading) {
@@ -30,15 +36,15 @@ export class IconList extends Component {
                 const [{ isIntersecting }] = entries;
 
                 if (isIntersecting) {
+                    console.log({ t: this });
                     console.log({ intersecting: isIntersecting });
+                    this.fetchIcons(this.state.pager.page + 1);
                 }
             },
             { threshold: 0.8 }
         );
 
         this.intersectionObserver.observe(this.loadingRef);
-
-        this.fetchIcons(1);
     }
 
     componentDidUpdate(prevProps) {
@@ -59,41 +65,43 @@ export class IconList extends Component {
     };
 
     fetchIcons = async page => {
-        const typeFilter = this.props.type === 'custom' ? 'custom' : 'default';
+        const typeFilter = this.props.type;
+
         const filter = this.props.textFilter || '';
+
+        this.setState({ loading: true });
         const response = await this.d2.Api.getApi().get('/icons', {
             type: typeFilter,
             paging: true,
             page: page,
-            keys: filter,
+            search: filter,
+            pageSize: 200,
         });
 
         this.setState(prevState => ({
             pager: response.pager,
-            icons: [...prevState.icons, ...response.icons.slice(0,25)],
+            icons: [...prevState.icons, ...response.icons],
+            loading: false,
         }));
     };
 
     render() {
         const isLastPage =
-            this.state.pager.pageCount &&
-            this.state.pager.pageSize &&
-            this.state.pager.total &&
-            this.state.pager.page ===
-                Math.floor(this.state.pager.total / this.state.pager.pageSize);
+            this.state.pager.total === 0 ||
+            (this.state.pager.pageCount &&
+                this.state.pager.page === this.state.pager.pageCount);
 
-        const shouldShowLoading = this.state.loading || false;
-        const icons = this.props.prependedIcons
-            ? [...this.props.prependedIcons, ...this.state.icons]
-            : this.state.icons;
+        const shouldShowLoading = !!this.state.loading || !isLastPage;
+        const icons = this.state.icons;
 
+        console.log({ icons });
+        // console.log({io: this.intersectionObserver })
         return (
             <div>
                 <div>
                     {this.state.selectedIcon && (
                         <Icon
                             icon={this.state.selectedIcon}
-                            key={this.state.selectedIcon.key}
                             selectedIconKey={this.props.selectedIconKey}
                             handleClick={this.props.onIconSelect}
                         />
@@ -110,7 +118,7 @@ export class IconList extends Component {
 
                 <div
                     className="icon-picker__list-loader"
-                    style={{ display: shouldShowLoading ? 'block' : 'none' }}
+                    style={shouldShowLoading ? undefined : { display: 'none' }}
                     ref={ref => (this.loadingRef = ref)}
                 >
                     <CircularProgress />
@@ -121,11 +129,10 @@ export class IconList extends Component {
 }
 
 IconList.propTypes = {
-    type: PropTypes.oneOf(['default', 'custom']).isRequired,
+    type: PropTypes.oneOf(['default', 'custom', 'all']).isRequired,
     textFilter: PropTypes.string,
     selectedIconKey: PropTypes.string,
     onIconSelect: PropTypes.func.isRequired,
-    prependedIcons: PropTypes.array,
 };
 
 IconList.contextTypes = {

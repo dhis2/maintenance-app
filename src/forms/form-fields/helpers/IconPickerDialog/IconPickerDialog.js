@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { debounce, endsWith, sortBy } from 'lodash/fp';
+import { debounce } from 'lodash/fp';
 import PropTypes from 'prop-types';
 import Button from 'd2-ui/lib/button/Button';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import CircularProgress from 'material-ui/CircularProgress';
 import TextField from 'material-ui/TextField';
-import Icon from './Icon';
-import filterIcons from './filterIcons';
 import { IconPickerCustomTab } from './IconPickerCustomTab.js';
 import { IconList } from './IconList.js';
+
+const isSupportedApiIconType = type =>
+    ['all', 'default', 'custom'].includes(type);
+const isVarianceIconType = type =>
+    ['positive', 'negative', 'outline'].includes(type);
 
 export default class IconPickerDialog extends Component {
     constructor(props, context) {
@@ -21,10 +23,8 @@ export default class IconPickerDialog extends Component {
             selectedIconKey: props.iconKey,
             icons: null,
             iconTypeFilter: 'all',
+            textFilter: '',
             debouncedTextFilter: '',
-            // list of icons uploaded by the user, to be able to prepend list with
-            // newly uploaded icons
-            uploadedIcons: [],
         };
         this.iconsCache = {
             all: null,
@@ -66,24 +66,39 @@ export default class IconPickerDialog extends Component {
     };
 
     handleTypeFilterClick = type => {
-        // this.setState({
-        //     iconTypeFilter: type,
-        //     icons: filterIcons(this.iconsCache[type], this.state.textFilter),
-        // });
+        if (isVarianceIconType(type)) {
+            // this is not ideal, but we're translating the filters to just
+            // a prefilled search
+            // we cannot combine searching for eg. "positive" and a user-defined search...
+            this.handleTextFilterChange(type, true);
+        }
+
+        this.setState({
+            iconTypeFilter: type,
+        });
+
+        const previousFilter = this.state.iconTypeFilter;
+        // if moving from a prefilled-search, clear filter when changing tab
+        if (
+            isVarianceIconType(previousFilter) &&
+            isSupportedApiIconType(type)
+        ) {
+            this.handleTextFilterChange('', true);
+        }
     };
 
-    handleTextFilterChange = debounce(375, value => {
+    debouncedFilterChange = debounce(375, value => {
         this.setState({
             debouncedTextFilter: value,
         });
-        this.updateTextFilter();
     });
 
-    updateTextFilter = () => {
-        const icons = this.iconsCache[this.state.iconTypeFilter];
-        this.setState({
-            icons: filterIcons(icons, this.state.debouncedTextFilter),
-        });
+    handleTextFilterChange = (value, immediate = false) => {
+        this.setState({ textFilter: value });
+        this.debouncedFilterChange(value);
+        if (immediate) {
+            this.debouncedFilterChange.flush();
+        }
     };
 
     renderIconButtonImage = iconKey => {
@@ -188,11 +203,7 @@ export default class IconPickerDialog extends Component {
                     key={type}
                     label={this.context.d2.i18n.getTranslation(`icons_${type}`)}
                     primary={type === this.state.iconTypeFilter}
-                    onClick={() =>
-                        this.setState({
-                            iconTypeFilter: type,
-                        })
-                    }
+                    onClick={() => this.handleTypeFilterClick(type)}
                 />
             ))}
         </div>
@@ -204,11 +215,21 @@ export default class IconPickerDialog extends Component {
             floatingLabelText={this.context.d2.i18n.getTranslation(
                 'icon_search'
             )}
-            onChange={event => this.handleTextFilterChange(event.target.value)}
+            value={this.state.textFilter}
+            onChange={event => {
+                const value = event.target.value;
+                this.setState({ textFilter: value });
+                this.handleTextFilterChange(value);
+            }}
         />
     );
 
     render() {
+        // iconTypeFilter is used to control the tabs
+        // however, the API does not have a concept of "positive" and "negative", so we just do a search instead
+        const iconApiType = isSupportedApiIconType(this.state.iconTypeFilter)
+            ? this.state.iconTypeFilter
+            : 'all';
         return (
             <div>
                 {this.renderIconButton()}
@@ -246,13 +267,14 @@ export default class IconPickerDialog extends Component {
                                     type={'custom'}
                                     textFilter={this.state.debouncedTextFilter}
                                     selectedIconKey={this.state.selectedIconKey}
-                                    prependedIcons={this.state.uploadedIcons}
                                 />
                             </IconPickerCustomTab>
                         ) : (
                             <IconList
+                                // reset when
+                                key={this.state.iconTypeFilter}
                                 onIconSelect={this.handleIconSelect}
-                                type={'default'}
+                                type={iconApiType}
                                 textFilter={this.state.debouncedTextFilter}
                                 selectedIconKey={this.state.selectedIconKey}
                             />

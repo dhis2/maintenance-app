@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import Button from 'd2-ui/lib/button/Button';
+import RaisedButton from 'material-ui/RaisedButton';
 import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField/TextField';
 import { fileToBase64 } from './fileToBase64.js';
+import { uploadIcon } from './uploadIcon.js';
+import ErrorMessage from 'd2-ui/lib/messages/ErrorMessage.component';
+import classes from 'classnames';
 
 const styles = {
     wrapper: {
@@ -14,6 +18,18 @@ const styles = {
     iconForm: {
         display: 'flex',
         flexDirection: 'column',
+    },
+    selectFileButton: {
+        backgroundColor: '#ff9800',
+        color: '#fff',
+        textAlign: 'center',
+        position: 'relative',
+        minWidth: 129,
+        height: 36,
+        lineHeight: 2.5,
+        boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
+        cursor: 'pointer',
+        textTransform: 'uppercase',
     },
     uploadButton: {
         alignSelf: 'center',
@@ -48,6 +64,8 @@ export class IconPickerCustomTab extends Component {
                 description: '',
                 keywords: [],
             },
+            uploading: false,
+            uploadError: null,
         };
     }
 
@@ -57,10 +75,9 @@ export class IconPickerCustomTab extends Component {
             value: event.target.value,
             name: event.target.name,
         });
-        let value = event.target.value;
+        const value = event.target.value && event.target.value.trim();
         const name = event.target.name;
 
-        value = value.trim();
         this.setState(prevState => ({
             iconMetadata: {
                 ...prevState.iconMetadata,
@@ -83,29 +100,16 @@ export class IconPickerCustomTab extends Component {
     };
 
     handleFileUpload = () => {
-        const formData = new FormData();
-        formData.append('file', this.state.iconFile);
-        formData.append('domain', 'CUSTOM_ICON');
-
-        const iconData = {
-            ...this.state.iconMetadata,
-        };
-
-        const fileResourceId = this.d2.Api.getApi()
-            .post('/fileResources', formData)
-            .then(response => response.response.fileResource.id)
-            .then(fileResourceId => {
-                const data = {
-                    fileResourceUid: fileResourceId,
-                    ...iconData,
-                };
-                return this.d2.Api.getApi().post('/icons', data);
-            })
-            .then(res => {
+        const iconData = this.state.iconMetadata;
+        this.setState({ uploading: true });
+        uploadIcon(this.state.iconFile, iconData)
+            .then(() => {
                 if (typeof this.props.onIconUpload === 'function') {
                     this.props.onIconUpload(iconData.key);
                 }
-            });
+                this.setState({ uploading: false, uploadError: null });
+            })
+            .catch(e => this.setState({ uploading: false, uploadError: e }));
     };
 
     handleFileChange = async event => {
@@ -118,23 +122,28 @@ export class IconPickerCustomTab extends Component {
         // since this is async, we can't do it during render
         const iconFileBase64 = await fileToBase64(file);
 
-        this.setState({
+        this.setState(prevState => ({
             iconFile: file,
             iconFileBase64,
-        });
+            iconMetadata: {
+                ...prevState.iconMetadata,
+                // remove file extension and replace hyphens with underscores
+                key: file.name.replace(/\..*$/, '').replaceAll('-', '_'),
+            },
+        }));
     };
 
     handleSelectUploadIcon = () => {
         this.refs.iconFileInput.click();
     };
 
-    renderIconFromFile = () => {
+    renderIconFromBase64 = srcBase64 => {
         const contextPath = this.context.d2.system.systemInfo.contextPath;
         const altText = this.context.d2.i18n.getTranslation('current_icon');
         const fallbackIconPath = `${contextPath}/api/icons/dhis2_logo_outline/icon.svg`;
         return (
             <img
-                src={this.state.iconFileBase64}
+                src={srcBase64}
                 alt={altText}
                 className="icon-picker__icon-button-image"
                 style={{ backgroundColor: 'white', overflow: 'hidden' }}
@@ -148,80 +157,69 @@ export class IconPickerCustomTab extends Component {
     };
 
     render() {
-        const iconFileKey = (
-            (this.state.iconFile && this.state.iconFile.name) ||
-            ''
-        )
-            .replace(/\..*$/, '')
-            .replaceAll('-', '_');
-
-        const iconKey = this.state.iconMetadata.key || iconFileKey;
+        const iconKey = this.state.iconMetadata.key;
 
         return (
-            <div style={styles.wrapper}>
-                <div style={styles.iconForm}>
+            <div className={classes('icon-picker-custom', 'wrapper')}>
+                <div className={'form'}>
                     <div>
                         <Button
                             onClick={this.handleSelectUploadIcon}
-                            style={{
-                                backgroundColor: '#ff9800',
-                                color: '#fff',
-                                textAlign: 'center',
-                                position: 'relative',
-                                minWidth: 129,
-                                height: 36,
-                                lineHeight: 2.5,
-                                marginTop: 10,
-                                boxShadow:
-                                    '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
-                                cursor: 'pointer',
-                                textTransform: 'uppercase',
-                            }}
+                            style={styles.selectFileButton}
                         >
                             {this.state.iconFileBase64 &&
-                                this.renderIconFromFile()}
+                                this.renderIconFromBase64(
+                                    this.state.iconFileBase64
+                                )}
 
                             <span style={{ padding: '0 16px' }}>
-                                {this.state.iconFile
-                                    ? this.context.d2.i18n.getTranslation(
-                                          'change_icon'
-                                      )
-                                    : this.context.d2.i18n.getTranslation(
-                                          'upload_icon'
-                                      )}
+                                {this.context.d2.i18n.getTranslation(
+                                    'choose_file_to_uploadddd'
+                                )}
                             </span>
                         </Button>
+                        <input
+                            type="file"
+                            onChange={this.handleFileChange}
+                            style={styles.iconFileInput}
+                            ref="iconFileInput"
+                            accept="image/png"
+                        />
                     </div>
-                    <input
-                        type="file"
-                        onChange={this.handleFileChange}
-                        style={styles.iconFileInput}
-                        ref="iconFileInput"
-                        accept="image/png"
-                    />
-                    <TextField
-                        name="key"
-                        onChange={this.handleIconMetadataChange}
-                        floatingLabelText="Icon Key"
-                        value={iconKey}
-                    />
-                    <TextField
-                        name="description"
-                        onChange={this.handleIconMetadataChange}
-                        floatingLabelText="Description"
-                    />
-                    <TextField
-                        name="keywords"
-                        onChange={this.handleIconKeywordsChange}
-                        floatingLabelText="Keywords"
-                        multiLine
-                    />
-                    <Button
-                        style={styles.uploadButton}
-                        onClick={this.handleFileUpload}
-                    >
-                        {this.t('upload_custom_icon')}
-                    </Button>
+                    {this.state.iconFile && (
+                        <div>
+                            <TextField
+                                name="key"
+                                onChange={this.handleIconMetadataChange}
+                                floatingLabelText="Icon Key"
+                                value={iconKey}
+                            />
+                            <TextField
+                                name="description"
+                                onChange={this.handleIconMetadataChange}
+                                floatingLabelText="Description"
+                            />
+                            <TextField
+                                name="keywords"
+                                onChange={this.handleIconKeywordsChange}
+                                floatingLabelText="Keywords"
+                                multiLine
+                                hintText="Separate keywords by ,"
+                            />
+                            {this.state.uploadError && (
+                                <ErrorMessage
+                                    message={this.state.uploadError.message}
+                                />
+                            )}
+                            <RaisedButton
+                                className="upload-button"
+                                onClick={this.handleFileUpload}
+                                label={this.t('upload_icon')}
+                                primary
+                                disabled={this.state.uploading}
+                            />
+                        </div>
+                    )}
                 </div>
                 <Divider />
                 <div>{this.props.children}</div>
