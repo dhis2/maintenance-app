@@ -36,8 +36,6 @@ export class IconList extends Component {
                 const [{ isIntersecting }] = entries;
 
                 if (isIntersecting) {
-                    console.log({ t: this });
-                    console.log({ intersecting: isIntersecting });
                     this.fetchIcons(this.state.pager.page + 1);
                 }
             },
@@ -94,8 +92,6 @@ export class IconList extends Component {
         const shouldShowLoading = !!this.state.loading || !isLastPage;
         const icons = this.state.icons;
 
-        console.log({ icons });
-        // console.log({io: this.intersectionObserver })
         return (
             <div>
                 <div>

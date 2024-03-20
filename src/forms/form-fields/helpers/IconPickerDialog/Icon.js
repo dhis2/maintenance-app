@@ -20,7 +20,7 @@ export default class Icon extends Component {
             try {
                 this.img.removeAttribute('data-loading');
             } catch (e) {
-                console.log('failed', e);
+               // ignore, this could happen if icon are  unmounted while loading
             }
         };
     }

@@ -10,15 +10,6 @@ import ErrorMessage from 'd2-ui/lib/messages/ErrorMessage.component';
 import classes from 'classnames';
 
 const styles = {
-    wrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 24,
-    },
-    iconForm: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
     selectFileButton: {
         backgroundColor: '#ff9800',
         color: '#fff',
@@ -31,23 +22,6 @@ const styles = {
         cursor: 'pointer',
         textTransform: 'uppercase',
     },
-    uploadButton: {
-        alignSelf: 'center',
-        backgroundColor: '#ff9800',
-        color: '#fff',
-        textAlign: 'center',
-        position: 'relative',
-        minWidth: 129,
-        height: 36,
-        lineHeight: 2.5,
-        marginTop: 24,
-        boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
-        cursor: 'pointer',
-    },
-    iconFileInput: {
-        display: 'none',
-    },
-    iconsWrapper: {},
 };
 
 export class IconPickerCustomTab extends Component {
@@ -70,11 +44,6 @@ export class IconPickerCustomTab extends Component {
     }
 
     handleIconMetadataChange = event => {
-        console.log({
-            event,
-            value: event.target.value,
-            name: event.target.name,
-        });
         const value = event.target.value && event.target.value.trim();
         const name = event.target.name;
 
