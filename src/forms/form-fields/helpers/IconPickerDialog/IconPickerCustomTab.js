@@ -22,6 +22,9 @@ const styles = {
         cursor: 'pointer',
         textTransform: 'uppercase',
     },
+    iconFileInput: {
+        display: 'none',
+    },
 };
 
 export class IconPickerCustomTab extends Component {
