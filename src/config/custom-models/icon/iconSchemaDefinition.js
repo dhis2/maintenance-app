@@ -3,12 +3,13 @@ It also does not have an id (it has user-defined key instead).
 This presents some challenges because a lot of the model-code is tied
 to them having an ID. So we add a "synthetic"-ID field
 
-Some other fields are also "synthetic" (eg. does not exist at all on the Icon object)
+Some other fields are also "synthetic" (eg. does not exist at all on the Icon object).
+These fields are needed in different places, eg. in the List etc
 
     - Access - this is calculated in the IconModelDefinition
     - Name  === key
     - Displayname === key
-    - Icon === href . This is mostly because "href"-field is translated to "API URL" by default
+    - Icon === href . This is mostly because "href"-field is translated to "API URL", and there's no good way to override this
     - User === createdBy
 */
 
@@ -116,7 +117,7 @@ const iconSchemaDefinition = {
             owner: false,
             ordered: false,
             collection: false,
-            required: true,
+            required: false,
             writable: true,
             embeddedObject: false,
             propertyType: 'TEXT',

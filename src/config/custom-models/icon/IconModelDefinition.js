@@ -117,12 +117,29 @@ export default class IconModelDefinition extends ModelDefinition {
                 );
                 return collection;
             });
-        console.log(res);
         return res;
     }
 
-    save(model) {
-        console.log('save');
+    async save(model) {
+        // key can only be edited during creation, so this should indicate whether it's an update or not
+        const isUpdate = !model.getDirtyPropertyNames().includes('key')
+
+        const baseSaveObject = {
+            description: model.description,
+            keywords: model.keywords
+        }
+
+        if(isUpdate) {
+            return this.api.update(`icons/${model.key}`, baseSaveObject)
+        }
+
+        const newObject = {
+            ...baseSaveObject,
+            key: model.key,
+            fileResourceId: model.fileResource.id
+        }
+        return this.api.post('icons', newObject)
+
     }
 
     delete(model) {
