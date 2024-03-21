@@ -92,21 +92,21 @@ export class IconPickerCustomTab extends Component {
                             <TextField
                                 name="key"
                                 onChange={this.handleIconMetadataChange}
-                                floatingLabelText="Icon Key"
+                                floatingLabelText={this.t("key")}
                                 value={iconKey}
                                 required
                             />
                             <TextField
                                 name="description"
                                 onChange={this.handleIconMetadataChange}
-                                floatingLabelText="Description"
+                                floatingLabelText={this.t('description')}
                             />
                             <TextField
                                 name="keywords"
                                 onChange={this.handleIconKeywordsChange}
-                                floatingLabelText="Keywords"
+                                floatingLabelText={this.t('keywords')}
                                 multiLine
-                                hintText="Separate keywords by ,"
+                                hintText={this.t('separate_keywords_by')}
                             />
                             {this.state.uploadError && (
                                 <ErrorMessage
