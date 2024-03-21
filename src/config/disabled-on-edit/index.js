@@ -7,6 +7,7 @@ import optionSet from './optionSet';
 import programRule from './programRule';
 import optionGroup from './optionGroup';
 import optionGroupSet from './optionGroupSet';
+import icon from './icon.js'
 
 const disabledByType = {
     category,
@@ -14,6 +15,7 @@ const disabledByType = {
     categoryOptionCombo,
     categoryOptionGroup,
     categoryOptionGroupSet,
+    icon,
     optionSet,
     programRule,
     optionGroup,

@@ -112,8 +112,8 @@ function noneOfOperator(value, list) {
     return list.indexOf(value) < 0;
 }
 
-function predicateOperator(value, predicate) {
-    return predicate(value)
+function predicateOperator(value, predicate, fieldConfig) {
+    return predicate(value, fieldConfig)
 }
 
 function isPointOperator(value) {
