@@ -6,24 +6,36 @@ export default class Icon extends Component {
         super(props);
         this.img = null;
 
-        this.setImgRef = (element) => {
+        this.setImgRef = element => {
             this.img = element;
         };
     }
 
+    componentWillUnmount() {
+        delete this.img.onload;
+    }
+
     componentDidMount() {
         this.img.onload = () => {
-            this.img.removeAttribute('data-loading');
+            try {
+                this.img.removeAttribute('data-loading');
+            } catch (e) {
+               // ignore, this could happen if icon are  unmounted while loading
+            }
         };
     }
 
     handleClick = () => {
         this.props.handleClick(this.props.icon.key);
-    }
+    };
 
     render() {
-        const { icon: { href, key, description }, selectedIconKey } = this.props;
-        const classSuffix = key === selectedIconKey ? ' icon-picker__icon--selected' : '';
+        const {
+            icon: { href, key, description },
+            selectedIconKey,
+        } = this.props;
+        const classSuffix =
+            key === selectedIconKey ? ' icon-picker__icon--selected' : '';
         const title = description || key.replace(/_/g, ' ');
         /* eslint-disable */
         return (
@@ -33,6 +45,8 @@ export default class Icon extends Component {
                 alt={title}
                 title={title}
                 data-loading
+                width={60}
+                height={60}
                 className={`icon-picker__icon${classSuffix}`}
                 onClick={this.handleClick}
             />
