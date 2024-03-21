@@ -23,7 +23,7 @@ const styles = {
         padding: '4px 0px',
         color: 'rgb(244, 67, 54)',
         fontSize: '12px',
-    }
+    },
 };
 
 export class UploadIconField extends Component {
@@ -106,7 +106,9 @@ export class UploadIconField extends Component {
                     ref={this.setFileInputRef}
                     accept={accept}
                 />
-                {this.props.errorText ? <div style={styles.errorText}>{this.props.errorText}</div> : null}
+                {this.props.errorText ? (
+                    <div style={styles.errorText}>{this.props.errorText}</div>
+                ) : null}
             </div>
         );
     }

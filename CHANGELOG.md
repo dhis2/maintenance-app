@@ -1,3 +1,10 @@
+# [32.28.0](https://github.com/dhis2/maintenance-app/compare/v32.27.0...v32.28.0) (2024-03-21)
+
+
+### Features
+
+* **icons:** support uploading icons ([#2818](https://github.com/dhis2/maintenance-app/issues/2818)) ([73990c0](https://github.com/dhis2/maintenance-app/commit/73990c0bd16f16b835fd06d5d5553a0cdc5e0ad1))
+
 # [32.27.0](https://github.com/dhis2/maintenance-app/compare/v32.26.2...v32.27.0) (2024-03-18)
 
 
