@@ -971,22 +971,4 @@ export default new Map([
             }]
         }
     ]],
-    ['icon', [
-        {
-            field: 'fileResource',
-            when: {
-                field: 'key',
-                operator: 'PREDICATE',
-                value: (value, fieldConfig) => {
-                    return fieldConfig && fieldConfig.props.disabled
-                }
-            },
-            operations: [{
-                type: 'SET_PROP',
-                propName: 'disabled',
-                thenValue: true,
-                elseValue: false,
-            }],
-        },
-    ]],
 ]);
