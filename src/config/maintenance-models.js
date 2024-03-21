@@ -89,6 +89,7 @@ export function getSideBarConfig() {
                 'dataApprovalWorkflow',
                 'locale',
                 'sqlView',
+                'icon',
             ],
         },
     };
@@ -223,6 +224,12 @@ const typeDetails = {
         columns: [
             'displayName',
             'locale',
+        ],
+    },
+    icon: {
+        columns: [
+            'key',
+            'icon'
         ],
     },
     sqlView: {
