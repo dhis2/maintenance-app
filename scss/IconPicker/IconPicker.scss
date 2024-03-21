@@ -49,7 +49,7 @@
     &__scroll-box {
         // This takes into account the primary and secundary header, 
         // footer and space above and below the dialog
-        height: calc(100vh - 320px);
+        height: calc(100vh - 330px);
         max-height: 1200px;
         overflow-y: auto;
         overflow-x: hidden;
@@ -62,6 +62,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
     }
 
     &__icon-list {
@@ -85,5 +86,30 @@
         &--selected {
             border: 3px solid #64acf5;
         }
+    }
+
+}
+
+.icon-picker-custom {
+    &.wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding-block-start: 24px;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+
+        .form-fields {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .upload-button {
+        max-width: 256px;
+        margin-block-start: 8px;
     }
 }
