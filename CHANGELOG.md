@@ -1,3 +1,10 @@
+# [32.29.0](https://github.com/dhis2/maintenance-app/compare/v32.28.0...v32.29.0) (2024-03-21)
+
+
+### Features
+
+* **icons:** icon list and edit ([#2819](https://github.com/dhis2/maintenance-app/issues/2819)) ([05e677a](https://github.com/dhis2/maintenance-app/commit/05e677ae2e8f86a896ff154f1f8a1df687ca52e3))
+
 # [32.28.0](https://github.com/dhis2/maintenance-app/compare/v32.27.0...v32.28.0) (2024-03-21)
 
 
