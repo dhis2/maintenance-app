@@ -29,7 +29,6 @@ export default class IconModelDefinition extends ModelDefinition {
     }
 
     list() {
-        console.log('icon list!');
         // Read the query string manually from the filters instance because we don't want to transform
         // it to query parameters for API calls. We will do client side filtering instead.
         const nameFilter = this.filters.filters.find(

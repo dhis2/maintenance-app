@@ -162,7 +162,6 @@ class List extends Component {
 
         const sourceStoreDisposable = listStore
             .subscribe((listStoreValue) => {
-                console.log({listStoreValue, params: this.props.params})
                 if (!isIterable(listStoreValue.list) || listStoreValue.modelType !== this.props.params.modelType) {
                     this.setState({
                         isLoading: true,

@@ -1,4 +1,4 @@
-import { isValidUid, isArray, checkType } from 'd2/lib/lib/check';
+import { isArray, checkType } from 'd2/lib/lib/check';
 import { throwError } from 'd2/lib/lib/utils';
 import Model from 'd2/lib/model/Model';
 import ModelDefinition from 'd2/lib/model/ModelDefinition';

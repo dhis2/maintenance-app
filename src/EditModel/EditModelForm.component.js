@@ -51,7 +51,6 @@ const modelToEditAndModelForm$ = Observable
         return false;
     })
     .map(([modelToEdit, editFormFieldsForCurrentModelType, modelType, d2]) => {
-        console.log({ modelToEdit })
         const fieldConfigs = editFormFieldsForCurrentModelType
         // TODO: When switching to the FormBuilder that manages state this function for all values
         // would need to be executed only for the field that actually changed and/or the values that
