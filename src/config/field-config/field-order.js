@@ -518,9 +518,9 @@ const fieldOrderByName = new Map([
         'sqlQuery',
     ]],
     ['icon', [
+        'fileResource',
         'key',
         'description',
-        'fileResource',
         'keywords',
     ]],
 ]);

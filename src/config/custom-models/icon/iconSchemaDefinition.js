@@ -359,7 +359,7 @@ const iconSchemaDefinition = {
             readable: true,
             writable: true,
             unique: false,
-            required: false,
+            required: true,
             length: 255,
             cascade: 'none',
             manyToMany: false,

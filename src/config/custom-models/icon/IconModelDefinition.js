@@ -1,57 +1,10 @@
 import ModelDefinition from 'd2/lib/model/ModelDefinition';
-import ModelCollection from 'd2/lib/model/ModelCollection';
-import { generateUid } from 'd2/lib/uid.js';
 import IconModelCollection from './IconModelCollection.js';
-
-let cachedLocales = null;
-const resetCache = () => {
-    cachedLocales = null;
-};
+import { uploadIcon } from '../../../forms/form-fields/helpers/IconPickerDialog/uploadIcon.js';
 
 export default class IconModelDefinition extends ModelDefinition {
-    getLocalesAndAuthorities() {
-        // Return cached results if available
-        if (cachedLocales) {
-            return Promise.resolve(cachedLocales);
-        }
-
-        // Otherwise fetch
-        return Promise.all([
-            this.api.get('locales/dbLocales'),
-            this.api.get('me/authorization'),
-        ]).then(([locales, authorities]) => {
-            const deleteAuthorities = ['F_SYSTEM_SETTING', 'ALL'];
-            const addAuthorities = ['F_LOCALE_ADD'];
-            const canDelete = authorities.some(auth =>
-                deleteAuthorities.includes(auth)
-            );
-            const canAdd =
-                canDelete ||
-                authorities.some(auth => addAuthorities.includes(auth));
-
-            const access = {
-                read: true,
-                update: canAdd,
-                externalize: false,
-                delete: canDelete,
-                write: canAdd,
-                manage: false,
-            };
-
-            // Cache the response first time and keep using it
-            cachedLocales = locales.map(locale => {
-                const model = this.create({
-                    ...locale,
-                    access,
-                    displayName: locale.name,
-                });
-                return model;
-            });
-            return cachedLocales;
-        });
-    }
-
     iconToModel(iconData) {
+        // apparently there's no restriction for icon access, so just hardcode it
         const access = {
             read: true,
             update: true,
@@ -67,13 +20,11 @@ export default class IconModelDefinition extends ModelDefinition {
             displayName: iconData.key,
             id: iconData.key,
             user: iconData.createdBy,
-            icon: iconData.href
+            icon: iconData.href,
         });
     }
     get(id) {
         // id is actually key here
-        console.log('get', id);
-
         return this.api.get(`icons/${id}`).then(icon => this.iconToModel(icon));
     }
 
@@ -86,15 +37,6 @@ export default class IconModelDefinition extends ModelDefinition {
         );
         const queryString = nameFilter && nameFilter.filterValue;
 
-        const access = {
-            read: true,
-            update: true,
-            externalize: false,
-            delete: true,
-            write: true,
-            manage: true,
-        };
-
         const params = {
             fields:
                 'key,description,custom,created,lastUpdated,createdBy[id,displayName,name],fileResource,href',
@@ -106,10 +48,9 @@ export default class IconModelDefinition extends ModelDefinition {
             .get('icons', params)
             .then(response => ({
                 ...response,
-                icons: response.icons.map(this.iconToModel.bind(this)),
+                icons: response.icons.map(icon => this.iconToModel(icon)),
             }))
             .then(response => {
-                console.log({ response });
                 const collection = IconModelCollection.create(
                     this,
                     response.icons,
@@ -121,35 +62,29 @@ export default class IconModelDefinition extends ModelDefinition {
     }
 
     async save(model) {
-        // key can only be edited during creation, so this should indicate whether it's an update or not
-        const isUpdate = !model.getDirtyPropertyNames().includes('key')
+        // href is not set before after creation
+        const isUpdate = model.href;
 
         const baseSaveObject = {
             description: model.description,
-            keywords: model.keywords
+            keywords: model.keywords,
+        };
+
+        if (isUpdate) {
+            return this.api.update(`icons/${model.key}`, baseSaveObject);
         }
 
-        if(isUpdate) {
-            return this.api.update(`icons/${model.key}`, baseSaveObject)
+        if (model.file) {
+            return uploadIcon(model.file, {
+                ...baseSaveObject,
+                key: model.key,
+            });
         }
 
-        const newObject = {
-            ...baseSaveObject,
-            key: model.key,
-            fileResourceId: model.fileResource.id
-        }
-        return this.api.post('icons', newObject)
-
+        return Promise.reject('Choose a file to upload');
     }
 
     delete(model) {
-        // TODO: change url to locales/dbLocales?....
-        return this.api.delete(`locales/dbLocales/${model.id}`).then(() => {
-            resetCache();
-
-            return {
-                status: 'OK',
-            };
-        });
+        return this.api.delete(`icons/${model.id}`);
     }
 }

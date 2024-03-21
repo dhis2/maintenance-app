@@ -409,10 +409,14 @@ objectActions.saveObject
         const iconModel = modelToEditStore.getState();
 
         const errorHandler = (error) => {
+            if(typeof error === 'string') {
+                action.error(error)
+            }
             if(error.message) {
                 action.error(error.message);
+            } else {
+                action.error(error)
             }
-            action.error('failed_to_save')
         };
 
         const successHandler = () => {
