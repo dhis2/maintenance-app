@@ -28,36 +28,45 @@ export default class IconModelDefinition extends ModelDefinition {
         return this.api.get(`icons/${id}`).then(icon => this.iconToModel(icon));
     }
 
-    list() {
+    list(listParams = {}) {
         // Read the query string manually from the filters instance because we don't want to transform
         // it to query parameters for API calls. We will do client side filtering instead.
         const nameFilter = this.filters.filters.find(
             ({ propertyName }) => propertyName === 'identifiable'
         );
-        const queryString = nameFilter && nameFilter.filterValue;
-
+        const search = nameFilter && nameFilter.filterValue;
         const params = {
             fields:
                 'key,description,custom,created,lastUpdated,createdBy[id,displayName,name],fileResource,href',
             type: 'custom',
-            search: queryString || '',
+            ...(search && { search }),
+            ...(listParams.page && { page: listParams.page }),
         };
 
-        const res = this.api
+        return this.api
             .get('icons', params)
             .then(response => ({
                 ...response,
                 icons: response.icons.map(icon => this.iconToModel(icon)),
             }))
             .then(response => {
+                // icons API doesnt have nextPage and prevPage...
+                // we only need these to be defined for it to work
+                const pager = {
+                    ...response.pager,
+                    nextPage:
+                        response.pager.page < response.pager.pageCount ||
+                        undefined,
+                    prevPage: response.pager.page === 1 && undefined,
+                };
                 const collection = IconModelCollection.create(
                     this,
                     response.icons,
-                    response.pager
+                    pager
                 );
+                console.log({ collection });
                 return collection;
             });
-        return res;
     }
 
     async save(model) {
