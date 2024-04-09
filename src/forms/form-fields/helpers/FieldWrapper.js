@@ -21,7 +21,7 @@ const FieldWrapper = props => {
                 <div style={styles.label}>{props.label}</div>
                 {props.children}
             </div>
-            <Divider />
+            {!props.hideDivider && <Divider /> }
         </div>
     );
 };

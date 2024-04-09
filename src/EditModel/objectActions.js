@@ -158,7 +158,7 @@ objectActions.getObjectOfTypeByIdAndClone
     });
 
 // Standard save handler
-const specialSaveHandlers = ['legendSet', 'dataSet', 'organisationUnit', 'programRule', 'programRuleVariable'];
+const specialSaveHandlers = ['legendSet', 'dataSet', 'organisationUnit', 'programRule', 'programRuleVariable', 'icon'];
 objectActions.saveObject
     .filter(({ data }) => !specialSaveHandlers.includes(data.modelType))
     .subscribe((action) => {
@@ -399,6 +399,39 @@ objectActions.saveObject
             .catch((err) => {
                 error(err.messages ? err.messages[0].message : err);
             });
+    });
+
+// Icon save handler - calls modelDefinition.save instead of model.save to shortcircuit validation
+objectActions.saveObject
+    .filter(({ data }) => data.modelType === 'icon')
+    .subscribe((action) => {
+        const isDirty = modelToEditStore.getState().isDirty();
+        const iconModel = modelToEditStore.getState();
+
+        const errorHandler = (error) => {
+            if(typeof error === 'string') {
+                action.error(error)
+            }
+            if(error.message) {
+                action.error(error.message);
+            } else {
+                action.error(error)
+            }
+        };
+
+        const successHandler = () => {
+            if (!isDirty) {
+                action.complete('no_changes_to_be_saved');
+            } else {
+                action.complete('success');
+            }
+        };
+
+        return iconModel.modelDefinition.save(iconModel)
+            .then(successHandler)
+            .catch(errorHandler)
+    }, (e) => {
+        log.error(e);
     });
 
 objectActions.update.subscribe((action) => {

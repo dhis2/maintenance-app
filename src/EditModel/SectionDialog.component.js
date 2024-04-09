@@ -18,10 +18,20 @@ import modelToEditStore from './modelToEditStore';
 import SelectField from 'material-ui/SelectField';
 import { MenuItem } from 'material-ui/DropDownMenu';
 
+import { sanitize } from 'dompurify';
+
 const dataElementStore = Store.create();
 const assignedDataElementStore = Store.create();
 const indicatorStore = Store.create();
 const assignedIndicatorStore = Store.create();
+
+const cleanDisplayOptions = (displayOptions) => {
+    return {
+        ...displayOptions,
+        beforeSectionText: sanitize(displayOptions.beforeSectionText),
+        afterSectionText: sanitize(displayOptions.afterSectionText),
+    }
+}
 
 class SectionDialog extends React.Component {
     constructor(props, context) {
@@ -291,6 +301,9 @@ class SectionDialog extends React.Component {
         const sectionModel = this.props.sectionModel.id
             ? this.props.sectionModel
             : this.props.sectionModel.modelDefinition.create();
+        
+        const displayOptions = cleanDisplayOptions(this.state.displayOptions)
+
         Object.assign(sectionModel, {
             dataSet: { id: modelToEditStore.state.id },
             name: this.state.name,
@@ -298,7 +311,7 @@ class SectionDialog extends React.Component {
             description: this.state.description,
             showRowTotals: this.state.showRowTotals,
             showColumnTotals: this.state.showColumnTotals,
-            displayOptions: JSON.stringify(this.state.displayOptions),
+            displayOptions: JSON.stringify(displayOptions),
             disableDataElementAutoGroup: this.state.disableDataElementAutoGroup,
             dataElements: assignedDataElementStore.state.map(de => ({
                 id: de,
@@ -359,6 +372,17 @@ class SectionDialog extends React.Component {
         });
     };
 
+    handleSectionTextUpdate = (fieldName) => (ev, text) => {
+        this.setState(prevState => {
+            return {
+                displayOptions: {
+                    ...prevState.displayOptions,
+                    [fieldName]: text,
+                }
+            }
+        });
+    }
+
     renderSectionDisplayConfigurationOptions = () => {
         const pivotOptions = [
             {
@@ -389,6 +413,7 @@ class SectionDialog extends React.Component {
                     {pivotOptions.map(({ value, text }) => {
                         return (
                             <RadioButton
+                                key={value}
                                 value={value}
                                 label={text}
                                 style={{ margin: '10px' }}
@@ -416,6 +441,25 @@ class SectionDialog extends React.Component {
                         })}
                     </SelectField>
                 )}
+                <div style={{marginTop: '16px'}}>
+                    <label>{this.getTranslation('section_text_descriptions')}</label>
+                    <TextField
+                        fullWidth
+                        hintText={this.getTranslation(
+                            'section_before_text'
+                        )}
+                        defaultValue={this.state.displayOptions.beforeSectionText}
+                        onChange={this.handleSectionTextUpdate('beforeSectionText')}
+                    />
+                    <TextField
+                        fullWidth
+                        hintText={this.getTranslation(
+                            'section_after_text'
+                        )}
+                        defaultValue={this.state.displayOptions.afterSectionText}
+                        onChange={this.handleSectionTextUpdate('afterSectionText')}
+                    />
+                </div>
             </div>
         );
     };

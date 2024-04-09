@@ -31,6 +31,7 @@ import optionGroup from './optionGroup';
 import sqlView from './sqlView';
 import optionGroupSet from './optionGroupSet';
 import eventProgramStage from './eventProgramStage';
+import icon from './icon.js'
 
 const overridesByType = {
     attribute,
@@ -42,6 +43,7 @@ const overridesByType = {
     dataApprovalWorkflow,
     dataSetNotificationTemplate,
     externalMapLayer,
+    icon,
     indicator,
     legendSet,
     locale,
