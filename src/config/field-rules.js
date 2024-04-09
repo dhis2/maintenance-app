@@ -2,7 +2,7 @@ import { defaultAnalyticsPeriodBoundaries, createDefaultRuleForField } from './f
 
 /**
  * Rule functions in EditModel/form-rules
- * 
+ *
  * Rules for the form fields.
  * If multiple `when` objects are specified these are evaluated as an OR.
  * The following would result check if either of the statements return true
@@ -368,6 +368,50 @@ export default new Map([
                 thenValue: true,
                 elseValue: false,
             }],
+        },
+        {
+            // When mapService is geojson or arcgis, then mapLayerPosition must be OVERLAY
+            field: 'mapLayerPosition',
+            when: [
+                {
+                    field: 'mapService',
+                    operator: 'ONEOF',
+                    value: ['GEOJSON_URL', 'ARCGIS_FEATURE'],
+                },
+            ],
+            operations: [
+                {
+                    field: 'mapLayerPosition',
+                    type: 'CHANGE_VALUE',
+
+                    setValue: (model, fieldConfig) => {
+                        fieldConfig.value = 'OVERLAY';
+                        model[fieldConfig.name] = 'OVERLAY';
+                    },
+                },
+            ],
+        },
+        {
+            // When mapService is Vector style, then mapLayerPosition must be BASEMAP
+            field: 'mapLayerPosition',
+            when: [
+                {
+                    field: 'mapService',
+                    operator: 'EQUALS',
+                    value: 'VECTOR_STYLE',
+                },
+            ],
+            operations: [
+                {
+                    field: 'mapLayerPosition',
+                    type: 'CHANGE_VALUE',
+
+                    setValue: (model, fieldConfig) => {
+                        fieldConfig.value = 'BASEMAP';
+                        model[fieldConfig.name] = 'BASEMAP';
+                    },
+                },
+            ],
         },
     ]],
     ['organisationUnit', [
