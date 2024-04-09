@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { debounce, endsWith, sortBy } from 'lodash/fp';
+import { debounce } from 'lodash/fp';
 import PropTypes from 'prop-types';
 import Button from 'd2-ui/lib/button/Button';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import CircularProgress from 'material-ui/CircularProgress';
 import TextField from 'material-ui/TextField';
-import Icon from './Icon';
-import filterIcons from './filterIcons';
+import { IconPickerCustomTab } from './IconPickerCustomTab.js';
+import { IconList } from './IconList.js';
+
+const isSupportedApiIconType = type =>
+    ['all', 'default', 'custom'].includes(type);
+const isVarianceIconType = type =>
+    ['positive', 'negative', 'outline'].includes(type);
 
 export default class IconPickerDialog extends Component {
     constructor(props, context) {
@@ -20,6 +24,7 @@ export default class IconPickerDialog extends Component {
             icons: null,
             iconTypeFilter: 'all',
             textFilter: '',
+            debouncedTextFilter: '',
         };
         this.iconsCache = {
             all: null,
@@ -27,36 +32,10 @@ export default class IconPickerDialog extends Component {
             negative: null,
             outline: null,
         };
-
-        this.debouncedUpdateTextFilter = debounce(375, this.updateTextFilter);
-    }
-
-    fetchIconLibrary = () => {
-        this.context.d2.Api.getApi().get('/icons')
-            .then((icons) => {
-                const sortedIcons = sortBy('key', icons).map((icon) => {
-                    // The '_positive', '_negative' and '_outline' suffixes are stripped for the searchKeys
-                    // to make sure that search queries for 'negative' only return icons that actually have
-                    // 'negative' in the relevant parts of the icon key.
-                    icon.searchKey = icon.key.substring(0, icon.key.lastIndexOf('_'));
-                    return icon;
-                });
-                this.iconsCache = {
-                    all: sortedIcons,
-                    positive: sortedIcons.filter(icon => endsWith('_positive', icon.key)),
-                    negative: sortedIcons.filter(icon => endsWith('_negative', icon.key)),
-                    outline: sortedIcons.filter(icon => endsWith('_outline', icon.key)),
-                };
-                this.setState({ icons: sortedIcons });
-            });
     }
 
     handleOpen = () => {
         this.setState({ open: true });
-
-        if (!this.icons) {
-            this.fetchIconLibrary();
-        }
     };
 
     handleClose = () => {
@@ -65,55 +44,81 @@ export default class IconPickerDialog extends Component {
 
     handleCancel = () => {
         this.setState({
-            selectedIconKey: this.props.iconKey //if cancelling revert back to original icon
+            selectedIconKey: this.props.iconKey, //if cancelling revert back to original icon
         });
         this.handleClose();
-    }
-
-    handleConfirm = () => {
-        this.setState({ iconKey: this.state.selectedIconKey });
-        this.props.updateStyleState({ icon: this.state.selectedIconKey });
-        this.handleClose();
-    }
-
-    handleIconSelect = (iconKey) => {
-        this.setState({ selectedIconKey: iconKey });
     };
 
-    handleTypeFilterClick = (type) => {
+    handleConfirm = () => {
+        this.setState({
+            iconKey: this.state.selectedIconKey,
+        });
+        this.props.updateStyleState({
+            icon: this.state.selectedIconKey,
+        });
+        this.handleClose();
+    };
+
+    handleIconSelect = iconKey => {
+        this.setState({
+            selectedIconKey: iconKey,
+        });
+    };
+
+    handleTypeFilterClick = type => {
+        if (isVarianceIconType(type)) {
+            // this is not ideal, but we're translating the filters to just
+            // a prefilled search
+            // we cannot combine searching for eg. "positive" and a user-defined search...
+            this.handleTextFilterChange(type, true);
+        }
+
         this.setState({
             iconTypeFilter: type,
-            icons: filterIcons(this.iconsCache[type], this.state.textFilter),
         });
-    }
 
-    handleTextFilterChange = (event) => {
-        this.setState({ textFilter: event.target.value });
-        this.debouncedUpdateTextFilter();
-    }
+        const previousFilter = this.state.iconTypeFilter;
+        // if moving from a prefilled-search, clear filter when changing tab
+        if (
+            isVarianceIconType(previousFilter) &&
+            isSupportedApiIconType(type)
+        ) {
+            this.handleTextFilterChange('', true);
+        }
+    };
 
-    updateTextFilter = () => {
-        const icons = this.iconsCache[this.state.iconTypeFilter];
+    debouncedFilterChange = debounce(375, value => {
         this.setState({
-            icons: filterIcons(icons, this.state.textFilter),
+            debouncedTextFilter: value,
         });
-    }
+    });
 
-    renderIconButtonImage = (iconKey) => {
+    handleTextFilterChange = (value, immediate = false) => {
+        this.setState({ textFilter: value });
+        this.debouncedFilterChange(value);
+        if (immediate) {
+            this.debouncedFilterChange.flush();
+        }
+    };
+
+    renderIconButtonImage = iconKey => {
         const contextPath = this.context.d2.system.systemInfo.contextPath;
         const altText = this.context.d2.i18n.getTranslation('current_icon');
-        const fallbackIconPath = `${contextPath}/api/icons/dhis2_logo_outline/icon.svg`
+        const fallbackIconPath = `${contextPath}/api/icons/dhis2_logo_outline/icon.svg`;
+
+        // need function for this-context
+        function onError({ target}) {
+            // prevent infinite loop on error
+            this.onerror = null;
+            this.src = fallbackIconPath;
+        }
         return (
             <img
                 src={`${contextPath}/api/icons/${iconKey}/icon.svg`}
                 alt={altText}
                 className="icon-picker__icon-button-image"
                 style={{ backgroundColor: 'white', overflow: 'hidden' }}
-                onError={({ target }) => {
-                    target.onerror = "";
-                    target.src=fallbackIconPath;
-                    return true;
-                }}
+                onError={onError}
             />
         );
     };
@@ -134,20 +139,18 @@ export default class IconPickerDialog extends Component {
                     height: 36,
                     lineHeight: 2.5,
                     marginTop: 10,
-                    boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
+                    boxShadow:
+                        '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
                     cursor: 'pointer',
                     textTransform: 'uppercase',
                 }}
             >
-                {iconKey &&
-                    this.renderIconButtonImage(iconKey)
-                }
+                {iconKey && this.renderIconButtonImage(iconKey)}
 
                 <span style={{ padding: '0 16px' }}>
                     {iconKey
                         ? this.context.d2.i18n.getTranslation('change_icon')
-                        : this.context.d2.i18n.getTranslation('add_icon')
-                    }
+                        : this.context.d2.i18n.getTranslation('add_icon')}
                 </span>
             </Button>
         );
@@ -166,88 +169,70 @@ export default class IconPickerDialog extends Component {
                         height: 36,
                         lineHeight: 2.5,
                         marginTop: 10,
-                        boxShadow: '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
+                        boxShadow:
+                            '0 1px 6px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.12)',
                         cursor: 'pointer',
                     }}
                 >
                     {this.context.d2.i18n.getTranslation('deselect_icon')}
                 </Button>
-            )
+            );
         }
 
         return buttons;
-    }
+    };
 
     handleDeselect = () => {
         this.setState({ iconKey: '' });
         this.props.updateStyleState({ icon: '' });
-    }
+    };
 
-    renderActions = () => (
-        [
-            <RaisedButton
-                label={this.context.d2.i18n.getTranslation('select')}
-                primary
-                onClick={this.handleConfirm}
-            />,
-            <FlatButton
-                label={this.context.d2.i18n.getTranslation('cancel')}
-                onClick={this.handleCancel}
-            />,
-        ]
-    )
+    renderActions = () => [
+        <RaisedButton
+            label={this.context.d2.i18n.getTranslation('select')}
+            primary
+            onClick={this.handleConfirm}
+        />,
+        <FlatButton
+            label={this.context.d2.i18n.getTranslation('cancel')}
+            onClick={this.handleCancel}
+        />,
+    ];
 
     renderTypeFilter = () => (
         <div className="icon-picker__filter-button-wrap">
-            {
-                ['all', 'positive', 'negative', 'outline'].map(type => (
-                    <FlatButton
-                        key={type}
-                        label={this.context.d2.i18n.getTranslation(`icons_${type}`)}
-                        primary={type === this.state.iconTypeFilter}
-                        /* eslint-disable */
-                        onClick={() => this.handleTypeFilterClick(type)}
-                        /* eslint-enable */
-                    />
-                ))
-            }
+            {['all', 'positive', 'negative', 'outline', 'custom'].map(type => (
+                <FlatButton
+                    key={type}
+                    label={this.context.d2.i18n.getTranslation(`icons_${type}`)}
+                    primary={type === this.state.iconTypeFilter}
+                    onClick={() => this.handleTypeFilterClick(type)}
+                />
+            ))}
         </div>
-    )
+    );
 
     renderTextFilter = () => (
         <TextField
             type="search"
-            floatingLabelText={this.context.d2.i18n.getTranslation('icon_search')}
+            floatingLabelText={this.context.d2.i18n.getTranslation(
+                'icon_search'
+            )}
             value={this.state.textFilter}
-            onChange={this.handleTextFilterChange}
+            onChange={event => {
+                const value = event.target.value;
+                this.setState({ textFilter: value });
+                this.handleTextFilterChange(value);
+            }}
         />
-    )
-
-    renderIconLibrary = () => {
-        const { icons, selectedIconKey } = this.state;
-        if (!icons) {
-            return (
-                <div className="icon-picker__list-loader">
-                    <CircularProgress />
-                </div>
-            );
-        }
-
-        return (
-            <div className="icon-picker__icon-list">
-                {icons.map(icon => (
-                    <Icon
-                        icon={icon}
-                        key={icon.key}
-                        selectedIconKey={selectedIconKey}
-                        handleClick={this.handleIconSelect}
-                    />
-                ))}
-            </div>
-        );
-    }
+    );
 
     render() {
+        // iconTypeFilter is used to control the tabs
+        // however, the API does not have a concept of "positive" and "negative", so we just do a search instead
+        const iconApiType = isSupportedApiIconType(this.state.iconTypeFilter)
+            ? this.state.iconTypeFilter
+            : 'all';
         return (
             <div>
                 {this.renderIconButton()}
@@ -269,7 +254,34 @@ export default class IconPickerDialog extends Component {
                         {this.renderTextFilter()}
                     </div>
                     <div className="icon-picker__scroll-box">
-                        {this.renderIconLibrary()}
+                        {this.state.iconTypeFilter === 'custom' ? (
+                            <IconPickerCustomTab
+                                onIconUpload={iconKey => {
+                                    if (this.iconListRef) {
+                                        this.iconListRef.fetchIconAndAddToStartOfList(
+                                            iconKey
+                                        );
+                                    }
+                                }}
+                            >
+                                <IconList
+                                    ref={ref => (this.iconListRef = ref)}
+                                    onIconSelect={this.handleIconSelect}
+                                    type={'custom'}
+                                    textFilter={this.state.debouncedTextFilter}
+                                    selectedIconKey={this.state.selectedIconKey}
+                                />
+                            </IconPickerCustomTab>
+                        ) : (
+                            <IconList
+                                // reset when
+                                key={this.state.iconTypeFilter}
+                                onIconSelect={this.handleIconSelect}
+                                type={iconApiType}
+                                textFilter={this.state.debouncedTextFilter}
+                                selectedIconKey={this.state.selectedIconKey}
+                            />
+                        )}
                     </div>
                 </Dialog>
             </div>

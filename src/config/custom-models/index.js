@@ -1,5 +1,6 @@
 import ModelDefinition from 'd2/lib/model/ModelDefinition';
 import locale from './locale';
+import icon from './icon';
 
 function createFromSchema({ schema, CustomModelDefinition }) {
     // Add current custom model to list of exceptions stored directly on the class
@@ -8,6 +9,4 @@ function createFromSchema({ schema, CustomModelDefinition }) {
     return ModelDefinition.createFromSchema(schema);
 }
 
-export default [
-    createFromSchema(locale),
-];
+export default [createFromSchema(locale), createFromSchema(icon)];

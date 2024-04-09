@@ -281,7 +281,7 @@ class List extends Component {
         case 'edit':
             return model.modelDefinition.name !== 'locale' && model.access.write;
         case 'clone':
-            return !['dataSet', 'program', 'locale', 'sqlView', 'optionSet'].includes(model.modelDefinition.name) &&
+            return !['dataSet', 'program', 'locale', 'sqlView', 'optionSet', 'icon'].includes(model.modelDefinition.name) &&
                 model.access.write;
         case 'translate':
             return model.access.read && model.modelDefinition.identifiableObject && model.modelDefinition.name !== 'sqlView';
