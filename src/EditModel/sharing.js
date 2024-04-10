@@ -68,6 +68,14 @@ export const transformSharingObjectToLegacy = sharing => {
 /* Converts legacy sharing structure to sharing object
 note that this will not include owner property */
 export const transformLegacySharingToSharingObject = modelWithSharing => {
+    if(!modelWithSharing) {
+        return {
+            public: '--------',
+            external: false,
+            userGroups: {},
+            users: {},
+        };
+    }
     const {
         publicAccess,
         externalAccess,
