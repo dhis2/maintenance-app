@@ -1,10 +1,13 @@
 /* Helpers to transform sharing properties of a model
 ` Before 2.41, sharing properties were on the root of the model
  
- publicAccess: 'rwrw----',
- externalAccess: false,
- userGroupAccesses: [],
+ "dataElement": {
+    publicAccess: 'rwrw----',
+    externalAccess: false,
+    userGroupAccesses: [],
     userAccesses: [],
+    ...otherProperties
+}
 
 After 2.41 these are grouped in a sharing object:
 
@@ -91,7 +94,7 @@ export const transformLegacySharingToSharingObject = modelWithSharing => {
     };
 };
 
-export const transformLegacySharingArrayToObject = sharingArray => {
+const transformLegacySharingArrayToObject = sharingArray => {
     return sharingArray.reduce((acc, sharing) => {
         acc[sharing.id] = {
             displayName: sharing.displayName,
