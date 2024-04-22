@@ -1,31 +1,37 @@
 import { isEqual } from 'lodash/fp';
 
+
+const sortSharingObjectPart = (sharingObjectPart) => {
+    if(!sharingObjectPart) return sharingObjectPart;
+
+    return Object.values(sharingObjectPart).sort((a, b) => a.id < b.id);
+}
+
 export const areSharingPropertiesSimilar = (modelA, modelB) => {
     const sharingA = modelA.sharing;
     const sharingB = modelB.sharing;
-    if (sharingA.public !== sharingB.public) return false;
+    if (!sharingA || !sharingB || sharingA.public !== sharingB.public) return false;
     if (!!sharingA.externalAccess !== !!sharingB.externalAccess) return false;
 
-    const compareFunction = (a, b) => a.id < b.id;
     if (
         !isEqual(
-            Array.sort(sharingA.users || [], compareFunction),
-            Array.sort(sharingB.users || [], compareFunction),
+            sortSharingObjectPart(sharingA.users),
+            sortSharingObjectPart(sharingB.users),
         )
     ) {
         return false;
     }
 
     return isEqual(
-        Array.sort(sharingA.userGroups || [], compareFunction),
-        Array.sort(sharingB.userGroups || [], compareFunction),
+        sortSharingObjectPart(sharingA.userGroups),
+        sortSharingObjectPart(sharingB.userGroups)
     )
 };
 
 export const extractDisplayName = model => model.dataValues.displayName;
 
 const getPublicAccessDescription = publicAccessString => {
-    if (publicAccessString.substr(0, 4) === '----') return 'No public access';
+    if (!publicAccessString || publicAccessString.substr(0, 4) === '----') return 'No public access';
     if (publicAccessString.substr(0, 4) === 'rwrw') return 'Complete public access';
 
     let description = '';
@@ -54,7 +60,7 @@ const getPublicAccessDescription = publicAccessString => {
 };
 
 export const generateSharingDescription = ({ sharing }) => {
-    const { public: publicAccess, users, userGroups } = sharing;
+    const { public: publicAccess, users, userGroups } = sharing || {};
     const publicAccessDescription = getPublicAccessDescription(publicAccess);
     const userGroupCount = userGroups ? Object.keys(userGroups).length : 0;
     const userCount = users ? Object.keys(users).length : 0;

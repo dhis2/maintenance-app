@@ -47,7 +47,7 @@ export const transformSharingObjectToLegacy = sharing => {
     const { public: publicAccess, users, userGroups, external } = sharing;
 
     return {
-        publicAccess,
+        publicAccess: publicAccess || '--------',
         externalAccess: Boolean(external),
         userGroupAccesses: userGroups
             ? Object.values(userGroups).map(userGroupSharing => ({
@@ -87,7 +87,7 @@ export const transformLegacySharingToSharingObject = modelWithSharing => {
     } = modelWithSharing;
 
     return {
-        public: publicAccess,
+        public: publicAccess || '--------',
         external: Boolean(externalAccess),
         userGroups: transformLegacySharingArrayToObject(userGroupAccesses),
         users: transformLegacySharingArrayToObject(userAccesses),
