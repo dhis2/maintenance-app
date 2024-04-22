@@ -549,7 +549,7 @@ class List extends Component {
             // the data-table has functionality for rendering "publicAccess"
             // we thus need to transform the sharing object to a publicAccess property
             if (model.sharing) {
-                model.publicAccess = model.sharing.public;
+                model.publicAccess = model.sharing.public || '--------';
             }
             return model;
         }
