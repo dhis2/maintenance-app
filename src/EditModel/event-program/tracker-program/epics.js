@@ -66,7 +66,12 @@ export const newTrackerProgramStage = action$ =>
             const maxSortOrder = getMaxSortOrder(store);
             const programStageModel = d2.models.programStages.create({
                 id: programStageUid,
-                publicAccess: "rw------",
+                sharing: {
+                    public: "rw------",
+                    userGroups: {},
+                    users: {},
+                    externalAccess: false
+                },
                 programStageDataElements: [],
                 notificationTemplates: [],
                 programStageSections: [],

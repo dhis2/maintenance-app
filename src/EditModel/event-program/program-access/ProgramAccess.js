@@ -15,12 +15,16 @@ const styles = {
     }
 };
 
-const ProgramNotSavedMessage = () => (
-    <div>Save the program in order to access sharing settings</div>
+const ProgramNotSavedMessage = (_, { d2 } ) => (
+    <div>{d2.i18n.getTranslation('save_the_program_in_order_to_access_sharing_settings')}</div>
 );
 
+ProgramNotSavedMessage.contextTypes = {
+    d2: PropTypes.object,
+}
+
 const ProgramStagesAccessHOC = branch(
-    props => !props.model.dataValues.publicAccess,
+    props => !props.model.dataValues.sharing,
     renderComponent(ProgramNotSavedMessage)
 )(ProgramStagesAccess);
 

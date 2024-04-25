@@ -42,6 +42,7 @@ import DialogRouter from '../Dialog/DialogRouter';
 import ContextMenuHeader from './ContextMenuHeader'
 import { openDialog } from '../Dialog/actions';
 import * as DIALOGTYPES from '../Dialog/types';
+import { transformLegacySharingToSharingObject } from '../EditModel/sharing';
 
 const styles = {
     dataTableWrap: {
@@ -189,7 +190,7 @@ class List extends Component {
                 sharing: sharingState,
                 dataRows: state.dataRows.map((row) => {
                     if (row.id === sharingState.model.id) {
-                        return Object.assign(row, { publicAccess: sharingState.model.publicAccess });
+                        return Object.assign(row, { sharing: sharingState.model.sharing });
                     }
                     return row;
                 }),
@@ -333,8 +334,12 @@ class List extends Component {
     }
 
     closeSharingDialog = (sharingState) => {
+        // sharing dialog gives us a legacy sharing object, we want to transform it to the "new" sharing Object
+        // because that's what the format the list will have
+        // this is then transformed to "publicAccess" in the render, because DataTable expects that
+        const sharingObject = transformLegacySharingToSharingObject(sharingState)
         const model = sharingState
-            ? Object.assign(sharingStore.state.model, { publicAccess: sharingState.publicAccess })
+            ? Object.assign(sharingStore.state.model, { sharing: sharingObject })
             : sharingStore.state.model;
 
         sharingStore.setState(Object.assign({}, sharingStore.state, {
@@ -540,6 +545,15 @@ class List extends Component {
             }, row);
         };
 
+        const transformSharingObjectToPublicAccess = (model) => {
+            // the data-table has functionality for rendering "publicAccess"
+            // we thus need to transform the sharing object to a publicAccess property
+            if (model.sharing) {
+                model.publicAccess = model.sharing.public || '--------';
+            }
+            return model;
+        }
+
         const primaryAction = (model) => {
             if (model.access.write && model.modelDefinition.name !== 'locale') {
                 availableActions.edit(model);
@@ -586,6 +600,7 @@ class List extends Component {
                                                 .map(magicallyUnwrapChildValues)
                                                 .map(defaultReallyMeansNone)
                                                 .map(translateConstants)
+                                                .map(transformSharingObjectToPublicAccess)
                                         }
                                         columns={this.state.tableColumns}
                                         contextMenuActions={availableActions}

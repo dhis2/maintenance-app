@@ -17,7 +17,7 @@ import {
 
 export const fieldFilteringForQuery = [
     'displayName', 'shortName', 'id', 'lastUpdated', 'created', 'displayDescription',
-    'code', 'publicAccess', 'access', 'href', 'level',
+    'code', 'sharing', 'access', 'href', 'level',
 ].join(',');
 
 //Set over schemas that should not filter out name=default
@@ -98,12 +98,18 @@ function getOrderingForSchema(modelName) {
 }
 
 export function getQueryForSchema(modelName) {
+    // remove fields from query
+    // note that these fields may still be used for "column"-types, to eg. show the field
+    // but we don't want to make requests with it, because they might've been removed or deprecated
+    const fieldsToRemove = new Set('publicAccess')
+
     return {
         fields: [
             fieldFilteringForQuery,
             getTableColumnsForType(modelName, true),
             getAdditionalFieldsForType(modelName),
-        ].join(),
+        ]
+            .filter(field => !fieldsToRemove.has(field)).join(),
         order: getOrderingForSchema(modelName),
     };
 }
