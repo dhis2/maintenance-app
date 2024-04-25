@@ -187,8 +187,8 @@ export class ColumnConfigDialog extends Component {
  * Ignore some that are internal, no easy way to filter these without a blacklist
  *
  */
-function getAvailableColumnsForModel(model) {
-    const validations = model.modelValidations;
+function getAvailableColumnsForModel(modelDefinition) {
+    const validations = modelDefinition.modelValidations;
     const ignoreFieldTypes = new Set(['COLLECTION', 'REFERENCE', 'COMPLEX']);
     const ignoreFieldNames = new Set([
         'dimensionItem',
@@ -240,7 +240,13 @@ function getAvailableColumnsForModel(model) {
         }
     }
 
-    return availableColumns;
+    if(modelDefinition.isShareable) {
+        // this is not a property on the model (was removed and replaced with sharing object)
+        // however, we map `sharing.public` to `publicAccess` in list, so it's available there.
+        // thus we need to make it selectable in the column config dialog as well.
+        availableColumns.push('publicAccess');
+    }
+    return availableColumns
 }
 
 ColumnConfigDialog.contextTypes = {

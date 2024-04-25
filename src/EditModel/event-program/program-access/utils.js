@@ -1,33 +1,41 @@
 import { isEqual } from 'lodash/fp';
 
-export const areSharingPropertiesSimilar = (a, b) => {
-    if (a.publicAccess !== b.publicAccess) return false;
-    if (!!a.externalAccess !== !!b.externalAccess) return false;
 
-    const compareFunction = (a, b) => a.id < b.id;
+const sortSharingObjectPart = (sharingObjectPart) => {
+    if(!sharingObjectPart) return sharingObjectPart;
+
+    return Object.values(sharingObjectPart).sort((a, b) => a.id < b.id);
+}
+
+export const areSharingPropertiesSimilar = (modelA, modelB) => {
+    const sharingA = modelA.sharing;
+    const sharingB = modelB.sharing;
+    if (!sharingA || !sharingB || sharingA.public !== sharingB.public) return false;
+    if (!!sharingA.externalAccess !== !!sharingB.externalAccess) return false;
+
     if (
         !isEqual(
-            Array.sort(a.userAccesses || [], compareFunction),
-            Array.sort(b.userAccesses || [], compareFunction),
+            sortSharingObjectPart(sharingA.users),
+            sortSharingObjectPart(sharingB.users),
         )
     ) {
         return false;
     }
 
     return isEqual(
-        Array.sort(a.userGroupAccesses || [], compareFunction),
-        Array.sort(b.userGroupAccesses || [], compareFunction),
-    );
+        sortSharingObjectPart(sharingA.userGroups),
+        sortSharingObjectPart(sharingB.userGroups)
+    )
 };
 
 export const extractDisplayName = model => model.dataValues.displayName;
 
-const getPublicAccessDescription = publicAccess => {
-    if (publicAccess.substr(0, 4) === '----') return 'No public access';
-    if (publicAccess.substr(0, 4) === 'rwrw') return 'Complete public access';
+const getPublicAccessDescription = publicAccessString => {
+    if (!publicAccessString || publicAccessString.substr(0, 4) === '----') return 'No public access';
+    if (publicAccessString.substr(0, 4) === 'rwrw') return 'Complete public access';
 
     let description = '';
-    switch (publicAccess.substr(0, 2)) {
+    switch (publicAccessString.substr(0, 2)) {
         case 'rw':
             description += 'Public metadata read- and write access';
             break;
@@ -41,7 +49,7 @@ const getPublicAccessDescription = publicAccess => {
 
     description = description += ', ';
 
-    switch (publicAccess.substr(2, 2)) {
+    switch (publicAccessString.substr(2, 2)) {
         case 'rw':
             return description + 'public data read- and write access';
         case 'r-':
@@ -51,10 +59,11 @@ const getPublicAccessDescription = publicAccess => {
     }
 };
 
-export const generateSharingDescription = ({ publicAccess, userGroupAccesses, userAccesses }) => {
+export const generateSharingDescription = ({ sharing }) => {
+    const { public: publicAccess, users, userGroups } = sharing || {};
     const publicAccessDescription = getPublicAccessDescription(publicAccess);
-    const userGroupCount = userGroupAccesses ? userGroupAccesses.length : 0;
-    const userCount = userAccesses ? userAccesses.length : 0;
+    const userGroupCount = userGroups ? Object.keys(userGroups).length : 0;
+    const userCount = users ? Object.keys(users).length : 0;
 
     let description = publicAccessDescription;
     if (userCount || userGroupCount) {
