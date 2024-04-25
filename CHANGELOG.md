@@ -1,3 +1,10 @@
+## [32.29.4](https://github.com/dhis2/maintenance-app/compare/v32.29.3...v32.29.4) (2024-04-25)
+
+
+### Bug Fixes
+
+* **program:** migrate from legacy sharing API ([#2828](https://github.com/dhis2/maintenance-app/issues/2828)) ([3b8ca5d](https://github.com/dhis2/maintenance-app/commit/3b8ca5d7b5d10f2285541d3cec71e22356312174))
+
 ## [32.29.3](https://github.com/dhis2/maintenance-app/compare/v32.29.2...v32.29.3) (2024-04-14)
 
 
