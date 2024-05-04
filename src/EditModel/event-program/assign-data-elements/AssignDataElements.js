@@ -178,6 +178,14 @@ const ProgramStageDataElement = pure(
                         />
                 </Table.Cell>
                 <Table.Cell>
+                        <Checkbox
+                            checked={isCheckedForProp('skipAnalytics')}
+                            onClick={onChangeFlipBooleanForProperty(
+                                'skipAnalytics',
+                            )}
+                        />
+                </Table.Cell>
+                <Table.Cell>
                     <RenderTypeSelectField
                         device={MOBILE}
                         target={programStageDataElement}
@@ -327,6 +335,9 @@ function AssignDataElements(props, { d2 }) {
                         </Table.CellHead>
                         <Table.CellHead>
                             {d2.i18n.getTranslation('skip_synchronization')}
+                        </Table.CellHead>
+                        <Table.CellHead>
+                            {d2.i18n.getTranslation('skip_in_analytics')}
                         </Table.CellHead>
                         <Table.CellHead>
                             {d2.i18n.getTranslation('render_type_mobile')}
