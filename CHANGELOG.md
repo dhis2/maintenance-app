@@ -1,3 +1,10 @@
+# [32.30.0](https://github.com/dhis2/maintenance-app/compare/v32.29.6...v32.30.0) (2024-05-05)
+
+
+### Features
+
+* **programs:** add skipAnalytics checkbox for psde ([#2839](https://github.com/dhis2/maintenance-app/issues/2839)) ([69145ed](https://github.com/dhis2/maintenance-app/commit/69145edc82005f86b23f1ff18cb8b761b95a837f))
+
 ## [32.29.6](https://github.com/dhis2/maintenance-app/compare/v32.29.5...v32.29.6) (2024-05-05)
 
 
