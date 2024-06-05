@@ -53,6 +53,10 @@ const fieldOrderByName = new Map([
         'endDate',
         'organisationUnits',
     ]],
+    ['categoryOptionCombo', [
+        'name',
+        'code',
+    ]],
     ['categoryCombo', [
         'name',
         'shortName',
