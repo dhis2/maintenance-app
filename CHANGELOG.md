@@ -1,3 +1,10 @@
+## [32.30.4](https://github.com/dhis2/maintenance-app/compare/v32.30.3...v32.30.4) (2024-06-05)
+
+
+### Bug Fixes
+
+* **categoryOptionCombo:** remove shortName ([#2869](https://github.com/dhis2/maintenance-app/issues/2869)) ([2164835](https://github.com/dhis2/maintenance-app/commit/2164835328619c4bb5e7578c4ff589ccf0ebfa94))
+
 ## [32.30.3](https://github.com/dhis2/maintenance-app/compare/v32.30.2...v32.30.3) (2024-06-02)
 
 
