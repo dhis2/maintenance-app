@@ -7,14 +7,13 @@ import Checkbox from '../../forms/form-fields/check-box';
 import {RadioButton, RadioButtonGroup} from "material-ui/RadioButton";
 import log from "loglevel";
 
-class CustomTestComponent extends React.Component {
+class RenderAsTabsSettings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             renderAsTabs: props.value,
             displayOptions: this.parseDisplayOptions()
         };
-
     }
 
     parseDisplayOptions = () =>  {
@@ -43,7 +42,6 @@ class CustomTestComponent extends React.Component {
     onDisplayOptionsChanged = (event) =>  {
         const tabsDirection = event.target.value
         this.updateTabsDirection(tabsDirection)
-
     }
 
     onDisplayAsTabsChanged = (event) =>  {
@@ -57,7 +55,7 @@ class CustomTestComponent extends React.Component {
             ...prevState,
             renderAsTabs
         }));
-        this.props.model.renderAsTabs = renderAsTabs
+        this.props.onChange({ target: { value: renderAsTabs } });
         this.updateTabsDirection(tabsDirection)
     }
 
@@ -116,7 +114,7 @@ export default new Map([
         component: DataInputPeriods,
     }],
     ['renderAsTabs', {
-        component: CustomTestComponent,
+        component: RenderAsTabsSettings,
     }]
 ]);
 
