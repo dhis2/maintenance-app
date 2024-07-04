@@ -1,3 +1,16 @@
+# [32.31.0](https://github.com/dhis2/maintenance-app/compare/v32.30.6...v32.31.0) (2024-07-04)
+
+
+### Bug Fixes
+
+* add translations and remove render as tabs from the state ([7114ca8](https://github.com/dhis2/maintenance-app/commit/7114ca8dfba1116566349911fc036c12253436da))
+* rename render as tabs settings component and change model using the on change prop ([d04efc6](https://github.com/dhis2/maintenance-app/commit/d04efc6639d73e3c70c21a6554529ac366b31634))
+
+
+### Features
+
+* add option to pick render as tabs direction for data sets ([d59135e](https://github.com/dhis2/maintenance-app/commit/d59135ec7eb0cdb53236b38bd6fdaeffd5f6da02))
+
 ## [32.30.6](https://github.com/dhis2/maintenance-app/compare/v32.30.5...v32.30.6) (2024-06-16)
 
 
