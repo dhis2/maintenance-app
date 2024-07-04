@@ -5,15 +5,18 @@ import DataInputPeriods from './data-set/DataInputPeriods.component';
 import PeriodTypeDropDown from '../../forms/form-fields/period-type-drop-down';
 import Checkbox from '../../forms/form-fields/check-box';
 import {RadioButton, RadioButtonGroup} from "material-ui/RadioButton";
+import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import log from "loglevel";
 
 class RenderAsTabsSettings extends React.Component {
-    constructor(props) {
+    constructor(props, context) {
         super(props);
         this.state = {
-            renderAsTabs: props.value,
             displayOptions: this.parseDisplayOptions()
         };
+        this.translate = context.d2.i18n.getTranslation.bind(
+            context.d2.i18n
+        );
     }
 
     parseDisplayOptions = () =>  {
@@ -32,10 +35,7 @@ class RenderAsTabsSettings extends React.Component {
             ...this.state.displayOptions,
             tabsDirection
         }
-        this.setState((prevState, _) => ({
-            ...prevState,
-            displayOptions: newDisplayOptions
-        }));
+        this.setState({displayOptions: newDisplayOptions});
         this.props.model.displayOptions = JSON.stringify(newDisplayOptions)
     }
 
@@ -44,17 +44,13 @@ class RenderAsTabsSettings extends React.Component {
         this.updateTabsDirection(tabsDirection)
     }
 
-    onDisplayAsTabsChanged = (event) =>  {
+    onRenderAsTabsChanged = (event) =>  {
         const renderAsTabs = event.target.value
         const tabsDirection =
             renderAsTabs
                 ? 'horizontal'
                 : undefined
 
-        this.setState((prevState) => ({
-            ...prevState,
-            renderAsTabs
-        }));
         this.props.onChange({ target: { value: renderAsTabs } });
         this.updateTabsDirection(tabsDirection)
     }
@@ -62,13 +58,14 @@ class RenderAsTabsSettings extends React.Component {
 
     render() {
         const state = this.state;
+        const props = this.props;
         return <div>
            <Checkbox
-            labelText="Render as tabs"
-            value={state.renderAsTabs}
-            onChange={this.onDisplayAsTabsChanged}
+            labelText={this.translate('render_as_tabs')}
+            value={props.value}
+            onChange={this.onRenderAsTabsChanged}
         />
-            {state.renderAsTabs &&
+            {props.value &&
              <RadioButtonGroup
                 onChange={this.onDisplayOptionsChanged}
                 name="tabsDirection"
@@ -78,13 +75,13 @@ class RenderAsTabsSettings extends React.Component {
                 <RadioButton
                     key='horizontal'
                     value='horizontal'
-                    label='Horizontal'
+                    label={this.translate('horizontal')}
                     style={{margin: '10px'}}
                 />
                 <RadioButton
                     key='vertical'
                     value='vertical'
-                    label='Vertical'
+                    label={this.translate('vertical')}
                     style={{margin: '10px'}}
                 />
             </RadioButtonGroup>}
@@ -114,7 +111,7 @@ export default new Map([
         component: DataInputPeriods,
     }],
     ['renderAsTabs', {
-        component: RenderAsTabsSettings,
+        component: addD2Context(RenderAsTabsSettings),
     }]
 ]);
 
