@@ -50,6 +50,17 @@ function setValueTypeToOptionSet(model, fieldConfig) {
     }
 }
 
+/*
+    Updates the Data Approval Workflow to match the Category Combo of the Data Set */
+function alignDataApprovalWorkflow(model, fieldConfig) {
+    try {
+        fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
+    } catch (e) {
+        return;
+    }
+}
+
+
 export default new Map([
     ['dataElement', [
         {
@@ -623,7 +634,7 @@ export default new Map([
         },
     ]],
     ['eventProgramStage', [
-        createDefaultRuleForField('validationStrategy', "ON_UPDATE_AND_INSERT"),
+        createDefaultRuleForField('validationStrategy', 'ON_UPDATE_AND_INSERT'),
     ]],
     ['programIndicator', [{
         field: 'orgUnitField',
@@ -887,8 +898,8 @@ export default new Map([
                 }
             }]
         }
-     ]],
-     ['sqlView', [
+    ]],
+    ['sqlView', [
         {
             field: 'name',
             when: {
@@ -940,10 +951,21 @@ export default new Map([
             operations: [{
                 type: 'HIDE_FIELD',
             }]
-        }
+        },
+        {
+            field: 'workflow',
+            when: [{
+                field: 'categoryCombo',
+                operator: 'HAS_VALUE',
+            }],
+            operations: [{
+                type: 'CHANGE_VALUE',
+                setValue: alignDataApprovalWorkflow,
+            }],
+        },
     ]],
     ['predictor', [
-        createDefaultRuleForField('organisationUnitDescendants', "SELECTED"),
+        createDefaultRuleForField('organisationUnitDescendants', 'SELECTED'),
     ]],
     ['eventProgram', [
         {
