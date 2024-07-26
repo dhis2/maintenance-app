@@ -50,17 +50,6 @@ function setValueTypeToOptionSet(model, fieldConfig) {
     }
 }
 
-/*
-    Updates the Data Approval Workflow to match the Category Combo of the Data Set */
-function alignDataApprovalWorkflow(model, fieldConfig) {
-    try {
-        fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
-    } catch (e) {
-        return;
-    }
-}
-
-
 export default new Map([
     ['dataElement', [
         {
@@ -960,8 +949,29 @@ export default new Map([
             }],
             operations: [{
                 type: 'CHANGE_VALUE',
-                setValue: alignDataApprovalWorkflow,
+                setValue: (model, fieldConfig) => {
+                    try {
+                        fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
+                    } catch (e) {
+                        return;
+                    }
+                }
             }],
+        },
+        {
+            field: 'workflow',
+            when: {
+                field: 'categoryCombo',
+                operator: 'CHANGE_VALUE',
+            },
+            operations: [{
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    if (fieldConfig) {
+                        fieldConfig.value = model[fieldConfig.name] = {};
+                    }
+                }
+            }]
         },
     ]],
     ['predictor', [
