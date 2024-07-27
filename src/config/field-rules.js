@@ -957,6 +957,20 @@ export default new Map([
         },
         {
             field: 'workflow',
+            when: {
+                field: 'workflow',
+                operator: 'HAS_VALUE',
+            },
+            operations: [{
+                field: 'workflow',
+                type: 'SET_PROP',
+                propName: 'labelText',
+                thenValue: 'Data approval workflow (to change Category combination, set this to <No value>)',
+                elseValue: 'Data approval workflow',
+            }]
+        },
+        {
+            field: 'workflow',
             when: [{
                 field: 'categoryCombo',
                 operator: 'HAS_VALUE',
