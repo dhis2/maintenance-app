@@ -953,6 +953,13 @@ export default new Map([
                 propName: 'disabled',
                 thenValue: true,
                 elseValue: false,
+            },
+            {
+                field: 'categoryCombo',
+                type: 'SET_PROP',
+                propName: 'labelText',
+                thenValue: 'Category combination (*) (to change, set Data approval workflow to <No value>)',
+                elseValue: 'Category combination (*)',
             }]
         },
         {
