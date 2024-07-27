@@ -942,6 +942,20 @@ export default new Map([
             }]
         },
         {
+            field: 'categoryCombo',
+            when: {
+                field: 'workflow',
+                operator: 'HAS_VALUE',
+            },
+            operations: [{
+                field: 'categoryCombo',
+                type: 'SET_PROP',
+                propName: 'disabled',
+                thenValue: true,
+                elseValue: false,
+            }]
+        },
+        {
             field: 'workflow',
             when: [{
                 field: 'categoryCombo',
@@ -954,21 +968,6 @@ export default new Map([
                         fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
                     } catch (e) {
                         return;
-                    }
-                }
-            }],
-        },
-        {
-            field: 'workflow',
-            when: {
-                field: 'categoryCombo',
-                operator: 'CHANGE_VALUE',
-            },
-            operations: [{
-                type: 'CHANGE_VALUE',
-                setValue: (model, fieldConfig) => {
-                    if (fieldConfig) {
-                        fieldConfig.value = model[fieldConfig.name] = {};
                     }
                 }
             }]
