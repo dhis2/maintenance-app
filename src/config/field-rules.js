@@ -942,41 +942,6 @@ export default new Map([
             }]
         },
         {
-            field: 'categoryCombo',
-            when: {
-                field: 'workflow',
-                operator: 'HAS_VALUE',
-            },
-            operations: [{
-                field: 'categoryCombo',
-                type: 'SET_PROP',
-                propName: 'disabled',
-                thenValue: true,
-                elseValue: false,
-            },
-            {
-                field: 'categoryCombo',
-                type: 'SET_PROP',
-                propName: 'labelText',
-                thenValue: 'Category combination (*) (to change, set Data approval workflow to <No value>)',
-                elseValue: 'Category combination (*)',
-            }]
-        },
-        {
-            field: 'workflow',
-            when: {
-                field: 'workflow',
-                operator: 'HAS_VALUE',
-            },
-            operations: [{
-                field: 'workflow',
-                type: 'SET_PROP',
-                propName: 'labelText',
-                thenValue: 'Data approval workflow (to change Category combination, set this to <No value>)',
-                elseValue: 'Data approval workflow',
-            }]
-        },
-        {
             field: 'workflow',
             when: [{
                 field: 'categoryCombo',
@@ -986,7 +951,12 @@ export default new Map([
                 type: 'CHANGE_VALUE',
                 setValue: (model, fieldConfig) => {
                     try {
-                        fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
+                        if (!Array.isArray(fieldConfig.props.queryParamFilter)) {
+                            fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
+                        } else if (!fieldConfig.props.queryParamFilter.includes('categoryCombo.id:eq:' + model.dataValues.categoryCombo.id)) {
+                            fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
+                            fieldConfig.value = model[fieldConfig.name] = undefined;
+                        }
                     } catch (e) {
                         return;
                     }
