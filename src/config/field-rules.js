@@ -951,10 +951,16 @@ export default new Map([
                 type: 'CHANGE_VALUE',
                 setValue: (model, fieldConfig) => {
                     try {
+                        var filters = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
+                        if (model.dataValues.categoryCombo.name == 'default') {
+                            // For backwards-compatibility with versions of DHIS2 where workflows
+                            // could have null catcombos
+                            filters.push('categoryCombo.id:null');
+                        }
                         if (!Array.isArray(fieldConfig.props.queryParamFilter)) {
-                            fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
-                        } else if (!fieldConfig.props.queryParamFilter.includes('categoryCombo.id:eq:' + model.dataValues.categoryCombo.id)) {
-                            fieldConfig.props.queryParamFilter = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id];
+                            fieldConfig.props.queryParamFilter = filters;
+                        } else if (!fieldConfig.props.queryParamFilter.includes(filters[0])) {
+                            fieldConfig.props.queryParamFilter = filters;
                             fieldConfig.value = model[fieldConfig.name] = undefined;
                         }
                     } catch (e) {
