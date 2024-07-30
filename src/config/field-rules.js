@@ -951,7 +951,7 @@ export default new Map([
                 type: 'CHANGE_VALUE',
                 setValue: (model, fieldConfig) => {
                     try {
-                        var filters = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id, 'categoryCombo.id:null'];
+                        const filters = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id, 'categoryCombo.id:null'];
                         if (!Array.isArray(fieldConfig.props.queryParamFilter)) {
                             fieldConfig.props.queryParamFilter = filters;
                         } else if (!fieldConfig.props.queryParamFilter.includes(filters[0])) {
