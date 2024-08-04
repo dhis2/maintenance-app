@@ -623,7 +623,7 @@ export default new Map([
         },
     ]],
     ['eventProgramStage', [
-        createDefaultRuleForField('validationStrategy', "ON_UPDATE_AND_INSERT"),
+        createDefaultRuleForField('validationStrategy', 'ON_UPDATE_AND_INSERT'),
     ]],
     ['programIndicator', [{
         field: 'orgUnitField',
@@ -887,8 +887,8 @@ export default new Map([
                 }
             }]
         }
-     ]],
-     ['sqlView', [
+    ]],
+    ['sqlView', [
         {
             field: 'name',
             when: {
@@ -940,10 +940,33 @@ export default new Map([
             operations: [{
                 type: 'HIDE_FIELD',
             }]
-        }
+        },
+        {
+            field: 'workflow',
+            when: [{
+                field: 'categoryCombo',
+                operator: 'HAS_VALUE',
+            }],
+            operations: [{
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    try {
+                        const filters = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id, 'categoryCombo.id:null'];
+                        if (!Array.isArray(fieldConfig.props.queryParamFilter)) {
+                            fieldConfig.props.queryParamFilter = filters;
+                        } else if (!fieldConfig.props.queryParamFilter.includes(filters[0])) {
+                            fieldConfig.props.queryParamFilter = filters;
+                            fieldConfig.value = model[fieldConfig.name] = undefined;
+                        }
+                    } catch (e) {
+                        return;
+                    }
+                }
+            }]
+        },
     ]],
     ['predictor', [
-        createDefaultRuleForField('organisationUnitDescendants', "SELECTED"),
+        createDefaultRuleForField('organisationUnitDescendants', 'SELECTED'),
     ]],
     ['eventProgram', [
         {
