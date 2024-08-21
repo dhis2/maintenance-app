@@ -1,3 +1,10 @@
+## [32.31.5](https://github.com/dhis2/maintenance-app/compare/v32.31.4...v32.31.5) (2024-08-21)
+
+
+### Bug Fixes
+
+* **dataset/workflow:** Add catcombos to workflows and make workflows … ([#2894](https://github.com/dhis2/maintenance-app/issues/2894)) ([1c1c2fc](https://github.com/dhis2/maintenance-app/commit/1c1c2fc7de17b2c01bd7a08193ea75440b44fe6e))
+
 ## [32.31.4](https://github.com/dhis2/maintenance-app/compare/v32.31.3...v32.31.4) (2024-08-11)
 
 
