@@ -56,6 +56,7 @@ const fieldOrderByName = new Map([
     ['categoryOptionCombo', [
         'name',
         'code',
+        'ignoreApproval',
     ]],
     ['categoryCombo', [
         'name',
