@@ -1,3 +1,10 @@
+## [32.31.7](https://github.com/dhis2/maintenance-app/compare/v32.31.6...v32.31.7) (2024-08-26)
+
+
+### Bug Fixes
+
+* **coc:** Add ignoreApproval back ([#2912](https://github.com/dhis2/maintenance-app/issues/2912)) ([d4cd22f](https://github.com/dhis2/maintenance-app/commit/d4cd22ff903c82f6b543c79f89347072b72c4d6b))
+
 ## [32.31.6](https://github.com/dhis2/maintenance-app/compare/v32.31.5...v32.31.6) (2024-08-25)
 
 
