@@ -1,0 +1,22 @@
+name: test-and-release
+
+on: push
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    # Cancel previous runs if not on a release branch
+    cancel-in-progress: ${{ !contains(fromJSON('["refs/heads/master", "ref/heads/main"]'), github.ref) }}
+
+jobs:
+    lint-commits:
+        uses: dhis2/workflows-platform/.github/workflows/lint-commits.yml@v1
+    lint:
+        uses: dhis2/workflows-platform/.github/workflows/lint.yml@v1
+    test:
+        uses: dhis2/workflows-platform/.github/workflows/test.yml@v1
+    release:
+        needs: [lint-commits, lint, test]
+        uses: dhis2/workflows-platform/.github/workflows/release.yml@v1
+        # Skips forks and dependabot PRs
+        if: '!github.event.push.repository.fork'
+        secrets: inherit

@@ -1,0 +1,13 @@
+name: lint-pr-title
+
+on:
+    pull_request:
+        types: ['opened', 'edited', 'reopened', 'synchronize']
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref }}
+    cancel-in-progress: true
+
+jobs:
+    lint-pr-title:
+        uses: dhis2/workflows-platform/.github/workflows/lint-pr-title.yml@v1
