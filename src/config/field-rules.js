@@ -916,6 +916,30 @@ export default new Map([
             }],
         },
     ]],
+    ['analyticsTableHook', [
+        {
+            field: 'resourceTableType',
+            when: {
+                field: 'phase',
+                operator: 'PREDICATE',
+                value: (phase) => phase === 'ANALYTICS_TABLE_POPULATED'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }],
+        },
+        {
+            field: 'analyticsTableType',
+            when: {
+                field: 'phase',
+                operator: 'PREDICATE',
+                value: (phase) => phase === 'RESOURCE_TABLE_POPULATED'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }],
+        },
+    ]],
     ['relationshipType', [
         {
             field: 'toFromName',

@@ -32,6 +32,7 @@ import sqlView from './sqlView';
 import optionGroupSet from './optionGroupSet';
 import eventProgramStage from './eventProgramStage';
 import icon from './icon.js'
+import analyticsTableHook from './analyticsTableHook'
 
 const overridesByType = {
     attribute,
@@ -69,6 +70,7 @@ const overridesByType = {
     optionGroup,
     optionGroupSet,
     sqlView,
+    analyticsTableHook,
 };
 
 export default {

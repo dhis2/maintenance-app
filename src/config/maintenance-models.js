@@ -41,6 +41,8 @@ export function getSideBarConfig() {
                 'indicatorGroupSet',
                 'programIndicator',
                 'programIndicatorGroup',
+                'predictor',
+                'predictorGroup',
             ],
         },
 
@@ -75,21 +77,20 @@ export function getSideBarConfig() {
 
         otherSection: {
             items: [
-                'constant',
+                'analyticsTableHook',
                 'attribute',
-                'optionSet',
-                'optionGroup',
-                'optionGroupSet',
-                'legendSet',
-                'predictor',
-                'predictorGroup',
-                'pushAnalysis',
-                'externalMapLayer',
+                'constant',
                 'dataApprovalLevel',
                 'dataApprovalWorkflow',
-                'locale',
-                'sqlView',
+                'externalMapLayer',
                 'icon',
+                'legendSet',
+                'locale',
+                'optionGroup',
+                'optionGroupSet',
+                'optionSet',
+                'pushAnalysis',
+                'sqlView',
             ],
         },
     };
@@ -302,7 +303,7 @@ export function getDefaultFiltersForType(modelType) {
 }
 
 export function getAdditionalFieldsForType(modelType) {
-    if (typeDetails.hasOwnProperty(modelType) && 
+    if (typeDetails.hasOwnProperty(modelType) &&
         typeDetails[modelType].hasOwnProperty('additionalFields')
     ) {
         return typeDetails[modelType].additionalFields;
