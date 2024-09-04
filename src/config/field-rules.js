@@ -926,6 +926,11 @@ export default new Map([
             },
             operations: [{
                 type: 'HIDE_FIELD',
+            }, {
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.name] = undefined;
+                },
             }],
         },
         {
@@ -937,6 +942,11 @@ export default new Map([
             },
             operations: [{
                 type: 'HIDE_FIELD',
+            }, {
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.name] = undefined;
+                },
             }],
         },
     ]],
