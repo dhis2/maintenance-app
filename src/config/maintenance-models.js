@@ -41,8 +41,6 @@ export function getSideBarConfig() {
                 'indicatorGroupSet',
                 'programIndicator',
                 'programIndicatorGroup',
-                'predictor',
-                'predictorGroup',
             ],
         },
 
@@ -89,6 +87,8 @@ export function getSideBarConfig() {
                 'optionGroup',
                 'optionGroupSet',
                 'optionSet',
+                'predictor',
+                'predictorGroup',
                 'pushAnalysis',
                 'sqlView',
             ],
