@@ -1,3 +1,10 @@
+## [32.31.10](https://github.com/dhis2/maintenance-app/compare/v32.31.9...v32.31.10) (2024-09-09)
+
+
+### Bug Fixes
+
+* **categoryCombo:** make categories required ([#2913](https://github.com/dhis2/maintenance-app/issues/2913)) ([9b01d21](https://github.com/dhis2/maintenance-app/commit/9b01d21ed03709a5ff7d78bd8c49a2a553487534))
+
 ## [32.31.9](https://github.com/dhis2/maintenance-app/compare/v32.31.8...v32.31.9) (2024-09-09)
 
 
