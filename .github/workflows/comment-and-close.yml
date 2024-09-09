@@ -1,13 +1,12 @@
+name: comment-and-close
+
 on:
     issues:
         types: [opened]
 
 jobs:
     comment-and-close:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: vardevs/candc@v1
-              with:
-                  close-comment: 'If you would like to file a bug report or feature request, please refer to our issue tracker: https://jira.dhis2.org'
-                  exempt-users: dhis2-bot,dependabot,kodiakhq
-                  github-token: ${{secrets.DHIS2_BOT_GITHUB_TOKEN}}
+        uses: dhis2/workflows-platform/.github/workflows/comment-and-close.yml@v1
+        if: '!contains(github.event.issue.sender.login , fromJson(''["dhis2-bot", "kodiakhq", "dependabot"]''))'
+        with:
+            issue_number: ${{ github.event.issue.number }}

@@ -1,0 +1,14 @@
+name: deploy-pr
+
+on:
+    pull_request:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref }}
+    cancel-in-progress: true
+
+jobs:
+    deploy:
+        uses: dhis2/workflows-platform/.github/workflows/deploy-pr.yml@v1
+        if: '!github.event.pull_request.head.repo.fork'
+        secrets: inherit

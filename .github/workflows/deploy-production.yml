@@ -1,0 +1,17 @@
+name: deploy-production
+
+on:
+    push:
+        branches:
+            - master
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    deploy:
+        uses: dhis2/workflows-platform/.github/workflows/deploy-production.yml@v1
+        secrets: inherit
+        with:
+            branch: master
