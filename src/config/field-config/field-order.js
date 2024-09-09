@@ -529,6 +529,13 @@ const fieldOrderByName = new Map([
         'description',
         'keywords',
     ]],
+    ['analyticsTableHook', [
+        'name',
+        'phase',
+        'resourceTableType',
+        'analyticsTableType',
+        'sql',
+    ]],
 ]);
 
 export default {

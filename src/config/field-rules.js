@@ -916,6 +916,40 @@ export default new Map([
             }],
         },
     ]],
+    ['analyticsTableHook', [
+        {
+            field: 'resourceTableType',
+            when: {
+                field: 'phase',
+                operator: 'PREDICATE',
+                value: (phase) => phase === 'ANALYTICS_TABLE_POPULATED'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }, {
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.name] = undefined;
+                },
+            }],
+        },
+        {
+            field: 'analyticsTableType',
+            when: {
+                field: 'phase',
+                operator: 'PREDICATE',
+                value: (phase) => phase === 'RESOURCE_TABLE_POPULATED'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }, {
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.name] = undefined;
+                },
+            }],
+        },
+    ]],
     ['relationshipType', [
         {
             field: 'toFromName',
