@@ -1,3 +1,10 @@
+## [32.31.9](https://github.com/dhis2/maintenance-app/compare/v32.31.8...v32.31.9) (2024-09-09)
+
+
+### Bug Fixes
+
+* **analyticstablehooks:** Adds analytics table hooks to the Maintenance app ([#2930](https://github.com/dhis2/maintenance-app/issues/2930)) ([1b70c09](https://github.com/dhis2/maintenance-app/commit/1b70c0965df842bf31a1a92ac1e56897955fcf04))
+
 ## [32.31.8](https://github.com/dhis2/maintenance-app/compare/v32.31.7...v32.31.8) (2024-09-01)
 
 
