@@ -56,6 +56,7 @@ const fieldOrderByName = new Map([
     ['categoryOptionCombo', [
         'name',
         'code',
+        'ignoreApproval',
     ]],
     ['categoryCombo', [
         'name',
@@ -493,6 +494,7 @@ const fieldOrderByName = new Map([
         'name',
         'periodType',
         'dataApprovalLevels',
+        'categoryCombo',
     ]],
     ['optionGroup', [
         'name',
@@ -526,6 +528,13 @@ const fieldOrderByName = new Map([
         'key',
         'description',
         'keywords',
+    ]],
+    ['analyticsTableHook', [
+        'name',
+        'phase',
+        'resourceTableType',
+        'analyticsTableType',
+        'sql',
     ]],
 ]);
 

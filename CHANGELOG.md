@@ -1,3 +1,100 @@
+## [32.31.12](https://github.com/dhis2/maintenance-app/compare/v32.31.11...v32.31.12) (2024-09-30)
+
+
+### Bug Fixes
+
+* improve error-message handling when saving objects ([#2914](https://github.com/dhis2/maintenance-app/issues/2914)) ([9de41e8](https://github.com/dhis2/maintenance-app/commit/9de41e80a005d41523eff5f0d0bb020e0dc7ed8a))
+
+## [32.31.11](https://github.com/dhis2/maintenance-app/compare/v32.31.10...v32.31.11) (2024-09-30)
+
+
+### Bug Fixes
+
+* **sqlview:** when current user in SQL view, do not cache ([#2911](https://github.com/dhis2/maintenance-app/issues/2911)) ([5eb5026](https://github.com/dhis2/maintenance-app/commit/5eb5026d960db5159903b325089ec98ecf080c4e))
+
+## [32.31.10](https://github.com/dhis2/maintenance-app/compare/v32.31.9...v32.31.10) (2024-09-09)
+
+
+### Bug Fixes
+
+* **categoryCombo:** make categories required ([#2913](https://github.com/dhis2/maintenance-app/issues/2913)) ([9b01d21](https://github.com/dhis2/maintenance-app/commit/9b01d21ed03709a5ff7d78bd8c49a2a553487534))
+
+## [32.31.9](https://github.com/dhis2/maintenance-app/compare/v32.31.8...v32.31.9) (2024-09-09)
+
+
+### Bug Fixes
+
+* **analyticstablehooks:** Adds analytics table hooks to the Maintenance app ([#2930](https://github.com/dhis2/maintenance-app/issues/2930)) ([1b70c09](https://github.com/dhis2/maintenance-app/commit/1b70c0965df842bf31a1a92ac1e56897955fcf04))
+
+## [32.31.8](https://github.com/dhis2/maintenance-app/compare/v32.31.7...v32.31.8) (2024-09-01)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([06a3b62](https://github.com/dhis2/maintenance-app/commit/06a3b624f9daa530bbd2605c98a1c4e71e7b949d))
+
+## [32.31.7](https://github.com/dhis2/maintenance-app/compare/v32.31.6...v32.31.7) (2024-08-26)
+
+
+### Bug Fixes
+
+* **coc:** Add ignoreApproval back ([#2912](https://github.com/dhis2/maintenance-app/issues/2912)) ([d4cd22f](https://github.com/dhis2/maintenance-app/commit/d4cd22ff903c82f6b543c79f89347072b72c4d6b))
+
+## [32.31.6](https://github.com/dhis2/maintenance-app/compare/v32.31.5...v32.31.6) (2024-08-25)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ae7b3c7](https://github.com/dhis2/maintenance-app/commit/ae7b3c7520c7dd6889f12baadc2850803cc0352b))
+
+## [32.31.5](https://github.com/dhis2/maintenance-app/compare/v32.31.4...v32.31.5) (2024-08-21)
+
+
+### Bug Fixes
+
+* **dataset/workflow:** Add catcombos to workflows and make workflows … ([#2894](https://github.com/dhis2/maintenance-app/issues/2894)) ([1c1c2fc](https://github.com/dhis2/maintenance-app/commit/1c1c2fc7de17b2c01bd7a08193ea75440b44fe6e))
+
+## [32.31.4](https://github.com/dhis2/maintenance-app/compare/v32.31.3...v32.31.4) (2024-08-11)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([50fb32f](https://github.com/dhis2/maintenance-app/commit/50fb32f95d4762b5c6b9ec85cb8a1343b66ad983))
+
+## [32.31.3](https://github.com/dhis2/maintenance-app/compare/v32.31.2...v32.31.3) (2024-08-04)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([2a1e224](https://github.com/dhis2/maintenance-app/commit/2a1e2242fcea15adf9b1c043d980c3d23c4fe65d))
+
+## [32.31.2](https://github.com/dhis2/maintenance-app/compare/v32.31.1...v32.31.2) (2024-07-28)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([3bcb65c](https://github.com/dhis2/maintenance-app/commit/3bcb65cd0ebfb1b06c366f5745a29fa92117bf60))
+
+## [32.31.1](https://github.com/dhis2/maintenance-app/compare/v32.31.0...v32.31.1) (2024-07-24)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([d38c6d7](https://github.com/dhis2/maintenance-app/commit/d38c6d7ec7161b30d54299fc10ee5792c1c93fb0))
+
+# [32.31.0](https://github.com/dhis2/maintenance-app/compare/v32.30.6...v32.31.0) (2024-07-04)
+
+
+### Bug Fixes
+
+* add translations and remove render as tabs from the state ([7114ca8](https://github.com/dhis2/maintenance-app/commit/7114ca8dfba1116566349911fc036c12253436da))
+* rename render as tabs settings component and change model using the on change prop ([d04efc6](https://github.com/dhis2/maintenance-app/commit/d04efc6639d73e3c70c21a6554529ac366b31634))
+
+
+### Features
+
+* add option to pick render as tabs direction for data sets ([d59135e](https://github.com/dhis2/maintenance-app/commit/d59135ec7eb0cdb53236b38bd6fdaeffd5f6da02))
+
 ## [32.30.6](https://github.com/dhis2/maintenance-app/compare/v32.30.5...v32.30.6) (2024-06-16)
 
 

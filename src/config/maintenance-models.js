@@ -75,21 +75,22 @@ export function getSideBarConfig() {
 
         otherSection: {
             items: [
-                'constant',
+                'analyticsTableHook',
                 'attribute',
-                'optionSet',
+                'constant',
+                'dataApprovalLevel',
+                'dataApprovalWorkflow',
+                'externalMapLayer',
+                'icon',
+                'legendSet',
+                'locale',
                 'optionGroup',
                 'optionGroupSet',
-                'legendSet',
+                'optionSet',
                 'predictor',
                 'predictorGroup',
                 'pushAnalysis',
-                'externalMapLayer',
-                'dataApprovalLevel',
-                'dataApprovalWorkflow',
-                'locale',
                 'sqlView',
-                'icon',
             ],
         },
     };
@@ -302,7 +303,7 @@ export function getDefaultFiltersForType(modelType) {
 }
 
 export function getAdditionalFieldsForType(modelType) {
-    if (typeDetails.hasOwnProperty(modelType) && 
+    if (typeDetails.hasOwnProperty(modelType) &&
         typeDetails[modelType].hasOwnProperty('additionalFields')
     ) {
         return typeDetails[modelType].additionalFields;

@@ -10,6 +10,7 @@ export default function extractFirstErrorMessageFromServer(response) {
     const messages = [
         extractFirstMessageFromErrorReports(response),
         extractFirstMessageFromMessages(response),
+        response.message
     ];
 
     return firstNotUndefinedIn(messages);

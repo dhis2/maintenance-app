@@ -623,7 +623,7 @@ export default new Map([
         },
     ]],
     ['eventProgramStage', [
-        createDefaultRuleForField('validationStrategy', "ON_UPDATE_AND_INSERT"),
+        createDefaultRuleForField('validationStrategy', 'ON_UPDATE_AND_INSERT'),
     ]],
     ['programIndicator', [{
         field: 'orgUnitField',
@@ -887,8 +887,8 @@ export default new Map([
                 }
             }]
         }
-     ]],
-     ['sqlView', [
+    ]],
+    ['sqlView', [
         {
             field: 'name',
             when: {
@@ -913,6 +913,63 @@ export default new Map([
                 propName: 'disabled',
                 thenValue: true,
                 elseValue: false,
+            }],
+        },
+        {
+            field: 'cacheStrategy',
+            when: [{
+                field: 'sqlQuery',
+                operator: 'HAS_VALUE',
+            }],
+            operations: [{
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    try {
+                        if (model.dataValues.sqlQuery.includes('${_current_user_id}') ||
+                            model.dataValues.sqlQuery.includes('${_current_username}')) {
+                            fieldConfig.value = model[fieldConfig.name] = 'NO_CACHE';
+                            fieldConfig.props.disabled = true;
+                        } else {
+                            fieldConfig.props.disabled = false;
+                        }
+                    } catch (e) {
+                        return;
+                    }
+                }
+            }]
+        },
+    ]],
+    ['analyticsTableHook', [
+        {
+            field: 'resourceTableType',
+            when: {
+                field: 'phase',
+                operator: 'PREDICATE',
+                value: (phase) => phase === 'ANALYTICS_TABLE_POPULATED'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }, {
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.name] = undefined;
+                },
+            }],
+        },
+        {
+            field: 'analyticsTableType',
+            when: {
+                field: 'phase',
+                operator: 'PREDICATE',
+                value: (phase) => phase === 'RESOURCE_TABLE_POPULATED'
+            },
+            operations: [{
+                type: 'HIDE_FIELD',
+            }, {
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    fieldConfig.value = model[fieldConfig.name] = undefined;
+                },
             }],
         },
     ]],
@@ -940,10 +997,33 @@ export default new Map([
             operations: [{
                 type: 'HIDE_FIELD',
             }]
-        }
+        },
+        {
+            field: 'workflow',
+            when: [{
+                field: 'categoryCombo',
+                operator: 'HAS_VALUE',
+            }],
+            operations: [{
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    try {
+                        const filters = ['categoryCombo.id:eq:' + model.dataValues.categoryCombo.id, 'categoryCombo.id:null'];
+                        if (!Array.isArray(fieldConfig.props.queryParamFilter)) {
+                            fieldConfig.props.queryParamFilter = filters;
+                        } else if (!fieldConfig.props.queryParamFilter.includes(filters[0])) {
+                            fieldConfig.props.queryParamFilter = filters;
+                            fieldConfig.value = model[fieldConfig.name] = undefined;
+                        }
+                    } catch (e) {
+                        return;
+                    }
+                }
+            }]
+        },
     ]],
     ['predictor', [
-        createDefaultRuleForField('organisationUnitDescendants', "SELECTED"),
+        createDefaultRuleForField('organisationUnitDescendants', 'SELECTED'),
     ]],
     ['eventProgram', [
         {
