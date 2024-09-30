@@ -915,6 +915,29 @@ export default new Map([
                 elseValue: false,
             }],
         },
+        {
+            field: 'cacheStrategy',
+            when: [{
+                field: 'sqlQuery',
+                operator: 'HAS_VALUE',
+            }],
+            operations: [{
+                type: 'CHANGE_VALUE',
+                setValue: (model, fieldConfig) => {
+                    try {
+                        if (model.dataValues.sqlQuery.includes('${_current_user_id}') ||
+                            model.dataValues.sqlQuery.includes('${_current_username}')) {
+                            fieldConfig.value = model[fieldConfig.name] = 'NO_CACHE';
+                            fieldConfig.props.disabled = true;
+                        } else {
+                            fieldConfig.props.disabled = false;
+                        }
+                    } catch (e) {
+                        return;
+                    }
+                }
+            }]
+        },
     ]],
     ['analyticsTableHook', [
         {
