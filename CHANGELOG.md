@@ -1,3 +1,10 @@
+## [32.31.11](https://github.com/dhis2/maintenance-app/compare/v32.31.10...v32.31.11) (2024-09-30)
+
+
+### Bug Fixes
+
+* **sqlview:** when current user in SQL view, do not cache ([#2911](https://github.com/dhis2/maintenance-app/issues/2911)) ([5eb5026](https://github.com/dhis2/maintenance-app/commit/5eb5026d960db5159903b325089ec98ecf080c4e))
+
 ## [32.31.10](https://github.com/dhis2/maintenance-app/compare/v32.31.9...v32.31.10) (2024-09-09)
 
 
