@@ -1,3 +1,10 @@
+## [32.31.12](https://github.com/dhis2/maintenance-app/compare/v32.31.11...v32.31.12) (2024-09-30)
+
+
+### Bug Fixes
+
+* improve error-message handling when saving objects ([#2914](https://github.com/dhis2/maintenance-app/issues/2914)) ([9de41e8](https://github.com/dhis2/maintenance-app/commit/9de41e80a005d41523eff5f0d0bb020e0dc7ed8a))
+
 ## [32.31.11](https://github.com/dhis2/maintenance-app/compare/v32.31.10...v32.31.11) (2024-09-30)
 
 
