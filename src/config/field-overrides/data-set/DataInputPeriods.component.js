@@ -12,7 +12,7 @@ import { generateUid } from 'd2/lib/uid';
 
 import getPeriod from 'd2/lib/period/parser';
 import PeriodPicker from 'd2-ui/lib/period-picker/PeriodPicker.component';
-
+import { getISOFormatLocalTimestamp } from '../../../utils/date';
 
 const styles = {
     periodRow: { display: 'flex' },
@@ -25,11 +25,6 @@ const styles = {
     divider: { marginTop: -9 },
     openDialogButton: { margin: '16px 0' },
 };
-
-const getISOFormatLocalTimestamp = value =>
-    new Date(value.getTime() - value.getTimezoneOffset() * 60000)
-        .toISOString()
-        .substring(0, 23);
 
 class DataInputPeriods extends React.Component {
     constructor(props, context) {
