@@ -45,6 +45,7 @@ class RenderAsTabsSettings extends React.Component {
         this.updateDisplayOption(newDisplayOptions)
     }
 
+
     onRenderAsTabsChanged = (event) =>  {
         const renderAsTabs = event.target.value
         const tabsDirection =
@@ -64,8 +65,19 @@ class RenderAsTabsSettings extends React.Component {
         const addCustomText = event.target.value
         const customText =
             addCustomText
-                ? {header: undefined, subheader: undefined}
+                ? {header: undefined, subheader: undefined, alignemt: 'center'}
                 : undefined
+
+        const newDisplayOptions = {
+            ...this.state.displayOptions,
+            customText
+        }
+        this.updateDisplayOption(newDisplayOptions)
+    }
+
+    onCustomTextAlignmentChanged = (event) =>  {
+        const customText =
+            {...this.state.displayOptions.customText,  align: event.target.value}
 
         const newDisplayOptions = {
             ...this.state.displayOptions,
@@ -77,7 +89,7 @@ class RenderAsTabsSettings extends React.Component {
 
     onCustomTextHeaderChanged = (event) =>  {
         const customText =
-            {header: event.target.value, subheader: this.state.displayOptions.customText.subheader || undefined}
+            {...this.state.displayOptions.customText, header: event.target.value}
 
         const newDisplayOptions = {
             ...this.state.displayOptions,
@@ -88,7 +100,7 @@ class RenderAsTabsSettings extends React.Component {
 
     onCustomTextSubheaderChanged = (event) =>  {
         const customText =
-            {header:  this.state.displayOptions.customText.header || undefined, subheader: event.target.value}
+            {...this.state.displayOptions.customText,  subheader: event.target.value}
 
         const newDisplayOptions = {
             ...this.state.displayOptions,
@@ -97,13 +109,13 @@ class RenderAsTabsSettings extends React.Component {
         this.updateDisplayOption(newDisplayOptions)
     }
 
-
     render() {
         const state = this.state;
         const props = this.props;
-        const cssStyles = {
+        const customTextCssStyles = {
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            marginLeft: '16px'
         };
         return <div>
             <div>
@@ -133,13 +145,42 @@ class RenderAsTabsSettings extends React.Component {
                         />
                     </RadioButtonGroup>}
             </div>
+            <div>
             <Checkbox
                 labelText={this.translate('add_custom_text')}
                 value={state.displayOptions && state.displayOptions.customText !== undefined}
                 onChange={this.onAddCustomTextChanged}
             />
+
             {state.displayOptions && state.displayOptions.customText &&
-                <div style={cssStyles}>
+                <RadioButtonGroup
+                    onChange={this.onCustomTextAlignmentChanged}
+                    name="customTextAlignment"
+                    defaultSelected={
+                        (state.displayOptions && state.displayOptions.customText && state.displayOptions.customText.align) || 'left'}
+                >
+                    <RadioButton
+                        key='left'
+                        value='left'
+                        label={this.translate('left')}
+                        style={{margin: '10px'}}
+                    />
+                    <RadioButton
+                        key='center'
+                        value='center'
+                        label={this.translate('center')}
+                        style={{margin: '10px'}}
+                    />
+                    <RadioButton
+                        key='right'
+                        value='right'
+                        label={this.translate('right')}
+                        style={{margin: '10px'}}
+                    />
+                </RadioButtonGroup>}
+
+                {state.displayOptions && state.displayOptions.customText &&
+                <div style={customTextCssStyles}>
                     <TextField
                     value={(this.state.displayOptions && state.displayOptions.customText &&
                         state.displayOptions.customText.header) || ""}
@@ -155,6 +196,7 @@ class RenderAsTabsSettings extends React.Component {
                         floatingLabelText={this.translate('data_set_subtitle')}
                     />
                 </div>}
+            </div>
         </div>
     }
 }
