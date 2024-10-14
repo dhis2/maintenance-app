@@ -145,14 +145,14 @@ class RenderAsTabsSettings extends React.Component {
                         state.displayOptions.customText.header) || ""}
                     fullWidth={false}
                     onChange={this.onCustomTextHeaderChanged}
-                    floatingLabelText={this.translate('header')}
+                    floatingLabelText={this.translate('data_set_title')}
                     />
                     <TextField
                         value={(this.state.displayOptions && state.displayOptions.customText &&
                             state.displayOptions.customText.subheader) || ""}
                         fullWidth={false}
                         onChange={this.onCustomTextSubheaderChanged}
-                        floatingLabelText={this.translate('subheader')}
+                        floatingLabelText={this.translate('data_set_subtitle')}
                     />
                 </div>}
         </div>
