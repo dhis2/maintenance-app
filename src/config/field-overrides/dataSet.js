@@ -65,7 +65,7 @@ class RenderAsTabsSettings extends React.Component {
         const addCustomText = event.target.value
         const customText =
             addCustomText
-                ? {header: undefined, subheader: undefined, alignemt: 'center'}
+                ? {header: undefined, subheader: undefined, align: 'center'}
                 : undefined
 
         const newDisplayOptions = {
@@ -75,38 +75,28 @@ class RenderAsTabsSettings extends React.Component {
         this.updateDisplayOption(newDisplayOptions)
     }
 
-    onCustomTextAlignmentChanged = (event) =>  {
+    onCustomTextChanged = (event, field) =>  {
         const customText =
-            {...this.state.displayOptions.customText,  align: event.target.value}
+            {...this.state.displayOptions.customText,  [field]: event.target.value}
 
         const newDisplayOptions = {
             ...this.state.displayOptions,
             customText
         }
         this.updateDisplayOption(newDisplayOptions)
+    }
+
+    onCustomTextAlignmentChanged = (event) =>  {
+        this.onCustomTextChanged(event, 'align')
     }
 
 
     onCustomTextHeaderChanged = (event) =>  {
-        const customText =
-            {...this.state.displayOptions.customText, header: event.target.value}
-
-        const newDisplayOptions = {
-            ...this.state.displayOptions,
-            customText
-        }
-        this.updateDisplayOption(newDisplayOptions)
+        this.onCustomTextChanged(event, 'header')
     }
 
     onCustomTextSubheaderChanged = (event) =>  {
-        const customText =
-            {...this.state.displayOptions.customText,  subheader: event.target.value}
-
-        const newDisplayOptions = {
-            ...this.state.displayOptions,
-            customText
-        }
-        this.updateDisplayOption(newDisplayOptions)
+        this.onCustomTextChanged(event, 'subheader')
     }
 
     render() {
@@ -157,7 +147,7 @@ class RenderAsTabsSettings extends React.Component {
                     onChange={this.onCustomTextAlignmentChanged}
                     name="customTextAlignment"
                     defaultSelected={
-                        (state.displayOptions && state.displayOptions.customText && state.displayOptions.customText.align) || 'left'}
+                        (state.displayOptions && state.displayOptions.customText && state.displayOptions.customText.align) || 'center'}
                 >
                     <RadioButton
                         key='left'
@@ -182,14 +172,14 @@ class RenderAsTabsSettings extends React.Component {
                 {state.displayOptions && state.displayOptions.customText &&
                 <div style={customTextCssStyles}>
                     <TextField
-                    value={(this.state.displayOptions && state.displayOptions.customText &&
+                    value={(state.displayOptions && state.displayOptions.customText &&
                         state.displayOptions.customText.header) || ""}
                     fullWidth={false}
                     onChange={this.onCustomTextHeaderChanged}
                     floatingLabelText={this.translate('data_set_title')}
                     />
                     <TextField
-                        value={(this.state.displayOptions && state.displayOptions.customText &&
+                        value={(state.displayOptions && state.displayOptions.customText &&
                             state.displayOptions.customText.subheader) || ""}
                         fullWidth={false}
                         onChange={this.onCustomTextSubheaderChanged}
