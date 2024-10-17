@@ -7,12 +7,13 @@ import Checkbox from '../../forms/form-fields/check-box';
 import {RadioButton, RadioButtonGroup} from "material-ui/RadioButton";
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import log from "loglevel";
+import TextField from "material-ui/TextField/TextField";
 
 class RenderAsTabsSettings extends React.Component {
     constructor(props, context) {
         super(props);
         this.state = {
-            displayOptions: this.parseDisplayOptions()
+            displayOptions: this.parseDisplayOptions(),
         };
         this.translate = context.d2.i18n.getTranslation.bind(
             context.d2.i18n
@@ -30,19 +31,20 @@ class RenderAsTabsSettings extends React.Component {
         }
     }
 
-    updateTabsDirection = (tabsDirection) => {
-        const newDisplayOptions = {
-            ...this.state.displayOptions,
-            tabsDirection
-        }
+    updateDisplayOption = (newDisplayOptions) => {
         this.setState({displayOptions: newDisplayOptions});
         this.props.model.displayOptions = JSON.stringify(newDisplayOptions)
     }
 
     onDisplayOptionsChanged = (event) =>  {
         const tabsDirection = event.target.value
-        this.updateTabsDirection(tabsDirection)
+        const newDisplayOptions = {
+            ...this.state.displayOptions,
+            tabsDirection
+        }
+        this.updateDisplayOption(newDisplayOptions)
     }
+
 
     onRenderAsTabsChanged = (event) =>  {
         const renderAsTabs = event.target.value
@@ -52,39 +54,139 @@ class RenderAsTabsSettings extends React.Component {
                 : undefined
 
         this.props.onChange({ target: { value: renderAsTabs } });
-        this.updateTabsDirection(tabsDirection)
+        const newDisplayOptions = {
+            ...this.state.displayOptions,
+            tabsDirection
+        }
+        this.updateDisplayOption(newDisplayOptions)
     }
 
+    onAddCustomTextChanged = (event) =>  {
+        const addCustomText = event.target.value
+        const customText =
+            addCustomText
+                ? {header: undefined, subheader: undefined, align: 'center'}
+                : undefined
+
+        const newDisplayOptions = {
+            ...this.state.displayOptions,
+            customText
+        }
+        this.updateDisplayOption(newDisplayOptions)
+    }
+
+    onCustomTextChanged = (event, field) =>  {
+        const customText =
+            {...this.state.displayOptions.customText,  [field]: event.target.value}
+
+        const newDisplayOptions = {
+            ...this.state.displayOptions,
+            customText
+        }
+        this.updateDisplayOption(newDisplayOptions)
+    }
+
+    onCustomTextAlignmentChanged = (event) =>  {
+        this.onCustomTextChanged(event, 'align')
+    }
+
+
+    onCustomTextHeaderChanged = (event) =>  {
+        this.onCustomTextChanged(event, 'header')
+    }
+
+    onCustomTextSubheaderChanged = (event) =>  {
+        this.onCustomTextChanged(event, 'subheader')
+    }
 
     render() {
         const state = this.state;
         const props = this.props;
+        const customTextCssStyles = {
+            display: 'flex',
+            flexDirection: 'column',
+            marginLeft: '16px'
+        };
         return <div>
-           <Checkbox
-            labelText={this.translate('render_as_tabs')}
-            value={props.value}
-            onChange={this.onRenderAsTabsChanged}
-        />
-            {props.value &&
-             <RadioButtonGroup
-                onChange={this.onDisplayOptionsChanged}
-                name="tabsDirection"
-                defaultSelected={
-                    (state.displayOptions && state.displayOptions.tabsDirection) || 'horizontal'  }
-            >
-                <RadioButton
-                    key='horizontal'
-                    value='horizontal'
-                    label={this.translate('horizontal')}
-                    style={{margin: '10px'}}
+            <div>
+                <Checkbox
+                    labelText={this.translate('render_as_tabs')}
+                    value={props.value}
+                    onChange={this.onRenderAsTabsChanged}
                 />
-                <RadioButton
-                    key='vertical'
-                    value='vertical'
-                    label={this.translate('vertical')}
-                    style={{margin: '10px'}}
-                />
-            </RadioButtonGroup>}
+                {props.value &&
+                    <RadioButtonGroup
+                        onChange={this.onDisplayOptionsChanged}
+                        name="tabsDirection"
+                        defaultSelected={
+                            (state.displayOptions && state.displayOptions.tabsDirection) || 'horizontal'}
+                    >
+                        <RadioButton
+                            key='horizontal'
+                            value='horizontal'
+                            label={this.translate('horizontal')}
+                            style={{margin: '10px'}}
+                        />
+                        <RadioButton
+                            key='vertical'
+                            value='vertical'
+                            label={this.translate('vertical')}
+                            style={{margin: '10px'}}
+                        />
+                    </RadioButtonGroup>}
+            </div>
+            <div>
+            <Checkbox
+                labelText={this.translate('add_custom_text')}
+                value={state.displayOptions && state.displayOptions.customText !== undefined}
+                onChange={this.onAddCustomTextChanged}
+            />
+
+            {state.displayOptions && state.displayOptions.customText &&
+                <RadioButtonGroup
+                    onChange={this.onCustomTextAlignmentChanged}
+                    name="customTextAlignment"
+                    defaultSelected={
+                        (state.displayOptions && state.displayOptions.customText && state.displayOptions.customText.align) || 'center'}
+                >
+                    <RadioButton
+                        key='line-start'
+                        value='line-start'
+                        label={this.translate('line_start')}
+                        style={{margin: '10px'}}
+                    />
+                    <RadioButton
+                        key='center'
+                        value='center'
+                        label={this.translate('center')}
+                        style={{margin: '10px'}}
+                    />
+                    <RadioButton
+                        key='line-end'
+                        value='line-end'
+                        label={this.translate('line_end')}
+                        style={{margin: '10px'}}
+                    />
+                </RadioButtonGroup>}
+
+                {state.displayOptions && state.displayOptions.customText &&
+                <div style={customTextCssStyles}>
+                    <TextField
+                    value={(state.displayOptions && state.displayOptions.customText &&
+                        state.displayOptions.customText.header) || ""}
+                    fullWidth={false}
+                    onChange={this.onCustomTextHeaderChanged}
+                    floatingLabelText={this.translate('data_set_title')}
+                    />
+                    <TextField
+                        value={(state.displayOptions && state.displayOptions.customText &&
+                            state.displayOptions.customText.subheader) || ""}
+                        fullWidth={false}
+                        onChange={this.onCustomTextSubheaderChanged}
+                        floatingLabelText={this.translate('data_set_subtitle')}
+                    />
+                </div>}
+            </div>
         </div>
     }
 }
