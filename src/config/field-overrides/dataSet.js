@@ -150,9 +150,9 @@ class RenderAsTabsSettings extends React.Component {
                         (state.displayOptions && state.displayOptions.customText && state.displayOptions.customText.align) || 'center'}
                 >
                     <RadioButton
-                        key='left'
-                        value='left'
-                        label={this.translate('left')}
+                        key='line-start'
+                        value='line-start'
+                        label={this.translate('line_start')}
                         style={{margin: '10px'}}
                     />
                     <RadioButton
@@ -162,9 +162,9 @@ class RenderAsTabsSettings extends React.Component {
                         style={{margin: '10px'}}
                     />
                     <RadioButton
-                        key='right'
-                        value='right'
-                        label={this.translate('right')}
+                        key='line-end'
+                        value='line-end'
+                        label={this.translate('line_end')}
                         style={{margin: '10px'}}
                     />
                 </RadioButtonGroup>}
