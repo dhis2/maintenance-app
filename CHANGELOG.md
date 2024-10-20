@@ -1,3 +1,10 @@
+## [32.31.15](https://github.com/dhis2/maintenance-app/compare/v32.31.14...v32.31.15) (2024-10-20)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ccfd375](https://github.com/dhis2/maintenance-app/commit/ccfd375e55c9dd08741d39f988e32b43a01e72ea))
+
 ## [32.31.14](https://github.com/dhis2/maintenance-app/compare/v32.31.13...v32.31.14) (2024-10-13)
 
 
