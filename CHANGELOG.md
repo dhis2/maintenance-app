@@ -1,3 +1,18 @@
+# [32.32.0](https://github.com/dhis2/maintenance-app/compare/v32.31.15...v32.32.0) (2024-10-23)
+
+
+### Bug Fixes
+
+* change text alignment in data set display options from left and right to line start and line end ([99806d0](https://github.com/dhis2/maintenance-app/commit/99806d0ab191707002758a57121899a05e0f58cb))
+* small fixes ([337536a](https://github.com/dhis2/maintenance-app/commit/337536aac5762c9a713e32bc00e3d9cc98b749ae))
+
+
+### Features
+
+* add option to enter custom text to data sets ([a94816f](https://github.com/dhis2/maintenance-app/commit/a94816f96476425a0de95a186a6a28511656b923))
+* add radio to decide how to align title and subtitle ([7a73419](https://github.com/dhis2/maintenance-app/commit/7a73419cc1a46b372ca11b1af71208ad29f16107))
+* fix copy for dataset title and subtitle ([feae172](https://github.com/dhis2/maintenance-app/commit/feae172a4bb686ed88569fa976f5bb7b5de1d603))
+
 ## [32.31.15](https://github.com/dhis2/maintenance-app/compare/v32.31.14...v32.31.15) (2024-10-20)
 
 
