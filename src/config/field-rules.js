@@ -945,7 +945,7 @@ export default new Map([
             when: {
                 field: 'phase',
                 operator: 'PREDICATE',
-                value: (phase) => phase === 'ANALYTICS_TABLE_POPULATED'
+                value: (phase) => phase != 'RESOURCE_TABLE_POPULATED'
             },
             operations: [{
                 type: 'HIDE_FIELD',
@@ -961,7 +961,7 @@ export default new Map([
             when: {
                 field: 'phase',
                 operator: 'PREDICATE',
-                value: (phase) => phase === 'RESOURCE_TABLE_POPULATED'
+                value: (phase) => phase != 'ANALYTICS_TABLE_POPULATED'
             },
             operations: [{
                 type: 'HIDE_FIELD',
