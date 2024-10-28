@@ -95,4 +95,17 @@ export default new Map([
             },
         },
     ],
+    [
+        'mapService',
+        {
+            required: true,
+            component: props => {
+                const options = props.options.filter(
+                    option => option.value !== 'ARCGIS_FEATURE'
+                );
+
+                return <DropDown {...props} options={options} />;
+            },
+        },
+    ],
 ]);
