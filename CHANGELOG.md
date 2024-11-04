@@ -1,3 +1,10 @@
+## [32.32.3](https://github.com/dhis2/maintenance-app/compare/v32.32.2...v32.32.3) (2024-11-04)
+
+
+### Bug Fixes
+
+* **analyticstablehooks:** Slightly better UI and label language ([#2969](https://github.com/dhis2/maintenance-app/issues/2969)) ([05831ec](https://github.com/dhis2/maintenance-app/commit/05831ec6439222f89f840a82e808801c9d0b2a58))
+
 ## [32.32.2](https://github.com/dhis2/maintenance-app/compare/v32.32.1...v32.32.2) (2024-11-04)
 
 
