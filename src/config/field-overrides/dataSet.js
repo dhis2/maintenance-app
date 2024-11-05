@@ -172,11 +172,12 @@ class RenderAsTabsSettings extends React.Component {
                 {state.displayOptions && state.displayOptions.customText &&
                 <div style={customTextCssStyles}>
                     <TextField
-                    value={(state.displayOptions && state.displayOptions.customText &&
-                        state.displayOptions.customText.header) || ""}
-                    fullWidth={false}
-                    onChange={this.onCustomTextHeaderChanged}
-                    floatingLabelText={this.translate('data_set_title')}
+                        value={(state.displayOptions && state.displayOptions.customText &&
+                            state.displayOptions.customText.header) || ""}
+                        fullWidth={false}
+                        onChange={this.onCustomTextHeaderChanged}
+                        floatingLabelText={this.translate('data_set_title')}
+                        maxLength={500}
                     />
                     <TextField
                         value={(state.displayOptions && state.displayOptions.customText &&
@@ -184,6 +185,7 @@ class RenderAsTabsSettings extends React.Component {
                         fullWidth={false}
                         onChange={this.onCustomTextSubheaderChanged}
                         floatingLabelText={this.translate('data_set_subtitle')}
+                        maxLength={500}
                     />
                 </div>}
             </div>
