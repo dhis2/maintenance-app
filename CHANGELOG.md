@@ -1,3 +1,10 @@
+# [32.33.0](https://github.com/dhis2/maintenance-app/compare/v32.32.3...v32.33.0) (2024-11-05)
+
+
+### Features
+
+* add max length to inputs for title and subtitle ([5fdcc44](https://github.com/dhis2/maintenance-app/commit/5fdcc44590d3596906d7e48a0b7291f7fd78419c))
+
 ## [32.32.3](https://github.com/dhis2/maintenance-app/compare/v32.32.2...v32.32.3) (2024-11-04)
 
 
