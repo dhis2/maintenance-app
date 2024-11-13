@@ -57,6 +57,7 @@ Observable
             hierarchy: {
                 ...appState.state.hierarchy,
                 [`${result.side}Roots`]: result.organisationUnits,
+                [`${result.side}SearchApplied`]: true,
             },
         });
     });
@@ -83,6 +84,7 @@ Observable
                 ...state.hierarchy,
                 // Reset the roots of the left or right tree to the original root(s)
                 [`${side}Roots`]: state.userOrganisationUnits.toArray(),
+                [`${side}SearchApplied`]: false,
             },
         });
     });
@@ -371,6 +373,8 @@ function OrganisationUnitHierarchy(props, context) {
     const headingTitle = context.d2.i18n.getTranslation('hierarchy_operations');
     const warningForMovingWithinSubtree = context.d2.i18n.getTranslation('you_can_not_move_higher_level_organisation_units_to_its_descendants');
     const initiallyExpandedRight = props.moveTargetPath ? [...props.initiallyExpanded, props.moveTargetPath] : props.initiallyExpanded;
+    const leftSearchApplied = appState && appState.state && appState.state.hierarchy && appState.state.hierarchy.leftSearchApplied
+    const rightSearchApplied = appState && appState.state && appState.state.hierarchy && appState.state.hierarchy.rightSearchApplied
 
     return (
         <div>
@@ -386,6 +390,7 @@ function OrganisationUnitHierarchy(props, context) {
                         idsThatShouldBeReloaded={props.reload}
                         noHitsLabel={context.d2.i18n.getTranslation('no_matching_organisation_units')}
                         forceReloadChildren
+                        searchHitsUsed={leftSearchApplied}
                     />
                 </Paper>
                 <Paper style={styles.ouTreeRight}>
@@ -400,6 +405,7 @@ function OrganisationUnitHierarchy(props, context) {
                         hideCheckboxes
                         hideMemberCount
                         forceReloadChildren
+                        searchHitsUsed={rightSearchApplied}
                     />
                 </Paper>
             </div>
