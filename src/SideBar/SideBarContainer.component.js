@@ -59,8 +59,9 @@ class SideBarContainer extends React.Component {
                 };
 
                 const orgUnitSearchHits = appState.getState().sideBar.organisationUnits;
+                const searchHitsUsed =  Array.isArray(orgUnitSearchHits)
 
-                const roots = Array.isArray(orgUnitSearchHits)
+                const roots = searchHitsUsed
                     ? orgUnitSearchHits
                     : this.state.userOrganisationUnits.toArray().map((ou) => {
                         // Use the name as displayName if it has not been loaded
@@ -86,6 +87,7 @@ class SideBarContainer extends React.Component {
                             noHitsLabel={this.context.d2.i18n.getTranslation('no_matching_organisation_units')}
                             hideMemberCount
                             hideCheckboxes
+                            searchHitsUsed={searchHitsUsed}
                         />
                     </div>
                 );

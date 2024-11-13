@@ -4,6 +4,25 @@ import OrganisationUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component'
 import addD2Context from 'd2-ui/lib/component-helpers/addD2Context';
 import noop from 'd2-utilizr/lib/noop';
 
+function findMinimumRootUnits(units,skipDeduplication) {
+    if (skipDeduplication) {
+        return units
+    }
+    // first sort the units by level, so lowest level comes first
+    const sorted = units.sort((a, b) => a.level - b.level)
+
+    const minimumRoots = sorted.filter((ou, index, array) => {
+        // since the array is sorted by level we can just check the previous units,
+        // because we want to get the "minimum" level
+        const previousUnits = array.slice(0, index)
+        // if a previous unit has a path that is a prefix of the current path,
+        // then the current path is a child and should not be included
+        return !previousUnits.some((pu) => ou.path.startsWith(pu.path))
+    })
+
+    return minimumRoots
+}
+
 function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
     const styles = {
         labelStyle: {
@@ -24,7 +43,7 @@ function OrganisationUnitTreeWithSingleSelectionAndSearch(props, context) {
                 dataSource={props.autoCompleteDataSource}
                 filter={AutoComplete.noFilter}
             />
-            {Array.isArray(props.roots) && props.roots.length > 0 ? props.roots
+            {Array.isArray(props.roots) && props.roots.length > 0 ? findMinimumRootUnits(props.roots,props.searchHitsUsed)
                 .map(root =>
                 {
                     return (
@@ -61,6 +80,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.propTypes = {
     noHitsLabel: React.PropTypes.string.isRequired,
     hideMemberCount: React.PropTypes.bool,
     hideCheckboxes: React.PropTypes.bool,
+    searchHitsUsed: React.PropTypes.bool,
 };
 OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onOrgUnitSearch: noop,
@@ -76,6 +96,7 @@ OrganisationUnitTreeWithSingleSelectionAndSearch.defaultProps = {
     onClick: noop,
     hideMemberCount: false,
     hideCheckboxes: false,
+    searchHitsUsed: false,
 };
 
 export default addD2Context(OrganisationUnitTreeWithSingleSelectionAndSearch);
