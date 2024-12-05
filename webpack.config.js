@@ -55,7 +55,7 @@ const webpackConfig = {
             {
                 test: /\.jsx?$/,
                 include: [
-                    path.resolve(__dirname, 'src/'), 
+                    path.resolve(__dirname, 'src/'),
                     path.resolve(__dirname, 'node_modules/dompurify')
                 ],
                 loader: 'babel-loader',

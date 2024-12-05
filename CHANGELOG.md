@@ -1,3 +1,81 @@
+## [32.33.2](https://github.com/dhis2/maintenance-app/compare/v32.33.1...v32.33.2) (2024-11-17)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([41034de](https://github.com/dhis2/maintenance-app/commit/41034de59b174fa28b5386ba0face474f305fb30))
+
+## [32.33.1](https://github.com/dhis2/maintenance-app/compare/v32.33.0...v32.33.1) (2024-11-10)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([77a38d7](https://github.com/dhis2/maintenance-app/commit/77a38d7c9f0148353dfba5c639ee18213e78fb73))
+
+# [32.33.0](https://github.com/dhis2/maintenance-app/compare/v32.32.3...v32.33.0) (2024-11-05)
+
+
+### Features
+
+* add max length to inputs for title and subtitle ([5fdcc44](https://github.com/dhis2/maintenance-app/commit/5fdcc44590d3596906d7e48a0b7291f7fd78419c))
+
+## [32.32.3](https://github.com/dhis2/maintenance-app/compare/v32.32.2...v32.32.3) (2024-11-04)
+
+
+### Bug Fixes
+
+* **analyticstablehooks:** Slightly better UI and label language ([#2969](https://github.com/dhis2/maintenance-app/issues/2969)) ([05831ec](https://github.com/dhis2/maintenance-app/commit/05831ec6439222f89f840a82e808801c9d0b2a58))
+
+## [32.32.2](https://github.com/dhis2/maintenance-app/compare/v32.32.1...v32.32.2) (2024-11-04)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([6a59f83](https://github.com/dhis2/maintenance-app/commit/6a59f839fcdfdceaf67e2433f3738fce5a9f0d81))
+
+## [32.32.1](https://github.com/dhis2/maintenance-app/compare/v32.32.0...v32.32.1) (2024-10-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ab9726e](https://github.com/dhis2/maintenance-app/commit/ab9726edbc22bde89e6fefbbb73402ba005d57ec))
+
+# [32.32.0](https://github.com/dhis2/maintenance-app/compare/v32.31.15...v32.32.0) (2024-10-23)
+
+
+### Bug Fixes
+
+* change text alignment in data set display options from left and right to line start and line end ([99806d0](https://github.com/dhis2/maintenance-app/commit/99806d0ab191707002758a57121899a05e0f58cb))
+* small fixes ([337536a](https://github.com/dhis2/maintenance-app/commit/337536aac5762c9a713e32bc00e3d9cc98b749ae))
+
+
+### Features
+
+* add option to enter custom text to data sets ([a94816f](https://github.com/dhis2/maintenance-app/commit/a94816f96476425a0de95a186a6a28511656b923))
+* add radio to decide how to align title and subtitle ([7a73419](https://github.com/dhis2/maintenance-app/commit/7a73419cc1a46b372ca11b1af71208ad29f16107))
+* fix copy for dataset title and subtitle ([feae172](https://github.com/dhis2/maintenance-app/commit/feae172a4bb686ed88569fa976f5bb7b5de1d603))
+
+## [32.31.15](https://github.com/dhis2/maintenance-app/compare/v32.31.14...v32.31.15) (2024-10-20)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ccfd375](https://github.com/dhis2/maintenance-app/commit/ccfd375e55c9dd08741d39f988e32b43a01e72ea))
+
+## [32.31.14](https://github.com/dhis2/maintenance-app/compare/v32.31.13...v32.31.14) (2024-10-13)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([d0a81b3](https://github.com/dhis2/maintenance-app/commit/d0a81b36103d325eb0b5df005341e878b872a615))
+
+## [32.31.13](https://github.com/dhis2/maintenance-app/compare/v32.31.12...v32.31.13) (2024-10-06)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([1f7c9dd](https://github.com/dhis2/maintenance-app/commit/1f7c9ddc5b96bebaa6ebba47667571537aa9dea2))
+
 ## [32.31.12](https://github.com/dhis2/maintenance-app/compare/v32.31.11...v32.31.12) (2024-09-30)
 
 
