@@ -1,3 +1,10 @@
+## [32.33.8](https://github.com/dhis2/maintenance-app/compare/v32.33.7...v32.33.8) (2025-02-17)
+
+
+### Bug Fixes
+
+* **translation:** average aggregation type ([#3042](https://github.com/dhis2/maintenance-app/issues/3042)) ([69aef71](https://github.com/dhis2/maintenance-app/commit/69aef7190f7f4b662f0a20489c38b62da7611415))
+
 ## [32.33.7](https://github.com/dhis2/maintenance-app/compare/v32.33.6...v32.33.7) (2025-02-16)
 
 
