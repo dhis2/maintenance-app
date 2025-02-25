@@ -20,7 +20,8 @@
     "manifest": "d2-manifest package.json build/manifest.webapp",
     "lint": "eslint ./src",
     "profile": "npm run start -- --profile",
-    "copy-ckeditor": "mkdir ./build/vendor && cp -r ./node_modules/ckeditor ./build/vendor"
+    "copy-ckeditor": "mkdir ./build/vendor && cp -r ./node_modules/ckeditor ./build/vendor",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -88,6 +89,8 @@
     "material-design-icons-iconfont": "^4.0.5",
     "material-ui": "^0.17.0",
     "nyc": "10.1.2",
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.6.0",
     "react": "~15.5.0",
     "react-addons-create-fragment": "^15.5.4",
