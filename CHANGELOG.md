@@ -1,3 +1,10 @@
+## [32.33.11](https://github.com/dhis2/maintenance-app/compare/v32.33.10...v32.33.11) (2025-03-13)
+
+
+### Bug Fixes
+
+* support categoryMappings for program and programIndicator ([#3050](https://github.com/dhis2/maintenance-app/issues/3050)) ([446ba82](https://github.com/dhis2/maintenance-app/commit/446ba829c8b532275fb9583c2217b4451acab08f))
+
 ## [32.33.10](https://github.com/dhis2/maintenance-app/compare/v32.33.9...v32.33.10) (2025-03-02)
 
 
