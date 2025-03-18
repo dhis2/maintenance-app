@@ -1,3 +1,10 @@
+## [32.33.13](https://github.com/dhis2/maintenance-app/compare/v32.33.12...v32.33.13) (2025-03-18)
+
+
+### Bug Fixes
+
+* update manifest ([#3057](https://github.com/dhis2/maintenance-app/issues/3057)) ([874ccb0](https://github.com/dhis2/maintenance-app/commit/874ccb07bb13a28978d86f1bd31911794ef099a0))
+
 ## [32.33.12](https://github.com/dhis2/maintenance-app/compare/v32.33.11...v32.33.12) (2025-03-16)
 
 
