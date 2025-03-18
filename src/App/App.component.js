@@ -15,7 +15,7 @@ import appState, { setAppState } from './appStateStore';
 import { Provider } from 'react-redux';
 import store from '../store';
 import HeaderBar from '@dhis2/d2-ui-header-bar';
-import { shouldRenderHeaderBar } from '../utils/shouldRenderHeaderbar';
+import { shouldRenderHeaderBar } from '../utils/shouldRenderHeaderBar';
 import DialogRouter from '../Dialog/DialogRouter';
 
 import 'typeface-roboto';

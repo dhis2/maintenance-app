@@ -3,7 +3,7 @@ import TopBarButtons from '../TopBar/TopBarButtons.component';
 import Tabs from 'material-ui/Tabs/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
 import noop from 'd2-utilizr/lib/noop';
-import { shouldRenderHeaderBar } from '../utils/shouldRenderHeaderbar';
+import { shouldRenderHeaderBar } from '../utils/shouldRenderHeaderBar';
 
 function SectionTabs(props) {
     const styles = {
