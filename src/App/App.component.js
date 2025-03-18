@@ -14,7 +14,8 @@ import { goToRoute } from '../router-utils';
 import appState, { setAppState } from './appStateStore';
 import { Provider } from 'react-redux';
 import store from '../store';
-import HeaderBar from "@dhis2/d2-ui-header-bar";
+import HeaderBar from '@dhis2/d2-ui-header-bar';
+import { shouldRenderHeaderBar } from '../utils/shouldRenderHeaderbar';
 import DialogRouter from '../Dialog/DialogRouter';
 
 import 'typeface-roboto';
@@ -80,8 +81,8 @@ class App extends AppWithD2 {
 
         return (
             <Provider store={store}>
-                <div>
-                    <HeaderBar d2={this.state.d2} />
+                <div style={{ marginTop: shouldRenderHeaderBar ? undefined : '-44px', }}>
+                    {shouldRenderHeaderBar && <HeaderBar d2={this.state.d2} />}
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
                         <TwoPanelLayout>

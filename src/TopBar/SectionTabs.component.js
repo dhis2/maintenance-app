@@ -3,6 +3,7 @@ import TopBarButtons from '../TopBar/TopBarButtons.component';
 import Tabs from 'material-ui/Tabs/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
 import noop from 'd2-utilizr/lib/noop';
+import { shouldRenderHeaderBar } from '../utils/shouldRenderHeaderbar';
 
 function SectionTabs(props) {
     const styles = {
@@ -13,7 +14,7 @@ function SectionTabs(props) {
             background: '#E4E4E4',
             width: '100%',
             zIndex: 10,
-            top: '44px',
+            top: shouldRenderHeaderBar ? '44px' : 0,
             flex: 1,
         },
         navButtonStyle: {

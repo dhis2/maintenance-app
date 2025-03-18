@@ -5,6 +5,7 @@ import { onSectionChanged, onOrgUnitSearch } from './sideBarActions';
 import { setAppState, default as appState } from '../App/appStateStore';
 import MaintenanceSideBar from './MaintenanceSidebar.component';
 import OrganisationUnitTreeWithSingleSelectionAndSearch from '../OrganisationUnitTree/OrganisationUnitTreeWithSingleSelectionAndSearch.component';
+import { shouldRenderHeaderBar } from '../utils/shouldRenderHeaderbar';
 
 class SideBarContainer extends React.Component {
     componentWillMount() {
@@ -143,7 +144,7 @@ class SideBarContainer extends React.Component {
             flex: 1,
             position: 'fixed',
             bottom: '0',
-            top: '7rem',
+            top: shouldRenderHeaderBar ? '7rem' : 'calc(7rem - 44px)',
             overflow: 'auto',
         };
 
