@@ -1,3 +1,10 @@
+# [32.34.0](https://github.com/dhis2/maintenance-app/compare/v32.33.13...v32.34.0) (2025-03-18)
+
+
+### Features
+
+* hide the header bar when in an iframe ([#3058](https://github.com/dhis2/maintenance-app/issues/3058)) ([14cf041](https://github.com/dhis2/maintenance-app/commit/14cf041573f1460d1f10b02bba1841c006f5abd3))
+
 ## [32.33.13](https://github.com/dhis2/maintenance-app/compare/v32.33.12...v32.33.13) (2025-03-18)
 
 
