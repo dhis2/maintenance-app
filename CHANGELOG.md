@@ -1,3 +1,11 @@
+## [32.34.1](https://github.com/dhis2/maintenance-app/compare/v32.34.0...v32.34.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* make title and subtitle full width ([fdd79f5](https://github.com/dhis2/maintenance-app/commit/fdd79f566a097930ebc2b4ebc8a0e1c8eed31266))
+* preselect first pivot option if displayOptions are available ([ab0e47b](https://github.com/dhis2/maintenance-app/commit/ab0e47b1b11987b3ecabe3958eeddbfbf3b55fa2))
+
 # [32.34.0](https://github.com/dhis2/maintenance-app/compare/v32.33.13...v32.34.0) (2025-03-18)
 
 
