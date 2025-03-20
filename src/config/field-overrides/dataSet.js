@@ -105,7 +105,7 @@ class RenderAsTabsSettings extends React.Component {
         const customTextCssStyles = {
             display: 'flex',
             flexDirection: 'column',
-            marginLeft: '16px'
+            marginLeft: '16px',
         };
         return <div>
             <div>
@@ -174,7 +174,7 @@ class RenderAsTabsSettings extends React.Component {
                     <TextField
                         value={(state.displayOptions && state.displayOptions.customText &&
                             state.displayOptions.customText.header) || ""}
-                        fullWidth={false}
+                        fullWidth={true}
                         onChange={this.onCustomTextHeaderChanged}
                         floatingLabelText={this.translate('data_set_title')}
                         maxLength={500}
@@ -182,7 +182,7 @@ class RenderAsTabsSettings extends React.Component {
                     <TextField
                         value={(state.displayOptions && state.displayOptions.customText &&
                             state.displayOptions.customText.subheader) || ""}
-                        fullWidth={false}
+                        fullWidth={true}
                         onChange={this.onCustomTextSubheaderChanged}
                         floatingLabelText={this.translate('data_set_subtitle')}
                         maxLength={500}
