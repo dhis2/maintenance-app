@@ -406,7 +406,7 @@ class SectionDialog extends React.Component {
                 <label>{this.getTranslation('pivot_options')}</label>
                 <RadioButtonGroup
                     onChange={this.handleChoosePivotMode}
-                    valueSelected={this.state.displayOptions.pivotMode}
+                    valueSelected={this.state.displayOptions !== undefined ? this.state.displayOptions.pivotMode || 'n/a' : undefined}
                     name="pivotOptions"
                     defaultSelected="n/a"
                 >
