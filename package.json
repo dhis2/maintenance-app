@@ -135,16 +135,192 @@
         },
         "shortcuts": [
             {
-                "name": "Data element management",
+                "name": "Categories",
+                "url": "#/list/categorySection/category"
+            },
+            {
+                "name": "Category options",
+                "url": "#/list/categorySection/categoryOption"
+            },
+            {
+                "name": "Category combinations",
+                "url": "#/list/categorySection/categoryCombo"
+            },
+            {
+                "name": "Category option combinations",
+                "url": "#/list/categorySection/categoryOptionCombo"
+            },
+            {
+                "name": "Category option groups",
+                "url": "#/list/categorySection/categoryOptionGroup"
+            },
+            {
+                "name": "Category option group sets",
+                "url": "#/list/categorySection/categoryOptionGroupSet"
+            },
+            {
+                "name": "Data elements",
                 "url": "#/list/dataElementSection/dataElement"
             },
             {
-                "name": "Data set management",
+                "name": "Data element groups ",
+                "url": "#/list/dataElementSection/dataElementGroup"
+            },
+            {
+                "name": "Data element group sets",
+                "url": "#/list/dataElementSection/dataElementGroupSet"
+            },
+            {
+                "name": "Data sets",
                 "url": "#/list/dataSetSection/dataSet"
             },
             {
-                "name": "Organisation unit management",
+                "name": "Data set notifications",
+                "url": "#/list/dataSetSection/dataSetNotificationTemplate"
+            },
+            {
+                "name": "Indicators",
+                "url": "#/list/indicatorSection/indicator"
+            },
+            {
+                "name": "Indicator types",
+                "url": "#/list/indicatorSection/indicatorType"
+            },
+            {
+                "name": "Indicator groups",
+                "url": "#/list/indicatorSection/indicatorGroup"
+            },
+            {
+                "name": "Indicator group sets",
+                "url": "#/list/indicatorSection/indicatorGroupSet"
+            },
+            {
+                "name": "Program indicators",
+                "url": "#/list/indicatorSection/programIndicator"
+            },
+            {
+                "name": "Program indicator groups",
+                "url": "#/list/indicatorSection/programIndicatorGroup"
+            },
+            {
+                "name": "Organisation units",
                 "url": "#/list/organisationUnitSection/organisationUnit"
+            },
+            {
+                "name": "Organisaiton unit groups",
+                "url": "#/list/organisationUnitSection/organisationUnitGroup"
+            },
+            {
+                "name": "Organisation unit group sets",
+                "url": "#/list/organisationUnitSection/organisationUnitGroupSet"
+            },
+            {
+                "name": "Organisation unit levels",
+                "url": "#/list/organisationUnitSection/organisationUnitLevel"
+            },
+            {
+                "name": "Hierarchy operations",
+                "url": "#/organisationUnitSection/hierarchy"
+            },
+            {
+                "name": "Programs",
+                "url": "#/list/programSection/program"
+            },
+            {
+                "name": "Tracked entity attributes",
+                "url": "#/list/programSection/trackedEntityAttribute"
+            },
+            {
+                "name": "Relationship types",
+                "url": "#/list/programSection/relationshipType"
+            },
+            {
+                "name": "Tracked entity types",
+                "url": "#/list/programSection/trackedEntityType"
+            },
+            {
+                "name": "Program rules",
+                "url": "#/list/programSection/programRule"
+            },
+            {
+                "name": "Program rule variables",
+                "url": "#/list/programSection/programRuleVariable"
+            },
+            {
+                "name": "Validation rules",
+                "url": "#/list/validationSection/validationRule"
+            },
+            {
+                "name": "Validation rule groups",
+                "url": "#/list/validationSection/validationRuleGroup"
+            },
+            {
+                "name": "Validation notifications",
+                "url": "#/list/validationSection/validationNotificationTemplate"
+            },
+            {
+                "name": "Constants",
+                "url": "#/list/otherSection/constant"
+            },
+            {
+                "name": "Attributes",
+                "url": "#/list/otherSection/attribute"
+            },
+            {
+                "name": "Option sets",
+                "url": "#/list/otherSection/optionSet"
+            },
+            {
+                "name": "Option groups",
+                "url": "#/list/otherSection/optionGroup"
+            },
+            {
+                "name": "Option group sets",
+                "url": "#/list/otherSection/optionGroupSet"
+            },
+            {
+                "name": "Legends",
+                "url": "#/list/otherSection/legendSet"
+            },
+            {
+                "name": "Predictors",
+                "url": "#/list/otherSection/predictor"
+            },
+            {
+                "name": "Predictor groups",
+                "url": "#/list/otherSection/predictorGroup"
+            },
+            {
+                "name": "Push analysis",
+                "url": "#/list/otherSection/pushAnalysis"
+            },
+            {
+                "name": "External map layers",
+                "url": "#/list/otherSection/externalMapLayer"
+            },
+            {
+                "name": "Data approval levels",
+                "url": "#/list/otherSection/dataApprovalLevel"
+            },
+            {
+                "name": "Data approval workflows",
+                "url": "#/list/otherSection/dataApprovalWorkflow"
+            },
+            {
+                "name": "Locales",
+                "url": "#/list/otherSection/locale"
+            },
+            {
+                "name": "SQL views",
+                "url": "#/list/otherSection/sqlView"
+            },
+            {
+                "name": "Icons",
+                "url": "#/list/otherSection/icon"
+            },
+            {
+                "name": "Analytics table hooks",
+                "url": "#/list/otherSection/analyticsTableHook"
             }
         ]
     }
