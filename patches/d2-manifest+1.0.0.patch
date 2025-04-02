@@ -1,0 +1,13 @@
+diff --git a/node_modules/d2-manifest/src/Manifest.js b/node_modules/d2-manifest/src/Manifest.js
+index fedb75f..d0179a9 100644
+--- a/node_modules/d2-manifest/src/Manifest.js
++++ b/node_modules/d2-manifest/src/Manifest.js
+@@ -61,7 +61,7 @@ class Manifest {
+     merge(data, force) {
+         if (data instanceof Object) {
+             Object.keys(data).map(key => {
+-                if (data[key] instanceof Object) {
++                if (data[key] instanceof Object && !Array.isArray(data[key])) {
+                     if (key === 'developer' && data[key].name) {
+                         Object.assign(data[key], Manifest.parseAuthor(data[key].name));
+                     }
