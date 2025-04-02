@@ -132,6 +132,20 @@
       "dhis": {
         "href": ".."
       }
-    }
+    },
+    "shortcuts": [
+      {
+        "name": "Data element management",
+        "url": "#/list/dataElementSection/dataElement"
+      },
+      {
+        "name": "Data set management",
+        "url": "#/list/dataSetSection/dataSet"
+      },
+      {
+        "name": "Organisation unit management",
+        "url": "#/list/organisationUnitSection/organisationUnit"
+      }
+    ]
   }
 }
