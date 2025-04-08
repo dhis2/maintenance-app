@@ -1,3 +1,10 @@
+# [32.35.0](https://github.com/dhis2/maintenance-app/compare/v32.34.1...v32.35.0) (2025-04-08)
+
+
+### Features
+
+* **manifest:** add shortcuts for command palette ([#3067](https://github.com/dhis2/maintenance-app/issues/3067)) ([053e88f](https://github.com/dhis2/maintenance-app/commit/053e88f23d6ed667314fc5bbd8d0ab2d5364b4dd))
+
 ## [32.34.1](https://github.com/dhis2/maintenance-app/compare/v32.34.0...v32.34.1) (2025-03-20)
 
 
