@@ -1,3 +1,10 @@
+## [32.35.1](https://github.com/dhis2/maintenance-app/compare/v32.35.0...v32.35.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* correctly list manifest shortcuts as an array instead of an object ([#3069](https://github.com/dhis2/maintenance-app/issues/3069)) ([88719dc](https://github.com/dhis2/maintenance-app/commit/88719dc0b8494999d28f54b2bda07b40562599c0))
+
 # [32.35.0](https://github.com/dhis2/maintenance-app/compare/v32.34.1...v32.35.0) (2025-04-08)
 
 
