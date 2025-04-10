@@ -1,0 +1,17 @@
+name: 'This workflow creates bill of material and uploads it to Dependency-Track each night'
+
+on:
+    schedule:
+        - cron: '0 0 * * *'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref }}
+    cancel-in-progress: true
+
+jobs:
+    create-bom:
+        uses: dhis2/workflows-platform/.github/workflows/generate-and-upload-bom.yml@v1
+        with:
+            node_version: 20
+            project_id: 'a77e532b-4e53-492c-8fb7-00563b94aa57'
+        secrets: inherit
