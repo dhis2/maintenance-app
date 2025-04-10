@@ -1,3 +1,10 @@
+## [32.35.2](https://github.com/dhis2/maintenance-app/compare/v32.35.1...v32.35.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* organisation unit group shortcut typo ([#3071](https://github.com/dhis2/maintenance-app/issues/3071)) ([bd4e849](https://github.com/dhis2/maintenance-app/commit/bd4e849fb49fb23290e351137a17383b858eb519))
+
 ## [32.35.1](https://github.com/dhis2/maintenance-app/compare/v32.35.0...v32.35.1) (2025-04-09)
 
 
