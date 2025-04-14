@@ -115,13 +115,13 @@ export default class OrganisationUnitTreeMultiSelect extends Component {
                     return Observable.of(this.state.originalRoots);
                 }
                 const organisationUnitRequest = this.context.d2.models.organisationUnits
-                    .filter().on('displayName').ilike(searchValue)
                     // withinUserHierarchy makes the query only apply to the subtrees of the organisation units that are
                     // assigned to the current user
                     .list({
                         pageSize: 100,
                         fields: 'id,displayName,path,children::isNotEmpty',
                         withinUserHierarchy: true,
+                        query: searchValue,
                     })
                     .then(modelCollection => modelCollection.toArray());
 
