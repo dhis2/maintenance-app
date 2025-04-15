@@ -1,6 +1,6 @@
 {
     "name": "maintenance-app",
-    "version": "32.35.0",
+    "version": "32.35.2",
     "description": "DHIS2 Maintenance app",
     "repository": {
         "type": "git",
@@ -207,7 +207,7 @@
                 "url": "#/list/organisationUnitSection/organisationUnit"
             },
             {
-                "name": "Organisaiton unit groups",
+                "name": "Organisation unit groups",
                 "url": "#/list/organisationUnitSection/organisationUnitGroup"
             },
             {
