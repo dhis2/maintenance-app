@@ -1,3 +1,173 @@
+## [32.35.2](https://github.com/dhis2/maintenance-app/compare/v32.35.1...v32.35.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* organisation unit group shortcut typo ([#3071](https://github.com/dhis2/maintenance-app/issues/3071)) ([bd4e849](https://github.com/dhis2/maintenance-app/commit/bd4e849fb49fb23290e351137a17383b858eb519))
+
+## [32.35.1](https://github.com/dhis2/maintenance-app/compare/v32.35.0...v32.35.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* correctly list manifest shortcuts as an array instead of an object ([#3069](https://github.com/dhis2/maintenance-app/issues/3069)) ([88719dc](https://github.com/dhis2/maintenance-app/commit/88719dc0b8494999d28f54b2bda07b40562599c0))
+
+# [32.35.0](https://github.com/dhis2/maintenance-app/compare/v32.34.1...v32.35.0) (2025-04-08)
+
+
+### Features
+
+* **manifest:** add shortcuts for command palette ([#3067](https://github.com/dhis2/maintenance-app/issues/3067)) ([053e88f](https://github.com/dhis2/maintenance-app/commit/053e88f23d6ed667314fc5bbd8d0ab2d5364b4dd))
+
+## [32.34.1](https://github.com/dhis2/maintenance-app/compare/v32.34.0...v32.34.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* make title and subtitle full width ([fdd79f5](https://github.com/dhis2/maintenance-app/commit/fdd79f566a097930ebc2b4ebc8a0e1c8eed31266))
+* preselect first pivot option if displayOptions are available ([ab0e47b](https://github.com/dhis2/maintenance-app/commit/ab0e47b1b11987b3ecabe3958eeddbfbf3b55fa2))
+
+# [32.34.0](https://github.com/dhis2/maintenance-app/compare/v32.33.13...v32.34.0) (2025-03-18)
+
+
+### Features
+
+* hide the header bar when in an iframe ([#3058](https://github.com/dhis2/maintenance-app/issues/3058)) ([14cf041](https://github.com/dhis2/maintenance-app/commit/14cf041573f1460d1f10b02bba1841c006f5abd3))
+
+## [32.33.13](https://github.com/dhis2/maintenance-app/compare/v32.33.12...v32.33.13) (2025-03-18)
+
+
+### Bug Fixes
+
+* update manifest ([#3057](https://github.com/dhis2/maintenance-app/issues/3057)) ([874ccb0](https://github.com/dhis2/maintenance-app/commit/874ccb07bb13a28978d86f1bd31911794ef099a0))
+
+## [32.33.12](https://github.com/dhis2/maintenance-app/compare/v32.33.11...v32.33.12) (2025-03-16)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([2cec258](https://github.com/dhis2/maintenance-app/commit/2cec2583d33aa1f218865ca3794e9d749776b1a4))
+
+## [32.33.11](https://github.com/dhis2/maintenance-app/compare/v32.33.10...v32.33.11) (2025-03-13)
+
+
+### Bug Fixes
+
+* support categoryMappings for program and programIndicator ([#3050](https://github.com/dhis2/maintenance-app/issues/3050)) ([446ba82](https://github.com/dhis2/maintenance-app/commit/446ba829c8b532275fb9583c2217b4451acab08f))
+
+## [32.33.10](https://github.com/dhis2/maintenance-app/compare/v32.33.9...v32.33.10) (2025-03-02)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([459c2e8](https://github.com/dhis2/maintenance-app/commit/459c2e8c8c19cf4442a1379b7e0873495b0bbe83))
+
+## [32.33.9](https://github.com/dhis2/maintenance-app/compare/v32.33.8...v32.33.9) (2025-02-23)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([26fbfb8](https://github.com/dhis2/maintenance-app/commit/26fbfb8b13296f9e54bf6417a5f83c7ba21d16d3))
+
+## [32.33.8](https://github.com/dhis2/maintenance-app/compare/v32.33.7...v32.33.8) (2025-02-17)
+
+
+### Bug Fixes
+
+* **translation:** average aggregation type ([#3042](https://github.com/dhis2/maintenance-app/issues/3042)) ([69aef71](https://github.com/dhis2/maintenance-app/commit/69aef7190f7f4b662f0a20489c38b62da7611415))
+
+## [32.33.7](https://github.com/dhis2/maintenance-app/compare/v32.33.6...v32.33.7) (2025-02-16)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([4217488](https://github.com/dhis2/maintenance-app/commit/4217488fd0713d74b0e749cbe1376a26d020204d))
+
+## [32.33.6](https://github.com/dhis2/maintenance-app/compare/v32.33.5...v32.33.6) (2025-02-04)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([781ef7e](https://github.com/dhis2/maintenance-app/commit/781ef7e79056847f30beb16a6a778be52516dea2))
+
+## [32.33.5](https://github.com/dhis2/maintenance-app/compare/v32.33.4...v32.33.5) (2024-12-22)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ac23af1](https://github.com/dhis2/maintenance-app/commit/ac23af19988637294c8e607433d7c4deef7c4f63))
+
+## [32.33.4](https://github.com/dhis2/maintenance-app/compare/v32.33.3...v32.33.4) (2024-12-15)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([c72f511](https://github.com/dhis2/maintenance-app/commit/c72f511337def5446983fd50b135c3e374661002))
+
+## [32.33.3](https://github.com/dhis2/maintenance-app/compare/v32.33.2...v32.33.3) (2024-12-08)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([0398bde](https://github.com/dhis2/maintenance-app/commit/0398bde85a78fe7bfb2e91a05ef086a8295c0083))
+
+## [32.33.2](https://github.com/dhis2/maintenance-app/compare/v32.33.1...v32.33.2) (2024-11-17)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([41034de](https://github.com/dhis2/maintenance-app/commit/41034de59b174fa28b5386ba0face474f305fb30))
+
+## [32.33.1](https://github.com/dhis2/maintenance-app/compare/v32.33.0...v32.33.1) (2024-11-10)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([77a38d7](https://github.com/dhis2/maintenance-app/commit/77a38d7c9f0148353dfba5c639ee18213e78fb73))
+
+# [32.33.0](https://github.com/dhis2/maintenance-app/compare/v32.32.3...v32.33.0) (2024-11-05)
+
+
+### Features
+
+* add max length to inputs for title and subtitle ([5fdcc44](https://github.com/dhis2/maintenance-app/commit/5fdcc44590d3596906d7e48a0b7291f7fd78419c))
+
+## [32.32.3](https://github.com/dhis2/maintenance-app/compare/v32.32.2...v32.32.3) (2024-11-04)
+
+
+### Bug Fixes
+
+* **analyticstablehooks:** Slightly better UI and label language ([#2969](https://github.com/dhis2/maintenance-app/issues/2969)) ([05831ec](https://github.com/dhis2/maintenance-app/commit/05831ec6439222f89f840a82e808801c9d0b2a58))
+
+## [32.32.2](https://github.com/dhis2/maintenance-app/compare/v32.32.1...v32.32.2) (2024-11-04)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([6a59f83](https://github.com/dhis2/maintenance-app/commit/6a59f839fcdfdceaf67e2433f3738fce5a9f0d81))
+
+## [32.32.1](https://github.com/dhis2/maintenance-app/compare/v32.32.0...v32.32.1) (2024-10-27)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([ab9726e](https://github.com/dhis2/maintenance-app/commit/ab9726edbc22bde89e6fefbbb73402ba005d57ec))
+
+# [32.32.0](https://github.com/dhis2/maintenance-app/compare/v32.31.15...v32.32.0) (2024-10-23)
+
+
+### Bug Fixes
+
+* change text alignment in data set display options from left and right to line start and line end ([99806d0](https://github.com/dhis2/maintenance-app/commit/99806d0ab191707002758a57121899a05e0f58cb))
+* small fixes ([337536a](https://github.com/dhis2/maintenance-app/commit/337536aac5762c9a713e32bc00e3d9cc98b749ae))
+
+
+### Features
+
+* add option to enter custom text to data sets ([a94816f](https://github.com/dhis2/maintenance-app/commit/a94816f96476425a0de95a186a6a28511656b923))
+* add radio to decide how to align title and subtitle ([7a73419](https://github.com/dhis2/maintenance-app/commit/7a73419cc1a46b372ca11b1af71208ad29f16107))
+* fix copy for dataset title and subtitle ([feae172](https://github.com/dhis2/maintenance-app/commit/feae172a4bb686ed88569fa976f5bb7b5de1d603))
+
 ## [32.31.15](https://github.com/dhis2/maintenance-app/compare/v32.31.14...v32.31.15) (2024-10-20)
 
 

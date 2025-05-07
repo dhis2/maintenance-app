@@ -1,0 +1,15 @@
+diff --git a/node_modules/d2/lib/model/helpers/json.js b/node_modules/d2/lib/model/helpers/json.js
+index 3361c97..6ad2944 100644
+--- a/node_modules/d2/lib/model/helpers/json.js
++++ b/node_modules/d2/lib/model/helpers/json.js
+@@ -27,7 +27,9 @@ var NON_MODEL_COLLECTIONS = {
+     organisationUnitLevels: ['validationRule'],
+     favorites: [],
+     userGroupAccesses: [],
+-    userAccesses: []
++    userAccesses: [],
++    categoryMappingIds: [],
++    categoryMappings: [],
+ };
+ 
+ var isNonModelCollection = function isNonModelCollection(propertyName, modelType) {
