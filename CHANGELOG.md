@@ -1,3 +1,10 @@
+## [32.35.3](https://github.com/dhis2/maintenance-app/compare/v32.35.2...v32.35.3) (2025-05-08)
+
+
+### Bug Fixes
+
+* apply order to data approval levels ([#3074](https://github.com/dhis2/maintenance-app/issues/3074)) ([2e60acf](https://github.com/dhis2/maintenance-app/commit/2e60acffc30f9dc003cf88505cf865631c029da1))
+
 ## [32.35.2](https://github.com/dhis2/maintenance-app/compare/v32.35.1...v32.35.2) (2025-04-10)
 
 
