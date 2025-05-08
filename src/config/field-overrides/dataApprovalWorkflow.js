@@ -11,4 +11,10 @@ export default new Map([
             defaultToDefaultValue: true,
         },
     }],
+    ['dataApprovalLevels', {
+        referenceType: 'dataApprovalLevels',
+        fieldOptions: {
+            queryParamOrder: 'level:asc',
+        },
+    }],
 ]);
