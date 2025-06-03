@@ -331,8 +331,13 @@ export default React.createClass({
                 .concat(this.props.queryParamFilter)
                 .filter(f => f);
 
+            const listOptions = { paging: false, fields: 'displayName|rename(name),id,level', filter: filters }
+            if (this.props.queryParamOrder) {
+                listOptions.order = this.props.queryParamOrder
+            }
+
             return multiSelectSourceModelDefinition
-                .list({ paging: false, fields: 'displayName|rename(name),id,level', filter: filters });
+                .list(listOptions);
         }
         return Promise.reject(`${this.props.referenceType} is not a model on d2.models`);
     },
