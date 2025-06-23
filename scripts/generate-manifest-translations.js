@@ -38,6 +38,10 @@ try {
 
     console.debug(`${propsFiles.length} .properties files found.`);
 
+    const keyMap = {
+        "APP_TITLE": "title",
+        "APP_DESCRIPTION": "description"
+    }
     const result = propsFiles.map(file => {
         // read the properties file using getProperties library
         const properties = getProperties(readFileSync('src/i18n/' + file));
@@ -58,15 +62,19 @@ try {
             let keyToUse = baseLanguageProperties[key]
             
             let cleaned_key = key?.replace(/MANIFEST_/, '')
-            cleaned_key = cleaned_key.startsWith('SHORTCUT') ? `SHORTCUT_${keyToUse}` : cleaned_key
 
-            prev[cleaned_key] = value;
+            if(cleaned_key.startsWith('SHORTCUT')) {
+                prev.shortcuts[keyToUse] = value
+            } else if (cleaned_key.startsWith('APP')) {
+                prev[keyMap[cleaned_key]] = value
+            }
+            
             return prev;
-        }, {});
+        }, {shortcuts: {}});
 
         return {
             locale,
-            translations,
+            ...translations,
         };
     });
 
