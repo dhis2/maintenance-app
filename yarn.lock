@@ -9286,6 +9286,11 @@ prop-types@~15.5.7:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
 
+properties-file@^3.5.12:
+  version "3.5.12"
+  resolved "https://registry.yarnpkg.com/properties-file/-/properties-file-3.5.12.tgz#b4ee8079e3e11198730f6a30ec29755f87daefcb"
+  integrity sha512-7dvf+jph2BoEWv0NskL0RIuBocAzf7R62qvG1K8q5ea8BddjepuwFiLLH1bgQGzSYYNvJHDXonnssd9dZ07RGA==
+
 proto-list@~1.2.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/proto-list/-/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
