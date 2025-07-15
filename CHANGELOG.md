@@ -1,3 +1,46 @@
+## [32.35.4](https://github.com/dhis2/maintenance-app/compare/v32.35.3...v32.35.4) (2025-07-15)
+
+
+### Bug Fixes
+
+* **translations:** sync translations from transifex (master) ([#3078](https://github.com/dhis2/maintenance-app/issues/3078)) ([d6b3582](https://github.com/dhis2/maintenance-app/commit/d6b3582c36ff3c30ee50a48fe30dbdddf93ec762))
+
+## [32.35.3](https://github.com/dhis2/maintenance-app/compare/v32.35.2...v32.35.3) (2025-05-08)
+
+
+### Bug Fixes
+
+* apply order to data approval levels ([#3074](https://github.com/dhis2/maintenance-app/issues/3074)) ([2e60acf](https://github.com/dhis2/maintenance-app/commit/2e60acffc30f9dc003cf88505cf865631c029da1))
+
+## [32.35.2](https://github.com/dhis2/maintenance-app/compare/v32.35.1...v32.35.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* organisation unit group shortcut typo ([#3071](https://github.com/dhis2/maintenance-app/issues/3071)) ([bd4e849](https://github.com/dhis2/maintenance-app/commit/bd4e849fb49fb23290e351137a17383b858eb519))
+
+## [32.35.1](https://github.com/dhis2/maintenance-app/compare/v32.35.0...v32.35.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* correctly list manifest shortcuts as an array instead of an object ([#3069](https://github.com/dhis2/maintenance-app/issues/3069)) ([88719dc](https://github.com/dhis2/maintenance-app/commit/88719dc0b8494999d28f54b2bda07b40562599c0))
+
+# [32.35.0](https://github.com/dhis2/maintenance-app/compare/v32.34.1...v32.35.0) (2025-04-08)
+
+
+### Features
+
+* **manifest:** add shortcuts for command palette ([#3067](https://github.com/dhis2/maintenance-app/issues/3067)) ([053e88f](https://github.com/dhis2/maintenance-app/commit/053e88f23d6ed667314fc5bbd8d0ab2d5364b4dd))
+
+## [32.34.1](https://github.com/dhis2/maintenance-app/compare/v32.34.0...v32.34.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* make title and subtitle full width ([fdd79f5](https://github.com/dhis2/maintenance-app/commit/fdd79f566a097930ebc2b4ebc8a0e1c8eed31266))
+* preselect first pivot option if displayOptions are available ([ab0e47b](https://github.com/dhis2/maintenance-app/commit/ab0e47b1b11987b3ecabe3958eeddbfbf3b55fa2))
+
 # [32.34.0](https://github.com/dhis2/maintenance-app/compare/v32.33.13...v32.34.0) (2025-03-18)
 
 
