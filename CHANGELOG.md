@@ -1,3 +1,10 @@
+## [32.35.5](https://github.com/dhis2/maintenance-app/compare/v32.35.4...v32.35.5) (2025-09-01)
+
+
+### Bug Fixes
+
+* back to Maintenance as app name in manifest ([#3087](https://github.com/dhis2/maintenance-app/issues/3087)) ([62170be](https://github.com/dhis2/maintenance-app/commit/62170bea7a9b73fc22c18a23b50815b850b71f5b))
+
 ## [32.35.4](https://github.com/dhis2/maintenance-app/compare/v32.35.3...v32.35.4) (2025-07-15)
 
 
