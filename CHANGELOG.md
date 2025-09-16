@@ -1,3 +1,10 @@
+## [32.35.6](https://github.com/dhis2/maintenance-app/compare/v32.35.5...v32.35.6) (2025-09-16)
+
+
+### Bug Fixes
+
+* update program indicators orgunit descriptions ([#3089](https://github.com/dhis2/maintenance-app/issues/3089)) ([1dfc5d5](https://github.com/dhis2/maintenance-app/commit/1dfc5d50bb9e06d3768c2ee017f1914912c8e435))
+
 ## [32.35.5](https://github.com/dhis2/maintenance-app/compare/v32.35.4...v32.35.5) (2025-09-01)
 
 
