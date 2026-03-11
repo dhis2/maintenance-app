@@ -4,18 +4,32 @@ import Tabs from 'material-ui/Tabs/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
 import noop from 'd2-utilizr/lib/noop';
 import { shouldRenderHeaderBar } from '../utils/shouldRenderHeaderBar';
+// import { IconWarning } from 'material-ui/svg-icons';
+import IconWarning from 'material-ui/svg-icons/alert/warning';
+import IconInfo from 'material-ui/svg-icons/action/info';
 
 function SectionTabs(props) {
     const styles = {
-        navStyle: {
-            display: 'flex',
-            flexOrientation: 'row',
-            position: 'fixed',
-            background: '#E4E4E4',
-            width: '100%',
+        navContainer: {
             zIndex: 10,
             top: shouldRenderHeaderBar ? '44px' : 0,
-            flex: 1,
+            position: 'fixed',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        redirectBar: {
+            backgroundColor: '#ffecb3',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: '8px 16px',
+            gap: '4px',
+        },
+        navStyle: {
+            display: 'flex',
+            flexOrientation: 'row',            
+            background: '#E4E4E4',            
         },
         navButtonStyle: {
             display: 'inline-block',
@@ -65,6 +79,12 @@ function SectionTabs(props) {
         ));
 
     return (
+        <div style={styles.navContainer}>
+            <div style={styles.redirectBar}>
+                {/* <IconWarning></IconWarning> */}
+                <IconInfo></IconInfo>
+                <span>This app is no longer maintained. We recommend that you instead use the <a href='https://www.dhis2.org'>Metadata Management app</a></span>
+            </div>
         <div style={styles.navStyle}>
             <div style={styles.tabsWrap}>
                 <Tabs
@@ -80,6 +100,7 @@ function SectionTabs(props) {
             <div style={styles.extraButtons}>
                 <TopBarButtons disabled={props.disabled} />
             </div>
+        </div>
         </div>
     );
 }

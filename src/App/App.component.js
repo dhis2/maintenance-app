@@ -82,7 +82,7 @@ class App extends AppWithD2 {
         return (
             <Provider store={store}>
                 <div style={{ marginTop: shouldRenderHeaderBar ? undefined : '-44px', }}>
-                    {shouldRenderHeaderBar && <HeaderBar d2={this.state.d2} />}
+                    {shouldRenderHeaderBar && <HeaderBar d2={this.state.d2} />}                    
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
                         <TwoPanelLayout>
