@@ -21,10 +21,10 @@ jobs:
         if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 14.x
+                  node-version: 16.x
 
             - uses: actions/cache@v4
               id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
@@ -41,10 +41,10 @@ jobs:
         needs: install
         if: "!contains(github.event.head_commit.message, '[skip ci]')"
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 14.x
+                  node-version: 16.x
 
             - uses: actions/cache@v4
               id: yarn-cache
@@ -68,10 +68,10 @@ jobs:
         needs: install
         if: "!contains(github.event.head_commit.message, '[skip ci]')"
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 14.x
+                  node-version: 16.x
 
             - uses: actions/cache@v4
               id: yarn-cache
@@ -87,10 +87,10 @@ jobs:
         needs: install
         if: "!contains(github.event.head_commit.message, '[skip ci]')"
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 14.x
+                  node-version: 16.x
 
             - uses: actions/cache@v4
               id: yarn-cache
@@ -106,13 +106,13 @@ jobs:
         needs: [build, lint, test] # add e2e if you use it
         if: "!contains(github.event.head_commit.message, '[skip ci]')"
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
               with:
                   token: ${{env.GH_TOKEN}}
 
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 14.x
+                  node-version: 16.x
 
             - uses: actions/download-artifact@v4
               with:
@@ -132,13 +132,13 @@ jobs:
         needs: [publish]
         if: "github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]')"
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
               with:
                   token: ${{env.GH_TOKEN}}
 
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 14.x
+                  node-version: 20.x
 
             - name: Publish release to GitHub
               run: npx @dhis2/cli-utils release
