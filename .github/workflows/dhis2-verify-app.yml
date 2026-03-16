@@ -142,3 +142,7 @@ jobs:
 
             - name: Publish release to GitHub
               run: npx @dhis2/cli-utils release
+              env:
+                  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                  NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+                  GITHUB_REPOSITORY_OWNER: ${{github.repository_owner}}
