@@ -142,7 +142,7 @@ jobs:
 
             -   name: Install cli-utils with pinned semantic-release/github
                 run: |
-                    npm install --no-save \
+                    npm install --no-save --legacy-peer-deps\
                       @dhis2/cli-utils \
                       @semantic-release/github@10.0.3
 
