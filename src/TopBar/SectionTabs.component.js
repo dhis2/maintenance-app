@@ -72,6 +72,7 @@ class SectionTabs extends Component {
 
     constructor(props, context) {
         super(props);
+        this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
         this.metadataEndpoint = `${context.d2.Api.getApi().baseUrl}/dhis-web-metadata-management`;
     }
 
@@ -91,7 +92,9 @@ class SectionTabs extends Component {
             <div style={styles.navContainer}>
                 <div style={styles.redirectBar}>
                     <IconInfo></IconInfo>
-                    <span>This app is no longer maintained. We recommend that you instead use the <a href={this.metadataEndpoint}>Metadata Management app</a></span>
+                    <span>
+                        {this.t('app_no_longer_maintained')} <a href={this.metadataEndpoint}>{this.t('metadata_management_app')}</a>
+                    </span>
                 </div>
                 <div style={styles.navStyle}>
                     <div style={styles.tabsWrap}>
