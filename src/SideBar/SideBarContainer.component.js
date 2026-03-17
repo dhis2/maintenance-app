@@ -144,7 +144,7 @@ class SideBarContainer extends React.Component {
             flex: 1,
             position: 'fixed',
             bottom: '0',
-            top: shouldRenderHeaderBar ? '7rem' : 'calc(7rem - 44px)',
+            top: shouldRenderHeaderBar ? '10rem' : 'calc(9rem - 44px)',
             overflow: 'auto',
         };
 

@@ -85,7 +85,7 @@ class App extends AppWithD2 {
                     {shouldRenderHeaderBar && <HeaderBar d2={this.state.d2} />}
                     <SectionTabsWrap disabled={!!this.props.children.props.route.disableTabs} />
                     {this.state.hasSection && !this.props.children.props.route.hideSidebar ? (
-                        <TwoPanelLayout>
+                        <TwoPanelLayout mainStyle={{marginTop: '10rem'}}>
                             <SideBar
                                 activeGroupName={this.props.params.groupName}
                                 activeModelType={this.props.params.modelType}
@@ -93,7 +93,7 @@ class App extends AppWithD2 {
                             <MainContent>{this.props.children}</MainContent>
                         </TwoPanelLayout>
                     ) : (
-                        <SinglePanelLayout>
+                        <SinglePanelLayout  mainStyle={{marginTop: '10rem'}}>
                             <MainContent>{this.props.children}</MainContent>
                         </SinglePanelLayout>
                     )}
