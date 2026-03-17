@@ -73,7 +73,11 @@ class SectionTabs extends Component {
     constructor(props, context) {
         super(props);
         this.t = context.d2.i18n.getTranslation.bind(context.d2.i18n);
-        this.metadataEndpoint = `${context.d2.Api.getApi().baseUrl}/dhis-web-metadata-management`;
+        const baseUrl = context.d2.Api.getApi().baseUrl
+        const index = baseUrl.indexOf('/api')
+        const trimmedBaseUrl = index !== -1 ? baseUrl.slice(0, index) : baseUrl
+
+        this.metadataEndpoint = `${trimmedBaseUrl}/dhis-web-metadata-management`;
     }
 
     render() {
