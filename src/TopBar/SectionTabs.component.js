@@ -97,7 +97,7 @@ class SectionTabs extends Component {
                 <div style={styles.redirectBar}>
                     <IconInfo></IconInfo>
                     <span>
-                        {this.t('app_no_longer_maintained')} <a href={this.metadataEndpoint}>{this.t('metadata_management_app')}</a>
+                        {this.t('app_no_longer_maintained')} <a href={this.metadataEndpoint}>{this.t('open_app')}</a>
                     </span>
                 </div>
                 <div style={styles.navStyle}>
