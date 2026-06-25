@@ -359,6 +359,8 @@ const fieldOrderByName = new Map([
     ]],
     ['trackedEntityType', [
         'name',
+        'shortName',
+        'code',
         'style',
         'description',
         'allowAuditLog',
