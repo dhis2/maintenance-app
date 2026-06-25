@@ -1,6 +1,7 @@
 import React from 'react';
 import DatePicker from 'material-ui/DatePicker/DatePicker';
 import IconButton from 'material-ui/IconButton/IconButton';
+import { getISOFormatLocalTimestamp } from '../../utils/date';
 
 export default React.createClass({
     propTypes: {
@@ -26,6 +27,7 @@ export default React.createClass({
             modelDefinition,
             ...other
         } = this.props;
+
 
         return (
             <div style={{ ...this.props.style }}>
@@ -74,9 +76,11 @@ export default React.createClass({
     },
 
     _onDateSelect(event, date) {
+        // selector gives date in local time, but we want to remove "timezone"-info
+        const correctedLocalDate = getISOFormatLocalTimestamp(date);
         this.props.onChange({
             target: {
-                value: date,
+                value: correctedLocalDate
             },
         });
     },
